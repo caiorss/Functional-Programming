@@ -462,12 +462,12 @@ Example 2: Derivate functions
 
 ### Recursion
 
-Product of List
+Product of a List
 
 ```haskell
 
 prod :: [Int] -> Int
-prod [x] = x
+prod [] = 1
 prod (x:xs) = x * prod xs
 
 
