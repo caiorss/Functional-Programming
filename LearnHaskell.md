@@ -4,6 +4,10 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [Haskell Tool set](#haskell-tool-set)
+  - [Toolset](#toolset)
+  - [GHCI Reference](#ghci-reference)
+- [Concepts](#concepts)
 - [Basic Syntax](#basic-syntax)
   - [Lists](#lists)
     - [Creating Lists](#creating-lists)
@@ -11,19 +15,26 @@
     - [Chekings Lists](#chekings-lists)
 - [Functions](#functions)
   - [Creating functions](#creating-functions)
+  - [Anonymous Functions or Lambda Functions](#anonymous-functions-or-lambda-functions)
   - [Infix Operators](#infix-operators)
-- [Currying](#currying)
+  - [Currying](#currying)
   - [Recursion](#recursion)
+  - [Higher Order Functions](#higher-order-functions)
+- [-- Maximum Number in a list](#---maximum-number-in-a-list)
 - [Pattern Matching](#pattern-matching)
+- [](#)
 - [List Comprehension](#list-comprehension)
   - [Simple List Comprehension](#simple-list-comprehension)
   - [Comprehensions with multiple generators](#comprehensions-with-multiple-generators)
   - [Function Inside List Comprehension](#function-inside-list-comprehension)
   - [Comprehension with Guards](#comprehension-with-guards)
 - [-- Get all prime numbers until number n](#---get-all-prime-numbers-until-number-n)
+- [Pipelining Operator](#pipelining-operator)
+- [Abstract Data Type](#abstract-data-type)
 - [Applications](#applications)
-  - [Degree Trigonometric Functions](#degree-trigonometric-functions)
+  - [Mathematic](#mathematic)
   - [Statiscs](#statiscs)
+  - [Vector](#vector)
 - [References](#references)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -393,8 +404,6 @@ f x y = sqrt ( x^2 + y^2 )
 > map (\x -> x^2 - 2.5*x) [1, 2, 3, 4, 5]
 [-1.5,-1.0,1.5,6.0,12.5]
 
-
-
 ```
 
 ### Infix Operators
@@ -462,6 +471,18 @@ Example 2: Derivate functions
 
 ### Recursion
 
+Reverse A list
+
+```haskell
+
+reverse2 :: [a] -> [a]
+reverse2 []     = []
+reverse2 (x:xs) = reverse2 xs ++ [x]
+
+*Main> reverse2 [1, 2, 3, 4, 5]
+[5,4,3,2,1]
+```
+
 Product of a List
 
 ```haskell
@@ -498,6 +519,31 @@ fib 0 = 1
 fib 1 = 1
 fib n | n>= 2
     = fib(n-1) + fib(n-2)
+```
+
+### Higher Order Functions
+
+**Foldr**
+
+* Fold right
+
+```haskell
+
+-- Summation from 1 to 10
+> foldr (+) 0 [1..10]
+55
+
+-- Product from 1 to 10
+> foldr (*) 1 [1..10]
+3628800
+> 
+
+-- Maximum Number in a list
+--
+> foldr (\x y -> if x >= y then x else y ) 0 [ -10, 100, 1000, 20, 34.23, 10]
+1000.0
+> 
+
 ```
 
 ## Pattern Matching
@@ -799,7 +845,46 @@ True
 
 ## Applications
 
-### Degree Trigonometric Functions
+### Mathematic
+
+**Pow Function**
+
+* pow(base, exponent) = base ^ exponent
+
+```haskell
+let pow x y = exp $ y * log x
+
+*Main> pow 2 3
+7.999999999999998
+*Main> 
+*Main> pow 2 2
+4.0
+*Main> pow 2 6
+63.99999999999998
+*Main> 
+*Main> pow 2 0.5
+1.414213562373095
+
+```
+
+**Logarithm of Base N**
+
+```haskell
+
+logN n x = (log x)/(log n)
+
+log10 = logN 10
+log2  = logN 2
+
+*Main> map log10 [1, 10, 100, 1000]
+[0.0,1.0,2.0,2.9999999999999996]
+
+*Main> map log2 [1, 2, 8, 16, 64]
+[0.0,1.0,3.0,4.0,6.0]
+
+```
+
+**Trigonometric Degree Functions**
 
 ```haskell
 
@@ -921,6 +1006,11 @@ Misc:
 * <https://wiki.haskell.org/Haskell_programming_tips>
 * <http://bayleshanks.com/tutorials-haskell>
 
+Lambda Calculus Concepts
+* <https://wiki.haskell.org/Anonymous_function>
+* <https://wiki.haskell.org/Closure>
+* <https://wiki.haskell.org/Beta_reduction>
+
 Data Types:
 * <http://en.wikibooks.org/wiki/Haskell/More_on_datatypes>
 * <https://www.fpcomplete.com/school/starting-with-haskell/introduction-to-haskell/2-algebraic-data-types>
@@ -945,6 +1035,8 @@ Interesting:
 
 **Dr. Erik Meijier Serie: Functional Programming Fundamentals**
 
-* [Function Definition - Chapter 4 of 13](https://www.youtube.com/watch?v=fQU99SJdWGY)
-* [List Comprehensions - Chapter 5 of 13](https://www.youtube.com/watch?v=cdPyykm2-gg)
-* [Recursive functions - Chapter 6 of 13](https://www.youtube.com/watch?v=2ECvUT3nbqk)
+* [Function Definition    - Chapter 4 of 13](https://www.youtube.com/watch?v=fQU99SJdWGY)
+* [List Comprehensions    - Chapter 5 of 13](https://www.youtube.com/watch?v=cdPyykm2-gg)
+* [Recursive functions    - Chapter 6 of 13](https://www.youtube.com/watch?v=2ECvUT3nbqk)
+* [Higher Order Functions - Chapter 7 of 13](https://www.youtube.com/watch?v=YRTQkBO2v-s)
+* [Functional Parsers     - Chapter 8 of 13](https://www.youtube.com/watch?v=OrAVS4QbMqo)
