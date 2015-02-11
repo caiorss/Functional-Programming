@@ -770,6 +770,8 @@ it can be defined by the user.
 
 ## Abstract Data Type
 
+**Example: Days of Week**
+
 Enumerated sets is type which can only have a limited number of values. 
 
 
@@ -784,6 +786,12 @@ data Weekday = Monday
              | Sunday
   deriving (Eq, Ord, Enum)
 
+fromDay :: Weekday -> Int
+fromDay = fromEnum
+
+toDay :: Int -> Weekday
+toDay = toEnum   
+
 > map (Monday<) [ Tuesday, Friday, Sunday]
 [True,True,True]
 
@@ -796,7 +804,29 @@ False
 > Tuesday == Tuesday
 True
 >  
+
+> 
+> fromDay Saturday 
+5
+
+> 1 + fromDay Monday 
+1
+> 1 + fromDay Saturday 
+6
+> Saturday 
+Saturday
+> 
+> toDay 0
+Monday
+> toDay 6
+Sunday
+> 
+> 
+
+
 ```
+
+**Example: Colors**
 
 ```haskell
 
@@ -842,10 +872,72 @@ True
 
 ```
 
+**Example: Shapes**
+
+```haskell
+
+data Shape = Circle  Float 
+            | Rect   Float Float 
+
+square   :: Float -> Shape
+square n =  Rect n n 
+
+area            :: Shape -> Float
+area (Circle r)  = pi * r^2
+area (Rect x y)  = x  * y
+
+*Main> area $  Rect 20 30
+600.0
+*Main> area $ Circle 20
+1256.6371
+*Main> area $ square 20
+400.0
+*Main> 
+
+
+```
+
+**Example: Students GPA**
+
+```haskell
+
+data Student = USU String Float 
+             deriving (Show)
+
+get_gpa :: Student -> Float
+get_gpa (USU _ grade) = grade
+
+get_name :: Student -> String
+get_name (USU name _ ) = name
+
+class_gpa :: [Student] -> Float
+class_gpa myclass = (sum c) / fromIntegral  (length c)
+                  where 
+                  c = map get_gpa myclass
+
+
+*Main> let myke = USU "Mike" 4.0
+*Main> 
+*Main> get_name myke
+"Mike"
+*Main> get_gpa myke
+4.0
+*Main> 
+
+*Main> let myclass = [USU "Mike" 3.7, USU "Steve" 3.9, USU "Fred" 2.9, USU "Joe" 1.5]
+*Main> 
+
+*Main> class_gpa myclass 
+3.0
+*Main
+
+```
+
 
 ## Applications
 
-### Mathematic
+
+### Mathematics
 
 **Pow Function**
 
@@ -896,6 +988,129 @@ cosd = cos . deg2rad
 tand = tan . deg2rad
 atand = rad2deg . atan
 atan2d y x = rad2deg (atan2 y x )
+```
+
+### Numerical Methods ###
+
+**Numerical Derivate**
+
+```haskell
+
+derv dx f x = (f(x+dx) - f(x))/dx
+
+f x = 2*x**2 - 2*x
+df = derv 1e-5 f
+
+*Main> map f [2, 3, 4, 5] 
+[4.0,12.0,24.0,40.0]
+*Main> 
+
+*Main> let df = derv 1e-5 f
+*Main> 
+*Main> map df  [2, 3, 4, 5]
+[6.000020000040961,10.000019999978349,14.000019999116374,18.000019998964945]
+*Main> 
+
+*Main> let dfx x = 4*x - 2
+*Main> map dfx [2, 3, 4, 5]
+[6,10,14,18]
+```
+
+**Newton-Raphson Method to Solve Equations**
+
+```haskell
+
+
+{-
+Newton-Raphson Method Iterator, builds an iterator function
+fromt the function to be solved and its derivate.
+
+-}
+newton_iterator f df x = x - f(x)/df(x)
+
+{---------------------------------------------------------------------
+    newtonSolver(eps, itmax, f, df, guess)
+
+    Solve equation using the Newton-Raphson Method.
+    
+    params:
+    
+        eps   :  Tolerance of the solver
+        itmax :  Maximum number of iterations
+        f     :  Function which the root will be computed
+        df    :  Derivate of the function
+        guess :  Initial guess 
+
+newtonSolver
+  :: (Fractional t, Ord t) =>
+     t -> Int -> (t -> t) -> (t -> t) -> t -> (t, t, Int)
+-----------------------------------------------------------------------
+-}
+newtonSolver :: (Floating t, Ord t) => t -> Int -> (t -> t) -> (t -> t) -> t -> (t, t, Int)
+newtonSolver eps itmax f df guess = (root, error, iterations)
+    where
+    check_root x = abs(f(x)) > eps                                  
+    iterator = newton_iterator f df   -- Builds the Newton Iterator                              
+    generator = iterate $ iterator    -- Infinite List that will that holds the roots (Lazy Evaluation)
+
+    rootlist = take itmax $ takeWhile check_root $ generator guess                                  
+    root = iterator $ last $ rootlist                                  
+    error = abs(f(root))
+    iterations = length rootlist
+
+
+f :: Floating a => a -> a
+f x = x^2 - 2.0
+
+
+square_root a | a > 0       = newtonSolver 1e-6 50 (\x -> x^2 -a) (\x -> 2*x) a 
+              | otherwise   = error ("The argument must be positive")
+
+```
+
+**Secant Equation Solving Method**
+
+haskell```
+
+
+(|>) x f = f x
+(|>>) x f = map f x
+
+secant_iterator :: Floating t => (t -> t) -> [t] -> [t]
+secant_iterator f guesslist = [x, xnext]
+    where
+    x =  guesslist !! (length guesslist - 1)
+    x_ = guesslist !! (length guesslist - 2)
+    xnext = x - f(x)*(x-x_)/(f(x) - f(x_))
+
+
+secant_error :: Floating a => [a] -> a
+secant_error xlist = abs(xlist !! 1 - xlist !! 0)
+
+--check_error :: (Floating a, Ord a) => [a] -> Bool
+
+
+secant_solver eps itmax f x1 x2 = (root, error, iterations) 
+    where  
+    check_error xlist = secant_error xlist > eps
+
+    iterator = secant_iterator  f
+
+    rootlist = xlist |> iterate iterator |> takeWhile check_error |> take itmax
+
+    pair = last rootlist |> iterator
+    root = last pair
+    error = secant_error pair
+
+    iterations = length rootlist
+
+
+
+*Main> let f x = x^2 - 2.0
+*Main> secant_solver 1e-4 20 f 2 3
+(1.4142135516460548,1.2368214102220776e-5,3)
+*Main>
+
 ```
 
 ### Statiscs
