@@ -28,12 +28,13 @@
   - [Comprehensions with multiple generators](#comprehensions-with-multiple-generators)
   - [Function Inside List Comprehension](#function-inside-list-comprehension)
   - [Comprehension with Guards](#comprehension-with-guards)
-- [-- Get all prime numbers until number n](#---get-all-prime-numbers-until-number-n)
 - [Pipelining Operator](#pipelining-operator)
 - [Abstract Data Type](#abstract-data-type)
 - [Applications](#applications)
-  - [Mathematic](#mathematic)
-  - [Statiscs](#statiscs)
+  - [Mathematics](#mathematics)
+  - [Numerical Methods](#numerical-methods)
+- [     t -> Int -> (t -> t) -> (t -> t) -> t -> (t, t, Int)](#t---int---t---t---t---t---t---t-t-int)
+  - [Statistics and Time Series](#statistics-and-time-series)
   - [Vector](#vector)
 - [References](#references)
 
@@ -729,8 +730,8 @@ True
 False
 > 
 
--- Get all prime numbers until number n
---
+{- Get all prime numbers until number n -}
+
 > let primes_n n = [ x | x <- [1..n], prime x]
 > 
 > primes_n 10
@@ -1072,7 +1073,6 @@ square_root a | a > 0       = newtonSolver 1e-6 50 (\x -> x^2 -a) (\x -> 2*x) a
 
 ```haskell
 
-
 (|>) x f = f x
 (|>>) x f = map f x
 
@@ -1083,15 +1083,10 @@ secant_iterator f guesslist = [x, xnext]
     x_ = guesslist !! (length guesslist - 2)
     xnext = x - f(x)*(x-x_)/(f(x) - f(x_))
 
-
-secant_error :: Floating a => [a] -> a
-secant_error xlist = abs(xlist !! 1 - xlist !! 0)
-
---check_error :: (Floating a, Ord a) => [a] -> Bool
-
-
 secant_solver eps itmax f x1 x2 = (root, error, iterations) 
     where  
+    
+    secant_error xlist = abs(f $ xlist !! 1)
     check_error xlist = secant_error xlist > eps
 
     iterator = secant_iterator  f
@@ -1101,9 +1096,7 @@ secant_solver eps itmax f x1 x2 = (root, error, iterations)
     pair = last rootlist |> iterator
     root = last pair
     error = secant_error pair
-
     iterations = length rootlist
-
 
 
 *Main> let f x = x^2 - 2.0
@@ -1111,9 +1104,15 @@ secant_solver eps itmax f x1 x2 = (root, error, iterations)
 (1.4142135516460548,1.2368214102220776e-5,3)
 *Main>
 
+*Main> let f x = exp(x) - 3.0*x^2
+*Main> secant_solver 1e-5 100 f (-2.0)  3.0
+(0.9100076383541602,1.9599609979437105e-7,4)
+*Main> 
+*Main> f 0.9100076383541602
+-1.9599609979437105e-7
 ```
 
-### Statiscs
+### Statistics and Time Series
 
 Arithmetic Mean of a Sequence
 * mean :: Fractional b => [b] -> b

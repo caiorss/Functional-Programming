@@ -16,15 +16,10 @@ secant_iterator f guesslist = [x, xnext]
     x_ = guesslist !! (length guesslist - 2)
     xnext = x - f(x)*(x-x_)/(f(x) - f(x_))
 
-
-secant_error :: Floating a => [a] -> a
-secant_error xlist = abs(xlist !! 1 - xlist !! 0)
-
---check_error :: (Floating a, Ord a) => [a] -> Bool
-
-
 secant_solver eps itmax f x1 x2 = (root, error, iterations) 
     where  
+    
+    secant_error xlist = abs(f $ xlist !! 1)
     check_error xlist = secant_error xlist > eps
 
     iterator = secant_iterator  f
