@@ -1070,7 +1070,7 @@ square_root a | a > 0       = newtonSolver 1e-6 50 (\x -> x^2 -a) (\x -> 2*x) a
 
 **Secant Equation Solving Method**
 
-haskell```
+```haskell
 
 
 (|>) x f = f x
