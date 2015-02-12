@@ -1,5 +1,12 @@
 {-
+http://www.scs.stanford.edu/11au-cs240h/notes/
+http://www.scs.stanford.edu/14sp-cs240h/
+
+http://aprendehaskell.es/content/OrdenSuperior.html
+
 http://channel9.msdn.com/Series/C9-Lectures-Erik-Meijer-Functional-Programming-Fundamentals/C9-Lectures-Dr-Erik-Meijer-Functional-Programming-Fundamentals-Chapter-10-of-13
+
+http://www.cs.bham.ac.uk/~vxs/teaching/Haskell/handouts/basics.pdf
 
 Example:
 
@@ -65,3 +72,36 @@ fromDay = fromEnum
 
 toDay :: Int -> Weekday
 toDay = toEnum   
+
+
+
+data Color
+    = Red
+    | Orange
+    | Yellow
+    | Green
+    | Blue
+    | Purple
+    | White
+    | Black
+    | CustomColor Int Int Int -- R G B components
+    deriving (Eq)
+
+colorToRGB Red    = (255,0,0)
+colorToRGB Orange = (255,128,0)
+colorToRGB Yellow = (255,255,0)
+colorToRGB Green  = (0,255,0)
+colorToRGB Blue   = (0,0,255)
+colorToRGB Purple = (255,0,255)
+colorToRGB White = (255,255,255)
+colorToRGB Black = (0,0,0)
+colorToRGB (CustomColor r g b) = (r,g,b)   -- this one is 
+
+
+
+-- file: ch03/BookStore.hs
+data Customer = Customer {
+      customerID        :: CustomerID
+    , customerName      :: String
+    , customerAddress   :: Address
+} deriving (Show)

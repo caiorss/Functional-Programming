@@ -1,13 +1,86 @@
 {-
-Solves equation using the Newton Method
+Numerical Methods in Functional Programming
 
+    Features:
+        1 - Root Solving
+        2 - Derivate Function
+        4 - Horner Method to evaluate polynomia.
 
 -}
+import Data.Maybe
+
 
 -- Pipe Operators
 --
 (|>) x f = f x
 (|>>) x f = map f x
+
+{-
+
+-}
+
+
+
+derivate :: Fractional a => a -> (a -> a) -> a -> a
+derivate dx f x = (f(x+dx) - f(x))/dx
+
+
+
+{-
+    Example: Evaluating Polynomia by the horner method.
+
+Reference: http://www.math10.com/en/algebra/horner.html
+
+f(x) = a0 + a1x + a2x2 + a3x3 + a4x4 + a5x5
+f(x0) = a0 + x0(a1 + x0(a2 + x0(a3 + x0(a4 + a5x0)))) 
+
+Example: Evaluate the polynomial 
+    f(x)  =  1x4 + 3x3 + 5x2 + 7x + 9 at x = 2 
+    df(x) =  3x3 + 6x2 + 10x +  7
+    
+let coeffs  = [9.0, 7.0, 5.0, 3.0, 1.0] 
+let f  = polyval  coeffs
+
+let df = polyval $  polyderv coeffs
+
+> polyderv coeffs 
+[7.0,10.0,9.0,4.0
+
+> f 2
+83.0
+
+> df 2
+95.0
+
+> (\x -> 7 + 10*x + 9*x^2 + 4*x^3) 2
+95
+
+
+-}
+polyval :: Fractional a => [a] -> a -> a
+polyval coeffs x = foldr (\b c -> b + x*c) 0 coeffs
+    -- where
+    -- hx x b c = b + x*c
+
+{-
+    Polynomia derivate
+    
+    Creates the polynomia of the derivate of the input
+    polynomia.
+    
+    > polyderv [9.0, 7.0, 5.0, 3.0, 1.0]
+    [7.0,10.0,9.0,4.0]
+    
+-}
+polyderv :: Fractional a => [a] -> [a] 
+polyderv coeffs = zipWith (*) (map fromIntegral [1..n]) (tail coeffs )
+    where
+    n = (length coeffs) - 1 
+    -- |>> fromIntegral
+    -- poly = zipWith (*) ([1..n] |>> fromIntegral) (tail coeffs)
+    
+
+
 
 
 {-
@@ -146,5 +219,86 @@ steffensenSolver eps itmax f guess = (root, error, iterations)
 
 
 
+newton2Solver eps itmax f guess = newtonSolver eps itmax f df guess
+    where 
+    df = derivate 1e-8 f
+
+
+
 square_root a | a > 0       = newtonSolver 1e-6 50 (\x -> x^2 -a) (\x -> 2*x) a 
               | otherwise   = error ("The argument must be positive")
+
+
+{-
+Linear Interpolation
+
+*Main> let rows2col rows idx = table |>> (\row -> row !! idx)
+*Main> 
+*Main> rows2col table 0
+[1950.0,1960.0,1970.0,1980.0,1990.0]
+*Main> 
+*Main> rows2col table 1
+[150.697,179.323,203.212,226.505,249.633]
+*Main> 
+
+*Main> let x = rows2col table 0
+*Main> let y = rows2col table 1
+*Main> 
+*Main> x
+[1950.0,1960.0,1970.0,1980.0,1990.0]
+*Main> y
+[150.697,179.323,203.212,226.505,249.633]
+*Main> 
+
+*Main> let cols = rows2col table
+*Main> 
+*Main> cols 0
+[1950.0,1960.0,1970.0,1980.0,1990.0]
+*Main> cols 1
+[150.697,179.323,203.212,226.505,249.633]
+*Main> 
+
+
+-}
+
+table = [[1950, 150.697], [1960, 179.323], [1970,  203.212], [1980,  226.505], [1990,  249.633]]
+
+
+rows2col rows idx = table |>> (\row -> row !! idx)
+
+enumerate lst = zip [0..(length lst)] lst 
+
+{- Find element in a list that satisfy a predicate -}
+findIdxEl :: (Double -> Bool) -> t -> Maybe (Int, Double)
+findIdxEl predicate lst = tuple
+    where
+    lst =  takeWhile (\row -> predicate $ snd row) (enumerate x)
+    tuple = if null lst then Nothing else Just (last lst)
+
+-- interpol :: Fractional a => [[a]] -> a -> a
+interpol xyrows x = y
+    where
+    xcol = rows2col 0 xyrows
+    ycol = rows2col 1 xyrows
+    
+    mx1 = fromJust $ findIdxEl (\a -> a <= x) xcol
+    
+    idx1 = fst mx1
+    x1   = snd mx1
+    x2   = xcol !! (idx1 + 1)
+    
+    y1   = ycol !! idx1
+    y2   = ycol !! (idx1 + 1)
+    
+    y = (y2-y1)/(x2-x1)*(x-x1) + y1
+    
+    
+
+    
+    
+    
+    
+
+x = rows2col table 0
+y = rows2col table 1
+

@@ -1,42 +1,7 @@
-# HASKELL BY EXAMPLE / PRACTICAL FUNCTIONAL PROGRAMMING
+<!-- # HASKELL BY EXAMPLE / PRACTICAL FUNCTIONAL PROGRAMMING -->
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
-- [Haskell Tool set](#haskell-tool-set)
-  - [Toolset](#toolset)
-  - [GHCI Reference](#ghci-reference)
-- [Concepts](#concepts)
-- [Basic Syntax](#basic-syntax)
-  - [Lists](#lists)
-    - [Creating Lists](#creating-lists)
-    - [List Operations](#list-operations)
-    - [Chekings Lists](#chekings-lists)
-- [Functions](#functions)
-  - [Creating functions](#creating-functions)
-  - [Anonymous Functions or Lambda Functions](#anonymous-functions-or-lambda-functions)
-  - [Infix Operators](#infix-operators)
-  - [Currying](#currying)
-  - [Recursion](#recursion)
-  - [Higher Order Functions](#higher-order-functions)
-- [-- Maximum Number in a list](#---maximum-number-in-a-list)
-- [Pattern Matching](#pattern-matching)
-- [](#)
-- [List Comprehension](#list-comprehension)
-  - [Simple List Comprehension](#simple-list-comprehension)
-  - [Comprehensions with multiple generators](#comprehensions-with-multiple-generators)
-  - [Function Inside List Comprehension](#function-inside-list-comprehension)
-  - [Comprehension with Guards](#comprehension-with-guards)
-- [Pipelining Operator](#pipelining-operator)
-- [Abstract Data Type](#abstract-data-type)
-- [Applications](#applications)
-  - [Mathematics](#mathematics)
-  - [Numerical Methods](#numerical-methods)
-- [     t -> Int -> (t -> t) -> (t -> t) -> t -> (t, t, Int)](#t---int---t---t---t---t---t---t-t-int)
-  - [Statistics and Time Series](#statistics-and-time-series)
-  - [Vector](#vector)
-- [References](#references)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -468,8 +433,6 @@ Example 1:
 
 Example 2: Derivate functions
 
-
-
 ### Recursion
 
 Reverse A list
@@ -499,9 +462,6 @@ prod (x:xs) = x * prod xs
 *Main> :t prod
 prod :: [Int] -> Int
 ```
-
-
-
 Factorial
 
 ```haskell
@@ -524,7 +484,47 @@ fib n | n>= 2
 
 ### Higher Order Functions
 
+**Map**
+
+The map functional takes a function as its first argument, then applies it to every element of a list. 
+[Programming in Haskell 3rd CCSC Northwest Conference • Fall 2001](http://www.willamette.edu/~fruehr/haskell/lectures/tutorial4.html#@sli@31)
+
+```haskell
+
+> map (^2) [1..10]
+[1,4,9,16,25,36,49,64,81,100]
+
+> map (`div` 3) [1..20]
+[0,0,1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,6,6,6]
+
+> map reverse ["hey", "there", "world"]
+["yeh","ereht","dlrow"]
+
+> reverse ["hey", "there", "world"]
+["world","there","hey"]
+
+```
+
+**Higher-order predicates**
+
+Predicates (boolean-valued functions) can be extended to lists via the higher-order predicates any and all. 
+[Programming in Haskell 3rd CCSC Northwest Conference • Fall 2001](http://www.willamette.edu/~fruehr/haskell/lectures/tutorial4.html#@sli@31)]
+
+```haskell
+
+> map even [1..5]
+[False,True,False,True,False]
+
+> all even (map (2*) [1..5])
+True
+
+> any odd [ x^2 | x<-[1..5] ]
+True
+```
+
 **Foldr**
+
+The fold functions foldl and foldr combine elements of a list based on a binary function and an initial value. 
 
 * Fold right
 
@@ -534,18 +534,43 @@ fib n | n>= 2
 > foldr (+) 0 [1..10]
 55
 
--- Product from 1 to 10
+{- Product from 1 to 10 -}
 > foldr (*) 1 [1..10]
 3628800
 > 
 
--- Maximum Number in a list
---
+{- Maximum Number in a list -}
+
 > foldr (\x y -> if x >= y then x else y ) 0 [ -10, 100, 1000, 20, 34.23, 10]
 1000.0
 > 
 
 ```
+
+
+**Other Useful higher-order functions**
+
+The standard Prelude defines scores of useful functions, many of which enjoy great generality due to the abstractional capabilities of polymorphic 
+types and higher-order functions [[Programming in Haskell 3rd CCSC Northwest Conference • Fall 2001](http://www.willamette.edu/~fruehr/haskell/lectures/tutorial4.html#@sli@31)]
+
+
+```haskell
+> zipWith (*) [1..10] [1..10]
+[1,4,9,16,25,36,49,64,81,100]
+
+> :t replicate
+replicate :: Int -> a -> [a]
+
+> zipWith replicate [1..6] ['a'..'z']
+["a","bb","ccc","dddd","eeeee","ffffff"]
+
+> takeWhile (<100) [ 2^n | n<-[1..] ]
+[2,4,8,16,32,64]
+
+> :t takeWhile
+takeWhile :: (a -> Bool) -> [a] -> [a]
+```
+
 
 ## Pattern Matching
 
@@ -753,6 +778,9 @@ it can be defined by the user.
 > 
 > let (|>>) x f = map f x
 
+> let (?>>) x f = filter f x
+
+
 > take 3 (reverse (filter even [1..10]))
 [10,8,6]
 
@@ -763,6 +791,16 @@ it can be defined by the user.
 
 > [1..10] |>> (^2) |>> (/10) |>> (+100)
 [100.1,100.4,100.9,101.6,102.5,103.6,104.9,106.4,108.1,110.0]
+
+> 
+> [1..10] ?>> even
+[2,4,6,8,10]
+> 
+> [1..10] ?>> even |>> (+1)
+[3,5,7,9,11]
+> 
+> 
+
 
 ```
 
@@ -991,9 +1029,61 @@ atand = rad2deg . atan
 atan2d y x = rad2deg (atan2 y x )
 ```
 
-### Numerical Methods ###
+### Numerical Methods 
 
-**Numerical Derivate**
+#### Polynomial
+
+Polynomial evaluation by the horner method.
+
+```haskell
+polyval :: Fractional a => [a] -> a -> a
+polyval coeffs x = foldr (\b c -> b + x*c) 0 coeffs
+
+polyderv :: Fractional a => [a] -> [a] 
+polyderv coeffs = zipWith (*) (map fromIntegral [1..n]) (tail coeffs )
+    where
+    n = (length coeffs) - 1    
+
+```
+
+Example:
+
+```
+Reference: http://www.math10.com/en/algebra/horner.html
+
+f(x) = a0 + a1x + a2x2 + a3x3 + a4x4 + a5x5
+f(x0) = a0 + x0(a1 + x0(a2 + x0(a3 + x0(a4 + a5x0)))) 
+
+Example: Evaluate the polynomial 
+    f(x)  =  1x4 + 3x3 + 5x2 + 7x + 9 at x = 2 
+    df(x) =  3x3 + 6x2 + 10x +  7
+```
+
+```haskell
+    
+> let coeffs  = [9.0, 7.0, 5.0, 3.0, 1.0] 
+> let f  = polyval  coeffs
+
+let df = polyval $  polyderv coeffs
+
+> polyderv coeffs 
+[7.0,10.0,9.0,4.0]
+
+> f 2
+83.0
+
+> df 2
+95.0
+
+> (\x -> 7 + 10*x + 9*x^2 + 4*x^3) 2
+95
+```
+
+
+
+
+
+#### Numerical Derivate
 
 ```haskell
 
@@ -1017,11 +1107,49 @@ df = derv 1e-5 f
 [6,10,14,18]
 ```
 
-**Newton-Raphson Method to Solve Equations**
+#### Equation Solving
+
+
+**Bissection Method**
 
 ```haskell
 
+bissection_iterator :: (Floating a, Floating a1, Ord a1) => (a -> a1) -> [a] -> [a]
+bissection_iterator f guesslist = newguess
+    where
+    a =  guesslist !! 0
+    b =  guesslist !! 1
+    c = (a+b)/2.0
+    p = f(a)*f(c)
+    newguess = (\p -> if p < 0.0 then [a, c] else [c, b] ) p
 
+
+bissectionSolver eps itmax f x1 x2 = (root, error, iterations) 
+    where  
+    
+    bissection_error xlist = abs(f $ xlist !! 1)
+    check_error xlist = bissection_error xlist > eps
+
+    iterator = bissection_iterator  f
+
+    rootlist = [x1, x2] |> iterate iterator |> takeWhile check_error |> take itmax
+
+    pair = last rootlist |> iterator
+    root = last pair
+    error = bissection_error pair
+
+    iterations = length rootlist    
+
+*Main> let f x  =  exp(-x) -3*log(x)
+*Main> bissectionSolver 1e-5 100 f 0.05 3
+(1.1154509544372555,8.86237816760671e-6,19)
+*Main> 
+
+```
+
+**Newton Raphson Method**
+
+```haskell
 {-
 Newton-Raphson Method Iterator, builds an iterator function
 fromt the function to be solved and its derivate.
@@ -1069,7 +1197,7 @@ square_root a | a > 0       = newtonSolver 1e-6 50 (\x -> x^2 -a) (\x -> 2*x) a
 
 ```
 
-**Secant Equation Solving Method**
+**Secant Method**
 
 ```haskell
 
@@ -1079,11 +1207,11 @@ square_root a | a > 0       = newtonSolver 1e-6 50 (\x -> x^2 -a) (\x -> 2*x) a
 secant_iterator :: Floating t => (t -> t) -> [t] -> [t]
 secant_iterator f guesslist = [x, xnext]
     where
-    x =  guesslist !! (length guesslist - 1)
-    x_ = guesslist !! (length guesslist - 2)
+    x =  guesslist !! 0
+    x_ = guesslist !! 1
     xnext = x - f(x)*(x-x_)/(f(x) - f(x_))
 
-secant_solver eps itmax f x1 x2 = (root, error, iterations) 
+secantSolver eps itmax f x1 x2 = (root, error, iterations) 
     where  
     
     secant_error xlist = abs(f $ xlist !! 1)
@@ -1091,31 +1219,28 @@ secant_solver eps itmax f x1 x2 = (root, error, iterations)
 
     iterator = secant_iterator  f
 
-    rootlist = xlist |> iterate iterator |> takeWhile check_error |> take itmax
+    rootlist = [x1, x2] |> iterate iterator |> takeWhile check_error |> take itmax
 
     pair = last rootlist |> iterator
     root = last pair
     error = secant_error pair
+
     iterations = length rootlist
 
-
 *Main> let f x = x^2 - 2.0
-*Main> secant_solver 1e-4 20 f 2 3
-(1.4142135516460548,1.2368214102220776e-5,3)
-*Main>
-
-*Main> let f x = exp(x) - 3.0*x^2
-*Main> secant_solver 1e-5 100 f (-2.0)  3.0
-(0.9100076383541602,1.9599609979437105e-7,4)
+*Main> secantSolver  1e-4 20 f 2 3
+(1.4142394822006472,7.331301515467459e-5,6)
 *Main> 
-*Main> f 0.9100076383541602
--1.9599609979437105e-7
+*Main> let f x = exp(x) - 3.0*x^2
+*Main> secantSolver 1e-5 100 f (-2.0)  3.0
+(-0.458964305393305,6.899607281729558e-6,24)
+*Main> 
+
 ```
 
 ### Statistics and Time Series
 
 Arithmetic Mean of a Sequence
-* mean :: Fractional b => [b] -> b
 
 ```haskell
 mean lst = sum lst / fromIntegral (length lst)
@@ -1123,12 +1248,15 @@ mean lst = sum lst / fromIntegral (length lst)
 
 Geometric Mean of Squence 
 ```haskell
-geomean lst = (product lst)^(fromIntegral (length lst))
+
+pow x y = exp $ y * log x
+geomean lst = pow (product lst) $ 1/(fromIntegral (length lst))
 ```
 
 Convert from decimal to percent
 ```haskell
-to_percent lst = map (100.0 *) lst
+to_pct   lst = map (100.0 *) lst {- Decimal to percent -}
+from_pct lst = map (/100.0)  lsd {- from Percent to Decimal -}
 ```
 
 Lagged Difference of a time serie
@@ -1145,8 +1273,55 @@ growth lst = zipWith (/) (lagdiff lst) lst
 
 Percentual Growth
 ```haskell
-growthp = to_percent . growth
+growthp = to_pct . growth
 ```
+
+Standard Deviation and Variance of a Sequence
+
+```haskell
+{- Standard Deviation-}
+stdev values =  values   |>> (\x -> x -  mean values ) |>> (^2) |> mean |> sqrt
+
+{- Standard Variance -}
+stvar values = stdev values |> (^2)
+```
+
+**Example: Investment Return**
+
+The annual prices of an Blue Chip company are given below,
+find the percent growth rate at the end of each year and 
+the [CAGR](http://www.investopedia.com/articles/analyst/041502.asp) Compound annual growth rate.
+
+```
+year    0    1     2     3     4     5
+price  16.06 23.83 33.13 50.26 46.97 39.89
+```
+
+Solution:
+
+```haskell
+
+> let (|>) x f = f x
+> let (|>>) x f = map f x
+>
+> let cagr prices = (growthp prices |>> (+100) |> geomean ) - 100
+>
+> let prices = [16.06, 23.83, 33.13, 50.26, 46.97, 39.89 ]
+> 
+> {- Percent Returns -}
+> let returns = growthp prices
+> 
+> returns
+[48.38107098381071,39.02643726395302,51.705402958044054,-6.545961002785513,-15.073451139024908]
+> 
+
+> let annual_cagr = cagr prices 
+> annual_cagr 
+19.956476057259906
+> 
+
+```
+
 
 ### Vector
 
@@ -1193,9 +1368,30 @@ growthp = to_percent . growth
 
 ```
 
+**Linspace and Range Matlab Function**
+
+```haskell
+
+linspace d1 d2 n = [d1 + i*step | i <- [0..n-1] ]
+    where 
+    step = (d2 - d1)/(n-1)
+        
+
+range start stop step =  [start + i*step | i <- [0..n] ]
+    where
+    n = floor((stop - start)/step)
+
+```
+
 ## References
 
+
+
 * http://www.cis.upenn.edu/~matuszek/Concise%20Guides/Concise%20Haskell98.html
+* http://www.cs.arizona.edu/~collberg/Teaching/372/2009/Handouts/Handout-11.pdf
+* http://en.wikibooks.org/wiki/Yet_Another_Haskell_Tutorial/Language_basics
+* https://courses.cs.washington.edu/courses/cse505/01au/functional/haskell-examples.txts
+
 
 Toolset
 * <http://en.wikibooks.org/wiki/Haskell/Using_GHCi_effectively>
