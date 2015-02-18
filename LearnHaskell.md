@@ -2,12 +2,60 @@
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Haskell Tool set](#haskell-tool-set)
+  - [Toolset](#toolset)
+  - [GHCI Reference](#ghci-reference)
+- [Concepts](#concepts)
+    - [Functional Programming](#functional-programming)
+    - [Functional Programming Design Patterns](#functional-programming-design-patterns)
+    - [Haskell Features](#haskell-features)
+- [Basic Syntax](#basic-syntax)
+  - [Operators](#operators)
+    - [Logic Operators](#logic-operators)
+    - [Powers](#powers)
+    - [Application Operator - $](#application-operator---$)
+    - [Pipelining Operator](#pipelining-operator)
+  - [Defining Values and Types](#defining-values-and-types)
+  - [Typeclasses and Types](#typeclasses-and-types)
+    - [Basic Types](#basic-types)
+    - [Typeclasses](#typeclasses)
+    - [Useful notations for functions](#useful-notations-for-functions)
+  - [Lists](#lists)
+    - [Creating Lists](#creating-lists)
+    - [List Operations](#list-operations)
+    - [Chekings Lists](#chekings-lists)
+- [Functions](#functions)
+  - [Creating functions](#creating-functions)
+  - [Anonymous Functions or Lambda Functions](#anonymous-functions-or-lambda-functions)
+  - [Infix Operators](#infix-operators)
+  - [Currying](#currying)
+  - [Recursion](#recursion)
+  - [Higher Order Functions](#higher-order-functions)
+- [Pattern Matching](#pattern-matching)
+- [](#)
+- [List Comprehension](#list-comprehension)
+  - [Simple List Comprehension](#simple-list-comprehension)
+  - [Comprehensions with multiple generators](#comprehensions-with-multiple-generators)
+  - [Function Inside List Comprehension](#function-inside-list-comprehension)
+  - [Comprehension with Guards](#comprehension-with-guards)
+- [Abstract Data Type](#abstract-data-type)
+- [Applications](#applications)
+  - [Mathematics](#mathematics)
+  - [Numerical Methods](#numerical-methods)
+    - [Polynomial](#polynomial)
+    - [Numerical Derivate](#numerical-derivate)
+    - [Equation Solving](#equation-solving)
+- [     t -> Int -> (t -> t) -> (t -> t) -> t -> (t, t, Int)](#t---int---t---t---t---t---t---t-t-int)
+  - [Statistics and Time Series](#statistics-and-time-series)
+  - [Vector](#vector)
+- [References](#references)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 The purpose of this documentation is to ilustrate functional programming concepts in
-Haskell Language by giving the reader small examples and snippets that can also be used
-to provide faster understanding of Haskell language.
+Haskell Language by providing reusable and useful pieces of codes and it's its results.
 
 Notes: 
 
@@ -44,15 +92,9 @@ GHCI Interactive Shell
 
 ## Concepts
 
-**Functional Programming**
+#### Functional Programming
 
 Functional Programming is all about programming with functions.
-
-**Lazy Evaluation**
-
-“Lazy evaluation” means that data structures are computed incrementally, as they 
-are needed (so the trees never exist in memory all at once) parts that are never needed 
-are never computed.
 
 **Functional Programming Features**
 
@@ -73,7 +115,189 @@ Non Essential Features:
 * Type Inferencing
 * Algebraic Data Types
 
+**Lazy Evaluation**
+
+“Lazy evaluation” means that data structures are computed incrementally, as they 
+are needed (so the trees never exist in memory all at once) parts that are never needed 
+are never computed.
+
+#### Functional Programming Design Patterns
+
+* Curry/ Partial function application  - Creating new functions by holding a parameter constant
+* Closure - Return functions from functions
+* Function composition
+* Composable functions
+* High Order Functions
+* MapReduce Algorithms - Split computation in multiple computers cores.
+* Lazy Evaluation ( aka Delayed evaluation)
+* Pattern Matching
+
+
+#### Haskell Features
+
+* Pure Functional programming language
+* Static Typed Language with Type Inference. 
+* Lazy Evaluation ( Dealayed evaluation) by default
+* Haskell has no variables
+    * Values can be bound to a name and can only be assigned once.
+    * Values can never change.
+* Haskell has not for-loop, while statements.
+* Algebraic Data types
+* Pattern Matching
+* Tail Recursions
+
 ## Basic Syntax
+
+### Operators
+
+
+#### Logic Operators
+
+```
+  True || False ⇒ True  
+  True && False ⇒ False 
+  True == False ⇒ False 
+  True /= False ⇒ True  (/=) is the operator for different 
+```
+
+#### Powers
+
+```
+x^n     for n an integral (understand Int or Integer)
+x**y    for y any kind of number (Float for example)
+x^n     pour n un entier (comprenez Int ou Integer)
+x**y    pour y tout type de nombre (Float par exemple)
+```
+
+
+#### Application Operator - $
+
+Tje application operator '$' makes code more readable and cleaner since substitutes parenthesis.
+It is also useful in higher-order situations, such as map ($ 0) xs, or zipWith ($) fs xs. 
+
+```haskell
+> f $ g $ h x = f (g (h x))
+```
+
+#### Pipelining Operator 
+
+Haskell doesn't have a native Pipe operator like F# (F-Sharp) does, however
+it can be defined by the user.
+
+```haskell
+
+> let (|>) x f = f x
+> 
+> let (|>>) x f = map f x
+
+> let (?>>) x f = filter f x
+
+
+> take 3 (reverse (filter even [1..10]))
+[10,8,6]
+
+> [1..10] |> filter even |> reverse |> take 3
+[10,8,6]
+> 
+
+
+> [1..10] |>> (^2) |>> (/10) |>> (+100)
+[100.1,100.4,100.9,101.6,102.5,103.6,104.9,106.4,108.1,110.0]
+
+> 
+> [1..10] ?>> even
+[2,4,6,8,10]
+> 
+> [1..10] ?>> even |>> (+1)
+[3,5,7,9,11]
+> 
+> 
+
+
+```
+
+
+
+
+### Defining Values and Types
+
+```haskell
+
+> let b = 100 :: Float
+> let a  = 100 :: Int
+> let c = 100 :: Double
+> 
+> b
+100.0
+> :t b 
+b :: Float
+> :t a 
+a :: Int
+> :t c
+c :: Double
+> 
+> let x = 100.2323
+> :t x
+x :: Double
+> 
+> let y = [1..10]
+> y
+[1,2,3,4,5,6,7,8,9,10]
+> 
+> let z = [1, 2, 4, 5, 6] :: [Float]
+> :t z
+z :: [Float]
+
+> let k = [1.2, 1.3, 1.4, 1.5 ]
+> k
+[1.2,1.3,1.4,1.5]
+> 
+> :t k
+k :: [Double]
+```
+
+### Typeclasses and Types
+
+- Typeclasses are sets of types.
+- Types are sets of values.
+
+```
+Value -->  Type --> Typeclass
+```
+
+#### Basic Types
+
+|            |                   |              |
+|------------|-------------------|--------------|
+| Char       |  'a' / 'b' / 'c'  |  Char Type   |
+| [Char]     |  "String"         |  String      |
+| Bool       |   True / False    |  Boolean     |
+| Int        |   1, 2, 3, 4      |  Integers in a finite range.  -2^29 to (2^29 - 1) |          
+| Integer    |   1, 2, 3, 4      |  Arbitrary Precision Integer |
+| Float      | 1.0, 2.0, 3.0     |  32 bits float point |
+| Double     | 1.0, 2.0, 3.0     |  64 bits float point |
+| (Int, Char)|  (1, 'a')         | Tuples, unlike lists elements can have different types. |
+| [a]        | [1, 2, 3, 4]      | List has the type [Int], [Char], [Double] |
+
+#### Typeclasses
+
+* Num : Integer, Int, Double and Float
+
+#### Useful notations for functions 
+
+Credits: http://yannesposito.com/Scratch/en/blog/Haskell-the-Hard-Way/
+
+```
+x :: Int            ⇔ x is of type Int
+x :: a              ⇔ x can be of any type
+x :: Num a => a     ⇔ x can be any type a
+                      such that a belongs to Num type class 
+f :: a -> b         ⇔ f is a function from a to b
+f :: a -> b -> c    ⇔ f is a function from a to (b→c)
+f :: (a -> b) -> c  ⇔ f is a function from (a→b) to c
+```
+
+
 
 ### Lists
 
@@ -588,6 +812,39 @@ Tuple Constructor
 > 
 ```
 
+```haskell
+
+addVectors :: (Num a) => (a, a) -> (a, a) -> (a, a)
+addVectors a b = (fst a + fst b, snd a + snd b)
+
+> addVectors (8, 9)(-10, 12)
+(-2,21)
+> 
+> addv1 = addVectors (1, 3)
+> 
+> let addv1 = addVectors (1, 3)
+> 
+> map addv1 [(12, 23), (45, 23), (6, 14)]
+[(13,26),(46,26),(7,17)]
+```
+
+```haskell
+
+add3Dvectors (x1, y1, z1) (x2, y2, z2) = (x1+x2, y1+y2, z1+z
+first  (x, _, _) = x
+second (_, y, _) = y
+third  (_, _, z) = z
+
+> first (1, 2, 3)
+1
+> second  (1, 2, 3)
+2
+> third (1, 2, 3)
+3   
+> add3Dvectors (23, 12, 233) (10, 100, 30)
+(33,112,263)
+```
+
 **Guarded Equations**
 
 Absolute Value
@@ -628,6 +885,14 @@ sign n | n <  0    = -1
 ```
 
 ```haskell
+f x y | y > z  = x^^2 - 10.5
+      | y == z = x+10*y
+      | y < z  = x/z + y
+      where z = x^2 - 5*y
+
+```
+
+```haskell
 
 units angle sym | sym == "deg" = angle*pi/180.0
                 | sym == "rad" = angle
@@ -652,6 +917,36 @@ True
 > sin(units 1.57 "rad")
 0.9999996829318346
 > 
+```
+
+```haskell
+
+password :: (Eq a, Num a) => a -> [Char]
+password 3423 = "OK - Safe opened"
+password x    = "Error: Wrong Password pal"
+
+> password 10
+"Error: Wrong Password pal"
+> password 11
+"Error: Wrong Password pal"
+> password 3423
+"OK - Safe opened"
+> s
+```
+
+```haskell
+sayMe :: (Integral a) => a -> [Char]
+sayMe 1 = "One!"  
+sayMe 2 = "Two!"  
+sayMe 3 = "Three!"  
+sayMe 4 = "Four!"  
+sayMe 5 = "Five!"  
+sayMe x = "Not between 1 and 5" 
+
+> map sayMe [1..8]
+["One!","Two!","Three!","Four!","Five!","Not between 1 and 5", "Not between 1 and 5","Not between 1 and 5"]
+
+
 ```
 
 ## List Comprehension
@@ -764,43 +1059,6 @@ False
 > primes_n 100
 [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97]
 > 
-
-```
-
-## Pipelining Operator 
-
-Haskell doesn't have a native Pipe operator like F# (F-Sharp) does, however
-it can be defined by the user.
-
-```haskell
-
-> let (|>) x f = f x
-> 
-> let (|>>) x f = map f x
-
-> let (?>>) x f = filter f x
-
-
-> take 3 (reverse (filter even [1..10]))
-[10,8,6]
-
-> [1..10] |> filter even |> reverse |> take 3
-[10,8,6]
-> 
-
-
-> [1..10] |>> (^2) |>> (/10) |>> (+100)
-[100.1,100.4,100.9,101.6,102.5,103.6,104.9,106.4,108.1,110.0]
-
-> 
-> [1..10] ?>> even
-[2,4,6,8,10]
-> 
-> [1..10] ?>> even |>> (+1)
-[3,5,7,9,11]
-> 
-> 
-
 
 ```
 
