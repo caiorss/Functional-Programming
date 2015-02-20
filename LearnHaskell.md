@@ -34,21 +34,19 @@
   - [Recursion](#recursion)
   - [Higher Order Functions](#higher-order-functions)
 - [Pattern Matching](#pattern-matching)
-- [](#)
 - [List Comprehension](#list-comprehension)
   - [Simple List Comprehension](#simple-list-comprehension)
   - [Comprehensions with multiple generators](#comprehensions-with-multiple-generators)
   - [Function Inside List Comprehension](#function-inside-list-comprehension)
   - [Comprehension with Guards](#comprehension-with-guards)
 - [Abstract Data Type](#abstract-data-type)
-- [Error Handling with Maybe](#error-handling-with-maybe)
+- [Avoiding Null checking with Maybe](#avoiding-null-checking-with-maybe)
 - [Applications](#applications)
   - [Mathematics](#mathematics)
   - [Numerical Methods](#numerical-methods)
     - [Polynomial](#polynomial)
     - [Numerical Derivate](#numerical-derivate)
     - [Equation Solving](#equation-solving)
-- [     t -> Int -> (t -> t) -> (t -> t) -> t -> (t, t, Int)](#t---int---t---t---t---t---t---t-t-int)
   - [Statistics and Time Series](#statistics-and-time-series)
   - [Vector](#vector)
 - [References](#references)
@@ -1230,6 +1228,83 @@ class_gpa myclass = (sum c) / fromIntegral  (length c)
 *Main
 
 ```
+
+**Example: Typeclass with record Syntax**
+
+```haskell
+
+data Person = Person { firstName :: String, 
+                       lastName :: String, 
+                       age :: Int 
+                     }
+                     deriving (Eq, Show, Read)
+
+
+people = [ Person { firstName = "Ayn",  lastName = "Rand",  age =50},
+           Person { firstName = "John", lastName = "Galt",  age =28},
+           Person { firstName = "Adam", lastName = "Smith", age =70}]
+
+
+{- Get someone from the people database -}
+getPerson n = people !! n
+
+{- Show Person -}
+showPerson :: Person -> String
+showPerson person  = "Name: " ++ show(firstName person) ++ " - Last Name: " ++ show(lastName person) ++ " - Age " ++ show(age person) 
+
+λ > people
+[Person {firstName = "Ayn", lastName = "Rand", age = 50},Person {firstName = "John", lastName = "Galt", age = 28},Person {firstName = "Adam", lastName = "Smith", age = 70}]
+λ > 
+
+λ > map firstName people
+["Ayn","John","Adam"]
+λ > 
+
+λ > map (\el ->  fst el ++ " " ++  snd el) $ zip (map firstName people) (map lastName people)
+λ >  ["Ayn Rand","John Galt","Adam Smith"]
+
+
+λ > people !! 1
+Person {firstName = "John", lastName = "Galt", age = 28}
+λ > people !! 2
+Person {firstName = "Adam", lastName = "Smith", age = 70}
+λ > 
+
+λ > "person 0 is " ++ show (people !! 0)
+"person 0 is Person {firstName = \"Ayn\", lastName = \"Rand\", age = 50}"
+λ > 
+λ > "person 1 is " ++ show (people !! 1)
+"person 1 is Person {firstName = \"John\", lastName = \"Galt\", age = 28}"
+λ >
+
+
+λ > let person = read "Person {firstName =\"Elmo\", lastName =\"NA\", age = 0}" :: Person
+λ > person
+Person {firstName = "Elmo", lastName = "NA", age = 0}
+λ > 
+λ > firstName person 
+"Elmo"
+λ > last
+last      lastName
+λ > lastName person 
+"NA"
+λ > age person
+0
+λ > 
+
+λ > let tesla = Person { firstName = "Nikola", lastName = "Tesla", age =30}
+λ > tesla
+Person {firstName = "Nikola", lastName = "Tesla", age = 30}
+λ > 
+
+λ > showPerson tesla
+"Name: \"Nikola\" - Last Name: \"Tesla\" - Age 30"
+λ > 
+
+```
+
+Reference: http://learnyouahaskell.com/making-our-own-types-and-typeclasses
+
 
 ## Avoiding Null checking with Maybe
 
