@@ -41,6 +41,7 @@
   - [Function Inside List Comprehension](#function-inside-list-comprehension)
   - [Comprehension with Guards](#comprehension-with-guards)
 - [Abstract Data Type](#abstract-data-type)
+- [Error Handling with Maybe](#error-handling-with-maybe)
 - [Applications](#applications)
   - [Mathematics](#mathematics)
   - [Numerical Methods](#numerical-methods)
@@ -136,9 +137,9 @@ are never computed.
 #### Haskell Features
 
 * Pure Functional programming language
-* Static Typed Language with Type Inference. 
+* Static Typed Language with Type Inference (The haskell compiler deduce the types for you). 
 * Lazy Evaluation ( Dealayed evaluation) by default
-* Haskell has no variables
+* Data Imutability/ Haskell has no variables
     * Values can be bound to a name and can only be assigned once.
     * Values can never change.
 * Haskell has not for-loop, while statements.
@@ -1230,6 +1231,137 @@ class_gpa myclass = (sum c) / fromIntegral  (length c)
 
 ```
 
+## Avoiding Null checking with Maybe
+
+Using the Maybe type is possible to indicate that a function
+might or not return value.
+
+```
+data Maybe x = Nothing | Just x
+```
+
+Examples without Maybe:
+
+```haskell
+
+λ :set prompt "λ > " 
+λ > 
+λ > 
+λ >  head [1, 2, 3, 4]
+1
+λ > head []
+*** Exception: Prelude.head: empty list
+ 
+
+λ > tail [1, 2, 3, 4]
+[2,3,4]
+λ > 
+λ > tail []
+*** Exception: Prelude.tail: empty list
+
+λ > div 10 2
+5
+λ > div 10 0
+*** Exception: divide by zero
+λ > 
+```
+
+Examples with Maybe monad:
+
+```haskell
+
+fromJust (Just x) = x
+
+safeHead :: [a] -> Maybe a
+safeHead [] = Nothing
+safeHead (x:_) = Just x
+
+safeTail :: [a] -> Maybe [a]
+safeTail [] = Nothing
+safeTail (_:xs) = Just xs
+
+safeLast :: [a] -> Maybe a
+safeLast [] = Nothing
+safeLast (y:[]) = Just y
+safeLast (_:xs) = safeLast xs
+
+safeInit :: [a] -> Maybe [a]
+safeInit [] = Nothing
+safeInit (x:[]) = Just []
+safeInit (x:xs) = Just (x : fromJust(safeInit xs))
+
+safediv y x | x == 0    = Nothing
+            | otherwise = Just(y/x)
+
+λ > fromJust (Just 10)
+10
+
+λ > safeHead [1..5]
+Just 1
+λ > safeHead []
+Nothing
+λ > 
+
+λ > safeTail  [1..5]
+Just [2,3,4,5]
+λ > safeTail  []
+Nothing
+λ > 
+
+λ > let div10by = safediv 10
+λ > let div100by = safediv 100
+
+
+λ > safediv 10 2
+Just 5.0
+λ > safediv 10 0
+Nothing
+λ > 
+λ > 
+
+λ > div10by 2
+Just 5.0
+
+λ > div100by 20
+Just 5.0
+λ > div100by 0
+Nothing
+λ > 
+
+λ > map div10by [-2..2]
+[Just (-5.0),Just (-10.0),Nothing,Just 10.0,Just 5.0]
+λ > 
+
+{- Composition With May be with the >>= (Monad bind operator) -}
+
+λ > div100by (div10by 2)
+
+<interactive>:102:11:
+    Couldn't match expected type `Double'
+                with actual type `Maybe Double'
+    In the return type of a call of `div10by'
+    In the first argument of `div100by', namely `(div10by 2)'
+    In the expression: div100by (div10by 2)
+λ > 
+
+λ > div10by 2 >>= div100by
+Just 20.0
+
+λ > div10by 2 >>= div10by >>= div100by 
+Just 50.0
+λ > 
+
+λ > div10by 2 >>= safediv 0 >>= div100by 
+Nothing
+λ > 
+
+λ > div10by 0 >>= safediv 1000 >>= div100by 
+Nothing
+λ > 
+
+```
+
+Reference:  http://www.fatvat.co.uk/2009/10/dealing-with-partial-functions.html 
 
 ## Applications
 
