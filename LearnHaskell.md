@@ -11,6 +11,9 @@
     - [Functional Programming](#functional-programming)
     - [Functional Programming Design Patterns](#functional-programming-design-patterns)
     - [Haskell Features](#haskell-features)
+    - [Concepts](#concepts-1)
+      - [Pure Functions](#pure-functions)
+    - [Lazy Evaluation](#lazy-evaluation)
 - [Basic Syntax](#basic-syntax)
   - [Operators](#operators)
     - [Logic Operators](#logic-operators)
@@ -39,7 +42,6 @@
     - [Other Useful higher-order functions](#other-useful-higher-order-functions)
   - [Useful notations for functions](#useful-notations-for-functions)
 - [Pattern Matching](#pattern-matching)
-- [](#)
 - [List Comprehension](#list-comprehension)
   - [Simple List Comprehension](#simple-list-comprehension)
   - [Comprehensions with multiple generators](#comprehensions-with-multiple-generators)
@@ -54,7 +56,6 @@
     - [Polynomial](#polynomial)
     - [Numerical Derivate](#numerical-derivate)
     - [Equation Solving](#equation-solving)
-- [     t -> Int -> (t -> t) -> (t -> t) -> t -> (t, t, Int)](#t---int---t---t---t---t---t---t-t-int)
   - [Statistics and Time Series](#statistics-and-time-series)
   - [Vector](#vector)
   - [Small DSL Domain Specific Language](#small-dsl-domain-specific-language)
@@ -128,12 +129,6 @@ Non Essential Features:
 * Type Inferencing
 * Algebraic Data Types
 
-**Lazy Evaluation**
-
-“Lazy evaluation” means that data structures are computed incrementally, as they 
-are needed (so the trees never exist in memory all at once) parts that are never needed 
-are never computed.
-
 #### Functional Programming Design Patterns
 
 * Curry/ Partial function application  - Creating new functions by holding a parameter constant
@@ -160,6 +155,32 @@ are never computed.
 * Pattern Matching
 * Tail Recursions
 * Compiles to native code.
+
+
+#### Concepts
+
+##### Pure Functions
+
+Pure functions:
+
+* Are functions without side effects, like mathematical functions. 
+* For the same input the functions always returns the same output.
+* Pure functions doens't rely on global variable, doesn't have internal states.
+* Deterministic.
+
+Why Pure Functions:
+
+* Composability, one fuction can be connected to another.
+* Can run in parallel, multi threading, multi core and GPU.
+* Better debugging.
+
+
+#### Lazy Evaluation
+
+“Lazy evaluation” means that data structures are computed incrementally, as they 
+are needed (so the trees never exist in memory all at once) parts that are never needed 
+are never computed.
+
 
 ## Basic Syntax
 
