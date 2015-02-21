@@ -18,10 +18,8 @@
     - [Application Operator - $](#application-operator---$)
     - [Pipelining Operator](#pipelining-operator)
   - [Defining Values and Types](#defining-values-and-types)
-  - [Typeclasses and Types](#typeclasses-and-types)
+  - [Type System](#type-system)
     - [Basic Types](#basic-types)
-    - [Typeclasses](#typeclasses)
-    - [Useful notations for functions](#useful-notations-for-functions)
   - [Lists](#lists)
     - [Creating Lists](#creating-lists)
     - [List Operations](#list-operations)
@@ -33,22 +31,38 @@
   - [Currying](#currying)
   - [Recursion](#recursion)
   - [Higher Order Functions](#higher-order-functions)
+    - [Map](#map)
+    - [Filter](#filter)
+    - [Higher-order predicates](#higher-order-predicates)
+    - [Fold](#fold)
+    - [Scanl](#scanl)
+    - [Other Useful higher-order functions](#other-useful-higher-order-functions)
+  - [Useful notations for functions](#useful-notations-for-functions)
 - [Pattern Matching](#pattern-matching)
+- [](#)
 - [List Comprehension](#list-comprehension)
   - [Simple List Comprehension](#simple-list-comprehension)
   - [Comprehensions with multiple generators](#comprehensions-with-multiple-generators)
   - [Function Inside List Comprehension](#function-inside-list-comprehension)
   - [Comprehension with Guards](#comprehension-with-guards)
 - [Abstract Data Type](#abstract-data-type)
-- [Avoiding Null checking with Maybe](#avoiding-null-checking-with-maybe)
+- [Monads, Functors and Applicatives](#monads-functors-and-applicatives)
+  - [Avoiding Null checking with Maybe](#avoiding-null-checking-with-maybe)
 - [Applications](#applications)
   - [Mathematics](#mathematics)
   - [Numerical Methods](#numerical-methods)
     - [Polynomial](#polynomial)
     - [Numerical Derivate](#numerical-derivate)
     - [Equation Solving](#equation-solving)
+- [     t -> Int -> (t -> t) -> (t -> t) -> t -> (t, t, Int)](#t---int---t---t---t---t---t---t-t-int)
   - [Statistics and Time Series](#statistics-and-time-series)
   - [Vector](#vector)
+  - [Small DSL Domain Specific Language](#small-dsl-domain-specific-language)
+- [Documentation and Learning Materials](#documentation-and-learning-materials)
+  - [Documentation](#documentation)
+  - [Books](#books)
+  - [Articles and Papers](#articles-and-papers)
+  - [Community](#community)
 - [References](#references)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -135,7 +149,8 @@ are never computed.
 #### Haskell Features
 
 * Pure Functional programming language
-* Static Typed Language with Type Inference (The haskell compiler deduce the types for you). 
+* Strong Static Typed Language 
+* Type Inference (The haskell compiler deduce the types for you). 
 * Lazy Evaluation ( Dealayed evaluation) by default
 * Data Imutability/ Haskell has no variables
     * Values can be bound to a name and can only be assigned once.
@@ -144,6 +159,7 @@ are never computed.
 * Algebraic Data types
 * Pattern Matching
 * Tail Recursions
+* Compiles to native code.
 
 ## Basic Syntax
 
@@ -255,14 +271,62 @@ z :: [Float]
 k :: [Double]
 ```
 
-### Typeclasses and Types
+### Type System
 
-- Typeclasses are sets of types.
-- Types are sets of values.
+* A type is a collection of related values.
+
+* Typeclasses are sets of types.
+
+* A class is a collection of types that support certain operations, 
+called the methods of the class.
+
+* Each expressions must have a valid type, which is calculated before to evaluating the 
+expression by the Haskell compiler, it is called type inference;
+
+* Haskell programs are type safe, since type errors can never occur during run time;
+
+* Type inference detects a very large class of programming errors, and is one of the most 
+powerful and useful features of Haskell.
+
+
+Reference: [Graham Hutton - University of Nottingham](http://www.agu.gov.br/page/download/index/id/11184731)
+
+**Basic Classes**
+
+|        |                  |
+|--------|------------------|
+| Eq     |  Equality Types  |
+| Ord    |  Ordered Types   |
+| Show   |  Showables Types |
+| Read   |  Readable Types  |
+| Num    |  Numeric Types   |
+| Enum   |  Enum Types      |
+
+Example Methods:
+
+```haskell
+(==) :: Eq a    a  a  Bool
+
+(<)  :: Ord a   a  a  Bool
+
+show :: Show a  a  String
+
+read :: Read a  String  a
+
+()  :: Num a   a  a  a
+```
+
 
 ```
 Value -->  Type --> Typeclass
 ```
+
+Standard Typeclasses:
+
+* Show: Representable as String
+* Enum: Enumerable in a list
+* Num:  Usable as a number
+* Ord:  Used for thing with total order
 
 #### Basic Types
 
@@ -278,23 +342,12 @@ Value -->  Type --> Typeclass
 | (Int, Char)|  (1, 'a')         | Tuples, unlike lists elements can have different types. |
 | [a]        | [1, 2, 3, 4]      | List has the type [Int], [Char], [Double] |
 
-#### Typeclasses
 
-* Num : Integer, Int, Double and Float
+References: 
 
-#### Useful notations for functions 
+* http://shuklan.com/haskell/lec03.html#/0/1
+* http://shuklan.com/haskell/lec05.html
 
-Credits: http://yannesposito.com/Scratch/en/blog/Haskell-the-Hard-Way/
-
-```
-x :: Int            ⇔ x is of type Int
-x :: a              ⇔ x can be of any type
-x :: Num a => a     ⇔ x can be any type a
-                      such that a belongs to Num type class 
-f :: a -> b         ⇔ f is a function from a to b
-f :: a -> b -> c    ⇔ f is a function from a to (b→c)
-f :: (a -> b) -> c  ⇔ f is a function from (a→b) to c
-```
 
 
 
@@ -707,7 +760,27 @@ fib n | n>= 2
 
 ### Higher Order Functions
 
-**Map**
+Higher Order functions are functios that takes functions as 
+arguments.
+
+Why Higher Order Function?
+
+* Common programming idioms, such as applying a function twice, can naturally be encapsulated as 
+general purpose higher-order functions (Hutton);
+
+* Special purpose languages can be defined within Haskell using higher-order functions, such as 
+for list processing, interaction, or parsing (Hutton);
+
+* Algebraic properties of higher-order functions can be used to reason about programs. (Hutton)
+
+
+Reference:
+
+* [Graham Hutton - University of Nottingham](http://www.agu.gov.br/page/download/index/id/11184731)
+
+#### Map
+
+map :: (a -> b) -> [a] -> [b]
 
 The map functional takes a function as its first argument, then applies it to every element of a list. 
 [Programming in Haskell 3rd CCSC Northwest Conference • Fall 2001](http://www.willamette.edu/~fruehr/haskell/lectures/tutorial4.html#@sli@31)
@@ -720,6 +793,11 @@ The map functional takes a function as its first argument, then applies it to ev
 > map (`div` 3) [1..20]
 [0,0,1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,6,6,6]
 
+{- Map With Anonymous Functions -}
+>  map (\x -> x*x - 10*x) [1..10]
+[-9,-16,-21,-24,-25,-24,-21,-16,-9,0]
+
+
 > map reverse ["hey", "there", "world"]
 ["yeh","ereht","dlrow"]
 
@@ -728,7 +806,77 @@ The map functional takes a function as its first argument, then applies it to ev
 
 ```
 
-**Higher-order predicates**
+**Example Estimating PI**
+
+Pi number can be aproximated by Gregory series. 
+
+http://shuklan.com/haskell/lec06.html#/0/6
+
+
+```
+                n
+              _____         k+1
+              \         (-1)
+            4  \      ___________
+               /        2k - 1
+              /____
+                 1
+```
+
+```haskell
+
+>  let f x = 4*(-1)^(x+1)/(2*k - 1) where k = fromIntegral x
+>  let piGuess n = sum $ map f [1..n]
+>  
+>  map piGuess [1, 10, 20, 30, 50, 100]
+[4.0,3.0418396189294032,3.09162380666784,3.108268566698947,3.121594652591011,3.1315929035585537]
+>
+>  {- Approximation Error -}
+>  
+>  map (pi -) $ map piGuess [1, 10, 20, 30, 50, 100]
+[-0.8584073464102069,9.975303466038987e-2,4.996884692195325e-2,3.332408689084598e-2,1.999800099878213e-2,9.99975003123943e-3]
+
+
+```
+
+#### Filter
+
+filter :: (a -> Bool) -> [a] -> [a]
+
+Returns elements of a list that satisfy a predicate.
+Predicate is boolean function which returns True or False.
+
+```haskell
+
+> filter even [1..10]
+[2,4,6,8,10]
+> 
+> filter (>6) [1..20]
+[7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+> 
+
+```
+
+**Example With custom types**
+
+Credits: http://shuklan.com/haskell/lec06.html#/0/10
+
+```haskell
+
+> data Gender = Male | Female deriving(Show, Eq, Read)
+> 
+> let people = [(Male, "Tesla"), (Male, "Alber"), (Female, "Zoe"), (Male, "Tom"), (Female, "Olga"), (Female, "Mia"), (Male, "Abdulah")]
+
+> filter (\(a, b) -> a==Female) people
+[(Female,"Zoe"),(Female,"Olga"),(Female,"Mia")]
+> 
+> filter (\(a, b) -> a==Male) people
+[(Male,"Tesla"),(Male,"Alber"),(Male,"Tom"),(Male,"Abdulah")]
+> 
+```
+
+
+#### Higher-order predicates
 
 Predicates (boolean-valued functions) can be extended to lists via the higher-order predicates any and all. 
 [Programming in Haskell 3rd CCSC Northwest Conference • Fall 2001](http://www.willamette.edu/~fruehr/haskell/lectures/tutorial4.html#@sli@31)]
@@ -745,11 +893,38 @@ True
 True
 ```
 
-**Foldr**
+#### Fold
 
-The fold functions foldl and foldr combine elements of a list based on a binary function and an initial value. 
+The fold functions foldl and foldr combine elements of a list based on a binary function and an initial value. In some programming languages fold is known as reduce.
 
-* Fold right
+"The higher-order library function foldr (“fold right”) encapsulates this simple pattern of recursion, with the function  and the value v as arguments" (Graham Hutton)
+
+**Why Is Foldr Useful?** (Graham Hutton)
+
+* Some recursive functions on lists, such as sum, are simpler to define using foldr;
+
+* Properties of functions defined using foldr can be proved using algebraic properties of foldr, such as fusion and the banana split rule;
+
+* Advanced program optimisations can be simpler if foldr is used in place of explicit recursion.
+
+```
+foldr :: (a -> b -> b) -> b -> [a] -> b
+
+foldl :: (a -> b -> a) -> a -> [b] -> a
+
+foldr []     = v
+foldr (x:xs) = x (+) foldr xs
+
+
+sum     = foldr (+) 0
+product = foldr (*) 1
+and     = foldr (&&) True
+
+
+```
+
+
+Examples:
 
 ```haskell
 
@@ -771,7 +946,28 @@ The fold functions foldl and foldr combine elements of a list based on a binary 
 ```
 
 
-**Other Useful higher-order functions**
+Reference:
+* [Graham Hutton - University of Nottingham](http://www.agu.gov.br/page/download/index/id/11184731)
+
+#### Scanl
+
+Shows the intermediate values of a fold.
+
+```haskell
+
+{- Cumulative Sum -}
+> scanl (+) 0 [1..5]
+[0,1,3,6,10,15]
+
+{- Cumulative Product -}
+
+> scanl (*) 1 [1..5]
+[1,1,2,6,24,120]
+
+```
+
+
+#### Other Useful higher-order functions
 
 The standard Prelude defines scores of useful functions, many of which enjoy great generality due to the abstractional capabilities of polymorphic 
 types and higher-order functions [[Programming in Haskell 3rd CCSC Northwest Conference • Fall 2001](http://www.willamette.edu/~fruehr/haskell/lectures/tutorial4.html#@sli@31)]
@@ -792,6 +988,20 @@ replicate :: Int -> a -> [a]
 
 > :t takeWhile
 takeWhile :: (a -> Bool) -> [a] -> [a]
+```
+
+### Useful notations for functions 
+
+Credits: http://yannesposito.com/Scratch/en/blog/Haskell-the-Hard-Way/
+
+```
+x :: Int            ⇔ x is of type Int
+x :: a              ⇔ x can be of any type
+x :: Num a => a     ⇔ x can be any type a
+                      such that a belongs to Num type class 
+f :: a -> b         ⇔ f is a function from a to b
+f :: a -> b -> c    ⇔ f is a function from a to (b→c)
+f :: (a -> b) -> c  ⇔ f is a function from (a→b) to c
 ```
 
 
@@ -1306,7 +1516,14 @@ Person {firstName = "Nikola", lastName = "Tesla", age = 30}
 Reference: http://learnyouahaskell.com/making-our-own-types-and-typeclasses
 
 
-## Avoiding Null checking with Maybe
+## Monads, Functors and Applicatives
+
+[Under Construction]
+
+* http://shuklan.com/haskell/lec09.html#/
+* http://learnyouahaskell.com/functors-applicative-functors-and-monoids
+
+### Avoiding Null checking with Maybe
 
 Using the Maybe type is possible to indicate that a function
 might or not return value.
@@ -1436,7 +1653,10 @@ Nothing
 
 ```
 
-Reference:  http://www.fatvat.co.uk/2009/10/dealing-with-partial-functions.html 
+Reference:  
+
+* http://www.fatvat.co.uk/2009/10/dealing-with-partial-functions.html 
+* http://en.wikibooks.org/wiki/Haskell/Understanding_monads
 
 ## Applications
 
@@ -1848,8 +2068,207 @@ range start stop step =  [start + i*step | i <- [0..n] ]
 
 ```
 
-## References
+### Small DSL Domain Specific Language
 
+  
+Simple DSL for describing cups of Starbucks coffee and computing prices (in dollars). 
+Example taken from: http://www.fssnip.net/9w 
+
+
+starbuck_dsl.hs
+
+```haskell
+data Size  = Tall | Grande | Venti
+            deriving (Eq, Enum, Read, Show, Ord)
+ 
+data Drink = Latte | Cappuccino | Mocha | Americano            
+            deriving (Eq, Enum, Read, Show, Ord)
+
+data Extra = Shot | Syrup
+            deriving (Eq, Enum, Read, Show, Ord)
+
+data Cup = Cup {
+                cupDrink :: Drink,
+                cupSize  :: Size,
+                cupExtra :: [Extra]         
+               }
+               deriving(Eq, Show, Read)
+
+{-
+ -                  Table in the format:
+ -                 -------------------
+ -                  tall, grande, venti 
+ -    Latte         p00   p01     p02
+ -    Cappuccino    p10   p11     p12
+ -    Mocha         p20   p21     p22
+ -    Amaericano    p30   p31     p32
+ -}
+
+table = [
+    [2.69, 3.19, 3.49],
+    [2.69, 3.19, 3.49],
+    [2.99, 3.49, 3.79],
+    [1.89, 2.19, 2.59]
+    ]    
+
+
+extraPrice :: Extra -> Double
+extraPrice Syrup = 0.59
+extraPrice Shot  = 0.39
+
+priceOfcup cup =  baseprice + extraprice
+            where
+            drinkrow = table !!  fromEnum  (cupDrink cup)
+            baseprice   = drinkrow !!  fromEnum  (cupSize cup)
+            extraprice = sum $ map extraPrice (cupExtra cup)
+            
+
+
+{- Constructor of Cup -}
+cupOf drink size extra = Cup { 
+                             cupSize = size, 
+                             cupDrink = drink, 
+                             cupExtra = extra}
+
+drink_options = [ Latte, Cappuccino, Mocha, Americano]
+size_options  = [ Tall, Grande, Venti]  
+extra_options = [[], [Shot], [Syrup], [Shot, Syrup]]
+
+cup_combinations =  
+            [ cupOf drink size extra | drink <- drink_options, size <- size_options, extra <- extra_options]
+
+```
+
+Example:
+
+
+```haskell
+> :load starbucks_dsl.hs 
+[1 of 1] Compiling Main             ( starbucks_dsl.hs, interpreted )
+Ok, modules loaded: Main.
+> 
+> 
+
+> let myCup = cupOf Latte Venti [Syrup]
+> let price = priceOfcup myCup 
+> myCup 
+Cup {cupDrink = Latte, cupSize = Venti, cupExtra = [Syrup]}
+> price
+4.08
+> 
+
+> priceOfcup (cupOf Cappuccino Tall [Syrup, Shot])
+3.67
+> 
+
+> let cups = [ cupOf Americano Venti extra |  extra <- extra_options]
+> cups
+[Cup {cupDrink = Americano, cupSize = Venti, cupExtra = []},
+Cup {cupDrink = Americano, cupSize = Venti, cupExtra = [Shot]},
+Cup {cupDrink = Americano, cupSize = Venti, cupExtra = [Syrup]},
+Cup {cupDrink = Americano, cupSize = Venti, cupExtra = [Shot,Syrup]}]
+> 
+
+> let prices = map priceOfcup cups
+> prices
+[2.59,2.98,3.1799999999999997,3.57]
+> 
+
+> let cupPrices = zip cups prices
+> cupPrices
+[(Cup {cupDrink = Americano, cupSize = Venti, cupExtra = []},2.59),
+(Cup {cupDrink = Americano, cupSize = Venti, cupExtra = [Shot]},2.98),
+(Cup {cupDrink = Americano, cupSize = Venti, cupExtra = [Syrup]},3.1799999999999997),
+(Cup {cupDrink = Americano, cupSize = Venti, cupExtra = [Shot,Syrup]},3.57)]
+> 
+
+```
+
+
+
+
+
+## Documentation and Learning Materials
+
+
+### Documentation
+
+Haskell API search engine, which allows you to search many 
+standard Haskell libraries by either function name, or by approximate type signature. 
+
+![](https://www.haskell.org/hoogle/res/hoogle.png)
+
+* [Hoogle](https://www.haskell.org/hoogle)
+
+* https://www.haskell.org/documentation
+
+Haskell Packages
+
+* http://hackage.haskell.org/packages/archive/pkg-list.html
+
+**Standard Library Prelude.hs**
+
+Prelude.hs is the standard library loaded when Haskell starts.
+
+* [Prelude - Standard defined functions documentation](http://hackage.haskell.org/package/base-4.7.0.2/docs/Prelude.html#v:getContents)
+* [Prelude Source Code](https://www.haskell.org/onlinereport/standard-prelude.html)
+* [Examples of How to use prelude functions](http://www.cse.unsw.edu.au/~en1000/haskell/inbuilt.html)
+
+**Type Classe**
+
+* http://www.haskell.org/haskellwiki/Typeclassopedia
+
+**Monads**
+
+* http://www.haskell.org/haskellwiki/All_About_Monads
+* http://www.haskell.org/haskellwiki/IO_inside
+* http://en.wikibooks.org/wiki/Haskell/Understanding_monads
+
+
+**Install**
+
+Binaries and Installation files: https://www.haskell.org/platform/
+
+Install Haskell Libraries:
+
+```
+cabal update
+
+cabal install <some package>
+```
+
+### Books
+
+* [Real-World Haskell by Bryan O'Sullivan et al.](http://book.realworldhaskell.org)
+* http://learnyouahaskell.com/
+* http://en.wikibooks.org/wiki/Haskell
+
+* [Haskell Data Analysis Cookbook](http://haskelldata.com/)
+
+### Articles and Papers
+
+* [Why the world needs Haskell](http://www.devalot.com/articles/2013/07/why-haskell.html)
+* [Why functional programming still matters by John Hughes](http://www.cse.chalmers.se/~rjmh/Papers/whyfp.pdf)
+* [Composing contracts: an adventure in financial engineering ](http://research.microsoft.com/en-us/um/people/simonpj/Papers/financial-contracts/contracts-icfp.htm) - Simon Peyton Jones et al.
+* http://paulkoerbitz.de/posts/Why-I-love-Haskell.html
+
+### Community
+
+* http://reddit.com/r/haskell
+* http://www.reddit.com/r/haskellquestions
+* http://stackoverflow.com/questions/tagged?tagnames=haskell
+* irc.freenode.net #haskell on Freenode
+
+Haskell Wiki             
+
+* http://www.haskell.org/haskellwiki/Category:Tutorials
+* http://www.haskell.org/haskellwiki/Category:Mathematics
+* http://www.haskell.org/haskellwiki/Category:FAQ
+* http://www.haskell.org/haskellwiki/Category:Communitys
+
+
+
+## References
 
 
 * http://www.cis.upenn.edu/~matuszek/Concise%20Guides/Concise%20Haskell98.html
@@ -1904,9 +2323,6 @@ Control:
 * <http://hackage.haskell.org/package/base-4.7.0.2/docs/Control-Monad.html#v:forM>
 * <http://en.wikibooks.org/wiki/Haskell/Control_structures>
 
-Interesting:
-
-* <http://research.microsoft.com/en-us/um/people/simonpj/Papers/financial-contracts/contracts-icfp.htm>
 
 **Dr. Erik Meijier Serie: Functional Programming Fundamentals**
 
