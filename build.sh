@@ -7,13 +7,13 @@
 
 
 
-doctoc LearnHaskell.md
+doctoc Readme.md
 
 # Build PDF documentation
 #pandoc --latex-engine=xelatex -f markdown_github -o LearnHaskell.pdf LearnHaskell.md
 
 
-grip LearnHaskell.md --gfm --export LearnHaskell2.html
+grip Readme.md --gfm --export LearnHaskell.html
 
 # Build HTML documentation
 #pandoc -f markdown_github -o LearnHaskell.html LearnHaskell.md --standalone 

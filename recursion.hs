@@ -48,3 +48,7 @@ data Vect = Scalar Double |
 
 map2 func x      = func x
 map2 func (x:xs) = func map (x:xs)
+
+
+
+
