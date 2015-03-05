@@ -19,6 +19,7 @@
     - [Logic Operators](#logic-operators)
     - [Powers](#powers)
     - [Application Operator - $](#application-operator---$)
+    - [Misc. Operators](#misc-operators)
     - [Pipelining Operator](#pipelining-operator)
   - [Defining Values and Types](#defining-values-and-types)
   - [Type System](#type-system)
@@ -45,6 +46,7 @@
     - [Other Useful higher-order functions](#other-useful-higher-order-functions)
   - [Useful notations for functions](#useful-notations-for-functions)
 - [Pattern Matching](#pattern-matching)
+- [](#)
 - [List Comprehension](#list-comprehension)
   - [Simple List Comprehension](#simple-list-comprehension)
   - [Comprehensions with multiple generators](#comprehensions-with-multiple-generators)
@@ -52,6 +54,7 @@
   - [Comprehension with Guards](#comprehension-with-guards)
 - [Abstract Data Type](#abstract-data-type)
 - [Monads, Functors and Applicatives](#monads-functors-and-applicatives)
+  - [IO Functions](#io-functions)
   - [Avoiding Null checking with Maybe](#avoiding-null-checking-with-maybe)
 - [Applications](#applications)
   - [Mathematics](#mathematics)
@@ -59,9 +62,18 @@
     - [Polynomial](#polynomial)
     - [Numerical Derivate](#numerical-derivate)
     - [Equation Solving](#equation-solving)
+- [     t -> Int -> (t -> t) -> (t -> t) -> t -> (t, t, Int)](#t---int---t---t---t---t---t---t-t-int)
   - [Statistics and Time Series](#statistics-and-time-series)
   - [Vector](#vector)
   - [Small DSL Domain Specific Language](#small-dsl-domain-specific-language)
+- [Libraries](#libraries)
+  - [Data.Time](#datatime)
+    - [Get current year / month / day in Haskell](#get-current-year--month--day-in-haskell)
+    - [Get Current Time](#get-current-time)
+    - [Documentation By Examples - GHCI shell](#documentation-by-examples---ghci-shell)
+      - [Date Time Manipulation](#date-time-manipulation)
+      - [Difference between two dates](#difference-between-two-dates)
+      - [Day in a Week/Month/Year or Week Number](#day-in-a-weekmonthyear-or-week-number)
 - [Documentation and Learning Materials](#documentation-and-learning-materials)
   - [Documentation](#documentation)
   - [Books](#books)
@@ -217,6 +229,34 @@ It is also useful in higher-order situations, such as map ($ 0) xs, or zipWith (
 ```haskell
 > f $ g $ h x = f (g (h x))
 ```
+
+#### Misc. Operators
+
+```haskell
+>>=     bind
+>>      then
+*>      then
+->      to                a -> b: a to b
+<-      bind (drawn from) (as it desugars to >>=)
+<$>     (f)map
+<$      map-replace by    0 <$ f: "f map-replace by 0"
+<*>     ap(ply)           (as it is the same as Control.Monad.ap)
+$                         (none, just as " " [whitespace])
+.       pipe to           a . b: "b pipe-to a"
+!!      index
+!       index / strict    a ! b: "a index b", foo !x: foo strict x
+<|>     or / alternative  expr <|> term: "expr or term"
+++      concat / plus / append
+[]      empty list
+:       cons
+::      of type / as      f x :: Int: f x of type Int
+\       lambda
+@       as                go ll@(l:ls): go ll as l cons ls
+~       lazy              go ~(a,b): go lazy pair a, b
+
+_       Whatever          Used in Pattern Matching
+```
+
 
 #### Pipelining Operator 
 
@@ -1699,15 +1739,73 @@ Reference: http://learnyouahaskell.com/making-our-own-types-and-typeclasses
 
 ## Monads, Functors and Applicatives
 
+Monads in Haskell are used to perform IO, State, Pararelism, Exception Handling, parallellism, continuations and coroutines.
+
+A monad is defined by three things:
+
+* a type constructor M;
+* a function return  ;
+* an operator (>>=) which is pronounced "bind".
+
+* Return:     return :: Monad m => a -> m a
+* Bind:       (>>=)  :: (Monad m) => m a -> (a -> m b) -> m b
+
+In Haskell, the Monad type class is used to implement monads. It is provided by the Control.Monad module and included in the Prelude. The class has the following methods:
+
+```haskell
+    class Monad m where
+        return :: a -> m a
+        (>>=)  :: m a -> (a -> m b) -> m b
+ 
+        (>>)   :: m a -> m b -> m b
+        fail   :: String -> m a
+```
+
+Under this interpretation, the functions behave as follows:
+
+* fmap applies a given function to every element in a container
+* return packages an element into a container,
+* join takes a container of containers and flattens it into a single container.
+
+```haskell
+
+    fmap   :: (a -> b) -> M a -> M b  -- functor
+    return :: a -> M a
+    join   :: M (M a) -> M a
+    
+```
+
+**Monad Laws**
+
+In Haskell, all instances of the Monad type class (and thus all implementations of (>>=) and return) must obey the following three laws below:
+
+```haskell
+    m >>= return     =  m                        -- right unit
+    return x >>= f   =  f x                      -- left unit
+
+    (m >>= f) >>= g  =  m >>= (\x -> f x >>= g)  -- associativity
+```
+
+
+
 [Under Construction]
 
 ```
+
+return :: Monad m => a -> m a
+
+{- Bind Operator -}
+(>>=) :: (Monad m) => m a -> (a -> m b) -> m b
+
 sequence  :: Monad m => [m a] -> m [a] 
 sequence_ :: Monad m => [m a] -> m () 
 mapM      :: Monad m => (a -> m b) -> [a] -> m [b]
 mapM_     :: Monad m => (a -> m b) -> [a] -> m ()
-(=<<)     :: Monad m => (a -> m b) -> m a -> m b
 
+
+{- monad composition operator -}
+(>=>) :: Monad m => (a -> m b) -> (b -> m c) -> a -> m c
+f >=> g = \x -> f x >>= g
 
 
 data  Maybe a     =  Nothing | Just a  deriving (Eq, Ord, Read, Show)
@@ -1715,11 +1813,96 @@ data  Either a b  =  Left a | Right b  deriving (Eq, Ord, Read, Show)
 data  Ordering    =  LT | EQ | GT deriving
                                   (Eq, Ord, Bounded, Enum, Read, Show)
 
+
+```
+
+### IO Functions
+
+Haskell uses the data type IO (IO monad) for actions.
+
+* > let n = v   Binds n to value v
+* > n <- a      Executes action a and binds the anme n to the result
+* > a           Executes action a
+* do  notation  is syntactic sugar for (>>=) operations. 
+
+**Read and Show**
+
+```
+show   :: (Show a) => a -> String
+read   :: (Read a) => String -> a
+
+{- lines 
+    split string into substring at new line character \n \r
+-}
+lines :: String -> [String]
+```
+
+Example:
+
+```haskell
+
+λ > show(12.12 + 23.445)
+"35.565"
+λ > 
+
+λ > read "1.245" :: Double
+1.245
+λ > 
+λ > let x = read "1.245" :: Double
+λ > :t x
+x :: Double
+λ > 
+λ > read "[1, 2, 3, 4, 5]" :: [Int]
+[1,2,3,4,5]
+λ > 
+
+```
+
+**Output Functions**
+
+```haskell
+print :: Show a => a -> IO ()
+putStrLn :: String -> IO ()
+
+```
+
+**Intput Functions**
+
+```haskell
+getChar             :: IO Char
+getLine             :: IO String
+getContents         :: IO String
+interact            :: (String -> String) -> IO ()
+readIO              :: Read a => String -> IO a
+readLine            :: Read a => IO a
+```
+
+Examples:
+
+```haskell
+
+λ > :t getLine 
+getLine :: IO String
+λ > 
+λ > 
+λ > x <- getLine
+hello
+λ > x
+"hello"
+λ > :t x
+x :: String
+λ > 
+
+
 ```
 
 
+**Sources**
+
+* http://en.wikibooks.org/wiki/Haskell/Understanding_monads
 * http://shuklan.com/haskell/lec09.html#/
 * http://learnyouahaskell.com/functors-applicative-functors-and-monoids
+* http://squing.blogspot.com.br/2008/01/unmonad-tutorial-io-in-haskell-for-non.html
 
 ### Avoiding Null checking with Maybe
 
@@ -2383,8 +2566,272 @@ Cup {cupDrink = Americano, cupSize = Venti, cupExtra = [Shot,Syrup]}]
 ```
 
 
+## Libraries
+
+### Data.Time
+
+#### Get current year / month / day in Haskell
+
+UTC time:
+
+Note that the UTC time might differ from your local time depending on the timezone.
+
+```haskell
+import Data.Time.Clock
+import Data.Time.Calendar
+
+main = do
+    now <- getCurrentTime
+    let (year, month, day) = toGregorian $ utctDay now
+    putStrLn $ "Year: " ++ show year
+    putStrLn $ "Month: " ++ show month
+    putStrLn $ "Day: " ++ show day
+```
+
+#### Get Current Time
+
+Local time:
+
+It is also possible to get your current local time using your system’s default timezone:
+
+```haskell
+import Data.Time.Clock
+import Data.Time.Calendar
+import Data.Time.LocalTime
+
+main = do
+    now <- getCurrentTime
+    timezone <- getCurrentTimeZone
+    let zoneNow = utcToLocalTime timezone now
+    let (year, month, day) = toGregorian $ localDay zoneNow
+    putStrLn $ "Year: " ++ show year
+    putStrLn $ "Month: " ++ show month
+    putStrLn $ "Day: " ++ show day
+```
 
 
+```haskell
+import Data.Time.Clock
+import Data.Time.LocalTime
+
+main = do
+    now <- getCurrentTime
+    timezone <- getCurrentTimeZone
+    let (TimeOfDay hour minute second) = localTimeOfDay $ utcToLocalTime timezone now
+    putStrLn $ "Hour: " ++ show hour
+    putStrLn $ "Minute: " ++ show minute
+    -- Note: Second is of type @Pico@: It contains a fractional part.
+    -- Use @fromIntegral@ to convert it to a plain integer.
+    putStrLn $ "Second: " ++ show second
+```
+
+#### Documentation By Examples - GHCI shell
+
+##### Date Time Manipulation
+
+```haskell
+import Data.Time
+
+λ > :t getCurrentTime
+getCurrentTime :: IO UTCTime
+λ > 
+
+
+λ > t <- getCurrentTime
+λ > t
+2015-03-04 23:22:39.046752 UTC
+λ > 
+
+λ > :t t
+t :: UTCTime
+
+
+λ > today <- fmap utctDay getCurrentTime 
+λ > today
+2015-03-04
+λ > :t today
+today :: Day
+λ > 
+λ > 
+
+λ >  let (year, _, _) = toGregorian today
+λ > year
+2015
+λ > 
+
+λ > :t fromGregorian 2015 0 0
+fromGregorian 2015 0 0 :: Day
+
+λ > fromGregorian 2015 0 0
+2015-01-01
+λ > 
+
+λ > diffDays today (fromGregorian year 0 0)
+62
+λ > 
+
+λ > import Text.Printf
+λ >
+λ > tm <- getCurrentTime
+λ >  let (year, month, day) = toGregorian (utctDay tm)
+λ > year
+2015
+λ > month
+3
+λ > day
+4
+λ > 
+
+λ > printf "The current date is %04d %02d %02d\n" year month day
+The current date is 2015 03 04
+
+
+λ > import System.Locale
+λ > 
+λ > fmap (formatTime defaultTimeLocale "%Y-%m-%d") getCurrentTime
+"2015-03-04"
+λ > 
+λ > 
+
+```
+
+##### Difference between two dates
+
+```haskell
+
+λ > import Data.Time
+λ > import Data.Time.Clock.POSIX
+λ > 
+
+λ > let bree = UTCTime (fromGregorian 1981 6 16) (timeOfDayToTime $ TimeOfDay 4 35 25) -- 1981-06-16 04:35:25 UTC
+λ > bree
+1981-06-16 04:35:25 UTC
+λ > 
+
+
+λ > let nat  = UTCTime (fromGregorian 1973 1 18) (timeOfDayToTime $ TimeOfDay 3 45 50) -- 1973-01-18 03:45:50 UTC
+λ > nat
+1973-01-18 03:45:50 UTC
+λ > 
+
+
+λ > 
+λ > let bree' = read "1981-06-16 04:35:25" :: UTCTime
+λ > bree'
+1981-06-16 04:35:25 UTC
+λ > :t bree'
+bree' :: UTCTime
+λ > 
+λ > let nat'  = read "1973-01-18 03:45:50" :: UTCTime
+λ > 
+λ > nat'
+1973-01-18 03:45:50 UTC
+λ > 
+
+
+λ > difference = diffUTCTime bree nat / posixDayLength
+λ > difference 
+3071.03443287037s
+λ > 
+
+λ >  "There were " ++ (show $ round difference) ++ " days between Nat and Bree"
+"There were 3071 days between Nat and Bree"
+λ > 
+```
+
+##### Day in a Week/Month/Year or Week Number
+
+```haskell
+
+λ > import Data.Time
+λ > import Data.Time.Calendar.MonthDay
+λ > import Data.Time.Calendar.OrdinalDate
+λ > import System.Locale
+
+λ > :t fromGregorian
+fromGregorian :: Integer -> Int -> Int -> Day
+
+λ > let (year, month, day) = (1981, 6, 16) :: (Integer , Int , Int )
+λ > 
+λ > let date = (fromGregorian year month day)
+λ > date
+1981-06-16
+λ > 
+λ > let (week, week_day) = sundayStartWeek date
+λ > week
+24
+λ > week_day
+2
+λ > 
+
+λ > let (year_, year_day) = toOrdinalDate date
+λ > year_
+1981
+λ > year_day
+167
+λ > 
+
+
+λ > let (week_day_name, _) = wDays defaultTimeLocale !! week_day
+λ > week_day_name
+"Tuesday"
+λ > 
+
+λ > :t defaultTimeLocale 
+defaultTimeLocale :: TimeLocale
+λ > 
+λ > defaultTimeLocale 
+TimeLocale {wDays = [("Sunday","Sun"),("Monday","Mon"),("Tuesday","Tue"),("Wednesday","Wed"),("Thursday","Thu"),("Friday","Fri"),("Saturday","Sat")], months = [("January","Jan"),("February","Feb"),("March","Mar"),("April","Apr"),("May","May"),("June","Jun"),("July","Jul"),("August","Aug"),("September","Sep"),("October","Oct"),("November","Nov"),("December","Dec")], intervals = [("year","years"),("month","months"),("day","days"),("hour","hours"),("min","mins"),("sec","secs"),("usec","usecs")], amPm = ("AM","PM"), dateTimeFmt = "%a %b %e %H:%M:%S %Z %Y", dateFmt = "%m/%d/%y", timeFmt = "%H:%M:%S", time12Fmt = "%I:%M:%S %p"}
+λ > 
+λ > 
+```
+
+##### Parsing Dates and Times from Strings
+
+```haskell
+λ > import Data.Time
+λ > import Data.Time.Format
+λ > import Data.Time.Clock.POSIX
+λ > import System.Locale
+
+λ > let day:: Day ; day = readTime defaultTimeLocale "%F" "1998-06-03"
+λ > 
+λ > day
+1998-06-03
+λ > 
+
+```
+
+##### Printing a Date
+
+```haskell
+λ > import Data.Time
+λ > import Data.Time.Format
+λ > import System.Locale
+λ > 
+λ > now <- getCurrentTime
+λ > :t now
+now :: UTCTime
+λ > 
+λ > formatTime defaultTimeLocale "The date is %A (%a) %d/%m/%Y" now
+"The date is Wednesday (Wed) 04/03/2015"
+λ > 
+λ > 
+
+λ > let t = do now <- getCurrentTime ; return $ formatTime defaultTimeLocale "The date is %A (%a) %d/%m/%Y" now
+λ > t
+"The date is Wednesday (Wed) 04/03/2015"
+λ > 
+
+
+```
+
+
+Credits: 
+
+* http://techoverflow.net/blog/2014/06/13/get-current-year-month-day-in-haskell/
+* http://techoverflow.net/blog/2014/08/24/get-current-hour-minute-second-in-haskell/
+* http://pleac.sourceforge.net/pleac_haskell/datesandtimes.html
 
 ## Documentation and Learning Materials
 

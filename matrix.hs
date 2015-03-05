@@ -1,4 +1,7 @@
 
+import Graphics.Gnuplot.Simple
+
+type Matrix = [[Double]]
 
 --  Kronecker delta 
 -- 
@@ -30,6 +33,7 @@ rowM matrix i = matrix !! i             -- Matrix column i
 addv va vb = zipWith (+) va vb
 subv vb va = zipWith (-) vb va
 mulv vb va = zipWith (*) va vb
+mulvx x v  = map (*x) v
 
 normv vector = sqrt $ sum $ map (\e -> e^^2) vector
 
@@ -37,10 +41,11 @@ nrowsM matrix = length matrix
 ncolsM matrix = length (matrix !! 0)
 
 -- Subtract Matrix of equal sizes
-diffm mb ma = map (\(b, a) -> zipWith (-) b a) (zip mb ma)
+subm mb ma = map (\(b, a) -> zipWith (-) b a) (zip mb ma)
 
 -- Add matrix eleMent by eleMent
 addm mb ma = map (\(b, a)  -> zipWith (+) b a) (zip mb ma)
+
 
 -- Multiply matrix a and b
 mullm ma mb =  [ [ c i j   | i <- [0..(nrows -1)]] | j <- [0..(ncols -1)]]
@@ -98,7 +103,7 @@ matrixLU matrix = matrixIterator e_ij matrix
     e_ij (i, j) | i /= j    = 1
                 | otherwise = 0   
 
-diagonalM matrix = map (\i -> (eleM matrix)(i, i)) [0..((nrowsM mat)-1)] 
+diagonalM matrix = map (\i -> (eleM matrix)(i, i)) [0..((nrowsM matrix)-1)] 
 
 
 
@@ -129,12 +134,12 @@ jacobi_step matrix vector_b vector_x = zipWith (/) (zipWith (-) vector_b  (mullm
     lum  = matrixLU  matrix
     diag = diagonalM matrix
 
-mat = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] :: [[Double]]
+--mat = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] :: [[Double]]
 
 
 
-b = [-1, 2, 3] :: [Double]
-matrixA  = [[5, -2, 3], [-3, 9, 1], [2, -1, -7]] :: [[Double]]
+--b = [-1, 2, 3] :: [Double]
+--matrixA  = [[5, -2, 3], [-3, 9, 1], [2, -1, -7]] :: [[Double]]
 
 jacobi matrixA vector_b vector_x0 = vector_x
     where
@@ -143,7 +148,45 @@ jacobi matrixA vector_b vector_x0 = vector_x
     errorv vx = normv $ (matrixA `mullmcol` vx) `subv` vector_b 
     until_error vx = (errorv vx) >= 1e-5
     vector_x = last $ take 200 $ takeWhile until_error  generator
+
+
+
+--ss_setep :: [[Double]] -> [Double] -> Double ->  (Double -> [Double]) -> (Double, [Double]) -> (Double, [Double])
+ss_step a b dt u (t, x) = (tnext, xnext) 
+    where
+    -- (I + dt*A)
+    da = (mullmx dt a)  `addm` eye (length a)
     
+    -- dt*B
+    db = mulvx dt b 
+    
+    xnext = (mullmcol da x) `addv` ( (u t) `mulvx` b) 
+    tnext = t + dt
+
+
+
+a = [[-20, -40, -60], [1,  0,  0], [0,  1, 0]] :: Matrix
+b = [1, 0, 0] :: [Double]
+c = [0, 0, 1] :: [Double]
+d = [0, 0, 0] :: [Double]
+
+u :: Double -> Double
+u t = 1.0
+--u t =  0.0
+
+x0 = [0.1, 0.1, 0.1]
+
+
+ssys = ss_step a b 0.01 u
+
+simu = take 1000 $ iterate ssys (0, x0) 
+
+t_vector = map fst simu
+x_vector = map snd simu
+y_vector = map (!!2) x_vector
+
+plot_solution = plotList [] (zip t_vector y_vector) 
+
  
 {-
 Testing:
