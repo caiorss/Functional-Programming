@@ -13,7 +13,7 @@
     - [Haskell Features](#haskell-features)
     - [Concepts](#concepts-1)
       - [Pure Functions](#pure-functions)
-    - [Lazy Evaluation](#lazy-evaluation)
+      - [Lazy Evaluation](#lazy-evaluation)
 - [Basic Syntax](#basic-syntax)
   - [Operators](#operators)
     - [Logic Operators](#logic-operators)
@@ -46,7 +46,6 @@
     - [Other Useful higher-order functions](#other-useful-higher-order-functions)
   - [Useful notations for functions](#useful-notations-for-functions)
 - [Pattern Matching](#pattern-matching)
-- [](#)
 - [List Comprehension](#list-comprehension)
   - [Simple List Comprehension](#simple-list-comprehension)
   - [Comprehensions with multiple generators](#comprehensions-with-multiple-generators)
@@ -62,7 +61,7 @@
     - [Polynomial](#polynomial)
     - [Numerical Derivate](#numerical-derivate)
     - [Equation Solving](#equation-solving)
-- [     t -> Int -> (t -> t) -> (t -> t) -> t -> (t, t, Int)](#t---int---t---t---t---t---t---t-t-int)
+    - [Differential Equations](#differential-equations)
   - [Statistics and Time Series](#statistics-and-time-series)
   - [Vector](#vector)
   - [Small DSL Domain Specific Language](#small-dsl-domain-specific-language)
@@ -74,6 +73,8 @@
       - [Date Time Manipulation](#date-time-manipulation)
       - [Difference between two dates](#difference-between-two-dates)
       - [Day in a Week/Month/Year or Week Number](#day-in-a-weekmonthyear-or-week-number)
+      - [Parsing Dates and Times from Strings](#parsing-dates-and-times-from-strings)
+      - [Printing a Date](#printing-a-date)
 - [Documentation and Learning Materials](#documentation-and-learning-materials)
   - [Documentation](#documentation)
   - [Books](#books)
@@ -84,7 +85,7 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 The purpose of this documentation is to ilustrate functional programming concepts in
-Haskell Language by providing reusable and useful pieces of codes and it's its results.
+Haskell Language by providing reusable and useful pieces of codes and examples.
 
 Notes: 
 
@@ -189,12 +190,162 @@ Why Pure Functions:
 * Can run in parallel, multi threading, multi core and GPU.
 * Better debugging.
 
+Example of Pure Functions:
 
-#### Lazy Evaluation
+```python
+# A pure function
+def min(x, y):
+    if x < y:
+        return x
+    else:
+        return y
 
-“Lazy evaluation” means that data structures are computed incrementally, as they 
-are needed (so the trees never exist in memory all at once) parts that are never needed 
-are never computed.
+
+# Impure function 
+#   - Impure functions doesn't have always the same output for the same
+#   imput. Examples functions that does IO or has Hidden State, Global Variables
+exponent = 2
+
+def powers(L):
+    for i in range(len(L)):
+        L[i] = L[i]**exponent
+    return L
+```
+The function min is pure. It always produces the same result given 
+the same inputs and it doesn’t affect any external variable.
+
+The function powers is impure because it not always gives the same output
+for the same input, it depends on the global variable exponent:
+
+```python
+
+>>> exponent = 2
+>>> 
+>>> def powers(L):
+...     for i in range(len(L)):
+...         L[i] = L[i]**exponent
+...     return L
+... 
+>>> powers([1, 2, 3])
+[1, 4, 9]
+>>> exponent = 4 
+>>> powers([1, 2, 3])  # (Impure since it doesn't give the same result )
+[1, 16, 81]
+>>> 
+```
+
+Another example, puryfing an impure Language:
+
+```python
+
+>>> lst = [1, 2, 3, 4]  # An pure function doesn't modify its arguments.
+>>>                     # therefore lst.reverse is impure
+>>> x = lst.reverse()
+>>> x
+>>> lst
+[4, 3, 2, 1]
+
+>>> lst.reverse()
+>>> lst
+[1, 2, 3, 4]
+```
+
+Reverse list function purified:
+
+```python
+
+>>> lst = [1, 2, 3, 4]
+>>>
+>>> def reverse(lst):
+...     ls = lst.copy()
+...     ls.reverse()
+...     return ls
+... 
+>>> 
+>>> reverse(lst)
+[4, 3, 2, 1]
+>>> lst
+[1, 2, 3, 4]
+>>> reverse(lst)
+[4, 3, 2, 1]
+>>> lst
+[1, 2, 3, 4]
+
+```
+
+
+##### Lazy Evaluation
+
+“Lazy evaluation” means that data structures are computed incrementally, as they are needed (so the trees never exist in memory all at once) parts that are never needed are never computed. Haskell uses lazy evaluation by default.
+
+Example in Haskell: 
+
+```haskell
+λ> let lazylist = [2..1000000000]
+λ> 
+λ> let f x = x^6 
+λ> 
+λ> take 5 lazylist 
+[2,3,4,5,6]
+λ>
+λ>
+λ> {- Only the terms needed are computed. -}
+λ> take 5 ( map f lazylist )
+[64,729,4096,15625,46656]
+λ> 
+```
+
+Example in Python:
+
+* Python uses eager eavaluation by default. In order to get lazy evaluation in python the programmer must use iterators or generators. The example below uses generator.
+
+```python
+
+def lazy_list():
+    """ Infinite list """
+    x = 0 
+    while True:
+        x += 2
+        yield x
+
+
+>>> gen = lazy_list()
+>>> next(gen)
+2
+>>> next(gen)
+4
+>>> next(gen)
+6
+>>> next(gen)
+8
+>>> next(gen)
+10
+>>> 
+
+def take(n, iterable):
+    return [next(iterable) for i in range(n)]
+
+def mapi(func, iterable):   
+    while True:
+        yield func(next(iterable))
+        
+f = lambda x: x**5
+
+>>> take(5, lazy_list())
+[2, 4, 6, 8, 10]
+>>> take(10, lazy_list())
+[2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+>>> 
+
+>>> take(5, mapi(f, lazy_list()))
+[32, 1024, 7776, 32768, 100000]
+>>> 
+>>> take(6, mapi(f, lazy_list()))
+[32, 1024, 7776, 32768, 100000, 248832]
+>>> 
+
+```
+
 
 
 ## Basic Syntax
@@ -2301,6 +2452,90 @@ secantSolver eps itmax f x1 x2 = (root, error, iterations)
 *Main> secantSolver 1e-5 100 f (-2.0)  3.0
 (-0.458964305393305,6.899607281729558e-6,24)
 *Main> 
+
+```
+
+#### Differential Equations
+
+**Euler Method**
+
+The task is to implement a routine of Euler's method and then to use it to solve the given example of Newton's cooling law with it for three different step sizes of 2 s, 5 s and 10 s and to compare with the analytical solution. The initial temperature T0 shall be 100 °C, the room temperature TR 20 °C, and the cooling constant k 0.07. The time interval to calculate shall be from 0 s to 100 s
+
+From: http://rosettacode.org/wiki/Euler_method
+
+```
+Solve differential equation by the Euler's Method.
+
+    T(t)
+    ---- =  -k(T(t) - Tr)
+     dt
+    
+    T(t) = Tr + k(T0(t) - Tr).exp(-k*t)
+```
+
+```haskell
+
+
+import Graphics.Gnuplot.Simple
+
+
+eulerStep f step (x, y)= (xnew, ynew)
+                    where
+                    xnew = x + step
+                    ynew = y + step * (f (x, y))
+
+euler :: ((Double, Double) -> Double) -> Double -> Double -> Double -> Double -> [(Double, Double)]
+euler f x0 xf y0 step = xypairs
+                     where
+                     iterator = iterate $ eulerStep f step
+                     xypairs = takeWhile (\(x, y) -> x <= xf ) $ iterator (x0, y0)
+
+λ> let dTemp k temp_r (t, temp) = -k*(temp - temp_r)
+
+λ> euler (dTemp 0.07 20.0) 0.0 100.0 100.0 5.0
+[(0.0,100.0),(5.0,72.0),(10.0,53.8),(15.0,41.97) \.\.\.
+(100.0,20.01449963666907)]
+λ> 
+
+let t_temp = euler (dTemp 0.07 20.0) 0.0 100.0 100.0 5.0
+
+plotList [] t_temp
+
+```
+
+![](images/euler_newton_cooling.png)
+
+**Runge Kutta RK4**
+
+See also: [Runge Kutta Methods](http://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods)
+
+```haskell
+
+import Graphics.Gnuplot.Simple
+
+rk4Step f h (x, y) = (xnext, ynext)
+                      where
+                      
+                      k1 = f (x, y)
+                      k2 = f (x+h/2, y+h/2*k1)
+                      k3 = f (x+h/2, y+h/2*k2)
+                      k4 = f (x+h,y+h*k3)
+                      
+                      xnext = x + h
+                      ynext = y + h/6*(k1+2*k2+2*k3+k4)
+                      
+
+rk4 :: ((Double, Double) -> Double) -> Double -> Double -> Double -> Double -> [(Double, Double)]
+rk4 f x0 xf y0 h = xypairs
+                     where
+                     iterator = iterate $ rk4Step f h
+                     xypairs = takeWhile (\(x, y) -> x <= xf ) $ iterator (x0, y0)
+
+
+λ> let t_temp = rk4 (dTemp 0.07 20.0) 0.0 100.0 100.0 5.0
+
+plotList [] t_temp
+
 
 ```
 
