@@ -1,7 +1,6 @@
 ## Functional Programming in Haskell by Examples
 
-The purpose of this documentation is to ilustrate functional programming concepts in
-Haskell Language by providing reusable and useful pieces of codes and examples.
+The purpose of this tutorial is to illustrate functional programming concepts in Haskell language by providing reusable and useful pieces of codes examples and applications.
 
 Notes: 
 
