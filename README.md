@@ -1,3 +1,15 @@
+## Functional Programming in Haskell by Examples
+
+The purpose of this documentation is to ilustrate functional programming concepts in
+Haskell Language by providing reusable and useful pieces of codes and examples.
+
+Notes: 
+
+* The codes with '>' symbol were run in the interactive haskell Shell ghci
+and the line bellow without the symbol > are the output.
+
+
+
 <!-- # HASKELL BY EXAMPLE / PRACTICAL FUNCTIONAL PROGRAMMING -->
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -84,15 +96,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-The purpose of this documentation is to ilustrate functional programming concepts in
-Haskell Language by providing reusable and useful pieces of codes and examples.
 
-Notes: 
-
-* The codes with '>' symbol were run in the interactive haskell Shell ghci
-and the line bellow without the symbol > are the output.
-
-## Haskell Tool set
 
 ### Toolset
 
