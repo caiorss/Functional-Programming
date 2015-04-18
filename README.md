@@ -15,7 +15,6 @@ and the line bellow without the symbol > are the output.
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Haskell Tool set](#haskell-tool-set)
   - [Toolset](#toolset)
   - [GHCI Reference](#ghci-reference)
 - [Concepts](#concepts)
@@ -53,10 +52,12 @@ and the line bellow without the symbol > are the output.
     - [Higher-order predicates](#higher-order-predicates)
     - [Fold](#fold)
     - [Scanl](#scanl)
+    - [Curry and Uncurrying](#curry-and-uncurrying)
     - [Iterate](#iterate)
     - [Other Useful higher-order functions](#other-useful-higher-order-functions)
   - [Useful notations for functions](#useful-notations-for-functions)
 - [Pattern Matching](#pattern-matching)
+- [](#)
 - [List Comprehension](#list-comprehension)
   - [Simple List Comprehension](#simple-list-comprehension)
   - [Comprehensions with multiple generators](#comprehensions-with-multiple-generators)
@@ -72,6 +73,7 @@ and the line bellow without the symbol > are the output.
     - [Polynomial](#polynomial)
     - [Numerical Derivate](#numerical-derivate)
     - [Equation Solving](#equation-solving)
+- [     t -> Int -> (t -> t) -> (t -> t) -> t -> (t, t, Int)](#t---int---t---t---t---t---t---t-t-int)
     - [Differential Equations](#differential-equations)
   - [Statistics and Time Series](#statistics-and-time-series)
   - [Vector](#vector)
@@ -1202,20 +1204,74 @@ The fold functions foldl and foldr combine elements of a list based on a binary 
 
 * Advanced program optimisations can be simpler if foldr is used in place of explicit recursion.
 
+**Right Fold**
+
+```
+foldr f z [x]
+
+    f is a function of two arguments:
+    z is is the initial value of the accumulator
+    [x] Is a list of values
+
+foldr (+)  10  [1, 2, 3, 4]  =>  (+ 1 (+ 2 (+ 3 (+ 4 10)))) => 20
+
+ 
+         \ f            (f 1 (f 2 (f 3 (f 4 10)))) => (+ 1 (+ 2 (+ 3 (+ 4 10))))
+        / \
+       1   \
+           /\ f         (f 2 (f 3 (f 4 10)))
+          /  \
+         2    \
+              /\ f      (f 3 (f 4 10))
+             /  \
+            3    \
+                 /\ f   (f 4 10)
+                /  \
+               /    \
+               4     \
+                      z = 10
+        
+```
+
+Foldr Definition:
+
 ```
 foldr :: (a -> b -> b) -> b -> [a] -> b
-
-foldl :: (a -> b -> a) -> a -> [b] -> a
-
 foldr []     = v
 foldr (x:xs) = x (+) foldr xs
+```    
+
+**Left Fold**
+
+```
+foldl :: (a -> b -> a) -> a -> [b] -> a
+
+foldl (+)  10  [1, 2, 3, 4]  =>  (+ 4 (+3 (+ 2 (+ 1 10)))) => 20
+
+          \
+          /\ f             (f 4 (f 3 (f 2 (f 1 10))))
+         /  \
+        /    \
+       4      \ f          (f 3 (f 2 (f 1 10)))
+             / \ 
+            /   \
+           3     \ f       (f 2 (f 1 10))
+                 /\   
+                /  \
+               2    \ f    (f 1 10)
+                   / \
+                  /   \
+                 1     \
+                        z = 10
+```
 
 
+Common Haskell Functions can be defined using fold
+
+```
 sum     = foldr (+) 0
 product = foldr (*) 1
 and     = foldr (&&) True
-
-
 ```
 
 
@@ -1259,6 +1315,132 @@ Shows the intermediate values of a fold.
 > scanl (*) 1 [1..5]
 [1,1,2,6,24,120]
 
+```
+
+#### Curry and Uncurrying
+
+
+**Curry**
+
+Converts a function ((a, b) -> c) that has a single argument: a tuple of two values (a, b) to a new function that has a two arguments a and b and returns c. For short: curry converts an uncurried function to a curried function.
+
+```
+curry :: ((a, b) -> c) -> a -> b -> c 
+```
+
+
+**Uncurry**
+
+Converts a function (a -> b -> c) that accepts a sequence of arguments a, b and returns c to a function that accepts a tuple of two arguments (a, b) and returns c. For short: it converts a curried function to a function on pairs.
+
+This function and its variants are useful to map a function of multiple arguments over a list of arguments.
+
+```
+uncurry :: (a -> b -> c) -> (a, b) -> c
+```   
+
+**Example: Uncurrying a function**
+
+```haskell
+λ> let f x y = 10*x - y
+λ>
+λ> :t f
+f :: Num a => a -> a -> a
+λ> 
+λ> 
+λ> f 2 4
+```
+
+The problemn is: how to map f over a list of pairs of a tuple of values??
+
+```haskell
+λ> map f [(1, 2), (4, 5), (9, 10)]
+
+<interactive>:122:5:
+    No instance for (Num (t0, t1)) arising from a use of `f'
+    Possible fix: add an instance declaration for (Num (t0, t1))
+    In the first argument of `map', namely `f'
+```
+
+Solution: Uncurry the function f: 
+
+```haskell
+
+λ> let f' = uncurry f
+λ>
+λ> :t f'
+f' :: (Integer, Integer) -> Integer
+λ>
+λ> 
+λ> map f' [(1, 2), (4, 5), (9, 10)]
+[8,35,80]
+λ> 
+λ> map (uncurry f) [(1, 2), (4, 5), (9, 10)]
+[8,35,80]
+λ> 
+```
+
+**Example: Currying a function**
+
+```haskell
+λ> let g (x, y) = 10*x - y
+λ> 
+λ> :t g
+g :: Num a => (a, a) -> a
+λ> 
+λ> g (2, 4)
+16
+λ> 
+λ> g 2 4
+<interactive>:138:1:
+    No instance for (Num (a0 -> t0)) arising from a use of `g'
+    Possible fix: add an instance declaration for (Num (a0 -> t0))
+    In the expression: g 2 4
+    In an equation for `it': it = g 2 4
+    ...
+λ> 
+λ> let g' = curry g
+λ> :t g'
+g' :: Integer -> Integer -> Integer
+λ> 
+λ> g' 2 4
+16
+λ> 
+λ> (curry g) 2 4
+16
+λ> 
+```
+
+**Other Examples**
+
+Map a function of 3 arguments and a function of 4 arguments of over a list of tuples:
+
+```haskell
+
+λ> let uncurry3 f (a, b, c) = f a b c
+λ> let uncurry4 f (a, b, c, d) = f a b c d
+λ> 
+λ> :t uncurry3
+uncurry3 :: (t1 -> t2 -> t3 -> t) -> (t1, t2, t3) -> t
+λ> 
+λ> :t uncurry4
+uncurry4 :: (t1 -> t2 -> t3 -> t4 -> t) -> (t1, t2, t3, t4) -> t
+λ> 
+λ> 
+λ> let f a b c = 10*a -2*(a+c) + 5*c
+λ> 
+λ> 
+λ> map (uncurry3 f) [(2, 3, 5), (4, 9, 2), (3, 7, 9)]
+[31,38,51]
+λ> 
+λ> 
+
+λ> 
+λ> let f x y z w = 2*x + 4*y + 10*z + w
+λ> 
+λ> map (uncurry4 f) [(2, 3, 5, 3), (4, 9, 2, 8), (3, 7, 9, 1)]
+[69,72,125]
+λ> 
 ```
 
 #### Iterate
