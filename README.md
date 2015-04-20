@@ -3746,13 +3746,31 @@ cabal install <some package>
 
 * [Haskell Data Analysis Cookbook](http://haskelldata.com/)
 
-### Articles and Papers
+### Papers and Articles
 
-* [Why the world needs Haskell](http://www.devalot.com/articles/2013/07/why-haskell.html)
+Papers
+
 * [Why functional programming still matters by John Hughes](http://www.cse.chalmers.se/~rjmh/Papers/whyfp.pdf)
 * [Composing contracts: an adventure in financial engineering ](http://research.microsoft.com/en-us/um/people/simonpj/Papers/financial-contracts/contracts-icfp.htm) - Simon Peyton Jones et al.
 * [Monads for functional programming- Philip Wadler, University of Glasgow?](http://homepages.inf.ed.ac.uk/wadler/papers/marktoberdorf/baastad.pdf)
 * [Learn Physics by Programming in Haskell - Scott N. Walck (Lebanon Valley College, Annville, Pennsylvania, USA) ](http://arxiv.org/abs/1412.4880)
+
+Repositories of Papers:
+
+* [Phd. Philip Wadler Papers](http://homepages.inf.ed.ac.uk/wadler/)
+* [Simon Peyton Jones: papers](http://research.microsoft.com/en-us/um/people/simonpj/papers/papers.html)
+* [Generic Haskell publications/papers](http://www.cs.uu.nl/research/projects/generic-haskell/publications.html)
+
+* [Research papers/Functional pearls](https://wiki.haskell.org/Research_papers/Functional_pearls)
+
+* [Great Works in Programming Languages](http://www.cis.upenn.edu/~bcpierce/courses/670Fall04/GreatWorksInPL.shtml)
+
+Journal:
+* [Journal of Functional Programming](http://journals.cambridge.org/action/displayJournal?jid=JFP)
+
+Articles:
+
+* [Why the world needs Haskell](http://www.devalot.com/articles/2013/07/why-haskell.html)
 * http://paulkoerbitz.de/posts/Why-I-love-Haskell.html
 
 ### Community
@@ -3865,6 +3883,10 @@ Control:
 * [Recursive functions    - Chapter 6 of 13](https://www.youtube.com/watch?v=2ECvUT3nbqk)
 * [Higher Order Functions - Chapter 7 of 13](https://www.youtube.com/watch?v=YRTQkBO2v-s)
 * [Functional Parsers     - Chapter 8 of 13](https://www.youtube.com/watch?v=OrAVS4QbMqo)
+
+**Channel 9 Videos about Functional Programming**
+
+* http://channel9.msdn.com/Tags/functional+programming
 
 **Loop School Video Lectures**
 
