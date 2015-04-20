@@ -1,6 +1,8 @@
 ## Functional Programming in Haskell by Examples
 
-The purpose of this tutorial is to illustrate functional programming concepts in Haskell language by providing reusable and useful pieces of codes examples and applications.
+![](images/haskellLogo.png)
+
+The purpose of this tutorial is to illustrate functional programming concepts in Haskell language by providing reusable and useful pieces of codes, examples, case study and applications.
 
 Notes: 
 
@@ -53,6 +55,7 @@ and the line bellow without the symbol > are the output.
     - [Fold](#fold)
     - [Scanl](#scanl)
     - [Curry and Uncurrying](#curry-and-uncurrying)
+    - [Flip](#flip)
     - [Iterate](#iterate)
     - [Other Useful higher-order functions](#other-useful-higher-order-functions)
   - [Useful notations for functions](#useful-notations-for-functions)
@@ -64,7 +67,14 @@ and the line bellow without the symbol > are the output.
   - [Function Inside List Comprehension](#function-inside-list-comprehension)
   - [Comprehension with Guards](#comprehension-with-guards)
 - [Abstract Data Type](#abstract-data-type)
-- [Monads, Functors and Applicatives](#monads-functors-and-applicatives)
+- [Functors, Monads, Applicatives and Monoids](#functors-monads-applicatives-and-monoids)
+  - [Functors](#functors)
+  - [Monads](#monads)
+    - [Overview](#overview)
+    - [Bind Operator](#bind-operator)
+    - [Monad Laws](#monad-laws)
+    - [Selected Monad Implementations](#selected-monad-implementations)
+    - [Return - Type constructor](#return---type-constructor)
   - [IO Functions](#io-functions)
   - [Avoiding Null checking with Maybe](#avoiding-null-checking-with-maybe)
 - [Applications](#applications)
@@ -90,10 +100,15 @@ and the line bellow without the symbol > are the output.
       - [Printing a Date](#printing-a-date)
 - [Documentation and Learning Materials](#documentation-and-learning-materials)
   - [Documentation](#documentation)
-  - [Books](#books)
+  - [Code Search Engine](#code-search-engine)
+    - [Libraries Documentation](#libraries-documentation)
+    - [Prelude](#prelude)
+    - [Type Classe](#type-classe)
+  - [Online Books](#online-books)
   - [Articles and Papers](#articles-and-papers)
   - [Community](#community)
-- [References](#references)
+  - [References by Subject](#references-by-subject)
+  - [Lectures](#lectures)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1192,7 +1207,7 @@ True
 
 #### Fold
 
-The fold functions foldl and foldr combine elements of a list based on a binary function and an initial value. In some programming languages fold is known as reduce.
+The fold functions foldl and foldr combine elements of a list based on a binary function and an initial value. In some programming languages fold is known as reduce. The fold in some programming languages Python is called reduce.
 
 "The higher-order library function foldr (“fold right”) encapsulates this simple pattern of recursion, with the function  and the value v as arguments" (Graham Hutton)
 
@@ -1440,6 +1455,35 @@ uncurry4 :: (t1 -> t2 -> t3 -> t4 -> t) -> (t1, t2, t3, t4) -> t
 λ> 
 λ> map (uncurry4 f) [(2, 3, 5, 3), (4, 9, 2, 8), (3, 7, 9, 1)]
 [69,72,125]
+λ> 
+```
+
+#### Flip 
+
+Converts a function of two arguments a, b to a new one with argument in inverse order of the old one.
+
+```
+flip :: (a -> b -> c) -> b -> a -> c
+```
+
+Example: 
+
+```
+λ> let f a b = 10*a + b
+λ> 
+λ> :t f
+f :: Num a => a -> a -> a
+
+λ> 
+λ> f 5 6
+56
+λ>
+λ> f 6 5
+65
+λ> 
+λ> 
+λ> (flip f) 5 6
+65
 λ> 
 ```
 
@@ -2070,32 +2114,370 @@ Person {firstName = "Nikola", lastName = "Tesla", age = 30}
 
 ```
 
-Reference: http://learnyouahaskell.com/making-our-own-types-and-typeclasses
+Reference: 
+    * http://learnyouahaskell.com/making-our-own-types-and-typeclasses
 
 
-## Monads, Functors and Applicatives
+## Functors, Monads, Applicatives and Monoids
+
+The concepts of functors, monads and applicatives comes from [category theory](http://en.wikipedia.org/wiki/Category_theory).
+
+### Functors
+
+Functors is a prelude class for types which the function fmap is defined. The function fmap is a generalization of map function.
+
+```haskell
+class  Functor f  where
+    fmap        :: (a -> b) -> f a -> f b
+```
+
+* f is a parametrized data type
+* (a -> b ) Is a polymorphic function that takes a as parameter and returns b
+* f a : a is a parameter, f wraps a
+* f b : b is a parameter wrapped by f
+
+A functor must satisfy the following operations (aka funtor laws):
+
+```haskell
+
+-- id is the identity function:
+id :: a -> a
+id x = x
+
+fmap (f . g) = fmap f . fmap g  -- Composition law
+fmap id = id                    -- Identity law
+```
+
+The following functors defined in Haskell standard library prelude.hs. The function fmap is defined for each of the functor types.
+
+**List**
+
+```haskell
+instance Functor [] where
+    fmap = map
+```
+
+**Maybe**
+
+```haskell
+
+data Maybe x = Nothing | Just x
+
+instance  Functor Maybe  where
+    fmap f Nothing    =  Nothing
+    fmap f (Just x)   =  Just (f x)
+```
+
+**Either**
+
+```haskell
+
+data Either c d = Left c | Right d
+
+instance Functor (Either a) where
+    fmap f (Left a) = Left a
+    fmap f (Right b) = Right (f b)
+```
+
+**IO**
+
+```haskell
+instance  Functor IO where
+   fmap f x           =  x >>= (return . f)
+```
+
+Examples:
+
+The most well known functor is the list functor:
+
+```haskell
+λ> let f x  = 10*x -2
+λ> fmap f [1, 2, 3, 10]
+[8,18,28,98]
+λ> 
+λ> fmap f (fmap f [1, 2, 3, 10])
+[78,178,278,978]
+λ> 
+```
+
+The Maybe type is a functor which the return value is non deterministic that returns a value if the computation is sucessful or return a null value Nothing if the computation fails. It is useful to avoid boilerplate successives null checkings and avoid null checking error.
+
+```haskell
+λ> 
+λ> let add10 x = x + 10
+λ> 
+λ> 
+λ> fmap add10 Nothing
+Nothing
+λ> 
+λ> 
+λ> 
+λ> fmap add10 $ fmap add10 Nothing
+Nothing
+λ> 
+λ> 
+λ> fmap add10 (Just 10)
+Just 20
+λ> 
+λ> 
+λ> fmap add10 $ fmap add10 (Just 10)
+Just 30
+λ> 
+λ> 
+```
+
+**Functor Laws Testing**
+
+
+```haskell
+
+-- fmap id == id
+
+λ> fmap id [1, 2, 3] == id [1, 2, 3]
+True
+λ> 
+λ> 
+λ> let testLaw_id functor = fmap id functor == id functor
+λ> testLaw_id [1, 2, 3]
+True
+λ> testLaw_id []
+True
+λ> 
+
+-- Testing for Maybe functor
+λ> testLaw_id Nothing
+True
+λ> testLaw_id (Just 10)
+True
+λ> 
+λ> 
+
+-- Composition Testing
+-- fmap (f . g) = fmap f . fmap g  -- Composition law
+λ> let f x = x + 1
+λ> let g x = 2*x
+λ> 
+
+λ> 
+λ> fmap (f . g)  [1, 2, 3]
+[3,5,7]
+λ> 
+λ> 
+λ> :t (fmap f)
+(fmap f) :: (Functor f, Num b) => f b -> f b
+λ> 
+λ> 
+λ> fmap (f . g)  [1, 2, 3] ==  ((fmap f) . (fmap g)) [1, 2, 3]
+True
+λ> 
+
+λ> 
+λ> let test_fcomp f g functor = fmap (f . g) functor ==  ((fmap f) . (fmap g)) functor
+λ> 
+λ> test_fcomp f g (Just 10)
+True
+λ> 
+λ> test_fcomp f g Nothing
+True
+λ> 
+λ>
+```
+
+
+To list all instances of the Functor class:
+
+```haskell
+λ> 
+λ> :i Functor
+class Functor f where
+  fmap :: (a -> b) -> f a -> f b
+  (<$) :: a -> f b -> f a
+    -- Defined in `GHC.Base'
+instance Functor (Either a) -- Defined in `Data.Either'
+instance Functor Maybe -- Defined in `Data.Maybe'
+instance Functor ZipList -- Defined in `Control.Applicative'
+instance Monad m => Functor (WrappedMonad m)
+  -- Defined in `Control.Applicative'
+instance Functor (Const m) -- Defined in `Control.Applicative'
+instance Functor [] -- Defined in `GHC.Base'
+instance Functor IO -- Defined in `GHC.Base'
+instance Functor ((->) r) -- Defined in `GHC.Base'
+instance Functor ((,) a) -- Defined in `GHC.Base'
+
+```
+
+References:
+
+* [The Functor Design Pattern](http://www.haskellforall.com/2012/09/the-functor-design-pattern.html)
+* http://en.wikibooks.org/wiki/Haskell/Applicative_Functors
+* http://comonad.com/reader/2008/deriving-strength-from-laziness/
+
+### Monads
+
+#### Overview
 
 Monads in Haskell are used to perform IO, State, Pararelism, Exception Handling, parallellism, continuations and coroutines.
 
+Most common applications of monads include:
+
+* Representing failure and avoiding null checking using Maybe or Either monad 
+* Nondeterminism using List monad to represent carrying multiple values
+* State using State monad
+* Read-only environment using Reader monad
+* I/O using IO monad
+
 A monad is defined by three things:
 
-* a type constructor M;
-* a function return  ;
-* an operator (>>=) which is pronounced "bind".
+* a type constructor m that wraps a parameter a;
+* a return  operation: takes a value from a plain type and puts it into a monadic container using the constructor, creating a monadic value. The return operator must not be confused with the "return" from a function in a imperative language. This operator is also known as unit, lift, pure and point. It is a polymorphic constructor.
+* a bind operator (>>=). It takes as its arguments a monadic value and a function from a plain type to a monadic value, and returns a new monadic value.
 
-* Return:     return :: Monad m => a -> m a
+* A monadic function is a function which returns a Monad (a -> m b)
+
+* Return/unit:     return :: Monad m => a -> m a
 * Bind:       (>>=)  :: (Monad m) => m a -> (a -> m b) -> m b
 
-In Haskell, the Monad type class is used to implement monads. It is provided by the Control.Monad module and included in the Prelude. The class has the following methods:
+A type class is an interface, it is a set of functions and type signatures. Each type derived from a type class must implement the functions described whit the same type signatures and same name. It is similar to a Java interface.
+
+In Haskell, the Monad type class is used to implement monads. It is provided by the Control.Monad module which is included in the Prelude. The class has the following methods:
+
 
 ```haskell
-    class Monad m where
-        return :: a -> m a
-        (>>=)  :: m a -> (a -> m b) -> m b
- 
-        (>>)   :: m a -> m b -> m b
-        fail   :: String -> m a
+
+class Monad m where
+    return :: a -> m a      -- Constructor (aka unit, lift) 
+                            --Not a keyword, but a unfortunate and misleading name.
+    (>>=)  :: m a -> (a -> m b) -> m b   -- Bind operator
+    (>>)   :: m a -> m b -> m b
+    fail   :: String -> m a
+        
 ```
+
+**Some Haskell Monads**
+
+* IO Monads         - Used for output IO
+* Maybe and Either  - Error handling and avoinding null checking
+* List Monad        - One of the most widely known monands
+* Writer Monad
+* Reader Monad
+* State Monad
+
+
+#### Bind Operator
+
+In a imperative language the bind operatior could be described as below:
+```
+-- Operator (>>=)
+
+func: Is a monadic function ->
+    func :: a -> m b
+        
+    In Haskell:
+        m a >>= func     == m b
+    
+    In a Imperative Language        
+        bind (m a, func) == m b        
+
+    In a Object Orientated language:
+        (m a).bind( func) == m b
+```
+
+#### Monad Laws
+
+All monads must satisfy the monadic laws:
+
+In Haskell, all instances of the Monad type class (and thus all implementations of (>>=) and return) must obey the following three laws below:
+
+Left identity:
+```
+Haskell
+    m >>= return =  m       
+
+Imperative Language Equivalent
+    bind (m a, unit) == m a -- unit instead of return
+
+Object Orientated Equivalent
+    (m a).bind(unit) == m a
+```
+
+Left unit
+```
+Haskell
+    return x >>= f  ==  f x 
+
+Imperative Language Equivalent
+    bind(unit x, f) ==  f x -- f x  == m a
+
+Object Orientated Equivalent
+    (unit x).bind(f) == f x
+```
+
+Associativity
+```
+Haskell
+    (m >>= f) >>= g  =  m >>= (\x -> f x >>= g)  
+
+Imperative Language Equivalent
+    bind(bind(m a, f), g) == bind(m a, (\x -> bind(f x, g)))
+
+Object Orientated Equivalent
+    (m a).bind(f).bind(g) == (m a).bind(\x -> (f x).bind(g))
+```
+
+#### Selected Monad Implementations
+
+**List Monad**
+
+```haskell
+instance  Monad []  where
+    m >>= k          = concat (map k m)
+    return x         = [x]
+    fail s           = []
+```
+
+**Maybe Monad**
+
+```haskell
+data Maybe a = Nothing | Just a
+
+instance Monad Maybe where
+  Just a  >>= f = f a
+  Nothing >>= _ = Nothing
+  return a      = Just a
+```
+
+#### Return - Type constructor
+
+Return is polymorphic type constructor. This name return is misleading, it has nothing to do with the return from a function in a imperative language.
+
+Examples:
+
+```haskell
+
+λ> :t return
+return :: Monad m => a -> m a
+λ> 
+
+λ> return 223.23 :: (Maybe Double)
+Just 223.23
+λ> 
+λ> 
+λ> return Nothing
+Nothing
+λ> 
+
+λ> return "el toro" :: (Either String  String)
+Right "el toro"
+λ> 
+λ> 
+
+λ> 
+λ> return "Nichola Tesla" :: (IO String)
+"Nichola Tesla"
+λ> 
+λ> 
+```
+
 
 Under this interpretation, the functions behave as follows:
 
@@ -2109,17 +2491,6 @@ Under this interpretation, the functions behave as follows:
     return :: a -> M a
     join   :: M (M a) -> M a
     
-```
-
-**Monad Laws**
-
-In Haskell, all instances of the Monad type class (and thus all implementations of (>>=) and return) must obey the following three laws below:
-
-```haskell
-    m >>= return     =  m                        -- right unit
-    return x >>= f   =  f x                      -- left unit
-
-    (m >>= f) >>= g  =  m >>= (\x -> f x >>= g)  -- associativity
 ```
 
 
@@ -2149,8 +2520,28 @@ data  Either a b  =  Left a | Right b  deriving (Eq, Ord, Read, Show)
 data  Ordering    =  LT | EQ | GT deriving
                                   (Eq, Ord, Bounded, Enum, Read, Show)
 
-
 ```
+
+Sources:
+
+    * http://mvanier.livejournal.com/4586.html
+
+    * https://jonaswesterlund.se/monads.html
+    
+    * http://learnyouahaskell.com/for-a-few-monads-more
+    * http://learnyouahaskell.com/a-fistful-of-monads
+    
+    * http://en.wikipedia.org/wiki/Monad_(functional_programming)
+    
+    * https://wiki.haskell.org/All_About_Monads#What_is_a_monad.3F
+    * http://dev.stephendiehl.com/hask/#monad-transformers
+    * http://blog.jakubarnold.cz/2014/07/20/mutable-state-in-haskell.html
+    * https://ro-che.info/articles/2012-01-02-composing-monads
+    * http://www.stephanboyer.com/post/9/monads-part-1-a-design-pattern
+    * http://the-27th-comrade.appspot.com/blog/ahJzfnRoZS0yN3RoLWNvbXJhZGVyDAsSBUVudHJ5GOFdDA
+    * http://comonad.com/reader/2008/deriving-strength-from-laziness/
+    * https://www.haskell.org/tutorial/monads.html
+    
 
 ### IO Functions
 
@@ -3258,6 +3649,8 @@ Credits:
 
 ### Documentation
 
+### Code Search Engine
+
 Haskell API search engine, which allows you to search many 
 standard Haskell libraries by either function name, or by approximate type signature. 
 
@@ -3267,9 +3660,9 @@ standard Haskell libraries by either function name, or by approximate type signa
 
 * https://www.haskell.org/documentation
 
-Haskell Packages
+#### Libraries Documentation
 
-* http://hackage.haskell.org/packages/archive/pkg-list.html
+#### Prelude
 
 **Standard Library Prelude.hs**
 
@@ -3277,9 +3670,18 @@ Prelude.hs is the standard library loaded when Haskell starts.
 
 * [Prelude - Standard defined functions documentation](http://hackage.haskell.org/package/base-4.7.0.2/docs/Prelude.html#v:getContents)
 * [Prelude Source Code](https://www.haskell.org/onlinereport/standard-prelude.html)
-* [Examples of How to use prelude functions](http://www.cse.unsw.edu.au/~en1000/haskell/inbuilt.html)
 
-**Type Classe**
+
+* [Prelude.hs - Examples of How to use prelude functions](http://www.cse.unsw.edu.au/~en1000/haskell/inbuilt.html)
+
+Nice and precise description of Haskell Libraries:
+
+* [The Haskell 2010 Libraries Part I](https://www.haskell.org/onlinereport/haskell2010/haskellpa1.html)
+* [The Haskell 2010 Libraries Part II](https://www.haskell.org/onlinereport/haskell2010/haskellpa2.html#x20-192000II)
+
+* http://hackage.haskell.org/packages/archive/pkg-list.html
+
+#### Type Classe
 
 * http://www.haskell.org/haskellwiki/Typeclassopedia
 
@@ -3302,7 +3704,7 @@ cabal update
 cabal install <some package>
 ```
 
-### Books
+### Online Books
 
 * [Real-World Haskell by Bryan O'Sullivan et al.](http://book.realworldhaskell.org)
 * http://learnyouahaskell.com/
@@ -3315,6 +3717,7 @@ cabal install <some package>
 * [Why the world needs Haskell](http://www.devalot.com/articles/2013/07/why-haskell.html)
 * [Why functional programming still matters by John Hughes](http://www.cse.chalmers.se/~rjmh/Papers/whyfp.pdf)
 * [Composing contracts: an adventure in financial engineering ](http://research.microsoft.com/en-us/um/people/simonpj/Papers/financial-contracts/contracts-icfp.htm) - Simon Peyton Jones et al.
+* [Monads for functional programming- Philip Wadler, University of Glasgow?](http://homepages.inf.ed.ac.uk/wadler/papers/marktoberdorf/baastad.pdf)
 * http://paulkoerbitz.de/posts/Why-I-love-Haskell.html
 
 ### Community
@@ -3331,9 +3734,38 @@ Haskell Wiki
 * http://www.haskell.org/haskellwiki/Category:FAQ
 * http://www.haskell.org/haskellwiki/Category:Communitys
 
+Selected Wikipedia Pages:
 
+* [List of functional programming topics](http://en.wikipedia.org/wiki/List_of_functional_programming_topics)
 
-## References
+* [Functional programming](http://en.wikipedia.org/wiki/Functional_programming)
+* [Declarative programming](http://en.wikipedia.org/wiki/Declarative_programming)
+
+* [Lambda calculus](http://en.wikipedia.org/wiki/Lambda_calculus)
+
+* [Higher-order function](http://en.wikipedia.org/wiki/Higher-order_function)
+
+* [Referential transparency (computer science)](http://en.wikipedia.org/wiki/Referential_transparency_(computer_science))
+
+* [Eager Evaluation](http://en.wikipedia.org/wiki/Eager_evaluation)
+* [Lazy Evaluation](http://en.wikipedia.org/wiki/Lazy_evaluation)
+* [Short-circuit evaluation](http://en.wikipedia.org/wiki/Short-circuit_evaluation)
+
+* [Monads Functional Programming](http://en.wikipedia.org/wiki/Monad_(functional_programming))
+* [Haskell/Understanding monads](http://en.wikibooks.org/wiki/Haskell/Understanding_monads)
+* [Monad transformer](http://en.wikipedia.org/wiki/Monad_transformer)
+
+* [Aspect-oriented programming](http://en.wikipedia.org/wiki/Aspect-oriented_programming)
+
+* [Continuation](http://en.wikipedia.org/wiki/Continuation)
+* [Continuation-passing style](http://en.wikipedia.org/wiki/Continuation-passing_style)
+
+* [Closure (computer programming)](http://en.wikipedia.org/wiki/Closure_(computer_programming))
+* [Callback (computer programming)](http://en.wikipedia.org/wiki/Callback_(computer_programming))
+
+* [Coroutine](http://en.wikipedia.org/wiki/Coroutine)
+
+### References by Subject
 
 
 * http://www.cis.upenn.edu/~matuszek/Concise%20Guides/Concise%20Haskell98.html
@@ -3389,6 +3821,8 @@ Control:
 * <http://en.wikibooks.org/wiki/Haskell/Control_structures>
 
 
+### Lectures
+
 **Dr. Erik Meijier Serie: Functional Programming Fundamentals**
 
 * [Function Definition    - Chapter 4 of 13](https://www.youtube.com/watch?v=fQU99SJdWGY)
@@ -3396,3 +3830,9 @@ Control:
 * [Recursive functions    - Chapter 6 of 13](https://www.youtube.com/watch?v=2ECvUT3nbqk)
 * [Higher Order Functions - Chapter 7 of 13](https://www.youtube.com/watch?v=YRTQkBO2v-s)
 * [Functional Parsers     - Chapter 8 of 13](https://www.youtube.com/watch?v=OrAVS4QbMqo)
+
+**Loop School Video Lectures**
+
+Good video lectures about Category theory and Haskell programing language.
+
+* http://school.looprecur.com/
