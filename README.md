@@ -9,7 +9,7 @@ Notes:
 * The codes with '>' symbol were run in the interactive haskell Shell ghci
 and the line bellow without the symbol > are the output.
 
-
+This page can be accessed from: https://github.com/caiorss/Functional-Programming
 
 <!-- # HASKELL BY EXAMPLE / PRACTICAL FUNCTIONAL PROGRAMMING -->
 
@@ -45,9 +45,10 @@ and the line bellow without the symbol > are the output.
 - [Functions](#functions)
   - [Creating functions](#creating-functions)
   - [Anonymous Functions or Lambda Functions](#anonymous-functions-or-lambda-functions)
-  - [Infix Operators](#infix-operators)
+  - [Infix Operators Functions](#infix-operators-functions)
   - [Currying](#currying)
   - [Recursion](#recursion)
+  - [Standard Functions](#standard-functions)
   - [Higher Order Functions](#higher-order-functions)
     - [Map](#map)
     - [Filter](#filter)
@@ -60,7 +61,6 @@ and the line bellow without the symbol > are the output.
     - [Other Useful higher-order functions](#other-useful-higher-order-functions)
   - [Useful notations for functions](#useful-notations-for-functions)
 - [Pattern Matching](#pattern-matching)
-- [](#)
 - [List Comprehension](#list-comprehension)
   - [Simple List Comprehension](#simple-list-comprehension)
   - [Comprehensions with multiple generators](#comprehensions-with-multiple-generators)
@@ -83,7 +83,6 @@ and the line bellow without the symbol > are the output.
     - [Polynomial](#polynomial)
     - [Numerical Derivate](#numerical-derivate)
     - [Equation Solving](#equation-solving)
-- [     t -> Int -> (t -> t) -> (t -> t) -> t -> (t, t, Int)](#t---int---t---t---t---t---t---t-t-int)
     - [Differential Equations](#differential-equations)
   - [Statistics and Time Series](#statistics-and-time-series)
   - [Vector](#vector)
@@ -946,7 +945,7 @@ f x y = sqrt ( x^2 + y^2 )
 
 ```
 
-### Infix Operators
+### Infix Operators Functions
 
 
 | Shorthand  |  Equivalence   |
@@ -1069,6 +1068,41 @@ fib 1 = 1
 fib n | n>= 2
     = fib(n-1) + fib(n-2)
 ```
+
+
+### Standard Functions
+
+**id Identity Function**
+
+```haskell
+λ> :t id
+id :: a -> a
+
+λ> 
+λ> id 100
+100
+λ> id "Hello World"
+"Hello World"
+λ> 
+```
+
+**Constant Function**
+
+```haskell
+λ> :t const
+const :: a -> b -> a
+λ> 
+
+λ> let f1 = const 10
+λ> f1 20
+10
+λ> f1 0
+10
+λ> map f1 [1, 2, 3]
+[10,10,10]
+
+``` 
+
 
 ### Higher Order Functions
 
@@ -3718,6 +3752,7 @@ cabal install <some package>
 * [Why functional programming still matters by John Hughes](http://www.cse.chalmers.se/~rjmh/Papers/whyfp.pdf)
 * [Composing contracts: an adventure in financial engineering ](http://research.microsoft.com/en-us/um/people/simonpj/Papers/financial-contracts/contracts-icfp.htm) - Simon Peyton Jones et al.
 * [Monads for functional programming- Philip Wadler, University of Glasgow?](http://homepages.inf.ed.ac.uk/wadler/papers/marktoberdorf/baastad.pdf)
+* [Learn Physics by Programming in Haskell - Scott N. Walck (Lebanon Valley College, Annville, Pennsylvania, USA) ](http://arxiv.org/abs/1412.4880)
 * http://paulkoerbitz.de/posts/Why-I-love-Haskell.html
 
 ### Community
