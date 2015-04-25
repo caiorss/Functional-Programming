@@ -59,8 +59,10 @@ This page can be accessed from: https://github.com/caiorss/Functional-Programmin
     - [Flip](#flip)
     - [Iterate](#iterate)
     - [Other Useful higher-order functions](#other-useful-higher-order-functions)
+    - [The $ apply operator.](#the-$-apply-operator)
   - [Useful notations for functions](#useful-notations-for-functions)
 - [Pattern Matching](#pattern-matching)
+- [](#)
 - [List Comprehension](#list-comprehension)
   - [Simple List Comprehension](#simple-list-comprehension)
   - [Comprehensions with multiple generators](#comprehensions-with-multiple-generators)
@@ -75,6 +77,7 @@ This page can be accessed from: https://github.com/caiorss/Functional-Programmin
     - [Monad Laws](#monad-laws)
     - [Selected Monad Implementations](#selected-monad-implementations)
     - [Return - Type constructor](#return---type-constructor)
+    - [Sources](#sources)
   - [IO Functions](#io-functions)
   - [Avoiding Null checking with Maybe](#avoiding-null-checking-with-maybe)
 - [Applications](#applications)
@@ -83,6 +86,7 @@ This page can be accessed from: https://github.com/caiorss/Functional-Programmin
     - [Polynomial](#polynomial)
     - [Numerical Derivate](#numerical-derivate)
     - [Equation Solving](#equation-solving)
+- [     t -> Int -> (t -> t) -> (t -> t) -> t -> (t, t, Int)](#t---int---t---t---t---t---t---t-t-int)
     - [Differential Equations](#differential-equations)
   - [Statistics and Time Series](#statistics-and-time-series)
   - [Vector](#vector)
@@ -104,7 +108,7 @@ This page can be accessed from: https://github.com/caiorss/Functional-Programmin
     - [Prelude](#prelude)
     - [Type Classe](#type-classe)
   - [Online Books](#online-books)
-  - [Articles and Papers](#articles-and-papers)
+  - [Papers and Articles](#papers-and-articles)
   - [Community](#community)
   - [References by Subject](#references-by-subject)
   - [Lectures](#lectures)
@@ -200,29 +204,34 @@ Pure functions:
 
 * Are functions without side effects, like mathematical functions. 
 * For the same input the functions always returns the same output.
-* Pure functions doens't rely on global variable, doesn't have internal states.
-* Deterministic.
+* Pure functions doens't rely on global variable and doesn't have internal states.
+* Pure functions are deterministic
+* The result of any function call is fully determined by its arguments. 
 
 Why Pure Functions:
 
 * Composability, one fuction can be connected to another.
 * Can run in parallel, multi threading, multi core and GPU.
-* Better debugging.
+* Better debugging and testing.
+* Predictability
 
-Example of Pure Functions:
+**Example of pure functions**
 
 ```python
-# A pure function
 def min(x, y):
     if x < y:
         return x
     else:
         return y
+```
 
 
-# Impure function 
-#   - Impure functions doesn't have always the same output for the same
-#   imput. Examples functions that does IO or has Hidden State, Global Variables
+**Example of impure function**
+
+* Impure functions doesn't have always the same output for the same
+* Impure functions does IO or has Hidden State, Global Variables
+
+```python
 exponent = 2
 
 def powers(L):
@@ -1625,6 +1634,44 @@ replicate :: Int -> a -> [a]
 takeWhile :: (a -> Bool) -> [a] -> [a]
 ```
 
+#### The $ apply operator.
+
+```haskell
+f $ x = f x
+
+λ> :t ($)
+($) :: (a -> b) -> a -> b
+```
+
+Example: This operator is useful to apply an argument to a list of functions.
+
+```haskell
+λ> ($ 10) (*3)
+30
+λ> 
+λ> let f x = x*8 - 4
+λ> 
+λ> ($ 10) f
+76
+λ> 
+
+λ> map ($ 3) [(*3), (+4), (^3)]
+[9,7,27]
+λ> 
+
+```
+
+OR
+
+```haskell
+λ> let callWith x f = f x
+λ> 
+λ> map (callWith 3)  [(*3), (+4), (^3)]
+[9,7,27]
+λ> 
+
+```
+
 ### Useful notations for functions 
 
 Credits: http://yannesposito.com/Scratch/en/blog/Haskell-the-Hard-Way/
@@ -1638,6 +1685,7 @@ f :: a -> b         ⇔ f is a function from a to b
 f :: a -> b -> c    ⇔ f is a function from a to (b→c)
 f :: (a -> b) -> c  ⇔ f is a function from (a→b) to c
 ```
+
 
 
 ## Pattern Matching
@@ -2362,16 +2410,16 @@ Most common applications of monads include:
 
 A monad is defined by three things:
 
-* a type constructor m that wraps a parameter a;
+* a type constructor m that wraps a, parameter a;
 * a return  operation: takes a value from a plain type and puts it into a monadic container using the constructor, creating a monadic value. The return operator must not be confused with the "return" from a function in a imperative language. This operator is also known as unit, lift, pure and point. It is a polymorphic constructor.
 * a bind operator (>>=). It takes as its arguments a monadic value and a function from a plain type to a monadic value, and returns a new monadic value.
 
 * A monadic function is a function which returns a Monad (a -> m b)
 
 * Return/unit:     return :: Monad m => a -> m a
-* Bind:       (>>=)  :: (Monad m) => m a -> (a -> m b) -> m b
+* Bind:            (>>=)  :: (Monad m) => m a -> (a -> m b) -> m b
 
-A type class is an interface, it is a set of functions and type signatures. Each type derived from a type class must implement the functions described whit the same type signatures and same name. It is similar to a Java interface.
+A type class is an interface which is a set of functions and type signatures. Each type derived from a type class must implement the functions described with the same type signatures and same name as described in the interface/type class. It is similar to a Java interface.
 
 In Haskell, the Monad type class is used to implement monads. It is provided by the Control.Monad module which is included in the Prelude. The class has the following methods:
 
@@ -2458,6 +2506,16 @@ Object Orientated Equivalent
     (m a).bind(f).bind(g) == (m a).bind(\x -> (f x).bind(g))
 ```
 
+Nice Version.
+
+```haskell
+1. return >=> f       ==    f
+2. f >=> return       ==    f
+3. (f >=> g) >=> h    ==    f >=> (g >=> h)
+```
+
+Credits: http://mvanier.livejournal.com/4586.html
+
 #### Selected Monad Implementations
 
 **List Monad**
@@ -2479,6 +2537,19 @@ instance Monad Maybe where
   Nothing >>= _ = Nothing
   return a      = Just a
 ```
+
+```haskell
+(>>=) :: Maybe a -> (a -> Maybe b) -> Maybe b
+return :: a -> Maybe a
+```
+
+**IO Monad**
+
+```haskell
+(>>=) :: IO a -> (a -> IO b) -> IO b
+return :: a -> IO b
+```
+
 
 #### Return - Type constructor
 
@@ -2512,6 +2583,11 @@ Right "el toro"
 λ> 
 ```
 
+#### Monad function composition
+
+```
+(>=>) :: Monad m => (a -> m b) -> (b -> m c) -> a -> m c
+```
 
 Under this interpretation, the functions behave as follows:
 
@@ -2556,26 +2632,399 @@ data  Ordering    =  LT | EQ | GT deriving
 
 ```
 
-Sources:
+#### Sources
 
-    * http://mvanier.livejournal.com/4586.html
+* <http://mvanier.livejournal.com/4586.html>
+* <https://jonaswesterlund.se/monads.html>    
+* <http://learnyouahaskell.com/for-a-few-monads-more>
+* <http://learnyouahaskell.com/a-fistful-of-monads>    
+* <http://en.wikipedia.org/wiki/Monad_(functional_programming)>    
+* <https://wiki.haskell.org/All_About_Monads#What_is_a_monad.3F>
+* <http://dev.stephendiehl.com/hask/#monad-transformers>
+* <http://blog.jakubarnold.cz/2014/07/20/mutable-state-in-haskell.html>
+* <https://ro-che.info/articles/2012-01-02-composing-monads>
+* <http://www.stephanboyer.com/post/9/monads-part-1-a-design-pattern>
+* <http://the-27th-comrade.appspot.com/blog/ahJzfnRoZS0yN3RoLWNvbXJhZGVyDAsSBUVudHJ5GOFdDA>
+* <http://comonad.com/reader/2008/deriving-strength-from-laziness/>
+* <https://www.haskell.org/tutorial/monads.html>
 
-    * https://jonaswesterlund.se/monads.html
+### List Monad
+
+The list comprehension is a syntax sugar for do-notation to list monad.
+
+File: listMonad.hs 
+```haskell
+listOfTuples :: [(Int,Char)]  
+listOfTuples = do  
+    n <- [1,2]  
+    ch <- ['a','b']  
+    return (n,ch) 
+```    
+
+Ghci shell
+```
+λ> :l listMonad.hs 
+[1 of 1] Compiling Main             ( listMonad.hs, interpreted )
+Ok, modules loaded: Main.
+λ> 
+
+λ> listOfTuples 
+[(1,'a'),(1,'b'),(2,'a'),(2,'b')]
+
+λ> [ (n,ch) | n <- [1,2], ch <- ['a','b'] ]  
+[(1,'a'),(1,'b'),(2,'a'),(2,'b')]
+λ> 
+
+```
+
+http://learnyouahaskell.com/a-fistful-of-monads
+
+### IO and IO Monad
+
+Haskell separates pure functions from computations where side effects must be considered by encoding those side effects as values of a particular type. Specifically, a value of type (IO a) is an action, which if executed would produce a value of type a.  [[1](https://wiki.haskell.org/Introduction_to_IO)]
+
+Actions are either atomic, as defined in system primitives, or are a sequential composition of other actions. The I/O monad contains primitives which build composite actions, a process similar to joining statements in sequential order using `;' in other languages. Thus the monad serves as the glue which binds together the actions in a program. [[2](https://www.haskell.org/tutorial/io.html)]
+
+#### Main action
+
+The only IO action which can really be said to run in a compiled Haskell program is main. 
+
+HelloWorld.hs
+```
+main :: IO ()
+main = putStrLn "Hello, World!"
+```
+
+Compile HelloWorld.hs
+```
+$ ghc HelloWorld.hs 
+[1 of 1] Compiling Main             ( HelloWorld.hs, HelloWorld.o )
+Linking HelloWorld ...
+
+$ file HelloWorld
+HelloWorld: ELF 32-bit LSB  executable, Intel 80386, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.24, BuildID[sha1]=9cd178d3dd88290e7fcfaf93c9aba9b2308a0e87, not stripped
+
+```
+
+Running HelloWorld.hs executable.
+```
+$ ./HelloWorld 
+Hello, World!
+```
+
+
+#### Basic I/O Operations
+
+Every IO action returns a value. The returned value is tagged with IO type.
+
+Examples:
+
+```haskell
+getChar :: IO Char -- Performs an action that returns a character
+
+{- 
+    To capture a value returned by an action, the operator <- must be used
+-}
+λ> c <- getChar 
+hλ> 
+λ> c
+'h'
+λ> :t c
+c :: Char
+λ> 
+```
+
+IO Actions that returns nothing uses the unit type (). The return type is IO (), it is equivalent to C language void.
+
+Example:
+
+```haskell
+λ> :t putChar
+putChar :: Char -> IO ()
+
+λ> putChar 'X'
+Xλ> 
+λ> 
+```
+
+The operator >> concatenates IO actions, it is equivalent to (;) semicolon operator in imperative languages.
+
+```haskell
+λ> :t (>>)
+(>>) :: Monad m => m a -> m b -> m b
+```
+
+```haskell
+λ> putChar 'X' >>  putChar '\n'
+X
+λ> 
+```
+
+Equivalent code in a imperative language, Python.
+
+```python
+>>> print ('\n') ; print ('x')
+
+
+x
+
+```
+
+#### Do Notation
+
+The statements in the do-notation are executed in a sequential order. It is syntactic sugar for the bind (>>=) operator. The values of local statements are defined using let and result of an action uses the (<-) operator.
+
+The do notation 
+
+```
+anActon = do {v1 <- e1; e2} 
+```
+
+is a syntax sugar notation for the expression:
+
+```
+anActon = e1 >>= \v1 -> e2
+```
+
+##### Basic Do Notation
+
+File: do_notation1.hs
+```haskell
+do1test = do
+    c <- getChar 
+    putChar 'x'
+    putChar c
+    putChar '\n'
+```
+
+In the shell ghci
+```haskell
+λ> :l do_notation1.hs 
+[1 of 1] Compiling Main             ( do_notation1.hs, interpreted )
+Ok, modules loaded: Main.
+λ> 
+
+λ> :t do1test 
+do1test :: IO ()
+λ> 
+
+λ> do1test -- User types character 'a'
+axa
+λ> do1test -- User types character 'x'
+txt
+λ> do1test -- User types character 'p'
+pxp
+λ> 
+```
+
+##### Do Notation and Let keyword
+
+File: do_notation2.hs
+
+```haskell
+make_string :: Char -> String
+make_string achar = "\nThe character is : " ++ [achar]
+
+do2test = do
+    let mychar = 'U'
+    c <- getChar     
+    putStrLn (make_string c)
+    putChar mychar
+    putChar '\n'
     
-    * http://learnyouahaskell.com/for-a-few-monads-more
-    * http://learnyouahaskell.com/a-fistful-of-monads
+do3test = do   
+    c <- getChar     
+    let phrase = make_string c
+    putStrLn phrase   
+    putChar '\n'
+```
+
+In the shell ghci
+```haskell
+λ> :l do_notation2.hs 
+[1 of 1] Compiling Main             ( do_notation1.hs, interpreted )
+Ok, modules loaded: Main.
+λ> 
+
+λ> :t make_string 
+make_string :: Char -> String
+λ>
+
+λ> :t do2test 
+do2test :: IO ()
+
+λ> make_string 'q'
+"\nThe character is : q"
+λ> make_string 'a'
+"\nThe character is : a"
+λ> 
+
+λ> do2test 
+a
+The character is : a
+U
+
+λ> do2test 
+p
+The character is : p
+U
+
+λ> do3test 
+a
+The character is : a
+
+λ> do3test 
+b
+The character is : b
+```
+
+##### Do Notation returning a value
+
+
+File: do_return.hs
+```haskell
+doReturn = do
+    c <- getChar
+    let test = c == 'y'
+    return test
+```
+
+In ghci shell
+```haskell
+λ> :t doReturn 
+doReturn :: IO Bool
+λ> 
+
+λ> doReturn 
+aFalse
+λ> doReturn 
+bFalse
+λ> doReturn 
+cFalse
+λ> doReturn 
+yTrue
+λ> 
+
+λ> x <- doReturn 
+rλ> 
+λ> x
+False
+λ> 
+λ> x <- doReturn 
+mλ> 
+λ> x
+False
+λ> x <- doReturn 
+yλ> 
+λ> x
+True
+λ> 
+```
+
+##### Executing a list of actions
+
+The list myTodoList doesn't execute any action, it holds them. To join those actions the function sequence_ must be used.
+
+
+```haskell
+λ> 
+λ> let myTodoList = [putChar '1', putChar '2', putChar '3', putChar '4']
+
+λ> :t myTodoList 
+myTodoList :: [IO ()]
+λ> 
+
+λ> :t sequence_
+sequence_ :: Monad m => [m a] -> m ()
+λ>
+λ> sequence_ myTodoList 
+1234λ> 
+λ> 
+
+λ> 
+λ> let newAction = sequence_ myTodoList 
+λ> :t newAction 
+newAction :: IO ()
+λ> 
+λ> newAction 
+1234λ> 
+λ> 
+λ> 
+```
+
+The function sequence_ is defined as:
+
+```haskell
+sequence_        :: [IO ()] -> IO ()
+sequence_ []     =  return ()
+sequence_ (a:as) =  do a
+                       sequence as                                            
+```
+
+Or defined as:
+
+```haskell
+sequence_        :: [IO ()] -> IO ()
+sequence_        =  foldr (>>) (return ())
+```
+
+The sequence_ function can be used to construct putStr from putChar:
+
+```
+putStr                  :: String -> IO ()
+putStr s                =  sequence_ (map putChar s)
+```
+
+#### IO action Examples
+
+**Interactive Program**
+
+File: questions.hs
+```haskell
+questions = do
+    putStrLn "\nWhat is your name ??"
+    name <- getLine
     
-    * http://en.wikipedia.org/wiki/Monad_(functional_programming)
+    putStrLn "\nWhere you come from ??"
+    country <- getLine
     
-    * https://wiki.haskell.org/All_About_Monads#What_is_a_monad.3F
-    * http://dev.stephendiehl.com/hask/#monad-transformers
-    * http://blog.jakubarnold.cz/2014/07/20/mutable-state-in-haskell.html
-    * https://ro-che.info/articles/2012-01-02-composing-monads
-    * http://www.stephanboyer.com/post/9/monads-part-1-a-design-pattern
-    * http://the-27th-comrade.appspot.com/blog/ahJzfnRoZS0yN3RoLWNvbXJhZGVyDAsSBUVudHJ5GOFdDA
-    * http://comonad.com/reader/2008/deriving-strength-from-laziness/
-    * https://www.haskell.org/tutorial/monads.html
+    putStrLn "\nHow old are you ??"
+    age <- getLine
     
+    
+    let result = "Your name is : " ++ name ++ "\nYou come from " ++ country  ++ "\nYour age is : " ++ age
+    putStrLn result       
+```
+
+GHCI Shell
+```haskell
+[1 of 1] Compiling Main             ( questions.hs, interpreted )
+Ok, modules loaded: Main.
+λ> 
+λ> questions
+
+Whats your name ??
+George Washington
+
+Where you come from ??
+US
+
+Whats your age ??
+60
+Your name is : George Washington
+You come from US
+Your age is : 60
+
+```
+
+
+#### Sources
+
+* [Introduction to IO](https://wiki.haskell.org/Introduction_to_IO)
+* [A Gentle Introduction to Haskell, Version 98 -  Input/Output](https://www.haskell.org/tutorial/io.html)
+
+
+
 
 ### IO Functions
 
@@ -3884,7 +4333,7 @@ Control:
 * [Higher Order Functions - Chapter 7 of 13](https://www.youtube.com/watch?v=YRTQkBO2v-s)
 * [Functional Parsers     - Chapter 8 of 13](https://www.youtube.com/watch?v=OrAVS4QbMqo)
 
-**Channel 9 Videos about Functional Programming**
+**Channel 9 MSDN Videos about Functional Programming**
 
 * http://channel9.msdn.com/Tags/functional+programming
 

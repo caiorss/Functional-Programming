@@ -6,14 +6,14 @@
 #----------------------------------------------------------------------
 
 
-
-doctoc README.md
+cp README.md /tmp/README.md
+doctoc /tmp/README.md
 
 # Build PDF documentation
 #pandoc --latex-engine=xelatex -f markdown_github -o LearnHaskell.pdf LearnHaskell.md
 
 
-grip README.md --gfm --export LearnHaskell.html
+grip /tmp/README.md --gfm --export ./LearnHaskell.html
 
 # Build HTML documentation
 #pandoc -f markdown_github -o LearnHaskell.html LearnHaskell.md --standalone 
