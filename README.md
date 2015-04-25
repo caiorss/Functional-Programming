@@ -2593,11 +2593,13 @@ Right "el toro"
 λ> 
 ```
 
-#### Monad function composition
+#### Haskell Monads
 
-```
-(>=>) :: Monad m => (a -> m b) -> (b -> m c) -> a -> m c
-```
+![](images/monadTable.png)
+
+From: https://wiki.haskell.org/All_About_Monads#What_is_a_monad.3F
+
+
 
 Under this interpretation, the functions behave as follows:
 
@@ -2613,7 +2615,11 @@ Under this interpretation, the functions behave as follows:
     
 ```
 
+#### Monad function composition
 
+```
+(>=>) :: Monad m => (a -> m b) -> (b -> m c) -> a -> m c
+```
 
 [Under Construction]
 
@@ -2658,7 +2664,222 @@ data  Ordering    =  LT | EQ | GT deriving
 * <http://comonad.com/reader/2008/deriving-strength-from-laziness/>
 * <https://www.haskell.org/tutorial/monads.html>
 
+
+
+#### Maybe Monad
+
+Using the Maybe type is possible to indicate that a function might or not return value. It is also useful to avoid many boilerplates null checkings.
+
+```
+data Maybe x = Nothing | Just x
+
+f :: a -> Maybe b
+return x  = Just x
+Nothing >>= f = Nothing
+Just x >>= f = f x
+
+
+g :: a -> b
+fmap g (Just x) = Just( g x)
+fmap g  Nothing = Nothing
+
+{- fmap is the same as liftM -}
+liftM g (Just x) = Just( g x)
+liftM g  Nothing = Nothing
+```
+
+Lift Functions
+
+```haskell
+liftM  :: Monad m => (a1 -> r) -> m a1 -> m r
+liftM2 :: Monad m => (a1 -> a2 -> r) -> m a1 -> m a2 -> m r
+liftM3 :: Monad m => (a1 -> a2 -> a3 -> r) -> m a1 -> m a2 -> m a3 -> m r
+liftM4 :: Monad m => (a1 -> a2 -> a3 -> a4 -> r) -> m a1 -> m a2 -> m a3 -> m a4 -> m r
+```
+
+Example:
+
+```haskell
+λ> liftM (+4) (Just 10)
+Just 14 
+λ>
+λ> liftM (+4) Nothing
+Nothing
+λ> 
+λ> 
+
+λ> liftM2 (+) (Just 10) (Just 5)
+Just 15
+λ> 
+λ> 
+λ> liftM2 (+) (Just 10) Nothing
+Nothing
+λ> 
+
+λ> liftM2 (+) Nothing Nothing
+Nothing
+λ> 
+```
+
+**Error Handling and avoinding Null Checking**
+
+Examples without Maybe:
+
+```haskell
+
+λ :set prompt "λ > " 
+λ > 
+λ > 
+λ >  head [1, 2, 3, 4]
+1
+λ > head []
+*** Exception: Prelude.head: empty list
+ 
+
+λ > tail [1, 2, 3, 4]
+[2,3,4]
+λ > 
+λ > tail []
+*** Exception: Prelude.tail: empty list
+
+λ > div 10 2
+5
+λ > div 10 0
+*** Exception: divide by zero
+λ > 
+```
+
+Examples with Maybe monad:
+
+```haskell
+
+fromJust (Just x) = x
+
+safeHead :: [a] -> Maybe a
+safeHead [] = Nothing
+safeHead (x:_) = Just x
+
+safeTail :: [a] -> Maybe [a]
+safeTail [] = Nothing
+safeTail (_:xs) = Just xs
+
+safeLast :: [a] -> Maybe a
+safeLast [] = Nothing
+safeLast (y:[]) = Just y
+safeLast (_:xs) = safeLast xs
+
+safeInit :: [a] -> Maybe [a]
+safeInit [] = Nothing
+safeInit (x:[]) = Just []
+safeInit (x:xs) = Just (x : fromJust(safeInit xs))
+
+safediv y x | x == 0    = Nothing
+            | otherwise = Just(y/x)
+
+λ > fromJust (Just 10)
+10
+
+λ > safeHead [1..5]
+Just 1
+λ > safeHead []
+Nothing
+λ > 
+
+λ > safeTail  [1..5]
+Just [2,3,4,5]
+λ > safeTail  []
+Nothing
+λ > 
+
+λ > let div10by = safediv 10
+λ > let div100by = safediv 100
+
+
+λ > safediv 10 2
+Just 5.0
+λ > safediv 10 0
+Nothing
+λ > 
+λ > 
+
+λ > div10by 2
+Just 5.0
+
+λ > div100by 20
+Just 5.0
+λ > div100by 0
+Nothing
+λ > 
+
+λ > map div10by [-2..2]
+[Just (-5.0),Just (-10.0),Nothing,Just 10.0,Just 5.0]
+λ > 
+```
+
+Composition With May be with the >>= (Monad bind operator)
+
+```haskell
+
+
+λ > div100by (div10by 2)
+
+<interactive>:102:11:
+    Couldn't match expected type `Double'
+                with actual type `Maybe Double'
+    In the return type of a call of `div10by'
+    In the first argument of `div100by', namely `(div10by 2)'
+    In the expression: div100by (div10by 2)
+λ > 
+
+λ > div10by 2 >>= div100by
+Just 20.0
+
+λ > div10by 2 >>= div10by >>= div100by 
+Just 50.0
+λ > 
+
+λ > div10by 2 >>= safediv 0 >>= div100by 
+Nothing
+λ > 
+
+λ > div10by 0 >>= safediv 1000 >>= div100by 
+Nothing
+λ > 
+```
+
+Reference:  
+
+* http://www.fatvat.co.uk/2009/10/dealing-with-partial-functions.html 
+* http://en.wikibooks.org/wiki/Haskell/Understanding_monads
+* https://www21.in.tum.de/teaching/perlen/WS1415/unterlagen/Monads_in_Haskell.pdf
+
+
 ### List Monad
+
+```haskell
+instance Monad [] where
+    --return :: a -> [a]
+    return x = [x] -- make a list containing the one element given
+ 
+    --(>>=) :: [a] -> (a -> [b]) -> [b]
+    xs >>= f = concat (map f xs) 
+        -- collect up all the results of f (which are lists)
+        -- and combine them into a new list
+```
+
+Examples Unsing the bind operator for lists:
+
+```haskell
+λ> [10,20,30] >>= \x -> [2*x, x+5] 
+[20,15,40,25,60,35]
+λ> 
+
+λ> [10,20,30] >>= \x -> [(2*x, x+5)] 
+[(20,15),(40,25),(60,35)]
+λ> 
+```
+
+Do Notation for lists
 
 The list comprehension is a syntax sugar for do-notation to list monad.
 
@@ -2685,7 +2906,80 @@ Ok, modules loaded: Main.
 [(1,'a'),(1,'b'),(2,'a'),(2,'b')]
 λ> 
 
+λ> do { x <- [10, 20, 30] ; [x, x+1] }
+[10,11,20,21,30,31]
+
+λ> do { x <- [10, 20, 30] ; [(x, x+1)] }
+[(10,11),(20,21),(30,31)]
+λ> 
+
+λ> do { x <- [10, 20, 30] ; y <- [1, 2, 3] ; return (x*y) }
+[10,20,30,20,40,60,30,60,90]
+λ> 
+
+λ> sequence [[1,2],[3,4]]
+[[1,3],[1,4],[2,3],[2,4]]
+λ> 
+λ> 
 ```
+
+Operator: (,)
+```
+λ> (,) 3 4
+(3,4)
+λ> 
+
+λ> map ((,)2) [1, 2, 3, 4]
+[(2,1),(2,2),(2,3),(2,4)]
+```
+
+**fmap, map and liftM**
+
+For a list, fmap is equivalent to map
+
+```haskell
+λ> fmap ((,)3) [1, 2, 3, 4]
+[(3,1),(3,2),(3,3),(3,4)]
+λ> 
+λ> fmap (+3) [1, 2, 3, 4]
+[4,5,6,7]
+λ> 
+
+λ> liftM ((,)3) [1, 2, 3, 4]
+[(3,1),(3,2),(3,3),(3,4)]
+λ> 
+
+λ> liftM (+3) [1, 2, 3, 4]
+[4,5,6,7]
+λ> 
+```
+
+**liftM and Cartesian Product**
+
+```haskell
+
+λ> liftM2 (,) [1, 2, 3] [4, 5, 6, 7]
+[(1,4),(1,5),(1,6),(1,7),(2,4),(2,5),(2,6),(2,7),(3,4),(3,5),(3,6),(3,7)]
+λ> 
+λ> 
+λ> liftM2 (,) ['a', 'b', 'c'] [1, 2]
+[('a',1),('a',2),('b',1),('b',2),('c',1),('c',2)]
+λ> 
+λ> 
+
+λ> liftM2 (*) [1, 2, 3] [4, 5, 6, 7]
+[4,5,6,7,8,10,12,14,12,15,18,21]
+λ> 
+
+λ> liftM2 (+) [1, 2, 3] [4, 5, 6, 7]
+[5,6,7,8,6,7,8,9,7,8,9,10]
+λ> 
+
+λ> liftM3 (,,) [1, 2, 3] ['a', 'b', 'c', 'd'] ['x', 'y', 'z']
+[(1,'a','x'),(1,'a','y'),(1,'a','z'),(1,'b','x'),(1,'b','y'),(1,'b','z'),(1,'c','x'),(1,'c','y'),(1,'c','z'),(1,'d','x'),(1,'d','y'),(1,'d','z'),(2,'a','x'),(2,'a','y'),(2,'a','z'),(2,'b','x'),(2,'b','y'),(2,'b','z'),(2,'c','x'),(2,'c','y'),(2,'c','z'),(2,'d','x'),(2,'d','y'),(2,'d','z'),(3,'a','x'),(3,'a','y'),(3,'a','z'),(3,'b','x'),(3,'b','y'),(3,'b','z'),(3,'c','x'),(3,'c','y'),(3,'c','z'),(3,'d','x'),(3,'d','y'),(3,'d','z')]
+
+```
+
 
 http://learnyouahaskell.com/a-fistful-of-monads
 
@@ -2694,6 +2988,45 @@ http://learnyouahaskell.com/a-fistful-of-monads
 Haskell separates pure functions from computations where side effects must be considered by encoding those side effects as values of a particular type. Specifically, a value of type (IO a) is an action, which if executed would produce a value of type a.  [[1](https://wiki.haskell.org/Introduction_to_IO)]
 
 Actions are either atomic, as defined in system primitives, or are a sequential composition of other actions. The I/O monad contains primitives which build composite actions, a process similar to joining statements in sequential order using `;' in other languages. Thus the monad serves as the glue which binds together the actions in a program. [[2](https://www.haskell.org/tutorial/io.html)]
+
+Haskell uses the data type IO (IO monad) for actions.
+
+* > let n = v   Binds n to value v
+* > n <- a      Executes action a and binds the anme n to the result
+* > a           Executes action a
+* do  notation  is syntactic sugar for (>>=) operations. 
+
+
+**Intput Functions**
+
+Stdin - Standard Input
+```haskell
+getChar             :: IO Char
+getLine             :: IO String
+getContents         :: IO String
+interact            :: (String -> String) -> IO ()
+readIO              :: Read a => String -> IO a
+readLine            :: Read a => IO a
+```
+
+
+**Output Functions**
+
+Stdout - Standard Output
+```haskell
+print               :: Show a => a -> IO ()
+putStrLn            :: String -> IO ()
+putStr              :: String -> IO ()
+```
+
+**Files**
+```
+type FilePath = String
+
+writeFile     ::  FilePath -> String            -> IO ()
+appendFile    ::  FilePath -> String            -> IO ()
+readFile      ::  FilePath                      -> IO String
+```
 
 #### Main action
 
@@ -2720,6 +3053,73 @@ Running HelloWorld.hs executable.
 ```
 $ ./HelloWorld 
 Hello, World!
+
+$ runhaskell HelloWorld.hs
+Hello, World!
+```
+
+#### Read and Show
+
+```
+show   :: (Show a) => a -> String
+read   :: (Read a) => String -> a
+
+{- lines 
+    split string into substring at new line character \n \r
+-}
+lines :: String -> [String]
+```
+
+Example:
+
+```haskell
+
+λ > show(12.12 + 23.445)
+"35.565"
+λ > 
+
+λ > read "1.245" :: Double
+1.245
+λ > 
+λ > let x = read "1.245" :: Double
+λ > :t x
+x :: Double
+λ > 
+λ > read "[1, 2, 3, 4, 5]" :: [Int]
+[1,2,3,4,5]
+λ > 
+
+```
+
+#### Operator >> (then)
+
+The “then” combinator (>>) does sequencing when there is no value to pass:
+
+```haskell
+(>>)    ::  IO a -> IO b -> IO b
+m >> n  =   m >>= (\_ -> n)
+```
+
+Example:
+
+```haskell
+λ> let echoDup = getChar >>= \c -> putChar c >> putChar c
+λ> echoDup 
+eeeλ> 
+λ> 
+λ> echoDup 
+oooλ> 
+λ> 
+
+```
+
+It is equivalent in a do-notation to:
+
+```
+echoDup = do
+    c <- getChar
+    putChar c
+    putChar c
 ```
 
 
@@ -2780,9 +3180,11 @@ x
 
 ```
 
+
+
 #### Do Notation
 
-The statements in the do-notation are executed in a sequential order. It is syntactic sugar for the bind (>>=) operator. The values of local statements are defined using let and result of an action uses the (<-) operator.
+The statements in the do-notation are executed in a sequential order. It is syntactic sugar for the bind (>>=) operator. The values of local statements are defined using let and result of an action uses the (<-) operator. The “do” notation adds syntactic sugar to make monadic code easier to read.
 
 The do notation 
 
@@ -2795,6 +3197,35 @@ is a syntax sugar notation for the expression:
 ```
 anActon = e1 >>= \v1 -> e2
 ```
+
+Plain Syntax
+
+```haskell
+getTwoChars :: IO (Char,Char)
+getTwoChars = getChar   >>= \c1 ->
+              getChar   >>= \c2 ->
+              return (c1,c2)
+```
+
+Do Notation
+
+```haskell
+getTwoCharsDo :: IO(Char,Char)
+getTwoCharsDo = do { c1 <- getChar ;
+                     c2 <- getChar ;
+                     return (c1,c2) }
+```
+
+Or:
+
+```haskell
+getTwoCharsDo :: IO(Char,Char)
+getTwoCharsDo = do 
+    c1 <- getChar 
+    c2 <- getChar 
+    return (c1,c2)
+```
+
 
 ##### Basic Do Notation
 
@@ -2931,6 +3362,58 @@ True
 λ> 
 ```
 
+
+##### Combining functions and I/O actions
+
+```haskell
+λ> import Data.Char (toUpper)
+λ> 
+
+λ> :t shout
+shout :: [Char] -> [Char]
+λ> 
+
+{- Fmap is Equivalent to liftM , those functions
+apply a function to the value wraped in the monad and returns a new monad of 
+same type with the return value wraped
+
+-}
+
+λ> :t liftM
+liftM :: Monad m => (a1 -> r) -> m a1 -> m r
+λ> :t fmap
+fmap :: Functor f => (a -> b) -> f a -> f b
+λ> 
+
+
+λ> shout "hola estados unidos"
+"HOLA ESTADOS UNIDOS"
+
+λ> liftM shout getLine
+Hello world
+"HELLO WORLD"
+
+
+λ> fmap shout getLine
+heloo
+"HELOO"
+λ> 
+
+λ> let upperLine = putStrLn "Enter a line" >> liftM shout getLine
+
+λ> upperLine 
+Enter a line
+hola estados Unidos
+"HOLA ESTADOS UNIDOS"
+λ> 
+
+λ> upperLine 
+Enter a line
+air lift
+"AIR LIFT"
+λ> 
+```
+
 ##### Executing a list of actions
 
 The list myTodoList doesn't execute any action, it holds them. To join those actions the function sequence_ must be used.
@@ -2985,9 +3468,117 @@ putStr                  :: String -> IO ()
 putStr s                =  sequence_ (map putChar s)
 ```
 
-#### IO action Examples
+##### Control Structures 
 
-**Interactive Program**
+###### For Loops
+
+```haskell
+λ> :t forM_
+forM_ :: Monad m => [a] -> (a -> m b) -> m ()
+
+λ> :t forM
+forM :: Monad m => [a] -> (a -> m b) -> m [b]
+λ> 
+```
+
+Example:
+
+```haskell
+λ> :t (putStrLn . show)
+(putStrLn . show) :: Show a => a -> IO (
+
+λ> (putStrLn . show) 10
+10
+λ> (putStrLn . show) 200
+200
+λ>
+
+λ> forM_ [1..10] (putStrLn . show)
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+```
+
+##### mapM and mapM_
+
+Map a monadic function, a function that returns a monad, to a list. It is similar to forM and formM_.
+
+```haskell
+λ> :t mapM
+mapM :: Monad m => (a -> m b) -> [a] -> m [b]
+λ> 
+λ> :t mapM_
+mapM_ :: Monad m => (a -> m b) -> [a] -> m ()
+λ> 
+λ> 
+```
+
+Example:
+
+```haskell
+
+λ> :t (putStrLn . show)
+(putStrLn . show) :: Show a => a -> IO (
+
+λ> mapM_ (putStrLn . show) [1..10]
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+```
+
+#### IO Examples
+
+**Example 1**
+
+```haskell
+λ> let echo = getChar >>= putChar 
+λ> echo 
+aaλ> 
+λ> echo 
+ccλ> 
+λ> 
+
+
+λ> :t getChar
+getChar :: IO Char
+λ> :t putChar
+putChar :: Char -> IO ()
+λ> :t (>>=)
+(>>=) :: Monad m => m a -> (a -> m b) -> m b
+λ> 
+```
+
+**Example 2**
+
+```haskell
+reverseInput = do 
+    putStrLn "Enter a line of text:"
+    x <- getLine
+    putStrLn (reverse x)
+
+λ> reverseInput 
+Enter a line of text:
+Hello World
+dlroW olleH
+λ>          
+```        
+
+
+**Example 3**
 
 File: questions.hs
 ```haskell
@@ -3007,6 +3598,7 @@ questions = do
 ```
 
 GHCI Shell
+
 ```haskell
 [1 of 1] Compiling Main             ( questions.hs, interpreted )
 Ok, modules loaded: Main.
@@ -3027,237 +3619,73 @@ Your age is : 60
 
 ```
 
+**Example 4 - Reading and Writing a File**
+
+```haskell
+λ> (show [(x,x*x) | x <- [0,1..10]])
+"[(0,0),(1,1),(2,4),(3,9),(4,16),(5,25),(6,36),(7,49),(8,64),(9,81),(10,100)]"
+λ> 
+λ> :t writeFile "squares.txt" (show [(x,x*x) | x <- [0,1..10]])
+writeFile "squares.txt" (show [(x,x*x) | x <- [0,1..10]]) :: IO ()
+λ> 
+λ> writeFile "squares.txt" (show [(x,x*x) | x <- [0,1..10]])
+λ> 
+λ> readFile "squares.txt"
+"[(0,0),(1,1),(2,4),(3,9),(4,16),(5,25),(6,36),(7,49),(8,64),(9,81),(10,100)]"
+λ> 
+λ> :t readFile "squares.txt"
+readFile "squares.txt" :: IO String
+λ> 
+λ> 
+λ> content <- readFile "squares.txt"
+λ> :t content
+content :: String
+λ> content
+"[(0,0),(1,1),(2,4),(3,9),(4,16),(5,25),(6,36),(7,49),(8,64),(9,81),(10,100)]"
+λ> 
+λ> let array = read content :: [(Int,Int)]
+λ> array
+[(0,0),(1,1),(2,4),(3,9),(4,16),(5,25),(6,36),(7,49),(8,64),(9,81),(10,100)]
+λ> 
+
+λ> let readSquareFile = liftM (\cont -> read cont :: [(Int, Int)]) (readFile "squares.txt")
+λ> 
+λ> readSquareFile 
+[(0,0),(1,1),(2,4),(3,9),(4,16),(5,25),(6,36),(7,49),(8,64),(9,81),(10,100)]
+λ> 
+λ> :t readSquareFile 
+readSquareFile :: IO [(Int, Int)]
+λ> 
+
+λ> sq <- readSquareFile 
+λ> sq
+[(0,0),(1,1),(2,4),(3,9),(4,16),(5,25),(6,36),(7,49),(8,64),(9,81),(10,100)]
+λ> 
+λ> :t sq
+sq :: [(Int, Int)]
+λ> 
+
+λ> :t liftM (map $ uncurry (+)) readSquareFile 
+liftM (map $ uncurry (+)) readSquareFile :: IO [Int]
+λ> 
+λ> liftM (map $ uncurry (+)) readSquareFile 
+[0,2,6,12,20,30,42,56,72,90,110]
+λ> 
+λ> 
+```
 
 #### Sources
 
 * [Introduction to IO](https://wiki.haskell.org/Introduction_to_IO)
 * [A Gentle Introduction to Haskell, Version 98 -  Input/Output](https://www.haskell.org/tutorial/io.html)
 
-
-
-
-### IO Functions
-
-Haskell uses the data type IO (IO monad) for actions.
-
-* > let n = v   Binds n to value v
-* > n <- a      Executes action a and binds the anme n to the result
-* > a           Executes action a
-* do  notation  is syntactic sugar for (>>=) operations. 
-
-**Read and Show**
-
-```
-show   :: (Show a) => a -> String
-read   :: (Read a) => String -> a
-
-{- lines 
-    split string into substring at new line character \n \r
--}
-lines :: String -> [String]
-```
-
-Example:
-
-```haskell
-
-λ > show(12.12 + 23.445)
-"35.565"
-λ > 
-
-λ > read "1.245" :: Double
-1.245
-λ > 
-λ > let x = read "1.245" :: Double
-λ > :t x
-x :: Double
-λ > 
-λ > read "[1, 2, 3, 4, 5]" :: [Int]
-[1,2,3,4,5]
-λ > 
-
-```
-
-**Output Functions**
-
-```haskell
-print :: Show a => a -> IO ()
-putStrLn :: String -> IO ()
-
-```
-
-**Intput Functions**
-
-```haskell
-getChar             :: IO Char
-getLine             :: IO String
-getContents         :: IO String
-interact            :: (String -> String) -> IO ()
-readIO              :: Read a => String -> IO a
-readLine            :: Read a => IO a
-```
-
-Examples:
-
-```haskell
-
-λ > :t getLine 
-getLine :: IO String
-λ > 
-λ > 
-λ > x <- getLine
-hello
-λ > x
-"hello"
-λ > :t x
-x :: String
-λ > 
-
-
-```
-
-
-**Sources**
-
 * http://en.wikibooks.org/wiki/Haskell/Understanding_monads
 * http://shuklan.com/haskell/lec09.html#/
 * http://learnyouahaskell.com/functors-applicative-functors-and-monoids
 * http://squing.blogspot.com.br/2008/01/unmonad-tutorial-io-in-haskell-for-non.html
 
-### Avoiding Null checking with Maybe
-
-Using the Maybe type is possible to indicate that a function
-might or not return value.
-
-```
-data Maybe x = Nothing | Just x
-```
-
-Examples without Maybe:
-
-```haskell
-
-λ :set prompt "λ > " 
-λ > 
-λ > 
-λ >  head [1, 2, 3, 4]
-1
-λ > head []
-*** Exception: Prelude.head: empty list
- 
-
-λ > tail [1, 2, 3, 4]
-[2,3,4]
-λ > 
-λ > tail []
-*** Exception: Prelude.tail: empty list
-
-λ > div 10 2
-5
-λ > div 10 0
-*** Exception: divide by zero
-λ > 
-```
-
-Examples with Maybe monad:
-
-```haskell
-
-fromJust (Just x) = x
-
-safeHead :: [a] -> Maybe a
-safeHead [] = Nothing
-safeHead (x:_) = Just x
-
-safeTail :: [a] -> Maybe [a]
-safeTail [] = Nothing
-safeTail (_:xs) = Just xs
-
-safeLast :: [a] -> Maybe a
-safeLast [] = Nothing
-safeLast (y:[]) = Just y
-safeLast (_:xs) = safeLast xs
-
-safeInit :: [a] -> Maybe [a]
-safeInit [] = Nothing
-safeInit (x:[]) = Just []
-safeInit (x:xs) = Just (x : fromJust(safeInit xs))
-
-safediv y x | x == 0    = Nothing
-            | otherwise = Just(y/x)
-
-λ > fromJust (Just 10)
-10
-
-λ > safeHead [1..5]
-Just 1
-λ > safeHead []
-Nothing
-λ > 
-
-λ > safeTail  [1..5]
-Just [2,3,4,5]
-λ > safeTail  []
-Nothing
-λ > 
-
-λ > let div10by = safediv 10
-λ > let div100by = safediv 100
 
 
-λ > safediv 10 2
-Just 5.0
-λ > safediv 10 0
-Nothing
-λ > 
-λ > 
-
-λ > div10by 2
-Just 5.0
-
-λ > div100by 20
-Just 5.0
-λ > div100by 0
-Nothing
-λ > 
-
-λ > map div10by [-2..2]
-[Just (-5.0),Just (-10.0),Nothing,Just 10.0,Just 5.0]
-λ > 
-
-{- Composition With May be with the >>= (Monad bind operator) -}
-
-λ > div100by (div10by 2)
-
-<interactive>:102:11:
-    Couldn't match expected type `Double'
-                with actual type `Maybe Double'
-    In the return type of a call of `div10by'
-    In the first argument of `div100by', namely `(div10by 2)'
-    In the expression: div100by (div10by 2)
-λ > 
-
-λ > div10by 2 >>= div100by
-Just 20.0
-
-λ > div10by 2 >>= div10by >>= div100by 
-Just 50.0
-λ > 
-
-λ > div10by 2 >>= safediv 0 >>= div100by 
-Nothing
-λ > 
-
-λ > div10by 0 >>= safediv 1000 >>= div100by 
-Nothing
-λ > 
-
-```
-
-Reference:  
-
-* http://www.fatvat.co.uk/2009/10/dealing-with-partial-functions.html 
-* http://en.wikibooks.org/wiki/Haskell/Understanding_monads
 
 ## Applications
 

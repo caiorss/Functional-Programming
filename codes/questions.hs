@@ -14,3 +14,7 @@ questions = do
     putStrLn result    
     
 
+reverseInput = do 
+    putStrLn "Enter a line of text:"
+    x <- getLine
+    putStrLn (reverse x)
