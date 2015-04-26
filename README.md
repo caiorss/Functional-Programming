@@ -4662,7 +4662,7 @@ getDirectoryContents :: FilePath -> IO [FilePath]
 λ> 
 ```
 
-Especial Directory Location
+Special Directories Location
 ```haskell
 λ> getHomeDirectory
 "/home/tux"
