@@ -76,21 +76,27 @@ This page can be accessed from: https://github.com/caiorss/Functional-Programmin
     - [Monad Laws](#monad-laws)
     - [Selected Monad Implementations](#selected-monad-implementations)
     - [Return - Type constructor](#return---type-constructor)
+    - [Haskell Monads](#haskell-monads)
     - [Monad function composition](#monad-function-composition)
     - [Sources](#sources)
+    - [Maybe Monad](#maybe-monad)
   - [List Monad](#list-monad)
   - [IO and IO Monad](#io-and-io-monad)
     - [Main action](#main-action)
+    - [Read and Show](#read-and-show)
+    - [Operator >> (then)](#operator--then)
     - [Basic I/O Operations](#basic-io-operations)
     - [Do Notation](#do-notation)
       - [Basic Do Notation](#basic-do-notation)
       - [Do Notation and Let keyword](#do-notation-and-let-keyword)
       - [Do Notation returning a value](#do-notation-returning-a-value)
+      - [Combining functions and I/O actions](#combining-functions-and-io-actions)
       - [Executing a list of actions](#executing-a-list-of-actions)
-    - [IO action Examples](#io-action-examples)
+      - [Control Structures](#control-structures)
+        - [For Loops](#for-loops)
+      - [mapM and mapM_](#mapm-and-mapm_)
+    - [IO Examples](#io-examples)
     - [Sources](#sources-1)
-  - [IO Functions](#io-functions)
-  - [Avoiding Null checking with Maybe](#avoiding-null-checking-with-maybe)
 - [Applications](#applications)
   - [Mathematics](#mathematics)
   - [Numerical Methods](#numerical-methods)
@@ -99,6 +105,8 @@ This page can be accessed from: https://github.com/caiorss/Functional-Programmin
     - [Equation Solving](#equation-solving)
     - [Differential Equations](#differential-equations)
   - [Statistics and Time Series](#statistics-and-time-series)
+    - [Some Statistical Functions](#some-statistical-functions)
+    - [Monte Carlo Simulation Coin Toss](#monte-carlo-simulation-coin-toss)
   - [Vector](#vector)
   - [Small DSL Domain Specific Language](#small-dsl-domain-specific-language)
 - [Libraries](#libraries)
@@ -4038,6 +4046,8 @@ plotList [] t_temp
 
 ### Statistics and Time Series
 
+#### Some Statistical Functions
+
 Arithmetic Mean of a Sequence
 
 ```haskell
@@ -4120,6 +4130,125 @@ Solution:
 
 ```
 
+#### Monte Carlo Simulation Coin Toss
+
+The simplest such situation must be the tossing of a coin. Any individual event will result in the coin falling with one side or the other uppermost (heads or tails). However, common sense tells us that, if we tossed it a very large number of times, the total number of heads and tails should become increasingly similar. For a greater numner of tosses the percentage of heads or tails will be next to 50% in a non-biased coin. Credits: [Monte Carlo Simulation - Tossing a Coin](http://staff.argyll.epsb.ca/jreed/math7/strand4/4203.htm)
+
+See [Law of Large Numbers](http://en.wikipedia.org/wiki/Law_of_large_numbers)
+
+![](images/coinflip.gif)
+
+File: coinSimulator.hs
+```haskell
+import System.Random
+import Control.Monad (replicateM)
+
+{-
+    0 - tails
+    1 - means head
+
+-}
+
+flipCoin :: IO Integer
+flipCoin = randomRIO (0, 1)
+
+flipCoinNtimes n = replicateM n flipCoin
+
+frequency elem alist = length $ filter (==elem) alist
+
+relativeFreq :: Integer -> [Integer] -> Double
+relativeFreq elem alist = 
+    fromIntegral (frequency elem alist) / fromIntegral (length alist)
+
+simulateCoinToss ntimes =  do
+    serie <- (flipCoinNtimes  ntimes)
+    let counts = map (flip frequency serie)   [0, 1]
+    let freqs = map (flip relativeFreq serie) [0, 1]
+    return (freqs, counts)
+
+showSimulation ntimes = do
+    result <- simulateCoinToss ntimes
+    let p_tails = (fst result) !! 0
+    let p_heads = (fst result) !! 1
+    
+    let n_tails = (snd result) !! 0
+    let n_heads = (snd result) !! 1
+    
+    let tosses = n_tails + n_heads
+    let p_error = abs(p_tails - p_heads)
+    
+    putStrLn $ "Number of tosses : " ++ show(tosses)
+    putStrLn $ "The number of tails is : " ++ show(n_tails)        
+    putStrLn $ "The number of heads is : " ++ show(n_heads)
+    putStrLn $ "The % of tails is : " ++ show(100.0*p_tails)
+    putStrLn $ "The % of heads is :" ++ show(100.0*p_heads)
+    putStrLn $ "The %erro is : "  ++ show(100*p_error)
+    putStrLn "\n-------------------------------------"
+```
+
+
+```
+λ> :r
+[1 of 1] Compiling Main             ( coinSimulator.hs, interpreted )
+Ok, modules loaded: Main.
+λ> 
+
+λ> :t simulateCoinToss 
+simulateCoinToss :: Int -> IO ([Double], [Int])
+λ> 
+
+λ> :t showSimulation 
+showSimulation :: Int -> IO ()
+λ> 
+
+
+λ> simulateCoinToss 30
+([0.5666666666666667,0.43333333333333335],[17,13])
+λ> 
+λ> simulateCoinToss 50
+([0.56,0.44],[28,22])
+λ> 
+λ> simulateCoinToss 100
+([0.46,0.54],[46,54])
+λ> 
+λ> simulateCoinToss 1000
+([0.491,0.509],[491,509])
+λ> 
+
+λ> mapM_ showSimulation [1000, 10000, 100000, 1000000]
+Number of tosses : 1000
+The number of tails is : 492
+The number of heads is : 508
+The % of tails is : 49.2
+The % of heads is :50.8
+The %erro is : 1.6000000000000014
+
+-------------------------------------
+Number of tosses : 10000
+The number of tails is : 4999
+The number of heads is : 5001
+The % of tails is : 49.99
+The % of heads is :50.01
+The %erro is : 1.9999999999997797e-2
+
+-------------------------------------
+Number of tosses : 100000
+The number of tails is : 49810
+The number of heads is : 50190
+The % of tails is : 49.81
+The % of heads is :50.19
+The %erro is : 0.38000000000000256
+
+-------------------------------------
+Number of tosses : 1000000
+The number of tails is : 499878
+The number of heads is : 500122
+The % of tails is : 49.9878
+The % of heads is :50.01219999999999
+The %erro is : 2.4399999999996647e-2
+
+-------------------------------------
+```
 
 ### Vector
 
