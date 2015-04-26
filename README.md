@@ -107,10 +107,13 @@ This page can be accessed from: https://github.com/caiorss/Functional-Programmin
   - [Statistics and Time Series](#statistics-and-time-series)
     - [Some Statistical Functions](#some-statistical-functions)
     - [Monte Carlo Simulation Coin Toss](#monte-carlo-simulation-coin-toss)
-  - [Vector](#vector)
+  - [Vectors](#vectors)
+  - [Tax Brackets](#tax-brackets)
   - [Small DSL Domain Specific Language](#small-dsl-domain-specific-language)
 - [Libraries](#libraries)
+  - [System Programming in Haskell](#system-programming-in-haskell)
   - [Data.Time](#datatime)
+    - [System](#system)
     - [Get current year / month / day in Haskell](#get-current-year--month--day-in-haskell)
     - [Get Current Time](#get-current-time)
     - [Documentation By Examples - GHCI shell](#documentation-by-examples---ghci-shell)
@@ -120,16 +123,15 @@ This page can be accessed from: https://github.com/caiorss/Functional-Programmin
       - [Parsing Dates and Times from Strings](#parsing-dates-and-times-from-strings)
       - [Printing a Date](#printing-a-date)
 - [Documentation and Learning Materials](#documentation-and-learning-materials)
-  - [Documentation](#documentation)
   - [Code Search Engine](#code-search-engine)
     - [Libraries Documentation](#libraries-documentation)
     - [Prelude](#prelude)
     - [Type Classe](#type-classe)
-  - [Online Books](#online-books)
-  - [Papers and Articles](#papers-and-articles)
-  - [Community](#community)
-  - [References by Subject](#references-by-subject)
-  - [Lectures](#lectures)
+    - [Online Books](#online-books)
+    - [Papers and Articles](#papers-and-articles)
+    - [Community](#community)
+    - [References by Subject](#references-by-subject)
+    - [Video Lectures](#video-lectures)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -3694,7 +3696,6 @@ liftM (map $ uncurry (+)) readSquareFile :: IO [Int]
 
 
 
-
 ## Applications
 
 
@@ -4250,7 +4251,7 @@ The %erro is : 2.4399999999996647e-2
 -------------------------------------
 ```
 
-### Vector
+### Vectors
 
 **Dot Product of Two Vectors / Escalar Product**
 
@@ -4309,6 +4310,193 @@ range start stop step =  [start + i*step | i <- [0..n] ]
     n = floor((stop - start)/step)
 
 ```
+
+### Tax Brackets
+
+Progressive Income Taxe Calculation
+
+Credits: [Ayend - Tax Challange](http://ayende.com/blog/108545/the-tax-calculation-challenge)
+
+The following table is the current tax rates in Israel:
+
+
+```
+                        Tax Rate
+Up      to 5,070        10%
+5,071   up to 8,660     14%
+8,661   up to 14,070    23%
+14,071  up to 21,240    30%
+21,241  up to 40,230    33%
+Higher  than 40,230     45%
+```
+
+
+Here are some example answers:
+```
+    5,000 –> 500
+    5,800 –> 609.2
+    9,000 –> 1087.8
+    15,000 –> 2532.9
+    50,000 –> 15,068.1
+``` 
+
+This problem is a bit tricky because the tax rate doesn’t apply to the 
+whole sum, only to the part that is within the current rate.
+
+A progressive tax system is a way to calculate a tax for a given price 
+using brackets each taxed separately using its rate. The french tax on 
+revenues is a good example of a progressive tax system.
+
+```
+To calculate his taxation, John will have to do this calculation 
+(see figure on left):
+
+= (10,000 x 0.105) + (35,000 x 0.256) + (5,000 x 0.4)
+= 1,050 + 8,960 + 2,000
+= 12,010
+ 
+John will have to pay $ 12,010
+
+If John revenues was below some bracket definition (take $ 25,000 for 
+example), only the last bracket containing the remaining amount to be 
+taxed is applied :
+
+= (10,000 x 0.105) + (15,000 x 0.256)
+
+Here nothing is taxed in the last bracket range at rate 40.
+```
+
+Solution:
+
+```haskell
+
+(|>) x f = f x
+(|>>) x f = map f x
+joinf functions element = map ($ element) functions
+
+-- Infinite number
+above = 1e30 
+
+pairs xs = zip xs (tail xs)
+
+{- 
+    Tax rate function - Calculates the net tax rate in %
+    
+    taxrate = 100 *  tax / (gross revenue)
+
+-}
+taxrate taxfunction income = 100.0*(taxfunction income)/income
+
+progressivetax :: [[Double]] -> Double -> Double
+progressivetax taxtable income = amount
+            where 
+            rates = taxtable |>> (!!1) |>> (/100.0)  |> tail
+            levels = taxtable |>> (!!0)
+            table = zip3 levels (tail levels) rates            
+            amount = table |>> frow income |> takeWhile (>0) |> sum
+            
+            frow x (xlow, xhigh, rate) | x > xhigh = (xhigh-xlow)*rate 
+                                       | otherwise = (x-xlow)*rate   
+taxsearch taxtable value = result        
+        where
+        rows = takeWhile (\row -> fst row !! 0 <= value) (pairs taxtable)       
+        result = case rows of 
+                    [] -> taxtable !! 0
+                    xs -> snd $ last rows
+
+{- 
+   This is useful for Brazil income tax calculation
+
+  [(Gross Salary  – Deduction - Social Security ) • Aliquot – Deduction] = IRRF 
+  [(Salário Bruto – Dependentes – INSS) • Alíquota – Dedução] =
+
+-}
+incometax taxtable income  = amount--(tax, aliquot, discount)
+                where
+                
+                row = taxsearch taxtable income                
+                aliquot = row !! 1
+                discount = row !! 2                
+                amount = income*(aliquot/100.0) - discount
+
+{- Progressive Tax System -}
+israeltaxbrackets = [
+    [0,          0],
+    [ 5070.0, 10.0],
+    [ 8660.0, 14.0],
+    [14070.0, 23.0],
+    [21240.0, 30.0],
+    [40230.0, 33.0],
+    [above  , 45.0]
+    ]                    
+
+taxOfIsrael     = progressivetax israeltaxbrackets
+taxRateOfIsrael = taxrate taxOfIsrael
+
+braziltaxbrackets = [
+    [1787.77,    0,   0.00],
+    [2679.29,  7.5, 134.48],
+    [3572.43, 15.0, 335.03],
+    [4463.81, 22.5, 602.96],
+    [above,    27.5, 826.15]
+   ]
+
+
+taxOfBrazil = incometax braziltaxbrackets
+taxRateOfBrazil = taxrate  taxOfBrazil
+
+
+
+{- 
+    Unit test of a function of numerical input and output.
+    
+    input       - Unit test case values             [t1, t2, t2, e5]
+    expected    - Expected value of each test case  [e1, e2, e3, e4]
+    tol         - Tolerance 1e-3 tipical value 
+    f           - Function:                         error_i = abs(e_i-t_i)
+    
+    Returns true if in all test cases  error_i < tol
+-}
+testCaseNumeric :: (Num a, Ord a) => [a1] -> [a] -> a -> (a1 -> a) -> Bool
+testCaseNumeric input expected tol f = all (\t -> t && True) ( zipWith (\x y -> abs(x-y) < tol) (map f input) expected )
+
+testIsraelTaxes = testCaseNumeric  
+    [5000, 5800, 9000, 15000, 50000]
+    [500.0,609.2,1087.8,2532.9,15068.1]
+    1e-3 taxOfIsrael
+
+λ> testIsraelTaxes 
+True
+λ> 
+λ> 
+λ> taxOfIsrael 5000
+500.0
+λ> taxOfIsrael 5800
+609.2
+λ> taxOfIsrael 1087.8
+108.78
+λ> taxOfIsrael 15000.0
+2532.9
+λ> taxOfIsrael 50000.0
+15068.1
+λ> 
+λ> taxRateOfIsrael 5000
+10.0
+λ> taxRateOfIsrael 5800
+10.50344827586207
+λ> taxRateOfIsrael 15000
+16.886
+λ> taxRateOfIsrael 50000
+30.1362
+
+```
+
+Sources: 
+    * http://ayende.com/blog/108545/the-tax-calculation-challenge
+    * http://gghez.com/c-net-implementation-of-a-progressive-tax-system/
+
+
+
 
 ### Small DSL Domain Specific Language
 
@@ -4429,7 +4617,122 @@ Cup {cupDrink = Americano, cupSize = Venti, cupExtra = [Shot,Syrup]}]
 
 ## Libraries
 
+### System Programming in Haskell
+
+**Directory**
+
+Get current Directory
+```
+λ> import System.Directory
+λ> 
+λ> getCurrentDirectory 
+"/home/tux/PycharmProjects/Haskell"
+λ> 
+```
+
+Change Current Directory
+```haskell
+λ> import System.Directory
+λ> 
+λ> setCurrentDirectory "/"
+λ> 
+λ> getCurrentDirectory 
+"/"
+λ> 
+getCurrentDirectory :: IO FilePath
+λ> 
+λ> 
+λ> fmap (=="/") getCurrentDirectory 
+True
+λ> 
+λ> liftM (=="/") getCurrentDirectory 
+True
+λ> 
+```
+
+List Directory Contents
+```haskell
+λ> import System.Directory
+λ>
+λ>  getDirectoryContents "/usr"
+[".","include","src","local","bin","games","share","sbin","lib",".."]
+λ> 
+λ> :t getDirectoryContents 
+getDirectoryContents :: FilePath -> IO [FilePath]
+λ> 
+```
+
+Especial Directory Location
+```haskell
+λ> getHomeDirectory
+"/home/tux"
+λ> 
+λ> getAppUserDataDirectory "myApp"
+"/home/tux/.myApp"
+λ> 
+λ> getUserDocumentsDirectory
+"/home/tux"
+λ> 
+```
+
+**Running External Commands**
+
+```haskell
+λ> import System.Cmd
+λ> 
+λ> :t rawSystem
+rawSystem :: String -> [String] -> IO GHC.IO.Exception.ExitCode
+λ> 
+λ> rawSystem "ls" ["-l", "/usr"]
+total 260
+drwxr-xr-x   2 root root 118784 Abr 26 03:38 bin
+drwxr-xr-x   2 root root   4096 Abr 10  2014 games
+drwxr-xr-x 131 root root  36864 Mar 11 01:38 include
+drwxr-xr-x 261 root root  53248 Abr 14 16:46 lib
+drwxr-xr-x  10 root root   4096 Dez  2 18:55 local
+drwxr-xr-x   2 root root  12288 Abr  3 13:28 sbin
+drwxr-xr-x 460 root root  20480 Abr 26 03:38 share
+drwxr-xr-x  13 root root   4096 Jan 13 21:03 src
+ExitSuccess
+λ>
+```
+
+**Reading input from a system command in Haskell**
+
+This command executes ls -la and gets the output.
+
+```haskell
+import System.Process
+test = readProcess "ls" ["-a"] ""
+
+
+λ> import System.Process
+λ> let test = readProcess "ls" ["-a"] ""
+λ> 
+λ> :t test
+test :: IO String
+λ> 
+λ> test >>= putStrLn 
+.
+..
+adt2.py
+adt.py
+build.sh
+build_zeromq.sh
+clean.sh
+codes
+comparison.ods
+dict.sh
+ffi
+figure1.png
+.git
+
+
+```
+
 ### Data.Time
+
+#### System 
 
 #### Get current year / month / day in Haskell
 
@@ -4697,8 +5000,6 @@ Credits:
 ## Documentation and Learning Materials
 
 
-### Documentation
-
 ### Code Search Engine
 
 Haskell API search engine, which allows you to search many 
@@ -4754,7 +5055,7 @@ cabal update
 cabal install <some package>
 ```
 
-### Online Books
+#### Online Books
 
 * [Real-World Haskell by Bryan O'Sullivan et al.](http://book.realworldhaskell.org)
 * http://learnyouahaskell.com/
@@ -4762,7 +5063,7 @@ cabal install <some package>
 
 * [Haskell Data Analysis Cookbook](http://haskelldata.com/)
 
-### Papers and Articles
+#### Papers and Articles
 
 Papers
 
@@ -4789,7 +5090,7 @@ Articles:
 * [Why the world needs Haskell](http://www.devalot.com/articles/2013/07/why-haskell.html)
 * http://paulkoerbitz.de/posts/Why-I-love-Haskell.html
 
-### Community
+#### Community
 
 * http://reddit.com/r/haskell
 * http://www.reddit.com/r/haskellquestions
@@ -4834,7 +5135,7 @@ Selected Wikipedia Pages:
 
 * [Coroutine](http://en.wikipedia.org/wiki/Coroutine)
 
-### References by Subject
+#### References by Subject
 
 
 * http://www.cis.upenn.edu/~matuszek/Concise%20Guides/Concise%20Haskell98.html
@@ -4890,7 +5191,7 @@ Control:
 * <http://en.wikibooks.org/wiki/Haskell/Control_structures>
 
 
-### Lectures
+#### Video Lectures
 
 **Dr. Erik Meijier Serie: Functional Programming Fundamentals**
 

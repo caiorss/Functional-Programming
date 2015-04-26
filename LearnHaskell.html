@@ -224,7 +224,8 @@ and the line bellow without the symbol &gt; are the output.</li>
 <li><a href="#monte-carlo-simulation-coin-toss">Monte Carlo Simulation Coin Toss</a></li>
 </ul>
 </li>
-<li><a href="#vector">Vector</a></li>
+<li><a href="#vectors">Vectors</a></li>
+<li><a href="#tax-brackets">Tax Brackets</a></li>
 <li>
 <a href="#small-dsl-domain-specific-language">Small DSL Domain Specific Language</a>
 
@@ -232,10 +233,12 @@ and the line bellow without the symbol &gt; are the output.</li>
 <li><a href="#libraries">Libraries</a></li>
 </ul>
 </li>
+<li><a href="#system-programming-in-haskell">System Programming in Haskell</a></li>
 <li>
 <a href="#datatime">Data.Time</a>
 
 <ul>
+<li><a href="#system">System</a></li>
 <li><a href="#get-current-year--month--day-in-haskell">Get current year / month / day in Haskell</a></li>
 <li><a href="#get-current-time">Get Current Time</a></li>
 <li>
@@ -252,7 +255,6 @@ and the line bellow without the symbol &gt; are the output.</li>
 <li><a href="#documentation-and-learning-materials">Documentation and Learning Materials</a></li>
 </ul>
 </li>
-<li><a href="#documentation">Documentation</a></li>
 <li>
 <a href="#code-search-engine">Code Search Engine</a>
 
@@ -260,13 +262,13 @@ and the line bellow without the symbol &gt; are the output.</li>
 <li><a href="#libraries-documentation">Libraries Documentation</a></li>
 <li><a href="#prelude">Prelude</a></li>
 <li><a href="#type-classe">Type Classe</a></li>
-</ul>
-</li>
 <li><a href="#online-books">Online Books</a></li>
 <li><a href="#papers-and-articles">Papers and Articles</a></li>
 <li><a href="#community">Community</a></li>
 <li><a href="#references-by-subject">References by Subject</a></li>
-<li><a href="#lectures">Lectures</a></li>
+<li><a href="#video-lectures">Video Lectures</a></li>
+</ul>
+</li>
 </ul>
 
 
@@ -4305,7 +4307,7 @@ The %erro is : 2.4399999999996647e-2
 -------------------------------------
 </code></pre>
 
-<h3>Vector</h3>
+<h3>Vectors</h3>
 
 <p><strong>Dot Product of Two Vectors / Escalar Product</strong></p>
 
@@ -4362,6 +4364,184 @@ range start stop step =  [start + i*step | i &lt;- [<span class="pl-c1">0</span>
     <span class="pl-k">where</span>
     n = <span class="pl-c1">floor</span>((stop - start)/step)
 </pre></div>
+
+<h3>Tax Brackets</h3>
+
+<p>Progressive Income Taxe Calculation</p>
+
+<p>Credits: <a href="http://ayende.com/blog/108545/the-tax-calculation-challenge">Ayend - Tax Challange</a></p>
+
+<p>The following table is the current tax rates in Israel:</p>
+
+<pre><code>                        Tax Rate
+Up      to 5,070        10%
+5,071   up to 8,660     14%
+8,661   up to 14,070    23%
+14,071  up to 21,240    30%
+21,241  up to 40,230    33%
+Higher  than 40,230     45%
+</code></pre>
+
+<p>Here are some example answers:</p>
+
+<pre><code>    5,000 –&gt; 500
+    5,800 –&gt; 609.2
+    9,000 –&gt; 1087.8
+    15,000 –&gt; 2532.9
+    50,000 –&gt; 15,068.1
+</code></pre>
+
+<p>This problem is a bit tricky because the tax rate doesn’t apply to the <br>
+whole sum, only to the part that is within the current rate.</p>
+
+<p>A progressive tax system is a way to calculate a tax for a given price <br>
+using brackets each taxed separately using its rate. The french tax on <br>
+revenues is a good example of a progressive tax system.</p>
+
+<pre><code>To calculate his taxation, John will have to do this calculation 
+(see figure on left):
+
+= (10,000 x 0.105) + (35,000 x 0.256) + (5,000 x 0.4)
+= 1,050 + 8,960 + 2,000
+= 12,010
+
+John will have to pay $ 12,010
+
+If John revenues was below some bracket definition (take $ 25,000 for 
+example), only the last bracket containing the remaining amount to be 
+taxed is applied :
+
+= (10,000 x 0.105) + (15,000 x 0.256)
+
+Here nothing is taxed in the last bracket range at rate 40.
+</code></pre>
+
+<p>Solution:</p>
+
+<div class="highlight highlight-haskell"><pre>
+(|&gt;) x f = f x
+(|&gt;&gt;) x f = <span class="pl-c1">map</span> f x
+joinf functions element = <span class="pl-c1">map</span> ($ element) functions
+
+<span class="pl-c">-- Infinite number</span>
+above = <span class="pl-c1">1e30</span> 
+
+pairs xs = <span class="pl-c1">zip</span> xs (<span class="pl-c1">tail</span> xs)
+
+<span class="pl-c">{- </span>
+<span class="pl-c">    Tax rate function - Calculates the net tax rate in %</span>
+<span class="pl-c"></span>
+<span class="pl-c">    taxrate = 100 *  tax / (gross revenue)</span>
+<span class="pl-c"></span>
+<span class="pl-c">-}</span>
+taxrate taxfunction income = <span class="pl-c1">100.0</span>*(taxfunction income)/income
+
+<span class="pl-en">progressivetax</span> <span class="pl-k">::</span> [[<span class="pl-c1">Double</span>]] <span class="pl-k">-&gt;</span> <span class="pl-c1">Double</span> <span class="pl-k">-&gt;</span> <span class="pl-c1">Double</span>
+progressivetax taxtable income = amount
+            <span class="pl-k">where</span> 
+            rates = taxtable |&gt;&gt; (!!<span class="pl-c1">1</span>) |&gt;&gt; (/<span class="pl-c1">100.0</span>)  |&gt; <span class="pl-c1">tail</span>
+            levels = taxtable |&gt;&gt; (!!<span class="pl-c1">0</span>)
+            table = <span class="pl-c1">zip3</span> levels (<span class="pl-c1">tail</span> levels) rates            
+            amount = table |&gt;&gt; frow income |&gt; <span class="pl-c1">takeWhile</span> (&gt;<span class="pl-c1">0</span>) |&gt; <span class="pl-c1">sum</span>
+
+            frow x (xlow, xhigh, rate) | x &gt; xhigh = (xhigh-xlow)*rate 
+                                       | <span class="pl-c1">otherwise</span> = (x-xlow)*rate   
+taxsearch taxtable value = result        
+        <span class="pl-k">where</span>
+        rows = <span class="pl-c1">takeWhile</span> (\row -&gt; <span class="pl-c1">fst</span> row !! <span class="pl-c1">0</span> &lt;= value) (pairs taxtable)       
+        result = <span class="pl-k">case</span> rows <span class="pl-k">of</span> 
+                    <span class="pl-c1">[]</span> -&gt; taxtable !! <span class="pl-c1">0</span>
+                    xs -&gt; <span class="pl-c1">snd</span> $ <span class="pl-c1">last</span> rows
+
+<span class="pl-c">{- </span>
+<span class="pl-c">   This is useful for Brazil income tax calculation</span>
+<span class="pl-c"></span>
+<span class="pl-c">  [(Gross Salary  – Deduction - Social Security ) • Aliquot – Deduction] = IRRF </span>
+<span class="pl-c">  [(Salário Bruto – Dependentes – INSS) • Alíquota – Dedução] =</span>
+<span class="pl-c"></span>
+<span class="pl-c">-}</span>
+incometax taxtable income  = amount<span class="pl-c">--(tax, aliquot, discount)</span>
+                <span class="pl-k">where</span>
+
+                row = taxsearch taxtable income                
+                aliquot = row !! <span class="pl-c1">1</span>
+                discount = row !! <span class="pl-c1">2</span>                
+                amount = income*(aliquot/<span class="pl-c1">100.0</span>) - discount
+
+<span class="pl-c">{- Progressive Tax System -}</span>
+israeltaxbrackets = [
+    [<span class="pl-c1">0</span>,          <span class="pl-c1">0</span>],
+    [ <span class="pl-c1">5070.0</span>, <span class="pl-c1">10.0</span>],
+    [ <span class="pl-c1">8660.0</span>, <span class="pl-c1">14.0</span>],
+    [<span class="pl-c1">14070.0</span>, <span class="pl-c1">23.0</span>],
+    [<span class="pl-c1">21240.0</span>, <span class="pl-c1">30.0</span>],
+    [<span class="pl-c1">40230.0</span>, <span class="pl-c1">33.0</span>],
+    [above  , <span class="pl-c1">45.0</span>]
+    ]                    
+
+taxOfIsrael     = progressivetax israeltaxbrackets
+taxRateOfIsrael = taxrate taxOfIsrael
+
+braziltaxbrackets = [
+    [<span class="pl-c1">1787.77</span>,    <span class="pl-c1">0</span>,   <span class="pl-c1">0.00</span>],
+    [<span class="pl-c1">2679.29</span>,  <span class="pl-c1">7.5</span>, <span class="pl-c1">134.48</span>],
+    [<span class="pl-c1">3572.43</span>, <span class="pl-c1">15.0</span>, <span class="pl-c1">335.03</span>],
+    [<span class="pl-c1">4463.81</span>, <span class="pl-c1">22.5</span>, <span class="pl-c1">602.96</span>],
+    [above,    <span class="pl-c1">27.5</span>, <span class="pl-c1">826.15</span>]
+   ]
+
+
+taxOfBrazil = incometax braziltaxbrackets
+taxRateOfBrazil = taxrate  taxOfBrazil
+
+
+
+<span class="pl-c">{- </span>
+<span class="pl-c">    Unit test of a function of numerical input and output.</span>
+<span class="pl-c"></span>
+<span class="pl-c">    input       - Unit test case values             [t1, t2, t2, e5]</span>
+<span class="pl-c">    expected    - Expected value of each test case  [e1, e2, e3, e4]</span>
+<span class="pl-c">    tol         - Tolerance 1e-3 tipical value </span>
+<span class="pl-c">    f           - Function:                         error_i = abs(e_i-t_i)</span>
+<span class="pl-c"></span>
+<span class="pl-c">    Returns true if in all test cases  error_i &lt; tol</span>
+<span class="pl-c">-}</span>
+<span class="pl-en">testCaseNumeric</span> <span class="pl-k">::</span> (<span class="pl-k">Num</span> <span class="pl-smi">a</span>, <span class="pl-k">Ord</span> <span class="pl-smi">a</span>) <span class="pl-k">=&gt;</span> [<span class="pl-smi">a1</span>] <span class="pl-k">-&gt;</span> [<span class="pl-smi">a</span>] <span class="pl-k">-&gt;</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> (<span class="pl-smi">a1</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">a</span>) <span class="pl-k">-&gt;</span> <span class="pl-c1">Bool</span>
+testCaseNumeric input expected tol f = <span class="pl-c1">all</span> (\t -&gt; t &amp;&amp; <span class="pl-c1">True</span>) ( <span class="pl-c1">zipWith</span> (\x y -&gt; <span class="pl-c1">abs</span>(x-y) &lt; tol) (<span class="pl-c1">map</span> f input) expected )
+
+testIsraelTaxes = testCaseNumeric  
+    [<span class="pl-c1">5000</span>, <span class="pl-c1">5800</span>, <span class="pl-c1">9000</span>, <span class="pl-c1">15000</span>, <span class="pl-c1">50000</span>]
+    [<span class="pl-c1">500.0</span>,<span class="pl-c1">609.2</span>,<span class="pl-c1">1087.8</span>,<span class="pl-c1">2532.9</span>,<span class="pl-c1">15068.1</span>]
+    <span class="pl-c1">1e-3</span> taxOfIsrael
+
+λ&gt; testIsraelTaxes 
+<span class="pl-c1">True</span>
+λ&gt; 
+λ&gt; 
+λ&gt; taxOfIsrael <span class="pl-c1">5000</span>
+<span class="pl-c1">500.0</span>
+λ&gt; taxOfIsrael <span class="pl-c1">5800</span>
+<span class="pl-c1">609.2</span>
+λ&gt; taxOfIsrael <span class="pl-c1">1087.8</span>
+<span class="pl-c1">108.78</span>
+λ&gt; taxOfIsrael <span class="pl-c1">15000.0</span>
+<span class="pl-c1">2532.9</span>
+λ&gt; taxOfIsrael <span class="pl-c1">50000.0</span>
+<span class="pl-c1">15068.1</span>
+λ&gt; 
+λ&gt; taxRateOfIsrael <span class="pl-c1">5000</span>
+<span class="pl-c1">10.0</span>
+λ&gt; taxRateOfIsrael <span class="pl-c1">5800</span>
+<span class="pl-c1">10.50344827586207</span>
+λ&gt; taxRateOfIsrael <span class="pl-c1">15000</span>
+<span class="pl-c1">16.886</span>
+λ&gt; taxRateOfIsrael <span class="pl-c1">50000</span>
+<span class="pl-c1">30.1362</span>
+</pre></div>
+
+<p>Sources: <br>
+    * <a href="http://ayende.com/blog/108545/the-tax-calculation-challenge">http://ayende.com/blog/108545/the-tax-calculation-challenge</a><br>
+    * <a href="http://gghez.com/c-net-implementation-of-a-progressive-tax-system/">http://gghez.com/c-net-implementation-of-a-progressive-tax-system/</a></p>
 
 <h3>Small DSL Domain Specific Language</h3>
 
@@ -4474,7 +4654,115 @@ cup_combinations =
 
 <h2>Libraries</h2>
 
+<h3>System Programming in Haskell</h3>
+
+<p><strong>Directory</strong></p>
+
+<p>Get current Directory</p>
+
+<pre><code>λ&gt; import System.Directory
+λ&gt; 
+λ&gt; getCurrentDirectory 
+"/home/tux/PycharmProjects/Haskell"
+λ&gt; 
+</code></pre>
+
+<p>Change Current Directory</p>
+
+<div class="highlight highlight-haskell"><pre>λ&gt; <span class="pl-k">import</span> <span class="pl-c1">System.Directory</span>
+λ&gt; 
+λ&gt; setCurrentDirectory <span class="pl-s"><span class="pl-pds">"</span>/<span class="pl-pds">"</span></span>
+λ&gt; 
+λ&gt; getCurrentDirectory 
+<span class="pl-s"><span class="pl-pds">"</span>/<span class="pl-pds">"</span></span>
+λ&gt; 
+<span class="pl-en">getCurrentDirectory</span> <span class="pl-k">::</span> <span class="pl-c1">IO</span> <span class="pl-c1">FilePath</span>
+λ&gt; 
+λ&gt; 
+λ&gt; <span class="pl-c1">fmap</span> (==<span class="pl-s"><span class="pl-pds">"</span>/<span class="pl-pds">"</span></span>) getCurrentDirectory 
+<span class="pl-c1">True</span>
+λ&gt; 
+λ&gt; liftM (==<span class="pl-s"><span class="pl-pds">"</span>/<span class="pl-pds">"</span></span>) getCurrentDirectory 
+<span class="pl-c1">True</span>
+λ&gt; </pre></div>
+
+<p>List Directory Contents</p>
+
+<div class="highlight highlight-haskell"><pre>λ&gt; <span class="pl-k">import</span> <span class="pl-c1">System.Directory</span>
+λ&gt;
+λ&gt;  getDirectoryContents <span class="pl-s"><span class="pl-pds">"</span>/usr<span class="pl-pds">"</span></span>
+[<span class="pl-s"><span class="pl-pds">"</span>.<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>include<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>src<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>local<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>bin<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>games<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>share<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>sbin<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>lib<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>..<span class="pl-pds">"</span></span>]
+λ&gt; 
+λ&gt; :t getDirectoryContents 
+<span class="pl-en">getDirectoryContents</span> <span class="pl-k">::</span> <span class="pl-c1">FilePath</span> <span class="pl-k">-&gt;</span> <span class="pl-c1">IO</span> [<span class="pl-c1">FilePath</span>]
+λ&gt; </pre></div>
+
+<p>Especial Directory Location</p>
+
+<div class="highlight highlight-haskell"><pre>λ&gt; getHomeDirectory
+<span class="pl-s"><span class="pl-pds">"</span>/home/tux<span class="pl-pds">"</span></span>
+λ&gt; 
+λ&gt; getAppUserDataDirectory <span class="pl-s"><span class="pl-pds">"</span>myApp<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>/home/tux/.myApp<span class="pl-pds">"</span></span>
+λ&gt; 
+λ&gt; getUserDocumentsDirectory
+<span class="pl-s"><span class="pl-pds">"</span>/home/tux<span class="pl-pds">"</span></span>
+λ&gt; </pre></div>
+
+<p><strong>Running External Commands</strong></p>
+
+<div class="highlight highlight-haskell"><pre>λ&gt; <span class="pl-k">import</span> <span class="pl-c1">System.Cmd</span>
+λ&gt; 
+λ&gt; :t rawSystem
+<span class="pl-en">rawSystem</span> <span class="pl-k">::</span> <span class="pl-c1">String</span> <span class="pl-k">-&gt;</span> [<span class="pl-c1">String</span>] <span class="pl-k">-&gt;</span> <span class="pl-c1">IO</span> <span class="pl-k">GHC</span>.<span class="pl-c1">IO</span>.<span class="pl-k">Exception</span>.<span class="pl-k">ExitCode</span>
+λ&gt; 
+λ&gt; rawSystem <span class="pl-s"><span class="pl-pds">"</span>ls<span class="pl-pds">"</span></span> [<span class="pl-s"><span class="pl-pds">"</span>-l<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>/usr<span class="pl-pds">"</span></span>]
+total <span class="pl-c1">260</span>
+drwxr-xr-x   <span class="pl-c1">2</span> root root <span class="pl-c1">118784</span> <span class="pl-c1">Abr</span> <span class="pl-c1">26</span> <span class="pl-c1">03</span>:<span class="pl-c1">38</span> bin
+drwxr-xr-x   <span class="pl-c1">2</span> root root   <span class="pl-c1">4096</span> <span class="pl-c1">Abr</span> <span class="pl-c1">10</span>  <span class="pl-c1">2014</span> games
+drwxr-xr-x <span class="pl-c1">131</span> root root  <span class="pl-c1">36864</span> <span class="pl-c1">Mar</span> <span class="pl-c1">11</span> <span class="pl-c1">01</span>:<span class="pl-c1">38</span> include
+drwxr-xr-x <span class="pl-c1">261</span> root root  <span class="pl-c1">53248</span> <span class="pl-c1">Abr</span> <span class="pl-c1">14</span> <span class="pl-c1">16</span>:<span class="pl-c1">46</span> lib
+drwxr-xr-x  <span class="pl-c1">10</span> root root   <span class="pl-c1">4096</span> <span class="pl-c1">Dez</span>  <span class="pl-c1">2</span> <span class="pl-c1">18</span>:<span class="pl-c1">55</span> local
+drwxr-xr-x   <span class="pl-c1">2</span> root root  <span class="pl-c1">12288</span> <span class="pl-c1">Abr</span>  <span class="pl-c1">3</span> <span class="pl-c1">13</span>:<span class="pl-c1">28</span> sbin
+drwxr-xr-x <span class="pl-c1">460</span> root root  <span class="pl-c1">20480</span> <span class="pl-c1">Abr</span> <span class="pl-c1">26</span> <span class="pl-c1">03</span>:<span class="pl-c1">38</span> share
+drwxr-xr-x  <span class="pl-c1">13</span> root root   <span class="pl-c1">4096</span> <span class="pl-c1">Jan</span> <span class="pl-c1">13</span> <span class="pl-c1">21</span>:<span class="pl-c1">03</span> src
+<span class="pl-c1">ExitSuccess</span>
+λ&gt;</pre></div>
+
+<p><strong>Reading input from a system command in Haskell</strong></p>
+
+<p>This command executes ls -la and gets the output.</p>
+
+<div class="highlight highlight-haskell"><pre><span class="pl-k">import</span> <span class="pl-c1">System.Process</span>
+test = readProcess <span class="pl-s"><span class="pl-pds">"</span>ls<span class="pl-pds">"</span></span> [<span class="pl-s"><span class="pl-pds">"</span>-a<span class="pl-pds">"</span></span>] <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>
+
+
+λ&gt; <span class="pl-k">import</span> <span class="pl-c1">System.Process</span>
+λ&gt; <span class="pl-k">let</span> test = readProcess <span class="pl-s"><span class="pl-pds">"</span>ls<span class="pl-pds">"</span></span> [<span class="pl-s"><span class="pl-pds">"</span>-a<span class="pl-pds">"</span></span>] <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>
+λ&gt; 
+λ&gt; :t test
+<span class="pl-en">test</span> <span class="pl-k">::</span> <span class="pl-c1">IO</span> <span class="pl-c1">String</span>
+λ&gt; 
+λ&gt; test &gt;&gt;= <span class="pl-c1">putStrLn</span> 
+.
+..
+adt2.py
+adt.py
+build.sh
+build_zeromq.sh
+clean.sh
+codes
+comparison.ods
+dict.sh
+ffi
+figure1.png
+.git
+
+</pre></div>
+
 <h3>Data.Time</h3>
+
+<h4>System</h4>
 
 <h4>Get current year / month / day in Haskell</h4>
 
@@ -4725,8 +5013,6 @@ fromGregorian <span class="pl-c1">2015</span> <span class="pl-c1">0</span> <span
 
 <h2>Documentation and Learning Materials</h2>
 
-<h3>Documentation</h3>
-
 <h3>Code Search Engine</h3>
 
 <p>Haskell API search engine, which allows you to search many <br>
@@ -4786,7 +5072,7 @@ standard Haskell libraries by either function name, or by approximate type signa
 cabal install &lt;some package&gt;
 </code></pre>
 
-<h3>Online Books</h3>
+<h4>Online Books</h4>
 
 <ul>
 <li><a href="http://book.realworldhaskell.org">Real-World Haskell by Bryan O'Sullivan et al.</a></li>
@@ -4795,7 +5081,7 @@ cabal install &lt;some package&gt;
 <li><p><a href="http://haskelldata.com/">Haskell Data Analysis Cookbook</a></p></li>
 </ul>
 
-<h3>Papers and Articles</h3>
+<h4>Papers and Articles</h4>
 
 <p>Papers</p>
 
@@ -4830,7 +5116,7 @@ cabal install &lt;some package&gt;
 <li><a href="http://paulkoerbitz.de/posts/Why-I-love-Haskell.html">http://paulkoerbitz.de/posts/Why-I-love-Haskell.html</a></li>
 </ul>
 
-<h3>Community</h3>
+<h4>Community</h4>
 
 <ul>
 <li><a href="http://reddit.com/r/haskell">http://reddit.com/r/haskell</a></li>
@@ -4871,7 +5157,7 @@ cabal install &lt;some package&gt;
 <li><p><a href="http://en.wikipedia.org/wiki/Coroutine">Coroutine</a></p></li>
 </ul>
 
-<h3>References by Subject</h3>
+<h4>References by Subject</h4>
 
 <ul>
 <li><a href="http://www.cis.upenn.edu/%7Ematuszek/Concise%20Guides/Concise%20Haskell98.html">http://www.cis.upenn.edu/~matuszek/Concise%20Guides/Concise%20Haskell98.html</a></li>
@@ -4952,7 +5238,7 @@ cabal install &lt;some package&gt;
 <li><a href="http://en.wikibooks.org/wiki/Haskell/Control_structures">http://en.wikibooks.org/wiki/Haskell/Control_structures</a></li>
 </ul>
 
-<h3>Lectures</h3>
+<h4>Video Lectures</h4>
 
 <p><strong>Dr. Erik Meijier Serie: Functional Programming Fundamentals</strong></p>
 
