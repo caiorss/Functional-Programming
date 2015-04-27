@@ -422,7 +422,7 @@ x**y    pour y tout type de nombre (Float par exemple)
 
 #### Application Operator - $
 
-Tje application operator '$' makes code more readable and cleaner since substitutes parenthesis.
+The application operator '$' makes code more readable and cleaner since substitutes parenthesis.
 It is also useful in higher-order situations, such as map ($ 0) xs, or zipWith ($) fs xs. 
 
 ```haskell
