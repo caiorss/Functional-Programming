@@ -40,11 +40,11 @@
                 <div class="comment">
                   <div class="comment-content">
                     <div class="comment-body markdown-body markdown-format">
-                      <h2>Functional Programming in Haskell by Examples</h2>
+                      <h1>Functional Programming in Haskell by Examples</h1>
 
 <p><a href="images/haskellLogo.png" target="_blank"><img src="images/haskellLogo.png" alt="" style="max-width:100%;"></a></p>
 
-<p>The purpose of this tutorial is to illustrate functional programming concepts in Haskell language by providing reusable and useful pieces of codes, examples, case study and applications.</p>
+<p>The purpose of this tutorial is to illustrate functional programming concepts in Haskell programing language by providing reusable and useful pieces of codes, examples, case study and applications.</p>
 
 <p>Notes: </p>
 
@@ -64,26 +64,28 @@ and the line bellow without the symbol &gt; are the output.</li>
 <p><strong>Table of Contents</strong>  <em>generated with <a href="https://github.com/thlorenz/doctoc">DocToc</a></em></p>
 
 <ul>
+<li>
+<a href="#haskell">Haskell</a>
+
+<ul>
+<li><a href="#suffixes-of-file-names-for-haskell">Suffixes of file names for Haskell</a></li>
 <li><a href="#toolset">Toolset</a></li>
+<li><a href="#ghci-reference">GHCI Reference</a></li>
+</ul>
+</li>
 <li>
-<a href="#ghci-reference">GHCI Reference</a>
+<a href="#function-programming-concepts">Function Programming Concepts</a>
 
 <ul>
-<li><a href="#concepts">Concepts</a></li>
-<li><a href="#functional-programming">Functional Programming</a></li>
-<li><a href="#functional-programming-design-patterns">Functional Programming Design Patterns</a></li>
-<li><a href="#haskell-features">Haskell Features</a></li>
-<li>
-<a href="#concepts-1">Concepts</a>
-
-<ul>
+<li><a href="#overview">Overview</a></li>
 <li><a href="#pure-functions">Pure Functions</a></li>
 <li><a href="#lazy-evaluation">Lazy Evaluation</a></li>
 </ul>
 </li>
-<li><a href="#basic-syntax">Basic Syntax</a></li>
-</ul>
-</li>
+<li>
+<a href="#basic-syntax">Basic Syntax</a>
+
+<ul>
 <li>
 <a href="#operators">Operators</a>
 
@@ -103,6 +105,7 @@ and the line bellow without the symbol &gt; are the output.</li>
 <li><a href="#basic-classes">Basic Classes</a></li>
 <li><a href="#basic-types">Basic Types</a></li>
 <li><a href="#numeric-types-conversion">Numeric Types Conversion</a></li>
+<li><a href="#haskell-style-syntax-for-types">Haskell-Style Syntax for types:</a></li>
 </ul>
 </li>
 <li>
@@ -112,9 +115,14 @@ and the line bellow without the symbol &gt; are the output.</li>
 <li><a href="#creating-lists">Creating Lists</a></li>
 <li><a href="#list-operations">List Operations</a></li>
 <li><a href="#chekings-lists">Chekings Lists</a></li>
-<li><a href="#functions">Functions</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li>
+<a href="#functions">Functions</a>
+
+<ul>
 <li><a href="#creating-functions">Creating functions</a></li>
 <li><a href="#anonymous-functions-or-lambda-functions">Anonymous Functions or Lambda Functions</a></li>
 <li><a href="#infix-operators-functions">Infix Operators Functions</a></li>
@@ -137,31 +145,31 @@ and the line bellow without the symbol &gt; are the output.</li>
 <li><a href="#the-%24-apply-operator">The $ apply operator.</a></li>
 </ul>
 </li>
-<li>
-<a href="#useful-notations-for-functions">Useful notations for functions</a>
-
-<ul>
-<li><a href="#pattern-matching">Pattern Matching</a></li>
-<li><a href="#list-comprehension">List Comprehension</a></li>
+<li><a href="#useful-notations-for-functions">Useful notations for functions</a></li>
 </ul>
 </li>
+<li><a href="#pattern-matching">Pattern Matching</a></li>
+<li>
+<a href="#list-comprehension">List Comprehension</a>
+
+<ul>
 <li><a href="#simple-list-comprehension">Simple List Comprehension</a></li>
 <li><a href="#comprehensions-with-multiple-generators">Comprehensions with multiple generators</a></li>
 <li><a href="#function-inside-list-comprehension">Function Inside List Comprehension</a></li>
-<li>
-<a href="#comprehension-with-guards">Comprehension with Guards</a>
-
-<ul>
-<li><a href="#abstract-data-type">Abstract Data Type</a></li>
-<li><a href="#functors-monads-applicatives-and-monoids">Functors, Monads, Applicatives and Monoids</a></li>
+<li><a href="#comprehension-with-guards">Comprehension with Guards</a></li>
 </ul>
 </li>
+<li><a href="#abstract-data-type">Abstract Data Type</a></li>
+<li>
+<a href="#functors-monads-applicatives-and-monoids">Functors, Monads, Applicatives and Monoids</a>
+
+<ul>
 <li><a href="#functors">Functors</a></li>
 <li>
 <a href="#monads">Monads</a>
 
 <ul>
-<li><a href="#overview">Overview</a></li>
+<li><a href="#overview-1">Overview</a></li>
 <li><a href="#bind-operator">Bind Operator</a></li>
 <li><a href="#monad-laws">Monad Laws</a></li>
 <li><a href="#selected-monad-implementations">Selected Monad Implementations</a></li>
@@ -202,9 +210,15 @@ and the line bellow without the symbol &gt; are the output.</li>
 </li>
 <li><a href="#io-examples">IO Examples</a></li>
 <li><a href="#sources-1">Sources</a></li>
-<li><a href="#applications">Applications</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a href="#useful-custom-functions-iterators-and-operators">Useful Custom Functions/ Iterators and Operators</a></li>
+<li>
+<a href="#applications">Applications</a>
+
+<ul>
 <li><a href="#mathematics">Mathematics</a></li>
 <li>
 <a href="#numerical-methods">Numerical Methods</a>
@@ -226,13 +240,13 @@ and the line bellow without the symbol &gt; are the output.</li>
 </li>
 <li><a href="#vectors">Vectors</a></li>
 <li><a href="#tax-brackets">Tax Brackets</a></li>
-<li>
-<a href="#small-dsl-domain-specific-language">Small DSL Domain Specific Language</a>
-
-<ul>
-<li><a href="#libraries">Libraries</a></li>
+<li><a href="#small-dsl-domain-specific-language">Small DSL Domain Specific Language</a></li>
 </ul>
 </li>
+<li>
+<a href="#libraries">Libraries</a>
+
+<ul>
 <li><a href="#system-programming-in-haskell">System Programming in Haskell</a></li>
 <li>
 <a href="#datatime">Data.Time</a>
@@ -252,9 +266,28 @@ and the line bellow without the symbol &gt; are the output.</li>
 <li><a href="#printing-a-date">Printing a Date</a></li>
 </ul>
 </li>
-<li><a href="#documentation-and-learning-materials">Documentation and Learning Materials</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li>
+<a href="#miscelanious">Miscelanious</a>
+
+<ul>
+<li><a href="#ghci-configuration-file">GHCI configuration file</a></li>
+<li>
+<a href="#troubleshooting">Troubleshooting</a>
+
+<ul>
+<li><a href="#importing-ambigous-modules-in-ghci">Importing Ambigous Modules in GHCi</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="#documentation-and-learning-materials">Documentation and Learning Materials</a>
+
+<ul>
 <li>
 <a href="#code-search-engine">Code Search Engine</a>
 
@@ -270,8 +303,46 @@ and the line bellow without the symbol &gt; are the output.</li>
 </ul>
 </li>
 </ul>
+</li>
+</ul>
 
 
+
+<h2>Haskell</h2>
+
+<ul>
+<li>Pure Functional programming language</li>
+<li>Strong Static Typed Language </li>
+<li>Type Inference (The haskell compiler deduce the types for you). </li>
+<li>Lazy Evaluation ( Dealayed evaluation) by default</li>
+<li>Data Imutability/ Haskell has no variables
+
+<ul>
+<li>Values can be bound to a name and can only be assigned once.</li>
+<li>Values can never change.</li>
+</ul>
+</li>
+<li>Haskell has not for-loop, while statements.</li>
+<li>Algebraic Data types</li>
+<li>Pattern Matching</li>
+<li>Tail Recursions</li>
+<li>Compiles to native code.</li>
+</ul>
+
+<h3>Suffixes of file names for Haskell</h3>
+
+<pre><code>.hs    Haskell source code; preprocess, compile
+
+.lhs   literate Haskell source; unlit, preprocess, compile
+
+.hi    Interface file; contains information about exported symbols
+
+.hc    intermediate C files
+
+.x_o   way x object files; common ways are: p, u, s
+
+.x_hi  way x interface files
+</code></pre>
 
 <h3>Toolset</h3>
 
@@ -353,9 +424,11 @@ and the line bellow without the symbol &gt; are the output.</li>
 </tbody>
 </table>
 
-<h2>Concepts</h2>
+<h2>Function Programming Concepts</h2>
 
-<h4>Functional Programming</h4>
+<h3>Overview</h3>
+
+<p><strong>Functional Programming</strong></p>
 
 <p>Functional Programming is all about programming with functions.</p>
 
@@ -381,7 +454,7 @@ and the line bellow without the symbol &gt; are the output.</li>
 <li>Algebraic Data Types</li>
 </ul>
 
-<h4>Functional Programming Design Patterns</h4>
+<p><strong>Functional Programming Design Patterns</strong></p>
 
 <ul>
 <li>Curry/ Partial function application  - Creating new functions by holding a parameter constant</li>
@@ -394,46 +467,25 @@ and the line bellow without the symbol &gt; are the output.</li>
 <li>Pattern Matching</li>
 </ul>
 
-<h4>Haskell Features</h4>
-
-<ul>
-<li>Pure Functional programming language</li>
-<li>Strong Static Typed Language </li>
-<li>Type Inference (The haskell compiler deduce the types for you). </li>
-<li>Lazy Evaluation ( Dealayed evaluation) by default</li>
-<li>Data Imutability/ Haskell has no variables
-
-<ul>
-<li>Values can be bound to a name and can only be assigned once.</li>
-<li>Values can never change.</li>
-</ul>
-</li>
-<li>Haskell has not for-loop, while statements.</li>
-<li>Algebraic Data types</li>
-<li>Pattern Matching</li>
-<li>Tail Recursions</li>
-<li>Compiles to native code.</li>
-</ul>
-
-<h4>Concepts</h4>
-
-<h5>Pure Functions</h5>
+<h3>Pure Functions</h3>
 
 <p>Pure functions:</p>
 
 <ul>
 <li>Are functions without side effects, like mathematical functions. </li>
 <li>For the same input the functions always returns the same output.</li>
-<li>Pure functions doens't rely on global variable and doesn't have internal states.</li>
-<li>Pure functions are deterministic</li>
 <li>The result of any function call is fully determined by its arguments. </li>
+<li>Pure functions doens't rely on global variable and doesn't have internal states.</li>
+<li>They don't do IO, i.e .:. don't print, don't write a file ...</li>
+<li>Pure functions are stateless</li>
+<li>Pure functions are deterministic</li>
 </ul>
 
 <p>Why Pure Functions:</p>
 
 <ul>
 <li>Composability, one fuction can be connected to another.</li>
-<li>Can run in parallel, multi threading, multi core and GPU.</li>
+<li>Can run in parallel, multi threading, multi core, GPU and distributed systems.</li>
 <li>Better debugging and testing.</li>
 <li>Predictability</li>
 </ul>
@@ -450,7 +502,7 @@ and the line bellow without the symbol &gt; are the output.</li>
 
 <ul>
 <li>Impure functions doesn't have always the same output for the same</li>
-<li>Impure functions does IO or has Hidden State, Global Variables</li>
+<li>Impure functions does IO or has Hidden State or Global Variables</li>
 </ul>
 
 <div class="highlight highlight-python"><pre>exponent <span class="pl-k">=</span> <span class="pl-c1">2</span>
@@ -516,7 +568,7 @@ for the same input, it depends on the global variable exponent:</p>
 [<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>]
 </pre></div>
 
-<h5>Lazy Evaluation</h5>
+<h3>Lazy Evaluation</h3>
 
 <p>“Lazy evaluation” means that data structures are computed incrementally, as they are needed (so the trees never exist in memory all at once) parts that are never needed are never computed. Haskell uses lazy evaluation by default.</p>
 
@@ -976,6 +1028,25 @@ fromRealFrac            =  fromRational . toRational
 </code></pre>
 
 <p><a href="https://www.haskell.org/tutorial/numbers.html">https://www.haskell.org/tutorial/numbers.html</a></p>
+
+<h4>Haskell-Style Syntax for types:</h4>
+
+<p>Function g from type a to type b: </p>
+
+<div class="highlight highlight-haskell"><pre><span class="pl-en">g</span> <span class="pl-k">::</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">b</span></pre></div>
+
+<p>Function with two arguments and result of type a:</p>
+
+<div class="highlight highlight-haskell"><pre><span class="pl-en">s</span> <span class="pl-k">::</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">a</span></pre></div>
+
+<p>Function f from a type a to type m b, a type m parametrized on type b</p>
+
+<div class="highlight highlight-haskell"><pre><span class="pl-en">f</span> <span class="pl-k">::</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">m</span> <span class="pl-smi">b</span></pre></div>
+
+<p>A function h wich takes as argument two functions of type <br>
+a -&gt; b and b -&gt; c and returns a function of type a -&gt; m b</p>
+
+<div class="highlight highlight-haskell"><pre><span class="pl-en">h</span> <span class="pl-k">::</span> ( <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">b</span>) <span class="pl-k">-&gt;</span> (<span class="pl-smi">b</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">c</span>) <span class="pl-k">-&gt;</span> ( <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">m</span> <span class="pl-smi">b</span>)</pre></div>
 
 <h3>Lists</h3>
 
@@ -3789,6 +3860,92 @@ liftM (<span class="pl-c1">map</span> $ <span class="pl-c1">uncurry</span> (+)) 
 <li><a href="http://squing.blogspot.com.br/2008/01/unmonad-tutorial-io-in-haskell-for-non.html">http://squing.blogspot.com.br/2008/01/unmonad-tutorial-io-in-haskell-for-non.html</a></li>
 </ul>
 
+<h2>Useful Custom Functions/ Iterators and Operators</h2>
+
+<p>This a collection of useful short code snippets. </p>
+
+<p><strong>Pairs</strong></p>
+
+<p>Definition:</p>
+
+<div class="highlight highlight-haskell"><pre><span class="pl-k">let</span> pairs alist = <span class="pl-c1">zip</span> alist (<span class="pl-c1">tail</span> alist)</pre></div>
+
+<p>Example:</p>
+
+<div class="highlight highlight-haskell"><pre>
+λ&gt; pairs [<span class="pl-c1">1</span>..<span class="pl-c1">5</span>]
+[(<span class="pl-c1">1</span>,<span class="pl-c1">2</span>),(<span class="pl-c1">2</span>,<span class="pl-c1">3</span>),(<span class="pl-c1">3</span>,<span class="pl-c1">4</span>),(<span class="pl-c1">4</span>,<span class="pl-c1">5</span><span class="pl-k">)]</span>
+
+<span class="pl-c">{- [(X, Y)]  coordinates of points in a plane -}</span>
+λ&gt; <span class="pl-k">let</span> points = [(<span class="pl-c1">1.0</span>, <span class="pl-c1">2.0</span>), (<span class="pl-c1">3.0</span>, <span class="pl-c1">4.0</span>), (-<span class="pl-c1">1.0</span>, <span class="pl-c1">5.0</span>), (<span class="pl-c1">6.0</span>, <span class="pl-c1">6.0</span><span class="pl-k">)]</span>
+λ&gt; <span class="pl-k">let</span> distance (x1, y1) (x2, y2) = <span class="pl-c1">sqrt</span>( (x2-x1)^<span class="pl-c1">2</span> + (y2-y1)^<span class="pl-c1">2</span> )
+
+λ&gt; <span class="pl-k">let</span> <span class="pl-c1">lines</span> = pairs points 
+λ&gt; <span class="pl-c1">lines</span>
+[((<span class="pl-c1">1.0</span>,<span class="pl-c1">2.0</span>),(<span class="pl-c1">3.0</span>,<span class="pl-c1">4.0</span>)),((<span class="pl-c1">3.0</span>,<span class="pl-c1">4.0</span>),(-<span class="pl-c1">1.0</span>,<span class="pl-c1">5.0</span>)),((-<span class="pl-c1">1.0</span>,<span class="pl-c1">5.0</span>),(<span class="pl-c1">6.0</span>,<span class="pl-c1">6.0</span>)<span class="pl-k">)]</span>
+λ&gt; 
+
+λ&gt; distance (<span class="pl-c1">1.0</span>, <span class="pl-c1">2.0</span>) (<span class="pl-c1">3.0</span>, <span class="pl-c1">4.0</span>)
+<span class="pl-c1">2.8284271247461903</span>
+λ&gt; 
+
+<span class="pl-c">{- Calculate the length of each line segment -}</span>
+
+λ&gt; <span class="pl-c1">map</span> (<span class="pl-c1">uncurry</span>(distance)) <span class="pl-c1">lines</span>
+[<span class="pl-c1">2.8284271247461903</span>,<span class="pl-c1">4.123105625617661</span>,<span class="pl-c1">7.0710678118654755</span>]
+λ&gt; 
+
+λ&gt; <span class="pl-c1">sum</span> $ <span class="pl-c1">map</span> (<span class="pl-c1">uncurry</span>(distance)) <span class="pl-c1">lines</span>
+<span class="pl-c1">14.022600562229327</span>
+λ&gt; 
+
+λ&gt; <span class="pl-k">let</span> totalLenght points  =  <span class="pl-c1">sum</span> $  <span class="pl-c1">map</span> (<span class="pl-c1">uncurry</span>(distance)) $ pairs (points)
+λ&gt; 
+λ&gt; totalLenght points 
+<span class="pl-c1">14.022600562229327</span>
+λ&gt; 
+</pre></div>
+
+<p><strong>Sliding Window Iterator</strong></p>
+
+<p>This iterator is used in Scala and it is a generalized pairs iterator.</p>
+
+<p>Definition:</p>
+
+<div class="highlight highlight-haskell"><pre>sliding n alist = <span class="pl-c1">map</span> (<span class="pl-c1">take</span> n) (<span class="pl-c1">take</span> (<span class="pl-c1">length</span>(alist) -n + <span class="pl-c1">1</span> ) $ <span class="pl-c1">iterate</span> <span class="pl-c1">tail</span> alist)</pre></div>
+
+<p>Example:</p>
+
+<div class="highlight highlight-haskell"><pre>λ&gt; sliding <span class="pl-c1">3</span> [<span class="pl-c1">1</span>..<span class="pl-c1">10</span>]
+[[<span class="pl-c1">1</span>,<span class="pl-c1">2</span>,<span class="pl-c1">3</span>],[<span class="pl-c1">2</span>,<span class="pl-c1">3</span>,<span class="pl-c1">4</span>],[<span class="pl-c1">3</span>,<span class="pl-c1">4</span>,<span class="pl-c1">5</span>],[<span class="pl-c1">4</span>,<span class="pl-c1">5</span>,<span class="pl-c1">6</span>],[<span class="pl-c1">5</span>,<span class="pl-c1">6</span>,<span class="pl-c1">7</span>],[<span class="pl-c1">6</span>,<span class="pl-c1">7</span>,<span class="pl-c1">8</span>],[<span class="pl-c1">7</span>,<span class="pl-c1">8</span>,<span class="pl-c1">9</span>],[<span class="pl-c1">8</span>,<span class="pl-c1">9</span>,<span class="pl-c1">10</span><span class="pl-k">]]</span>
+λ&gt; 
+λ&gt; sliding <span class="pl-c1">4</span> [<span class="pl-c1">1</span>..<span class="pl-c1">10</span>]
+[[<span class="pl-c1">1</span>,<span class="pl-c1">2</span>,<span class="pl-c1">3</span>,<span class="pl-c1">4</span>],[<span class="pl-c1">2</span>,<span class="pl-c1">3</span>,<span class="pl-c1">4</span>,<span class="pl-c1">5</span>],[<span class="pl-c1">3</span>,<span class="pl-c1">4</span>,<span class="pl-c1">5</span>,<span class="pl-c1">6</span>],[<span class="pl-c1">4</span>,<span class="pl-c1">5</span>,<span class="pl-c1">6</span>,<span class="pl-c1">7</span>],[<span class="pl-c1">5</span>,<span class="pl-c1">6</span>,<span class="pl-c1">7</span>,<span class="pl-c1">8</span>],[<span class="pl-c1">6</span>,<span class="pl-c1">7</span>,<span class="pl-c1">8</span>,<span class="pl-c1">9</span>],[<span class="pl-c1">7</span>,<span class="pl-c1">8</span>,<span class="pl-c1">9</span>,<span class="pl-c1">10</span><span class="pl-k">]]</span></pre></div>
+
+<p>Scala Equivalent</p>
+
+<pre><code>scala&gt; (1 to 5).iterator.sliding(3).toList
+res2: List[Seq[Int]] = List(List(1, 2, 3), List(2, 3, 4), List(3, 4, 5))
+</code></pre>
+
+<p><strong>Enumerate</strong></p>
+
+<p>Equivalent to python enumerate.</p>
+
+<p>Definition:</p>
+
+<div class="highlight highlight-haskell"><pre><span class="pl-en">enumerate</span> <span class="pl-k">::</span> [<span class="pl-smi">b</span>] <span class="pl-k">-&gt;</span> [(<span class="pl-c1">Int</span>, <span class="pl-smi">b</span>)]
+enumerate alist = <span class="pl-c1">zip</span> [<span class="pl-c1">0</span>..(<span class="pl-c1">length</span>(alist)-<span class="pl-c1">1</span><span class="pl-k">)]</span> alist</pre></div>
+
+<p>Example:</p>
+
+<div class="highlight highlight-haskell"><pre>λ&gt; enumerate [<span class="pl-s"><span class="pl-pds">'</span>a<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>b<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>c<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>d<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>e<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>f<span class="pl-pds">'</span></span>]
+[(<span class="pl-c1">0</span>,<span class="pl-s"><span class="pl-pds">'</span>a<span class="pl-pds">'</span></span>),(<span class="pl-c1">1</span>,<span class="pl-s"><span class="pl-pds">'</span>b<span class="pl-pds">'</span></span>),(<span class="pl-c1">2</span>,<span class="pl-s"><span class="pl-pds">'</span>c<span class="pl-pds">'</span></span>),(<span class="pl-c1">3</span>,<span class="pl-s"><span class="pl-pds">'</span>d<span class="pl-pds">'</span></span>),(<span class="pl-c1">4</span>,<span class="pl-s"><span class="pl-pds">'</span>e<span class="pl-pds">'</span></span>),(<span class="pl-c1">5</span>,<span class="pl-s"><span class="pl-pds">'</span>f<span class="pl-pds">'</span></span><span class="pl-k">)]</span>
+
+λ&gt; <span class="pl-c1">take</span> <span class="pl-c1">8</span>  (enumerate [<span class="pl-s"><span class="pl-pds">'</span>a<span class="pl-pds">'</span></span>..<span class="pl-s"><span class="pl-pds">'</span>z<span class="pl-pds">'</span></span>])
+[(<span class="pl-c1">0</span>,<span class="pl-s"><span class="pl-pds">'</span>a<span class="pl-pds">'</span></span>),(<span class="pl-c1">1</span>,<span class="pl-s"><span class="pl-pds">'</span>b<span class="pl-pds">'</span></span>),(<span class="pl-c1">2</span>,<span class="pl-s"><span class="pl-pds">'</span>c<span class="pl-pds">'</span></span>),(<span class="pl-c1">3</span>,<span class="pl-s"><span class="pl-pds">'</span>d<span class="pl-pds">'</span></span>),(<span class="pl-c1">4</span>,<span class="pl-s"><span class="pl-pds">'</span>e<span class="pl-pds">'</span></span>),(<span class="pl-c1">5</span>,<span class="pl-s"><span class="pl-pds">'</span>f<span class="pl-pds">'</span></span>),(<span class="pl-c1">6</span>,<span class="pl-s"><span class="pl-pds">'</span>g<span class="pl-pds">'</span></span>),(<span class="pl-c1">7</span>,<span class="pl-s"><span class="pl-pds">'</span>h<span class="pl-pds">'</span></span><span class="pl-k">)]</span>
+λ&gt; </pre></div>
+
 <h2>Applications</h2>
 
 <h3>Mathematics</h3>
@@ -4697,7 +4854,7 @@ cup_combinations =
 <span class="pl-en">getDirectoryContents</span> <span class="pl-k">::</span> <span class="pl-c1">FilePath</span> <span class="pl-k">-&gt;</span> <span class="pl-c1">IO</span> [<span class="pl-c1">FilePath</span>]
 λ&gt; </pre></div>
 
-<p>Especial Directory Location</p>
+<p>Special Directories Location</p>
 
 <div class="highlight highlight-haskell"><pre>λ&gt; getHomeDirectory
 <span class="pl-s"><span class="pl-pds">"</span>/home/tux<span class="pl-pds">"</span></span>
@@ -5010,6 +5167,100 @@ fromGregorian <span class="pl-c1">2015</span> <span class="pl-c1">0</span> <span
 <li><a href="http://techoverflow.net/blog/2014/08/24/get-current-hour-minute-second-in-haskell/">http://techoverflow.net/blog/2014/08/24/get-current-hour-minute-second-in-haskell/</a></li>
 <li><a href="http://pleac.sourceforge.net/pleac_haskell/datesandtimes.html">http://pleac.sourceforge.net/pleac_haskell/datesandtimes.html</a></li>
 </ul>
+
+<h2>Miscelanious</h2>
+
+<h3>GHCI configuration file</h3>
+
+<p>The ghci configuration file allows the user to create custom commands and <br>
+customize the ghci shell. The file is in the directory ~/.ghci in Unix systems <br>
+like Linux and OSX.</p>
+
+<p>Example: ~/.ghci</p>
+
+<pre><code>import System.Directory ( getCurrentDirectory)
+import System.Process (readProcess)
+
+
+:set prompt "\x1b[32mλ&gt;\x1b[0m " -- set the shell prompt to print λ (lambda)
+
+:def hoogle \s -&gt; return $ ":! hoogle --count=15 \"" ++ s ++ "\""
+
+let xclip_ =  readProcess "xclip" ["-o", "-selection", "clipboard"] ""
+
+let __savePasted = do {  code &lt;-  readProcess "xclip" ["-o", "-selection", "clipboard"] ""  ;  putStrLn 
+
+code ; writeFile "/tmp/haskTemp.hs" code}
+
+let pwd = getCurrentDirectory &gt;&gt;= putStrLn
+
+:def paste (\_ -&gt; __savePasted &gt;&gt; return ":load /tmp/haskTemp.hs" )
+:def pwd (\_ -&gt; pwd &gt;&gt; return "")
+
+</code></pre>
+
+<p>It requires hoogle to be installed on Linux: (sudo apt-get install hoogle)<br>
+on Ubuntu.</p>
+
+<p>Examples:</p>
+
+<pre><code>:paste - Paste code block in clipboard and compiles it in ghci
+:pwd   - Show Current Directory
+</code></pre>
+
+<div class="highlight highlight-haskell"><pre>
+λ&gt; :pwd
+/home/tux/<span class="pl-c1">PycharmProjects</span>/<span class="pl-c1">Haskell</span>
+λ&gt; 
+λ&gt; 
+
+λ&gt; :hoogle getCurrentDirectory
+<span class="pl-c1">Directory</span> getCurrentDirectory :: <span class="pl-c1">IO</span> <span class="pl-c1">FilePath</span>
+<span class="pl-c1">System</span>.<span class="pl-c1">Directory</span> getCurrentDirectory :: <span class="pl-c1">IO</span> <span class="pl-c1">FilePath</span>
+λ&gt; 
+
+
+λ&gt; :paste
+<span class="pl-k">import</span> <span class="pl-c1">Data.Time.Clock</span>
+<span class="pl-k">import</span> <span class="pl-c1">Data.Time.Calendar</span>
+<span class="pl-k">import</span> <span class="pl-c1">Data.Time.LocalTime</span>
+
+main = <span class="pl-k">do</span>
+    now &lt;- getCurrentTime
+    timezone &lt;- getCurrentTimeZone
+    <span class="pl-k">let</span> zoneNow = utcToLocalTime timezone now
+    <span class="pl-k">let</span> (year, month, day) = toGregorian $ localDay zoneNow
+    <span class="pl-c1">putStrLn</span> $ <span class="pl-s"><span class="pl-pds">"</span>Year: <span class="pl-pds">"</span></span> ++ <span class="pl-c1">show</span> year
+    <span class="pl-c1">putStrLn</span> $ <span class="pl-s"><span class="pl-pds">"</span>Month: <span class="pl-pds">"</span></span> ++ <span class="pl-c1">show</span> month
+    <span class="pl-c1">putStrLn</span> $ <span class="pl-s"><span class="pl-pds">"</span>Day: <span class="pl-pds">"</span></span> ++ <span class="pl-c1">show</span> day
+[<span class="pl-c1">1</span> <span class="pl-k">of</span> <span class="pl-c1">1</span>] <span class="pl-c1">Compiling</span> <span class="pl-c1">Main</span>             ( /tmp/haskTemp.hs, interpreted )
+<span class="pl-c1">Ok</span>, modules loaded: <span class="pl-c1">Main</span>.
+λ&gt; 
+λ&gt; main
+<span class="pl-c1">Year</span>: <span class="pl-c1">2015</span>
+<span class="pl-c1">Month</span>: <span class="pl-c1">4</span>
+<span class="pl-c1">Day</span>: <span class="pl-c1">26</span>
+λ&gt; 
+
+</pre></div>
+
+<h3>Troubleshooting</h3>
+
+<h4>Importing Ambigous Modules in GHCi</h4>
+
+<div class="highlight highlight-haskell"><pre><span class="pl-c1">GHCi</span>, version <span class="pl-c1">7.4</span>.<span class="pl-c1">1</span>: http://www.haskell.org/ghc/  :? for help
+<span class="pl-c1">Loading</span> package ghc-prim ... linking ... done.
+<span class="pl-c1">Loading</span> package integer-gmp ... linking ... done.
+<span class="pl-c1">Loading</span> package base ... linking ... done.
+<span class="pl-c1">Prelude</span>&gt; :m +<span class="pl-c1">Control</span>.<span class="pl-c1">Monad</span>.<span class="pl-c1">State</span>
+
+&lt;no location info&gt;:
+    <span class="pl-c1">Ambiguous</span> <span class="pl-k">module</span> name `<span class="pl-c1">Control.Monad.State'</span>:
+      it was found in multiple packages: mtl-2.0.1.0 monads-tf-0.1.0.0
+<span class="pl-c1">Prelude</span>&gt; :set -<span class="pl-c1">XPackageImports</span> 
+<span class="pl-c1">Prelude</span>&gt; import "mtl-2.0.1.0" <span class="pl-c1">Control.Monad.State</span>
+<span class="pl-c1">Prelude</span>&gt; import "mtl" <span class="pl-c1">Control.Monad.State</span>
+<span class="pl-c1">Prelude</span>&gt; --<span class="pl-c1">Nothing</span> is imported!</pre></div>
 
 <h2>Documentation and Learning Materials</h2>
 

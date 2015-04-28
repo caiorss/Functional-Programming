@@ -1,8 +1,8 @@
-## Functional Programming in Haskell by Examples
+# Functional Programming in Haskell by Examples
 
 ![](images/haskellLogo.png)
 
-The purpose of this tutorial is to illustrate functional programming concepts in Haskell language by providing reusable and useful pieces of codes, examples, case study and applications.
+The purpose of this tutorial is to illustrate functional programming concepts in Haskell programing language by providing reusable and useful pieces of codes, examples, case study and applications.
 
 Notes: 
 
@@ -17,15 +17,14 @@ This page can be accessed from: https://github.com/caiorss/Functional-Programmin
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [Haskell](#haskell)
+  - [Suffixes of file names for Haskell](#suffixes-of-file-names-for-haskell)
   - [Toolset](#toolset)
   - [GHCI Reference](#ghci-reference)
-- [Concepts](#concepts)
-    - [Functional Programming](#functional-programming)
-    - [Functional Programming Design Patterns](#functional-programming-design-patterns)
-    - [Haskell Features](#haskell-features)
-    - [Concepts](#concepts-1)
-      - [Pure Functions](#pure-functions)
-      - [Lazy Evaluation](#lazy-evaluation)
+- [Function Programming Concepts](#function-programming-concepts)
+  - [Overview](#overview)
+  - [Pure Functions](#pure-functions)
+  - [Lazy Evaluation](#lazy-evaluation)
 - [Basic Syntax](#basic-syntax)
   - [Operators](#operators)
     - [Logic Operators](#logic-operators)
@@ -38,6 +37,7 @@ This page can be accessed from: https://github.com/caiorss/Functional-Programmin
     - [Basic Classes](#basic-classes)
     - [Basic Types](#basic-types)
     - [Numeric Types Conversion](#numeric-types-conversion)
+    - [Haskell-Style Syntax for types:](#haskell-style-syntax-for-types)
   - [Lists](#lists)
     - [Creating Lists](#creating-lists)
     - [List Operations](#list-operations)
@@ -60,6 +60,11 @@ This page can be accessed from: https://github.com/caiorss/Functional-Programmin
     - [Iterate](#iterate)
     - [Other Useful higher-order functions](#other-useful-higher-order-functions)
     - [The $ apply operator.](#the-$-apply-operator)
+  - [Functions to Manipulate Characters and Strings](#functions-to-manipulate-characters-and-strings)
+    - [Strings Features](#strings-features)
+    - [Prelude String Functions](#prelude-string-functions)
+    - [Data.Char String Functions](#datachar-string-functions)
+    - [Data.List.Split String Functions](#datalistsplit-string-functions)
   - [Useful notations for functions](#useful-notations-for-functions)
 - [Pattern Matching](#pattern-matching)
 - [List Comprehension](#list-comprehension)
@@ -71,7 +76,7 @@ This page can be accessed from: https://github.com/caiorss/Functional-Programmin
 - [Functors, Monads, Applicatives and Monoids](#functors-monads-applicatives-and-monoids)
   - [Functors](#functors)
   - [Monads](#monads)
-    - [Overview](#overview)
+    - [Overview](#overview-1)
     - [Bind Operator](#bind-operator)
     - [Monad Laws](#monad-laws)
     - [Selected Monad Implementations](#selected-monad-implementations)
@@ -97,6 +102,7 @@ This page can be accessed from: https://github.com/caiorss/Functional-Programmin
       - [mapM and mapM_](#mapm-and-mapm_)
     - [IO Examples](#io-examples)
     - [Sources](#sources-1)
+- [Useful Custom Functions/ Iterators and Operators](#useful-custom-functions-iterators-and-operators)
 - [Applications](#applications)
   - [Mathematics](#mathematics)
   - [Numerical Methods](#numerical-methods)
@@ -122,6 +128,10 @@ This page can be accessed from: https://github.com/caiorss/Functional-Programmin
       - [Day in a Week/Month/Year or Week Number](#day-in-a-weekmonthyear-or-week-number)
       - [Parsing Dates and Times from Strings](#parsing-dates-and-times-from-strings)
       - [Printing a Date](#printing-a-date)
+- [Miscelanious](#miscelanious)
+  - [GHCI configuration file](#ghci-configuration-file)
+  - [Troubleshooting](#troubleshooting)
+    - [Importing Ambigous Modules in GHCi](#importing-ambigous-modules-in-ghci)
 - [Documentation and Learning Materials](#documentation-and-learning-materials)
   - [Code Search Engine](#code-search-engine)
     - [Libraries Documentation](#libraries-documentation)
@@ -135,6 +145,43 @@ This page can be accessed from: https://github.com/caiorss/Functional-Programmin
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+
+
+
+
+
+
+## Haskell
+
+* Pure Functional programming language
+* Strong Static Typed Language 
+* Type Inference (The haskell compiler deduce the types for you). 
+* Lazy Evaluation ( Dealayed evaluation) by default
+* Data Imutability/ Haskell has no variables
+    * Values can be bound to a name and can only be assigned once.
+    * Values can never change.
+* Haskell has not for-loop, while statements.
+* Algebraic Data types
+* Pattern Matching
+* Tail Recursions
+* Compiles to native code.
+
+
+### Suffixes of file names for Haskell
+
+```
+.hs    Haskell source code; preprocess, compile
+
+.lhs   literate Haskell source; unlit, preprocess, compile
+
+.hi    Interface file; contains information about exported symbols
+
+.hc    intermediate C files
+
+.x_o   way x object files; common ways are: p, u, s
+
+.x_hi  way x interface files
+```
 
 
 ### Toolset
@@ -154,18 +201,21 @@ GHCI Interactive Shell
 | Command                     |  Description                                |
 |-----------------------------|---------------------------------------------|
 | :help                       |  Show help                                  |
-| :load [haskell-source.hs] |    Load Haskell Source Code                   |
+| :load [haskell-source.hs] |    Load Haskell Source Code                 |
 | :reload                     |  Reload Code after it was edited            |
 | :type [symbol]             |  Show the Type of a Symbol                  |
 | :browser                    |  Gives the type signature of all functions  |
 | :set +s                     |  Multiline Code                             |
-| :{ [code here ] :}        |    Multiline Code                             |
+| :{ [code here ] :}        |    Multiline Code                            |
 | :set prompt ">"             |  Change the prompt to ">"                   |
 
 
-## Concepts
 
-#### Functional Programming
+## Function Programming Concepts
+
+### Overview
+
+**Functional Programming**
 
 Functional Programming is all about programming with functions.
 
@@ -188,7 +238,7 @@ Non Essential Features:
 * Type Inferencing
 * Algebraic Data Types
 
-#### Functional Programming Design Patterns
+**Functional Programming Design Patterns**
 
 * Curry/ Partial function application  - Creating new functions by holding a parameter constant
 * Closure - Return functions from functions
@@ -200,38 +250,22 @@ Non Essential Features:
 * Pattern Matching
 
 
-#### Haskell Features
-
-* Pure Functional programming language
-* Strong Static Typed Language 
-* Type Inference (The haskell compiler deduce the types for you). 
-* Lazy Evaluation ( Dealayed evaluation) by default
-* Data Imutability/ Haskell has no variables
-    * Values can be bound to a name and can only be assigned once.
-    * Values can never change.
-* Haskell has not for-loop, while statements.
-* Algebraic Data types
-* Pattern Matching
-* Tail Recursions
-* Compiles to native code.
-
-
-#### Concepts
-
-##### Pure Functions
+### Pure Functions
 
 Pure functions:
 
 * Are functions without side effects, like mathematical functions. 
 * For the same input the functions always returns the same output.
-* Pure functions doens't rely on global variable and doesn't have internal states.
-* Pure functions are deterministic
 * The result of any function call is fully determined by its arguments. 
+* Pure functions doens't rely on global variable and doesn't have internal states.
+* They don't do IO, i.e .:. don't print, don't write a file ...
+* Pure functions are stateless
+* Pure functions are deterministic
 
 Why Pure Functions:
 
 * Composability, one fuction can be connected to another.
-* Can run in parallel, multi threading, multi core and GPU.
+* Can run in parallel, multi threading, multi core, GPU and distributed systems.
 * Better debugging and testing.
 * Predictability
 
@@ -249,7 +283,7 @@ def min(x, y):
 **Example of impure function**
 
 * Impure functions doesn't have always the same output for the same
-* Impure functions does IO or has Hidden State, Global Variables
+* Impure functions does IO or has Hidden State or Global Variables
 
 ```python
 exponent = 2
@@ -322,7 +356,7 @@ Reverse list function purified:
 ```
 
 
-##### Lazy Evaluation
+### Lazy Evaluation
 
 “Lazy evaluation” means that data structures are computed incrementally, as they are needed (so the trees never exist in memory all at once) parts that are never needed are never computed. Haskell uses lazy evaluation by default.
 
@@ -662,6 +696,32 @@ fromRealFrac            =  fromRational . toRational
 
 https://www.haskell.org/tutorial/numbers.html
 
+#### Haskell-Style Syntax for types:
+
+Function g from type a to type b: 
+
+```haskell
+g :: a -> b
+```
+
+Function with two arguments and result of type a:
+
+```haskell
+s :: a -> a -> a
+```
+
+Function f from a type a to type m b, a type m parametrized on type b
+
+```haskell
+f :: a -> m b
+```
+
+A function h wich takes as argument two functions of type 
+a -> b and b -> c and returns a function of type a -> m b
+
+```haskell
+h :: ( a -> b) -> (b -> c) -> ( a -> m b)
+```
 
 ### Lists
 
@@ -1688,6 +1748,238 @@ OR
 λ> 
 λ> map (callWith 3)  [(*3), (+4), (^3)]
 [9,7,27]
+λ> 
+
+```
+
+### Functions to Manipulate Characters and Strings
+
+#### Strings Features
+
+**Strings as List of Characters**
+
+```
+λ> 
+λ> ['(', ')', '!', 'a', 'b', 'c', '0', '1']
+"()!abc01"
+λ> 
+```
+
+
+**Character Sequences**
+
+```haskell
+λ> ['a'..'z']
+"abcdefghijklmnopqrstuvwxyz"
+
+λ> ['A'..'Z']
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+λ> ['0'..'9']
+"0123456789"
+λ> 
+
+λ> ['0'..'z']
+"0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz"
+
+```
+
+**Add a character to a string**
+
+```haskell
+
+λ> "adding " ++ "three" ++ " strings"
+"adding three strings"
+λ> 
+
+λ> "Hello world " ++ ['1']
+"Hello world 1"
+λ> 
+
+λ> 'x' : "Hello World"
+"xHello World"
+λ> 
+λ> 'y' : 'x' : "Hello World"
+"yxHello World"
+λ> 
+
+```
+
+#### Prelude String Functions
+
+**lines**
+
+Lines breaks a string up into a list of strings at newline characters. The resulting strings do not contain newlines.
+
+
+```
+lines :: String -> [String] 
+```
+
+```haskell
+λ> let text = "Hello World\nHaskell\n Is very Cool"
+λ> text
+"Hello World\nHaskell\n Is very Cool"
+
+
+λ> putStrLn text
+Hello World
+Haskell
+ Is very Cool
+λ> 
+λ> 
+
+λ> lines text
+["Hello World","Haskell"," Is very Cool"]
+λ> 
+```
+
+**unlines**
+
+Unlines is an inverse operation to lines. It joins lines, after appending a terminating newline to each.
+
+```
+unlines :: [String] -> String 
+```
+
+```haskell
+λ> unlines ["Hello World","Haskell"," Is very Cool"]
+"Hello World\nHaskell\n Is very Cool\n"
+λ> 
+λ> putStrLn $ unlines ["Hello World","Haskell"," Is very Cool"]
+Hello World
+Haskell
+ Is very Cool
+
+λ>
+```
+
+**words**
+
+Words breaks a string up into a list of words, which were delimited by white space.
+
+```
+words :: String -> [String] 
+```
+
+```haskell
+λ> words "Hello world haskell 123 2312 --- "
+["Hello","world","haskell","123","2312","---"]
+λ> 
+```
+
+**unwords**
+
+unwords is an inverse operation to words. It joins words with separating spaces.
+
+```
+unwords :: [String] -> String 
+```
+
+```haskell
+λ> unwords ["Hello","world","haskell","123","2312","---"]
+"Hello world haskell 123 2312 ---"
+λ> 
+```
+
+**reverse**
+
+Reverse a string. 
+
+```haskell
+λ> reverse "lleksaH dlroW olleH"
+"Hello World Haskell"
+λ> 
+```
+
+#### Data.Char String Functions
+
+Documentation: https://hackage.haskell.org/package/base-4.2.0.1/docs/Data-Char.html
+
+```haskell
+import Data.Char
+
+λ> ['0'..'z']
+"0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz"
+λ> 
+
+λ> filter isDigit  ['0'..'z']
+"0123456789"
+λ> 
+
+λ> filter isAlpha ['0'..'z']
+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+λ> 
+
+λ> filter isLower ['0'..'z']
+"abcdefghijklmnopqrstuvwxyz"
+λ> 
+λ> filter isUpper ['0'..'z']
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+λ> 
+λ> 
+
+λ> filter isHexDigit ['0'..'z']
+"0123456789ABCDEFabcdef"
+λ> 
+
+λ> filter isAlphaNum ['0'..'z']
+"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+λ> 
+
+λ> map toUpper ['a'..'z']
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+λ>
+
+λ> map toLower ['A'..'Z']
+"abcdefghijklmnopqrstuvwxyz"
+λ> 
+
+{- Convert to ascii decimal number -}
+λ> map ord ['a'..'f']
+[97,98,99,100,101,102]
+λ> 
+
+
+{- Convert ascii to char -}
+λ> map chr [97,98,99,100,101,102]
+"abcdef"
+λ> 
+```
+
+
+#### Data.List.Split String Functions
+
+The Data.List.Split module contains a wide range of strategies for splitting lists with respect to some sort of delimiter, mostly implemented through a unified combinator interface. The goal is to be flexible yet simple.
+
+Documentation: http://hackage.haskell.org/package/split-0.1.4.1/docs/Data-List-Split.html
+
+```haskell
+λ> import Data.List.Split
+λ> 
+
+λ> splitOn "," "1232,2323.232,323.434"
+["1232","2323.232","323.434"]
+λ> 
+λ> 
+
+λ> map (\s -> read s :: Double) $ splitOn "," "1232,2323.232,323.434"
+[1232.0,2323.232,323.434]
+λ> 
+λ> 
+
+λ> endBy "," "1232,2323.232,323.434,"
+["1232","2323.232","323.434"]
+λ> 
+λ> 
+
+λ>  splitOneOf ";.," "foo,bar;baz.glurk"
+["foo","bar","baz","glurk"]
+λ> 
+
+λ> chunksOf  3 ['a'..'z']
+["abc","def","ghi","jkl","mno","pqr","stu","vwx","yz"]
+λ> 
 λ> 
 
 ```
@@ -3696,6 +3988,134 @@ liftM (map $ uncurry (+)) readSquareFile :: IO [Int]
 
 
 
+## Useful Custom Functions/ Iterators and Operators
+
+This a collection of useful short code snippets. 
+
+
+**Pairs**
+
+Definition:
+
+```haskell
+let pairs alist = zip alist (tail alist)
+```
+
+Example:
+
+```haskell
+
+λ> pairs [1..5]
+[(1,2),(2,3),(3,4),(4,5)]
+
+{- [(X, Y)]  coordinates of points in a plane -}
+λ> let points = [(1.0, 2.0), (3.0, 4.0), (-1.0, 5.0), (6.0, 6.0)]
+λ> let distance (x1, y1) (x2, y2) = sqrt( (x2-x1)^2 + (y2-y1)^2 )
+
+λ> let lines = pairs points 
+λ> lines
+[((1.0,2.0),(3.0,4.0)),((3.0,4.0),(-1.0,5.0)),((-1.0,5.0),(6.0,6.0))]
+λ> 
+
+λ> distance (1.0, 2.0) (3.0, 4.0)
+2.8284271247461903
+λ> 
+
+{- Calculate the length of each line segment -}
+
+λ> map (uncurry(distance)) lines
+[2.8284271247461903,4.123105625617661,7.0710678118654755]
+λ> 
+
+λ> sum $ map (uncurry(distance)) lines
+14.022600562229327
+λ> 
+
+λ> let totalLenght points  =  sum $  map (uncurry(distance)) $ pairs (points)
+λ> 
+λ> totalLenght points 
+14.022600562229327
+λ> 
+
+```
+
+**Sliding Window Iterator**
+
+This iterator is used in Scala and it is a generalized pairs iterator.
+
+Definition:
+
+```haskell
+sliding n alist = map (take n) (take (length(alist) -n + 1 ) $ iterate tail alist)
+```
+
+Example:
+
+```haskell
+λ> sliding 3 [1..10]
+[[1,2,3],[2,3,4],[3,4,5],[4,5,6],[5,6,7],[6,7,8],[7,8,9],[8,9,10]]
+λ> 
+λ> sliding 4 [1..10]
+[[1,2,3,4],[2,3,4,5],[3,4,5,6],[4,5,6,7],[5,6,7,8],[6,7,8,9],[7,8,9,10]]
+```
+
+Scala Equivalent
+```
+scala> (1 to 5).iterator.sliding(3).toList
+res2: List[Seq[Int]] = List(List(1, 2, 3), List(2, 3, 4), List(3, 4, 5))
+```
+
+**Enumerate**
+
+Equivalent to python enumerate.
+
+Definition:
+```haskell
+enumerate :: [b] -> [(Int, b)]
+enumerate alist = zip [0..(length(alist)-1)] alist
+```
+
+Example:
+
+```haskell
+λ> enumerate ['a', 'b', 'c', 'd', 'e', 'f']
+[(0,'a'),(1,'b'),(2,'c'),(3,'d'),(4,'e'),(5,'f')]
+
+λ> take 8  (enumerate ['a'..'z'])
+[(0,'a'),(1,'b'),(2,'c'),(3,'d'),(4,'e'),(5,'f'),(6,'g'),(7,'h')]
+λ> 
+```
+
+**Group by lenght**
+
+Definition:
+
+```haskell
+groupByLen n alist = filter (\a -> length(a) == n  ) ( map f indexes )
+    where
+    len = length(alist)
+    indexes = map (\i -> n*i) [0..(div len n)]
+    f idx = take n (drop idx alist)
+```
+
+Example:
+
+```haskell
+λ> groupByLen 3 [1..15]
+[[1,2,3],[4,5,6],[7,8,9],[10,11,12],[13,14,15]]
+λ> 
+λ> groupByLen 5 [1..15]
+[[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15]]
+λ> 
+λ> groupByLen 6 [0..20]
+[[0,1,2,3,4,5],[6,7,8,9,10,11],[12,13,14,15,16,17]]
+λ> 
+λ> groupByLen 3 ['a'..'z']
+["abc","def","ghi","jkl","mno","pqr","stu","vwx"]
+λ> 
+
+```
+
 ## Applications
 
 
@@ -4996,6 +5416,107 @@ Credits:
 * http://techoverflow.net/blog/2014/06/13/get-current-year-month-day-in-haskell/
 * http://techoverflow.net/blog/2014/08/24/get-current-hour-minute-second-in-haskell/
 * http://pleac.sourceforge.net/pleac_haskell/datesandtimes.html
+
+
+## Miscelanious
+
+### GHCI configuration file
+
+The ghci configuration file allows the user to create custom commands and 
+customize the ghci shell. The file is in the directory ~/.ghci in Unix systems 
+like Linux and OSX.
+
+Example: ~/.ghci
+```
+import System.Directory ( getCurrentDirectory)
+import System.Process (readProcess)
+
+
+:set prompt "\x1b[32mλ>\x1b[0m " -- set the shell prompt to print λ (lambda)
+
+:def hoogle \s -> return $ ":! hoogle --count=15 \"" ++ s ++ "\""
+
+let xclip_ =  readProcess "xclip" ["-o", "-selection", "clipboard"] ""
+
+let __savePasted = do {  code <-  readProcess "xclip" ["-o", "-selection", "clipboard"] ""  ;  putStrLn 
+
+code ; writeFile "/tmp/haskTemp.hs" code}
+
+let pwd = getCurrentDirectory >>= putStrLn
+
+:def paste (\_ -> __savePasted >> return ":load /tmp/haskTemp.hs" )
+:def pwd (\_ -> pwd >> return "")
+
+```
+
+It requires hoogle to be installed on Linux: (sudo apt-get install hoogle)
+on Ubuntu.
+
+Examples:
+
+```
+:paste - Paste code block in clipboard and compiles it in ghci
+:pwd   - Show Current Directory
+```
+
+```haskell
+
+λ> :pwd
+/home/tux/PycharmProjects/Haskell
+λ> 
+λ> 
+
+λ> :hoogle getCurrentDirectory
+Directory getCurrentDirectory :: IO FilePath
+System.Directory getCurrentDirectory :: IO FilePath
+λ> 
+
+
+λ> :paste
+import Data.Time.Clock
+import Data.Time.Calendar
+import Data.Time.LocalTime
+
+main = do
+    now <- getCurrentTime
+    timezone <- getCurrentTimeZone
+    let zoneNow = utcToLocalTime timezone now
+    let (year, month, day) = toGregorian $ localDay zoneNow
+    putStrLn $ "Year: " ++ show year
+    putStrLn $ "Month: " ++ show month
+    putStrLn $ "Day: " ++ show day
+[1 of 1] Compiling Main             ( /tmp/haskTemp.hs, interpreted )
+Ok, modules loaded: Main.
+λ> 
+λ> main
+Year: 2015
+Month: 4
+Day: 26
+λ> 
+
+
+```
+
+
+### Troubleshooting
+
+#### Importing Ambigous Modules in GHCi
+
+```haskell
+GHCi, version 7.4.1: http://www.haskell.org/ghc/  :? for help
+Loading package ghc-prim ... linking ... done.
+Loading package integer-gmp ... linking ... done.
+Loading package base ... linking ... done.
+Prelude> :m +Control.Monad.State
+
+<no location info>:
+    Ambiguous module name `Control.Monad.State':
+      it was found in multiple packages: mtl-2.0.1.0 monads-tf-0.1.0.0
+Prelude> :set -XPackageImports 
+Prelude> import "mtl-2.0.1.0" Control.Monad.State
+Prelude> import "mtl" Control.Monad.State
+Prelude> --Nothing is imported!
+```
 
 ## Documentation and Learning Materials
 
