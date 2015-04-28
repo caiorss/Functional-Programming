@@ -568,15 +568,15 @@ Reference: [Graham Hutton - University of Nottingham](http://www.agu.gov.br/page
 Example Methods:
 
 ```haskell
-(==) :: Eq a    a  a  Bool
+(==) :: (Eq a)   => a -> a -> Bool
 
-(<)  :: Ord a   a  a  Bool
+(<)  :: (Ord a)  => a -> a -> Bool
 
-show :: Show a  a  String
+show :: (Show a) => a -> String
 
-read :: Read a  String  a
+read :: (Read a) => String -> a
 
-()  :: Num a   a  a  a
+(*)  :: (Num a)  => a -> a -> a
 ```
 
 
