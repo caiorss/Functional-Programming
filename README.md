@@ -4313,7 +4313,7 @@ range start stop step =  [start + i*step | i <- [0..n] ]
 
 ### Tax Brackets
 
-Progressive Income Taxe Calculation
+Progressive Income Tax Calculation
 
 Credits: [Ayend - Tax Challange](http://ayende.com/blog/108545/the-tax-calculation-challenge)
 
