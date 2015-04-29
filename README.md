@@ -226,7 +226,7 @@ Functional Programming is all about programming with functions.
 * Lambda Functions/ Anonymous Functions
 * High Order Functions
 * Currying/ Partial Function Application
-* Clousure - Returning functions from functions
+* Closure - Returning functions from functions
 
 * Data Imutability
 * Pattern Matching
