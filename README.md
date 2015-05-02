@@ -2,7 +2,7 @@
 
 ![](images/haskellLogo.png)
 
-The purpose of this tutorial is to illustrate functional programming concepts in Haskell programing language by providing reusable and useful pieces of codes, examples, case study and applications.
+The purpose of this tutorial is to illustrate functional programming concepts in the Haskell programing language by providing reusable and useful pieces of codes, examples, case study and applications.
 
 Notes: 
 
@@ -138,17 +138,13 @@ This page can be accessed from: https://github.com/caiorss/Functional-Programmin
     - [Prelude](#prelude)
     - [Type Classe](#type-classe)
     - [Online Books](#online-books)
+    - [Books](#books)
     - [Papers and Articles](#papers-and-articles)
     - [Community](#community)
     - [References by Subject](#references-by-subject)
     - [Video Lectures](#video-lectures)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-
-
-
-
 
 
 ## Haskell
@@ -1034,27 +1030,55 @@ f x y = sqrt ( x^2 + y^2 )
 
 ### Infix Operators Functions
 
+In Haskell the infix operators can be seen as a two-argument function.
 
-| Shorthand  |  Equivalence   |
-|------------|----------------|
-| (+4)       |  \x -> x 4     |
-| (*3)       |  \x -> x*3     |
-| (/2)       |  \x -> x/2     |
-| ((-)5)     |  \x -> 5 - x   |
-| (^2)       |  \x -> x^2     |
-| (2^)       |  \x -> 2^x     |
-| (+)        |  \x, y -> x+ y |
-| (-)        |  \x, y -> x-y  |
-| (/)        |  \x, y -> x/y  |
-| (^)        |  \x, y -> x^y  |
+```
+x + y is equivalent to +(x, y) or (+ x y)
+```
+
+
+| Shorthand  |  Equivalence         | Type Signature |
+|------------|----------------------|----------------|
+| (+4)       |  \x -> x 4           |                |
+| (*3)       |  \x -> x * 3           | |
+| (/2)       |  \x -> x / 2           | |
+| ((-)5)     |  \x -> 5 - x         | |
+| (^2)       |  \x -> x ^ 2           | |
+| (2^)       |  \x -> 2 ^ x           | |
+| (+)        |  \x y -> x + y        | (+) :: Num a => a -> a -> a        |
+| (-)        |  \x y -> x - y         | (-) :: Num a => a -> a -> a        |
+| (/)        |  \x y -> x / y         | (/) :: Fractional a => a -> a -> a |
+| (^)        |  \x y -> x ^ y         | (^) :: (Integral b, Num a) => a -> b -> a |
+| (**)       |  \x y -> x ** y        | (**) :: Floating a => a -> a -> a |
+| (,)        |  \x y -> (x, y)      | (,) :: a -> b -> (a, b) |
+| (,,)       |  \x y z -> (x, y, z) | (,,) :: a -> b -> c -> (a, b, c) |
+| (!!)       | alist !! i = alist[i] |  (!!) :: [a] -> Int -> a |
+| (>)        |  \x y -> x > y       | (>) :: Ord a => a -> a -> Bool |
+| (<)        |  \x y -> x < y       | (<) :: Ord a => a -> a -> Bool |
+| (>=)       |  \x y -> x >= y      | (>=) :: Ord a => a -> a -> Bool |
+| (<=)       |  \x y -> x <= y      | (<=) :: Ord a => a -> a -> Bool |
+| (==)       |  \x y -> x == y      | (==) :: Eq a => a -> a -> Bool |
+| (/=)       |  \x y -> x /= y      | (/=) :: Eq a => a -> a -> Bool |
+
 
 ```haskell
 
 > (+) 10 30.33
 40.33
 
+> map ((+) 10) [1, 20, 43, 44]
+[11,30,53,54]
+> 
+
 > (-) 100 30
 70
+
+> map ((-) 100) [10, 20, 80, -50]
+[90,80,20,150]
+> 
+λ> map (flip (-)100) [10, 20, 80, -50]
+[-90,-80,-20,-150]
+
 
 > (/) 100 10
 10.0
@@ -1062,9 +1086,115 @@ f x y = sqrt ( x^2 + y^2 )
 > (*) 40 30
 1200
 
+> map (*10) [1, 2, 3, 4]
+[10,20,30,40]
+> 
+
 > (^) 2 6
 64
 
+> 4 ** 0.5
+2.0
+
+> 2 ** 0.5
+1.4142135623730951
+
+> (**) 2  3.5
+11.313708498984761
+>
+
+λ> map ((**) 0.5) [1, 2, 3, 4]
+[0.5,0.25,0.125,6.25e-2]
+
+λ> map ((flip (**)) 0.5) [1, 2, 3, 4]
+[1.0,1.4142135623730951,1.7320508075688772,2.0]
+λ> 
+
+> (,) 4 5
+(4,5)
+
+> map ((,)4) [1, 2, 3, 4]
+[(4,1),(4,2),(4,3),(4,4)]
+
+> map ((flip (,)) 4) [1, 2, 3, 4]
+[(1,4),(2,4),(3,4),(4,4)]
+
+> (,,) 4 5 7
+(4,5,7)
+
+> ((,,) 4) 5 6
+(4,5,6)
+
+> map (uncurry ((,,) 4)) [(5, 6), (1, 1), (3, 4)]
+[(4,5,6),(4,1,1),(4,3,4)]
+
+> map ((,,) 12 4) [1, 2, 3, 4]
+[(12,4,1),(12,4,2),(12,4,3),(12,4,4)]
+> 
+
+> alist =  ['a', 'b', 'c', 'd', 'e'] 
+> alist !! 0 
+'a'
+> alist !! 3
+'d'
+> 
+> (!!3) alist
+'d'
+> (!!0) alist
+'a'
+> 
+> (!!) alist 0
+'a'
+> (!!) alist 3
+'d'
+
+> map ((!!) alist) [0, 2, 3, 4]
+"acde"
+> 
+> map (!!2) [['a', 'b', 'c'], ['y', 'w', 'x', 'z'], ['1', '2', '3', '4']]
+"cx3"
+> 
+
+
+> (>) 30 10
+True
+> (<) 30 10
+False
+>
+> map (>30) [60, 380, 23, 1, 100]
+[True,True,False,False,True]
+> 
+> filter (>30) [60, 380, 23, 1, 100]
+[60,380,100]
+λ> 
+
+> (==) 100 10
+False
+> (==) 10 10
+True
+> 
+> 
+> filter (==10) [100, 10, 20, 10, 30]
+[10,10]
+> 
+> map (uncurry (==)) [(100, 100), (10, 23), (34, 44), (0, 0)]
+[True,False,False,True]
+> 
+> filter (uncurry (==)) [(100, 100), (10, 23), (34, 44), (0, 0)]
+[(100,100),(0,0)]
+> 
+
+> 10 /= 100
+True
+> 10 /= 10
+False
+> 
+> 
+> filter (/=10) [100, 10, 20, 10, 30]
+[100,20,30]
+> 
+> filter (uncurry (/=)) [(100, 100), (10, 23), (34, 44), (0, 0)]
+[(10,23),(34,44)]
 
 > :t (+)
 (+) :: Num a => a -> a -> a
@@ -1080,6 +1210,7 @@ f x y = sqrt ( x^2 + y^2 )
 > 
 > :t (^)
 (^) :: (Integral b, Num a) => a -> b -> a
+
 ```
 
 ### Currying
@@ -1633,13 +1764,14 @@ Xi+1 = g(Xi)
 
 The magnitude of the derivative of g must be smaller than 1 to the method work.
 
-```haskell
-{-
+```
 sqrt(a) --> f(x) = x^2 - a = 0 
 x  = 1/2*(a/x+x)
 x  = g(x) --> g(x) = 1/2*(a/x+x)
--}
+```
 
+
+```haskell
 > let f a x = 0.5*(a/x + x)
 
 > let g = f 2 -- a = 2
@@ -1742,12 +1874,38 @@ Example: This operator is useful to apply an argument to a list of functions.
 OR
 
 ```haskell
-λ> let callWith x f = f x
+λ> let apply x f = f x
 λ> 
-λ> map (callWith 3)  [(*3), (+4), (^3)]
+λ> map (apply 3)  [(*3), (+4), (^3)]
 [9,7,27]
 λ> 
 
+```
+
+See also the Clojure function [juxt](https://clojuredocs.org/clojure.core/juxt)
+
+Aplly a set of functions to a single argument.
+
+```haskell
+λ> let juxt fs x = map ($ x) fs
+
+λ> juxt [(*3), (+4), (/10)] 30
+[90.0,34.0,3.0]
+λ> 
+λ> let fs = juxt [(*3), (+4), (/10)]
+λ> 
+λ> :t fs
+fs :: Double -> [Double]
+λ>
+λ> fs 30
+[90.0,34.0,3.0]
+λ> fs 40
+[120.0,44.0,4.0]
+λ> 
+λ> map fs [10, 20, 30]
+[[30.0,14.0,1.0],[60.0,24.0,2.0],[90.0,34.0,3.0]]
+λ> 
+λ> 
 ```
 
 ### Functions to Manipulate Characters and Strings
@@ -4248,8 +4406,13 @@ df = derv 1e-5 f
 [6,10,14,18]
 ```
 
-#### Equation Solving
+#### Nonlinear Equation - Root-finding
 
+See also: 
+
+* [Root finding](http://en.wikipedia.org/wiki/Root-finding_algorithm)
+* [Newton's method](http://en.wikipedia.org/wiki/Newton's_method)
+* [Bisection method](http://en.wikipedia.org/wiki/Bisection_method)
 
 **Bissection Method**
 
@@ -4329,13 +4492,26 @@ newtonSolver eps itmax f df guess = (root, error, iterations)
     iterations = length rootlist
 
 
-f :: Floating a => a -> a
-f x = x^2 - 2.0
-
-
 square_root a | a > 0       = newtonSolver 1e-6 50 (\x -> x^2 -a) (\x -> 2*x) a 
               | otherwise   = error ("The argument must be positive")
 
+{- 
+    Solve f(x) = x^2 - 2 = 0 
+    
+    The solution is sqrt(2)
+-}
+λ> let f x = x^2 - 2.0
+λ> 
+λ> let df x = 2*x
+λ> 
+λ> let df x = 2.0*x
+λ> 
+λ> newtonSolver 1e-3 100 f df 5
+(1.414470981367771,7.281571315052027e-4,4)
+λ> 
+λ> newtonSolver 1e-3 100 f df 50
+(1.4142150098491113,4.094082521888254e-6,8)
+λ> 
 ```
 
 **Secant Method**
@@ -4448,19 +4624,17 @@ rk4Step f h (x, y) = (xnext, ynext)
                       xnext = x + h
                       ynext = y + h/6*(k1+2*k2+2*k3+k4)
                       
-
 rk4 :: ((Double, Double) -> Double) -> Double -> Double -> Double -> Double -> [(Double, Double)]
 rk4 f x0 xf y0 h = xypairs
                      where
                      iterator = iterate $ rk4Step f h
                      xypairs = takeWhile (\(x, y) -> x <= xf ) $ iterator (x0, y0)
 
-
+λ> let dTemp k temp_r (t, temp) = -k*(temp - temp_r)
+λ> 
 λ> let t_temp = rk4 (dTemp 0.07 20.0) 0.0 100.0 100.0 5.0
-
-plotList [] t_temp
-
-
+λ> plotList [] t_temp
+λ> 
 ```
 
 ### Statistics and Time Series
@@ -5530,6 +5704,10 @@ standard Haskell libraries by either function name, or by approximate type signa
 
 * https://www.haskell.org/documentation
 
+Dohaskell is a tagged Haskell learning resources index. U
+
+* http://www.dohaskell.com/
+
 #### Libraries Documentation
 
 #### Prelude
@@ -5577,10 +5755,15 @@ cabal install <some package>
 #### Online Books
 
 * [Real-World Haskell by Bryan O'Sullivan et al.](http://book.realworldhaskell.org)
-* http://learnyouahaskell.com/
-* http://en.wikibooks.org/wiki/Haskell
+* [Learn You a Haskell for Great Good!](http://learnyouahaskell.com/chapters)
+* [Haskell Wikibook](http://en.wikibooks.org/wiki/Haskell)
+* [Gentle Introduction To Haskell, version 98](https://www.haskell.org/tutorial/)
+
+#### Books
 
 * [Haskell Data Analysis Cookbook](http://haskelldata.com/)
+* [Parallel and Concurrent Programming in Haskell, By Simon Marlow](http://chimera.labs.oreilly.com/books/1230000000929)
+
 
 #### Papers and Articles
 
@@ -5714,17 +5897,41 @@ Control:
 
 **Dr. Erik Meijer Series: Functional Programming Fundamentals**
 
+All lectures: [C9 Lectures: Erik Meijer - Functional Programming Fundamentals Video Series](http://channel9.msdn.com/Series/C9-Lectures-Erik-Meijer-Functional-Programming-Fundamentals)
+
+Haskell Videos
+
 * [Function Definition    - Chapter 4 of 13](https://www.youtube.com/watch?v=fQU99SJdWGY)
 * [List Comprehensions    - Chapter 5 of 13](https://www.youtube.com/watch?v=cdPyykm2-gg)
 * [Recursive functions    - Chapter 6 of 13](https://www.youtube.com/watch?v=2ECvUT3nbqk)
 * [Higher Order Functions - Chapter 7 of 13](https://www.youtube.com/watch?v=YRTQkBO2v-s)
 * [Functional Parsers     - Chapter 8 of 13](https://www.youtube.com/watch?v=OrAVS4QbMqo)
 
+
 **Channel 9 MSDN Videos about Functional Programming**
 
 * http://channel9.msdn.com/Tags/functional+programming
 
-**Loop School Video Lectures**
+
+**Haskell Course by Philip Wadler (Youtube)**
+
+* [Haskell Course by Phd. Philip Wadler](https://www.youtube.com/playlist?list=PLtRG9GLtNcHBv4cuh2w1cz5VsgY6adoc3)
+
+* [Phillip Wadler's home page](http://homepages.inf.ed.ac.uk/wadler/)
+
+**Haskell From Scratch (Youtube)**
+
+Creating complete programs in Haskell from the ground up.
+
+* [Haskell From Scratch](https://www.youtube.com/playlist?list=PLxj9UAX4Em-Ij4TKwKvo-SLp-Zbv-hB4B)
+
+
+**Learn you a haskell by Michał Drozd (Youtube)**
+
+* [Learn you a haskell by Michal Drozd](https://www.youtube.com/playlist?list=PLPqPwGvHPSZB-urE6QFjKYt6AGXcZqJUh)
+
+
+**Loop School**
 
 Good video lectures about Category theory and Haskell programing language.
 

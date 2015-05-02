@@ -44,7 +44,7 @@
 
 <p><a href="images/haskellLogo.png" target="_blank"><img src="images/haskellLogo.png" alt="" style="max-width:100%;"></a></p>
 
-<p>The purpose of this tutorial is to illustrate functional programming concepts in Haskell programing language by providing reusable and useful pieces of codes, examples, case study and applications.</p>
+<p>The purpose of this tutorial is to illustrate functional programming concepts in the Haskell programing language by providing reusable and useful pieces of codes, examples, case study and applications.</p>
 
 <p>Notes: </p>
 
@@ -143,6 +143,16 @@ and the line bellow without the symbol &gt; are the output.</li>
 <li><a href="#iterate">Iterate</a></li>
 <li><a href="#other-useful-higher-order-functions">Other Useful higher-order functions</a></li>
 <li><a href="#the-%24-apply-operator">The $ apply operator.</a></li>
+</ul>
+</li>
+<li>
+<a href="#functions-to-manipulate-characters-and-strings">Functions to Manipulate Characters and Strings</a>
+
+<ul>
+<li><a href="#strings-features">Strings Features</a></li>
+<li><a href="#prelude-string-functions">Prelude String Functions</a></li>
+<li><a href="#datachar-string-functions">Data.Char String Functions</a></li>
+<li><a href="#datalistsplit-string-functions">Data.List.Split String Functions</a></li>
 </ul>
 </li>
 <li><a href="#useful-notations-for-functions">Useful notations for functions</a></li>
@@ -296,6 +306,7 @@ and the line bellow without the symbol &gt; are the output.</li>
 <li><a href="#prelude">Prelude</a></li>
 <li><a href="#type-classe">Type Classe</a></li>
 <li><a href="#online-books">Online Books</a></li>
+<li><a href="#books">Books</a></li>
 <li><a href="#papers-and-articles">Papers and Articles</a></li>
 <li><a href="#community">Community</a></li>
 <li><a href="#references-by-subject">References by Subject</a></li>
@@ -314,7 +325,7 @@ and the line bellow without the symbol &gt; are the output.</li>
 <li>Pure Functional programming language</li>
 <li>Strong Static Typed Language </li>
 <li>Type Inference (The haskell compiler deduce the types for you). </li>
-<li>Lazy Evaluation ( Dealayed evaluation) by default</li>
+<li>Lazy Evaluation ( Dlea yed evaluation) by default</li>
 <li>Data Imutability/ Haskell has no variables
 
 <ul>
@@ -435,12 +446,12 @@ and the line bellow without the symbol &gt; are the output.</li>
 <p><strong>Functional Programming Features</strong></p>
 
 <ul>
-<li>Pure Functions / Referencail Transparency / No side effect</li>
+<li>Pure Functions / Referential Transparency / No side effect</li>
 <li>Function Composition</li>
 <li>Lambda Functions/ Anonymous Functions</li>
 <li>High Order Functions</li>
 <li>Currying/ Partial Function Application</li>
-<li><p>Clousure - Returning functions from functions</p></li>
+<li><p>Closure - Returning functions from functions</p></li>
 <li><p>Data Imutability</p></li>
 <li>Pattern Matching</li>
 <li>Lists are the fundamental data Structure</li>
@@ -475,7 +486,7 @@ and the line bellow without the symbol &gt; are the output.</li>
 <li>Are functions without side effects, like mathematical functions. </li>
 <li>For the same input the functions always returns the same output.</li>
 <li>The result of any function call is fully determined by its arguments. </li>
-<li>Pure functions doens't rely on global variable and doesn't have internal states.</li>
+<li>Pure functions don't rely on global variable and don't have internal states.</li>
 <li>They don't do IO, i.e .:. don't print, don't write a file ...</li>
 <li>Pure functions are stateless</li>
 <li>Pure functions are deterministic</li>
@@ -484,7 +495,7 @@ and the line bellow without the symbol &gt; are the output.</li>
 <p>Why Pure Functions:</p>
 
 <ul>
-<li>Composability, one fuction can be connected to another.</li>
+<li>Composability, one function can be connected to another.</li>
 <li>Can run in parallel, multi threading, multi core, GPU and distributed systems.</li>
 <li>Better debugging and testing.</li>
 <li>Predictability</li>
@@ -533,7 +544,7 @@ for the same input, it depends on the global variable exponent:</p>
 [<span class="pl-c1">1</span>, <span class="pl-c1">16</span>, <span class="pl-c1">81</span>]
 <span class="pl-k">&gt;&gt;&gt;</span> </pre></div>
 
-<p>Another example, puryfing an impure Language:</p>
+<p>Another example, purifying an impure Language:</p>
 
 <div class="highlight highlight-python"><pre>
 <span class="pl-k">&gt;&gt;&gt;</span> lst <span class="pl-k">=</span> [<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>]  <span class="pl-c"># An pure function doesn't modify its arguments.</span>
@@ -590,7 +601,7 @@ for the same input, it depends on the global variable exponent:</p>
 <p>Example in Python:</p>
 
 <ul>
-<li>Python uses eager eavaluation by default. In order to get lazy evaluation in python the programmer must use iterators or generators. The example below uses generator.</li>
+<li>Python uses eager evaluation by default. In order to get lazy evaluation in python the programmer must use iterators or generators. The example below uses generator.</li>
 </ul>
 
 <div class="highlight highlight-python"><pre>
@@ -654,13 +665,11 @@ f <span class="pl-k">=</span> <span class="pl-k">lambda</span> <span class="pl-s
 
 <pre><code>x^n     for n an integral (understand Int or Integer)
 x**y    for y any kind of number (Float for example)
-x^n     pour n un entier (comprenez Int ou Integer)
-x**y    pour y tout type de nombre (Float par exemple)
 </code></pre>
 
 <h4>Application Operator - $</h4>
 
-<p>Tje application operator '$' makes code more readable and cleaner since substitutes parenthesis.<br>
+<p>The application operator '$' makes code more readable and cleaner since substitutes parenthesis.<br>
 It is also useful in higher-order situations, such as map ($ 0) xs, or zipWith ($) fs xs. </p>
 
 <div class="highlight highlight-haskell"><pre>&gt; f $ g $ h x = f (g (h x))</pre></div>
@@ -815,15 +824,15 @@ powerful and useful features of Haskell.</p></li>
 
 <p>Example Methods:</p>
 
-<div class="highlight highlight-haskell"><pre>(==) :: <span class="pl-c1">Eq</span> a    a  a  <span class="pl-c1">Bool</span>
+<div class="highlight highlight-haskell"><pre>(==) :: (<span class="pl-c1">Eq</span> a)   =&gt; a -&gt; a -&gt; <span class="pl-c1">Bool</span>
 
-(&lt;)  :: <span class="pl-c1">Ord</span> a   a  a  <span class="pl-c1">Bool</span>
+(&lt;)  :: (<span class="pl-c1">Ord</span> a)  =&gt; a -&gt; a -&gt; <span class="pl-c1">Bool</span>
 
-<span class="pl-en">show</span> <span class="pl-k">::</span> <span class="pl-k">Show</span> <span class="pl-smi">a</span>  <span class="pl-smi">a</span>  <span class="pl-c1">String</span>
+<span class="pl-en">show</span> <span class="pl-k">::</span> (<span class="pl-e">Show</span> <span class="pl-smi">a</span>) <span class="pl-k">=&gt;</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-c1">String</span>
 
-<span class="pl-en">read</span> <span class="pl-k">::</span> <span class="pl-k">Read</span> <span class="pl-smi">a</span>  <span class="pl-c1">String</span>  <span class="pl-smi">a</span>
+<span class="pl-en">read</span> <span class="pl-k">::</span> (<span class="pl-e">Read</span> <span class="pl-smi">a</span>) <span class="pl-k">=&gt;</span> <span class="pl-c1">String</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">a</span>
 
-()  :: <span class="pl-c1">Num</span> a   a  a  a</pre></div>
+(*)  :: (<span class="pl-c1">Num</span> a)  =&gt; a -&gt; a -&gt; a</pre></div>
 
 <pre><code>Value --&gt;  Type --&gt; Typeclass
 </code></pre>
@@ -977,7 +986,7 @@ powerful and useful features of Haskell.</p></li>
 <thead>
 <tr>
 <th>Class</th>
-<th>Class Intance</th>
+<th>Class Instance</th>
 </tr>
 </thead>
 <tbody>
@@ -1043,7 +1052,7 @@ fromRealFrac            =  fromRational . toRational
 
 <div class="highlight highlight-haskell"><pre><span class="pl-en">f</span> <span class="pl-k">::</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">m</span> <span class="pl-smi">b</span></pre></div>
 
-<p>A function h wich takes as argument two functions of type <br>
+<p>A function h which takes as argument two functions of type <br>
 a -&gt; b and b -&gt; c and returns a function of type a -&gt; m b</p>
 
 <div class="highlight highlight-haskell"><pre><span class="pl-en">h</span> <span class="pl-k">::</span> ( <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">b</span>) <span class="pl-k">-&gt;</span> (<span class="pl-smi">b</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">c</span>) <span class="pl-k">-&gt;</span> ( <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">m</span> <span class="pl-smi">b</span>)</pre></div>
@@ -1120,7 +1129,7 @@ a -&gt; b and b -&gt; c and returns a function of type a -&gt; m b</p>
 <div class="highlight highlight-haskell"><pre>&gt; <span class="pl-c1">product</span> lst
 <span class="pl-c1">0</span></pre></div>
 
-<p>Adding an element to the beggining of the list</p>
+<p>Adding an element to the begining of the list</p>
 
 <div class="highlight highlight-haskell"><pre>&gt; <span class="pl-c1">20</span> : lst
 [<span class="pl-c1">20</span>,-<span class="pl-c1">4</span>,-<span class="pl-c1">3</span>,-<span class="pl-c1">2</span>,-<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">2</span>,<span class="pl-c1">3</span>,<span class="pl-c1">4</span>,<span class="pl-c1">5</span>,<span class="pl-c1">6</span>,<span class="pl-c1">7</span>,<span class="pl-c1">8</span>,<span class="pl-c1">9</span>,<span class="pl-c1">10</span>]</pre></div>
@@ -1343,53 +1352,119 @@ prefix (possibly empty) of xs of elements that satisfy p:</p>
 
 <h3>Infix Operators Functions</h3>
 
+<p>In Haskell the infix operators can be seen as a two-argument function.</p>
+
+<pre><code>x + y is equivalent to +(x, y) or (+ x y)
+</code></pre>
+
 <table>
 <thead>
 <tr>
 <th>Shorthand</th>
 <th>Equivalence</th>
+<th>Type Signature</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>(+4)</td>
 <td>\x -&gt; x 4</td>
+<td></td>
 </tr>
 <tr>
 <td>(*3)</td>
-<td>\x -&gt; x*3</td>
+<td>\x -&gt; x * 3</td>
+<td></td>
 </tr>
 <tr>
 <td>(/2)</td>
-<td>\x -&gt; x/2</td>
+<td>\x -&gt; x / 2</td>
+<td></td>
 </tr>
 <tr>
 <td>((-)5)</td>
 <td>\x -&gt; 5 - x</td>
+<td></td>
 </tr>
 <tr>
 <td>(^2)</td>
-<td>\x -&gt; x^2</td>
+<td>\x -&gt; x ^ 2</td>
+<td></td>
 </tr>
 <tr>
 <td>(2^)</td>
-<td>\x -&gt; 2^x</td>
+<td>\x -&gt; 2 ^ x</td>
+<td></td>
 </tr>
 <tr>
 <td>(+)</td>
-<td>\x, y -&gt; x+ y</td>
+<td>\x y -&gt; x + y</td>
+<td>(+) :: Num a =&gt; a -&gt; a -&gt; a</td>
 </tr>
 <tr>
 <td>(-)</td>
-<td>\x, y -&gt; x-y</td>
+<td>\x y -&gt; x - y</td>
+<td>(-) :: Num a =&gt; a -&gt; a -&gt; a</td>
 </tr>
 <tr>
 <td>(/)</td>
-<td>\x, y -&gt; x/y</td>
+<td>\x y -&gt; x / y</td>
+<td>(/) :: Fractional a =&gt; a -&gt; a -&gt; a</td>
 </tr>
 <tr>
 <td>(^)</td>
-<td>\x, y -&gt; x^y</td>
+<td>\x y -&gt; x ^ y</td>
+<td>(^) :: (Integral b, Num a) =&gt; a -&gt; b -&gt; a</td>
+</tr>
+<tr>
+<td>(**)</td>
+<td>\x y -&gt; x ** y</td>
+<td>(**) :: Floating a =&gt; a -&gt; a -&gt; a</td>
+</tr>
+<tr>
+<td>(,)</td>
+<td>\x y -&gt; (x, y)</td>
+<td>(,) :: a -&gt; b -&gt; (a, b)</td>
+</tr>
+<tr>
+<td>(,,)</td>
+<td>\x y z -&gt; (x, y, z)</td>
+<td>(,,) :: a -&gt; b -&gt; c -&gt; (a, b, c)</td>
+</tr>
+<tr>
+<td>(!!)</td>
+<td>alist !! i = alist[i]</td>
+<td>(!!) :: [a] -&gt; Int -&gt; a</td>
+</tr>
+<tr>
+<td>(&gt;)</td>
+<td>\x y -&gt; x &gt; y</td>
+<td>(&gt;) :: Ord a =&gt; a -&gt; a -&gt; Bool</td>
+</tr>
+<tr>
+<td>(&lt;)</td>
+<td>\x y -&gt; x &lt; y</td>
+<td>(&lt;) :: Ord a =&gt; a -&gt; a -&gt; Bool</td>
+</tr>
+<tr>
+<td>(&gt;=)</td>
+<td>\x y -&gt; x &gt;= y</td>
+<td>(&gt;=) :: Ord a =&gt; a -&gt; a -&gt; Bool</td>
+</tr>
+<tr>
+<td>(&lt;=)</td>
+<td>\x y -&gt; x &lt;= y</td>
+<td>(&lt;=) :: Ord a =&gt; a -&gt; a -&gt; Bool</td>
+</tr>
+<tr>
+<td>(==)</td>
+<td>\x y -&gt; x == y</td>
+<td>(==) :: Eq a =&gt; a -&gt; a -&gt; Bool</td>
+</tr>
+<tr>
+<td>(/=)</td>
+<td>\x y -&gt; x /= y</td>
+<td>(/=) :: Eq a =&gt; a -&gt; a -&gt; Bool</td>
 </tr>
 </tbody>
 </table>
@@ -1398,8 +1473,19 @@ prefix (possibly empty) of xs of elements that satisfy p:</p>
 &gt; (+) <span class="pl-c1">10</span> <span class="pl-c1">30.33</span>
 <span class="pl-c1">40.33</span>
 
+&gt; <span class="pl-c1">map</span> ((+) <span class="pl-c1">10</span>) [<span class="pl-c1">1</span>, <span class="pl-c1">20</span>, <span class="pl-c1">43</span>, <span class="pl-c1">44</span>]
+[<span class="pl-c1">11</span>,<span class="pl-c1">30</span>,<span class="pl-c1">53</span>,<span class="pl-c1">54</span>]
+&gt; 
+
 &gt; (-) <span class="pl-c1">100</span> <span class="pl-c1">30</span>
 <span class="pl-c1">70</span>
+
+&gt; <span class="pl-c1">map</span> ((-) <span class="pl-c1">100</span>) [<span class="pl-c1">10</span>, <span class="pl-c1">20</span>, <span class="pl-c1">80</span>, -<span class="pl-c1">50</span>]
+[<span class="pl-c1">90</span>,<span class="pl-c1">80</span>,<span class="pl-c1">20</span>,<span class="pl-c1">150</span>]
+&gt; 
+λ&gt; <span class="pl-c1">map</span> (<span class="pl-c1">flip</span> (-)<span class="pl-c1">100</span>) [<span class="pl-c1">10</span>, <span class="pl-c1">20</span>, <span class="pl-c1">80</span>, -<span class="pl-c1">50</span>]
+[-<span class="pl-c1">90</span>,-<span class="pl-c1">80</span>,-<span class="pl-c1">20</span>,-<span class="pl-c1">150</span>]
+
 
 &gt; (/) <span class="pl-c1">100</span> <span class="pl-c1">10</span>
 <span class="pl-c1">10.0</span>
@@ -1407,9 +1493,115 @@ prefix (possibly empty) of xs of elements that satisfy p:</p>
 &gt; (*) <span class="pl-c1">40</span> <span class="pl-c1">30</span>
 <span class="pl-c1">1200</span>
 
+&gt; <span class="pl-c1">map</span> (*<span class="pl-c1">10</span>) [<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>]
+[<span class="pl-c1">10</span>,<span class="pl-c1">20</span>,<span class="pl-c1">30</span>,<span class="pl-c1">40</span>]
+&gt; 
+
 &gt; (^) <span class="pl-c1">2</span> <span class="pl-c1">6</span>
 <span class="pl-c1">64</span>
 
+&gt; <span class="pl-c1">4</span> ** <span class="pl-c1">0.5</span>
+<span class="pl-c1">2.0</span>
+
+&gt; <span class="pl-c1">2</span> ** <span class="pl-c1">0.5</span>
+<span class="pl-c1">1.4142135623730951</span>
+
+&gt; (**) <span class="pl-c1">2</span>  <span class="pl-c1">3.5</span>
+<span class="pl-c1">11.313708498984761</span>
+&gt;
+
+λ&gt; <span class="pl-c1">map</span> ((**) <span class="pl-c1">0.5</span>) [<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>]
+[<span class="pl-c1">0.5</span>,<span class="pl-c1">0.25</span>,<span class="pl-c1">0.125</span>,<span class="pl-c1">6.25e-2</span>]
+
+λ&gt; <span class="pl-c1">map</span> ((<span class="pl-c1">flip</span> (**)) <span class="pl-c1">0.5</span>) [<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>]
+[<span class="pl-c1">1.0</span>,<span class="pl-c1">1.4142135623730951</span>,<span class="pl-c1">1.7320508075688772</span>,<span class="pl-c1">2.0</span>]
+λ&gt; 
+
+&gt; <span class="pl-en">(,)</span> <span class="pl-c1">4</span> <span class="pl-c1">5</span>
+(<span class="pl-c1">4</span>,<span class="pl-c1">5</span>)
+
+&gt; <span class="pl-c1">map</span> (<span class="pl-en">(,)</span><span class="pl-c1">4</span>) [<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>]
+[(<span class="pl-c1">4</span>,<span class="pl-c1">1</span>),(<span class="pl-c1">4</span>,<span class="pl-c1">2</span>),(<span class="pl-c1">4</span>,<span class="pl-c1">3</span>),(<span class="pl-c1">4</span>,<span class="pl-c1">4</span><span class="pl-k">)]</span>
+
+&gt; <span class="pl-c1">map</span> ((<span class="pl-c1">flip</span> <span class="pl-en">(,)</span>) <span class="pl-c1">4</span>) [<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>]
+[(<span class="pl-c1">1</span>,<span class="pl-c1">4</span>),(<span class="pl-c1">2</span>,<span class="pl-c1">4</span>),(<span class="pl-c1">3</span>,<span class="pl-c1">4</span>),(<span class="pl-c1">4</span>,<span class="pl-c1">4</span><span class="pl-k">)]</span>
+
+&gt; <span class="pl-en">(,,)</span> <span class="pl-c1">4</span> <span class="pl-c1">5</span> <span class="pl-c1">7</span>
+(<span class="pl-c1">4</span>,<span class="pl-c1">5</span>,<span class="pl-c1">7</span>)
+
+&gt; (<span class="pl-en">(,,)</span> <span class="pl-c1">4</span>) <span class="pl-c1">5</span> <span class="pl-c1">6</span>
+(<span class="pl-c1">4</span>,<span class="pl-c1">5</span>,<span class="pl-c1">6</span>)
+
+&gt; <span class="pl-c1">map</span> (<span class="pl-c1">uncurry</span> (<span class="pl-en">(,,)</span> <span class="pl-c1">4</span>)) [(<span class="pl-c1">5</span>, <span class="pl-c1">6</span>), (<span class="pl-c1">1</span>, <span class="pl-c1">1</span>), (<span class="pl-c1">3</span>, <span class="pl-c1">4</span><span class="pl-k">)]</span>
+[(<span class="pl-c1">4</span>,<span class="pl-c1">5</span>,<span class="pl-c1">6</span>),(<span class="pl-c1">4</span>,<span class="pl-c1">1</span>,<span class="pl-c1">1</span>),(<span class="pl-c1">4</span>,<span class="pl-c1">3</span>,<span class="pl-c1">4</span><span class="pl-k">)]</span>
+
+&gt; <span class="pl-c1">map</span> (<span class="pl-en">(,,)</span> <span class="pl-c1">12</span> <span class="pl-c1">4</span>) [<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>]
+[(<span class="pl-c1">12</span>,<span class="pl-c1">4</span>,<span class="pl-c1">1</span>),(<span class="pl-c1">12</span>,<span class="pl-c1">4</span>,<span class="pl-c1">2</span>),(<span class="pl-c1">12</span>,<span class="pl-c1">4</span>,<span class="pl-c1">3</span>),(<span class="pl-c1">12</span>,<span class="pl-c1">4</span>,<span class="pl-c1">4</span><span class="pl-k">)]</span>
+&gt; 
+
+&gt; alist =  [<span class="pl-s"><span class="pl-pds">'</span>a<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>b<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>c<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>d<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>e<span class="pl-pds">'</span></span>] 
+&gt; alist !! <span class="pl-c1">0</span> 
+<span class="pl-s"><span class="pl-pds">'</span>a<span class="pl-pds">'</span></span>
+&gt; alist !! <span class="pl-c1">3</span>
+<span class="pl-s"><span class="pl-pds">'</span>d<span class="pl-pds">'</span></span>
+&gt; 
+&gt; (!!<span class="pl-c1">3</span>) alist
+<span class="pl-s"><span class="pl-pds">'</span>d<span class="pl-pds">'</span></span>
+&gt; (!!<span class="pl-c1">0</span>) alist
+<span class="pl-s"><span class="pl-pds">'</span>a<span class="pl-pds">'</span></span>
+&gt; 
+&gt; (!!) alist <span class="pl-c1">0</span>
+<span class="pl-s"><span class="pl-pds">'</span>a<span class="pl-pds">'</span></span>
+&gt; (!!) alist <span class="pl-c1">3</span>
+<span class="pl-s"><span class="pl-pds">'</span>d<span class="pl-pds">'</span></span>
+
+&gt; <span class="pl-c1">map</span> ((!!) alist) [<span class="pl-c1">0</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>]
+<span class="pl-s"><span class="pl-pds">"</span>acde<span class="pl-pds">"</span></span>
+&gt; 
+&gt; <span class="pl-c1">map</span> (!!<span class="pl-c1">2</span>) [[<span class="pl-s"><span class="pl-pds">'</span>a<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>b<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>c<span class="pl-pds">'</span></span>], [<span class="pl-s"><span class="pl-pds">'</span>y<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>w<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>x<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>z<span class="pl-pds">'</span></span>], [<span class="pl-s"><span class="pl-pds">'</span>1<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>2<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>3<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>4<span class="pl-pds">'</span></span><span class="pl-k">]]</span>
+<span class="pl-s"><span class="pl-pds">"</span>cx3<span class="pl-pds">"</span></span>
+&gt; 
+
+
+&gt; (&gt;) <span class="pl-c1">30</span> <span class="pl-c1">10</span>
+<span class="pl-c1">True</span>
+&gt; (&lt;) <span class="pl-c1">30</span> <span class="pl-c1">10</span>
+<span class="pl-c1">False</span>
+&gt;
+&gt; <span class="pl-c1">map</span> (&gt;<span class="pl-c1">30</span>) [<span class="pl-c1">60</span>, <span class="pl-c1">380</span>, <span class="pl-c1">23</span>, <span class="pl-c1">1</span>, <span class="pl-c1">100</span>]
+[<span class="pl-c1">True</span>,<span class="pl-c1">True</span>,<span class="pl-c1">False</span>,<span class="pl-c1">False</span>,<span class="pl-c1">True</span>]
+&gt; 
+&gt; <span class="pl-c1">filter</span> (&gt;<span class="pl-c1">30</span>) [<span class="pl-c1">60</span>, <span class="pl-c1">380</span>, <span class="pl-c1">23</span>, <span class="pl-c1">1</span>, <span class="pl-c1">100</span>]
+[<span class="pl-c1">60</span>,<span class="pl-c1">380</span>,<span class="pl-c1">100</span>]
+λ&gt; 
+
+&gt; (==) <span class="pl-c1">100</span> <span class="pl-c1">10</span>
+<span class="pl-c1">False</span>
+&gt; (==) <span class="pl-c1">10</span> <span class="pl-c1">10</span>
+<span class="pl-c1">True</span>
+&gt; 
+&gt; 
+&gt; <span class="pl-c1">filter</span> (==<span class="pl-c1">10</span>) [<span class="pl-c1">100</span>, <span class="pl-c1">10</span>, <span class="pl-c1">20</span>, <span class="pl-c1">10</span>, <span class="pl-c1">30</span>]
+[<span class="pl-c1">10</span>,<span class="pl-c1">10</span>]
+&gt; 
+&gt; <span class="pl-c1">map</span> (<span class="pl-c1">uncurry</span> (==)) [(<span class="pl-c1">100</span>, <span class="pl-c1">100</span>), (<span class="pl-c1">10</span>, <span class="pl-c1">23</span>), (<span class="pl-c1">34</span>, <span class="pl-c1">44</span>), (<span class="pl-c1">0</span>, <span class="pl-c1">0</span><span class="pl-k">)]</span>
+[<span class="pl-c1">True</span>,<span class="pl-c1">False</span>,<span class="pl-c1">False</span>,<span class="pl-c1">True</span>]
+&gt; 
+&gt; <span class="pl-c1">filter</span> (<span class="pl-c1">uncurry</span> (==)) [(<span class="pl-c1">100</span>, <span class="pl-c1">100</span>), (<span class="pl-c1">10</span>, <span class="pl-c1">23</span>), (<span class="pl-c1">34</span>, <span class="pl-c1">44</span>), (<span class="pl-c1">0</span>, <span class="pl-c1">0</span><span class="pl-k">)]</span>
+[(<span class="pl-c1">100</span>,<span class="pl-c1">100</span>),(<span class="pl-c1">0</span>,<span class="pl-c1">0</span><span class="pl-k">)]</span>
+&gt; 
+
+&gt; <span class="pl-c1">10</span> /= <span class="pl-c1">100</span>
+<span class="pl-c1">True</span>
+&gt; <span class="pl-c1">10</span> /= <span class="pl-c1">10</span>
+<span class="pl-c1">False</span>
+&gt; 
+&gt; 
+&gt; <span class="pl-c1">filter</span> (/=<span class="pl-c1">10</span>) [<span class="pl-c1">100</span>, <span class="pl-c1">10</span>, <span class="pl-c1">20</span>, <span class="pl-c1">10</span>, <span class="pl-c1">30</span>]
+[<span class="pl-c1">100</span>,<span class="pl-c1">20</span>,<span class="pl-c1">30</span>]
+&gt; 
+&gt; <span class="pl-c1">filter</span> (<span class="pl-c1">uncurry</span> (/=)) [(<span class="pl-c1">100</span>, <span class="pl-c1">100</span>), (<span class="pl-c1">10</span>, <span class="pl-c1">23</span>), (<span class="pl-c1">34</span>, <span class="pl-c1">44</span>), (<span class="pl-c1">0</span>, <span class="pl-c1">0</span><span class="pl-k">)]</span>
+[(<span class="pl-c1">10</span>,<span class="pl-c1">23</span>),(<span class="pl-c1">34</span>,<span class="pl-c1">44</span><span class="pl-k">)]</span>
 
 &gt; :t (+)
 (+) :: <span class="pl-c1">Num</span> a =&gt; a -&gt; a -&gt; a
@@ -1424,7 +1616,8 @@ prefix (possibly empty) of xs of elements that satisfy p:</p>
 (*) :: <span class="pl-c1">Num</span> a =&gt; a -&gt; a -&gt; a
 &gt; 
 &gt; :t (^)
-(^) :: (<span class="pl-c1">Integral</span> b, <span class="pl-c1">Num</span> a) =&gt; a -&gt; b -&gt; a</pre></div>
+(^) :: (<span class="pl-c1">Integral</span> b, <span class="pl-c1">Num</span> a) =&gt; a -&gt; b -&gt; a
+</pre></div>
 
 <h3>Currying</h3>
 
@@ -1483,7 +1676,7 @@ fact n = n*fact(n-<span class="pl-c1">1</span>)
 &gt; <span class="pl-c1">map</span> fact [<span class="pl-c1">1</span>..<span class="pl-c1">10</span>]
 [<span class="pl-c1">1</span>,<span class="pl-c1">2</span>,<span class="pl-c1">6</span>,<span class="pl-c1">24</span>,<span class="pl-c1">120</span>,<span class="pl-c1">720</span>,<span class="pl-c1">5040</span>,<span class="pl-c1">40320</span>,<span class="pl-c1">362880</span>,<span class="pl-c1">3628800</span>]</pre></div>
 
-<p>Fibbonacci Function</p>
+<p>Fibonacci Function</p>
 
 <div class="highlight highlight-haskell"><pre>fib <span class="pl-c1">0</span> = <span class="pl-c1">1</span>
 fib <span class="pl-c1">1</span> = <span class="pl-c1">1</span>
@@ -1521,7 +1714,7 @@ fib n | n&gt;= <span class="pl-c1">2</span>
 
 <h3>Higher Order Functions</h3>
 
-<p>Higher Order functions are functios that takes functions as <br>
+<p>Higher Order functions are functions that takes functions as <br>
 arguments.</p>
 
 <p>Why Higher Order Function?</p>
@@ -1568,7 +1761,7 @@ for list processing, interaction, or parsing (Hutton);</p></li>
 
 <p><strong>Example Estimating PI</strong></p>
 
-<p>Pi number can be aproximated by Gregory series. </p>
+<p>Pi number can be approximated by Gregory series. </p>
 
 <p><a href="http://shuklan.com/haskell/lec06.html#/0/6">http://shuklan.com/haskell/lec06.html#/0/6</a></p>
 
@@ -1789,7 +1982,7 @@ and     = foldr (&amp;&amp;) True
 λ&gt; 
 λ&gt; f <span class="pl-c1">2</span> <span class="pl-c1">4</span></pre></div>
 
-<p>The problemn is: how to map f over a list of pairs of a tuple of values??</p>
+<p>The problem is: how to map f over a list of pairs of a tuple of values??</p>
 
 <div class="highlight highlight-haskell"><pre>λ&gt; <span class="pl-c1">map</span> f [(<span class="pl-c1">1</span>, <span class="pl-c1">2</span>), (<span class="pl-c1">4</span>, <span class="pl-c1">5</span>), (<span class="pl-c1">9</span>, <span class="pl-c1">10</span><span class="pl-k">)]</span>
 
@@ -1918,15 +2111,14 @@ f :: Num a =&gt; a -&gt; a -&gt; a
 <pre><code>Xi+1 = g(Xi)
 </code></pre>
 
-<p>The magnitude of the derivate of g must be smaller than 1 to the method work.</p>
+<p>The magnitude of the derivative of g must be smaller than 1 to the method work.</p>
 
-<div class="highlight highlight-haskell"><pre><span class="pl-c">{-</span>
-<span class="pl-c">sqrt(a) --&gt; f(x) = x^2 - a = 0 </span>
-<span class="pl-c">x  = 1/2*(a/x+x)</span>
-<span class="pl-c">x  = g(x) --&gt; g(x) = 1/2*(a/x+x)</span>
-<span class="pl-c">-}</span>
+<pre><code>sqrt(a) --&gt; f(x) = x^2 - a = 0 
+x  = 1/2*(a/x+x)
+x  = g(x) --&gt; g(x) = 1/2*(a/x+x)
+</code></pre>
 
-&gt; <span class="pl-k">let</span> f a x = <span class="pl-c1">0.5</span>*(a/x + x)
+<div class="highlight highlight-haskell"><pre>&gt; <span class="pl-k">let</span> f a x = <span class="pl-c1">0.5</span>*(a/x + x)
 
 &gt; <span class="pl-k">let</span> g = f <span class="pl-c1">2</span> <span class="pl-c">-- a = 2</span>
 
@@ -2016,10 +2208,240 @@ types and higher-order functions [<a href="http://www.willamette.edu/%7Efruehr/h
 
 <p>OR</p>
 
-<div class="highlight highlight-haskell"><pre>λ&gt; <span class="pl-k">let</span> callWith x f = f x
+<div class="highlight highlight-haskell"><pre>λ&gt; <span class="pl-k">let</span> apply x f = f x
 λ&gt; 
-λ&gt; <span class="pl-c1">map</span> (callWith <span class="pl-c1">3</span>)  [(*<span class="pl-c1">3</span>), (+<span class="pl-c1">4</span>), (^<span class="pl-c1">3</span><span class="pl-k">)]</span>
+λ&gt; <span class="pl-c1">map</span> (apply <span class="pl-c1">3</span>)  [(*<span class="pl-c1">3</span>), (+<span class="pl-c1">4</span>), (^<span class="pl-c1">3</span><span class="pl-k">)]</span>
 [<span class="pl-c1">9</span>,<span class="pl-c1">7</span>,<span class="pl-c1">27</span>]
+λ&gt; 
+</pre></div>
+
+<p>See also the Clojure function <a href="https://clojuredocs.org/clojure.core/juxt">juxt</a></p>
+
+<p>Aplly a set of functions to a single argument.</p>
+
+<div class="highlight highlight-haskell"><pre>λ&gt; <span class="pl-k">let</span> juxt fs x = <span class="pl-c1">map</span> ($ x) fs
+
+λ&gt; juxt [(*<span class="pl-c1">3</span>), (+<span class="pl-c1">4</span>), (/<span class="pl-c1">10</span><span class="pl-k">)]</span> <span class="pl-c1">30</span>
+[<span class="pl-c1">90.0</span>,<span class="pl-c1">34.0</span>,<span class="pl-c1">3.0</span>]
+λ&gt; 
+λ&gt; <span class="pl-k">let</span> fs = juxt [(*<span class="pl-c1">3</span>), (+<span class="pl-c1">4</span>), (/<span class="pl-c1">10</span><span class="pl-k">)]</span>
+λ&gt; 
+λ&gt; :t fs
+<span class="pl-en">fs</span> <span class="pl-k">::</span> <span class="pl-c1">Double</span> <span class="pl-k">-&gt;</span> [<span class="pl-c1">Double</span>]
+λ&gt;
+λ&gt; fs <span class="pl-c1">30</span>
+[<span class="pl-c1">90.0</span>,<span class="pl-c1">34.0</span>,<span class="pl-c1">3.0</span>]
+λ&gt; fs <span class="pl-c1">40</span>
+[<span class="pl-c1">120.0</span>,<span class="pl-c1">44.0</span>,<span class="pl-c1">4.0</span>]
+λ&gt; 
+λ&gt; <span class="pl-c1">map</span> fs [<span class="pl-c1">10</span>, <span class="pl-c1">20</span>, <span class="pl-c1">30</span>]
+[[<span class="pl-c1">30.0</span>,<span class="pl-c1">14.0</span>,<span class="pl-c1">1.0</span>],[<span class="pl-c1">60.0</span>,<span class="pl-c1">24.0</span>,<span class="pl-c1">2.0</span>],[<span class="pl-c1">90.0</span>,<span class="pl-c1">34.0</span>,<span class="pl-c1">3.0</span><span class="pl-k">]]</span>
+λ&gt; 
+λ&gt; </pre></div>
+
+<h3>Functions to Manipulate Characters and Strings</h3>
+
+<h4>Strings Features</h4>
+
+<p><strong>Strings as List of Characters</strong></p>
+
+<pre><code>λ&gt; 
+λ&gt; ['(', ')', '!', 'a', 'b', 'c', '0', '1']
+"()!abc01"
+λ&gt; 
+</code></pre>
+
+<p><strong>Character Sequences</strong></p>
+
+<div class="highlight highlight-haskell"><pre>λ&gt; [<span class="pl-s"><span class="pl-pds">'</span>a<span class="pl-pds">'</span></span>..<span class="pl-s"><span class="pl-pds">'</span>z<span class="pl-pds">'</span></span>]
+<span class="pl-s"><span class="pl-pds">"</span>abcdefghijklmnopqrstuvwxyz<span class="pl-pds">"</span></span>
+
+λ&gt; [<span class="pl-s"><span class="pl-pds">'</span>A<span class="pl-pds">'</span></span>..<span class="pl-s"><span class="pl-pds">'</span>Z<span class="pl-pds">'</span></span>]
+<span class="pl-s"><span class="pl-pds">"</span>ABCDEFGHIJKLMNOPQRSTUVWXYZ<span class="pl-pds">"</span></span>
+
+λ&gt; [<span class="pl-s"><span class="pl-pds">'</span>0<span class="pl-pds">'</span></span>..<span class="pl-s"><span class="pl-pds">'</span>9<span class="pl-pds">'</span></span>]
+<span class="pl-s"><span class="pl-pds">"</span>0123456789<span class="pl-pds">"</span></span>
+λ&gt; 
+
+λ&gt; [<span class="pl-s"><span class="pl-pds">'</span>0<span class="pl-pds">'</span></span>..<span class="pl-s"><span class="pl-pds">'</span>z<span class="pl-pds">'</span></span>]
+<span class="pl-s"><span class="pl-pds">"</span>0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[<span class="pl-cce">\\</span>]<span class="pl-cce">^_</span>`abcdefghijklmnopqrstuvwxyz<span class="pl-pds">"</span></span>
+</pre></div>
+
+<p><strong>Add a character to a string</strong></p>
+
+<div class="highlight highlight-haskell"><pre>
+λ&gt; <span class="pl-s"><span class="pl-pds">"</span>adding <span class="pl-pds">"</span></span> ++ <span class="pl-s"><span class="pl-pds">"</span>three<span class="pl-pds">"</span></span> ++ <span class="pl-s"><span class="pl-pds">"</span> strings<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>adding three strings<span class="pl-pds">"</span></span>
+λ&gt; 
+
+λ&gt; <span class="pl-s"><span class="pl-pds">"</span>Hello world <span class="pl-pds">"</span></span> ++ [<span class="pl-s"><span class="pl-pds">'</span>1<span class="pl-pds">'</span></span>]
+<span class="pl-s"><span class="pl-pds">"</span>Hello world 1<span class="pl-pds">"</span></span>
+λ&gt; 
+
+λ&gt; <span class="pl-s"><span class="pl-pds">'</span>x<span class="pl-pds">'</span></span> : <span class="pl-s"><span class="pl-pds">"</span>Hello World<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>xHello World<span class="pl-pds">"</span></span>
+λ&gt; 
+λ&gt; <span class="pl-s"><span class="pl-pds">'</span>y<span class="pl-pds">'</span></span> : <span class="pl-s"><span class="pl-pds">'</span>x<span class="pl-pds">'</span></span> : <span class="pl-s"><span class="pl-pds">"</span>Hello World<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>yxHello World<span class="pl-pds">"</span></span>
+λ&gt; 
+</pre></div>
+
+<h4>Prelude String Functions</h4>
+
+<p><strong>lines</strong></p>
+
+<p>Lines breaks a string up into a list of strings at newline characters. The resulting strings do not contain newlines.</p>
+
+<pre><code>lines :: String -&gt; [String] 
+</code></pre>
+
+<div class="highlight highlight-haskell"><pre>λ&gt; <span class="pl-k">let</span> text = <span class="pl-s"><span class="pl-pds">"</span>Hello World<span class="pl-cce">\n</span>Haskell<span class="pl-cce">\n</span> Is very Cool<span class="pl-pds">"</span></span>
+λ&gt; text
+<span class="pl-s"><span class="pl-pds">"</span>Hello World<span class="pl-cce">\n</span>Haskell<span class="pl-cce">\n</span> Is very Cool<span class="pl-pds">"</span></span>
+
+
+λ&gt; <span class="pl-c1">putStrLn</span> text
+<span class="pl-c1">Hello</span> <span class="pl-c1">World</span>
+<span class="pl-c1">Haskell</span>
+ <span class="pl-c1">Is</span> very <span class="pl-c1">Cool</span>
+λ&gt; 
+λ&gt; 
+
+λ&gt; <span class="pl-c1">lines</span> text
+[<span class="pl-s"><span class="pl-pds">"</span>Hello World<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>Haskell<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span> Is very Cool<span class="pl-pds">"</span></span>]
+λ&gt; </pre></div>
+
+<p><strong>unlines</strong></p>
+
+<p>Unlines is an inverse operation to lines. It joins lines, after appending a terminating newline to each.</p>
+
+<pre><code>unlines :: [String] -&gt; String 
+</code></pre>
+
+<div class="highlight highlight-haskell"><pre>λ&gt; <span class="pl-c1">unlines</span> [<span class="pl-s"><span class="pl-pds">"</span>Hello World<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>Haskell<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span> Is very Cool<span class="pl-pds">"</span></span>]
+<span class="pl-s"><span class="pl-pds">"</span>Hello World<span class="pl-cce">\n</span>Haskell<span class="pl-cce">\n</span> Is very Cool<span class="pl-cce">\n</span><span class="pl-pds">"</span></span>
+λ&gt; 
+λ&gt; <span class="pl-c1">putStrLn</span> $ <span class="pl-c1">unlines</span> [<span class="pl-s"><span class="pl-pds">"</span>Hello World<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>Haskell<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span> Is very Cool<span class="pl-pds">"</span></span>]
+<span class="pl-c1">Hello</span> <span class="pl-c1">World</span>
+<span class="pl-c1">Haskell</span>
+ <span class="pl-c1">Is</span> very <span class="pl-c1">Cool</span>
+
+λ&gt;</pre></div>
+
+<p><strong>words</strong></p>
+
+<p>Words breaks a string up into a list of words, which were delimited by white space.</p>
+
+<pre><code>words :: String -&gt; [String] 
+</code></pre>
+
+<div class="highlight highlight-haskell"><pre>λ&gt; <span class="pl-c1">words</span> <span class="pl-s"><span class="pl-pds">"</span>Hello world haskell 123 2312 --- <span class="pl-pds">"</span></span>
+[<span class="pl-s"><span class="pl-pds">"</span>Hello<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>world<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>haskell<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>123<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>2312<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>---<span class="pl-pds">"</span></span>]
+λ&gt; </pre></div>
+
+<p><strong>unwords</strong></p>
+
+<p>unwords is an inverse operation to words. It joins words with separating spaces.</p>
+
+<pre><code>unwords :: [String] -&gt; String 
+</code></pre>
+
+<div class="highlight highlight-haskell"><pre>λ&gt; <span class="pl-c1">unwords</span> [<span class="pl-s"><span class="pl-pds">"</span>Hello<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>world<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>haskell<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>123<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>2312<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>---<span class="pl-pds">"</span></span>]
+<span class="pl-s"><span class="pl-pds">"</span>Hello world haskell 123 2312 ---<span class="pl-pds">"</span></span>
+λ&gt; </pre></div>
+
+<p><strong>reverse</strong></p>
+
+<p>Reverse a string. </p>
+
+<div class="highlight highlight-haskell"><pre>λ&gt; <span class="pl-c1">reverse</span> <span class="pl-s"><span class="pl-pds">"</span>lleksaH dlroW olleH<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>Hello World Haskell<span class="pl-pds">"</span></span>
+λ&gt; </pre></div>
+
+<h4>Data.Char String Functions</h4>
+
+<p>Documentation: <a href="https://hackage.haskell.org/package/base-4.2.0.1/docs/Data-Char.html">https://hackage.haskell.org/package/base-4.2.0.1/docs/Data-Char.html</a></p>
+
+<div class="highlight highlight-haskell"><pre><span class="pl-k">import</span> <span class="pl-c1">Data.Char</span>
+
+λ&gt; [<span class="pl-s"><span class="pl-pds">'</span>0<span class="pl-pds">'</span></span>..<span class="pl-s"><span class="pl-pds">'</span>z<span class="pl-pds">'</span></span>]
+<span class="pl-s"><span class="pl-pds">"</span>0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[<span class="pl-cce">\\</span>]<span class="pl-cce">^_</span>`abcdefghijklmnopqrstuvwxyz<span class="pl-pds">"</span></span>
+λ&gt; 
+
+λ&gt; <span class="pl-c1">filter</span> isDigit  [<span class="pl-s"><span class="pl-pds">'</span>0<span class="pl-pds">'</span></span>..<span class="pl-s"><span class="pl-pds">'</span>z<span class="pl-pds">'</span></span>]
+<span class="pl-s"><span class="pl-pds">"</span>0123456789<span class="pl-pds">"</span></span>
+λ&gt; 
+
+λ&gt; <span class="pl-c1">filter</span> isAlpha [<span class="pl-s"><span class="pl-pds">'</span>0<span class="pl-pds">'</span></span>..<span class="pl-s"><span class="pl-pds">'</span>z<span class="pl-pds">'</span></span>]
+<span class="pl-s"><span class="pl-pds">"</span>ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz<span class="pl-pds">"</span></span>
+λ&gt; 
+
+λ&gt; <span class="pl-c1">filter</span> isLower [<span class="pl-s"><span class="pl-pds">'</span>0<span class="pl-pds">'</span></span>..<span class="pl-s"><span class="pl-pds">'</span>z<span class="pl-pds">'</span></span>]
+<span class="pl-s"><span class="pl-pds">"</span>abcdefghijklmnopqrstuvwxyz<span class="pl-pds">"</span></span>
+λ&gt; 
+λ&gt; <span class="pl-c1">filter</span> isUpper [<span class="pl-s"><span class="pl-pds">'</span>0<span class="pl-pds">'</span></span>..<span class="pl-s"><span class="pl-pds">'</span>z<span class="pl-pds">'</span></span>]
+<span class="pl-s"><span class="pl-pds">"</span>ABCDEFGHIJKLMNOPQRSTUVWXYZ<span class="pl-pds">"</span></span>
+λ&gt; 
+λ&gt; 
+
+λ&gt; <span class="pl-c1">filter</span> isHexDigit [<span class="pl-s"><span class="pl-pds">'</span>0<span class="pl-pds">'</span></span>..<span class="pl-s"><span class="pl-pds">'</span>z<span class="pl-pds">'</span></span>]
+<span class="pl-s"><span class="pl-pds">"</span>0123456789ABCDEFabcdef<span class="pl-pds">"</span></span>
+λ&gt; 
+
+λ&gt; <span class="pl-c1">filter</span> isAlphaNum [<span class="pl-s"><span class="pl-pds">'</span>0<span class="pl-pds">'</span></span>..<span class="pl-s"><span class="pl-pds">'</span>z<span class="pl-pds">'</span></span>]
+<span class="pl-s"><span class="pl-pds">"</span>0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz<span class="pl-pds">"</span></span>
+λ&gt; 
+
+λ&gt; <span class="pl-c1">map</span> toUpper [<span class="pl-s"><span class="pl-pds">'</span>a<span class="pl-pds">'</span></span>..<span class="pl-s"><span class="pl-pds">'</span>z<span class="pl-pds">'</span></span>]
+<span class="pl-s"><span class="pl-pds">"</span>ABCDEFGHIJKLMNOPQRSTUVWXYZ<span class="pl-pds">"</span></span>
+λ&gt;
+
+λ&gt; <span class="pl-c1">map</span> toLower [<span class="pl-s"><span class="pl-pds">'</span>A<span class="pl-pds">'</span></span>..<span class="pl-s"><span class="pl-pds">'</span>Z<span class="pl-pds">'</span></span>]
+<span class="pl-s"><span class="pl-pds">"</span>abcdefghijklmnopqrstuvwxyz<span class="pl-pds">"</span></span>
+λ&gt; 
+
+<span class="pl-c">{- Convert to ascii decimal number -}</span>
+λ&gt; <span class="pl-c1">map</span> ord [<span class="pl-s"><span class="pl-pds">'</span>a<span class="pl-pds">'</span></span>..<span class="pl-s"><span class="pl-pds">'</span>f<span class="pl-pds">'</span></span>]
+[<span class="pl-c1">97</span>,<span class="pl-c1">98</span>,<span class="pl-c1">99</span>,<span class="pl-c1">100</span>,<span class="pl-c1">101</span>,<span class="pl-c1">102</span>]
+λ&gt; 
+
+
+<span class="pl-c">{- Convert ascii to char -}</span>
+λ&gt; <span class="pl-c1">map</span> chr [<span class="pl-c1">97</span>,<span class="pl-c1">98</span>,<span class="pl-c1">99</span>,<span class="pl-c1">100</span>,<span class="pl-c1">101</span>,<span class="pl-c1">102</span>]
+<span class="pl-s"><span class="pl-pds">"</span>abcdef<span class="pl-pds">"</span></span>
+λ&gt; </pre></div>
+
+<h4>Data.List.Split String Functions</h4>
+
+<p>The Data.List.Split module contains a wide range of strategies for splitting lists with respect to some sort of delimiter, mostly implemented through a unified combinator interface. The goal is to be flexible yet simple.</p>
+
+<p>Documentation: <a href="http://hackage.haskell.org/package/split-0.1.4.1/docs/Data-List-Split.html">http://hackage.haskell.org/package/split-0.1.4.1/docs/Data-List-Split.html</a></p>
+
+<div class="highlight highlight-haskell"><pre>λ&gt; <span class="pl-k">import</span> <span class="pl-c1">Data.List.Split</span>
+λ&gt; 
+
+λ&gt; splitOn <span class="pl-s"><span class="pl-pds">"</span>,<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>1232,2323.232,323.434<span class="pl-pds">"</span></span>
+[<span class="pl-s"><span class="pl-pds">"</span>1232<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>2323.232<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>323.434<span class="pl-pds">"</span></span>]
+λ&gt; 
+λ&gt; 
+
+λ&gt; <span class="pl-c1">map</span> (\s -&gt; <span class="pl-c1">read</span> s :: <span class="pl-c1">Double</span>) $ splitOn <span class="pl-s"><span class="pl-pds">"</span>,<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>1232,2323.232,323.434<span class="pl-pds">"</span></span>
+[<span class="pl-c1">1232.0</span>,<span class="pl-c1">2323.232</span>,<span class="pl-c1">323.434</span>]
+λ&gt; 
+λ&gt; 
+
+λ&gt; endBy <span class="pl-s"><span class="pl-pds">"</span>,<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>1232,2323.232,323.434,<span class="pl-pds">"</span></span>
+[<span class="pl-s"><span class="pl-pds">"</span>1232<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>2323.232<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>323.434<span class="pl-pds">"</span></span>]
+λ&gt; 
+λ&gt; 
+
+λ&gt;  splitOneOf <span class="pl-s"><span class="pl-pds">"</span>;.,<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>foo,bar;baz.glurk<span class="pl-pds">"</span></span>
+[<span class="pl-s"><span class="pl-pds">"</span>foo<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>bar<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>baz<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>glurk<span class="pl-pds">"</span></span>]
+λ&gt; 
+
+λ&gt; chunksOf  <span class="pl-c1">3</span> [<span class="pl-s"><span class="pl-pds">'</span>a<span class="pl-pds">'</span></span>..<span class="pl-s"><span class="pl-pds">'</span>z<span class="pl-pds">'</span></span>]
+[<span class="pl-s"><span class="pl-pds">"</span>abc<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>def<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>ghi<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>jkl<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>mno<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>pqr<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>stu<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>vwx<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>yz<span class="pl-pds">"</span></span>]
+λ&gt; 
 λ&gt; 
 </pre></div>
 
@@ -2514,13 +2936,13 @@ showPerson person  = <span class="pl-s"><span class="pl-pds">"</span>Name: <span
     <span class="pl-en">fmap</span>        <span class="pl-k">::</span> (<span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">b</span>) <span class="pl-k">-&gt;</span> <span class="pl-smi">f</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">f</span> <span class="pl-smi">b</span></pre></div>
 
 <ul>
-<li>f is a parametrized data type</li>
+<li>f is a parameterized data type</li>
 <li>(a -&gt; b ) Is a polymorphic function that takes a as parameter and returns b</li>
 <li>f a : a is a parameter, f wraps a</li>
 <li>f b : b is a parameter wrapped by f</li>
 </ul>
 
-<p>A functor must satisfy the following operations (aka funtor laws):</p>
+<p>A functor must satisfy the following operations (aka functor laws):</p>
 
 <div class="highlight highlight-haskell"><pre>
 <span class="pl-c">-- id is the identity function:</span>
@@ -2572,7 +2994,7 @@ showPerson person  = <span class="pl-s"><span class="pl-pds">"</span>Name: <span
 [<span class="pl-c1">78</span>,<span class="pl-c1">178</span>,<span class="pl-c1">278</span>,<span class="pl-c1">978</span>]
 λ&gt; </pre></div>
 
-<p>The Maybe type is a functor which the return value is non deterministic that returns a value if the computation is sucessful or return a null value Nothing if the computation fails. It is useful to avoid boilerplate successives null checkings and avoid null checking error.</p>
+<p>The Maybe type is a functor which the return value is non deterministic that returns a value if the computation is sucessful or return a null value Nothing if the computation fails. It is useful to avoid boilerplate successive null checkings and avoid null checking error.</p>
 
 <div class="highlight highlight-haskell"><pre>λ&gt; 
 λ&gt; <span class="pl-k">let</span> add10 x = x + <span class="pl-c1">10</span>
@@ -2682,7 +3104,7 @@ showPerson person  = <span class="pl-s"><span class="pl-pds">"</span>Name: <span
 
 <h4>Overview</h4>
 
-<p>Monads in Haskell are used to perform IO, State, Pararelism, Exception Handling, parallellism, continuations and coroutines.</p>
+<p>Monads in Haskell are used to perform IO, State, Parallelism, Exception Handling, parallelism, continuations and coroutines.</p>
 
 <p>Most common applications of monads include:</p>
 
@@ -2731,7 +3153,7 @@ showPerson person  = <span class="pl-s"><span class="pl-pds">"</span>Name: <span
 
 <h4>Bind Operator</h4>
 
-<p>In a imperative language the bind operatior could be described as below:</p>
+<p>In a imperative language the bind operator could be described as below:</p>
 
 <pre><code>-- Operator (&gt;&gt;=)
 
@@ -2931,7 +3353,7 @@ data  Ordering    =  LT | EQ | GT deriving
 
 <h4>Maybe Monad</h4>
 
-<p>Using the Maybe type is possible to indicate that a function might or not return value. It is also useful to avoid many boilerplates null checkings.</p>
+<p>Using the Maybe type is possible to indicate that a function might or not return value. It is also useful to avoid many boilerplate null checkings.</p>
 
 <pre><code>data Maybe x = Nothing | Just x
 
@@ -3119,7 +3541,7 @@ safediv y x | x == <span class="pl-c1">0</span>    = <span class="pl-c1">Nothing
         <span class="pl-c">-- collect up all the results of f (which are lists)</span>
         <span class="pl-c">-- and combine them into a new list</span></pre></div>
 
-<p>Examples Unsing the bind operator for lists:</p>
+<p>Examples Using the bind operator for lists:</p>
 
 <div class="highlight highlight-haskell"><pre>λ&gt; [<span class="pl-c1">10</span>,<span class="pl-c1">20</span>,<span class="pl-c1">30</span>] &gt;&gt;= \x -&gt; [<span class="pl-c1">2</span>*x, x+<span class="pl-c1">5</span>] 
 [<span class="pl-c1">20</span>,<span class="pl-c1">15</span>,<span class="pl-c1">40</span>,<span class="pl-c1">25</span>,<span class="pl-c1">60</span>,<span class="pl-c1">35</span>]
@@ -3237,7 +3659,7 @@ Ok, modules loaded: Main.
 
 <ul>
 <li>&gt; let n = v   Binds n to value v</li>
-<li>&gt; n &lt;- a      Executes action a and binds the anme n to the result</li>
+<li>&gt; n &lt;- a      Executes action a and binds the name n to the result</li>
 <li>&gt; a           Executes action a</li>
 <li>do  notation  is syntactic sugar for (&gt;&gt;=) operations. </li>
 </ul>
@@ -3899,9 +4321,9 @@ liftM (<span class="pl-c1">map</span> $ <span class="pl-c1">uncurry</span> (+)) 
 <span class="pl-c1">14.022600562229327</span>
 λ&gt; 
 
-λ&gt; <span class="pl-k">let</span> totalLenght points  =  <span class="pl-c1">sum</span> $  <span class="pl-c1">map</span> (<span class="pl-c1">uncurry</span>(distance)) $ pairs (points)
+λ&gt; <span class="pl-k">let</span> totalLength points  =  <span class="pl-c1">sum</span> $  <span class="pl-c1">map</span> (<span class="pl-c1">uncurry</span>(distance)) $ pairs (points)
 λ&gt; 
-λ&gt; totalLenght points 
+λ&gt; totalLength points 
 <span class="pl-c1">14.022600562229327</span>
 λ&gt; 
 </pre></div>
@@ -3945,6 +4367,32 @@ enumerate alist = <span class="pl-c1">zip</span> [<span class="pl-c1">0</span>..
 λ&gt; <span class="pl-c1">take</span> <span class="pl-c1">8</span>  (enumerate [<span class="pl-s"><span class="pl-pds">'</span>a<span class="pl-pds">'</span></span>..<span class="pl-s"><span class="pl-pds">'</span>z<span class="pl-pds">'</span></span>])
 [(<span class="pl-c1">0</span>,<span class="pl-s"><span class="pl-pds">'</span>a<span class="pl-pds">'</span></span>),(<span class="pl-c1">1</span>,<span class="pl-s"><span class="pl-pds">'</span>b<span class="pl-pds">'</span></span>),(<span class="pl-c1">2</span>,<span class="pl-s"><span class="pl-pds">'</span>c<span class="pl-pds">'</span></span>),(<span class="pl-c1">3</span>,<span class="pl-s"><span class="pl-pds">'</span>d<span class="pl-pds">'</span></span>),(<span class="pl-c1">4</span>,<span class="pl-s"><span class="pl-pds">'</span>e<span class="pl-pds">'</span></span>),(<span class="pl-c1">5</span>,<span class="pl-s"><span class="pl-pds">'</span>f<span class="pl-pds">'</span></span>),(<span class="pl-c1">6</span>,<span class="pl-s"><span class="pl-pds">'</span>g<span class="pl-pds">'</span></span>),(<span class="pl-c1">7</span>,<span class="pl-s"><span class="pl-pds">'</span>h<span class="pl-pds">'</span></span><span class="pl-k">)]</span>
 λ&gt; </pre></div>
+
+<p><strong>Group by length</strong></p>
+
+<p>Definition:</p>
+
+<div class="highlight highlight-haskell"><pre>groupByLen n alist = <span class="pl-c1">filter</span> (\a -&gt; <span class="pl-c1">length</span>(a) == n  ) ( <span class="pl-c1">map</span> f indexes )
+    <span class="pl-k">where</span>
+    len = <span class="pl-c1">length</span>(alist)
+    indexes = <span class="pl-c1">map</span> (\i -&gt; n*i) [<span class="pl-c1">0</span>..(<span class="pl-c1">div</span> len n<span class="pl-k">)]</span>
+    f idx = <span class="pl-c1">take</span> n (<span class="pl-c1">drop</span> idx alist)</pre></div>
+
+<p>Example:</p>
+
+<div class="highlight highlight-haskell"><pre>λ&gt; groupByLen <span class="pl-c1">3</span> [<span class="pl-c1">1</span>..<span class="pl-c1">15</span>]
+[[<span class="pl-c1">1</span>,<span class="pl-c1">2</span>,<span class="pl-c1">3</span>],[<span class="pl-c1">4</span>,<span class="pl-c1">5</span>,<span class="pl-c1">6</span>],[<span class="pl-c1">7</span>,<span class="pl-c1">8</span>,<span class="pl-c1">9</span>],[<span class="pl-c1">10</span>,<span class="pl-c1">11</span>,<span class="pl-c1">12</span>],[<span class="pl-c1">13</span>,<span class="pl-c1">14</span>,<span class="pl-c1">15</span><span class="pl-k">]]</span>
+λ&gt; 
+λ&gt; groupByLen <span class="pl-c1">5</span> [<span class="pl-c1">1</span>..<span class="pl-c1">15</span>]
+[[<span class="pl-c1">1</span>,<span class="pl-c1">2</span>,<span class="pl-c1">3</span>,<span class="pl-c1">4</span>,<span class="pl-c1">5</span>],[<span class="pl-c1">6</span>,<span class="pl-c1">7</span>,<span class="pl-c1">8</span>,<span class="pl-c1">9</span>,<span class="pl-c1">10</span>],[<span class="pl-c1">11</span>,<span class="pl-c1">12</span>,<span class="pl-c1">13</span>,<span class="pl-c1">14</span>,<span class="pl-c1">15</span><span class="pl-k">]]</span>
+λ&gt; 
+λ&gt; groupByLen <span class="pl-c1">6</span> [<span class="pl-c1">0</span>..<span class="pl-c1">20</span>]
+[[<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">2</span>,<span class="pl-c1">3</span>,<span class="pl-c1">4</span>,<span class="pl-c1">5</span>],[<span class="pl-c1">6</span>,<span class="pl-c1">7</span>,<span class="pl-c1">8</span>,<span class="pl-c1">9</span>,<span class="pl-c1">10</span>,<span class="pl-c1">11</span>],[<span class="pl-c1">12</span>,<span class="pl-c1">13</span>,<span class="pl-c1">14</span>,<span class="pl-c1">15</span>,<span class="pl-c1">16</span>,<span class="pl-c1">17</span><span class="pl-k">]]</span>
+λ&gt; 
+λ&gt; groupByLen <span class="pl-c1">3</span> [<span class="pl-s"><span class="pl-pds">'</span>a<span class="pl-pds">'</span></span>..<span class="pl-s"><span class="pl-pds">'</span>z<span class="pl-pds">'</span></span>]
+[<span class="pl-s"><span class="pl-pds">"</span>abc<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>def<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>ghi<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>jkl<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>mno<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>pqr<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>stu<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>vwx<span class="pl-pds">"</span></span>]
+λ&gt; 
+</pre></div>
 
 <h2>Applications</h2>
 
@@ -4105,7 +4553,7 @@ bissectionSolver eps itmax f x1 x2 = (root, <span class="pl-c1">error</span>, it
 
 <div class="highlight highlight-haskell"><pre><span class="pl-c">{-</span>
 <span class="pl-c">Newton-Raphson Method Iterator, builds an iterator function</span>
-<span class="pl-c">fromt the function to be solved and its derivate.</span>
+<span class="pl-c">from the function to be solved and its derivate.</span>
 <span class="pl-c"></span>
 <span class="pl-c">-}</span>
 newton_iterator f df x = x - f(x)/df(x)
@@ -4275,7 +4723,7 @@ plotList <span class="pl-c1">[]</span> t_temp
 
 <div class="highlight highlight-haskell"><pre>mean lst = <span class="pl-c1">sum</span> lst / <span class="pl-c1">fromIntegral</span> (<span class="pl-c1">length</span> lst)</pre></div>
 
-<p>Geometric Mean of Squence </p>
+<p>Geometric Mean of Sequence </p>
 
 <div class="highlight highlight-haskell"><pre>
 pow x y = <span class="pl-c1">exp</span> $ y * <span class="pl-c1">log</span> x
@@ -4349,7 +4797,7 @@ price  16.06 23.83 33.13 50.26 46.97 39.89
 
 <h4>Monte Carlo Simulation Coin Toss</h4>
 
-<p>The simplest such situation must be the tossing of a coin. Any individual event will result in the coin falling with one side or the other uppermost (heads or tails). However, common sense tells us that, if we tossed it a very large number of times, the total number of heads and tails should become increasingly similar. For a greater numner of tosses the percentage of heads or tails will be next to 50% in a non-biased coin. Credits: <a href="http://staff.argyll.epsb.ca/jreed/math7/strand4/4203.htm">Monte Carlo Simulation - Tossing a Coin</a></p>
+<p>The simplest such situation must be the tossing of a coin. Any individual event will result in the coin falling with one side or the other uppermost (heads or tails). However, common sense tells us that, if we tossed it a very large number of times, the total number of heads and tails should become increasingly similar. For a greater number of tosses the percentage of heads or tails will be next to 50% in a non-biased coin. Credits: <a href="http://staff.argyll.epsb.ca/jreed/math7/strand4/4203.htm">Monte Carlo Simulation - Tossing a Coin</a></p>
 
 <p>See <a href="http://en.wikipedia.org/wiki/Law_of_large_numbers">Law of Large Numbers</a></p>
 
@@ -4524,7 +4972,7 @@ range start stop step =  [start + i*step | i &lt;- [<span class="pl-c1">0</span>
 
 <h3>Tax Brackets</h3>
 
-<p>Progressive Income Taxe Calculation</p>
+<p>Progressive Income Tax Calculation</p>
 
 <p>Credits: <a href="http://ayende.com/blog/108545/the-tax-calculation-challenge">Ayend - Tax Challange</a></p>
 
@@ -5276,6 +5724,12 @@ standard Haskell libraries by either function name, or by approximate type signa
 <li><p><a href="https://www.haskell.org/documentation">https://www.haskell.org/documentation</a></p></li>
 </ul>
 
+<p>Dohaskell is a tagged Haskell learning resources index. U</p>
+
+<ul>
+<li><a href="http://www.dohaskell.com/">http://www.dohaskell.com/</a></li>
+</ul>
+
 <h4>Libraries Documentation</h4>
 
 <h4>Prelude</h4>
@@ -5327,9 +5781,16 @@ cabal install &lt;some package&gt;
 
 <ul>
 <li><a href="http://book.realworldhaskell.org">Real-World Haskell by Bryan O'Sullivan et al.</a></li>
-<li><a href="http://learnyouahaskell.com/">http://learnyouahaskell.com/</a></li>
-<li><p><a href="http://en.wikibooks.org/wiki/Haskell">http://en.wikibooks.org/wiki/Haskell</a></p></li>
-<li><p><a href="http://haskelldata.com/">Haskell Data Analysis Cookbook</a></p></li>
+<li><a href="http://learnyouahaskell.com/chapters">Learn You a Haskell for Great Good!</a></li>
+<li><a href="http://en.wikibooks.org/wiki/Haskell">Haskell Wikibook</a></li>
+<li><a href="https://www.haskell.org/tutorial/">Gentle Introduction To Haskell, version 98</a></li>
+</ul>
+
+<h4>Books</h4>
+
+<ul>
+<li><a href="http://haskelldata.com/">Haskell Data Analysis Cookbook</a></li>
+<li><a href="http://chimera.labs.oreilly.com/books/1230000000929">Parallel and Concurrent Programming in Haskell, By Simon Marlow</a></li>
 </ul>
 
 <h4>Papers and Articles</h4>
@@ -5491,7 +5952,11 @@ cabal install &lt;some package&gt;
 
 <h4>Video Lectures</h4>
 
-<p><strong>Dr. Erik Meijier Serie: Functional Programming Fundamentals</strong></p>
+<p><strong>Dr. Erik Meijer Series: Functional Programming Fundamentals</strong></p>
+
+<p>All lectures: <a href="http://channel9.msdn.com/Series/C9-Lectures-Erik-Meijer-Functional-Programming-Fundamentals">C9 Lectures: Erik Meijer - Functional Programming Fundamentals Video Series</a></p>
+
+<p>Haskell Videos</p>
 
 <ul>
 <li><a href="https://www.youtube.com/watch?v=fQU99SJdWGY">Function Definition    - Chapter 4 of 13</a></li>
@@ -5507,7 +5972,28 @@ cabal install &lt;some package&gt;
 <li><a href="http://channel9.msdn.com/Tags/functional+programming">http://channel9.msdn.com/Tags/functional+programming</a></li>
 </ul>
 
-<p><strong>Loop School Video Lectures</strong></p>
+<p><strong>Haskell Course by Philip Wadler (Youtube)</strong></p>
+
+<ul>
+<li><p><a href="https://www.youtube.com/playlist?list=PLtRG9GLtNcHBv4cuh2w1cz5VsgY6adoc3">Haskell Course by Phd. Philip Wadler</a></p></li>
+<li><p><a href="http://homepages.inf.ed.ac.uk/wadler/">Phillip Wadler's home page</a></p></li>
+</ul>
+
+<p><strong>Haskell From Scratch (Youtube)</strong></p>
+
+<p>Creating complete programs in Haskell from the ground up.</p>
+
+<ul>
+<li><a href="https://www.youtube.com/playlist?list=PLxj9UAX4Em-Ij4TKwKvo-SLp-Zbv-hB4B">Haskell From Scratch</a></li>
+</ul>
+
+<p><strong>Learn you a haskell by Michał Drozd (Youtube)</strong></p>
+
+<ul>
+<li><a href="https://www.youtube.com/playlist?list=PLPqPwGvHPSZB-urE6QFjKYt6AGXcZqJUh">Learn you a haskell by Michal Drozd</a></li>
+</ul>
+
+<p><strong>Loop School</strong></p>
 
 <p>Good video lectures about Category theory and Haskell programing language.</p>
 
