@@ -48,6 +48,8 @@ This page can be accessed from: https://github.com/caiorss/Functional-Programmin
   - [Infix Operators Functions](#infix-operators-functions)
   - [Currying](#currying)
   - [Recursion](#recursion)
+  - [Integer Arithmetic Functions](#integer-arithmetic-functions)
+  - [Mathematics Functions](#mathematics-functions)
   - [Standard Functions](#standard-functions)
   - [Higher Order Functions](#higher-order-functions)
     - [Map](#map)
@@ -108,7 +110,7 @@ This page can be accessed from: https://github.com/caiorss/Functional-Programmin
   - [Numerical Methods](#numerical-methods)
     - [Polynomial](#polynomial)
     - [Numerical Derivate](#numerical-derivate)
-    - [Equation Solving](#equation-solving)
+    - [Nonlinear Equation - Root-finding](#nonlinear-equation---root-finding)
     - [Differential Equations](#differential-equations)
   - [Statistics and Time Series](#statistics-and-time-series)
     - [Some Statistical Functions](#some-statistical-functions)
@@ -197,13 +199,17 @@ GHCI Interactive Shell
 | Command                     |  Description                                |
 |-----------------------------|---------------------------------------------|
 | :help                       |  Show help                                  |
-| :load [haskell-source.hs] |    Load Haskell Source Code                 |
-| :reload                     |  Reload Code after it was edited            |
-| :type [symbol]             |  Show the Type of a Symbol                  |
+| :load [haskell-source.hs] or :l src.hs |    Load Haskell Source Code   |
+| :reload or :r                    |  Reload Code after it was edited      |
+| :type [symbol]   or :t [symbol]          |  Show the Type of a Symbol   |
 | :browser                    |  Gives the type signature of all functions  |
 | :set +s                     |  Multiline Code                             |
 | :{ [code here ] :}        |    Multiline Code                            |
 | :set prompt ">"             |  Change the prompt to ">"                   |
+| :cd [directory]       | change the current working directory to [directory] |
+| :! [shell command>]   | execute the shell command; :! pwd  print the current directory |
+| :quit                 | Quit the interpreter |
+
 
 
 
@@ -1037,6 +1043,8 @@ x + y is equivalent to +(x, y) or (+ x y)
 ```
 
 
+**Arithmetic Operators**
+
 | Shorthand  |  Equivalence         | Type Signature |
 |------------|----------------------|----------------|
 | (+4)       |  \x -> x 4           |                |
@@ -1050,9 +1058,11 @@ x + y is equivalent to +(x, y) or (+ x y)
 | (/)        |  \x y -> x / y         | (/) :: Fractional a => a -> a -> a |
 | (^)        |  \x y -> x ^ y         | (^) :: (Integral b, Num a) => a -> b -> a |
 | (**)       |  \x y -> x ** y        | (**) :: Floating a => a -> a -> a |
-| (,)        |  \x y -> (x, y)      | (,) :: a -> b -> (a, b) |
-| (,,)       |  \x y z -> (x, y, z) | (,,) :: a -> b -> c -> (a, b, c) |
-| (!!)       | alist !! i = alist[i] |  (!!) :: [a] -> Int -> a |
+
+**Comparison Operator**
+
+| Shorthand  |  Equivalence         | Type Signature |
+|------------|----------------------|----------------|
 | (>)        |  \x y -> x > y       | (>) :: Ord a => a -> a -> Bool |
 | (<)        |  \x y -> x < y       | (<) :: Ord a => a -> a -> Bool |
 | (>=)       |  \x y -> x >= y      | (>=) :: Ord a => a -> a -> Bool |
@@ -1060,9 +1070,26 @@ x + y is equivalent to +(x, y) or (+ x y)
 | (==)       |  \x y -> x == y      | (==) :: Eq a => a -> a -> Bool |
 | (/=)       |  \x y -> x /= y      | (/=) :: Eq a => a -> a -> Bool |
 
+**Boolean operators**
+
+| Shorthand  |  Equivalence         | Type Signature | Name |
+|------------|----------------------|----------------|------|
+| (&&)        |  \x y -> x && y         | (&&) :: Bool -> Bool -> Bool | And |
+| (||)       |  \x y z -> x || y        | (||) :: Bool -> Bool -> Bool | Or |
+| (not)       | not x                   |  not :: Bool -> Bool | Not |
+
+**List and Tuples Operators**
+
+| Shorthand  |  Equivalence         | Type Signature |
+|------------|----------------------|----------------|
+| (,)        |  \x y -> (x, y)      | (,) :: a -> b -> (a, b) |
+| (,,)       |  \x y z -> (x, y, z) | (,,) :: a -> b -> c -> (a, b, c) |
+| (!!)       | alist !! i = alist[i] |  (!!) :: [a] -> Int -> a |
+
+
+**Examples**
 
 ```haskell
-
 > (+) 10 30.33
 40.33
 
@@ -1287,6 +1314,330 @@ fib n | n>= 2
     = fib(n-1) + fib(n-2)
 ```
 
+
+### Integer Arithmetic Functions
+
+| Function | Description |
+|----------|-------------|
+| even     | Test if number is even, multiple of 2 |
+| odd      | Test if number is odd, non multiple of 2 |
+| quot     | Quotient of two numbers | 
+| rem      | Remainder from the quotient | 
+| div      | Similar to "quot", but is rounded down towards minus infinity |
+| mod | Returns the modulus of the two numbers | 
+| divMod | Returns the quocient and the modulus tuple |
+| gcd   | Greatest common divisor of two numbers |
+| lcd   | Lowest Common Multiple of two numbers |
+| compare | Compare two numbers |
+
+Exaples:
+
+```haskell
+
+{- -------------------Interger Division----------------- -}
+
+{- Division Quotient -}
+
+λ> quot 70 8
+8
+λ> 
+λ> quot (-80)  8
+-10
+λ> 
+λ> 80 `quot` 8
+10
+λ> 
+
+λ> div 100 8
+12
+λ> 
+λ> div (-100) 8
+-13
+λ> quot (-100) 8
+-12
+λ> 
+λ> 100 `div` 8
+12
+λ> 
+
+{- Remainder-}
+
+λ> rem 100 12
+4
+λ> rem 100 10
+0
+λ> 100 `rem` 12
+4
+λ> 100 `rem` 10
+0
+λ> 
+λ> rem (-100) 12
+-4
+λ> rem (-100) 10
+0
+λ> (-100) `rem` 12
+-4
+λ> (-100) `rem` 10
+0
+λ> 
+
+
+λ> mod 100 12
+4
+λ> mod 100 10
+0
+λ> 100 `mod` 12
+4
+λ> 100 `mod` 10
+0
+λ> 
+λ> mod (-100) 12
+8
+λ> 
+λ> (-100) `mod` 12
+8
+λ> 
+
+
+{- DivMod Quotient and Modulus of Division -}
+
+λ> divMod 100 12
+(8,4)
+λ> divMod 100 10
+(10,0)
+λ> 100 `divMod` 12
+(8,4)
+λ> 100 `divMod` 10
+(10,0)
+λ> 
+λ> divMod (-100) 12
+(-9,8)
+λ> divMod (-100) 10
+(-10,0)
+λ> 
+
+
+{- Odd / Even Test -}
+
+λ> even 20
+True
+λ> even 31
+False
+
+λ> odd 20
+False
+λ> odd 31
+True
+
+λ> [1..10]
+[1,2,3,4,5,6,7,8,9,10]
+λ> filter odd [1..10]
+[1,3,5,7,9]
+λ> filter even [1..10]
+[2,4,6,8,10]
+λ> 
+
+{- Greatest Common Divisor -}
+
+λ> gcd 840 15
+15
+λ> 
+λ> gcd 21 14
+7
+λ> 
+λ> 
+
+λ> foldl1 gcd [21, 14, 35, 700]
+7
+λ> 
+
+
+{- Lowest Common Multiple -}
+
+λ> lcm 9 36
+36
+λ> 
+λ> lcm 15 35
+105
+λ> 
+{- 
+    Lowest Common multiple of a list of numbers
+    15 = 3 x 5
+    35 = 5 x 7
+    20 = 4 x 5
+    40 = 8 x 5
+    
+    lcm = 3 x 5 x 8 = 840
+-}
+λ> foldl1 lcm [15, 35, 20, 40]
+840
+λ> 
+```
+
+Reference:
+
+* http://en.wikibooks.org/wiki/Haskell/A_Miscellany_of_Types
+
+
+### Mathematical Functions
+
+Sqrt, Log, Exp, Power 
+
+```haskell
+
+{- Natural logarithm -}
+λ> log 10
+2.302585092994046
+λ> 
+
+{- Logarithm to any base -}
+
+λ> let log10 = logBase 10
+λ> let log2  = logBase 2
+λ> 
+λ> log10 100
+2.0
+λ> map log10 [1, 10, 20, 100, 1000]
+[0.0,1.0,1.3010299956639813,2.0,3.0]
+λ> 
+λ> map log2 [1, 2, 4, 8, 16]
+[0.0,1.0,2.0,3.0,4.0]
+λ> 
+
+{- Square Root -}
+λ> sqrt 100
+10.0
+λ> sqrt 10
+3.1622776601683795
+λ> 
+
+{- Exponential function -}
+λ> exp 1
+2.718281828459045
+λ> exp 2
+7.38905609893065
+λ> 
+
+{- Pow/ Power Function x^y-}
+
+λ> sqrt 2
+1.4142135623730951
+λ> 2 ** 0.5
+1.4142135623730951
+λ> 
+
+λ> 2** 3
+8.0
+λ> 
+λ> (**) 2 3
+8.0
+λ> 
+
+λ> map round [13.03123, 13.20, 13.50, 13.60, 13.992]
+[13,13,14,14,14]
+λ> 
+```
+
+Trigonometric Functions
+
+```haskell
+
+λ> pi
+3.141592653589793
+λ>
+
+λ> sin pi
+1.2246063538223773e-16
+λ> 
+λ> sin (pi/3)
+0.8660254037844386
+λ> 
+λ> asin (0.8660254037844386) == pi/3
+True
+λ> 
+
+
+λ> cos pi
+-1.0
+λ>
+λ> acos (-1)
+3.141592653589793
+λ> acos (-1) == pi
+True
+λ> 
+
+
+
+λ> atan 1
+0.7853981633974483
+λ> 
+
+λ> atan2 1 (-1)
+2.356194490192345
+λ> 
+```
+
+
+Floor, Round, Ceil 
+
+```haskell
+
+λ> map round [13.03123, 13.20, 13.50, 13.60, 13.992]
+[13,13,14,14,14]
+λ> 
+
+λ> map truncate  [13.03123, 13.20, 13.50, 13.60, 13.992]
+[13,13,13,13,13]
+λ> 
+
+λ> map floor [13.03123, 13.20, 13.50, 13.60, 13.992]
+[13,13,13,13,13]
+λ> 
+
+λ> map ceiling [13.03123, 13.20, 13.50, 13.60, 13.992]
+[14,14,14,14,14]
+λ> 
+```
+
+
+Convert Interger to Float Point
+
+```haskell
+λ> let inv x = 1/x
+
+λ> :t inv
+inv :: Fractional a => a -> a
+λ> 
+
+
+λ> let v = [1..10]
+λ> v
+[1,2,3,4,5,6,7,8,9,10]
+λ> :t v
+v :: [Integer]
+λ> 
+
+λ> inv 10
+0.1
+λ> inv 0.1
+10.0
+λ> 
+
+λ> map inv v
+
+<interactive>:20:5:
+    No instance for (Fractional Integer) arising from a use of `inv'
+    Possible fix: add an instance declaration for (Fractional Integer)
+    In the first argument of `map', namely `inv'
+    In the expression: map inv v
+    In an equation for `it': it = map inv v
+
+λ> map (inv . fromInteger) v
+[1.0,0.5,0.3333333333333333,0.25,0.2,0.16666666666666666,0.14285714285714285,0.125,0.1111111111111111,0.1]
+λ> 
+
+
+```
 
 ### Standard Functions
 

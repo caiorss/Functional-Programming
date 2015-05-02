@@ -128,6 +128,8 @@ and the line bellow without the symbol &gt; are the output.</li>
 <li><a href="#infix-operators-functions">Infix Operators Functions</a></li>
 <li><a href="#currying">Currying</a></li>
 <li><a href="#recursion">Recursion</a></li>
+<li><a href="#integer-arithmetic-functions">Integer Arithmetic Functions</a></li>
+<li><a href="#mathematics-functions">Mathematics Functions</a></li>
 <li><a href="#standard-functions">Standard Functions</a></li>
 <li>
 <a href="#higher-order-functions">Higher Order Functions</a>
@@ -236,7 +238,7 @@ and the line bellow without the symbol &gt; are the output.</li>
 <ul>
 <li><a href="#polynomial">Polynomial</a></li>
 <li><a href="#numerical-derivate">Numerical Derivate</a></li>
-<li><a href="#equation-solving">Equation Solving</a></li>
+<li><a href="#nonlinear-equation---root-finding">Nonlinear Equation - Root-finding</a></li>
 <li><a href="#differential-equations">Differential Equations</a></li>
 </ul>
 </li>
@@ -405,15 +407,15 @@ and the line bellow without the symbol &gt; are the output.</li>
 <td>Show help</td>
 </tr>
 <tr>
-<td>:load [haskell-source.hs]</td>
+<td>:load [haskell-source.hs] or :l src.hs</td>
 <td>Load Haskell Source Code</td>
 </tr>
 <tr>
-<td>:reload</td>
+<td>:reload or :r</td>
 <td>Reload Code after it was edited</td>
 </tr>
 <tr>
-<td>:type [symbol]</td>
+<td>:type [symbol]   or :t [symbol]</td>
 <td>Show the Type of a Symbol</td>
 </tr>
 <tr>
@@ -431,6 +433,18 @@ and the line bellow without the symbol &gt; are the output.</li>
 <tr>
 <td>:set prompt "&gt;"</td>
 <td>Change the prompt to "&gt;"</td>
+</tr>
+<tr>
+<td>:cd [directory]</td>
+<td>change the current working directory to [directory]</td>
+</tr>
+<tr>
+<td>:! [shell command&gt;]</td>
+<td>execute the shell command; :! pwd  print the current directory</td>
+</tr>
+<tr>
+<td>:quit</td>
+<td>Quit the interpreter</td>
 </tr>
 </tbody>
 </table>
@@ -1357,6 +1371,8 @@ prefix (possibly empty) of xs of elements that satisfy p:</p>
 <pre><code>x + y is equivalent to +(x, y) or (+ x y)
 </code></pre>
 
+<p><strong>Arithmetic Operators</strong></p>
+
 <table>
 <thead>
 <tr>
@@ -1421,21 +1437,20 @@ prefix (possibly empty) of xs of elements that satisfy p:</p>
 <td>\x y -&gt; x ** y</td>
 <td>(**) :: Floating a =&gt; a -&gt; a -&gt; a</td>
 </tr>
+</tbody>
+</table>
+
+<p><strong>Comparison Operator</strong></p>
+
+<table>
+<thead>
 <tr>
-<td>(,)</td>
-<td>\x y -&gt; (x, y)</td>
-<td>(,) :: a -&gt; b -&gt; (a, b)</td>
+<th>Shorthand</th>
+<th>Equivalence</th>
+<th>Type Signature</th>
 </tr>
-<tr>
-<td>(,,)</td>
-<td>\x y z -&gt; (x, y, z)</td>
-<td>(,,) :: a -&gt; b -&gt; c -&gt; (a, b, c)</td>
-</tr>
-<tr>
-<td>(!!)</td>
-<td>alist !! i = alist[i]</td>
-<td>(!!) :: [a] -&gt; Int -&gt; a</td>
-</tr>
+</thead>
+<tbody>
 <tr>
 <td>(&gt;)</td>
 <td>\x y -&gt; x &gt; y</td>
@@ -1469,8 +1484,71 @@ prefix (possibly empty) of xs of elements that satisfy p:</p>
 </tbody>
 </table>
 
-<div class="highlight highlight-haskell"><pre>
-&gt; (+) <span class="pl-c1">10</span> <span class="pl-c1">30.33</span>
+<p><strong>Boolean operators</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>Shorthand</th>
+<th>Equivalence</th>
+<th>Type Signature</th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(&amp;&amp;)</td>
+<td>\x y -&gt; x &amp;&amp; y</td>
+<td>(&amp;&amp;) :: Bool -&gt; Bool -&gt; Bool</td>
+<td>And</td>
+</tr>
+<tr>
+<td>(</td>
+<td></td>
+<td>)</td>
+<td>\x y z -&gt; x</td>
+</tr>
+<tr>
+<td>(not)</td>
+<td>not x</td>
+<td>not :: Bool -&gt; Bool</td>
+<td>Not</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>List and Tuples Operators</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>Shorthand</th>
+<th>Equivalence</th>
+<th>Type Signature</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(,)</td>
+<td>\x y -&gt; (x, y)</td>
+<td>(,) :: a -&gt; b -&gt; (a, b)</td>
+</tr>
+<tr>
+<td>(,,)</td>
+<td>\x y z -&gt; (x, y, z)</td>
+<td>(,,) :: a -&gt; b -&gt; c -&gt; (a, b, c)</td>
+</tr>
+<tr>
+<td>(!!)</td>
+<td>alist !! i = alist[i]</td>
+<td>(!!) :: [a] -&gt; Int -&gt; a</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Examples</strong></p>
+
+<div class="highlight highlight-haskell"><pre>&gt; (+) <span class="pl-c1">10</span> <span class="pl-c1">30.33</span>
 <span class="pl-c1">40.33</span>
 
 &gt; <span class="pl-c1">map</span> ((+) <span class="pl-c1">10</span>) [<span class="pl-c1">1</span>, <span class="pl-c1">20</span>, <span class="pl-c1">43</span>, <span class="pl-c1">44</span>]
@@ -1682,6 +1760,320 @@ fact n = n*fact(n-<span class="pl-c1">1</span>)
 fib <span class="pl-c1">1</span> = <span class="pl-c1">1</span>
 fib n | n&gt;= <span class="pl-c1">2</span>
     = fib(n-<span class="pl-c1">1</span>) + fib(n-<span class="pl-c1">2</span>)</pre></div>
+
+<h3>Integer Arithmetic Functions</h3>
+
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>even</td>
+<td>Test if number is even, multiple of 2</td>
+</tr>
+<tr>
+<td>odd</td>
+<td>Test if number is odd, non multiple of 2</td>
+</tr>
+<tr>
+<td>quot</td>
+<td>Quotient of two numbers</td>
+</tr>
+<tr>
+<td>rem</td>
+<td>Remainder from the quotient</td>
+</tr>
+<tr>
+<td>div</td>
+<td>Similar to "quot", but is rounded down towards minus infinity</td>
+</tr>
+<tr>
+<td>mod</td>
+<td>Returns the modulus of the two numbers</td>
+</tr>
+<tr>
+<td>divMod</td>
+<td>Returns the quocient and the modulus tuple</td>
+</tr>
+<tr>
+<td>gcd</td>
+<td>Greatest common divisor of two numbers</td>
+</tr>
+<tr>
+<td>lcd</td>
+<td>Lowest Common Multiple of two numbers</td>
+</tr>
+<tr>
+<td>compare</td>
+<td>Compare two numbers</td>
+</tr>
+</tbody>
+</table>
+
+<p>Exaples:</p>
+
+<div class="highlight highlight-haskell"><pre>
+<span class="pl-c">{- -------------------Interger Division----------------- -}</span>
+
+<span class="pl-c">{- Division Quotient -}</span>
+
+λ&gt; <span class="pl-c1">quot</span> <span class="pl-c1">70</span> <span class="pl-c1">8</span>
+<span class="pl-c1">8</span>
+λ&gt; 
+λ&gt; <span class="pl-c1">quot</span> (-<span class="pl-c1">80</span>)  <span class="pl-c1">8</span>
+-<span class="pl-c1">10</span>
+λ&gt; 
+λ&gt; <span class="pl-c1">80</span> <span class="pl-k">`quot`</span> <span class="pl-c1">8</span>
+<span class="pl-c1">10</span>
+λ&gt; 
+
+λ&gt; <span class="pl-c1">div</span> <span class="pl-c1">100</span> <span class="pl-c1">8</span>
+<span class="pl-c1">12</span>
+λ&gt; 
+λ&gt; <span class="pl-c1">div</span> (-<span class="pl-c1">100</span>) <span class="pl-c1">8</span>
+-<span class="pl-c1">13</span>
+λ&gt; <span class="pl-c1">quot</span> (-<span class="pl-c1">100</span>) <span class="pl-c1">8</span>
+-<span class="pl-c1">12</span>
+λ&gt; 
+λ&gt; <span class="pl-c1">100</span> <span class="pl-k">`div`</span> <span class="pl-c1">8</span>
+<span class="pl-c1">12</span>
+λ&gt; 
+
+<span class="pl-c">{- Remainder-}</span>
+
+λ&gt; <span class="pl-c1">rem</span> <span class="pl-c1">100</span> <span class="pl-c1">12</span>
+<span class="pl-c1">4</span>
+λ&gt; <span class="pl-c1">rem</span> <span class="pl-c1">100</span> <span class="pl-c1">10</span>
+<span class="pl-c1">0</span>
+λ&gt; <span class="pl-c1">100</span> <span class="pl-k">`rem`</span> <span class="pl-c1">12</span>
+<span class="pl-c1">4</span>
+λ&gt; <span class="pl-c1">100</span> <span class="pl-k">`rem`</span> <span class="pl-c1">10</span>
+<span class="pl-c1">0</span>
+λ&gt; 
+λ&gt; <span class="pl-c1">rem</span> (-<span class="pl-c1">100</span>) <span class="pl-c1">12</span>
+-<span class="pl-c1">4</span>
+λ&gt; <span class="pl-c1">rem</span> (-<span class="pl-c1">100</span>) <span class="pl-c1">10</span>
+<span class="pl-c1">0</span>
+λ&gt; (-<span class="pl-c1">100</span>) <span class="pl-k">`rem`</span> <span class="pl-c1">12</span>
+-<span class="pl-c1">4</span>
+λ&gt; (-<span class="pl-c1">100</span>) <span class="pl-k">`rem`</span> <span class="pl-c1">10</span>
+<span class="pl-c1">0</span>
+λ&gt; 
+
+
+λ&gt; <span class="pl-c1">mod</span> <span class="pl-c1">100</span> <span class="pl-c1">12</span>
+<span class="pl-c1">4</span>
+λ&gt; <span class="pl-c1">mod</span> <span class="pl-c1">100</span> <span class="pl-c1">10</span>
+<span class="pl-c1">0</span>
+λ&gt; <span class="pl-c1">100</span> <span class="pl-k">`mod`</span> <span class="pl-c1">12</span>
+<span class="pl-c1">4</span>
+λ&gt; <span class="pl-c1">100</span> <span class="pl-k">`mod`</span> <span class="pl-c1">10</span>
+<span class="pl-c1">0</span>
+λ&gt; 
+λ&gt; <span class="pl-c1">mod</span> (-<span class="pl-c1">100</span>) <span class="pl-c1">12</span>
+<span class="pl-c1">8</span>
+λ&gt; 
+λ&gt; (-<span class="pl-c1">100</span>) <span class="pl-k">`mod`</span> <span class="pl-c1">12</span>
+<span class="pl-c1">8</span>
+λ&gt; 
+
+
+<span class="pl-c">{- DivMod Quotient and Modulus of Division -}</span>
+
+λ&gt; <span class="pl-c1">divMod</span> <span class="pl-c1">100</span> <span class="pl-c1">12</span>
+(<span class="pl-c1">8</span>,<span class="pl-c1">4</span>)
+λ&gt; <span class="pl-c1">divMod</span> <span class="pl-c1">100</span> <span class="pl-c1">10</span>
+(<span class="pl-c1">10</span>,<span class="pl-c1">0</span>)
+λ&gt; <span class="pl-c1">100</span> <span class="pl-k">`divMod`</span> <span class="pl-c1">12</span>
+(<span class="pl-c1">8</span>,<span class="pl-c1">4</span>)
+λ&gt; <span class="pl-c1">100</span> <span class="pl-k">`divMod`</span> <span class="pl-c1">10</span>
+(<span class="pl-c1">10</span>,<span class="pl-c1">0</span>)
+λ&gt; 
+λ&gt; <span class="pl-c1">divMod</span> (-<span class="pl-c1">100</span>) <span class="pl-c1">12</span>
+(-<span class="pl-c1">9</span>,<span class="pl-c1">8</span>)
+λ&gt; <span class="pl-c1">divMod</span> (-<span class="pl-c1">100</span>) <span class="pl-c1">10</span>
+(-<span class="pl-c1">10</span>,<span class="pl-c1">0</span>)
+λ&gt; 
+
+
+<span class="pl-c">{- Odd / Even Test -}</span>
+
+λ&gt; <span class="pl-c1">even</span> <span class="pl-c1">20</span>
+<span class="pl-c1">True</span>
+λ&gt; <span class="pl-c1">even</span> <span class="pl-c1">31</span>
+<span class="pl-c1">False</span>
+
+λ&gt; <span class="pl-c1">odd</span> <span class="pl-c1">20</span>
+<span class="pl-c1">False</span>
+λ&gt; <span class="pl-c1">odd</span> <span class="pl-c1">31</span>
+<span class="pl-c1">True</span>
+
+λ&gt; [<span class="pl-c1">1</span>..<span class="pl-c1">10</span>]
+[<span class="pl-c1">1</span>,<span class="pl-c1">2</span>,<span class="pl-c1">3</span>,<span class="pl-c1">4</span>,<span class="pl-c1">5</span>,<span class="pl-c1">6</span>,<span class="pl-c1">7</span>,<span class="pl-c1">8</span>,<span class="pl-c1">9</span>,<span class="pl-c1">10</span>]
+λ&gt; <span class="pl-c1">filter</span> <span class="pl-c1">odd</span> [<span class="pl-c1">1</span>..<span class="pl-c1">10</span>]
+[<span class="pl-c1">1</span>,<span class="pl-c1">3</span>,<span class="pl-c1">5</span>,<span class="pl-c1">7</span>,<span class="pl-c1">9</span>]
+λ&gt; <span class="pl-c1">filter</span> <span class="pl-c1">even</span> [<span class="pl-c1">1</span>..<span class="pl-c1">10</span>]
+[<span class="pl-c1">2</span>,<span class="pl-c1">4</span>,<span class="pl-c1">6</span>,<span class="pl-c1">8</span>,<span class="pl-c1">10</span>]
+λ&gt; 
+
+<span class="pl-c">{- Greatest Common Divisor -}</span>
+
+λ&gt; <span class="pl-c1">gcd</span> <span class="pl-c1">840</span> <span class="pl-c1">15</span>
+<span class="pl-c1">15</span>
+λ&gt; 
+λ&gt; <span class="pl-c1">gcd</span> <span class="pl-c1">21</span> <span class="pl-c1">14</span>
+<span class="pl-c1">7</span>
+λ&gt; 
+λ&gt; 
+
+λ&gt; <span class="pl-c1">foldl1</span> <span class="pl-c1">gcd</span> [<span class="pl-c1">21</span>, <span class="pl-c1">14</span>, <span class="pl-c1">35</span>, <span class="pl-c1">700</span>]
+<span class="pl-c1">7</span>
+λ&gt; 
+
+
+<span class="pl-c">{- Lowest Common Multiple -}</span>
+
+λ&gt; <span class="pl-c1">lcm</span> <span class="pl-c1">9</span> <span class="pl-c1">36</span>
+<span class="pl-c1">36</span>
+λ&gt; 
+λ&gt; <span class="pl-c1">lcm</span> <span class="pl-c1">15</span> <span class="pl-c1">35</span>
+<span class="pl-c1">105</span>
+λ&gt; 
+<span class="pl-c">{- </span>
+<span class="pl-c">    Lowest Common multiple of a list of numbers</span>
+<span class="pl-c">    15 = 3 x 5</span>
+<span class="pl-c">    35 = 5 x 7</span>
+<span class="pl-c">    20 = 4 x 5</span>
+<span class="pl-c">    40 = 8 x 5</span>
+<span class="pl-c"></span>
+<span class="pl-c">    lcm = 3 x 5 x 8 = 840</span>
+<span class="pl-c">-}</span>
+λ&gt; <span class="pl-c1">foldl1</span> <span class="pl-c1">lcm</span> [<span class="pl-c1">15</span>, <span class="pl-c1">35</span>, <span class="pl-c1">20</span>, <span class="pl-c1">40</span>]
+<span class="pl-c1">840</span>
+λ&gt; </pre></div>
+
+<p>Reference:</p>
+
+<ul>
+<li><a href="http://en.wikibooks.org/wiki/Haskell/A_Miscellany_of_Types">http://en.wikibooks.org/wiki/Haskell/A_Miscellany_of_Types</a></li>
+</ul>
+
+<h3>Mathematics Functions</h3>
+
+<p>Sqrt, Log, Exp, Power </p>
+
+<div class="highlight highlight-haskell"><pre>
+<span class="pl-c">{- Natural logarithm -}</span>
+λ&gt; <span class="pl-c1">log</span> <span class="pl-c1">10</span>
+<span class="pl-c1">2.302585092994046</span>
+λ&gt; 
+
+<span class="pl-c">{- Logarithm to any base -}</span>
+
+λ&gt; <span class="pl-k">let</span> log10 = <span class="pl-c1">logBase</span> <span class="pl-c1">10</span>
+λ&gt; <span class="pl-k">let</span> log2  = <span class="pl-c1">logBase</span> <span class="pl-c1">2</span>
+λ&gt; 
+λ&gt; log10 <span class="pl-c1">100</span>
+<span class="pl-c1">2.0</span>
+λ&gt; <span class="pl-c1">map</span> log10 [<span class="pl-c1">1</span>, <span class="pl-c1">10</span>, <span class="pl-c1">20</span>, <span class="pl-c1">100</span>, <span class="pl-c1">1000</span>]
+[<span class="pl-c1">0.0</span>,<span class="pl-c1">1.0</span>,<span class="pl-c1">1.3010299956639813</span>,<span class="pl-c1">2.0</span>,<span class="pl-c1">3.0</span>]
+λ&gt; 
+λ&gt; <span class="pl-c1">map</span> log2 [<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">4</span>, <span class="pl-c1">8</span>, <span class="pl-c1">16</span>]
+[<span class="pl-c1">0.0</span>,<span class="pl-c1">1.0</span>,<span class="pl-c1">2.0</span>,<span class="pl-c1">3.0</span>,<span class="pl-c1">4.0</span>]
+λ&gt; 
+
+<span class="pl-c">{- Square Root -}</span>
+λ&gt; <span class="pl-c1">sqrt</span> <span class="pl-c1">100</span>
+<span class="pl-c1">10.0</span>
+λ&gt; <span class="pl-c1">sqrt</span> <span class="pl-c1">10</span>
+<span class="pl-c1">3.1622776601683795</span>
+λ&gt; 
+
+<span class="pl-c">{- Exponential function -}</span>
+λ&gt; <span class="pl-c1">exp</span> <span class="pl-c1">1</span>
+<span class="pl-c1">2.718281828459045</span>
+λ&gt; <span class="pl-c1">exp</span> <span class="pl-c1">2</span>
+<span class="pl-c1">7.38905609893065</span>
+λ&gt; 
+
+<span class="pl-c">{- Pow/ Power Function x^y-}</span>
+
+λ&gt; <span class="pl-c1">sqrt</span> <span class="pl-c1">2</span>
+<span class="pl-c1">1.4142135623730951</span>
+λ&gt; <span class="pl-c1">2</span> ** <span class="pl-c1">0.5</span>
+<span class="pl-c1">1.4142135623730951</span>
+λ&gt; 
+
+λ&gt; <span class="pl-c1">2</span>** <span class="pl-c1">3</span>
+<span class="pl-c1">8.0</span>
+λ&gt; 
+λ&gt; (**) <span class="pl-c1">2</span> <span class="pl-c1">3</span>
+<span class="pl-c1">8.0</span>
+λ&gt; 
+
+λ&gt; <span class="pl-c1">map</span> <span class="pl-c1">round</span> [<span class="pl-c1">13.03123</span>, <span class="pl-c1">13.20</span>, <span class="pl-c1">13.50</span>, <span class="pl-c1">13.60</span>, <span class="pl-c1">13.992</span>]
+[<span class="pl-c1">13</span>,<span class="pl-c1">13</span>,<span class="pl-c1">14</span>,<span class="pl-c1">14</span>,<span class="pl-c1">14</span>]
+λ&gt; </pre></div>
+
+<p>Trigonometric Functions</p>
+
+<div class="highlight highlight-haskell"><pre>
+λ&gt; <span class="pl-c1">pi</span>
+<span class="pl-c1">3.141592653589793</span>
+λ&gt;
+
+λ&gt; <span class="pl-c1">sin</span> <span class="pl-c1">pi</span>
+<span class="pl-c1">1.2246063538223773e-16</span>
+λ&gt; 
+λ&gt; <span class="pl-c1">sin</span> (<span class="pl-c1">pi</span>/<span class="pl-c1">3</span>)
+<span class="pl-c1">0.8660254037844386</span>
+λ&gt; 
+λ&gt; <span class="pl-c1">asin</span> (<span class="pl-c1">0.8660254037844386</span>) == <span class="pl-c1">pi</span>/<span class="pl-c1">3</span>
+<span class="pl-c1">True</span>
+λ&gt; 
+
+
+λ&gt; <span class="pl-c1">cos</span> <span class="pl-c1">pi</span>
+-<span class="pl-c1">1.0</span>
+λ&gt;
+λ&gt; <span class="pl-c1">acos</span> (-<span class="pl-c1">1</span>)
+<span class="pl-c1">3.141592653589793</span>
+λ&gt; <span class="pl-c1">acos</span> (-<span class="pl-c1">1</span>) == <span class="pl-c1">pi</span>
+<span class="pl-c1">True</span>
+λ&gt; 
+
+
+
+λ&gt; <span class="pl-c1">atan</span> <span class="pl-c1">1</span>
+<span class="pl-c1">0.7853981633974483</span>
+λ&gt; 
+
+λ&gt; <span class="pl-c1">atan2</span> <span class="pl-c1">1</span> (-<span class="pl-c1">1</span>)
+<span class="pl-c1">2.356194490192345</span>
+λ&gt; </pre></div>
+
+<p>Floor, Round, Ceil </p>
+
+<div class="highlight highlight-haskell"><pre>
+λ&gt; <span class="pl-c1">map</span> <span class="pl-c1">round</span> [<span class="pl-c1">13.03123</span>, <span class="pl-c1">13.20</span>, <span class="pl-c1">13.50</span>, <span class="pl-c1">13.60</span>, <span class="pl-c1">13.992</span>]
+[<span class="pl-c1">13</span>,<span class="pl-c1">13</span>,<span class="pl-c1">14</span>,<span class="pl-c1">14</span>,<span class="pl-c1">14</span>]
+λ&gt; 
+
+λ&gt; <span class="pl-c1">map</span> <span class="pl-c1">truncate</span>  [<span class="pl-c1">13.03123</span>, <span class="pl-c1">13.20</span>, <span class="pl-c1">13.50</span>, <span class="pl-c1">13.60</span>, <span class="pl-c1">13.992</span>]
+[<span class="pl-c1">13</span>,<span class="pl-c1">13</span>,<span class="pl-c1">13</span>,<span class="pl-c1">13</span>,<span class="pl-c1">13</span>]
+λ&gt; 
+
+λ&gt; <span class="pl-c1">map</span> <span class="pl-c1">floor</span> [<span class="pl-c1">13.03123</span>, <span class="pl-c1">13.20</span>, <span class="pl-c1">13.50</span>, <span class="pl-c1">13.60</span>, <span class="pl-c1">13.992</span>]
+[<span class="pl-c1">13</span>,<span class="pl-c1">13</span>,<span class="pl-c1">13</span>,<span class="pl-c1">13</span>,<span class="pl-c1">13</span>]
+λ&gt; 
+
+λ&gt; <span class="pl-c1">map</span> <span class="pl-c1">ceiling</span> [<span class="pl-c1">13.03123</span>, <span class="pl-c1">13.20</span>, <span class="pl-c1">13.50</span>, <span class="pl-c1">13.60</span>, <span class="pl-c1">13.992</span>]
+[<span class="pl-c1">14</span>,<span class="pl-c1">14</span>,<span class="pl-c1">14</span>,<span class="pl-c1">14</span>,<span class="pl-c1">14</span>]
+λ&gt; </pre></div>
 
 <h3>Standard Functions</h3>
 
@@ -4512,7 +4904,15 @@ df = derv <span class="pl-c1">1e-5</span> f
 *<span class="pl-c1">Main</span>&gt; <span class="pl-c1">map</span> dfx [<span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>, <span class="pl-c1">5</span>]
 [<span class="pl-c1">6</span>,<span class="pl-c1">10</span>,<span class="pl-c1">14</span>,<span class="pl-c1">18</span>]</pre></div>
 
-<h4>Equation Solving</h4>
+<h4>Nonlinear Equation - Root-finding</h4>
+
+<p>See also: </p>
+
+<ul>
+<li><a href="http://en.wikipedia.org/wiki/Root-finding_algorithm">Root finding</a></li>
+<li><a href="http://en.wikipedia.org/wiki/Newton's_method">Newton's method</a></li>
+<li><a href="http://en.wikipedia.org/wiki/Bisection_method">Bisection method</a></li>
+</ul>
 
 <p><strong>Bissection Method</strong></p>
 
@@ -4589,13 +4989,26 @@ newtonSolver eps itmax f df guess = (root, <span class="pl-c1">error</span>, ite
     iterations = <span class="pl-c1">length</span> rootlist
 
 
-<span class="pl-en">f</span> <span class="pl-k">::</span> <span class="pl-k">Floating</span> <span class="pl-smi">a</span> <span class="pl-k">=&gt;</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">a</span>
-f x = x^<span class="pl-c1">2</span> - <span class="pl-c1">2.0</span>
-
-
 square_root a | a &gt; <span class="pl-c1">0</span>       = newtonSolver <span class="pl-c1">1e-6</span> <span class="pl-c1">50</span> (\x -&gt; x^<span class="pl-c1">2</span> -a) (\x -&gt; <span class="pl-c1">2</span>*x) a 
               | <span class="pl-c1">otherwise</span>   = <span class="pl-c1">error</span> (<span class="pl-s"><span class="pl-pds">"</span>The argument must be positive<span class="pl-pds">"</span></span>)
-</pre></div>
+
+<span class="pl-c">{- </span>
+<span class="pl-c">    Solve f(x) = x^2 - 2 = 0 </span>
+<span class="pl-c"></span>
+<span class="pl-c">    The solution is sqrt(2)</span>
+<span class="pl-c">-}</span>
+λ&gt; <span class="pl-k">let</span> f x = x^<span class="pl-c1">2</span> - <span class="pl-c1">2.0</span>
+λ&gt; 
+λ&gt; <span class="pl-k">let</span> df x = <span class="pl-c1">2</span>*x
+λ&gt; 
+λ&gt; <span class="pl-k">let</span> df x = <span class="pl-c1">2.0</span>*x
+λ&gt; 
+λ&gt; newtonSolver <span class="pl-c1">1e-3</span> <span class="pl-c1">100</span> f df <span class="pl-c1">5</span>
+(<span class="pl-c1">1.414470981367771</span>,<span class="pl-c1">7.281571315052027e-4</span>,<span class="pl-c1">4</span>)
+λ&gt; 
+λ&gt; newtonSolver <span class="pl-c1">1e-3</span> <span class="pl-c1">100</span> f df <span class="pl-c1">50</span>
+(<span class="pl-c1">1.4142150098491113</span>,<span class="pl-c1">4.094082521888254e-6</span>,<span class="pl-c1">8</span>)
+λ&gt; </pre></div>
 
 <p><strong>Secant Method</strong></p>
 
@@ -4701,19 +5114,17 @@ rk4Step f h (x, y) = (xnext, ynext)
                       xnext = x + h
                       ynext = y + h/<span class="pl-c1">6</span>*(k1+<span class="pl-c1">2</span>*k2+<span class="pl-c1">2</span>*k3+k4)
 
-
 <span class="pl-en">rk4</span> <span class="pl-k">::</span> ((<span class="pl-c1">Double</span>, <span class="pl-c1">Double</span>) <span class="pl-k">-&gt;</span> <span class="pl-c1">Double</span>) <span class="pl-k">-&gt;</span> <span class="pl-c1">Double</span> <span class="pl-k">-&gt;</span> <span class="pl-c1">Double</span> <span class="pl-k">-&gt;</span> <span class="pl-c1">Double</span> <span class="pl-k">-&gt;</span> <span class="pl-c1">Double</span> <span class="pl-k">-&gt;</span> [(<span class="pl-c1">Double</span>, <span class="pl-c1">Double</span>)]
 rk4 f x0 xf y0 h = xypairs
                      <span class="pl-k">where</span>
                      iterator = <span class="pl-c1">iterate</span> $ rk4Step f h
                      xypairs = <span class="pl-c1">takeWhile</span> (\(x, y) -&gt; x &lt;= xf ) $ iterator (x0, y0)
 
-
+λ&gt; <span class="pl-k">let</span> dTemp k temp_r (t, temp) = -k*(temp - temp_r)
+λ&gt; 
 λ&gt; <span class="pl-k">let</span> t_temp = rk4 (dTemp <span class="pl-c1">0.07</span> <span class="pl-c1">20.0</span>) <span class="pl-c1">0.0</span> <span class="pl-c1">100.0</span> <span class="pl-c1">100.0</span> <span class="pl-c1">5.0</span>
-
-plotList <span class="pl-c1">[]</span> t_temp
-
-</pre></div>
+λ&gt; plotList <span class="pl-c1">[]</span> t_temp
+λ&gt; </pre></div>
 
 <h3>Statistics and Time Series</h3>
 
