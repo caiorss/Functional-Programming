@@ -156,7 +156,7 @@ This page can be accessed from: https://github.com/caiorss/Functional-Programmin
 * Pure Functional programming language
 * Strong Static Typed Language 
 * Type Inference (The haskell compiler deduce the types for you). 
-* Lazy Evaluation ( Dealayed evaluation) by default
+* Lazy Evaluation ( Dlea yed evaluation) by default
 * Data Imutability/ Haskell has no variables
     * Values can be bound to a name and can only be assigned once.
     * Values can never change.
@@ -221,12 +221,12 @@ Functional Programming is all about programming with functions.
 
 **Functional Programming Features**
 
-* Pure Functions / Referencail Transparency / No side effect
+* Pure Functions / Referential Transparency / No side effect
 * Function Composition
 * Lambda Functions/ Anonymous Functions
 * High Order Functions
 * Currying/ Partial Function Application
-* Clousure - Returning functions from functions
+* Closure - Returning functions from functions
 
 * Data Imutability
 * Pattern Matching
@@ -257,14 +257,14 @@ Pure functions:
 * Are functions without side effects, like mathematical functions. 
 * For the same input the functions always returns the same output.
 * The result of any function call is fully determined by its arguments. 
-* Pure functions doens't rely on global variable and doesn't have internal states.
+* Pure functions don't rely on global variable and don't have internal states.
 * They don't do IO, i.e .:. don't print, don't write a file ...
 * Pure functions are stateless
 * Pure functions are deterministic
 
 Why Pure Functions:
 
-* Composability, one fuction can be connected to another.
+* Composability, one function can be connected to another.
 * Can run in parallel, multi threading, multi core, GPU and distributed systems.
 * Better debugging and testing.
 * Predictability
@@ -316,7 +316,7 @@ for the same input, it depends on the global variable exponent:
 >>> 
 ```
 
-Another example, puryfing an impure Language:
+Another example, purifying an impure Language:
 
 ```python
 
@@ -379,7 +379,7 @@ Example in Haskell:
 
 Example in Python:
 
-* Python uses eager eavaluation by default. In order to get lazy evaluation in python the programmer must use iterators or generators. The example below uses generator.
+* Python uses eager evaluation by default. In order to get lazy evaluation in python the programmer must use iterators or generators. The example below uses generator.
 
 ```python
 
@@ -665,7 +665,7 @@ References:
 * http://shuklan.com/haskell/lec05.html
 * http://book.realworldhaskell.org/read/using-typeclasses.html
 
-| Class      |   Class Intance
+| Class      |   Class Instance
 |------------|------------------------------|
 | Num        | Int, Integer, Nat, Float, Double, Complex  |
 | Real       | Int, Integer, Nat. Float, Double, Complex  |
@@ -714,7 +714,7 @@ Function f from a type a to type m b, a type m parametrized on type b
 f :: a -> m b
 ```
 
-A function h wich takes as argument two functions of type 
+A function h which takes as argument two functions of type 
 a -> b and b -> c and returns a function of type a -> m b
 
 ```haskell
@@ -805,7 +805,7 @@ Product of all elements
 0
 ```
 
-Adding an element to the beggining of the list
+Adding an element to the begining of the list
 
 ```haskell
 > 20 : lst
@@ -1147,7 +1147,7 @@ fact n = n*fact(n-1)
 [1,2,6,24,120,720,5040,40320,362880,3628800]
 ```
 
-Fibbonacci Function
+Fibonacci Function
 
 ```haskell
 fib 0 = 1
@@ -1193,7 +1193,7 @@ const :: a -> b -> a
 
 ### Higher Order Functions
 
-Higher Order functions are functios that takes functions as 
+Higher Order functions are functions that takes functions as 
 arguments.
 
 Why Higher Order Function?
@@ -1241,7 +1241,7 @@ The map functional takes a function as its first argument, then applies it to ev
 
 **Example Estimating PI**
 
-Pi number can be aproximated by Gregory series. 
+Pi number can be approximated by Gregory series. 
 
 http://shuklan.com/haskell/lec06.html#/0/6
 
@@ -1487,7 +1487,7 @@ f :: Num a => a -> a -> a
 λ> f 2 4
 ```
 
-The problemn is: how to map f over a list of pairs of a tuple of values??
+The problem is: how to map f over a list of pairs of a tuple of values??
 
 ```haskell
 λ> map f [(1, 2), (4, 5), (9, 10)]
@@ -2528,7 +2528,7 @@ class  Functor f  where
 * f a : a is a parameter, f wraps a
 * f b : b is a parameter wrapped by f
 
-A functor must satisfy the following operations (aka funtor laws):
+A functor must satisfy the following operations (aka functor laws):
 
 ```haskell
 
@@ -2757,7 +2757,7 @@ class Monad m where
 
 #### Bind Operator
 
-In a imperative language the bind operatior could be described as below:
+In a imperative language the bind operator could be described as below:
 ```
 -- Operator (>>=)
 
@@ -3167,7 +3167,7 @@ instance Monad [] where
         -- and combine them into a new list
 ```
 
-Examples Unsing the bind operator for lists:
+Examples Using the bind operator for lists:
 
 ```haskell
 λ> [10,20,30] >>= \x -> [2*x, x+5] 
@@ -3292,7 +3292,7 @@ Actions are either atomic, as defined in system primitives, or are a sequential 
 Haskell uses the data type IO (IO monad) for actions.
 
 * > let n = v   Binds n to value v
-* > n <- a      Executes action a and binds the anme n to the result
+* > n <- a      Executes action a and binds the name n to the result
 * > a           Executes action a
 * do  notation  is syntactic sugar for (>>=) operations. 
 
@@ -4029,9 +4029,9 @@ Example:
 14.022600562229327
 λ> 
 
-λ> let totalLenght points  =  sum $  map (uncurry(distance)) $ pairs (points)
+λ> let totalLength points  =  sum $  map (uncurry(distance)) $ pairs (points)
 λ> 
-λ> totalLenght points 
+λ> totalLength points 
 14.022600562229327
 λ> 
 
@@ -4084,7 +4084,7 @@ Example:
 λ> 
 ```
 
-**Group by lenght**
+**Group by length**
 
 Definition:
 
@@ -4293,7 +4293,7 @@ bissectionSolver eps itmax f x1 x2 = (root, error, iterations)
 ```haskell
 {-
 Newton-Raphson Method Iterator, builds an iterator function
-fromt the function to be solved and its derivate.
+from the function to be solved and its derivate.
 
 -}
 newton_iterator f df x = x - f(x)/df(x)
@@ -4473,7 +4473,7 @@ Arithmetic Mean of a Sequence
 mean lst = sum lst / fromIntegral (length lst)
 ```
 
-Geometric Mean of Squence 
+Geometric Mean of Sequence 
 ```haskell
 
 pow x y = exp $ y * log x
@@ -4551,7 +4551,7 @@ Solution:
 
 #### Monte Carlo Simulation Coin Toss
 
-The simplest such situation must be the tossing of a coin. Any individual event will result in the coin falling with one side or the other uppermost (heads or tails). However, common sense tells us that, if we tossed it a very large number of times, the total number of heads and tails should become increasingly similar. For a greater numner of tosses the percentage of heads or tails will be next to 50% in a non-biased coin. Credits: [Monte Carlo Simulation - Tossing a Coin](http://staff.argyll.epsb.ca/jreed/math7/strand4/4203.htm)
+The simplest such situation must be the tossing of a coin. Any individual event will result in the coin falling with one side or the other uppermost (heads or tails). However, common sense tells us that, if we tossed it a very large number of times, the total number of heads and tails should become increasingly similar. For a greater number of tosses the percentage of heads or tails will be next to 50% in a non-biased coin. Credits: [Monte Carlo Simulation - Tossing a Coin](http://staff.argyll.epsb.ca/jreed/math7/strand4/4203.htm)
 
 See [Law of Large Numbers](http://en.wikipedia.org/wiki/Law_of_large_numbers)
 
