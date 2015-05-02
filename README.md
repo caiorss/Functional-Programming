@@ -449,14 +449,12 @@ f = lambda x: x**5
 ```
 x^n     for n an integral (understand Int or Integer)
 x**y    for y any kind of number (Float for example)
-x^n     pour n un entier (comprenez Int ou Integer)
-x**y    pour y tout type de nombre (Float par exemple)
 ```
 
 
 #### Application Operator - $
 
-Tje application operator '$' makes code more readable and cleaner since substitutes parenthesis.
+The application operator '$' makes code more readable and cleaner since substitutes parenthesis.
 It is also useful in higher-order situations, such as map ($ 0) xs, or zipWith ($) fs xs. 
 
 ```haskell
