@@ -2,12 +2,11 @@
 
 ![](images/haskellLogo.png)
 
-The purpose of this tutorial is to illustrate functional programming concepts in the Haskell programing language by providing reusable and useful pieces of codes, examples, case study and applications.
+The purpose of this tutorial is to illustrate functional programming concepts in the Haskell programming language by providing reusable and useful snippets of code, examples, case studies, and applications.
 
 Notes: 
 
-* The codes with '>' symbol were run in the interactive haskell Shell ghci
-and the line bellow without the symbol > are the output.
+* The code snippets with the '>' symbol were run in the interactive Haskell Shell (GHCi) and the lines below without the '>' symbol are the output.
 
 This page can be accessed from: 
 
