@@ -7,4 +7,8 @@ html:
 
 tags:
 	git tag
-    
+
+clean:
+	rm -rf *.hi *.o
+	
+     

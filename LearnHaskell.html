@@ -799,67 +799,6 @@ powerful and useful features of Haskell.</p></li>
 
 <p>Reference: <a href="http://www.agu.gov.br/page/download/index/id/11184731">Graham Hutton - University of Nottingham</a></p>
 
-<h4>Basic Classes</h4>
-
-<table>
-<thead>
-<tr>
-<th></th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Eq</td>
-<td>Equality Types</td>
-</tr>
-<tr>
-<td>Ord</td>
-<td>Ordered Types</td>
-</tr>
-<tr>
-<td>Show</td>
-<td>Showables Types</td>
-</tr>
-<tr>
-<td>Read</td>
-<td>Readable Types</td>
-</tr>
-<tr>
-<td>Num</td>
-<td>Numeric Types</td>
-</tr>
-<tr>
-<td>Enum</td>
-<td>Enum Types</td>
-</tr>
-</tbody>
-</table>
-
-<p>Example Methods:</p>
-
-<div class="highlight highlight-haskell"><pre>(==) :: (<span class="pl-c1">Eq</span> a)   =&gt; a -&gt; a -&gt; <span class="pl-c1">Bool</span>
-
-(&lt;)  :: (<span class="pl-c1">Ord</span> a)  =&gt; a -&gt; a -&gt; <span class="pl-c1">Bool</span>
-
-<span class="pl-en">show</span> <span class="pl-k">::</span> (<span class="pl-e">Show</span> <span class="pl-smi">a</span>) <span class="pl-k">=&gt;</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-c1">String</span>
-
-<span class="pl-en">read</span> <span class="pl-k">::</span> (<span class="pl-e">Read</span> <span class="pl-smi">a</span>) <span class="pl-k">=&gt;</span> <span class="pl-c1">String</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">a</span>
-
-(*)  :: (<span class="pl-c1">Num</span> a)  =&gt; a -&gt; a -&gt; a</pre></div>
-
-<pre><code>Value --&gt;  Type --&gt; Typeclass
-</code></pre>
-
-<p>Standard Typeclasses:</p>
-
-<ul>
-<li>Show: Representable as String</li>
-<li>Enum: Enumerable in a list</li>
-<li>Num:  Usable as a number</li>
-<li>Ord:  Used for thing with total order</li>
-</ul>
-
 <h4>Basic Types</h4>
 
 <table>
@@ -1036,6 +975,160 @@ powerful and useful features of Haskell.</p></li>
 </table>
 
 <p><a href="images/classes.gif" target="_blank"><img src="images/classes.gif" alt="" style="max-width:100%;"></a></p>
+
+<h4>Basic Type Classes</h4>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Eq</td>
+<td>Equality Types</td>
+</tr>
+<tr>
+<td>Ord</td>
+<td>Ordered Types</td>
+</tr>
+<tr>
+<td>Show</td>
+<td>Showables Types</td>
+</tr>
+<tr>
+<td>Read</td>
+<td>Readable Types</td>
+</tr>
+<tr>
+<td>Num</td>
+<td>Numeric Types</td>
+</tr>
+<tr>
+<td>Enum</td>
+<td>Enum Types</td>
+</tr>
+</tbody>
+</table>
+
+<p>Example Methods:</p>
+
+<div class="highlight highlight-haskell"><pre>(==) :: (<span class="pl-c1">Eq</span> a)   =&gt; a -&gt; a -&gt; <span class="pl-c1">Bool</span>
+
+(&lt;)  :: (<span class="pl-c1">Ord</span> a)  =&gt; a -&gt; a -&gt; <span class="pl-c1">Bool</span>
+
+<span class="pl-en">show</span> <span class="pl-k">::</span> (<span class="pl-e">Show</span> <span class="pl-smi">a</span>) <span class="pl-k">=&gt;</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-c1">String</span>
+
+<span class="pl-en">read</span> <span class="pl-k">::</span> (<span class="pl-e">Read</span> <span class="pl-smi">a</span>) <span class="pl-k">=&gt;</span> <span class="pl-c1">String</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">a</span>
+
+(*)  :: (<span class="pl-c1">Num</span> a)  =&gt; a -&gt; a -&gt; a</pre></div>
+
+<pre><code>Value --&gt;  Type --&gt; Typeclass
+</code></pre>
+
+<p>Standard Typeclasses:</p>
+
+<ul>
+<li>Show: Representable as String</li>
+<li>Enum: Enumerable in a list</li>
+<li>Num:  Usable as a number</li>
+<li>Ord:  Used for thing with total order</li>
+</ul>
+
+<h4>Standard Haskell Types</h4>
+
+<p>Credit: <a href="http://www2.informatik.uni-freiburg.de/%7Ethiemann/haskell/haskell98-report-html/basic.html">The Haskell 98 Report - Predefined Types and Classes</a></p>
+
+<p>Booleans</p>
+
+<div class="highlight highlight-haskell"><pre><span class="pl-k">data</span>  <span class="pl-c1">Bool</span>  =  <span class="pl-c1">False</span> | <span class="pl-c1">True</span> <span class="pl-k">deriving</span> 
+                             (<span class="pl-c1">Read</span>, <span class="pl-c1">Show</span>, <span class="pl-c1">Eq</span>, <span class="pl-c1">Ord</span>, <span class="pl-c1">Enum</span>, <span class="pl-c1">Bounded</span>)</pre></div>
+
+<p>Characters and Strings</p>
+
+<div class="highlight highlight-haskell"><pre><span class="pl-k">type</span>  <span class="pl-c1">String</span>  =  [<span class="pl-c1">Char</span>]</pre></div>
+
+<p>Lists</p>
+
+<div class="highlight highlight-haskell"><pre><span class="pl-k">data</span>  [a]  =  <span class="pl-c1">[]</span> | a : [a]  <span class="pl-k">deriving</span> (<span class="pl-e">Eq</span>, <span class="pl-e">Ord</span>)</pre></div>
+
+<p>The Unit Datatype ()</p>
+
+<div class="highlight highlight-haskell"><pre><span class="pl-k">data</span>  <span class="pl-c1">()</span> = <span class="pl-c1">()</span> <span class="pl-k">deriving</span> (<span class="pl-e">Eq</span>, <span class="pl-e">Ord</span>, <span class="pl-e">Bounded</span>, <span class="pl-e">Enum</span>, <span class="pl-e">Read</span>, <span class="pl-e">Show</span>)</pre></div>
+
+<p>Other Types</p>
+
+<div class="highlight highlight-haskell"><pre><span class="pl-k">data</span>  <span class="pl-c1">Maybe</span> a     =  <span class="pl-c1">Nothing</span> | <span class="pl-c1">Just</span> a  <span class="pl-k">deriving</span> (<span class="pl-e">Eq</span>, <span class="pl-e">Ord</span>, <span class="pl-e">Read</span>, <span class="pl-e">Show</span>)
+<span class="pl-k">data</span>  <span class="pl-c1">Either</span> a b  =  <span class="pl-c1">Left</span> a | <span class="pl-c1">Right</span> b  <span class="pl-k">deriving</span> (<span class="pl-e">Eq</span>, <span class="pl-e">Ord</span>, <span class="pl-e">Read</span>, <span class="pl-e">Show</span>)
+<span class="pl-k">data</span>  <span class="pl-c1">Ordering</span>    =  <span class="pl-c1">LT</span> | <span class="pl-c1">EQ</span> | <span class="pl-c1">GT</span> <span class="pl-k">deriving</span>
+                                  (<span class="pl-c1">Eq</span>, <span class="pl-c1">Ord</span>, <span class="pl-c1">Bounded</span>, <span class="pl-c1">Enum</span>, <span class="pl-c1">Read</span>, <span class="pl-c1">Show</span>)</pre></div>
+
+<h4>Standard Haskell Classes</h4>
+
+<p>Credit: <a href="http://www2.informatik.uni-freiburg.de/%7Ethiemann/haskell/haskell98-report-html/basic.html">The Haskell 98 Report - Predefined Types and Classes</a></p>
+
+<p>The Eq Class</p>
+
+<div class="highlight highlight-haskell"><pre><span class="pl-k">class</span>  <span class="pl-c1">Eq</span> <span class="pl-smi">a</span>  <span class="pl-k">where</span>
+    (==), (/=)  ::  a -&gt; a -&gt; <span class="pl-c1">Bool</span>
+
+    x /= y  = <span class="pl-c1">not</span> (x == y)
+    x == y  = <span class="pl-c1">not</span> (x /= y)</pre></div>
+
+<p>The Ord Class</p>
+
+<div class="highlight highlight-haskell"><pre>  <span class="pl-k">class</span>  (<span class="pl-c1">Eq</span> <span class="pl-smi">a</span>) =&gt; <span class="pl-c1">Ord</span> <span class="pl-smi">a</span>  <span class="pl-k">where</span>
+    <span class="pl-en">compare</span>              <span class="pl-k">::</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-c1">Ordering</span>
+    (&lt;), (&lt;=), (&gt;=), (&gt;) :: a -&gt; a -&gt; <span class="pl-c1">Bool</span>
+    <span class="pl-en">max</span>, <span class="pl-en">min</span>             <span class="pl-k">::</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">a</span>
+
+    <span class="pl-c1">compare</span> x y | x == y    = <span class="pl-c1">EQ</span>
+                | x &lt;= y    = <span class="pl-c1">LT</span>
+                | <span class="pl-c1">otherwise</span> = <span class="pl-c1">GT</span>
+
+    x &lt;= y  = <span class="pl-c1">compare</span> x y /= <span class="pl-c1">GT</span>
+    x &lt;  y  = <span class="pl-c1">compare</span> x y == <span class="pl-c1">LT</span>
+    x &gt;= y  = <span class="pl-c1">compare</span> x y /= <span class="pl-c1">LT</span>
+    x &gt;  y  = <span class="pl-c1">compare</span> x y == <span class="pl-c1">GT</span>
+
+    <span class="pl-c">-- Note that (min x y, max x y) = (x,y) or (y,x)</span>
+    <span class="pl-c1">max</span> x y | x &lt;= y    =  y
+            | <span class="pl-c1">otherwise</span> =  x
+    <span class="pl-c1">min</span> x y | x &lt;= y    =  x
+            | <span class="pl-c1">otherwise</span> =  y</pre></div>
+
+<p>The Read and Show Classes</p>
+
+<div class="highlight highlight-haskell"><pre><span class="pl-k">type</span>  <span class="pl-c1">ReadS</span> a = <span class="pl-c1">String</span> -&gt; [(a,<span class="pl-c1">String</span><span class="pl-k">)]</span>
+<span class="pl-k">type</span>  <span class="pl-c1">ShowS</span>   = <span class="pl-c1">String</span> -&gt; <span class="pl-c1">String</span>
+
+<span class="pl-k">class</span>  <span class="pl-c1">Read</span> <span class="pl-smi">a</span>  <span class="pl-k">where</span>
+    <span class="pl-en">readsPrec</span> <span class="pl-k">::</span> <span class="pl-c1">Int</span> <span class="pl-k">-&gt;</span> <span class="pl-c1">ReadS</span> <span class="pl-smi">a</span>
+    <span class="pl-en">readList</span>  <span class="pl-k">::</span> <span class="pl-c1">ReadS</span> [<span class="pl-smi">a</span>]
+    <span class="pl-c">-- ... default decl for readList given in Prelude</span>
+
+<span class="pl-k">class</span>  <span class="pl-c1">Show</span> <span class="pl-smi">a</span>  <span class="pl-k">where</span>
+    <span class="pl-en">showsPrec</span> <span class="pl-k">::</span> <span class="pl-c1">Int</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-c1">ShowS</span>
+    <span class="pl-en">show</span>      <span class="pl-k">::</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-c1">String</span> 
+    <span class="pl-en">showList</span>  <span class="pl-k">::</span> [<span class="pl-smi">a</span>] <span class="pl-k">-&gt;</span> <span class="pl-c1">ShowS</span>
+
+    <span class="pl-c1">showsPrec</span> _ x s   = <span class="pl-c1">show</span> x ++ s
+    <span class="pl-c1">show</span> x            = <span class="pl-c1">showsPrec</span> <span class="pl-c1">0</span> x <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>
+    <span class="pl-c">-- ... default decl for showList given in Prelude</span></pre></div>
+
+<p>The Enum Class</p>
+
+<div class="highlight highlight-haskell"><pre><span class="pl-k">class</span>  <span class="pl-c1">Enum</span> <span class="pl-smi">a</span>  <span class="pl-k">where</span>
+    <span class="pl-en">succ</span>, <span class="pl-en">pred</span>     <span class="pl-k">::</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">a</span>
+    <span class="pl-en">toEnum</span>         <span class="pl-k">::</span> <span class="pl-c1">Int</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">a</span>
+    <span class="pl-en">fromEnum</span>       <span class="pl-k">::</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-c1">Int</span>
+    <span class="pl-en">enumFrom</span>       <span class="pl-k">::</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> [<span class="pl-smi">a</span>]            <span class="pl-c">-- [n..]</span>
+    <span class="pl-en">enumFromThen</span>   <span class="pl-k">::</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> [<span class="pl-smi">a</span>]       <span class="pl-c">-- [n,n'..]</span>
+    <span class="pl-en">enumFromTo</span>     <span class="pl-k">::</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> [<span class="pl-smi">a</span>]       <span class="pl-c">-- [n..m]</span>
+    <span class="pl-en">enumFromThenTo</span> <span class="pl-k">::</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> [<span class="pl-smi">a</span>]  <span class="pl-c">-- [n,n'..m]</span>
+    <span class="pl-c">-- Default declarations given in Prelude</span></pre></div>
 
 <h4>Numeric Types Conversion</h4>
 
@@ -4827,41 +4920,6 @@ enumerate alist = <span class="pl-c1">zip</span> [<span class="pl-c1">0</span>..
 
 <h3>Mathematics</h3>
 
-<p><strong>Pow Function</strong></p>
-
-<ul>
-<li>pow(base, exponent) = base ^ exponent</li>
-</ul>
-
-<div class="highlight highlight-haskell"><pre><span class="pl-k">let</span> pow x y = <span class="pl-c1">exp</span> $ y * <span class="pl-c1">log</span> x
-
-*<span class="pl-c1">Main</span>&gt; pow <span class="pl-c1">2</span> <span class="pl-c1">3</span>
-<span class="pl-c1">7.999999999999998</span>
-*<span class="pl-c1">Main</span>&gt; 
-*<span class="pl-c1">Main</span>&gt; pow <span class="pl-c1">2</span> <span class="pl-c1">2</span>
-<span class="pl-c1">4.0</span>
-*<span class="pl-c1">Main</span>&gt; pow <span class="pl-c1">2</span> <span class="pl-c1">6</span>
-<span class="pl-c1">63.99999999999998</span>
-*<span class="pl-c1">Main</span>&gt; 
-*<span class="pl-c1">Main</span>&gt; pow <span class="pl-c1">2</span> <span class="pl-c1">0.5</span>
-<span class="pl-c1">1.414213562373095</span>
-</pre></div>
-
-<p><strong>Logarithm of Base N</strong></p>
-
-<div class="highlight highlight-haskell"><pre>
-logN n x = (<span class="pl-c1">log</span> x)/(<span class="pl-c1">log</span> n)
-
-log10 = logN <span class="pl-c1">10</span>
-log2  = logN <span class="pl-c1">2</span>
-
-*<span class="pl-c1">Main</span>&gt; <span class="pl-c1">map</span> log10 [<span class="pl-c1">1</span>, <span class="pl-c1">10</span>, <span class="pl-c1">100</span>, <span class="pl-c1">1000</span>]
-[<span class="pl-c1">0.0</span>,<span class="pl-c1">1.0</span>,<span class="pl-c1">2.0</span>,<span class="pl-c1">2.9999999999999996</span>]
-
-*<span class="pl-c1">Main</span>&gt; <span class="pl-c1">map</span> log2 [<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">8</span>, <span class="pl-c1">16</span>, <span class="pl-c1">64</span>]
-[<span class="pl-c1">0.0</span>,<span class="pl-c1">1.0</span>,<span class="pl-c1">3.0</span>,<span class="pl-c1">4.0</span>,<span class="pl-c1">6.0</span>]
-</pre></div>
-
 <p><strong>Trigonometric Degree Functions</strong></p>
 
 <div class="highlight highlight-haskell"><pre>
@@ -4873,6 +4931,81 @@ cosd = <span class="pl-c1">cos</span> . deg2rad
 tand = <span class="pl-c1">tan</span> . deg2rad
 atand = rad2deg . <span class="pl-c1">atan</span>
 atan2d y x = rad2deg (<span class="pl-c1">atan2</span> y x )</pre></div>
+
+<h3>Picewise Functions</h3>
+
+<p>Implement the following functions in Haskell</p>
+
+<pre><code>
+       /  0.10    if 0.0      &lt;= x &lt;= 7150.0
+       |  0.15    if 7150.0   &lt;  x &lt;= 29050.0
+       |  0.25    if 29050.0  &lt;  x &lt;= 70350.0
+f1(x)= |  0.28    if 70350.0  &lt;  x &lt;= 146750.0
+       |  0.33    if 146750.0 &lt;  x &lt;= 319100.0
+       \  0.35    if 139100.0 &lt;  x &lt; +infinitum
+
+
+       /  x^2 - 1  if x &lt; 0
+f2(x) = |  x   - 1  if 0 &lt;= x &lt; 4
+       \  3        if x &gt; 4
+</code></pre>
+
+<div class="highlight highlight-haskell"><pre>
+<span class="pl-k">import</span> <span class="pl-c1">Graphics.Gnuplot.Simple</span>
+
+(|&gt;) x f = f x
+(|&gt;&gt;) x f = <span class="pl-c1">map</span> f x
+
+pairs xs = <span class="pl-c1">zip</span> xs (<span class="pl-c1">tail</span> xs)
+
+infp =    <span class="pl-c1">1.0e30</span>  <span class="pl-c">-- Plus Infinite</span>
+infm = (-<span class="pl-c1">1.0e30</span>)  <span class="pl-c">-- Minus Infinite</span>
+
+inInterval x (p1, p2) = (<span class="pl-c1">fst</span> p1) &lt; x &amp;&amp; x &lt;= (<span class="pl-c1">fst</span> p2) 
+
+piceWiseFactory intervalTable x = f x
+    <span class="pl-k">where</span>
+    f =  <span class="pl-c1">filter</span> (inInterval x) (pairs intervalTable) 
+        |&gt; <span class="pl-c1">head</span> 
+        |&gt; <span class="pl-c1">fst</span> 
+        |&gt; <span class="pl-c1">snd</span> 
+
+arange start stop step = [start,(start+step)..(stop-step<span class="pl-k">)]</span>
+
+plotFxs f xs  = <span class="pl-k">do</span>
+    <span class="pl-k">let</span> ys = <span class="pl-c1">map</span> f xs
+    plotList <span class="pl-c1">[]</span> (<span class="pl-c1">zip</span> xs ys)
+
+
+f1_table = 
+    [
+    (<span class="pl-c1">0.0</span>,        <span class="pl-c1">const</span> <span class="pl-c1">0.10</span>),
+    (<span class="pl-c1">7150.0</span>,     <span class="pl-c1">const</span> <span class="pl-c1">0.15</span>),
+    (<span class="pl-c1">29050.0</span>,    <span class="pl-c1">const</span> <span class="pl-c1">0.25</span>),
+    (<span class="pl-c1">70350.0</span>,    <span class="pl-c1">const</span> <span class="pl-c1">0.28</span>),
+    (<span class="pl-c1">146750.0</span>,   <span class="pl-c1">const</span> <span class="pl-c1">0.33</span>),  
+    (<span class="pl-c1">319100.0</span>,   <span class="pl-c1">const</span> <span class="pl-c1">0.35</span>),  
+    (<span class="pl-c1">1.0e30</span>,     <span class="pl-c1">const</span> <span class="pl-c1">0.35</span>)
+    ]
+
+f2_table = [
+    (infm,  \x -&gt; x**<span class="pl-c1">2</span> - <span class="pl-c1">1</span>), <span class="pl-c">--  if -∞ &lt; x &lt;= 0  -&gt; x^2 - 1 </span>
+    (<span class="pl-c1">0.0</span>,   \x -&gt; x - <span class="pl-c1">1.0</span> ), <span class="pl-c">--  if 0  &lt; x &lt;= 4  -&gt; x   - 1</span>
+    (<span class="pl-c1">4.0</span>,   \x -&gt; <span class="pl-c1">3.0</span>),      <span class="pl-c">--  if 4  &lt; x &lt;= +∞ -&gt; 3.0</span>
+    (infp,  \x -&gt; <span class="pl-c1">3.0</span> )
+    ]
+
+f1 = piceWiseFactory f1_table
+f2 = piceWiseFactory f2_table
+</pre></div>
+
+<div class="highlight highlight-haskell"><pre>λ&gt; plotFxs f1 $ arange (<span class="pl-c1">1.0</span>) <span class="pl-c1">400000</span> <span class="pl-c1">1000.0</span></pre></div>
+
+<p><a href="images/chartF1table.png" target="_blank"><img src="images/chartF1table.png" alt="f1 chart" style="max-width:100%;"></a></p>
+
+<div class="highlight highlight-haskell"><pre>λ&gt; plotFxs f2 $ arange (-<span class="pl-c1">4</span>) <span class="pl-c1">4</span> <span class="pl-c1">0.01</span></pre></div>
+
+<p><a href="images/chartF2table.png" target="_blank"><img src="images/chartF2table.png" alt="f2 chart" style="max-width:100%;"></a></p>
 
 <h3>Numerical Methods</h3>
 

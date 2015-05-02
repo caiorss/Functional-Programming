@@ -34,8 +34,10 @@ This page can be accessed from: https://github.com/caiorss/Functional-Programmin
     - [Pipelining Operator](#pipelining-operator)
   - [Defining Values and Types](#defining-values-and-types)
   - [Type System](#type-system)
-    - [Basic Classes](#basic-classes)
     - [Basic Types](#basic-types)
+    - [Basic Type Classes](#basic-type-classes)
+    - [Standard Haskell Types](#standard-haskell-types)
+    - [Standard Haskell Classes](#standard-haskell-classes)
     - [Numeric Types Conversion](#numeric-types-conversion)
     - [Haskell-Style Syntax for types:](#haskell-style-syntax-for-types)
   - [Lists](#lists)
@@ -107,6 +109,7 @@ This page can be accessed from: https://github.com/caiorss/Functional-Programmin
 - [Useful Custom Functions/ Iterators and Operators](#useful-custom-functions-iterators-and-operators)
 - [Applications](#applications)
   - [Mathematics](#mathematics)
+  - [Picewise Functions](#picewise-functions)
   - [Numerical Methods](#numerical-methods)
     - [Polynomial](#polynomial)
     - [Numerical Derivate](#numerical-derivate)
@@ -588,42 +591,6 @@ powerful and useful features of Haskell.
 
 Reference: [Graham Hutton - University of Nottingham](http://www.agu.gov.br/page/download/index/id/11184731)
 
-#### Basic Classes
-
-|        |                  |
-|--------|------------------|
-| Eq     |  Equality Types  |
-| Ord    |  Ordered Types   |
-| Show   |  Showables Types |
-| Read   |  Readable Types  |
-| Num    |  Numeric Types   |
-| Enum   |  Enum Types      |
-
-Example Methods:
-
-```haskell
-(==) :: (Eq a)   => a -> a -> Bool
-
-(<)  :: (Ord a)  => a -> a -> Bool
-
-show :: (Show a) => a -> String
-
-read :: (Read a) => String -> a
-
-(*)  :: (Num a)  => a -> a -> a
-```
-
-
-```
-Value -->  Type --> Typeclass
-```
-
-Standard Typeclasses:
-
-* Show: Representable as String
-* Enum: Enumerable in a list
-* Num:  Usable as a number
-* Ord:  Used for thing with total order
 
 #### Basic Types
 
@@ -679,6 +646,157 @@ References:
 
 
 ![](images/classes.gif)
+
+#### Basic Type Classes
+
+|        |                  |
+|--------|------------------|
+| Eq     |  Equality Types  |
+| Ord    |  Ordered Types   |
+| Show   |  Showables Types |
+| Read   |  Readable Types  |
+| Num    |  Numeric Types   |
+| Enum   |  Enum Types      |
+
+Example Methods:
+
+```haskell
+(==) :: (Eq a)   => a -> a -> Bool
+
+(<)  :: (Ord a)  => a -> a -> Bool
+
+show :: (Show a) => a -> String
+
+read :: (Read a) => String -> a
+
+(*)  :: (Num a)  => a -> a -> a
+```
+
+
+```
+Value -->  Type --> Typeclass
+```
+
+Standard Typeclasses:
+
+* Show: Representable as String
+* Enum: Enumerable in a list
+* Num:  Usable as a number
+* Ord:  Used for thing with total order
+
+
+#### Standard Haskell Types
+
+Credit: [The Haskell 98 Report - Predefined Types and Classes](http://www2.informatik.uni-freiburg.de/~thiemann/haskell/haskell98-report-html/basic.html)
+
+Booleans
+
+```haskell
+data  Bool  =  False | True deriving 
+                             (Read, Show, Eq, Ord, Enum, Bounded)
+```
+
+Characters and Strings
+
+```haskell
+type  String  =  [Char]
+```
+
+Lists
+
+```haskell
+data  [a]  =  [] | a : [a]  deriving (Eq, Ord)
+```
+
+The Unit Datatype ()
+
+```haskell
+data  () = () deriving (Eq, Ord, Bounded, Enum, Read, Show)
+```
+
+Other Types
+
+```haskell
+data  Maybe a     =  Nothing | Just a  deriving (Eq, Ord, Read, Show)
+data  Either a b  =  Left a | Right b  deriving (Eq, Ord, Read, Show)
+data  Ordering    =  LT | EQ | GT deriving
+                                  (Eq, Ord, Bounded, Enum, Read, Show)
+```                                  
+
+#### Standard Haskell Classes
+
+Credit: [The Haskell 98 Report - Predefined Types and Classes](http://www2.informatik.uni-freiburg.de/~thiemann/haskell/haskell98-report-html/basic.html)
+
+
+The Eq Class
+
+```haskell
+class  Eq a  where
+    (==), (/=)  ::  a -> a -> Bool
+
+    x /= y  = not (x == y)
+    x == y  = not (x /= y)
+```   
+
+The Ord Class
+
+```haskell
+  class  (Eq a) => Ord a  where
+    compare              :: a -> a -> Ordering
+    (<), (<=), (>=), (>) :: a -> a -> Bool
+    max, min             :: a -> a -> a
+
+    compare x y | x == y    = EQ
+                | x <= y    = LT
+                | otherwise = GT
+
+    x <= y  = compare x y /= GT
+    x <  y  = compare x y == LT
+    x >= y  = compare x y /= LT
+    x >  y  = compare x y == GT
+
+    -- Note that (min x y, max x y) = (x,y) or (y,x)
+    max x y | x <= y    =  y
+            | otherwise =  x
+    min x y | x <= y    =  x
+            | otherwise =  y
+```
+
+
+The Read and Show Classes
+
+```haskell
+type  ReadS a = String -> [(a,String)]
+type  ShowS   = String -> String
+
+class  Read a  where
+    readsPrec :: Int -> ReadS a
+    readList  :: ReadS [a]
+    -- ... default decl for readList given in Prelude
+
+class  Show a  where
+    showsPrec :: Int -> a -> ShowS
+    show      :: a -> String 
+    showList  :: [a] -> ShowS
+
+    showsPrec _ x s   = show x ++ s
+    show x            = showsPrec 0 x ""
+    -- ... default decl for showList given in Prelude
+```
+
+The Enum Class
+
+```haskell
+class  Enum a  where
+    succ, pred     :: a -> a
+    toEnum         :: Int -> a
+    fromEnum       :: a -> Int
+    enumFrom       :: a -> [a]            -- [n..]
+    enumFromThen   :: a -> a -> [a]       -- [n,n'..]
+    enumFromTo     :: a -> a -> [a]       -- [n..m]
+    enumFromThenTo :: a -> a -> a -> [a]  -- [n,n'..m]
+    -- Default declarations given in Prelude
+```
 
 #### Numeric Types Conversion
 
@@ -4628,42 +4746,6 @@ Example:
 
 ### Mathematics
 
-**Pow Function**
-
-* pow(base, exponent) = base ^ exponent
-
-```haskell
-let pow x y = exp $ y * log x
-
-*Main> pow 2 3
-7.999999999999998
-*Main> 
-*Main> pow 2 2
-4.0
-*Main> pow 2 6
-63.99999999999998
-*Main> 
-*Main> pow 2 0.5
-1.414213562373095
-
-```
-
-**Logarithm of Base N**
-
-```haskell
-
-logN n x = (log x)/(log n)
-
-log10 = logN 10
-log2  = logN 2
-
-*Main> map log10 [1, 10, 100, 1000]
-[0.0,1.0,2.0,2.9999999999999996]
-
-*Main> map log2 [1, 2, 8, 16, 64]
-[0.0,1.0,3.0,4.0,6.0]
-
-```
 
 **Trigonometric Degree Functions**
 
@@ -4678,6 +4760,91 @@ tand = tan . deg2rad
 atand = rad2deg . atan
 atan2d y x = rad2deg (atan2 y x )
 ```
+
+
+### Picewise Functions
+
+
+Implement the following functions in Haskell
+
+```
+
+       /  0.10    if 0.0      <= x <= 7150.0
+       |  0.15    if 7150.0   <  x <= 29050.0
+       |  0.25    if 29050.0  <  x <= 70350.0
+f1(x)= |  0.28    if 70350.0  <  x <= 146750.0
+       |  0.33    if 146750.0 <  x <= 319100.0
+       \  0.35    if 139100.0 <  x < +infinitum
+
+
+       /  x^2 - 1  if x < 0
+f2(x) = |  x   - 1  if 0 <= x < 4
+       \  3        if x > 4
+```
+
+```haskell
+
+import Graphics.Gnuplot.Simple
+
+(|>) x f = f x
+(|>>) x f = map f x
+
+pairs xs = zip xs (tail xs)
+
+infp =    1.0e30  -- Plus Infinite
+infm = (-1.0e30)  -- Minus Infinite
+
+inInterval x (p1, p2) = (fst p1) < x && x <= (fst p2) 
+
+piceWiseFactory intervalTable x = f x
+    where
+    f =  filter (inInterval x) (pairs intervalTable) 
+        |> head 
+        |> fst 
+        |> snd 
+
+arange start stop step = [start,(start+step)..(stop-step)]
+
+plotFxs f xs  = do
+    let ys = map f xs
+    plotList [] (zip xs ys)
+
+
+f1_table = 
+    [
+    (0.0,        const 0.10),
+    (7150.0,     const 0.15),
+    (29050.0,    const 0.25),
+    (70350.0,    const 0.28),
+    (146750.0,   const 0.33),  
+    (319100.0,   const 0.35),  
+    (1.0e30,     const 0.35)
+    ]
+
+f2_table = [
+    (infm,  \x -> x**2 - 1), --  if -∞ < x <= 0  -> x^2 - 1 
+    (0.0,   \x -> x - 1.0 ), --  if 0  < x <= 4  -> x   - 1
+    (4.0,   \x -> 3.0),      --  if 4  < x <= +∞ -> 3.0
+    (infp,  \x -> 3.0 )
+    ]
+
+f1 = piceWiseFactory f1_table
+f2 = piceWiseFactory f2_table
+
+```
+
+```haskell
+λ> plotFxs f1 $ arange (1.0) 400000 1000.0
+```
+
+![f1 chart](images/chartF1table.png)
+
+```haskell
+λ> plotFxs f2 $ arange (-4) 4 0.01
+```
+
+
+![f2 chart](images/chartF2table.png)
 
 ### Numerical Methods 
 
