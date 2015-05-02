@@ -21,7 +21,7 @@ This page can be accessed from: https://github.com/caiorss/Functional-Programmin
   - [Suffixes of file names for Haskell](#suffixes-of-file-names-for-haskell)
   - [Toolset](#toolset)
   - [GHCI Reference](#ghci-reference)
-- [Function Programming Concepts](#function-programming-concepts)
+- [Functional Programming Concepts](#functional-programming-concepts)
   - [Overview](#overview)
   - [Pure Functions](#pure-functions)
   - [Lazy Evaluation](#lazy-evaluation)
@@ -49,7 +49,7 @@ This page can be accessed from: https://github.com/caiorss/Functional-Programmin
   - [Currying](#currying)
   - [Recursion](#recursion)
   - [Integer Arithmetic Functions](#integer-arithmetic-functions)
-  - [Mathematics Functions](#mathematics-functions)
+  - [Mathematical Functions](#mathematical-functions)
   - [Standard Functions](#standard-functions)
   - [Higher Order Functions](#higher-order-functions)
     - [Map](#map)
@@ -213,7 +213,7 @@ GHCI Interactive Shell
 
 
 
-## Function Programming Concepts
+## Functional Programming Concepts
 
 ### Overview
 

@@ -74,7 +74,7 @@ and the line bellow without the symbol &gt; are the output.</li>
 </ul>
 </li>
 <li>
-<a href="#function-programming-concepts">Function Programming Concepts</a>
+<a href="#functional-programming-concepts">Functional Programming Concepts</a>
 
 <ul>
 <li><a href="#overview">Overview</a></li>
@@ -129,7 +129,7 @@ and the line bellow without the symbol &gt; are the output.</li>
 <li><a href="#currying">Currying</a></li>
 <li><a href="#recursion">Recursion</a></li>
 <li><a href="#integer-arithmetic-functions">Integer Arithmetic Functions</a></li>
-<li><a href="#mathematics-functions">Mathematics Functions</a></li>
+<li><a href="#mathematical-functions">Mathematical Functions</a></li>
 <li><a href="#standard-functions">Standard Functions</a></li>
 <li>
 <a href="#higher-order-functions">Higher Order Functions</a>
@@ -449,7 +449,7 @@ and the line bellow without the symbol &gt; are the output.</li>
 </tbody>
 </table>
 
-<h2>Function Programming Concepts</h2>
+<h2>Functional Programming Concepts</h2>
 
 <h3>Overview</h3>
 
@@ -1962,7 +1962,7 @@ fib n | n&gt;= <span class="pl-c1">2</span>
 <li><a href="http://en.wikibooks.org/wiki/Haskell/A_Miscellany_of_Types">http://en.wikibooks.org/wiki/Haskell/A_Miscellany_of_Types</a></li>
 </ul>
 
-<h3>Mathematics Functions</h3>
+<h3>Mathematical Functions</h3>
 
 <p>Sqrt, Log, Exp, Power </p>
 
@@ -2074,6 +2074,43 @@ fib n | n&gt;= <span class="pl-c1">2</span>
 λ&gt; <span class="pl-c1">map</span> <span class="pl-c1">ceiling</span> [<span class="pl-c1">13.03123</span>, <span class="pl-c1">13.20</span>, <span class="pl-c1">13.50</span>, <span class="pl-c1">13.60</span>, <span class="pl-c1">13.992</span>]
 [<span class="pl-c1">14</span>,<span class="pl-c1">14</span>,<span class="pl-c1">14</span>,<span class="pl-c1">14</span>,<span class="pl-c1">14</span>]
 λ&gt; </pre></div>
+
+<p>Convert Interger to Float Point</p>
+
+<div class="highlight highlight-haskell"><pre>λ&gt; <span class="pl-k">let</span> inv x = <span class="pl-c1">1</span>/x
+
+λ&gt; :t inv
+<span class="pl-en">inv</span> <span class="pl-k">::</span> <span class="pl-k">Fractional</span> <span class="pl-smi">a</span> <span class="pl-k">=&gt;</span> <span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">a</span>
+λ&gt; 
+
+
+λ&gt; <span class="pl-k">let</span> v = [<span class="pl-c1">1</span>..<span class="pl-c1">10</span>]
+λ&gt; v
+[<span class="pl-c1">1</span>,<span class="pl-c1">2</span>,<span class="pl-c1">3</span>,<span class="pl-c1">4</span>,<span class="pl-c1">5</span>,<span class="pl-c1">6</span>,<span class="pl-c1">7</span>,<span class="pl-c1">8</span>,<span class="pl-c1">9</span>,<span class="pl-c1">10</span>]
+λ&gt; :t v
+<span class="pl-en">v</span> <span class="pl-k">::</span> [<span class="pl-c1">Integer</span>]
+λ&gt; 
+
+λ&gt; inv <span class="pl-c1">10</span>
+<span class="pl-c1">0.1</span>
+λ&gt; inv <span class="pl-c1">0.1</span>
+<span class="pl-c1">10.0</span>
+λ&gt; 
+
+λ&gt; <span class="pl-c1">map</span> inv v
+
+&lt;interactive&gt;:<span class="pl-c1">20</span>:<span class="pl-c1">5</span>:
+    <span class="pl-c1">No</span> <span class="pl-k">instance</span> <span class="pl-smi">for</span> (<span class="pl-k">Fractional</span> <span class="pl-c1">Integer</span>) <span class="pl-smi">arising</span> <span class="pl-smi">from</span> <span class="pl-smi">a</span> <span class="pl-smi">use</span> <span class="pl-smi">of</span> `<span class="pl-smi">inv'</span>
+    <span class="pl-c1">Possible</span> fix: add an <span class="pl-k">instance</span> <span class="pl-smi">declaration</span> <span class="pl-smi">for</span> (<span class="pl-k">Fractional</span> <span class="pl-c1">Integer</span>)
+    <span class="pl-c1">In</span> the first argument <span class="pl-k">of</span> `map', namely `inv'
+    <span class="pl-c1">In</span> the expression: <span class="pl-c1">map</span> inv v
+    <span class="pl-c1">In</span> an equation for `it': it = <span class="pl-c1">map</span> inv v
+
+λ&gt; <span class="pl-c1">map</span> (inv . <span class="pl-c1">fromInteger</span>) v
+[<span class="pl-c1">1.0</span>,<span class="pl-c1">0.5</span>,<span class="pl-c1">0.3333333333333333</span>,<span class="pl-c1">0.25</span>,<span class="pl-c1">0.2</span>,<span class="pl-c1">0.16666666666666666</span>,<span class="pl-c1">0.14285714285714285</span>,<span class="pl-c1">0.125</span>,<span class="pl-c1">0.1111111111111111</span>,<span class="pl-c1">0.1</span>]
+λ&gt; 
+
+</pre></div>
 
 <h3>Standard Functions</h3>
 
