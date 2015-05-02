@@ -9,7 +9,12 @@ Notes:
 * The codes with '>' symbol were run in the interactive haskell Shell ghci
 and the line bellow without the symbol > are the output.
 
-This page can be accessed from: https://github.com/caiorss/Functional-Programming
+This page can be accessed from: 
+
+* Full  URL: https://github.com/caiorss/Functional-Programming
+* Short URL: http://tinyurl.com/fpbyexample
+
+![](images/qrcode_url.png)
 
 <!-- # HASKELL BY EXAMPLE / PRACTICAL FUNCTIONAL PROGRAMMING -->
 
