@@ -1631,7 +1631,7 @@ Find the square root of a number by Fixed-point iteration
 Xi+1 = g(Xi)
 ```
 
-The magnitude of the derivate of g must be smaller than 1 to the method work.
+The magnitude of the derivative of g must be smaller than 1 to the method work.
 
 ```haskell
 {-
@@ -2523,7 +2523,7 @@ class  Functor f  where
     fmap        :: (a -> b) -> f a -> f b
 ```
 
-* f is a parametrized data type
+* f is a parameterized data type
 * (a -> b ) Is a polymorphic function that takes a as parameter and returns b
 * f a : a is a parameter, f wraps a
 * f b : b is a parameter wrapped by f
@@ -2592,7 +2592,7 @@ The most well known functor is the list functor:
 λ> 
 ```
 
-The Maybe type is a functor which the return value is non deterministic that returns a value if the computation is sucessful or return a null value Nothing if the computation fails. It is useful to avoid boilerplate successives null checkings and avoid null checking error.
+The Maybe type is a functor which the return value is non deterministic that returns a value if the computation is sucessful or return a null value Nothing if the computation fails. It is useful to avoid boilerplate successive null checkings and avoid null checking error.
 
 ```haskell
 λ> 
@@ -2708,7 +2708,7 @@ References:
 
 #### Overview
 
-Monads in Haskell are used to perform IO, State, Pararelism, Exception Handling, parallellism, continuations and coroutines.
+Monads in Haskell are used to perform IO, State, Parallelism, Exception Handling, parallelism, continuations and coroutines.
 
 Most common applications of monads include:
 
@@ -2968,7 +2968,7 @@ data  Ordering    =  LT | EQ | GT deriving
 
 #### Maybe Monad
 
-Using the Maybe type is possible to indicate that a function might or not return value. It is also useful to avoid many boilerplates null checkings.
+Using the Maybe type is possible to indicate that a function might or not return value. It is also useful to avoid many boilerplate null checkings.
 
 ```
 data Maybe x = Nothing | Just x
@@ -5712,7 +5712,7 @@ Control:
 
 #### Video Lectures
 
-**Dr. Erik Meijier Serie: Functional Programming Fundamentals**
+**Dr. Erik Meijer Series: Functional Programming Fundamentals**
 
 * [Function Definition    - Chapter 4 of 13](https://www.youtube.com/watch?v=fQU99SJdWGY)
 * [List Comprehensions    - Chapter 5 of 13](https://www.youtube.com/watch?v=cdPyykm2-gg)
