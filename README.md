@@ -210,7 +210,7 @@ GHCI Interactive Shell
 | :load [haskell-source.hs] or :l src.hs |    Load Haskell Source Code   |
 | :reload or :r                    |  Reload Code after it was edited      |
 | :type [symbol]   or :t [symbol]          |  Show the Type of a Symbol   |
-| :browser                    |  Gives the type signature of all functions  |
+| :browse                    |  Gives the type signature of all functions  |
 | :set +s                     |  Multiline Code                             |
 | :{ [code here ] :}        |    Multiline Code                            |
 | :set prompt ">"             |  Change the prompt to ">"                   |
