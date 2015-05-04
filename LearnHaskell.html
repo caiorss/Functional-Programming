@@ -44,7 +44,7 @@
 
 <p><a href="images/haskellLogo.png" target="_blank"><img src="images/haskellLogo.png" alt="" style="max-width:100%;"></a></p>
 
-<p>The purpose of this tutorial is to illustrate functional programming concepts in the Haskell programing language by providing reusable and useful pieces of codes, examples, case study and applications.</p>
+<p>The purpose of this tutorial is to illustrate functional programming concepts in the Haskell programming language by providing reusable and useful snippets of code, examples, case studies, and applications.</p>
 
 <ul>
 <li>Full  URL: <a href="https://github.com/caiorss/Functional-Programming">https://github.com/caiorss/Functional-Programming</a>
@@ -56,8 +56,7 @@
 <p>Notes: </p>
 
 <ul>
-<li>The codes with '&gt;' symbol were run in the interactive haskell Shell ghci
-and the line bellow without the symbol &gt; are the output.</li>
+<li>The code snippets with the '&gt;' symbol were run in the interactive Haskell Shell (GHCi) and the lines below without the '&gt;' symbol are the output.</li>
 </ul>
 
 
@@ -1914,7 +1913,7 @@ fib n | n&gt;= <span class="pl-c1">2</span>
 </tr>
 <tr>
 <td>divMod</td>
-<td>Returns the quocient and the modulus tuple</td>
+<td>Returns the quotient and the modulus tuple</td>
 </tr>
 <tr>
 <td>gcd</td>
@@ -2765,7 +2764,7 @@ types and higher-order functions [<a href="http://www.willamette.edu/%7Efruehr/h
 
 <p>See also the Clojure function <a href="https://clojuredocs.org/clojure.core/juxt">juxt</a></p>
 
-<p>Aplly a set of functions to a single argument.</p>
+<p>Apply a set of functions to a single argument.</p>
 
 <div class="highlight highlight-haskell"><pre>λ&gt; <span class="pl-k">let</span> juxt fs x = <span class="pl-c1">map</span> ($ x) fs
 
@@ -3542,7 +3541,7 @@ showPerson person  = <span class="pl-s"><span class="pl-pds">"</span>Name: <span
 [<span class="pl-c1">78</span>,<span class="pl-c1">178</span>,<span class="pl-c1">278</span>,<span class="pl-c1">978</span>]
 λ&gt; </pre></div>
 
-<p>The Maybe type is a functor which the return value is non deterministic that returns a value if the computation is sucessful or return a null value Nothing if the computation fails. It is useful to avoid boilerplate successive null checkings and avoid null checking error.</p>
+<p>The Maybe type is a functor which the return value is non deterministic that returns a value if the computation is successful or return a null value Nothing if the computation fails. It is useful to avoid boilerplate successive null checkings and avoid null checking error.</p>
 
 <div class="highlight highlight-haskell"><pre>λ&gt; 
 λ&gt; <span class="pl-k">let</span> add10 x = x + <span class="pl-c1">10</span>
@@ -3693,7 +3692,7 @@ showPerson person  = <span class="pl-s"><span class="pl-pds">"</span>Name: <span
 <ul>
 <li>IO Monads         - Used for output IO</li>
 <li>Maybe and Either  - Error handling and avoinding null checking</li>
-<li>List Monad        - One of the most widely known monands</li>
+<li>List Monad        - One of the most widely known monads</li>
 <li>Writer Monad</li>
 <li>Reader Monad</li>
 <li>State Monad</li>
@@ -5110,11 +5109,11 @@ df = derv <span class="pl-c1">1e-5</span> f
 <li><a href="http://en.wikipedia.org/wiki/Bisection_method">Bisection method</a></li>
 </ul>
 
-<p><strong>Bissection Method</strong></p>
+<p><strong>Bisection Method</strong></p>
 
 <div class="highlight highlight-haskell"><pre>
-<span class="pl-en">bissection_iterator</span> <span class="pl-k">::</span> (<span class="pl-k">Floating</span> <span class="pl-smi">a</span>, <span class="pl-k">Floating</span> <span class="pl-smi">a1</span>, <span class="pl-k">Ord</span> <span class="pl-smi">a1</span>) <span class="pl-k">=&gt;</span> (<span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">a1</span>) <span class="pl-k">-&gt;</span> [<span class="pl-smi">a</span>] <span class="pl-k">-&gt;</span> [<span class="pl-smi">a</span>]
-bissection_iterator f guesslist = newguess
+<span class="pl-en">bisection_iterator</span> <span class="pl-k">::</span> (<span class="pl-k">Floating</span> <span class="pl-smi">a</span>, <span class="pl-k">Floating</span> <span class="pl-smi">a1</span>, <span class="pl-k">Ord</span> <span class="pl-smi">a1</span>) <span class="pl-k">=&gt;</span> (<span class="pl-smi">a</span> <span class="pl-k">-&gt;</span> <span class="pl-smi">a1</span>) <span class="pl-k">-&gt;</span> [<span class="pl-smi">a</span>] <span class="pl-k">-&gt;</span> [<span class="pl-smi">a</span>]
+bisection_iterator f guesslist = newguess
     <span class="pl-k">where</span>
     a =  guesslist !! <span class="pl-c1">0</span>
     b =  guesslist !! <span class="pl-c1">1</span>
@@ -5123,24 +5122,24 @@ bissection_iterator f guesslist = newguess
     newguess = (\p -&gt; <span class="pl-k">if</span> p &lt; <span class="pl-c1">0.0</span> <span class="pl-k">then</span> [a, c] <span class="pl-k">else</span> [c, b] ) p
 
 
-bissectionSolver eps itmax f x1 x2 = (root, <span class="pl-c1">error</span>, iterations) 
+bisectionSolver eps itmax f x1 x2 = (root, <span class="pl-c1">error</span>, iterations) 
     <span class="pl-k">where</span>  
 
-    bissection_error xlist = <span class="pl-c1">abs</span>(f $ xlist !! <span class="pl-c1">1</span>)
-    check_error xlist = bissection_error xlist &gt; eps
+    bisection_error xlist = <span class="pl-c1">abs</span>(f $ xlist !! <span class="pl-c1">1</span>)
+    check_error xlist = bisection_error xlist &gt; eps
 
-    iterator = bissection_iterator  f
+    iterator = bisection_iterator  f
 
     rootlist = [x1, x2] |&gt; <span class="pl-c1">iterate</span> iterator |&gt; <span class="pl-c1">takeWhile</span> check_error |&gt; <span class="pl-c1">take</span> itmax
 
     pair = <span class="pl-c1">last</span> rootlist |&gt; iterator
     root = <span class="pl-c1">last</span> pair
-    <span class="pl-c1">error</span> = bissection_error pair
+    <span class="pl-c1">error</span> = bisection_error pair
 
     iterations = <span class="pl-c1">length</span> rootlist    
 
 *<span class="pl-c1">Main</span>&gt; <span class="pl-k">let</span> f x  =  <span class="pl-c1">exp</span>(-x) -<span class="pl-c1">3</span>*<span class="pl-c1">log</span>(x)
-*<span class="pl-c1">Main</span>&gt; bissectionSolver <span class="pl-c1">1e-5</span> <span class="pl-c1">100</span> f <span class="pl-c1">0.05</span> <span class="pl-c1">3</span>
+*<span class="pl-c1">Main</span>&gt; bisectionSolver <span class="pl-c1">1e-5</span> <span class="pl-c1">100</span> f <span class="pl-c1">0.05</span> <span class="pl-c1">3</span>
 (<span class="pl-c1">1.1154509544372555</span>,<span class="pl-c1">8.86237816760671e-6</span>,<span class="pl-c1">19</span>)
 *<span class="pl-c1">Main</span>&gt; 
 </pre></div>
@@ -5713,7 +5712,7 @@ taxRateOfBrazil = taxrate  taxOfBrazil
 <span class="pl-c"></span>
 <span class="pl-c">    input       - Unit test case values             [t1, t2, t2, e5]</span>
 <span class="pl-c">    expected    - Expected value of each test case  [e1, e2, e3, e4]</span>
-<span class="pl-c">    tol         - Tolerance 1e-3 tipical value </span>
+<span class="pl-c">    tol         - Tolerance 1e-3 typical value </span>
 <span class="pl-c">    f           - Function:                         error_i = abs(e_i-t_i)</span>
 <span class="pl-c"></span>
 <span class="pl-c">    Returns true if in all test cases  error_i &lt; tol</span>

@@ -4312,7 +4312,7 @@ True
 ```haskell
 λ> import Data.Char (toUpper)
 λ> 
-
+λ> let shout = map toUpper 
 λ> :t shout
 shout :: [Char] -> [Char]
 λ> 

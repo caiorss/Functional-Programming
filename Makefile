@@ -16,4 +16,4 @@ upload:
 	git push github master
 
 commit:
-	git commit -m
+	git commit 
