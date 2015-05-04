@@ -4,17 +4,14 @@
 
 The purpose of this tutorial is to illustrate functional programming concepts in the Haskell programing language by providing reusable and useful pieces of codes, examples, case study and applications.
 
+* Full  URL: https://github.com/caiorss/Functional-Programming
+* Short URL: http://tinyurl.com/fpbyexample
+
 Notes: 
 
 * The codes with '>' symbol were run in the interactive haskell Shell ghci
 and the line bellow without the symbol > are the output.
 
-This page can be accessed from: 
-
-* Full  URL: https://github.com/caiorss/Functional-Programming
-* Short URL: http://tinyurl.com/fpbyexample
-
-![](images/qrcode_url.png)
 
 <!-- # HASKELL BY EXAMPLE / PRACTICAL FUNCTIONAL PROGRAMMING -->
 
@@ -25,6 +22,7 @@ This page can be accessed from:
 - [Haskell](#haskell)
   - [Suffixes of file names for Haskell](#suffixes-of-file-names-for-haskell)
   - [Toolset](#toolset)
+  - [Install Haskell Platform](#install-haskell-platform)
   - [GHCI Reference](#ghci-reference)
 - [Functional Programming Concepts](#functional-programming-concepts)
   - [Overview](#overview)
@@ -161,9 +159,9 @@ This page can be accessed from:
 
 * Pure Functional programming language
 * Strong Static Typed Language 
-* Type Inference (The haskell compiler deduce the types for you). 
-* Lazy Evaluation ( Dlea yed evaluation) by default
-* Data Imutability/ Haskell has no variables
+* Type Inference (The Haskell compiler deduce the types for you). 
+* Lazy Evaluation ( Delayed evaluation) by default
+* Data Immutability/ Haskell has no variables
     * Values can be bound to a name and can only be assigned once.
     * Values can never change.
 * Haskell has not for-loop, while statements.
@@ -199,6 +197,20 @@ This page can be accessed from:
 | runghc                             | Haskell Non Interactive Interpreter                  | 
 | haddock                            | Documentation tool for annotated Haskell source code |
 | cabal                              | GHC Haskell Cabal package manager                    |
+
+### Install Haskell Platform
+
+Binaries and Installation files: 
+    * https://www.haskell.org/platform/
+    * [Haskell for Linux](https://www.haskell.org/platform/linux.html)
+
+Install Haskell Libraries:
+
+```
+cabal update
+
+cabal install <some package>
+```
 
 ### GHCI Reference
 
@@ -238,7 +250,7 @@ Functional Programming is all about programming with functions.
 * Currying/ Partial Function Application
 * Closure - Returning functions from functions
 
-* Data Imutability
+* Data Immutability
 * Pattern Matching
 * Lists are the fundamental data Structure
 
@@ -304,7 +316,7 @@ def powers(L):
     return L
 ```
 The function min is pure. It always produces the same result given 
-the same inputs and it doesn’t affect any external variable.
+the same inputs and it does not affect any external variable.
 
 The function powers is impure because it not always gives the same output
 for the same input, it depends on the global variable exponent:
@@ -321,7 +333,7 @@ for the same input, it depends on the global variable exponent:
 >>> powers([1, 2, 3])
 [1, 4, 9]
 >>> exponent = 4 
->>> powers([1, 2, 3])  # (Impure since it doesn't give the same result )
+>>> powers([1, 2, 3])  # (It is impure since it doesn't give the same result )
 [1, 16, 81]
 >>> 
 ```
@@ -331,7 +343,7 @@ Another example, purifying an impure Language:
 ```python
 
 >>> lst = [1, 2, 3, 4]  # An pure function doesn't modify its arguments.
->>>                     # therefore lst.reverse is impure
+>>>                     # therefore lst reverse is impure
 >>> x = lst.reverse()
 >>> x
 >>> lst
@@ -368,7 +380,7 @@ Reverse list function purified:
 
 ### Lazy Evaluation
 
-“Lazy evaluation” means that data structures are computed incrementally, as they are needed (so the trees never exist in memory all at once) parts that are never needed are never computed. Haskell uses lazy evaluation by default.
+"Lazy evaluation" means that data structures are computed incrementally, as they are needed (so the trees never exist in memory all at once) parts that are never needed are never computed. Haskell uses lazy evaluation by default.
 
 Example in Haskell: 
 
@@ -582,19 +594,18 @@ k :: [Double]
 
 * Typeclasses are sets of types.
 
-* A class is a collection of types that support certain operations, 
-called the methods of the class.
+* A class is a collection of types that support certain operations, called the methods of the class.
 
-* Each expressions must have a valid type, which is calculated before to evaluating the 
-expression by the Haskell compiler, it is called type inference;
+* Each expressions must have a valid type, which is calculated before to evaluating the expression by the Haskell compiler, it is called type inference;
 
 * Haskell programs are type safe, since type errors can never occur during run time;
 
-* Type inference detects a very large class of programming errors, and is one of the most 
-powerful and useful features of Haskell.
+* Type inference detects a very large class of programming errors, and is one of the most powerful and useful features of Haskell.
 
 
-Reference: [Graham Hutton - University of Nottingham](http://www.agu.gov.br/page/download/index/id/11184731)
+Reference:
+* [Graham Hutton Lecture](http://www.cs.nott.ac.uk/~gmh/functional.ppt)
+* [Graham Hutton - University of Nottingham](http://www.cs.nott.ac.uk/~gmh/)
 
 
 #### Basic Types
@@ -1811,10 +1822,10 @@ for list processing, interaction, or parsing (Hutton);
 
 * Algebraic properties of higher-order functions can be used to reason about programs. (Hutton)
 
-
 Reference:
+* [Graham Hutton Lecture](http://www.cs.nott.ac.uk/~gmh/functional.ppt)
+* [Graham Hutton - University of Nottingham](http://www.cs.nott.ac.uk/~gmh/)
 
-* [Graham Hutton - University of Nottingham](http://www.agu.gov.br/page/download/index/id/11184731)
 
 #### Map
 
@@ -2039,7 +2050,9 @@ Examples:
 
 
 Reference:
-* [Graham Hutton - University of Nottingham](http://www.agu.gov.br/page/download/index/id/11184731)
+* [Graham Hutton Lecture](http://www.cs.nott.ac.uk/~gmh/functional.ppt)
+* [Graham Hutton - University of Nottingham](http://www.cs.nott.ac.uk/~gmh/)
+
 
 #### Scanl
 
@@ -6263,18 +6276,6 @@ Nice and precise description of Haskell Libraries:
 * http://en.wikibooks.org/wiki/Haskell/Understanding_monads
 
 
-**Install**
-
-Binaries and Installation files: https://www.haskell.org/platform/
-
-Install Haskell Libraries:
-
-```
-cabal update
-
-cabal install <some package>
-```
-
 #### Online Books
 
 * [Real-World Haskell by Bryan O'Sullivan et al.](http://book.realworldhaskell.org)
@@ -6436,11 +6437,22 @@ Haskell Videos
 * http://channel9.msdn.com/Tags/functional+programming
 
 
-**Haskell Course by Philip Wadler (Youtube)**
+**Haskell Course by Phd. Philip Wadler (Youtube)**
 
 * [Haskell Course by Phd. Philip Wadler](https://www.youtube.com/playlist?list=PLtRG9GLtNcHBv4cuh2w1cz5VsgY6adoc3)
 
 * [Phillip Wadler's home page](http://homepages.inf.ed.ac.uk/wadler/)
+
+
+**Prof. Dr. Jürgen Giesl**
+
+Credits:  * [Issue: seoulgithub](https://github.com/caiorss/Functional-Programming/issues/20)
+
+* [Prof. Dr. Jürgen Giesl's home page](http://verify.rwth-aachen.de/giesl/) (In German.)
+* [Lectures in English](https://videoag.fsmpi.rwth-aachen.de/?course=12ss-funkprog)
+
+
+In this course, you will learn (Compiler+Assembly+Language) together in a single course. So, for a CS background person, this course will be highly beneficiary since Compiler and Assembler both are known to him/her. 
 
 **Haskell From Scratch (Youtube)**
 
@@ -6459,3 +6471,4 @@ Creating complete programs in Haskell from the ground up.
 Good video lectures about Category theory and Haskell programing language.
 
 * http://school.looprecur.com/
+

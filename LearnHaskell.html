@@ -46,15 +46,6 @@
 
 <p>The purpose of this tutorial is to illustrate functional programming concepts in the Haskell programing language by providing reusable and useful pieces of codes, examples, case study and applications.</p>
 
-<p>Notes: </p>
-
-<ul>
-<li>The codes with '&gt;' symbol were run in the interactive haskell Shell ghci
-and the line bellow without the symbol &gt; are the output.</li>
-</ul>
-
-<p>This page can be accessed from: </p>
-
 <ul>
 <li>Full  URL: <a href="https://github.com/caiorss/Functional-Programming">https://github.com/caiorss/Functional-Programming</a>
 </li>
@@ -62,7 +53,12 @@ and the line bellow without the symbol &gt; are the output.</li>
 </li>
 </ul>
 
-<p><a href="images/qrcode_url.png" target="_blank"><img src="images/qrcode_url.png" alt="" style="max-width:100%;"></a></p>
+<p>Notes: </p>
+
+<ul>
+<li>The codes with '&gt;' symbol were run in the interactive haskell Shell ghci
+and the line bellow without the symbol &gt; are the output.</li>
+</ul>
 
 
 
@@ -79,6 +75,7 @@ and the line bellow without the symbol &gt; are the output.</li>
 <ul>
 <li><a href="#suffixes-of-file-names-for-haskell">Suffixes of file names for Haskell</a></li>
 <li><a href="#toolset">Toolset</a></li>
+<li><a href="#install-haskell-platform">Install Haskell Platform</a></li>
 <li><a href="#ghci-reference">GHCI Reference</a></li>
 </ul>
 </li>
@@ -338,9 +335,9 @@ and the line bellow without the symbol &gt; are the output.</li>
 <ul>
 <li>Pure Functional programming language</li>
 <li>Strong Static Typed Language </li>
-<li>Type Inference (The haskell compiler deduce the types for you). </li>
-<li>Lazy Evaluation ( Dlea yed evaluation) by default</li>
-<li>Data Imutability/ Haskell has no variables
+<li>Type Inference (The Haskell compiler deduce the types for you). </li>
+<li>Lazy Evaluation ( Delayed evaluation) by default</li>
+<li>Data Immutability/ Haskell has no variables
 
 <ul>
 <li>Values can be bound to a name and can only be assigned once.</li>
@@ -402,6 +399,19 @@ and the line bellow without the symbol &gt; are the output.</li>
 </tbody>
 </table>
 
+<h3>Install Haskell Platform</h3>
+
+<p>Binaries and Installation files: <br>
+    * <a href="https://www.haskell.org/platform/">https://www.haskell.org/platform/</a><br>
+    * <a href="https://www.haskell.org/platform/linux.html">Haskell for Linux</a></p>
+
+<p>Install Haskell Libraries:</p>
+
+<pre><code>cabal update
+
+cabal install &lt;some package&gt;
+</code></pre>
+
 <h3>GHCI Reference</h3>
 
 <p>GHCI Interactive Shell</p>
@@ -431,7 +441,7 @@ and the line bellow without the symbol &gt; are the output.</li>
 <td>Show the Type of a Symbol</td>
 </tr>
 <tr>
-<td>:browser</td>
+<td>:browse</td>
 <td>Gives the type signature of all functions</td>
 </tr>
 <tr>
@@ -478,7 +488,7 @@ and the line bellow without the symbol &gt; are the output.</li>
 <li>High Order Functions</li>
 <li>Currying/ Partial Function Application</li>
 <li><p>Closure - Returning functions from functions</p></li>
-<li><p>Data Imutability</p></li>
+<li><p>Data Immutability</p></li>
 <li>Pattern Matching</li>
 <li>Lists are the fundamental data Structure</li>
 </ul>
@@ -550,7 +560,7 @@ and the line bellow without the symbol &gt; are the output.</li>
     <span class="pl-k">return</span> L</pre></div>
 
 <p>The function min is pure. It always produces the same result given <br>
-the same inputs and it doesn’t affect any external variable.</p>
+the same inputs and it does not affect any external variable.</p>
 
 <p>The function powers is impure because it not always gives the same output<br>
 for the same input, it depends on the global variable exponent:</p>
@@ -566,7 +576,7 @@ for the same input, it depends on the global variable exponent:</p>
 <span class="pl-k">&gt;&gt;&gt;</span> powers([<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>])
 [<span class="pl-c1">1</span>, <span class="pl-c1">4</span>, <span class="pl-c1">9</span>]
 <span class="pl-k">&gt;&gt;&gt;</span> exponent <span class="pl-k">=</span> <span class="pl-c1">4</span> 
-<span class="pl-k">&gt;&gt;&gt;</span> powers([<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>])  <span class="pl-c"># (Impure since it doesn't give the same result )</span>
+<span class="pl-k">&gt;&gt;&gt;</span> powers([<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>])  <span class="pl-c"># (It is impure since it doesn't give the same result )</span>
 [<span class="pl-c1">1</span>, <span class="pl-c1">16</span>, <span class="pl-c1">81</span>]
 <span class="pl-k">&gt;&gt;&gt;</span> </pre></div>
 
@@ -574,7 +584,7 @@ for the same input, it depends on the global variable exponent:</p>
 
 <div class="highlight highlight-python"><pre>
 <span class="pl-k">&gt;&gt;&gt;</span> lst <span class="pl-k">=</span> [<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>]  <span class="pl-c"># An pure function doesn't modify its arguments.</span>
-<span class="pl-k">&gt;&gt;&gt;</span>                     <span class="pl-c"># therefore lst.reverse is impure</span>
+<span class="pl-k">&gt;&gt;&gt;</span>                     <span class="pl-c"># therefore lst reverse is impure</span>
 <span class="pl-k">&gt;&gt;&gt;</span> x <span class="pl-k">=</span> lst.reverse()
 <span class="pl-k">&gt;&gt;&gt;</span> x
 <span class="pl-k">&gt;&gt;&gt;</span> lst
@@ -607,7 +617,7 @@ for the same input, it depends on the global variable exponent:</p>
 
 <h3>Lazy Evaluation</h3>
 
-<p>“Lazy evaluation” means that data structures are computed incrementally, as they are needed (so the trees never exist in memory all at once) parts that are never needed are never computed. Haskell uses lazy evaluation by default.</p>
+<p>"Lazy evaluation" means that data structures are computed incrementally, as they are needed (so the trees never exist in memory all at once) parts that are never needed are never computed. Haskell uses lazy evaluation by default.</p>
 
 <p>Example in Haskell: </p>
 
@@ -800,16 +810,18 @@ it can be defined by the user.</p>
 <ul>
 <li><p>A type is a collection of related values.</p></li>
 <li><p>Typeclasses are sets of types.</p></li>
-<li><p>A class is a collection of types that support certain operations, <br>
-called the methods of the class.</p></li>
-<li><p>Each expressions must have a valid type, which is calculated before to evaluating the <br>
-expression by the Haskell compiler, it is called type inference;</p></li>
+<li><p>A class is a collection of types that support certain operations, called the methods of the class.</p></li>
+<li><p>Each expressions must have a valid type, which is calculated before to evaluating the expression by the Haskell compiler, it is called type inference;</p></li>
 <li><p>Haskell programs are type safe, since type errors can never occur during run time;</p></li>
-<li><p>Type inference detects a very large class of programming errors, and is one of the most <br>
-powerful and useful features of Haskell.</p></li>
+<li><p>Type inference detects a very large class of programming errors, and is one of the most powerful and useful features of Haskell.</p></li>
 </ul>
 
-<p>Reference: <a href="http://www.agu.gov.br/page/download/index/id/11184731">Graham Hutton - University of Nottingham</a></p>
+<p>Reference:</p>
+
+<ul>
+<li><a href="http://www.cs.nott.ac.uk/%7Egmh/functional.ppt">Graham Hutton Lecture</a></li>
+<li><a href="http://www.cs.nott.ac.uk/%7Egmh/">Graham Hutton - University of Nottingham</a></li>
+</ul>
 
 <h4>Basic Types</h4>
 
@@ -2264,7 +2276,8 @@ for list processing, interaction, or parsing (Hutton);</p></li>
 <p>Reference:</p>
 
 <ul>
-<li><a href="http://www.agu.gov.br/page/download/index/id/11184731">Graham Hutton - University of Nottingham</a></li>
+<li><a href="http://www.cs.nott.ac.uk/%7Egmh/functional.ppt">Graham Hutton Lecture</a></li>
+<li><a href="http://www.cs.nott.ac.uk/%7Egmh/">Graham Hutton - University of Nottingham</a></li>
 </ul>
 
 <h4>Map</h4>
@@ -2470,7 +2483,8 @@ and     = foldr (&amp;&amp;) True
 <p>Reference:</p>
 
 <ul>
-<li><a href="http://www.agu.gov.br/page/download/index/id/11184731">Graham Hutton - University of Nottingham</a></li>
+<li><a href="http://www.cs.nott.ac.uk/%7Egmh/functional.ppt">Graham Hutton Lecture</a></li>
+<li><a href="http://www.cs.nott.ac.uk/%7Egmh/">Graham Hutton - University of Nottingham</a></li>
 </ul>
 
 <h4>Scanl</h4>
@@ -6359,17 +6373,6 @@ standard Haskell libraries by either function name, or by approximate type signa
 <li><a href="http://en.wikibooks.org/wiki/Haskell/Understanding_monads">http://en.wikibooks.org/wiki/Haskell/Understanding_monads</a></li>
 </ul>
 
-<p><strong>Install</strong></p>
-
-<p>Binaries and Installation files: <a href="https://www.haskell.org/platform/">https://www.haskell.org/platform/</a></p>
-
-<p>Install Haskell Libraries:</p>
-
-<pre><code>cabal update
-
-cabal install &lt;some package&gt;
-</code></pre>
-
 <h4>Online Books</h4>
 
 <ul>
@@ -6565,12 +6568,24 @@ cabal install &lt;some package&gt;
 <li><a href="http://channel9.msdn.com/Tags/functional+programming">http://channel9.msdn.com/Tags/functional+programming</a></li>
 </ul>
 
-<p><strong>Haskell Course by Philip Wadler (Youtube)</strong></p>
+<p><strong>Haskell Course by Phd. Philip Wadler (Youtube)</strong></p>
 
 <ul>
 <li><p><a href="https://www.youtube.com/playlist?list=PLtRG9GLtNcHBv4cuh2w1cz5VsgY6adoc3">Haskell Course by Phd. Philip Wadler</a></p></li>
 <li><p><a href="http://homepages.inf.ed.ac.uk/wadler/">Phillip Wadler's home page</a></p></li>
 </ul>
+
+<p><strong>Prof. Dr. Jürgen Giesl</strong></p>
+
+<p>Credits:  * <a href="https://github.com/caiorss/Functional-Programming/issues/20">Issue: seoulgithub</a></p>
+
+<ul>
+<li>
+<a href="http://verify.rwth-aachen.de/giesl/">Prof. Dr. Jürgen Giesl's home page</a> (In German.)</li>
+<li><a href="https://videoag.fsmpi.rwth-aachen.de/?course=12ss-funkprog">Lectures in English</a></li>
+</ul>
+
+<p>In this course, you will learn (Compiler+Assembly+Language) together in a single course. So, for a CS background person, this course will be highly beneficiary since Compiler and Assembler both are known to him/her. </p>
 
 <p><strong>Haskell From Scratch (Youtube)</strong></p>
 
