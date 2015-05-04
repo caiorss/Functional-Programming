@@ -2,15 +2,14 @@
 
 ![](images/haskellLogo.png)
 
-The purpose of this tutorial is to illustrate functional programming concepts in the Haskell programing language by providing reusable and useful pieces of codes, examples, case study and applications.
+The purpose of this tutorial is to illustrate functional programming concepts in the Haskell programming language by providing reusable and useful snippets of code, examples, case studies, and applications.
 
 * Full  URL: https://github.com/caiorss/Functional-Programming
 * Short URL: http://tinyurl.com/fpbyexample
 
 Notes: 
 
-* The codes with '>' symbol were run in the interactive haskell Shell ghci
-and the line bellow without the symbol > are the output.
+* The code snippets with the '>' symbol were run in the interactive Haskell Shell (GHCi) and the lines below without the '>' symbol are the output.
 
 
 <!-- # HASKELL BY EXAMPLE / PRACTICAL FUNCTIONAL PROGRAMMING -->
@@ -1459,7 +1458,7 @@ fib n | n>= 2
 | rem      | Remainder from the quotient | 
 | div      | Similar to "quot", but is rounded down towards minus infinity |
 | mod | Returns the modulus of the two numbers | 
-| divMod | Returns the quocient and the modulus tuple |
+| divMod | Returns the quotient and the modulus tuple |
 | gcd   | Greatest common divisor of two numbers |
 | lcd   | Lowest Common Multiple of two numbers |
 | compare | Compare two numbers |
@@ -2371,7 +2370,7 @@ OR
 
 See also the Clojure function [juxt](https://clojuredocs.org/clojure.core/juxt)
 
-Aplly a set of functions to a single argument.
+Apply a set of functions to a single argument.
 
 ```haskell
 λ> let juxt fs x = map ($ x) fs
@@ -3237,7 +3236,7 @@ The most well known functor is the list functor:
 λ> 
 ```
 
-The Maybe type is a functor which the return value is non deterministic that returns a value if the computation is sucessful or return a null value Nothing if the computation fails. It is useful to avoid boilerplate successive null checkings and avoid null checking error.
+The Maybe type is a functor which the return value is non deterministic that returns a value if the computation is successful or return a null value Nothing if the computation fails. It is useful to avoid boilerplate successive null checkings and avoid null checking error.
 
 ```haskell
 λ> 
@@ -3394,7 +3393,7 @@ class Monad m where
 
 * IO Monads         - Used for output IO
 * Maybe and Either  - Error handling and avoinding null checking
-* List Monad        - One of the most widely known monands
+* List Monad        - One of the most widely known monads
 * Writer Monad
 * Reader Monad
 * State Monad
@@ -4950,12 +4949,12 @@ See also:
 * [Newton's method](http://en.wikipedia.org/wiki/Newton's_method)
 * [Bisection method](http://en.wikipedia.org/wiki/Bisection_method)
 
-**Bissection Method**
+**Bisection Method**
 
 ```haskell
 
-bissection_iterator :: (Floating a, Floating a1, Ord a1) => (a -> a1) -> [a] -> [a]
-bissection_iterator f guesslist = newguess
+bisection_iterator :: (Floating a, Floating a1, Ord a1) => (a -> a1) -> [a] -> [a]
+bisection_iterator f guesslist = newguess
     where
     a =  guesslist !! 0
     b =  guesslist !! 1
@@ -4964,24 +4963,24 @@ bissection_iterator f guesslist = newguess
     newguess = (\p -> if p < 0.0 then [a, c] else [c, b] ) p
 
 
-bissectionSolver eps itmax f x1 x2 = (root, error, iterations) 
+bisectionSolver eps itmax f x1 x2 = (root, error, iterations) 
     where  
     
-    bissection_error xlist = abs(f $ xlist !! 1)
-    check_error xlist = bissection_error xlist > eps
+    bisection_error xlist = abs(f $ xlist !! 1)
+    check_error xlist = bisection_error xlist > eps
 
-    iterator = bissection_iterator  f
+    iterator = bisection_iterator  f
 
     rootlist = [x1, x2] |> iterate iterator |> takeWhile check_error |> take itmax
 
     pair = last rootlist |> iterator
     root = last pair
-    error = bissection_error pair
+    error = bisection_error pair
 
     iterations = length rootlist    
 
 *Main> let f x  =  exp(-x) -3*log(x)
-*Main> bissectionSolver 1e-5 100 f 0.05 3
+*Main> bisectionSolver 1e-5 100 f 0.05 3
 (1.1154509544372555,8.86237816760671e-6,19)
 *Main> 
 
@@ -5580,7 +5579,7 @@ taxRateOfBrazil = taxrate  taxOfBrazil
     
     input       - Unit test case values             [t1, t2, t2, e5]
     expected    - Expected value of each test case  [e1, e2, e3, e4]
-    tol         - Tolerance 1e-3 tipical value 
+    tol         - Tolerance 1e-3 typical value 
     f           - Function:                         error_i = abs(e_i-t_i)
     
     Returns true if in all test cases  error_i < tol
