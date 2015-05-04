@@ -12,3 +12,8 @@ clean:
 	rm -rf *.hi *.o
 	
      
+upload:
+	git push github master
+
+commit:
+	git commit -m
