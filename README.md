@@ -4634,21 +4634,118 @@ liftM (map $ uncurry (+)) readSquareFile :: IO [Int]
 
 This a collection of useful short code snippets. 
 
+### Iterators
 
-**Pairs**
+#### Pair Iterator
 
 Definition:
 
 ```haskell
-let pairs alist = zip alist (tail alist)
+pairs alist = zip alist (tail alist)
 ```
 
-Example:
+The pairs iterator converts a list of elements to a new list of consecutive elements tuple. 
+
+Pseudo code:
+```
+pairs [e0, e1, e2, e3, e4 ...] ==> [(e0, e1), (e1, e2), (e3, e4) ...]
+```
+
+Let f be a function of two arguments:
+```
+f :: a -> a -> b
+```
+
+The function f can be applied to to the pairs sequence using the higher order function uncurry.
+
+Pseudo code:
+```   
+> g = uncurry(f) :: (a, a) -> b
+> g (x, y) = f x y
+
+> map uncurry(f) $ pairs [e0, e1, e2, e3, e4 ...]
+>   [g (e0, e1), g (e1, e2), g (e2, e3), g (e3, e4) ...]
+```
+
+
+It can be useful to calculate the distance between two points, lagged difference, growth of a time series, draw a line between each two consecutive points or apply any function to two consecutive elements.
+
+Example: Grouping Consecutive numbers
 
 ```haskell
+λ> let pairs alist = zip alist (tail alist)
 
 λ> pairs [1..5]
 [(1,2),(2,3),(3,4),(4,5)]
+```
+
+Example: Lagged Difference
+
+Pseudo code:
+```
+lagdiff [e0, e1, e2, e3, e4 ...] ==> [(e1 - e0), (e2 - e1), (e3 - e2) ... ]
+``` 
+
+Development:
+
+```haskell
+
+λ> let pairs alist = zip alist (tail alist)
+
+λ> :t pairs
+pairs :: [b] -> [(b, b)]
+
+λ> :t (-)
+(-) :: Num a => a -> a -> a
+
+λ> :t uncurry(-)
+uncurry(-) :: Num c => (c, c) -> c
+λ> 
+
+λ> (-) 20 10
+10
+λ> 
+
+λ> uncurry(-) (20, 10)
+10
+λ> 
+
+λ> uncurry(-) (10, 20)
+-10
+λ> 
+
+λ> uncurry(flip (-)) (10, 20)
+10
+λ> 
+
+λ> pairs [10.3, 20.5, 5.6, 8.23, 40.3]
+[(10.3,20.5),(20.5,5.6),(5.6,8.23),(8.23,40.3)]
+λ> 
+
+λ> map (uncurry ( flip (-))) $ pairs [10.3, 20.5, 5.6, 8.23, 40.3]
+[10.2,-14.9,2.630000000000001,32.06999999999999]
+λ> 
+
+λ> let lagdiff series = map (uncurry ( flip (-))) $ pairs series
+λ> :t lagdiff 
+lagdiff :: Num b => [b] -> [b]
+λ> 
+
+λ> lagdiff [10.3, 20.5, 5.6, 8.23, 40.3]
+[10.2,-14.9,2.630000000000001,32.06999999999999]
+λ> 
+
+λ> lagdiff [10, 30, 5, 8, 100]
+[20,-25,3,92]
+λ> 
+
+```
+
+Example: Distance between points on the plane.
+
+```haskell
+
+λ> let pairs alist = zip alist (tail alist)
 
 {- [(X, Y)]  coordinates of points in a plane -}
 λ> let points = [(1.0, 2.0), (3.0, 4.0), (-1.0, 5.0), (6.0, 6.0)]
@@ -4681,7 +4778,26 @@ Example:
 
 ```
 
-**Sliding Window Iterator**
+#### Triples Iterator
+
+Definition:
+```haskell
+triples alist = zip3 alist (tail alist) (tail $ tail alist)
+```
+
+Example:
+```haskell
+λ> triples [1..10]
+[(1,2,3),(2,3,4),(3,4,5),(4,5,6),(5,6,7),(6,7,8),(7,8,9),(8,9,10)]
+λ> 
+
+λ> :t triples 
+triples :: [c] -> [(c, c, c)]
+λ> 
+λ> 
+```
+
+#### Sliding Window Iterator
 
 This iterator is used in Scala and it is a generalized pairs iterator.
 
@@ -4694,11 +4810,21 @@ sliding n alist = map (take n) (take (length(alist) -n + 1 ) $ iterate tail alis
 Example:
 
 ```haskell
-λ> sliding 3 [1..10]
+λ>  sliding 3 [1..10]
 [[1,2,3],[2,3,4],[3,4,5],[4,5,6],[5,6,7],[6,7,8],[7,8,9],[8,9,10]]
-λ> 
-λ> sliding 4 [1..10]
+
+λ>  sliding 4 [1..10]
 [[1,2,3,4],[2,3,4,5],[3,4,5,6],[4,5,6,7],[5,6,7,8],[6,7,8,9],[7,8,9,10]]
+
+λ> sliding 5 [1..10]
+[[1,2,3,4,5],[2,3,4,5,6],[3,4,5,6,7],[4,5,6,7,8],[5,6,7,8,9],[6,7,8,9,10]]
+
+λ> sliding 6 [1..10]
+[[1,2,3,4,5,6],[2,3,4,5,6,7],[3,4,5,6,7,8],[4,5,6,7,8,9],[5,6,7,8,9,10]]
+
+λ> sliding 9 [1..10]
+[[1,2,3,4,5,6,7,8,9],[2,3,4,5,6,7,8,9,10]]
+λ> 
 ```
 
 Scala Equivalent
@@ -4707,7 +4833,7 @@ scala> (1 to 5).iterator.sliding(3).toList
 res2: List[Seq[Int]] = List(List(1, 2, 3), List(2, 3, 4), List(3, 4, 5))
 ```
 
-**Enumerate**
+#### Enumerate Iterator
 
 Equivalent to python enumerate.
 
@@ -4758,6 +4884,140 @@ Example:
 
 ```
 
+### Applying Multiples Functions
+
+
+#### Applying a list of functions to the same argument.
+
+**juxt** is a function that allows apply a list of functions of same type signature to a single argument. This is useful for numerical analysis, statistics and engineering. This function was taken from the Clojure library.
+
+```haskell
+juxt fs x = map ($ x) fs
+```
+
+Example:
+```
+λ> let juxt fs x = map ($ x) fs
+
+λ> juxt [(*3), (+4), (/10)] 30
+[90.0,34.0,3.0]
+λ> 
+λ> let fs = juxt [(*3), (+4), (/10)]
+λ> 
+λ> :t fs
+fs :: Double -> [Double]
+λ>
+λ> fs 30
+[90.0,34.0,3.0]
+λ> fs 40
+[120.0,44.0,4.0]
+λ> 
+λ> map fs [10, 20, 30]
+[[30.0,14.0,1.0],[60.0,24.0,2.0],[90.0,34.0,3.0]]
+λ> 
+```
+
+#### Applying a tuple of functions to a same argument.
+
+The family of functions juxt2, juxt3, juxt4 allow apply tuples of functions to a single argument. This is necessary when the functions don't have the same type signature. 
+
+```haskell
+juxt2 (f1, f2) x = (f1 x, f2 x)
+juxt3 (f1, f2, f3) x = (f1 x, f2 x, f3 x)
+juxt4 (f1, f2, f3, f4) x = (f1 x, f2 x, f3 x, f4 x)
+juxt5 (f1, f2, f3, f4, f5) x = (f1 x, f2 x, f3 x, f4 x, f5 x)
+```
+
+Example:
+```haskell
+
+{- 
+
+This function fails in static typed language when 
+the functions don't have the same type signature 
+
+-}
+λ> juxt [(>100), (+100)]  30
+
+<interactive>:36:9:
+    No instance for (Num Bool) arising from the literal `100'
+    Possible fix: add an instance declaration for (Num Bool)
+    In the second argument of `(>)', namely `100'
+    In the expression: (> 100)
+    In the first argument of `juxt', namely `[(> 100), (+ 100)]'
+
+
+λ> juxt2 ((>100), (+100))  30
+(False,130)
+λ> 
+λ> 
+λ> let f = juxt2 ((>100), (+100))
+λ> :t f
+f :: Integer -> (Bool, Integer)
+λ> 
+λ> f 30
+(False,130)
+λ>
+λ> map f [10, 20, 25, 30, 100, 150]
+[(False,110),(False,120),(False,125),(False,130),(False,200),(True,250)]
+λ> 
+
+
+λ> 
+λ> juxt3 (length, maximum, minimum)  [100.23, 23.23, 12.33, -123.23, -1000.23, 4000.5]
+(6,4000.5,-1000.23)
+λ> 
+
+
+{- 
+
+    The type system fails to resolve the types in someone
+    cases. So when it happens the developer must make the
+    function types explicit.
+
+-}
+λ> let analytics = juxt3 (length, maximum, minimum)
+λ> 
+λ> :t analytics 
+analytics :: [()] -> (Int, (), ())
+λ> 
+λ> analytics [100.23, 23.23, 12.33, -123.23, -1000.23, 4000.5]
+
+<interactive>:79:12:
+    No instance for (Fractional ()) arising from the literal `100.23'
+    Possible fix: add an instance declaration for (Fractional ())
+    In the expression: 100.23
+    In the first argument of `analytics', namely
+      `[100.23, 23.23, 12.33, - 123.23, ....]'
+    In the expression: analytics [100.23, 23.23, 12.33, - 123.23, ....]
+
+λ> let analytics :: [Double] -> (Int, Double, Double)  ; analytics = juxt3 (length, maximum, minimum)
+λ> 
+λ> :t analytics 
+analytics :: [Double] -> (Int, Double, Double)
+λ> 
+
+λ> analytics [100.23, 23.23, 12.33, -123.23, -1000.23, 4000.5]
+(6,4000.5,-1000.23)
+λ> 
+
+λ> import Data.Char
+λ> 
+λ> let f = juxt3 (succ, pred, ord)
+λ> :t f
+f :: Char -> (Char, Char, Int)
+λ> 
+λ> let a = map f "haskell is fun"
+λ> a
+[('i','g',104),('b','`',97),('t','r',115),('l','j',107),('f','d',101),('m','k',108),('m','k',108),('!','\US',32),('j','h',105),('t','r',115),('!','\US',32),('g','e',102),('v','t',117),('o','m',110)]
+λ> 
+λ> unzip3 a
+("ibtlfmm!jt!gvo","g`rjdkk\UShr\USetm",[104,97,115,107,101,108,108,32,105,115,32,102,117,110])
+λ> 
+λ>
+
+```
+
 ## Applications
 
 
@@ -4776,6 +5036,21 @@ cosd = cos . deg2rad
 tand = tan . deg2rad
 atand = rad2deg . atan
 atan2d y x = rad2deg (atan2 y x )
+```
+
+Example:
+
+
+```haskell
+
+λ> map rad2deg [pi/6, pi/4, pi/3, pi/2, pi]
+[29.999999999999996,45.0,59.99999999999999,90.0,180.0]
+λ> 
+λ> 
+
+λ> map sind [30.0, 45.0, 60.0, 90.0, 180.0 ]
+[0.49999999999999994,0.7071067811865475,0.8660254037844386,1.0,1.2246063538223773e-16]
+λ> 
 ```
 
 
@@ -5184,9 +5459,7 @@ mean lst = sum lst / fromIntegral (length lst)
 
 Geometric Mean of Sequence 
 ```haskell
-
-pow x y = exp $ y * log x
-geomean lst = pow (product lst) $ 1/(fromIntegral (length lst))
+geomean lst = (product lst) ** 1/(fromIntegral (length lst))
 ```
 
 Convert from decimal to percent
@@ -6138,6 +6411,7 @@ Example: ~/.ghci
 import System.Directory ( getCurrentDirectory)
 import System.Process (readProcess)
 
+:set -hide-package mtl
 
 :set prompt "\x1b[32mλ>\x1b[0m " -- set the shell prompt to print λ (lambda)
 
@@ -6210,20 +6484,24 @@ Day: 26
 #### Importing Ambigous Modules in GHCi
 
 ```haskell
-GHCi, version 7.4.1: http://www.haskell.org/ghc/  :? for help
-Loading package ghc-prim ... linking ... done.
-Loading package integer-gmp ... linking ... done.
-Loading package base ... linking ... done.
-Prelude> :m +Control.Monad.State
+λ> import Control.Monad.State
 
 <no location info>:
     Ambiguous module name `Control.Monad.State':
-      it was found in multiple packages: mtl-2.0.1.0 monads-tf-0.1.0.0
-Prelude> :set -XPackageImports 
-Prelude> import "mtl-2.0.1.0" Control.Monad.State
-Prelude> import "mtl" Control.Monad.State
-Prelude> --Nothing is imported!
+      it was found in multiple packages: monads-tf-0.1.0.2 mtl-2.2.1
+λ> 
+
+λ> :set -hide-package mtl
+λ> import Control.Monad.State
+λ> 
 ```
+
+Solution: Add the line to ~/.ghci
+
+```
+:set -hide-package mtl
+```
+
 
 ## Documentation and Learning Materials
 
