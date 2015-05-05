@@ -1,5 +1,10 @@
 # Functional Programming in Haskell by Examples
 
+<!--
+@TODO: Add the creative commons public domain logo.
+@TODO: Update papers repository
+-->
+
 ![](images/haskellLogo.png)
 
 The purpose of this tutorial is to illustrate functional programming concepts in the Haskell programming language by providing reusable and useful snippets of code, examples, case studies, and applications.
@@ -50,8 +55,9 @@ Notes:
 - [Functions](#functions)
   - [Creating functions](#creating-functions)
   - [Anonymous Functions or Lambda Functions](#anonymous-functions-or-lambda-functions)
-  - [Infix Operators Functions](#infix-operators-functions)
+  - [Infix Operators as Functions](#infix-operators-as-functions)
   - [Currying](#currying)
+  - [Function Composition](#function-composition)
   - [Recursion](#recursion)
   - [Integer Arithmetic Functions](#integer-arithmetic-functions)
   - [Mathematical Functions](#mathematical-functions)
@@ -91,7 +97,7 @@ Notes:
     - [Haskell Monads](#haskell-monads)
     - [Monad function composition](#monad-function-composition)
     - [Sources](#sources)
-    - [Maybe Monad](#maybe-monad)
+  - [Maybe Monad](#maybe-monad)
   - [List Monad](#list-monad)
   - [IO and IO Monad](#io-and-io-monad)
     - [Main action](#main-action)
@@ -132,6 +138,7 @@ Notes:
   - [Vectors](#vectors)
   - [Tax Brackets](#tax-brackets)
   - [Small DSL Domain Specific Language](#small-dsl-domain-specific-language)
+    - [String Processing](#string-processing)
 - [Libraries](#libraries)
   - [System Programming in Haskell](#system-programming-in-haskell)
   - [Data.Time](#datatime)
@@ -145,6 +152,7 @@ Notes:
       - [Parsing Dates and Times from Strings](#parsing-dates-and-times-from-strings)
       - [Printing a Date](#printing-a-date)
 - [Miscelanious](#miscelanious)
+  - [Haskell IDEs and Text Editors](#haskell-ides-and-text-editors)
   - [GHCI configuration file](#ghci-configuration-file)
   - [Troubleshooting](#troubleshooting)
     - [Importing Ambigous Modules in GHCi](#importing-ambigous-modules-in-ghci)
@@ -156,6 +164,7 @@ Notes:
     - [Online Books](#online-books)
     - [Books](#books)
     - [Papers and Articles](#papers-and-articles)
+    - [Selected Wikipedia Articles](#selected-wikipedia-articles)
     - [Community](#community)
     - [References by Subject](#references-by-subject)
     - [Video Lectures](#video-lectures)
@@ -206,6 +215,7 @@ Notes:
 | haddock                            | Documentation tool for annotated Haskell source code |
 | cabal                              | GHC Haskell Cabal package manager                    |
 
+
 ### Install Haskell Platform
 
 Binaries and Installation files: 
@@ -219,6 +229,10 @@ cabal update
 
 cabal install <some package>
 ```
+
+<!--
+@TODO: Add instructions of how to install  Haskell in Linux.
+-->
 
 ### GHCI Reference
 
@@ -239,9 +253,16 @@ GHCI Interactive Shell
 | :quit                 | Quit the interpreter |
 
 
-
+See also:
+* [GHCI configuration file](#ghci-configuration-file)
+* [GHCI Debugger](https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/ghci-debugger.html)
+* [GHC and GHCI Man Page](http://manpages.ubuntu.com/manpages/trusty/man1/ghci.1.html)
 
 ## Functional Programming Concepts
+
+<!--
+@TODO: Add concepts: Function composition, Pure language, Referential Transparency.
+-->
 
 ### Overview
 
@@ -286,20 +307,20 @@ Non Essential Features:
 Some Functional programing languages:
 
 ```
-               purity   Evaluation Type     T. DC     T. Inf  OO   ADT  Plat.   Family   Curry  Feature
+               purity   Evaluation Type     T. DC     T. Inf  OO   ADT  Platform Family   Curry  Feature
 
-Haskell        Pure     Lazy       Static   Strong     Yes    No   Yes  NAT     ML/SML   Yes    Concurrency/Parallelism
-Ocaml          Impure   Strict     Dynamic  Strong     Yes    Yes  Yes  NAT/BC  ML/SML   Yes    
-F# (F sharp)   Impure   Strict     Static   Strong     Yes    Yes  Yes .NET     ML/SML   Yes   .NET Platform Integration
+Haskell        Pure     Lazy       Static   Strong     Yes    No   Yes  NAT      ML/SML   Yes    Concurrency/Parallelism
+Ocaml          Impure   Strict     Static  Strong     Yes    Yes  Yes  NAT/BC   ML/SML   Yes    
+F# (F sharp)   Impure   Strict     Static   Strong     Yes    Yes  Yes .NET      ML/SML   Yes   .NET Platform Integration
 
-Scheme         Impure   Strict     Dynamic  Strong     No     No   No   -       Lisp     No     ????s
-Clojure        Impure   Strict     Dynamic             No     No   No   JVM     Lisp     No     Java Libs Integration
+Scheme         Impure   Strict     Dynamic  Strong     No     No   No   -        Lisp     No     ????s
+Clojure        Impure   Strict     Dynamic             No     No   No   JVM      Lisp     No     Java Libs Integration
 
 Scala          Impure   Strict     Static   Strong     Yes    Yes  Yes  JVM                        
-Erlang         Impure   Strict     Dynamic  Strong     ?      ?     ?           ?       ?      Telecommunications/ Servers
+Erlang         Impure   Strict     Dynamic  Strong     ?      ?     ?            ?       ?      Telecommunications/ Servers
 
-R              Impure   Strict     Dynamic  Strong     No     Yes   -   -       No       No     DSL - Statics  
-Mathematica    Impure   Strict     Dynamic  ??         Yes    ?     -   -       No       No     DSL - Computer Algebraic System
+R              Impure   Strict     Dynamic  Strong     No     Yes   -   -        No       No     DSL - Statics  
+Mathematica    Impure   Strict     Dynamic  ??         Yes    ?     -   -        No       No     DSL - Computer Algebraic System
 ```
 
 ```
@@ -1182,7 +1203,9 @@ f x y = sqrt ( x^2 + y^2 )
 
 ### Anonymous Functions or Lambda Functions
 
-
+<!--
+@TODO: Add more anonymous functions examples.
+-->
 
 ```haskell
 
@@ -1213,12 +1236,16 @@ f x y = sqrt ( x^2 + y^2 )
 
 ```
 
-### Infix Operators Functions
+### Infix Operators as Functions
+
+<!--
+@TODO: Add more examples with logical infix operators
+-->
 
 In Haskell the infix operators can be seen as a two-argument function.
 
 ```
-x + y is equivalent to +(x, y) or (+ x y)
+x + y is equivalent to add x y or (+ x y)
 ```
 
 
@@ -1421,6 +1448,9 @@ False
 
 ### Currying
 
+<!--
+@TODO: Show the same example in other languages like: F#, Ocaml and Python
+-->
 
 Example 1:
 
@@ -1442,7 +1472,11 @@ Example 1:
 > 
 ```
 
-Example 2: Derivate functions
+### Function Composition
+
+<!--
+@TODO: Show function Composition definition, applications, examples and tips and tricks.
+-->
 
 ### Recursion
 
@@ -1854,16 +1888,17 @@ const :: a -> b -> a
 
 ### Higher Order Functions
 
-Higher Order functions are functions that takes functions as 
-arguments.
+<!--
+@TODO: Add more higher order functions: zip, zip3, zip4, unzip, unzip3 .., zipWith, zipWith3 ..
+-->
+
+Higher Order functions are functions that takes functions as arguments.
 
 Why Higher Order Function?
 
-* Common programming idioms, such as applying a function twice, can naturally be encapsulated as 
-general purpose higher-order functions (Hutton);
+* Common programming idioms, such as applying a function twice, can naturally be encapsulated as general purpose higher-order functions (Hutton);
 
-* Special purpose languages can be defined within Haskell using higher-order functions, such as 
-for list processing, interaction, or parsing (Hutton);
+* Special purpose languages can be defined within Haskell using higher-order functions, such as for list processing, interaction, or parsing (Hutton);
 
 * Algebraic properties of higher-order functions can be used to reason about programs. (Hutton)
 
@@ -3396,6 +3431,12 @@ References:
 
 ### Monads
 
+<!--
+@TODO: Add State Monad section. 
+@TODO: Add Writer Monad
+@TODO: Add Reader Monad
+-->
+
 #### Overview
 
 Monads in Haskell are used to perform IO, State, Parallelism, Exception Handling, parallelism, continuations and coroutines.
@@ -3656,7 +3697,7 @@ data  Ordering    =  LT | EQ | GT deriving
 
 
 
-#### Maybe Monad
+### Maybe Monad
 
 Using the Maybe type is possible to indicate that a function might or not return value. It is also useful to avoid many boilerplate null checkings.
 
@@ -6060,6 +6101,11 @@ Cup {cupDrink = Americano, cupSize = Venti, cupExtra = [Shot,Syrup]}]
 
 ```
 
+#### String Processing
+
+<!--
+@TODO: Add String Processing Examples
+-->
 
 ## Libraries
 
@@ -6446,6 +6492,13 @@ Credits:
 
 ## Miscelanious
 
+### Haskell IDEs and Text Editors
+
+
+<!--
+@TODO: Show Haskell IDEs text editors and features
+-->
+
 ### GHCI configuration file
 
 The ghci configuration file allows the user to create custom commands and 
@@ -6639,6 +6692,45 @@ Articles:
 * [Why the world needs Haskell](http://www.devalot.com/articles/2013/07/why-haskell.html)
 * http://paulkoerbitz.de/posts/Why-I-love-Haskell.html
 
+
+#### Selected Wikipedia Articles
+
+Selected Wikipedia Pages:
+
+* [List of functional programming topics](http://en.wikipedia.org/wiki/List_of_functional_programming_topics)
+* [Comparison of Functional Programming Languages](http://en.wikipedia.org/wiki/Comparison_of_functional_programming_languages)
+* [Functional programming](http://en.wikipedia.org/wiki/Functional_programming)
+
+
+* [Declarative programming](http://en.wikipedia.org/wiki/Declarative_programming)
+* [Aspect-oriented programming](http://en.wikipedia.org/wiki/Aspect-oriented_programming)
+
+**Pure Functions/ Lambda Calculus/ Closure/ Currying**
+
+* [Lambda calculus](http://en.wikipedia.org/wiki/Lambda_calculus)
+* [Higher-order function](http://en.wikipedia.org/wiki/Higher-order_function)
+* [Referential transparency (computer science)](http://en.wikipedia.org/wiki/Referential_transparency_(computer_science))
+* [Closure (computer programming)](http://en.wikipedia.org/wiki/Closure_(computer_programming))
+* [Callback (computer programming)](http://en.wikipedia.org/wiki/Callback_(computer_programming))
+* [Coroutine](http://en.wikipedia.org/wiki/Coroutine)
+
+**Evaluation**
+
+* [Eager Evaluation](http://en.wikipedia.org/wiki/Eager_evaluation)
+* [Lazy Evaluation](http://en.wikipedia.org/wiki/Lazy_evaluation)
+* [Short-circuit evaluation](http://en.wikipedia.org/wiki/Short-circuit_evaluation)
+
+**Monads**
+
+* [Monads Functional Programming](http://en.wikipedia.org/wiki/Monad_(functional_programming))
+* [Haskell/Understanding monads](http://en.wikibooks.org/wiki/Haskell/Understanding_monads)
+* [Monad transformer](http://en.wikipedia.org/wiki/Monad_transformer)
+
+**Continuations**
+
+* [Continuation](http://en.wikipedia.org/wiki/Continuation)
+* [Continuation-passing style](http://en.wikipedia.org/wiki/Continuation-passing_style)
+
 #### Community
 
 * http://reddit.com/r/haskell
@@ -6653,36 +6745,7 @@ Haskell Wiki
 * http://www.haskell.org/haskellwiki/Category:FAQ
 * http://www.haskell.org/haskellwiki/Category:Communitys
 
-Selected Wikipedia Pages:
 
-* [List of functional programming topics](http://en.wikipedia.org/wiki/List_of_functional_programming_topics)
-
-* [Functional programming](http://en.wikipedia.org/wiki/Functional_programming)
-* [Declarative programming](http://en.wikipedia.org/wiki/Declarative_programming)
-
-* [Lambda calculus](http://en.wikipedia.org/wiki/Lambda_calculus)
-
-* [Higher-order function](http://en.wikipedia.org/wiki/Higher-order_function)
-
-* [Referential transparency (computer science)](http://en.wikipedia.org/wiki/Referential_transparency_(computer_science))
-
-* [Eager Evaluation](http://en.wikipedia.org/wiki/Eager_evaluation)
-* [Lazy Evaluation](http://en.wikipedia.org/wiki/Lazy_evaluation)
-* [Short-circuit evaluation](http://en.wikipedia.org/wiki/Short-circuit_evaluation)
-
-* [Monads Functional Programming](http://en.wikipedia.org/wiki/Monad_(functional_programming))
-* [Haskell/Understanding monads](http://en.wikibooks.org/wiki/Haskell/Understanding_monads)
-* [Monad transformer](http://en.wikipedia.org/wiki/Monad_transformer)
-
-* [Aspect-oriented programming](http://en.wikipedia.org/wiki/Aspect-oriented_programming)
-
-* [Continuation](http://en.wikipedia.org/wiki/Continuation)
-* [Continuation-passing style](http://en.wikipedia.org/wiki/Continuation-passing_style)
-
-* [Closure (computer programming)](http://en.wikipedia.org/wiki/Closure_(computer_programming))
-* [Callback (computer programming)](http://en.wikipedia.org/wiki/Callback_(computer_programming))
-
-* [Coroutine](http://en.wikipedia.org/wiki/Coroutine)
 
 #### References by Subject
 
