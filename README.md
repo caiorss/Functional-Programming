@@ -25,6 +25,7 @@ Notes:
   - [GHCI Reference](#ghci-reference)
 - [Functional Programming Concepts](#functional-programming-concepts)
   - [Overview](#overview)
+  - [Functional Programming Languages](#functional-programming-languages)
   - [Pure Functions](#pure-functions)
   - [Lazy Evaluation](#lazy-evaluation)
 - [Basic Syntax](#basic-syntax)
@@ -109,6 +110,14 @@ Notes:
     - [IO Examples](#io-examples)
     - [Sources](#sources-1)
 - [Useful Custom Functions/ Iterators and Operators](#useful-custom-functions-iterators-and-operators)
+  - [Iterators](#iterators)
+    - [Pair Iterator](#pair-iterator)
+    - [Triples Iterator](#triples-iterator)
+    - [Sliding Window Iterator](#sliding-window-iterator)
+    - [Enumerate Iterator](#enumerate-iterator)
+  - [Applying Multiples Functions](#applying-multiples-functions)
+    - [Applying a list of functions to the same argument.](#applying-a-list-of-functions-to-the-same-argument)
+    - [Applying a tuple of functions to a same argument.](#applying-a-tuple-of-functions-to-a-same-argument)
 - [Applications](#applications)
   - [Mathematics](#mathematics)
   - [Picewise Functions](#picewise-functions)
@@ -270,6 +279,43 @@ Non Essential Features:
 * Lazy Evaluation ( aka Delayed evaluation)
 * Pattern Matching
 
+
+### Functional Programming Languages
+
+
+Some Functional programing languages:
+
+```
+               purity   Evaluation Type     T. DC     T. Inf  OO   ADT  Plat.   Family   Curry  Feature
+
+Haskell        Pure     Lazy       Static   Strong     Yes    No   Yes  NAT     ML/SML   Yes    Concurrency/Parallelism
+Ocaml          Impure   Strict     Dynamic  Strong     Yes    Yes  Yes  NAT/BC  ML/SML   Yes    
+F# (F sharp)   Impure   Strict     Static   Strong     Yes    Yes  Yes .NET     ML/SML   Yes   .NET Platform Integration
+
+Scheme         Impure   Strict     Dynamic  Strong     No     No   No   -       Lisp     No     ????s
+Clojure        Impure   Strict     Dynamic             No     No   No   JVM     Lisp     No     Java Libs Integration
+
+Scala          Impure   Strict     Static   Strong     Yes    Yes  Yes  JVM                        
+Erlang         Impure   Strict     Dynamic  Strong     ?      ?     ?           ?       ?      Telecommunications/ Servers
+
+R              Impure   Strict     Dynamic  Strong     No     Yes   -   -       No       No     DSL - Statics  
+Mathematica    Impure   Strict     Dynamic  ??         Yes    ?     -   -       No       No     DSL - Computer Algebraic System
+```
+
+```
+Notes:
+* JVM    - Java Virtual Machine / Java Platform
+* .NET   - Dot Net Platform
+* NAT    - Native Code
+* BC     - Byte code compilation
+* T. DC  - Type Discipline
+* T. Inf - Type Inferencing
+* Evl    - Evaluation
+* OO     - Object Orientated
+* Curry  - Curried functions like in Haskell
+```
+
+More Information: [Comparison of Functional Programming Languages](http://en.wikipedia.org/wiki/Comparison_of_functional_programming_languages)
 
 ### Pure Functions
 
