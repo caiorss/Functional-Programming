@@ -1434,10 +1434,317 @@ Example 1:
 > 
 ```
 
-### Function Composition/ Composition Operator
+### Function Composition / Composition Operator
+
+In Haskell the operator (.) dot is used for composing functions. Pure functions can be composed like math functions.
+
+See also: [Function composition (computer science)](http://en.wikipedia.org/wiki/Function_composition_%28computer_science%29)
+
+```
+(.) :: (b -> c) -> (a -> b) -> a -> c
+
+Given:
+    
+    f :: b -> c
+    g :: a -> b
+
+(f . g ) x = f (g x)
+
+    h = f . g
+    h :: a -> c
+```
+
+Function Composition Block Diagram
+
+```haskell
+                f . g
+        ................................
+        . /------\        /------\     . 
+a -->   . |  g   |  -->   |  f   | --> .---> c
+        . \------/   b    \------/  c  . 
+        ................................
+           g :: a -> b   f :: b -> c
+    
+    (.) :: (b -> c) -> (a -> b) -> a -> c
+```
+
+
+Composition Law
+
+```
+id . f = f                  Left  identity law
+f . id = f                  Right identity law
+(f . g) . h = f . (g . h)   Associativity
+
+
+Constant Function Composition
+f       . const a = const (f a)
+const a . f       = const a
+
+dentity function            -->  id x = x 
+const - Constant Function   --> const a b =  a   
+```
+
+Simplifying Code with function composition:
+
+```
+    h( f ( g( x)))  ==>  (h . f . g ) x   OR  h . f . g  $ x 
+OR   
+    h $ f $ g x     ==>   h . f . g $ x    
+
+                                 Point Free Style
+composed x = h . f . g $ x ==>   composed = h . f . g 
+```
+
+Function Composition with Map and Filter
+
+```
+h :: c -> [a]
+f :: a -> b
+
+map :: (a -> b) -> [a] -> [b]
+filter :: (a -> Bool) -> [a] -> [a]
+
+
+map     f (h c) = map    f . h $ c
+filter  f (h c) = filter f . h $ c
+```
+
+Inverting Predicate Functions
+
+```
+inverted_predicate == not . predicate
+```
+
+```haskell
+λ> not True
+False
+λ> not False
+True
+λ> 
+
+λ> (>5) 10
+True
+λ> (>5) 3
+False
+
+λ> not . (>5) $ 10
+False
+λ> not . (>5) $ 3
+True
+λ> 
+
+λ> let f = not . (>5)
+λ> f 10
+False
+λ> f 5
+True
+
+λ> import Data.List
+λ> 
+λ> filter ( isPrefixOf "a" ) ["a","ab","cd","abcd","xyz"]
+["a","ab","abcd"]
+λ> 
+λ> filter ( not . isPrefixOf "a" ) ["a","ab","cd","abcd","xyz"]
+["cd","xyz"]
+λ> 
+
+
+```
+
+
+Example:
+
+```haskell
+λ> let f = (+4)
+λ> let g = (*3)
+λ> 
+λ> 
+λ> f (g 6) -- (+4) ((*3) 6) = (+4) 18 = 22
+22
+λ> 
+λ> (f . g) 6
+22
+λ> 
+λ> (.) f g 6
+22
+λ> 
+λ> let h = f . g
+λ> 
+λ> h 6
+22
+λ>  
+
+λ> id 10
+10
+λ> id 3
+3
+λ> 
+λ> id Nothing
+Nothing
+λ> id 'a'
+'a'
+λ> id (Just 10)
+Just 10
+λ> 
+
+
+λ> (f . id) 10
+14
+λ> (id . f) 10
+14
+λ> 
+
+λ> const 10 20
+10
+λ> const 10 3
+10
+λ> 
+
+λ> (f . (const 10)) 4
+14
+λ> (f . (const 10)) 3
+14
+λ> const 10 . f $ 7
+10
+λ> const 10 . f $ 3
+10
+λ> 
+
+{- Avoiding Parenthesis with composition -}
+λ> let g x = x * 2
+λ> let f x = x + 10
+λ> let h x = x - 5
+λ> 
+λ> h (f (g 3))
+11
+λ> h $ f $ g 3
+11
+λ> 
+λ> (h . f . g ) 3
+11
+λ> h . f . g $ 3
+11
+λ> 
+
+{- Function Composition with curried functions -}
+
+λ> let f1 x y = 10*x + 4*y
+λ> let f2 a b c = 4*a -3*b + 2*c
+λ> let f3 x = 3*x
+
+λ> (f1 3 ( f3 5))
+90
+λ> 
+λ> f1 3 $ f3 5
+90
+λ> 
+λ> f1 3 . f3 $ 5
+90
+λ> 
+λ> let f = f1 3 . f3 
+λ> 
+λ> f 5
+90
+λ> f 8
+126
+λ> 
+
+
+λ> (f1 4 (f2 5 6 (f3 5)))
+168
+λ> 
+λ> f1 4 $ f2 5 6 $ f3 5
+168
+λ> 
+λ> f1 4 . f2 5 6 . f3 $ 5
+168
+λ> 
+λ> let g = f1 4 . f2 5 6 . f3 {- You can also create new functions -}
+λ> :t g
+g :: Integer -> Integer
+λ> g 5
+168
+λ> g 10
+288
+λ> 
+
+{- Function Composition with Map and Filter -}
+
+λ> import Data.Char
+
+λ> :t ord
+ord :: Char -> Int
+
+λ> :t ordStr
+ordStr :: [Char] -> [Int]
+λ> 
+
+λ> ordStr "curry"
+[99,117,114,114,121]
+λ> 
+λ> let r x= x + 30
+λ> 
+λ> map r (ordStr "curry")
+[129,147,144,144,151]
+λ> 
+λ> map r $ ordStr "curry"
+[129,147,144,144,151]
+λ> 
+λ> map r . ordStr $ "curry"
+[129,147,144,144,151]
+λ> 
+λ> sum . map r . ordStr $ "curry"
+715
+λ> 
+
+λ> let s =  map r . ordStr
+λ> s "curry"
+[129,147,144,144,151]
+λ> s "haskell"
+[134,127,145,137,131,138,138]
+λ> 
+
+let sum_ord = sum . map r . ordStr 
+
+λ> sum_s "curry"
+715
+λ> sum_s "haskell"
+950
+λ> 
+λ> sum_ord "curry"
+715
+λ> sum_ord "haskell"
+950
+λ> 
+
+
+λ> map ord (map toUpper "haskell")
+[72,65,83,75,69,76,76]
+λ> 
+λ> map ord . map toUpper $ "haskell"
+[72,65,83,75,69,76,76]
+λ> 
+
+λ> map (flip (-) 10) . map ord . map toUpper $ "haskell"
+[62,55,73,65,59,66,66]
+λ> 
+
+λ> map chr . map (flip (-) 10) . map ord . map toUpper $ "haskell"
+">7IA;BB"
+λ> 
+
+{- The function f is in point free style -}
+
+λ> let f = map chr . map (flip (-) 10) . map ord . map toUpper
+λ> 
+λ> f "haskell"
+">7IA;BB"
+λ> 
+
+```
 
 <!--
-@TODO: Show function Composition definition, applications, examples and tips and tricks.
 -->
 
 
