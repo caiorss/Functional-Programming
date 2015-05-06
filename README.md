@@ -56,7 +56,7 @@ Notes:
   - [Anonymous Functions or Lambda Functions](#anonymous-functions-or-lambda-functions)
   - [Infix Operators as Functions](#infix-operators-as-functions)
   - [Currying](#currying)
-  - [Function Composition/ Composition Operator](#function-composition-composition-operator)
+  - [Function Composition / Composition Operator](#function-composition--composition-operator)
   - [The $ apply operator.](#the-$-apply-operator)
   - [Recursion](#recursion)
   - [Integer Arithmetic Functions](#integer-arithmetic-functions)
