@@ -311,34 +311,28 @@ Non Essential Features:
 
 Some Functional programing languages:
 
-```
-               purity   Evaluation Type     T. DC     T. Inf  OO   ADT  Platform Family   Curry  Feature
+|  Language     | Purity  |Evaluation | Typing   | Type Discipline | Type Inference | OO  | AGDT | Platform | Family |  Curry |  Feature                |
+|---------------|---------|-----------|----------|-----------------|----------------|-----|-----|----------|--------|------|---------------------------|  
+| Haskell       | Pure    | Lazy    |   Static   |  Strong         | Yes            | No  | Yes | NAT      | ML/SML |  Yes |  Concurrency/Parallelism  |
+| Ocaml         | Impure  | Strict  |   Static   |  Strong         | Yes            | Yes | Yes | NAT/BC   | ML/SML |  Yes |                            |
+| F# (F sharp)  | Impure  | Strict  |   Static   |  Strong         | Yes            | Yes | Yes | .NET     | ML/SML |  Yes |  .NET Platform Integration |
+| Scheme        | Impure  | Strict  |   Dynamic  |  Strong         | No             | No  | No  | -        | Lisp   |  No  |   Minimalistic Educational |
+| Clojure       | Impure  | Strict  |   Dynamic  |  Strong         | No             | No  | No  | JVM      | Lisp   |  No  |   Java integration    | 
+| Scala         | Impure  | Strict  |   Static   |  Strong         | Yes            | Yes | Yes | JVM      |        |      |   Java integration    |
+| Erlang        | Impure  | Strict  |   Dynamic  |  Strong         | ?              | ?   |  ?  |          |  ?     |  ?   |   Telecommunications/ Servers |
+| R             | Impure  | Strict  |   Dynamic  |  Strong         | No             | Yes |  -  | BC       | No     |  No  |   DSL - Statics  |
+| Mathematica   | Impure  | Strict  |   Dynamic  |  ??             | Yes            | ?   |  ?  | ?        | No     |  No  |   DSL - Computer Algebraic System |
 
-Haskell        Pure     Lazy       Static   Strong     Yes    No   Yes  NAT      ML/SML   Yes    Concurrency/Parallelism
-Ocaml          Impure   Strict     Static  Strong     Yes    Yes  Yes  NAT/BC   ML/SML   Yes    
-F# (F sharp)   Impure   Strict     Static   Strong     Yes    Yes  Yes .NET      ML/SML   Yes   .NET Platform Integration
-
-Scheme         Impure   Strict     Dynamic  Strong     No     No   No   -        Lisp     No     ????s
-Clojure        Impure   Strict     Dynamic             No     No   No   JVM      Lisp     No     Java Libs Integration
-
-Scala          Impure   Strict     Static   Strong     Yes    Yes  Yes  JVM                        
-Erlang         Impure   Strict     Dynamic  Strong     ?      ?     ?            ?       ?      Telecommunications/ Servers
-
-R              Impure   Strict     Dynamic  Strong     No     Yes   -   -        No       No     DSL - Statics  
-Mathematica    Impure   Strict     Dynamic  ??         Yes    ?     -   -        No       No     DSL - Computer Algebraic System
-```
 
 ```
 Notes:
 * JVM    - Java Virtual Machine / Java Platform
 * .NET   - Dot Net Platform
 * NAT    - Native Code
-* BC     - Byte code compilation
-* T. DC  - Type Discipline
-* T. Inf - Type Inferencing
-* Evl    - Evaluation
+* BC     - Bytecode compilation
 * OO     - Object Orientated
 * Curry  - Curried functions like in Haskell
+* DSL    - Domain Specific Language
 ```
 
 More Information: [Comparison of Functional Programming Languages](http://en.wikipedia.org/wiki/Comparison_of_functional_programming_languages)
@@ -2584,6 +2578,23 @@ Example: Unzip
 λ> unzip4 [(1,5,'a',Nothing),(2,6,'b',Nothing),(3,7,'c',Nothing),(4,8,'d',Nothing)]
 ([1,2,3,4],[5,6,7,8],"abcd",[Nothing,Nothing,Nothing,Nothing])
 λ> 
+
+λ> let (x, y) = unzip [(1,'a'),(2,'b'),(3,'c'),(4,'d'),(5,'e')]
+λ> x
+[1,2,3,4,5]
+λ> y
+"abcde"
+λ> 
+
+λ> let (a, b, c) = unzip3 [(1,'a',"haskell"),(2,'b',"ocaml"),(3,'c',"sml"),(4,'d',"scala")]
+λ> a
+[1,2,3,4]
+λ> b
+"abcd"
+λ> c
+["haskell","ocaml","sml","scala"]
+λ> 
+
 ```
 
 
