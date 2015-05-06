@@ -39,7 +39,6 @@ Notes:
     - [Powers](#powers)
     - [Application Operator - $](#application-operator---$)
     - [Misc. Operators](#misc-operators)
-    - [Pipelining Operator](#pipelining-operator)
   - [Defining Values and Types](#defining-values-and-types)
   - [Type System](#type-system)
     - [Basic Types](#basic-types)
@@ -57,7 +56,8 @@ Notes:
   - [Anonymous Functions or Lambda Functions](#anonymous-functions-or-lambda-functions)
   - [Infix Operators as Functions](#infix-operators-as-functions)
   - [Currying](#currying)
-  - [Function Composition](#function-composition)
+  - [Function Composition/ Composition Operator](#function-composition-composition-operator)
+  - [The $ apply operator.](#the-$-apply-operator)
   - [Recursion](#recursion)
   - [Integer Arithmetic Functions](#integer-arithmetic-functions)
   - [Mathematical Functions](#mathematical-functions)
@@ -71,8 +71,12 @@ Notes:
     - [Curry and Uncurrying](#curry-and-uncurrying)
     - [Flip](#flip)
     - [Iterate](#iterate)
+    - [takeWhile](#takewhile)
+    - [dropWhile](#dropwhile)
+    - [Zip and Unzip](#zip-and-unzip)
+    - [ZipWith](#zipwith)
+    - [Replicate](#replicate)
     - [Other Useful higher-order functions](#other-useful-higher-order-functions)
-    - [The $ apply operator.](#the-$-apply-operator)
   - [Functions to Manipulate Characters and Strings](#functions-to-manipulate-characters-and-strings)
     - [Strings Features](#strings-features)
     - [Prelude String Functions](#prelude-string-functions)
@@ -116,6 +120,7 @@ Notes:
     - [IO Examples](#io-examples)
     - [Sources](#sources-1)
 - [Useful Custom Functions/ Iterators and Operators](#useful-custom-functions-iterators-and-operators)
+  - [Pipelining Operators](#pipelining-operators)
   - [Iterators](#iterators)
     - [Pair Iterator](#pair-iterator)
     - [Triples Iterator](#triples-iterator)
@@ -158,7 +163,7 @@ Notes:
     - [Importing Ambigous Modules in GHCi](#importing-ambigous-modules-in-ghci)
 - [Documentation and Learning Materials](#documentation-and-learning-materials)
   - [Code Search Engine](#code-search-engine)
-    - [Libraries Documentation](#libraries-documentation)
+  - [Libraries Documentation](#libraries-documentation)
     - [Prelude](#prelude)
     - [Type Classe](#type-classe)
     - [Online Books](#online-books)
@@ -576,43 +581,6 @@ $                         (none, just as " " [whitespace])
 _       Whatever          Used in Pattern Matching
 ```
 
-
-#### Pipelining Operator 
-
-Haskell doesn't have a native Pipe operator like F# (F-Sharp) does, however
-it can be defined by the user.
-
-```haskell
-
-> let (|>) x f = f x
-> 
-> let (|>>) x f = map f x
-
-> let (?>>) x f = filter f x
-
-
-> take 3 (reverse (filter even [1..10]))
-[10,8,6]
-
-> [1..10] |> filter even |> reverse |> take 3
-[10,8,6]
-> 
-
-
-> [1..10] |>> (^2) |>> (/10) |>> (+100)
-[100.1,100.4,100.9,101.6,102.5,103.6,104.9,106.4,108.1,110.0]
-
-> 
-> [1..10] ?>> even
-[2,4,6,8,10]
-> 
-> [1..10] ?>> even |>> (+1)
-[3,5,7,9,11]
-> 
-> 
-
-
-```
 
 
 
@@ -1472,11 +1440,77 @@ Example 1:
 > 
 ```
 
-### Function Composition
+### Function Composition/ Composition Operator
 
 <!--
 @TODO: Show function Composition definition, applications, examples and tips and tricks.
 -->
+
+
+### The $ apply operator.
+
+```haskell
+f $ x = f x
+
+λ> :t ($)
+($) :: (a -> b) -> a -> b
+```
+
+Example: This operator is useful to apply an argument to a list of functions.
+
+```haskell
+λ> ($ 10) (*3)
+30
+λ> 
+λ> let f x = x*8 - 4
+λ> 
+λ> ($ 10) f
+76
+λ> 
+
+λ> map ($ 3) [(*3), (+4), (^3)]
+[9,7,27]
+λ> 
+
+```
+
+OR
+
+```haskell
+λ> let apply x f = f x
+λ> 
+λ> map (apply 3)  [(*3), (+4), (^3)]
+[9,7,27]
+λ> 
+
+```
+
+See also the Clojure function [juxt](https://clojuredocs.org/clojure.core/juxt)
+
+Apply a set of functions to a single argument.
+
+```haskell
+λ> let juxt fs x = map ($ x) fs
+
+λ> juxt [(*3), (+4), (/10)] 30
+[90.0,34.0,3.0]
+λ> 
+λ> let fs = juxt [(*3), (+4), (/10)]
+λ> 
+λ> :t fs
+fs :: Double -> [Double]
+λ>
+λ> fs 30
+[90.0,34.0,3.0]
+λ> fs 40
+[120.0,44.0,4.0]
+λ> 
+λ> map fs [10, 20, 30]
+[[30.0,14.0,1.0],[60.0,24.0,2.0],[90.0,34.0,3.0]]
+λ> 
+λ> 
+```
+
 
 ### Recursion
 
@@ -1694,9 +1728,18 @@ Reference:
 
 ### Mathematical Functions
 
-Sqrt, Log, Exp, Power 
+Negate, Sqrt, Log, Exp and Power 
 
 ```haskell
+
+{- Negate -}
+
+λ> negate 100
+-100
+λ> negate 100.324
+-100.324
+λ> 
+
 
 {- Natural logarithm -}
 λ> log 10
@@ -2385,8 +2428,347 @@ with the iterate function
 
 ```
 
+#### takeWhile
+
+Apply a predicate p to a list xs and returns the longest prefix, that can be empty of xs of elements that satisfy the predicate.
+
+```haskell
+λ> :t takeWhile
+takeWhile :: (a -> Bool) -> [a] -> [a]
+λ> 
+
+{- Constant Function that always returns True-}
+λ> :t const True
+const True :: b -> Bool
+λ> 
+λ> takeWhile (const True)  [10, 20, 8, 4, 5, 7, 9] 
+[10,20,8,4,5,7,9]
+λ> 
+
+λ> takeWhile (const False)  [10, 20, 8, 4, 5, 7, 9] 
+[]
+λ> 
+
+λ> takeWhile (>5) [10, 20, 8, 4, 5, 7, 9] 
+[10,20,8]
+λ> 
+
+λ> takeWhile (<10) [1, 2, 3, 9, 10, 20, 30]
+[1,2,3,9]
+λ> 
+
+λ> takeWhile (/='a') "testing a function"
+"testing "
+λ> 
 
 
+```
+
+#### dropWhile
+
+The function dropWhile apply a predicate p to a list xs and returns the suffix remaining after takeWhile.
+
+Example:
+
+```haskell
+λ> :t dropWhile
+dropWhile :: (a -> Bool) -> [a] -> [a]
+λ> 
+
+λ> dropWhile (const True) [10, 20, 8, 4, 5, 7, 9] 
+[]
+
+λ> dropWhile (const False) [10, 20, 8, 4, 5, 7, 9] 
+[10,20,8,4,5,7,9]
+
+λ> dropWhile (>5) [10, 20, 8, 4, 5, 7, 9]
+[4,5,7,9]
+
+λ> dropWhile (/='a') "testing a function"
+"a function"
+λ> 
+
+```
+
+#### Zip and Unzip
+
+Zip takes two lists and returns a list of corresponding pairs. If one input list is short, excess elements of the longer list are discarded. 
+
+```haskell
+zip :: [a] -> [b] -> [(a, b)]
+zip3 :: [a] -> [b] -> [c] -> [(a, b, c)]
+```
+
+Data.List
+
+```haskell
+zip4 :: [a] -> [b] -> [c] -> [d] -> [(a, b, c, d)]
+zip5 :: [a] -> [b] -> [c] -> [d] -> [e] -> [(a, b, c, d, e)]
+zip6  :: [a] -> [b] -> [c] -> [d] -> [e] -> [f] -> [(a, b, c, d, e, f)]
+```
+
+Unzip transforms a list of pairs into a list of first components and a list of second components. It is the inverse of zip.
+
+```haskell
+unzip :: [(a, b)] -> ([a], [b])
+unzip3 :: [(a, b, c)] -> ([a], [b], [c])
+```
+
+Data.List
+```
+unzip4 :: [(a, b, c, d)] -> ([a], [b], [c], [d])
+unzip5 :: [(a, b, c, d, e)] -> ([a], [b], [c], [d], [e])
+unzip6 :: [(a, b, c, d, e, f)] -> ([a], [b], [c], [d], [e], [f])
+```
+
+Examples: Zip
+
+```haskell
+λ> zip [1, 3, 4, 5, 6] [10, 30, 40, 50, 60]
+[(1,10),(3,30),(4,40),(5,50),(6,60)]
+λ> 
+
+λ> zip [1, 3, 4, 5, 6] [10, 30, 40]
+[(1,10),(3,30),(4,40)]
+λ> 
+
+λ> zip [5, 6] [10, 30, 40, 50, 60]
+[(5,10),(6,30)]
+λ> 
+
+λ> zip [1, 2, 3, 4, 5] ['a', 'b', 'c', 'd', 'e']
+[(1,'a'),(2,'b'),(3,'c'),(4,'d'),(5,'e')]
+λ> 
+
+λ> zip ["haskell", "ocaml", "sml", "scala", "erlang"] ['a', 'b', 'c', 'd', 'e']
+[("haskell",'a'),("ocaml",'b'),("sml",'c'),("scala",'d'),("erlang",'e')]
+λ> 
+
+λ> zip3 [1, 2, 3, 4, 5] ['a', 'b', 'c', 'd', 'e'] ["haskell", "ocaml", "sml", "scala", "erlang"]
+[(1,'a',"haskell"),(2,'b',"ocaml"),(3,'c',"sml"),(4,'d',"scala"),(5,'e',"erlang")]
+λ> 
+
+λ> zip3 [1, 2, 3, 4, 5] ['a', 'b', 'c', 'd', 'e'] ["haskell", "ocaml", "sml", "scala"]
+[(1,'a',"haskell"),(2,'b',"ocaml"),(3,'c',"sml"),(4,'d',"scala")]
+λ> 
+
+λ> zip3 [4, 5] ['a', 'b', 'c', 'd', 'e'] ["haskell", "ocaml", "sml", "scala"]
+[(4,'a',"haskell"),(5,'b',"ocaml")]
+λ> 
+λ> 
+
+λ> import Data.List
+λ> 
+λ> zip4 [1..5] [5..15] ['a'..'z'] (replicate 4 Nothing)
+[(1,5,'a',Nothing),(2,6,'b',Nothing),(3,7,'c',Nothing),(4,8,'d',Nothing)]
+λ> 
+```
+
+Example: Unzip
+
+```haskell
+λ> unzip [(1,10),(3,30),(4,40),(5,50),(6,60)]
+([1,3,4,5,6],[10,30,40,50,60])
+λ> 
+
+λ> unzip [(1,'a'),(2,'b'),(3,'c'),(4,'d'),(5,'e')]
+([1,2,3,4,5],"abcde")
+λ> 
+
+λ> import Data.List
+
+λ> unzip3 [(1,'a',"haskell"),(2,'b',"ocaml"),(3,'c',"sml"),(4,'d',"scala")]
+([1,2,3,4],"abcd",["haskell","ocaml","sml","scala"])
+λ> 
+
+λ> unzip4 [(1,5,'a',Nothing),(2,6,'b',Nothing),(3,7,'c',Nothing),(4,8,'d',Nothing)]
+([1,2,3,4],[5,6,7,8],"abcd",[Nothing,Nothing,Nothing,Nothing])
+λ> 
+```
+
+
+#### ZipWith 
+
+ZipWith function applies a function of two arguments to each elements of two given lists returning a new list.
+
+Defined in Prelude
+
+```haskell
+zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]
+zipWith3 :: (a -> b -> c -> d) -> [a] -> [b] -> [c] -> [d]
+```
+
+Defined in Data.List
+
+```haskell
+import Data.List
+zipWith4   :: (a -> b -> c -> d -> e) -> [a] -> [b] -> [c] -> [d] -> [e]
+zipWith5   :: (a -> b -> c -> d -> e -> f) -> [a] -> [b] -> [c] -> [d] -> [e] -> [f]
+zipWith7   :: (a -> b -> c -> d -> e -> f -> g -> h) -> [a] -> [b] -> [c] -> [d] -> [e] -> [f] -> [g] -> [h]
+```
+
+Examples:
+
+```haskell
+
+{- 
+
+ZipWith takes a function of two arguments and two lists 
+returning a new one
+
+    ->  (a -> b -> c)   : Function of two arguments returning type c
+    ->  [a]            :  List of type a
+    ->  [b]            :  List of type b
+    
+    Returns 
+    ->  [c]            :  List of type c
+-}
+λ> :t zipWith
+zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]
+λ> 
+
+λ> :t (+)
+(+) :: Num a => a -> a -> a
+λ> 
+
+
+{- Add each element of two lists -}
+λ> zipWith (+) [1, 2, 3, 4] [9, 10, 3, 5]
+[10,12,6,9]
+λ> 
+λ> 
+
+{- Multiply each element of two lists-}
+λ> zipWith (*) [1, 2, 3, 4] [9, 10, 3, 5]
+[9,20,9,20]
+λ> 
+
+{- Subtract each element of two lists -}
+λ> zipWith (-) [1, 2, 3, 4] [9, 10, 3, 5]
+[-8,-8,0,-1]
+λ> 
+
+{- zipWith with anonymous functions -}
+
+λ> zipWith (\x y -> 10*x + 4*y) [10, 20, 30] [3, 4, 5]
+[112,216,320]
+λ> 
+λ> let f = zipWith (\x y -> 10*x + 4*y)
+λ> 
+λ> f [10, 20, 30] [3, 4, 5]
+[112,216,320]
+λ> 
+
+
+{- New functions can be created by curring arguments -}
+
+λ> let addVectors = zipWith (+)
+λ> let subVectors = zipWith (-)
+λ> let mulVectors = zipWith (*)
+λ> 
+λ> :t addVectors 
+addVectors :: [Integer] -> [Integer] -> [Integer]
+λ> :t subVectors 
+subVectors :: [Integer] -> [Integer] -> [Integer]
+λ> :t mulVectors 
+mulVectors :: [Integer] -> [Integer] -> [Integer]
+λ> 
+
+λ> addVectors [1, 2, 3, 4] [9, 10, 3, 5]
+[10,12,6,9]
+λ> 
+λ> subVectors [1, 2, 3, 4] [9, 10, 3, 5]
+[-8,-8,0,-1]
+λ> mulVectors [1, 2, 3, 4] [9, 10, 3, 5]
+[9,20,9,20]
+λ> 
+
+{- Using Functions as operators -}
+
+λ> [1, 2, 3, 4]  `addVectors` [9, 10, 3, 5]
+[10,12,6,9]
+λ> 
+λ> 
+λ> [1, 2, 3, 4]  `subVectors` [9, 10, 3, 5]
+[-8,-8,0,-1]
+λ> 
+λ> [1, 2, 3, 4]  `mulVectors` [9, 10, 3, 5]
+[9,20,9,20]
+λ> 
+
+λ> let f x y z = x*y*z 
+
+λ> zipWith3 f [1, 3, 4, 8] [4, 5, 9] [8, 7, 3]
+[32,105,108]
+λ> 
+λ> let zf = zipWith3 f
+λ> 
+λ> zf [1, 3, 4, 8] [4, 5, 9] [8, 7, 3]
+[32,105,108]
+λ> 
+
+λ> import Data.List
+λ> 
+λ> zipWith4 g [12, 34, 1, 4] [8, 19, 33, 23] [5, 7, 8, 9] [33, 78, 17, 14]
+[337,2371,-1277,-929]
+λ> 
+
+λ> let g1 = zipWith4 g [12, 34, 1, 4] 
+λ> g1 [8, 19, 33, 23] [5, 7, 8, 9] [33, 78, 17, 14]
+[337,2371,-1277,-929]
+
+λ> let g2 = g1 [8, 19, 33, 23]
+λ> g2 [5, 7, 8, 9] [33, 78, 17, 14]
+[337,2371,-1277,-929]
+
+λ> let g3 = g2 [5, 7, 8, 9]
+λ> g3  [33, 78, 17, 14]
+[337,2371,-1277,-929]
+
+λ> let g4 = g3 [33, 78, 17, 14]
+λ> g4
+[337,2371,-1277,-929]
+λ> 
+
+``` 
+
+
+#### Replicate
+
+Replicate an element of type a n times.
+```
+replicate :: Int -> a -> [a]
+```
+
+Example:
+```haskell
+λ> :t replicate 
+replicate :: Int -> a -> [a]
+λ> 
+
+λ> replicate 4 'a'
+"aaaa"
+λ> replicate 6 2.345
+[2.345,2.345,2.345,2.345,2.345,2.345]
+λ> 
+
+{- You can also replicate functions -}
+λ> let f = replicate 3 (+1)
+λ> :t f
+f :: [Integer -> Integer]
+λ> 
+λ> map ($ 5) f
+[6,6,6]
+λ> 
+
+λ> replicate 3 (Just 5)
+[Just 5,Just 5,Just 5]
+λ> 
+λ> replicate 3 Nothing
+[Nothing,Nothing,Nothing]
+λ> 
+
+```
 
 #### Other Useful higher-order functions
 
@@ -2411,69 +2793,6 @@ replicate :: Int -> a -> [a]
 takeWhile :: (a -> Bool) -> [a] -> [a]
 ```
 
-#### The $ apply operator.
-
-```haskell
-f $ x = f x
-
-λ> :t ($)
-($) :: (a -> b) -> a -> b
-```
-
-Example: This operator is useful to apply an argument to a list of functions.
-
-```haskell
-λ> ($ 10) (*3)
-30
-λ> 
-λ> let f x = x*8 - 4
-λ> 
-λ> ($ 10) f
-76
-λ> 
-
-λ> map ($ 3) [(*3), (+4), (^3)]
-[9,7,27]
-λ> 
-
-```
-
-OR
-
-```haskell
-λ> let apply x f = f x
-λ> 
-λ> map (apply 3)  [(*3), (+4), (^3)]
-[9,7,27]
-λ> 
-
-```
-
-See also the Clojure function [juxt](https://clojuredocs.org/clojure.core/juxt)
-
-Apply a set of functions to a single argument.
-
-```haskell
-λ> let juxt fs x = map ($ x) fs
-
-λ> juxt [(*3), (+4), (/10)] 30
-[90.0,34.0,3.0]
-λ> 
-λ> let fs = juxt [(*3), (+4), (/10)]
-λ> 
-λ> :t fs
-fs :: Double -> [Double]
-λ>
-λ> fs 30
-[90.0,34.0,3.0]
-λ> fs 40
-[120.0,44.0,4.0]
-λ> 
-λ> map fs [10, 20, 30]
-[[30.0,14.0,1.0],[60.0,24.0,2.0],[90.0,34.0,3.0]]
-λ> 
-λ> 
-```
 
 ### Functions to Manipulate Characters and Strings
 
@@ -3484,6 +3803,8 @@ class Monad m where
 * Writer Monad
 * Reader Monad
 * State Monad
+ 
+
 
 
 #### Bind Operator
@@ -4720,6 +5041,43 @@ liftM (map $ uncurry (+)) readSquareFile :: IO [Int]
 ## Useful Custom Functions/ Iterators and Operators
 
 This a collection of useful short code snippets. 
+
+
+### Pipelining Operators
+
+Haskell doesn't have a native Pipe operator like F# (F-Sharp) does, however
+it can be defined by the user.
+
+```haskell
+
+> let (|>) x f = f x
+> 
+> let (|>>) x f = map f x
+
+> let (?>>) x f = filter f x
+
+
+> take 3 (reverse (filter even [1..10]))
+[10,8,6]
+
+> [1..10] |> filter even |> reverse |> take 3
+[10,8,6]
+> 
+
+
+> [1..10] |>> (^2) |>> (/10) |>> (+100)
+[100.1,100.4,100.9,101.6,102.5,103.6,104.9,106.4,108.1,110.0]
+
+> 
+> [1..10] ?>> even
+[2,4,6,8,10]
+> 
+> [1..10] ?>> even |>> (+1)
+[3,5,7,9,11]
+> 
+> 
+
+```
 
 ### Iterators
 
@@ -6620,7 +6978,7 @@ Dohaskell is a tagged Haskell learning resources index. U
 
 * http://www.dohaskell.com/
 
-#### Libraries Documentation
+### Libraries Documentation
 
 #### Prelude
 

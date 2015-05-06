@@ -3,7 +3,7 @@ index:
 	doctoc  README.md
 
 html:
-	grip README.md --gfm --export ./LearnHaskell.html
+	grip README.md --gfm --export ./README.html
 
 tags:
 	git tag
