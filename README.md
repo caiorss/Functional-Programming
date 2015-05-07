@@ -250,7 +250,7 @@ GHCI Interactive Shell
 | :reload or :r                    |  Reload Code after it was edited      |
 | :type [symbol]   or :t [symbol]          |  Show the Type of a Symbol   |
 | :browse                    |  Gives the type signature of all functions  |
-| :set +s                     |  Multiline Code                             |
+| :set +s                     |  Print timing/memory stats after each evaluation |
 | :{ [code here ] :}        |    Multiline Code                            |
 | :set prompt ">"             |  Change the prompt to ">"                   |
 | :cd [directory]       | change the current working directory to [directory] |
