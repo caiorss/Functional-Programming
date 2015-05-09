@@ -450,18 +450,18 @@ Reverse list function purified:
 Example in Haskell: 
 
 ```haskell
-λ> let lazylist = [2..1000000000]
-λ> 
-λ> let f x = x^6 
-λ> 
-λ> take 5 lazylist 
+> let lazylist = [2..1000000000]
+> 
+> let f x = x^6 
+> 
+> take 5 lazylist 
 [2,3,4,5,6]
-λ>
-λ>
-λ> {- Only the terms needed are computed. -}
-λ> take 5 ( map f lazylist )
+>
+>
+> {- Only the terms needed are computed. -}
+> take 5 ( map f lazylist )
 [64,729,4096,15625,46656]
-λ> 
+> 
 ```
 
 Example in Python:
@@ -514,8 +514,6 @@ f = lambda x: x**5
 >>> 
 
 ```
-
-
 
 ## Basic Syntax
 
@@ -887,6 +885,12 @@ h :: ( a -> b) -> (b -> c) -> ( a -> m b)
 
 ### Lists
 
+Haskell lists are built from nils ([]) empty list, and cons (:).
+
+```haskell
+[x0, x1, x2, x3, ..., xn-1, xn] = x0:x1:x2:x3:...:xn-1:xn:[]
+```
+
 #### Creating Lists
 
 ```haskell
@@ -1075,6 +1079,22 @@ DropWhile p xs returns the suffix remaining after takeWhile p xs:
 
 ```
 
+Concating Nested Lists
+
+```haskell
+> :t concat
+concat :: [[a]] -> [a]
+
+> concat [[1, 2], [], [233, 33], [1, 2, 3]]
+[1,2,233,33,1,2,3]
+
+> concat ["hello", " world", " Haskell", "FP"]
+"hello world HaskellFP"
+> 
+ 
+
+```
+
 
 #### Chekings Lists
 
@@ -1244,16 +1264,16 @@ x + y is equivalent to add x y or (+ x y)
 |------------|----------------------|----------------|------|
 | (&&)        |  \x y -> x && y         | (&&) :: Bool -> Bool -> Bool | And |
 | (||)       |  \x y z -> x || y        | (||) :: Bool -> Bool -> Bool | Or |
-| (not)       | not x                   |  not :: Bool -> Bool | Not |
+| (not)       | not x                   |  not :: Bool -> Bool         | Not |
 
 **List and Tuples Operators**
 
-| Shorthand  |  Equivalence         | Type Signature |
-|------------|----------------------|----------------|
-| (,)        |  \x y -> (x, y)      | (,) :: a -> b -> (a, b) |
-| (,,)       |  \x y z -> (x, y, z) | (,,) :: a -> b -> c -> (a, b, c) |
-| (!!)       | alist !! i = alist[i] |  (!!) :: [a] -> Int -> a |
-
+| Shorthand  |  Equivalence         | Type Signature                   | Name            |
+|------------|----------------------|----------------------------------|-----------------|
+| (,)        |  \x y -> (x, y)      | (,) :: a -> b -> (a, b)          | Tuple of two elements |
+| (,,)       |  \x y z -> (x, y, z) | (,,) :: a -> b -> c -> (a, b, c) | Tuple of three elements |
+| (!!)       | alist !! i = alist[i] |  (!!) :: [a] -> Int -> a        | Nth element of a list |
+| (:)        | \x xs -> x:xs       | (:) :: a -> [a] -> [a]           | Cons            |
 
 **Examples**
 
@@ -1271,7 +1291,7 @@ x + y is equivalent to add x y or (+ x y)
 > map ((-) 100) [10, 20, 80, -50]
 [90,80,20,150]
 > 
-λ> map (flip (-)100) [10, 20, 80, -50]
+> map (flip (-)100) [10, 20, 80, -50]
 [-90,-80,-20,-150]
 
 
@@ -1298,12 +1318,12 @@ x + y is equivalent to add x y or (+ x y)
 11.313708498984761
 >
 
-λ> map ((**) 0.5) [1, 2, 3, 4]
+> map ((**) 0.5) [1, 2, 3, 4]
 [0.5,0.25,0.125,6.25e-2]
 
-λ> map ((flip (**)) 0.5) [1, 2, 3, 4]
+> map ((flip (**)) 0.5) [1, 2, 3, 4]
 [1.0,1.4142135623730951,1.7320508075688772,2.0]
-λ> 
+> 
 
 > (,) 4 5
 (4,5)
@@ -1361,7 +1381,7 @@ False
 > 
 > filter (>30) [60, 380, 23, 1, 100]
 [60,380,100]
-λ> 
+> 
 
 > (==) 100 10
 False
@@ -1405,6 +1425,63 @@ False
 > 
 > :t (^)
 (^) :: (Integral b, Num a) => a -> b -> a
+
+{- Cons Operator -}
+> :t (:)
+(:) :: a -> [a] -> [a]
+> 
+
+> (1:) [9, 2, 3, 4]
+[1,9,2,3,4]
+> 
+
+> (:) 1 []
+[1]
+
+> (:) 1 [0, 3, 5, 6]
+[1,0,3,5,6]
+> 
+
+
+> map (-1:) [[1, 2, 3], [5, 6], [0]]
+[[-1,1,2,3],[-1,5,6],[-1,0]]
+> 
+
+> map ((:) 89) [[1, 2, 3], [5, 6], [0]]
+[[89,1,2,3],[89,5,6],[89,0]]
+> 
+
+
+> 1:[]
+[1]
+> 1:2:[]
+[1,2]
+> 1:2:3:[]
+[1,2,3]
+> 
+
+> 1:[0]
+[1,0]
+> 2:1:[0]
+[2,1,0]
+> 
+
+> (2:[1, 9, 8, 10])
+[2,1,9,8,10]
+> 
+
+> (:[1, 2, 3, 4])  0
+[0,1,2,3,4]
+> 
+
+> map (:[1, 2, 3, 4])  [89, 77, 55, 66]
+[[89,1,2,3,4],[77,1,2,3,4],[55,1,2,3,4],[66,1,2,3,4]]
+> 
+
+> map (:["haskell "])  ["amazing", "awsome", "cool" ]
+[["amazing","haskell "],["awsome","haskell "],["cool","haskell "]]
+> 
+
 
 ```
 
@@ -1517,37 +1594,37 @@ inverted_predicate == not . predicate
 ```
 
 ```haskell
-λ> not True
+> not True
 False
-λ> not False
+> not False
 True
-λ> 
+> 
 
-λ> (>5) 10
+> (>5) 10
 True
-λ> (>5) 3
+> (>5) 3
 False
 
-λ> not . (>5) $ 10
+> not . (>5) $ 10
 False
-λ> not . (>5) $ 3
+> not . (>5) $ 3
 True
-λ> 
+> 
 
-λ> let f = not . (>5)
-λ> f 10
+> let f = not . (>5)
+> f 10
 False
-λ> f 5
+> f 5
 True
 
-λ> import Data.List
-λ> 
-λ> filter ( isPrefixOf "a" ) ["a","ab","cd","abcd","xyz"]
+> import Data.List
+> 
+> filter ( isPrefixOf "a" ) ["a","ab","cd","abcd","xyz"]
 ["a","ab","abcd"]
-λ> 
-λ> filter ( not . isPrefixOf "a" ) ["a","ab","cd","abcd","xyz"]
+> 
+> filter ( not . isPrefixOf "a" ) ["a","ab","cd","abcd","xyz"]
 ["cd","xyz"]
-λ> 
+> 
 
 
 ```
@@ -1556,191 +1633,191 @@ True
 Example:
 
 ```haskell
-λ> let f = (+4)
-λ> let g = (*3)
-λ> 
-λ> 
-λ> f (g 6) -- (+4) ((*3) 6) = (+4) 18 = 22
+> let f = (+4)
+> let g = (*3)
+> 
+> 
+> f (g 6) -- (+4) ((*3) 6) = (+4) 18 = 22
 22
-λ> 
-λ> (f . g) 6
+> 
+> (f . g) 6
 22
-λ> 
-λ> (.) f g 6
+> 
+> (.) f g 6
 22
-λ> 
-λ> let h = f . g
-λ> 
-λ> h 6
+> 
+> let h = f . g
+> 
+> h 6
 22
-λ>  
+>  
 
-λ> id 10
+> id 10
 10
-λ> id 3
+> id 3
 3
-λ> 
-λ> id Nothing
+> 
+> id Nothing
 Nothing
-λ> id 'a'
+> id 'a'
 'a'
-λ> id (Just 10)
+> id (Just 10)
 Just 10
-λ> 
+> 
 
 
-λ> (f . id) 10
+> (f . id) 10
 14
-λ> (id . f) 10
+> (id . f) 10
 14
-λ> 
+> 
 
-λ> const 10 20
+> const 10 20
 10
-λ> const 10 3
+> const 10 3
 10
-λ> 
+> 
 
-λ> (f . (const 10)) 4
+> (f . (const 10)) 4
 14
-λ> (f . (const 10)) 3
+> (f . (const 10)) 3
 14
-λ> const 10 . f $ 7
+> const 10 . f $ 7
 10
-λ> const 10 . f $ 3
+> const 10 . f $ 3
 10
-λ> 
+> 
 
 {- Avoiding Parenthesis with composition -}
-λ> let g x = x * 2
-λ> let f x = x + 10
-λ> let h x = x - 5
-λ> 
-λ> h (f (g 3))
+> let g x = x * 2
+> let f x = x + 10
+> let h x = x - 5
+> 
+> h (f (g 3))
 11
-λ> h $ f $ g 3
+> h $ f $ g 3
 11
-λ> 
-λ> (h . f . g ) 3
+> 
+> (h . f . g ) 3
 11
-λ> h . f . g $ 3
+> h . f . g $ 3
 11
-λ> 
+> 
 
 {- Function Composition with curried functions -}
 
-λ> let f1 x y = 10*x + 4*y
-λ> let f2 a b c = 4*a -3*b + 2*c
-λ> let f3 x = 3*x
+> let f1 x y = 10*x + 4*y
+> let f2 a b c = 4*a -3*b + 2*c
+> let f3 x = 3*x
 
-λ> (f1 3 ( f3 5))
+> (f1 3 ( f3 5))
 90
-λ> 
-λ> f1 3 $ f3 5
+> 
+> f1 3 $ f3 5
 90
-λ> 
-λ> f1 3 . f3 $ 5
+> 
+> f1 3 . f3 $ 5
 90
-λ> 
-λ> let f = f1 3 . f3 
-λ> 
-λ> f 5
+> 
+> let f = f1 3 . f3 
+> 
+> f 5
 90
-λ> f 8
+> f 8
 126
-λ> 
+> 
 
 
-λ> (f1 4 (f2 5 6 (f3 5)))
+> (f1 4 (f2 5 6 (f3 5)))
 168
-λ> 
-λ> f1 4 $ f2 5 6 $ f3 5
+> 
+> f1 4 $ f2 5 6 $ f3 5
 168
-λ> 
-λ> f1 4 . f2 5 6 . f3 $ 5
+> 
+> f1 4 . f2 5 6 . f3 $ 5
 168
-λ> 
-λ> let g = f1 4 . f2 5 6 . f3 {- You can also create new functions -}
-λ> :t g
+> 
+> let g = f1 4 . f2 5 6 . f3 {- You can also create new functions -}
+> :t g
 g :: Integer -> Integer
-λ> g 5
+> g 5
 168
-λ> g 10
+> g 10
 288
-λ> 
+> 
 
 {- Function Composition with Map and Filter -}
 
-λ> import Data.Char
+> import Data.Char
 
-λ> :t ord
+> :t ord
 ord :: Char -> Int
 
-λ> :t ordStr
+> :t ordStr
 ordStr :: [Char] -> [Int]
-λ> 
+> 
 
-λ> ordStr "curry"
+> ordStr "curry"
 [99,117,114,114,121]
-λ> 
-λ> let r x= x + 30
-λ> 
-λ> map r (ordStr "curry")
+> 
+> let r x= x + 30
+> 
+> map r (ordStr "curry")
 [129,147,144,144,151]
-λ> 
-λ> map r $ ordStr "curry"
+> 
+> map r $ ordStr "curry"
 [129,147,144,144,151]
-λ> 
-λ> map r . ordStr $ "curry"
+> 
+> map r . ordStr $ "curry"
 [129,147,144,144,151]
-λ> 
-λ> sum . map r . ordStr $ "curry"
+> 
+> sum . map r . ordStr $ "curry"
 715
-λ> 
+> 
 
-λ> let s =  map r . ordStr
-λ> s "curry"
+> let s =  map r . ordStr
+> s "curry"
 [129,147,144,144,151]
-λ> s "haskell"
+> s "haskell"
 [134,127,145,137,131,138,138]
-λ> 
+> 
 
 let sum_ord = sum . map r . ordStr 
 
-λ> sum_s "curry"
+> sum_s "curry"
 715
-λ> sum_s "haskell"
+> sum_s "haskell"
 950
-λ> 
-λ> sum_ord "curry"
+> 
+> sum_ord "curry"
 715
-λ> sum_ord "haskell"
+> sum_ord "haskell"
 950
-λ> 
+> 
 
 
-λ> map ord (map toUpper "haskell")
+> map ord (map toUpper "haskell")
 [72,65,83,75,69,76,76]
-λ> 
-λ> map ord . map toUpper $ "haskell"
+> 
+> map ord . map toUpper $ "haskell"
 [72,65,83,75,69,76,76]
-λ> 
+> 
 
-λ> map (flip (-) 10) . map ord . map toUpper $ "haskell"
+> map (flip (-) 10) . map ord . map toUpper $ "haskell"
 [62,55,73,65,59,66,66]
-λ> 
+> 
 
-λ> map chr . map (flip (-) 10) . map ord . map toUpper $ "haskell"
+> map chr . map (flip (-) 10) . map ord . map toUpper $ "haskell"
 ">7IA;BB"
-λ> 
+> 
 
 {- The function f is in point free style -}
 
-λ> let f = map chr . map (flip (-) 10) . map ord . map toUpper
-λ> 
-λ> f "haskell"
+> let f = map chr . map (flip (-) 10) . map ord . map toUpper
+> 
+> f "haskell"
 ">7IA;BB"
-λ> 
+> 
 
 ```
 
@@ -1753,36 +1830,36 @@ let sum_ord = sum . map r . ordStr
 ```haskell
 f $ x = f x
 
-λ> :t ($)
+> :t ($)
 ($) :: (a -> b) -> a -> b
 ```
 
 Example: This operator is useful to apply an argument to a list of functions.
 
 ```haskell
-λ> ($ 10) (*3)
+> ($ 10) (*3)
 30
-λ> 
-λ> let f x = x*8 - 4
-λ> 
-λ> ($ 10) f
+> 
+> let f x = x*8 - 4
+> 
+> ($ 10) f
 76
-λ> 
+> 
 
-λ> map ($ 3) [(*3), (+4), (^3)]
+> map ($ 3) [(*3), (+4), (^3)]
 [9,7,27]
-λ> 
+> 
 
 ```
 
 OR
 
 ```haskell
-λ> let apply x f = f x
-λ> 
-λ> map (apply 3)  [(*3), (+4), (^3)]
+> let apply x f = f x
+> 
+> map (apply 3)  [(*3), (+4), (^3)]
 [9,7,27]
-λ> 
+> 
 
 ```
 
@@ -1791,25 +1868,25 @@ See also the Clojure function [juxt](https://clojuredocs.org/clojure.core/juxt)
 Apply a set of functions to a single argument.
 
 ```haskell
-λ> let juxt fs x = map ($ x) fs
+> let juxt fs x = map ($ x) fs
 
-λ> juxt [(*3), (+4), (/10)] 30
+> juxt [(*3), (+4), (/10)] 30
 [90.0,34.0,3.0]
-λ> 
-λ> let fs = juxt [(*3), (+4), (/10)]
-λ> 
-λ> :t fs
+> 
+> let fs = juxt [(*3), (+4), (/10)]
+> 
+> :t fs
 fs :: Double -> [Double]
-λ>
-λ> fs 30
+>
+> fs 30
 [90.0,34.0,3.0]
-λ> fs 40
+> fs 40
 [120.0,44.0,4.0]
-λ> 
-λ> map fs [10, 20, 30]
+> 
+> map fs [10, 20, 30]
 [[30.0,14.0,1.0],[60.0,24.0,2.0],[90.0,34.0,3.0]]
-λ> 
-λ> 
+> 
+> 
 ```
 
 
@@ -1886,128 +1963,128 @@ Exaples:
 
 {- Division Quotient -}
 
-λ> quot 70 8
+> quot 70 8
 8
-λ> 
-λ> quot (-80)  8
+> 
+> quot (-80)  8
 -10
-λ> 
-λ> 80 `quot` 8
+> 
+> 80 `quot` 8
 10
-λ> 
+> 
 
-λ> div 100 8
+> div 100 8
 12
-λ> 
-λ> div (-100) 8
+> 
+> div (-100) 8
 -13
-λ> quot (-100) 8
+> quot (-100) 8
 -12
-λ> 
-λ> 100 `div` 8
+> 
+> 100 `div` 8
 12
-λ> 
+> 
 
 {- Remainder-}
 
-λ> rem 100 12
+> rem 100 12
 4
-λ> rem 100 10
+> rem 100 10
 0
-λ> 100 `rem` 12
+> 100 `rem` 12
 4
-λ> 100 `rem` 10
+> 100 `rem` 10
 0
-λ> 
-λ> rem (-100) 12
+> 
+> rem (-100) 12
 -4
-λ> rem (-100) 10
+> rem (-100) 10
 0
-λ> (-100) `rem` 12
+> (-100) `rem` 12
 -4
-λ> (-100) `rem` 10
+> (-100) `rem` 10
 0
-λ> 
+> 
 
 
-λ> mod 100 12
+> mod 100 12
 4
-λ> mod 100 10
+> mod 100 10
 0
-λ> 100 `mod` 12
+> 100 `mod` 12
 4
-λ> 100 `mod` 10
+> 100 `mod` 10
 0
-λ> 
-λ> mod (-100) 12
+> 
+> mod (-100) 12
 8
-λ> 
-λ> (-100) `mod` 12
+> 
+> (-100) `mod` 12
 8
-λ> 
+> 
 
 
 {- DivMod Quotient and Modulus of Division -}
 
-λ> divMod 100 12
+> divMod 100 12
 (8,4)
-λ> divMod 100 10
+> divMod 100 10
 (10,0)
-λ> 100 `divMod` 12
+> 100 `divMod` 12
 (8,4)
-λ> 100 `divMod` 10
+> 100 `divMod` 10
 (10,0)
-λ> 
-λ> divMod (-100) 12
+> 
+> divMod (-100) 12
 (-9,8)
-λ> divMod (-100) 10
+> divMod (-100) 10
 (-10,0)
-λ> 
+> 
 
 
 {- Odd / Even Test -}
 
-λ> even 20
+> even 20
 True
-λ> even 31
+> even 31
 False
 
-λ> odd 20
+> odd 20
 False
-λ> odd 31
+> odd 31
 True
 
-λ> [1..10]
+> [1..10]
 [1,2,3,4,5,6,7,8,9,10]
-λ> filter odd [1..10]
+> filter odd [1..10]
 [1,3,5,7,9]
-λ> filter even [1..10]
+> filter even [1..10]
 [2,4,6,8,10]
-λ> 
+> 
 
 {- Greatest Common Divisor -}
 
-λ> gcd 840 15
+> gcd 840 15
 15
-λ> 
-λ> gcd 21 14
+> 
+> gcd 21 14
 7
-λ> 
-λ> 
+> 
+> 
 
-λ> foldl1 gcd [21, 14, 35, 700]
+> foldl1 gcd [21, 14, 35, 700]
 7
-λ> 
+> 
 
 
 {- Lowest Common Multiple -}
 
-λ> lcm 9 36
+> lcm 9 36
 36
-λ> 
-λ> lcm 15 35
+> 
+> lcm 15 35
 105
-λ> 
+> 
 {- 
     Lowest Common multiple of a list of numbers
     15 = 3 x 5
@@ -2017,9 +2094,9 @@ True
     
     lcm = 3 x 5 x 8 = 840
 -}
-λ> foldl1 lcm [15, 35, 20, 40]
+> foldl1 lcm [15, 35, 20, 40]
 840
-λ> 
+> 
 ```
 
 Reference:
@@ -2035,103 +2112,103 @@ Negate, Sqrt, Log, Exp and Power
 
 {- Negate -}
 
-λ> negate 100
+> negate 100
 -100
-λ> negate 100.324
+> negate 100.324
 -100.324
-λ> 
+> 
 
 
 {- Natural logarithm -}
-λ> log 10
+> log 10
 2.302585092994046
-λ> 
+> 
 
 {- Logarithm to any base -}
 
-λ> let log10 = logBase 10
-λ> let log2  = logBase 2
-λ> 
-λ> log10 100
+> let log10 = logBase 10
+> let log2  = logBase 2
+> 
+> log10 100
 2.0
-λ> map log10 [1, 10, 20, 100, 1000]
+> map log10 [1, 10, 20, 100, 1000]
 [0.0,1.0,1.3010299956639813,2.0,3.0]
-λ> 
-λ> map log2 [1, 2, 4, 8, 16]
+> 
+> map log2 [1, 2, 4, 8, 16]
 [0.0,1.0,2.0,3.0,4.0]
-λ> 
+> 
 
 {- Square Root -}
-λ> sqrt 100
+> sqrt 100
 10.0
-λ> sqrt 10
+> sqrt 10
 3.1622776601683795
-λ> 
+> 
 
 {- Exponential function -}
-λ> exp 1
+> exp 1
 2.718281828459045
-λ> exp 2
+> exp 2
 7.38905609893065
-λ> 
+> 
 
 {- Pow/ Power Function x^y-}
 
-λ> sqrt 2
+> sqrt 2
 1.4142135623730951
-λ> 2 ** 0.5
+> 2 ** 0.5
 1.4142135623730951
-λ> 
+> 
 
-λ> 2** 3
+> 2** 3
 8.0
-λ> 
-λ> (**) 2 3
+> 
+> (**) 2 3
 8.0
-λ> 
+> 
 
-λ> map round [13.03123, 13.20, 13.50, 13.60, 13.992]
+> map round [13.03123, 13.20, 13.50, 13.60, 13.992]
 [13,13,14,14,14]
-λ> 
+> 
 ```
 
 Trigonometric Functions
 
 ```haskell
 
-λ> pi
+> pi
 3.141592653589793
-λ>
+>
 
-λ> sin pi
+> sin pi
 1.2246063538223773e-16
-λ> 
-λ> sin (pi/3)
+> 
+> sin (pi/3)
 0.8660254037844386
-λ> 
-λ> asin (0.8660254037844386) == pi/3
+> 
+> asin (0.8660254037844386) == pi/3
 True
-λ> 
+> 
 
 
-λ> cos pi
+> cos pi
 -1.0
-λ>
-λ> acos (-1)
+>
+> acos (-1)
 3.141592653589793
-λ> acos (-1) == pi
+> acos (-1) == pi
 True
-λ> 
+> 
 
 
 
-λ> atan 1
+> atan 1
 0.7853981633974483
-λ> 
+> 
 
-λ> atan2 1 (-1)
+> atan2 1 (-1)
 2.356194490192345
-λ> 
+> 
 ```
 
 
@@ -2139,48 +2216,48 @@ Floor, Round, Ceil
 
 ```haskell
 
-λ> map round [13.03123, 13.20, 13.50, 13.60, 13.992]
+> map round [13.03123, 13.20, 13.50, 13.60, 13.992]
 [13,13,14,14,14]
-λ> 
+> 
 
-λ> map truncate  [13.03123, 13.20, 13.50, 13.60, 13.992]
+> map truncate  [13.03123, 13.20, 13.50, 13.60, 13.992]
 [13,13,13,13,13]
-λ> 
+> 
 
-λ> map floor [13.03123, 13.20, 13.50, 13.60, 13.992]
+> map floor [13.03123, 13.20, 13.50, 13.60, 13.992]
 [13,13,13,13,13]
-λ> 
+> 
 
-λ> map ceiling [13.03123, 13.20, 13.50, 13.60, 13.992]
+> map ceiling [13.03123, 13.20, 13.50, 13.60, 13.992]
 [14,14,14,14,14]
-λ> 
+> 
 ```
 
 
 Convert Interger to Float Point
 
 ```haskell
-λ> let inv x = 1/x
+> let inv x = 1/x
 
-λ> :t inv
+> :t inv
 inv :: Fractional a => a -> a
-λ> 
+> 
 
 
-λ> let v = [1..10]
-λ> v
+> let v = [1..10]
+> v
 [1,2,3,4,5,6,7,8,9,10]
-λ> :t v
+> :t v
 v :: [Integer]
-λ> 
+> 
 
-λ> inv 10
+> inv 10
 0.1
-λ> inv 0.1
+> inv 0.1
 10.0
-λ> 
+> 
 
-λ> map inv v
+> map inv v
 
 <interactive>:20:5:
     No instance for (Fractional Integer) arising from a use of `inv'
@@ -2189,9 +2266,9 @@ v :: [Integer]
     In the expression: map inv v
     In an equation for `it': it = map inv v
 
-λ> map (inv . fromInteger) v
+> map (inv . fromInteger) v
 [1.0,0.5,0.3333333333333333,0.25,0.2,0.16666666666666666,0.14285714285714285,0.125,0.1111111111111111,0.1]
-λ> 
+> 
 
 
 ```
@@ -2201,30 +2278,30 @@ v :: [Integer]
 **id Identity Function**
 
 ```haskell
-λ> :t id
+> :t id
 id :: a -> a
 
-λ> 
-λ> id 100
+> 
+> id 100
 100
-λ> id "Hello World"
+> id "Hello World"
 "Hello World"
-λ> 
+> 
 ```
 
 **Constant Function**
 
 ```haskell
-λ> :t const
+> :t const
 const :: a -> b -> a
-λ> 
+> 
 
-λ> let f1 = const 10
-λ> f1 20
+> let f1 = const 10
+> f1 20
 10
-λ> f1 0
+> f1 0
 10
-λ> map f1 [1, 2, 3]
+> map f1 [1, 2, 3]
 [10,10,10]
 
 ``` 
@@ -2520,19 +2597,19 @@ uncurry :: (a -> b -> c) -> (a, b) -> c
 **Example: Uncurrying a function**
 
 ```haskell
-λ> let f x y = 10*x - y
-λ>
-λ> :t f
+> let f x y = 10*x - y
+>
+> :t f
 f :: Num a => a -> a -> a
-λ> 
-λ> 
-λ> f 2 4
+> 
+> 
+> f 2 4
 ```
 
 The problem is: how to map f over a list of pairs of a tuple of values??
 
 ```haskell
-λ> map f [(1, 2), (4, 5), (9, 10)]
+> map f [(1, 2), (4, 5), (9, 10)]
 
 <interactive>:122:5:
     No instance for (Num (t0, t1)) arising from a use of `f'
@@ -2544,49 +2621,49 @@ Solution: Uncurry the function f:
 
 ```haskell
 
-λ> let f' = uncurry f
-λ>
-λ> :t f'
+> let f' = uncurry f
+>
+> :t f'
 f' :: (Integer, Integer) -> Integer
-λ>
-λ> 
-λ> map f' [(1, 2), (4, 5), (9, 10)]
+>
+> 
+> map f' [(1, 2), (4, 5), (9, 10)]
 [8,35,80]
-λ> 
-λ> map (uncurry f) [(1, 2), (4, 5), (9, 10)]
+> 
+> map (uncurry f) [(1, 2), (4, 5), (9, 10)]
 [8,35,80]
-λ> 
+> 
 ```
 
 **Example: Currying a function**
 
 ```haskell
-λ> let g (x, y) = 10*x - y
-λ> 
-λ> :t g
+> let g (x, y) = 10*x - y
+> 
+> :t g
 g :: Num a => (a, a) -> a
-λ> 
-λ> g (2, 4)
+> 
+> g (2, 4)
 16
-λ> 
-λ> g 2 4
+> 
+> g 2 4
 <interactive>:138:1:
     No instance for (Num (a0 -> t0)) arising from a use of `g'
     Possible fix: add an instance declaration for (Num (a0 -> t0))
     In the expression: g 2 4
     In an equation for `it': it = g 2 4
     ...
-λ> 
-λ> let g' = curry g
-λ> :t g'
+> 
+> let g' = curry g
+> :t g'
 g' :: Integer -> Integer -> Integer
-λ> 
-λ> g' 2 4
+> 
+> g' 2 4
 16
-λ> 
-λ> (curry g) 2 4
+> 
+> (curry g) 2 4
 16
-λ> 
+> 
 ```
 
 **Other Examples**
@@ -2595,30 +2672,30 @@ Map a function of 3 arguments and a function of 4 arguments of over a list of tu
 
 ```haskell
 
-λ> let uncurry3 f (a, b, c) = f a b c
-λ> let uncurry4 f (a, b, c, d) = f a b c d
-λ> 
-λ> :t uncurry3
+> let uncurry3 f (a, b, c) = f a b c
+> let uncurry4 f (a, b, c, d) = f a b c d
+> 
+> :t uncurry3
 uncurry3 :: (t1 -> t2 -> t3 -> t) -> (t1, t2, t3) -> t
-λ> 
-λ> :t uncurry4
+> 
+> :t uncurry4
 uncurry4 :: (t1 -> t2 -> t3 -> t4 -> t) -> (t1, t2, t3, t4) -> t
-λ> 
-λ> 
-λ> let f a b c = 10*a -2*(a+c) + 5*c
-λ> 
-λ> 
-λ> map (uncurry3 f) [(2, 3, 5), (4, 9, 2), (3, 7, 9)]
+> 
+> 
+> let f a b c = 10*a -2*(a+c) + 5*c
+> 
+> 
+> map (uncurry3 f) [(2, 3, 5), (4, 9, 2), (3, 7, 9)]
 [31,38,51]
-λ> 
-λ> 
+> 
+> 
 
-λ> 
-λ> let f x y z w = 2*x + 4*y + 10*z + w
-λ> 
-λ> map (uncurry4 f) [(2, 3, 5, 3), (4, 9, 2, 8), (3, 7, 9, 1)]
+> 
+> let f x y z w = 2*x + 4*y + 10*z + w
+> 
+> map (uncurry4 f) [(2, 3, 5, 3), (4, 9, 2, 8), (3, 7, 9, 1)]
 [69,72,125]
-λ> 
+> 
 ```
 
 #### Flip 
@@ -2632,22 +2709,22 @@ flip :: (a -> b -> c) -> b -> a -> c
 Example: 
 
 ```
-λ> let f a b = 10*a + b
-λ> 
-λ> :t f
+> let f a b = 10*a + b
+> 
+> :t f
 f :: Num a => a -> a -> a
 
-λ> 
-λ> f 5 6
+> 
+> f 5 6
 56
-λ>
-λ> f 6 5
+>
+> f 6 5
 65
-λ> 
-λ> 
-λ> (flip f) 5 6
+> 
+> 
+> (flip f) 5 6
 65
-λ> 
+> 
 ```
 
 #### Iterate
@@ -2734,33 +2811,33 @@ with the iterate function
 Apply a predicate p to a list xs and returns the longest prefix, that can be empty of xs of elements that satisfy the predicate.
 
 ```haskell
-λ> :t takeWhile
+> :t takeWhile
 takeWhile :: (a -> Bool) -> [a] -> [a]
-λ> 
+> 
 
 {- Constant Function that always returns True-}
-λ> :t const True
+> :t const True
 const True :: b -> Bool
-λ> 
-λ> takeWhile (const True)  [10, 20, 8, 4, 5, 7, 9] 
+> 
+> takeWhile (const True)  [10, 20, 8, 4, 5, 7, 9] 
 [10,20,8,4,5,7,9]
-λ> 
+> 
 
-λ> takeWhile (const False)  [10, 20, 8, 4, 5, 7, 9] 
+> takeWhile (const False)  [10, 20, 8, 4, 5, 7, 9] 
 []
-λ> 
+> 
 
-λ> takeWhile (>5) [10, 20, 8, 4, 5, 7, 9] 
+> takeWhile (>5) [10, 20, 8, 4, 5, 7, 9] 
 [10,20,8]
-λ> 
+> 
 
-λ> takeWhile (<10) [1, 2, 3, 9, 10, 20, 30]
+> takeWhile (<10) [1, 2, 3, 9, 10, 20, 30]
 [1,2,3,9]
-λ> 
+> 
 
-λ> takeWhile (/='a') "testing a function"
+> takeWhile (/='a') "testing a function"
 "testing "
-λ> 
+> 
 
 
 ```
@@ -2772,22 +2849,22 @@ The function dropWhile apply a predicate p to a list xs and returns the suffix r
 Example:
 
 ```haskell
-λ> :t dropWhile
+> :t dropWhile
 dropWhile :: (a -> Bool) -> [a] -> [a]
-λ> 
+> 
 
-λ> dropWhile (const True) [10, 20, 8, 4, 5, 7, 9] 
+> dropWhile (const True) [10, 20, 8, 4, 5, 7, 9] 
 []
 
-λ> dropWhile (const False) [10, 20, 8, 4, 5, 7, 9] 
+> dropWhile (const False) [10, 20, 8, 4, 5, 7, 9] 
 [10,20,8,4,5,7,9]
 
-λ> dropWhile (>5) [10, 20, 8, 4, 5, 7, 9]
+> dropWhile (>5) [10, 20, 8, 4, 5, 7, 9]
 [4,5,7,9]
 
-λ> dropWhile (/='a') "testing a function"
+> dropWhile (/='a') "testing a function"
 "a function"
-λ> 
+> 
 
 ```
 
@@ -2825,82 +2902,82 @@ unzip6 :: [(a, b, c, d, e, f)] -> ([a], [b], [c], [d], [e], [f])
 Examples: Zip
 
 ```haskell
-λ> zip [1, 3, 4, 5, 6] [10, 30, 40, 50, 60]
+> zip [1, 3, 4, 5, 6] [10, 30, 40, 50, 60]
 [(1,10),(3,30),(4,40),(5,50),(6,60)]
-λ> 
+> 
 
-λ> zip [1, 3, 4, 5, 6] [10, 30, 40]
+> zip [1, 3, 4, 5, 6] [10, 30, 40]
 [(1,10),(3,30),(4,40)]
-λ> 
+> 
 
-λ> zip [5, 6] [10, 30, 40, 50, 60]
+> zip [5, 6] [10, 30, 40, 50, 60]
 [(5,10),(6,30)]
-λ> 
+> 
 
-λ> zip [1, 2, 3, 4, 5] ['a', 'b', 'c', 'd', 'e']
+> zip [1, 2, 3, 4, 5] ['a', 'b', 'c', 'd', 'e']
 [(1,'a'),(2,'b'),(3,'c'),(4,'d'),(5,'e')]
-λ> 
+> 
 
-λ> zip ["haskell", "ocaml", "sml", "scala", "erlang"] ['a', 'b', 'c', 'd', 'e']
+> zip ["haskell", "ocaml", "sml", "scala", "erlang"] ['a', 'b', 'c', 'd', 'e']
 [("haskell",'a'),("ocaml",'b'),("sml",'c'),("scala",'d'),("erlang",'e')]
-λ> 
+> 
 
-λ> zip3 [1, 2, 3, 4, 5] ['a', 'b', 'c', 'd', 'e'] ["haskell", "ocaml", "sml", "scala", "erlang"]
+> zip3 [1, 2, 3, 4, 5] ['a', 'b', 'c', 'd', 'e'] ["haskell", "ocaml", "sml", "scala", "erlang"]
 [(1,'a',"haskell"),(2,'b',"ocaml"),(3,'c',"sml"),(4,'d',"scala"),(5,'e',"erlang")]
-λ> 
+> 
 
-λ> zip3 [1, 2, 3, 4, 5] ['a', 'b', 'c', 'd', 'e'] ["haskell", "ocaml", "sml", "scala"]
+> zip3 [1, 2, 3, 4, 5] ['a', 'b', 'c', 'd', 'e'] ["haskell", "ocaml", "sml", "scala"]
 [(1,'a',"haskell"),(2,'b',"ocaml"),(3,'c',"sml"),(4,'d',"scala")]
-λ> 
+> 
 
-λ> zip3 [4, 5] ['a', 'b', 'c', 'd', 'e'] ["haskell", "ocaml", "sml", "scala"]
+> zip3 [4, 5] ['a', 'b', 'c', 'd', 'e'] ["haskell", "ocaml", "sml", "scala"]
 [(4,'a',"haskell"),(5,'b',"ocaml")]
-λ> 
-λ> 
+> 
+> 
 
-λ> import Data.List
-λ> 
-λ> zip4 [1..5] [5..15] ['a'..'z'] (replicate 4 Nothing)
+> import Data.List
+> 
+> zip4 [1..5] [5..15] ['a'..'z'] (replicate 4 Nothing)
 [(1,5,'a',Nothing),(2,6,'b',Nothing),(3,7,'c',Nothing),(4,8,'d',Nothing)]
-λ> 
+> 
 ```
 
 Example: Unzip
 
 ```haskell
-λ> unzip [(1,10),(3,30),(4,40),(5,50),(6,60)]
+> unzip [(1,10),(3,30),(4,40),(5,50),(6,60)]
 ([1,3,4,5,6],[10,30,40,50,60])
-λ> 
+> 
 
-λ> unzip [(1,'a'),(2,'b'),(3,'c'),(4,'d'),(5,'e')]
+> unzip [(1,'a'),(2,'b'),(3,'c'),(4,'d'),(5,'e')]
 ([1,2,3,4,5],"abcde")
-λ> 
+> 
 
-λ> import Data.List
+> import Data.List
 
-λ> unzip3 [(1,'a',"haskell"),(2,'b',"ocaml"),(3,'c',"sml"),(4,'d',"scala")]
+> unzip3 [(1,'a',"haskell"),(2,'b',"ocaml"),(3,'c',"sml"),(4,'d',"scala")]
 ([1,2,3,4],"abcd",["haskell","ocaml","sml","scala"])
-λ> 
+> 
 
-λ> unzip4 [(1,5,'a',Nothing),(2,6,'b',Nothing),(3,7,'c',Nothing),(4,8,'d',Nothing)]
+> unzip4 [(1,5,'a',Nothing),(2,6,'b',Nothing),(3,7,'c',Nothing),(4,8,'d',Nothing)]
 ([1,2,3,4],[5,6,7,8],"abcd",[Nothing,Nothing,Nothing,Nothing])
-λ> 
+> 
 
-λ> let (x, y) = unzip [(1,'a'),(2,'b'),(3,'c'),(4,'d'),(5,'e')]
-λ> x
+> let (x, y) = unzip [(1,'a'),(2,'b'),(3,'c'),(4,'d'),(5,'e')]
+> x
 [1,2,3,4,5]
-λ> y
+> y
 "abcde"
-λ> 
+> 
 
-λ> let (a, b, c) = unzip3 [(1,'a',"haskell"),(2,'b',"ocaml"),(3,'c',"sml"),(4,'d',"scala")]
-λ> a
+> let (a, b, c) = unzip3 [(1,'a',"haskell"),(2,'b',"ocaml"),(3,'c',"sml"),(4,'d',"scala")]
+> a
 [1,2,3,4]
-λ> b
+> b
 "abcd"
-λ> c
+> c
 ["haskell","ocaml","sml","scala"]
-λ> 
+> 
 
 ```
 
@@ -2941,112 +3018,112 @@ returning a new one
     Returns 
     ->  [c]            :  List of type c
 -}
-λ> :t zipWith
+> :t zipWith
 zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]
-λ> 
+> 
 
-λ> :t (+)
+> :t (+)
 (+) :: Num a => a -> a -> a
-λ> 
+> 
 
 
 {- Add each element of two lists -}
-λ> zipWith (+) [1, 2, 3, 4] [9, 10, 3, 5]
+> zipWith (+) [1, 2, 3, 4] [9, 10, 3, 5]
 [10,12,6,9]
-λ> 
-λ> 
+> 
+> 
 
 {- Multiply each element of two lists-}
-λ> zipWith (*) [1, 2, 3, 4] [9, 10, 3, 5]
+> zipWith (*) [1, 2, 3, 4] [9, 10, 3, 5]
 [9,20,9,20]
-λ> 
+> 
 
 {- Subtract each element of two lists -}
-λ> zipWith (-) [1, 2, 3, 4] [9, 10, 3, 5]
+> zipWith (-) [1, 2, 3, 4] [9, 10, 3, 5]
 [-8,-8,0,-1]
-λ> 
+> 
 
 {- zipWith with anonymous functions -}
 
-λ> zipWith (\x y -> 10*x + 4*y) [10, 20, 30] [3, 4, 5]
+> zipWith (\x y -> 10*x + 4*y) [10, 20, 30] [3, 4, 5]
 [112,216,320]
-λ> 
-λ> let f = zipWith (\x y -> 10*x + 4*y)
-λ> 
-λ> f [10, 20, 30] [3, 4, 5]
+> 
+> let f = zipWith (\x y -> 10*x + 4*y)
+> 
+> f [10, 20, 30] [3, 4, 5]
 [112,216,320]
-λ> 
+> 
 
 
 {- New functions can be created by curring arguments -}
 
-λ> let addVectors = zipWith (+)
-λ> let subVectors = zipWith (-)
-λ> let mulVectors = zipWith (*)
-λ> 
-λ> :t addVectors 
+> let addVectors = zipWith (+)
+> let subVectors = zipWith (-)
+> let mulVectors = zipWith (*)
+> 
+> :t addVectors 
 addVectors :: [Integer] -> [Integer] -> [Integer]
-λ> :t subVectors 
+> :t subVectors 
 subVectors :: [Integer] -> [Integer] -> [Integer]
-λ> :t mulVectors 
+> :t mulVectors 
 mulVectors :: [Integer] -> [Integer] -> [Integer]
-λ> 
+> 
 
-λ> addVectors [1, 2, 3, 4] [9, 10, 3, 5]
+> addVectors [1, 2, 3, 4] [9, 10, 3, 5]
 [10,12,6,9]
-λ> 
-λ> subVectors [1, 2, 3, 4] [9, 10, 3, 5]
+> 
+> subVectors [1, 2, 3, 4] [9, 10, 3, 5]
 [-8,-8,0,-1]
-λ> mulVectors [1, 2, 3, 4] [9, 10, 3, 5]
+> mulVectors [1, 2, 3, 4] [9, 10, 3, 5]
 [9,20,9,20]
-λ> 
+> 
 
 {- Using Functions as operators -}
 
-λ> [1, 2, 3, 4]  `addVectors` [9, 10, 3, 5]
+> [1, 2, 3, 4]  `addVectors` [9, 10, 3, 5]
 [10,12,6,9]
-λ> 
-λ> 
-λ> [1, 2, 3, 4]  `subVectors` [9, 10, 3, 5]
+> 
+> 
+> [1, 2, 3, 4]  `subVectors` [9, 10, 3, 5]
 [-8,-8,0,-1]
-λ> 
-λ> [1, 2, 3, 4]  `mulVectors` [9, 10, 3, 5]
+> 
+> [1, 2, 3, 4]  `mulVectors` [9, 10, 3, 5]
 [9,20,9,20]
-λ> 
+> 
 
-λ> let f x y z = x*y*z 
+> let f x y z = x*y*z 
 
-λ> zipWith3 f [1, 3, 4, 8] [4, 5, 9] [8, 7, 3]
+> zipWith3 f [1, 3, 4, 8] [4, 5, 9] [8, 7, 3]
 [32,105,108]
-λ> 
-λ> let zf = zipWith3 f
-λ> 
-λ> zf [1, 3, 4, 8] [4, 5, 9] [8, 7, 3]
+> 
+> let zf = zipWith3 f
+> 
+> zf [1, 3, 4, 8] [4, 5, 9] [8, 7, 3]
 [32,105,108]
-λ> 
+> 
 
-λ> import Data.List
-λ> 
-λ> zipWith4 g [12, 34, 1, 4] [8, 19, 33, 23] [5, 7, 8, 9] [33, 78, 17, 14]
+> import Data.List
+> 
+> zipWith4 g [12, 34, 1, 4] [8, 19, 33, 23] [5, 7, 8, 9] [33, 78, 17, 14]
 [337,2371,-1277,-929]
-λ> 
+> 
 
-λ> let g1 = zipWith4 g [12, 34, 1, 4] 
-λ> g1 [8, 19, 33, 23] [5, 7, 8, 9] [33, 78, 17, 14]
-[337,2371,-1277,-929]
-
-λ> let g2 = g1 [8, 19, 33, 23]
-λ> g2 [5, 7, 8, 9] [33, 78, 17, 14]
+> let g1 = zipWith4 g [12, 34, 1, 4] 
+> g1 [8, 19, 33, 23] [5, 7, 8, 9] [33, 78, 17, 14]
 [337,2371,-1277,-929]
 
-λ> let g3 = g2 [5, 7, 8, 9]
-λ> g3  [33, 78, 17, 14]
+> let g2 = g1 [8, 19, 33, 23]
+> g2 [5, 7, 8, 9] [33, 78, 17, 14]
 [337,2371,-1277,-929]
 
-λ> let g4 = g3 [33, 78, 17, 14]
-λ> g4
+> let g3 = g2 [5, 7, 8, 9]
+> g3  [33, 78, 17, 14]
 [337,2371,-1277,-929]
-λ> 
+
+> let g4 = g3 [33, 78, 17, 14]
+> g4
+[337,2371,-1277,-929]
+> 
 
 ``` 
 
@@ -3060,31 +3137,31 @@ replicate :: Int -> a -> [a]
 
 Example:
 ```haskell
-λ> :t replicate 
+> :t replicate 
 replicate :: Int -> a -> [a]
-λ> 
+> 
 
-λ> replicate 4 'a'
+> replicate 4 'a'
 "aaaa"
-λ> replicate 6 2.345
+> replicate 6 2.345
 [2.345,2.345,2.345,2.345,2.345,2.345]
-λ> 
+> 
 
 {- You can also replicate functions -}
-λ> let f = replicate 3 (+1)
-λ> :t f
+> let f = replicate 3 (+1)
+> :t f
 f :: [Integer -> Integer]
-λ> 
-λ> map ($ 5) f
+> 
+> map ($ 5) f
 [6,6,6]
-λ> 
+> 
 
-λ> replicate 3 (Just 5)
+> replicate 3 (Just 5)
 [Just 5,Just 5,Just 5]
-λ> 
-λ> replicate 3 Nothing
+> 
+> replicate 3 Nothing
 [Nothing,Nothing,Nothing]
-λ> 
+> 
 
 ```
 
@@ -3119,27 +3196,27 @@ takeWhile :: (a -> Bool) -> [a] -> [a]
 **Strings as List of Characters**
 
 ```
-λ> 
-λ> ['(', ')', '!', 'a', 'b', 'c', '0', '1']
+> 
+> ['(', ')', '!', 'a', 'b', 'c', '0', '1']
 "()!abc01"
-λ> 
+> 
 ```
 
 
 **Character Sequences**
 
 ```haskell
-λ> ['a'..'z']
+> ['a'..'z']
 "abcdefghijklmnopqrstuvwxyz"
 
-λ> ['A'..'Z']
+> ['A'..'Z']
 "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-λ> ['0'..'9']
+> ['0'..'9']
 "0123456789"
-λ> 
+> 
 
-λ> ['0'..'z']
+> ['0'..'z']
 "0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz"
 
 ```
@@ -3148,20 +3225,20 @@ takeWhile :: (a -> Bool) -> [a] -> [a]
 
 ```haskell
 
-λ> "adding " ++ "three" ++ " strings"
+> "adding " ++ "three" ++ " strings"
 "adding three strings"
-λ> 
+> 
 
-λ> "Hello world " ++ ['1']
+> "Hello world " ++ ['1']
 "Hello world 1"
-λ> 
+> 
 
-λ> 'x' : "Hello World"
+> 'x' : "Hello World"
 "xHello World"
-λ> 
-λ> 'y' : 'x' : "Hello World"
+> 
+> 'y' : 'x' : "Hello World"
 "yxHello World"
-λ> 
+> 
 
 ```
 
@@ -3177,21 +3254,21 @@ lines :: String -> [String]
 ```
 
 ```haskell
-λ> let text = "Hello World\nHaskell\n Is very Cool"
-λ> text
+> let text = "Hello World\nHaskell\n Is very Cool"
+> text
 "Hello World\nHaskell\n Is very Cool"
 
 
-λ> putStrLn text
+> putStrLn text
 Hello World
 Haskell
  Is very Cool
-λ> 
-λ> 
+> 
+> 
 
-λ> lines text
+> lines text
 ["Hello World","Haskell"," Is very Cool"]
-λ> 
+> 
 ```
 
 **unlines**
@@ -3203,15 +3280,15 @@ unlines :: [String] -> String
 ```
 
 ```haskell
-λ> unlines ["Hello World","Haskell"," Is very Cool"]
+> unlines ["Hello World","Haskell"," Is very Cool"]
 "Hello World\nHaskell\n Is very Cool\n"
-λ> 
-λ> putStrLn $ unlines ["Hello World","Haskell"," Is very Cool"]
+> 
+> putStrLn $ unlines ["Hello World","Haskell"," Is very Cool"]
 Hello World
 Haskell
  Is very Cool
 
-λ>
+>
 ```
 
 **words**
@@ -3223,9 +3300,9 @@ words :: String -> [String]
 ```
 
 ```haskell
-λ> words "Hello world haskell 123 2312 --- "
+> words "Hello world haskell 123 2312 --- "
 ["Hello","world","haskell","123","2312","---"]
-λ> 
+> 
 ```
 
 **unwords**
@@ -3237,9 +3314,9 @@ unwords :: [String] -> String
 ```
 
 ```haskell
-λ> unwords ["Hello","world","haskell","123","2312","---"]
+> unwords ["Hello","world","haskell","123","2312","---"]
 "Hello world haskell 123 2312 ---"
-λ> 
+> 
 ```
 
 **reverse**
@@ -3247,9 +3324,9 @@ unwords :: [String] -> String
 Reverse a string. 
 
 ```haskell
-λ> reverse "lleksaH dlroW olleH"
+> reverse "lleksaH dlroW olleH"
 "Hello World Haskell"
-λ> 
+> 
 ```
 
 #### Data.Char String Functions
@@ -3259,52 +3336,52 @@ Documentation: https://hackage.haskell.org/package/base-4.2.0.1/docs/Data-Char.h
 ```haskell
 import Data.Char
 
-λ> ['0'..'z']
+> ['0'..'z']
 "0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz"
-λ> 
+> 
 
-λ> filter isDigit  ['0'..'z']
+> filter isDigit  ['0'..'z']
 "0123456789"
-λ> 
+> 
 
-λ> filter isAlpha ['0'..'z']
+> filter isAlpha ['0'..'z']
 "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-λ> 
+> 
 
-λ> filter isLower ['0'..'z']
+> filter isLower ['0'..'z']
 "abcdefghijklmnopqrstuvwxyz"
-λ> 
-λ> filter isUpper ['0'..'z']
+> 
+> filter isUpper ['0'..'z']
 "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-λ> 
-λ> 
+> 
+> 
 
-λ> filter isHexDigit ['0'..'z']
+> filter isHexDigit ['0'..'z']
 "0123456789ABCDEFabcdef"
-λ> 
+> 
 
-λ> filter isAlphaNum ['0'..'z']
+> filter isAlphaNum ['0'..'z']
 "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-λ> 
+> 
 
-λ> map toUpper ['a'..'z']
+> map toUpper ['a'..'z']
 "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-λ>
+>
 
-λ> map toLower ['A'..'Z']
+> map toLower ['A'..'Z']
 "abcdefghijklmnopqrstuvwxyz"
-λ> 
+> 
 
 {- Convert to ascii decimal number -}
-λ> map ord ['a'..'f']
+> map ord ['a'..'f']
 [97,98,99,100,101,102]
-λ> 
+> 
 
 
 {- Convert ascii to char -}
-λ> map chr [97,98,99,100,101,102]
+> map chr [97,98,99,100,101,102]
 "abcdef"
-λ> 
+> 
 ```
 
 
@@ -3315,32 +3392,32 @@ The Data.List.Split module contains a wide range of strategies for splitting lis
 Documentation: http://hackage.haskell.org/package/split-0.1.4.1/docs/Data-List-Split.html
 
 ```haskell
-λ> import Data.List.Split
-λ> 
+> import Data.List.Split
+> 
 
-λ> splitOn "," "1232,2323.232,323.434"
+> splitOn "," "1232,2323.232,323.434"
 ["1232","2323.232","323.434"]
-λ> 
-λ> 
+> 
+> 
 
-λ> map (\s -> read s :: Double) $ splitOn "," "1232,2323.232,323.434"
+> map (\s -> read s :: Double) $ splitOn "," "1232,2323.232,323.434"
 [1232.0,2323.232,323.434]
-λ> 
-λ> 
+> 
+> 
 
-λ> endBy "," "1232,2323.232,323.434,"
+> endBy "," "1232,2323.232,323.434,"
 ["1232","2323.232","323.434"]
-λ> 
-λ> 
+> 
+> 
 
-λ>  splitOneOf ";.," "foo,bar;baz.glurk"
+>  splitOneOf ";.," "foo,bar;baz.glurk"
 ["foo","bar","baz","glurk"]
-λ> 
+> 
 
-λ> chunksOf  3 ['a'..'z']
+> chunksOf  3 ['a'..'z']
 ["abc","def","ghi","jkl","mno","pqr","stu","vwx","yz"]
-λ> 
-λ> 
+> 
+> 
 
 ```
 
@@ -3817,54 +3894,54 @@ getPerson n = people !! n
 showPerson :: Person -> String
 showPerson person  = "Name: " ++ show(firstName person) ++ " - Last Name: " ++ show(lastName person) ++ " - Age " ++ show(age person) 
 
-λ > people
+> people
 [Person {firstName = "Ayn", lastName = "Rand", age = 50},Person {firstName = "John", lastName = "Galt", age = 28},Person {firstName = "Adam", lastName = "Smith", age = 70}]
-λ > 
+> 
 
-λ > map firstName people
+> map firstName people
 ["Ayn","John","Adam"]
-λ > 
+> 
 
-λ > map (\el ->  fst el ++ " " ++  snd el) $ zip (map firstName people) (map lastName people)
-λ >  ["Ayn Rand","John Galt","Adam Smith"]
+> map (\el ->  fst el ++ " " ++  snd el) $ zip (map firstName people) (map lastName people)
+>  ["Ayn Rand","John Galt","Adam Smith"]
 
 
-λ > people !! 1
+> people !! 1
 Person {firstName = "John", lastName = "Galt", age = 28}
-λ > people !! 2
+> people !! 2
 Person {firstName = "Adam", lastName = "Smith", age = 70}
-λ > 
+> 
 
-λ > "person 0 is " ++ show (people !! 0)
+> "person 0 is " ++ show (people !! 0)
 "person 0 is Person {firstName = \"Ayn\", lastName = \"Rand\", age = 50}"
-λ > 
-λ > "person 1 is " ++ show (people !! 1)
+> 
+> "person 1 is " ++ show (people !! 1)
 "person 1 is Person {firstName = \"John\", lastName = \"Galt\", age = 28}"
-λ >
+>
 
 
-λ > let person = read "Person {firstName =\"Elmo\", lastName =\"NA\", age = 0}" :: Person
-λ > person
+> let person = read "Person {firstName =\"Elmo\", lastName =\"NA\", age = 0}" :: Person
+> person
 Person {firstName = "Elmo", lastName = "NA", age = 0}
-λ > 
-λ > firstName person 
+> 
+> firstName person 
 "Elmo"
-λ > last
+> last
 last      lastName
-λ > lastName person 
+> lastName person 
 "NA"
-λ > age person
+> age person
 0
-λ > 
+> 
 
-λ > let tesla = Person { firstName = "Nikola", lastName = "Tesla", age =30}
-λ > tesla
+> let tesla = Person { firstName = "Nikola", lastName = "Tesla", age =30}
+> tesla
 Person {firstName = "Nikola", lastName = "Tesla", age = 30}
-λ > 
+> 
 
-λ > showPerson tesla
+> showPerson tesla
 "Name: \"Nikola\" - Last Name: \"Tesla\" - Age 30"
-λ > 
+> 
 
 ```
 
@@ -3945,39 +4022,39 @@ Examples:
 The most well known functor is the list functor:
 
 ```haskell
-λ> let f x  = 10*x -2
-λ> fmap f [1, 2, 3, 10]
+> let f x  = 10*x -2
+> fmap f [1, 2, 3, 10]
 [8,18,28,98]
-λ> 
-λ> fmap f (fmap f [1, 2, 3, 10])
+> 
+> fmap f (fmap f [1, 2, 3, 10])
 [78,178,278,978]
-λ> 
+> 
 ```
 
 The Maybe type is a functor which the return value is non deterministic that returns a value if the computation is successful or return a null value Nothing if the computation fails. It is useful to avoid boilerplate successive null checkings and avoid null checking error.
 
 ```haskell
-λ> 
-λ> let add10 x = x + 10
-λ> 
-λ> 
-λ> fmap add10 Nothing
+> 
+> let add10 x = x + 10
+> 
+> 
+> fmap add10 Nothing
 Nothing
-λ> 
-λ> 
-λ> 
-λ> fmap add10 $ fmap add10 Nothing
+> 
+> 
+> 
+> fmap add10 $ fmap add10 Nothing
 Nothing
-λ> 
-λ> 
-λ> fmap add10 (Just 10)
+> 
+> 
+> fmap add10 (Just 10)
 Just 20
-λ> 
-λ> 
-λ> fmap add10 $ fmap add10 (Just 10)
+> 
+> 
+> fmap add10 $ fmap add10 (Just 10)
 Just 30
-λ> 
-λ> 
+> 
+> 
 ```
 
 **Functor Laws Testing**
@@ -3987,62 +4064,62 @@ Just 30
 
 -- fmap id == id
 
-λ> fmap id [1, 2, 3] == id [1, 2, 3]
+> fmap id [1, 2, 3] == id [1, 2, 3]
 True
-λ> 
-λ> 
-λ> let testLaw_id functor = fmap id functor == id functor
-λ> testLaw_id [1, 2, 3]
+> 
+> 
+> let testLaw_id functor = fmap id functor == id functor
+> testLaw_id [1, 2, 3]
 True
-λ> testLaw_id []
+> testLaw_id []
 True
-λ> 
+> 
 
 -- Testing for Maybe functor
-λ> testLaw_id Nothing
+> testLaw_id Nothing
 True
-λ> testLaw_id (Just 10)
+> testLaw_id (Just 10)
 True
-λ> 
-λ> 
+> 
+> 
 
 -- Composition Testing
 -- fmap (f . g) = fmap f . fmap g  -- Composition law
-λ> let f x = x + 1
-λ> let g x = 2*x
-λ> 
+> let f x = x + 1
+> let g x = 2*x
+> 
 
-λ> 
-λ> fmap (f . g)  [1, 2, 3]
+> 
+> fmap (f . g)  [1, 2, 3]
 [3,5,7]
-λ> 
-λ> 
-λ> :t (fmap f)
+> 
+> 
+> :t (fmap f)
 (fmap f) :: (Functor f, Num b) => f b -> f b
-λ> 
-λ> 
-λ> fmap (f . g)  [1, 2, 3] ==  ((fmap f) . (fmap g)) [1, 2, 3]
+> 
+> 
+> fmap (f . g)  [1, 2, 3] ==  ((fmap f) . (fmap g)) [1, 2, 3]
 True
-λ> 
+> 
 
-λ> 
-λ> let test_fcomp f g functor = fmap (f . g) functor ==  ((fmap f) . (fmap g)) functor
-λ> 
-λ> test_fcomp f g (Just 10)
+> 
+> let test_fcomp f g functor = fmap (f . g) functor ==  ((fmap f) . (fmap g)) functor
+> 
+> test_fcomp f g (Just 10)
 True
-λ> 
-λ> test_fcomp f g Nothing
+> 
+> test_fcomp f g Nothing
 True
-λ> 
-λ>
+> 
+>
 ```
 
 
 To list all instances of the Functor class:
 
 ```haskell
-λ> 
-λ> :i Functor
+> 
+> :i Functor
 class Functor f where
   fmap :: (a -> b) -> f a -> f b
   (<$) :: a -> f b -> f a
@@ -4239,28 +4316,28 @@ Examples:
 
 ```haskell
 
-λ> :t return
+> :t return
 return :: Monad m => a -> m a
-λ> 
+> 
 
-λ> return 223.23 :: (Maybe Double)
+> return 223.23 :: (Maybe Double)
 Just 223.23
-λ> 
-λ> 
-λ> return Nothing
+> 
+> 
+> return Nothing
 Nothing
-λ> 
+> 
 
-λ> return "el toro" :: (Either String  String)
+> return "el toro" :: (Either String  String)
 Right "el toro"
-λ> 
-λ> 
+> 
+> 
 
-λ> 
-λ> return "Nichola Tesla" :: (IO String)
+> 
+> return "Nichola Tesla" :: (IO String)
 "Nichola Tesla"
-λ> 
-λ> 
+> 
+> 
 ```
 
 #### Haskell Monads
@@ -4370,25 +4447,25 @@ liftM4 :: Monad m => (a1 -> a2 -> a3 -> a4 -> r) -> m a1 -> m a2 -> m a3 -> m a4
 Example:
 
 ```haskell
-λ> liftM (+4) (Just 10)
+> liftM (+4) (Just 10)
 Just 14 
-λ>
-λ> liftM (+4) Nothing
+>
+> liftM (+4) Nothing
 Nothing
-λ> 
-λ> 
+> 
+> 
 
-λ> liftM2 (+) (Just 10) (Just 5)
+> liftM2 (+) (Just 10) (Just 5)
 Just 15
-λ> 
-λ> 
-λ> liftM2 (+) (Just 10) Nothing
+> 
+> 
+> liftM2 (+) (Just 10) Nothing
 Nothing
-λ> 
+> 
 
-λ> liftM2 (+) Nothing Nothing
+> liftM2 (+) Nothing Nothing
 Nothing
-λ> 
+> 
 ```
 
 **Error Handling and avoinding Null Checking**
@@ -4397,26 +4474,26 @@ Examples without Maybe:
 
 ```haskell
 
-λ :set prompt "λ > " 
-λ > 
-λ > 
-λ >  head [1, 2, 3, 4]
+λ :set prompt "> " 
+> 
+> 
+>  head [1, 2, 3, 4]
 1
-λ > head []
+> head []
 *** Exception: Prelude.head: empty list
  
 
-λ > tail [1, 2, 3, 4]
+> tail [1, 2, 3, 4]
 [2,3,4]
-λ > 
-λ > tail []
+> 
+> tail []
 *** Exception: Prelude.tail: empty list
 
-λ > div 10 2
+> div 10 2
 5
-λ > div 10 0
+> div 10 0
 *** Exception: divide by zero
-λ > 
+> 
 ```
 
 Examples with Maybe monad:
@@ -4446,44 +4523,44 @@ safeInit (x:xs) = Just (x : fromJust(safeInit xs))
 safediv y x | x == 0    = Nothing
             | otherwise = Just(y/x)
 
-λ > fromJust (Just 10)
+> fromJust (Just 10)
 10
 
-λ > safeHead [1..5]
+> safeHead [1..5]
 Just 1
-λ > safeHead []
+> safeHead []
 Nothing
-λ > 
+> 
 
-λ > safeTail  [1..5]
+> safeTail  [1..5]
 Just [2,3,4,5]
-λ > safeTail  []
+> safeTail  []
 Nothing
-λ > 
+> 
 
-λ > let div10by = safediv 10
-λ > let div100by = safediv 100
+> let div10by = safediv 10
+> let div100by = safediv 100
 
 
-λ > safediv 10 2
+> safediv 10 2
 Just 5.0
-λ > safediv 10 0
+> safediv 10 0
 Nothing
-λ > 
-λ > 
+> 
+> 
 
-λ > div10by 2
+> div10by 2
 Just 5.0
 
-λ > div100by 20
+> div100by 20
 Just 5.0
-λ > div100by 0
+> div100by 0
 Nothing
-λ > 
+> 
 
-λ > map div10by [-2..2]
+> map div10by [-2..2]
 [Just (-5.0),Just (-10.0),Nothing,Just 10.0,Just 5.0]
-λ > 
+> 
 ```
 
 Composition With May be with the >>= (Monad bind operator)
@@ -4491,7 +4568,7 @@ Composition With May be with the >>= (Monad bind operator)
 ```haskell
 
 
-λ > div100by (div10by 2)
+> div100by (div10by 2)
 
 <interactive>:102:11:
     Couldn't match expected type `Double'
@@ -4499,22 +4576,22 @@ Composition With May be with the >>= (Monad bind operator)
     In the return type of a call of `div10by'
     In the first argument of `div100by', namely `(div10by 2)'
     In the expression: div100by (div10by 2)
-λ > 
+> 
 
-λ > div10by 2 >>= div100by
+> div10by 2 >>= div100by
 Just 20.0
 
-λ > div10by 2 >>= div10by >>= div100by 
+> div10by 2 >>= div10by >>= div100by 
 Just 50.0
-λ > 
+> 
 
-λ > div10by 2 >>= safediv 0 >>= div100by 
+> div10by 2 >>= safediv 0 >>= div100by 
 Nothing
-λ > 
+> 
 
-λ > div10by 0 >>= safediv 1000 >>= div100by 
+> div10by 0 >>= safediv 1000 >>= div100by 
 Nothing
-λ > 
+> 
 ```
 
 Reference:  
@@ -4540,13 +4617,13 @@ instance Monad [] where
 Examples Using the bind operator for lists:
 
 ```haskell
-λ> [10,20,30] >>= \x -> [2*x, x+5] 
+> [10,20,30] >>= \x -> [2*x, x+5] 
 [20,15,40,25,60,35]
-λ> 
+> 
 
-λ> [10,20,30] >>= \x -> [(2*x, x+5)] 
+> [10,20,30] >>= \x -> [(2*x, x+5)] 
 [(20,15),(40,25),(60,35)]
-λ> 
+> 
 ```
 
 Do Notation for lists
@@ -4564,42 +4641,42 @@ listOfTuples = do
 
 Ghci shell
 ```
-λ> :l listMonad.hs 
+> :l listMonad.hs 
 [1 of 1] Compiling Main             ( listMonad.hs, interpreted )
 Ok, modules loaded: Main.
-λ> 
+> 
 
-λ> listOfTuples 
+> listOfTuples 
 [(1,'a'),(1,'b'),(2,'a'),(2,'b')]
 
-λ> [ (n,ch) | n <- [1,2], ch <- ['a','b'] ]  
+> [ (n,ch) | n <- [1,2], ch <- ['a','b'] ]  
 [(1,'a'),(1,'b'),(2,'a'),(2,'b')]
-λ> 
+> 
 
-λ> do { x <- [10, 20, 30] ; [x, x+1] }
+> do { x <- [10, 20, 30] ; [x, x+1] }
 [10,11,20,21,30,31]
 
-λ> do { x <- [10, 20, 30] ; [(x, x+1)] }
+> do { x <- [10, 20, 30] ; [(x, x+1)] }
 [(10,11),(20,21),(30,31)]
-λ> 
+> 
 
-λ> do { x <- [10, 20, 30] ; y <- [1, 2, 3] ; return (x*y) }
+> do { x <- [10, 20, 30] ; y <- [1, 2, 3] ; return (x*y) }
 [10,20,30,20,40,60,30,60,90]
-λ> 
+> 
 
-λ> sequence [[1,2],[3,4]]
+> sequence [[1,2],[3,4]]
 [[1,3],[1,4],[2,3],[2,4]]
-λ> 
-λ> 
+> 
+> 
 ```
 
 Operator: (,)
 ```
-λ> (,) 3 4
+> (,) 3 4
 (3,4)
-λ> 
+> 
 
-λ> map ((,)2) [1, 2, 3, 4]
+> map ((,)2) [1, 2, 3, 4]
 [(2,1),(2,2),(2,3),(2,4)]
 ```
 
@@ -4608,44 +4685,44 @@ Operator: (,)
 For a list, fmap is equivalent to map
 
 ```haskell
-λ> fmap ((,)3) [1, 2, 3, 4]
+> fmap ((,)3) [1, 2, 3, 4]
 [(3,1),(3,2),(3,3),(3,4)]
-λ> 
-λ> fmap (+3) [1, 2, 3, 4]
+> 
+> fmap (+3) [1, 2, 3, 4]
 [4,5,6,7]
-λ> 
+> 
 
-λ> liftM ((,)3) [1, 2, 3, 4]
+> liftM ((,)3) [1, 2, 3, 4]
 [(3,1),(3,2),(3,3),(3,4)]
-λ> 
+> 
 
-λ> liftM (+3) [1, 2, 3, 4]
+> liftM (+3) [1, 2, 3, 4]
 [4,5,6,7]
-λ> 
+> 
 ```
 
 **liftM and Cartesian Product**
 
 ```haskell
 
-λ> liftM2 (,) [1, 2, 3] [4, 5, 6, 7]
+> liftM2 (,) [1, 2, 3] [4, 5, 6, 7]
 [(1,4),(1,5),(1,6),(1,7),(2,4),(2,5),(2,6),(2,7),(3,4),(3,5),(3,6),(3,7)]
-λ> 
-λ> 
-λ> liftM2 (,) ['a', 'b', 'c'] [1, 2]
+> 
+> 
+> liftM2 (,) ['a', 'b', 'c'] [1, 2]
 [('a',1),('a',2),('b',1),('b',2),('c',1),('c',2)]
-λ> 
-λ> 
+> 
+> 
 
-λ> liftM2 (*) [1, 2, 3] [4, 5, 6, 7]
+> liftM2 (*) [1, 2, 3] [4, 5, 6, 7]
 [4,5,6,7,8,10,12,14,12,15,18,21]
-λ> 
+> 
 
-λ> liftM2 (+) [1, 2, 3] [4, 5, 6, 7]
+> liftM2 (+) [1, 2, 3] [4, 5, 6, 7]
 [5,6,7,8,6,7,8,9,7,8,9,10]
-λ> 
+> 
 
-λ> liftM3 (,,) [1, 2, 3] ['a', 'b', 'c', 'd'] ['x', 'y', 'z']
+> liftM3 (,,) [1, 2, 3] ['a', 'b', 'c', 'd'] ['x', 'y', 'z']
 [(1,'a','x'),(1,'a','y'),(1,'a','z'),(1,'b','x'),(1,'b','y'),(1,'b','z'),(1,'c','x'),(1,'c','y'),(1,'c','z'),(1,'d','x'),(1,'d','y'),(1,'d','z'),(2,'a','x'),(2,'a','y'),(2,'a','z'),(2,'b','x'),(2,'b','y'),(2,'b','z'),(2,'c','x'),(2,'c','y'),(2,'c','z'),(2,'d','x'),(2,'d','y'),(2,'d','z'),(3,'a','x'),(3,'a','y'),(3,'a','z'),(3,'b','x'),(3,'b','y'),(3,'b','z'),(3,'c','x'),(3,'c','y'),(3,'c','z'),(3,'d','x'),(3,'d','y'),(3,'d','z')]
 
 ```
@@ -4744,20 +4821,20 @@ Example:
 
 ```haskell
 
-λ > show(12.12 + 23.445)
+> show(12.12 + 23.445)
 "35.565"
-λ > 
+> 
 
-λ > read "1.245" :: Double
+> read "1.245" :: Double
 1.245
-λ > 
-λ > let x = read "1.245" :: Double
-λ > :t x
+> 
+> let x = read "1.245" :: Double
+> :t x
 x :: Double
-λ > 
-λ > read "[1, 2, 3, 4, 5]" :: [Int]
+> 
+> read "[1, 2, 3, 4, 5]" :: [Int]
 [1,2,3,4,5]
-λ > 
+> 
 
 ```
 
@@ -4773,13 +4850,13 @@ m >> n  =   m >>= (\_ -> n)
 Example:
 
 ```haskell
-λ> let echoDup = getChar >>= \c -> putChar c >> putChar c
-λ> echoDup 
-eeeλ> 
-λ> 
-λ> echoDup 
-oooλ> 
-λ> 
+> let echoDup = getChar >>= \c -> putChar c >> putChar c
+> echoDup 
+eee> 
+> 
+> echoDup 
+ooo> 
+> 
 
 ```
 
@@ -4805,13 +4882,13 @@ getChar :: IO Char -- Performs an action that returns a character
 {- 
     To capture a value returned by an action, the operator <- must be used
 -}
-λ> c <- getChar 
-hλ> 
-λ> c
+> c <- getChar 
+h> 
+> c
 'h'
-λ> :t c
+> :t c
 c :: Char
-λ> 
+> 
 ```
 
 IO Actions that returns nothing uses the unit type (). The return type is IO (), it is equivalent to C language void.
@@ -4819,25 +4896,25 @@ IO Actions that returns nothing uses the unit type (). The return type is IO (),
 Example:
 
 ```haskell
-λ> :t putChar
+> :t putChar
 putChar :: Char -> IO ()
 
-λ> putChar 'X'
-Xλ> 
-λ> 
+> putChar 'X'
+X> 
+> 
 ```
 
 The operator >> concatenates IO actions, it is equivalent to (;) semicolon operator in imperative languages.
 
 ```haskell
-λ> :t (>>)
+> :t (>>)
 (>>) :: Monad m => m a -> m b -> m b
 ```
 
 ```haskell
-λ> putChar 'X' >>  putChar '\n'
+> putChar 'X' >>  putChar '\n'
 X
-λ> 
+> 
 ```
 
 Equivalent code in a imperative language, Python.
@@ -4910,22 +4987,22 @@ do1test = do
 
 In the shell ghci
 ```haskell
-λ> :l do_notation1.hs 
+> :l do_notation1.hs 
 [1 of 1] Compiling Main             ( do_notation1.hs, interpreted )
 Ok, modules loaded: Main.
-λ> 
+> 
 
-λ> :t do1test 
+> :t do1test 
 do1test :: IO ()
-λ> 
+> 
 
-λ> do1test -- User types character 'a'
+> do1test -- User types character 'a'
 axa
-λ> do1test -- User types character 'x'
+> do1test -- User types character 'x'
 txt
-λ> do1test -- User types character 'p'
+> do1test -- User types character 'p'
 pxp
-λ> 
+> 
 ```
 
 ##### Do Notation and Let keyword
@@ -4952,39 +5029,39 @@ do3test = do
 
 In the shell ghci
 ```haskell
-λ> :l do_notation2.hs 
+> :l do_notation2.hs 
 [1 of 1] Compiling Main             ( do_notation1.hs, interpreted )
 Ok, modules loaded: Main.
-λ> 
+> 
 
-λ> :t make_string 
+> :t make_string 
 make_string :: Char -> String
-λ>
+>
 
-λ> :t do2test 
+> :t do2test 
 do2test :: IO ()
 
-λ> make_string 'q'
+> make_string 'q'
 "\nThe character is : q"
-λ> make_string 'a'
+> make_string 'a'
 "\nThe character is : a"
-λ> 
+> 
 
-λ> do2test 
+> do2test 
 a
 The character is : a
 U
 
-λ> do2test 
+> do2test 
 p
 The character is : p
 U
 
-λ> do3test 
+> do3test 
 a
 The character is : a
 
-λ> do3test 
+> do3test 
 b
 The character is : b
 ```
@@ -5002,46 +5079,46 @@ doReturn = do
 
 In ghci shell
 ```haskell
-λ> :t doReturn 
+> :t doReturn 
 doReturn :: IO Bool
-λ> 
+> 
 
-λ> doReturn 
+> doReturn 
 aFalse
-λ> doReturn 
+> doReturn 
 bFalse
-λ> doReturn 
+> doReturn 
 cFalse
-λ> doReturn 
+> doReturn 
 yTrue
-λ> 
+> 
 
-λ> x <- doReturn 
-rλ> 
-λ> x
+> x <- doReturn 
+r> 
+> x
 False
-λ> 
-λ> x <- doReturn 
-mλ> 
-λ> x
+> 
+> x <- doReturn 
+m> 
+> x
 False
-λ> x <- doReturn 
-yλ> 
-λ> x
+> x <- doReturn 
+y> 
+> x
 True
-λ> 
+> 
 ```
 
 
 ##### Combining functions and I/O actions
 
 ```haskell
-λ> import Data.Char (toUpper)
-λ> 
-λ> let shout = map toUpper 
-λ> :t shout
+> import Data.Char (toUpper)
+> 
+> let shout = map toUpper 
+> :t shout
 shout :: [Char] -> [Char]
-λ> 
+> 
 
 {- Fmap is Equivalent to liftM , those functions
 apply a function to the value wraped in the monad and returns a new monad of 
@@ -5049,39 +5126,39 @@ same type with the return value wraped
 
 -}
 
-λ> :t liftM
+> :t liftM
 liftM :: Monad m => (a1 -> r) -> m a1 -> m r
-λ> :t fmap
+> :t fmap
 fmap :: Functor f => (a -> b) -> f a -> f b
-λ> 
+> 
 
 
-λ> shout "hola estados unidos"
+> shout "hola estados unidos"
 "HOLA ESTADOS UNIDOS"
 
-λ> liftM shout getLine
+> liftM shout getLine
 Hello world
 "HELLO WORLD"
 
 
-λ> fmap shout getLine
+> fmap shout getLine
 heloo
 "HELOO"
-λ> 
+> 
 
-λ> let upperLine = putStrLn "Enter a line" >> liftM shout getLine
+> let upperLine = putStrLn "Enter a line" >> liftM shout getLine
 
-λ> upperLine 
+> upperLine 
 Enter a line
 hola estados Unidos
 "HOLA ESTADOS UNIDOS"
-λ> 
+> 
 
-λ> upperLine 
+> upperLine 
 Enter a line
 air lift
 "AIR LIFT"
-λ> 
+> 
 ```
 
 ##### Executing a list of actions
@@ -5090,29 +5167,29 @@ The list myTodoList doesn't execute any action, it holds them. To join those act
 
 
 ```haskell
-λ> 
-λ> let myTodoList = [putChar '1', putChar '2', putChar '3', putChar '4']
+> 
+> let myTodoList = [putChar '1', putChar '2', putChar '3', putChar '4']
 
-λ> :t myTodoList 
+> :t myTodoList 
 myTodoList :: [IO ()]
-λ> 
+> 
 
-λ> :t sequence_
+> :t sequence_
 sequence_ :: Monad m => [m a] -> m ()
-λ>
-λ> sequence_ myTodoList 
-1234λ> 
-λ> 
+>
+> sequence_ myTodoList 
+1234> 
+> 
 
-λ> 
-λ> let newAction = sequence_ myTodoList 
-λ> :t newAction 
+> 
+> let newAction = sequence_ myTodoList 
+> :t newAction 
 newAction :: IO ()
-λ> 
-λ> newAction 
-1234λ> 
-λ> 
-λ> 
+> 
+> newAction 
+1234> 
+> 
+> 
 ```
 
 The function sequence_ is defined as:
@@ -5143,27 +5220,27 @@ putStr s                =  sequence_ (map putChar s)
 ###### For Loops
 
 ```haskell
-λ> :t forM_
+> :t forM_
 forM_ :: Monad m => [a] -> (a -> m b) -> m ()
 
-λ> :t forM
+> :t forM
 forM :: Monad m => [a] -> (a -> m b) -> m [b]
-λ> 
+> 
 ```
 
 Example:
 
 ```haskell
-λ> :t (putStrLn . show)
+> :t (putStrLn . show)
 (putStrLn . show) :: Show a => a -> IO (
 
-λ> (putStrLn . show) 10
+> (putStrLn . show) 10
 10
-λ> (putStrLn . show) 200
+> (putStrLn . show) 200
 200
-λ>
+>
 
-λ> forM_ [1..10] (putStrLn . show)
+> forM_ [1..10] (putStrLn . show)
 1
 2
 3
@@ -5181,23 +5258,23 @@ Example:
 Map a monadic function, a function that returns a monad, to a list. It is similar to forM and formM_.
 
 ```haskell
-λ> :t mapM
+> :t mapM
 mapM :: Monad m => (a -> m b) -> [a] -> m [b]
-λ> 
-λ> :t mapM_
+> 
+> :t mapM_
 mapM_ :: Monad m => (a -> m b) -> [a] -> m ()
-λ> 
-λ> 
+> 
+> 
 ```
 
 Example:
 
 ```haskell
 
-λ> :t (putStrLn . show)
+> :t (putStrLn . show)
 (putStrLn . show) :: Show a => a -> IO (
 
-λ> mapM_ (putStrLn . show) [1..10]
+> mapM_ (putStrLn . show) [1..10]
 1
 2
 3
@@ -5215,21 +5292,21 @@ Example:
 **Example 1**
 
 ```haskell
-λ> let echo = getChar >>= putChar 
-λ> echo 
-aaλ> 
-λ> echo 
-ccλ> 
-λ> 
+> let echo = getChar >>= putChar 
+> echo 
+aa> 
+> echo 
+cc> 
+> 
 
 
-λ> :t getChar
+> :t getChar
 getChar :: IO Char
-λ> :t putChar
+> :t putChar
 putChar :: Char -> IO ()
-λ> :t (>>=)
+> :t (>>=)
 (>>=) :: Monad m => m a -> (a -> m b) -> m b
-λ> 
+> 
 ```
 
 **Example 2**
@@ -5240,11 +5317,11 @@ reverseInput = do
     x <- getLine
     putStrLn (reverse x)
 
-λ> reverseInput 
+> reverseInput 
 Enter a line of text:
 Hello World
 dlroW olleH
-λ>          
+>          
 ```        
 
 
@@ -5272,8 +5349,8 @@ GHCI Shell
 ```haskell
 [1 of 1] Compiling Main             ( questions.hs, interpreted )
 Ok, modules loaded: Main.
-λ> 
-λ> questions
+> 
+> questions
 
 Whats your name ??
 George Washington
@@ -5292,56 +5369,56 @@ Your age is : 60
 **Example 4 - Reading and Writing a File**
 
 ```haskell
-λ> (show [(x,x*x) | x <- [0,1..10]])
+> (show [(x,x*x) | x <- [0,1..10]])
 "[(0,0),(1,1),(2,4),(3,9),(4,16),(5,25),(6,36),(7,49),(8,64),(9,81),(10,100)]"
-λ> 
-λ> :t writeFile "squares.txt" (show [(x,x*x) | x <- [0,1..10]])
+> 
+> :t writeFile "squares.txt" (show [(x,x*x) | x <- [0,1..10]])
 writeFile "squares.txt" (show [(x,x*x) | x <- [0,1..10]]) :: IO ()
-λ> 
-λ> writeFile "squares.txt" (show [(x,x*x) | x <- [0,1..10]])
-λ> 
-λ> readFile "squares.txt"
+> 
+> writeFile "squares.txt" (show [(x,x*x) | x <- [0,1..10]])
+> 
+> readFile "squares.txt"
 "[(0,0),(1,1),(2,4),(3,9),(4,16),(5,25),(6,36),(7,49),(8,64),(9,81),(10,100)]"
-λ> 
-λ> :t readFile "squares.txt"
+> 
+> :t readFile "squares.txt"
 readFile "squares.txt" :: IO String
-λ> 
-λ> 
-λ> content <- readFile "squares.txt"
-λ> :t content
+> 
+> 
+> content <- readFile "squares.txt"
+> :t content
 content :: String
-λ> content
+> content
 "[(0,0),(1,1),(2,4),(3,9),(4,16),(5,25),(6,36),(7,49),(8,64),(9,81),(10,100)]"
-λ> 
-λ> let array = read content :: [(Int,Int)]
-λ> array
+> 
+> let array = read content :: [(Int,Int)]
+> array
 [(0,0),(1,1),(2,4),(3,9),(4,16),(5,25),(6,36),(7,49),(8,64),(9,81),(10,100)]
-λ> 
+> 
 
-λ> let readSquareFile = liftM (\cont -> read cont :: [(Int, Int)]) (readFile "squares.txt")
-λ> 
-λ> readSquareFile 
+> let readSquareFile = liftM (\cont -> read cont :: [(Int, Int)]) (readFile "squares.txt")
+> 
+> readSquareFile 
 [(0,0),(1,1),(2,4),(3,9),(4,16),(5,25),(6,36),(7,49),(8,64),(9,81),(10,100)]
-λ> 
-λ> :t readSquareFile 
+> 
+> :t readSquareFile 
 readSquareFile :: IO [(Int, Int)]
-λ> 
+> 
 
-λ> sq <- readSquareFile 
-λ> sq
+> sq <- readSquareFile 
+> sq
 [(0,0),(1,1),(2,4),(3,9),(4,16),(5,25),(6,36),(7,49),(8,64),(9,81),(10,100)]
-λ> 
-λ> :t sq
+> 
+> :t sq
 sq :: [(Int, Int)]
-λ> 
+> 
 
-λ> :t liftM (map $ uncurry (+)) readSquareFile 
+> :t liftM (map $ uncurry (+)) readSquareFile 
 liftM (map $ uncurry (+)) readSquareFile :: IO [Int]
-λ> 
-λ> liftM (map $ uncurry (+)) readSquareFile 
+> 
+> liftM (map $ uncurry (+)) readSquareFile 
 [0,2,6,12,20,30,42,56,72,90,110]
-λ> 
-λ> 
+> 
+> 
 ```
 
 #### Sources
@@ -5436,9 +5513,9 @@ It can be useful to calculate the distance between two points, lagged difference
 Example: Grouping Consecutive numbers
 
 ```haskell
-λ> let pairs alist = zip alist (tail alist)
+> let pairs alist = zip alist (tail alist)
 
-λ> pairs [1..5]
+> pairs [1..5]
 [(1,2),(2,3),(3,4),(4,5)]
 ```
 
@@ -5453,54 +5530,54 @@ Development:
 
 ```haskell
 
-λ> let pairs alist = zip alist (tail alist)
+> let pairs alist = zip alist (tail alist)
 
-λ> :t pairs
+> :t pairs
 pairs :: [b] -> [(b, b)]
 
-λ> :t (-)
+> :t (-)
 (-) :: Num a => a -> a -> a
 
-λ> :t uncurry(-)
+> :t uncurry(-)
 uncurry(-) :: Num c => (c, c) -> c
-λ> 
+> 
 
-λ> (-) 20 10
+> (-) 20 10
 10
-λ> 
+> 
 
-λ> uncurry(-) (20, 10)
+> uncurry(-) (20, 10)
 10
-λ> 
+> 
 
-λ> uncurry(-) (10, 20)
+> uncurry(-) (10, 20)
 -10
-λ> 
+> 
 
-λ> uncurry(flip (-)) (10, 20)
+> uncurry(flip (-)) (10, 20)
 10
-λ> 
+> 
 
-λ> pairs [10.3, 20.5, 5.6, 8.23, 40.3]
+> pairs [10.3, 20.5, 5.6, 8.23, 40.3]
 [(10.3,20.5),(20.5,5.6),(5.6,8.23),(8.23,40.3)]
-λ> 
+> 
 
-λ> map (uncurry ( flip (-))) $ pairs [10.3, 20.5, 5.6, 8.23, 40.3]
+> map (uncurry ( flip (-))) $ pairs [10.3, 20.5, 5.6, 8.23, 40.3]
 [10.2,-14.9,2.630000000000001,32.06999999999999]
-λ> 
+> 
 
-λ> let lagdiff series = map (uncurry ( flip (-))) $ pairs series
-λ> :t lagdiff 
+> let lagdiff series = map (uncurry ( flip (-))) $ pairs series
+> :t lagdiff 
 lagdiff :: Num b => [b] -> [b]
-λ> 
+> 
 
-λ> lagdiff [10.3, 20.5, 5.6, 8.23, 40.3]
+> lagdiff [10.3, 20.5, 5.6, 8.23, 40.3]
 [10.2,-14.9,2.630000000000001,32.06999999999999]
-λ> 
+> 
 
-λ> lagdiff [10, 30, 5, 8, 100]
+> lagdiff [10, 30, 5, 8, 100]
 [20,-25,3,92]
-λ> 
+> 
 
 ```
 
@@ -5508,36 +5585,36 @@ Example: Distance between points on the plane.
 
 ```haskell
 
-λ> let pairs alist = zip alist (tail alist)
+> let pairs alist = zip alist (tail alist)
 
 {- [(X, Y)]  coordinates of points in a plane -}
-λ> let points = [(1.0, 2.0), (3.0, 4.0), (-1.0, 5.0), (6.0, 6.0)]
-λ> let distance (x1, y1) (x2, y2) = sqrt( (x2-x1)^2 + (y2-y1)^2 )
+> let points = [(1.0, 2.0), (3.0, 4.0), (-1.0, 5.0), (6.0, 6.0)]
+> let distance (x1, y1) (x2, y2) = sqrt( (x2-x1)^2 + (y2-y1)^2 )
 
-λ> let lines = pairs points 
-λ> lines
+> let lines = pairs points 
+> lines
 [((1.0,2.0),(3.0,4.0)),((3.0,4.0),(-1.0,5.0)),((-1.0,5.0),(6.0,6.0))]
-λ> 
+> 
 
-λ> distance (1.0, 2.0) (3.0, 4.0)
+> distance (1.0, 2.0) (3.0, 4.0)
 2.8284271247461903
-λ> 
+> 
 
 {- Calculate the length of each line segment -}
 
-λ> map (uncurry(distance)) lines
+> map (uncurry(distance)) lines
 [2.8284271247461903,4.123105625617661,7.0710678118654755]
-λ> 
+> 
 
-λ> sum $ map (uncurry(distance)) lines
+> sum $ map (uncurry(distance)) lines
 14.022600562229327
-λ> 
+> 
 
-λ> let totalLength points  =  sum $  map (uncurry(distance)) $ pairs (points)
-λ> 
-λ> totalLength points 
+> let totalLength points  =  sum $  map (uncurry(distance)) $ pairs (points)
+> 
+> totalLength points 
 14.022600562229327
-λ> 
+> 
 
 ```
 
@@ -5550,14 +5627,14 @@ triples alist = zip3 alist (tail alist) (tail $ tail alist)
 
 Example:
 ```haskell
-λ> triples [1..10]
+> triples [1..10]
 [(1,2,3),(2,3,4),(3,4,5),(4,5,6),(5,6,7),(6,7,8),(7,8,9),(8,9,10)]
-λ> 
+> 
 
-λ> :t triples 
+> :t triples 
 triples :: [c] -> [(c, c, c)]
-λ> 
-λ> 
+> 
+> 
 ```
 
 #### Sliding Window Iterator
@@ -5573,21 +5650,21 @@ sliding n alist = map (take n) (take (length(alist) -n + 1 ) $ iterate tail alis
 Example:
 
 ```haskell
-λ>  sliding 3 [1..10]
+>  sliding 3 [1..10]
 [[1,2,3],[2,3,4],[3,4,5],[4,5,6],[5,6,7],[6,7,8],[7,8,9],[8,9,10]]
 
-λ>  sliding 4 [1..10]
+>  sliding 4 [1..10]
 [[1,2,3,4],[2,3,4,5],[3,4,5,6],[4,5,6,7],[5,6,7,8],[6,7,8,9],[7,8,9,10]]
 
-λ> sliding 5 [1..10]
+> sliding 5 [1..10]
 [[1,2,3,4,5],[2,3,4,5,6],[3,4,5,6,7],[4,5,6,7,8],[5,6,7,8,9],[6,7,8,9,10]]
 
-λ> sliding 6 [1..10]
+> sliding 6 [1..10]
 [[1,2,3,4,5,6],[2,3,4,5,6,7],[3,4,5,6,7,8],[4,5,6,7,8,9],[5,6,7,8,9,10]]
 
-λ> sliding 9 [1..10]
+> sliding 9 [1..10]
 [[1,2,3,4,5,6,7,8,9],[2,3,4,5,6,7,8,9,10]]
-λ> 
+> 
 ```
 
 Scala Equivalent
@@ -5609,12 +5686,12 @@ enumerate alist = zip [0..(length(alist)-1)] alist
 Example:
 
 ```haskell
-λ> enumerate ['a', 'b', 'c', 'd', 'e', 'f']
+> enumerate ['a', 'b', 'c', 'd', 'e', 'f']
 [(0,'a'),(1,'b'),(2,'c'),(3,'d'),(4,'e'),(5,'f')]
 
-λ> take 8  (enumerate ['a'..'z'])
+> take 8  (enumerate ['a'..'z'])
 [(0,'a'),(1,'b'),(2,'c'),(3,'d'),(4,'e'),(5,'f'),(6,'g'),(7,'h')]
-λ> 
+> 
 ```
 
 **Group by length**
@@ -5632,18 +5709,18 @@ groupByLen n alist = filter (\a -> length(a) == n  ) ( map f indexes )
 Example:
 
 ```haskell
-λ> groupByLen 3 [1..15]
+> groupByLen 3 [1..15]
 [[1,2,3],[4,5,6],[7,8,9],[10,11,12],[13,14,15]]
-λ> 
-λ> groupByLen 5 [1..15]
+> 
+> groupByLen 5 [1..15]
 [[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15]]
-λ> 
-λ> groupByLen 6 [0..20]
+> 
+> groupByLen 6 [0..20]
 [[0,1,2,3,4,5],[6,7,8,9,10,11],[12,13,14,15,16,17]]
-λ> 
-λ> groupByLen 3 ['a'..'z']
+> 
+> groupByLen 3 ['a'..'z']
 ["abc","def","ghi","jkl","mno","pqr","stu","vwx"]
-λ> 
+> 
 
 ```
 
@@ -5660,24 +5737,24 @@ juxt fs x = map ($ x) fs
 
 Example:
 ```
-λ> let juxt fs x = map ($ x) fs
+> let juxt fs x = map ($ x) fs
 
-λ> juxt [(*3), (+4), (/10)] 30
+> juxt [(*3), (+4), (/10)] 30
 [90.0,34.0,3.0]
-λ> 
-λ> let fs = juxt [(*3), (+4), (/10)]
-λ> 
-λ> :t fs
+> 
+> let fs = juxt [(*3), (+4), (/10)]
+> 
+> :t fs
 fs :: Double -> [Double]
-λ>
-λ> fs 30
+>
+> fs 30
 [90.0,34.0,3.0]
-λ> fs 40
+> fs 40
 [120.0,44.0,4.0]
-λ> 
-λ> map fs [10, 20, 30]
+> 
+> map fs [10, 20, 30]
 [[30.0,14.0,1.0],[60.0,24.0,2.0],[90.0,34.0,3.0]]
-λ> 
+> 
 ```
 
 #### Applying a tuple of functions to a same argument.
@@ -5700,7 +5777,7 @@ This function fails in static typed language when
 the functions don't have the same type signature 
 
 -}
-λ> juxt [(>100), (+100)]  30
+> juxt [(>100), (+100)]  30
 
 <interactive>:36:9:
     No instance for (Num Bool) arising from the literal `100'
@@ -5710,26 +5787,26 @@ the functions don't have the same type signature
     In the first argument of `juxt', namely `[(> 100), (+ 100)]'
 
 
-λ> juxt2 ((>100), (+100))  30
+> juxt2 ((>100), (+100))  30
 (False,130)
-λ> 
-λ> 
-λ> let f = juxt2 ((>100), (+100))
-λ> :t f
+> 
+> 
+> let f = juxt2 ((>100), (+100))
+> :t f
 f :: Integer -> (Bool, Integer)
-λ> 
-λ> f 30
+> 
+> f 30
 (False,130)
-λ>
-λ> map f [10, 20, 25, 30, 100, 150]
+>
+> map f [10, 20, 25, 30, 100, 150]
 [(False,110),(False,120),(False,125),(False,130),(False,200),(True,250)]
-λ> 
+> 
 
 
-λ> 
-λ> juxt3 (length, maximum, minimum)  [100.23, 23.23, 12.33, -123.23, -1000.23, 4000.5]
+> 
+> juxt3 (length, maximum, minimum)  [100.23, 23.23, 12.33, -123.23, -1000.23, 4000.5]
 (6,4000.5,-1000.23)
-λ> 
+> 
 
 
 {- 
@@ -5739,12 +5816,12 @@ f :: Integer -> (Bool, Integer)
     function types explicit.
 
 -}
-λ> let analytics = juxt3 (length, maximum, minimum)
-λ> 
-λ> :t analytics 
+> let analytics = juxt3 (length, maximum, minimum)
+> 
+> :t analytics 
 analytics :: [()] -> (Int, (), ())
-λ> 
-λ> analytics [100.23, 23.23, 12.33, -123.23, -1000.23, 4000.5]
+> 
+> analytics [100.23, 23.23, 12.33, -123.23, -1000.23, 4000.5]
 
 <interactive>:79:12:
     No instance for (Fractional ()) arising from the literal `100.23'
@@ -5754,30 +5831,146 @@ analytics :: [()] -> (Int, (), ())
       `[100.23, 23.23, 12.33, - 123.23, ....]'
     In the expression: analytics [100.23, 23.23, 12.33, - 123.23, ....]
 
-λ> let analytics :: [Double] -> (Int, Double, Double)  ; analytics = juxt3 (length, maximum, minimum)
-λ> 
-λ> :t analytics 
+> let analytics :: [Double] -> (Int, Double, Double)  ; analytics = juxt3 (length, maximum, minimum)
+> 
+> :t analytics 
 analytics :: [Double] -> (Int, Double, Double)
-λ> 
+> 
 
-λ> analytics [100.23, 23.23, 12.33, -123.23, -1000.23, 4000.5]
+> analytics [100.23, 23.23, 12.33, -123.23, -1000.23, 4000.5]
 (6,4000.5,-1000.23)
-λ> 
+> 
 
-λ> import Data.Char
-λ> 
-λ> let f = juxt3 (succ, pred, ord)
-λ> :t f
+> import Data.Char
+> 
+> let f = juxt3 (succ, pred, ord)
+> :t f
 f :: Char -> (Char, Char, Int)
-λ> 
-λ> let a = map f "haskell is fun"
-λ> a
+> 
+> let a = map f "haskell is fun"
+> a
 [('i','g',104),('b','`',97),('t','r',115),('l','j',107),('f','d',101),('m','k',108),('m','k',108),('!','\US',32),('j','h',105),('t','r',115),('!','\US',32),('g','e',102),('v','t',117),('o','m',110)]
-λ> 
-λ> unzip3 a
+> 
+> unzip3 a
 ("ibtlfmm!jt!gvo","g`rjdkk\UShr\USetm",[104,97,115,107,101,108,108,32,105,115,32,102,117,110])
-λ> 
-λ>
+> 
+>
+
+```
+
+#### Control Flow Functions
+
+**between**
+
+```haskell
+between a b x = a <= x && x <= b
+```
+
+```haskell
+> filter (between 10 20) [23, 5, 8, 17, 24, 13, 12]
+[17,13,12]
+> 
+
+> filter (not . between 10 20) [23, 5, 8, 17, 24, 13, 12]
+[23,5,8,24]
+```
+
+**ifelseDo**
+
+Pseudo Code:
+
+```
+f(x) = if pred(x) == True then: fa(x) else fb(x)
+```
+
+```haskell
+ifelseDo pred fa fb  x  =  if pred x then fa x else fb x
+```
+
+Example: Apply the list the function (if x >10 then 10*x else x+5)
+
+```haskell
+> let  ifelseDo pred fa fb  x  =  if pred x then fa x else fb x
+
+> map (ifelseDo (>10) (*4) (+5)) [-1, 2, 7, 8, 9, 10, 20, 30, 50]
+[4,7,12,13,14,15,80,120,200]
+
+> let f = ifelseDo (>10) (*4) (+5)
+
+> f 1
+6
+> f 3
+8
+> f 5
+10
+> 
+
+> f 20
+80
+> f 30
+120
+
+λ> map f [-1, 2, 7, 8, 9, 10, 20, 30, 50]
+[4,7,12,13,14,15,80,120,200]
+
+```
+
+**ifelse***
+
+
+Pseudo Code:
+
+```
+f(x) = if pred(x) == True then: a else b
+```
+
+```haskell
+ifelse   pred a  b   x  =  if pred x then a   else b
+```
+
+Example: 
+
+If x<0 set x to -1 else set to 1
+
+```haskell
+> let f  = ifelse (<0) (-1) 1
+> 
+> f 2
+1
+> f 40
+1
+> f (-1)
+-1
+> f (-10)
+-1
+
+> map f [-1, -2, 3, 4, -5, -6, 0, 2]
+[-1,-1,1,1,-1,-1,1,1]
+> 
+```
+
+**ifelseEq**
+
+Pseudo Code:
+
+```
+f(x) = if pred(x) == True then: a else x
+```
+
+```haskell
+ifelseEq pred a      x  =  if pred x then a   else x
+```
+
+Example: if(x) > 10 then 30 else x
+```haskell
+
+> let ifelseEq pred a x  =  if pred x then a   else x
+
+> let f = ifelseEq (>10) 30
+
+> map f [1, 2, 20, 10, 9, 8, 100]
+[1,2,30,10,9,8,30]
+> 
 
 ```
 
@@ -5806,14 +5999,14 @@ Example:
 
 ```haskell
 
-λ> map rad2deg [pi/6, pi/4, pi/3, pi/2, pi]
+> map rad2deg [pi/6, pi/4, pi/3, pi/2, pi]
 [29.999999999999996,45.0,59.99999999999999,90.0,180.0]
-λ> 
-λ> 
+> 
+> 
 
-λ> map sind [30.0, 45.0, 60.0, 90.0, 180.0 ]
+> map sind [30.0, 45.0, 60.0, 90.0, 180.0 ]
 [0.49999999999999994,0.7071067811865475,0.8660254037844386,1.0,1.2246063538223773e-16]
-λ> 
+> 
 ```
 
 
@@ -5889,13 +6082,13 @@ f2 = piceWiseFactory f2_table
 ```
 
 ```haskell
-λ> plotFxs f1 $ arange (1.0) 400000 1000.0
+> plotFxs f1 $ arange (1.0) 400000 1000.0
 ```
 
 ![f1 chart](images/chartF1table.png)
 
 ```haskell
-λ> plotFxs f2 $ arange (-4) 4 0.01
+> plotFxs f2 $ arange (-4) 4 0.01
 ```
 
 
@@ -6073,18 +6266,18 @@ square_root a | a > 0       = newtonSolver 1e-6 50 (\x -> x^2 -a) (\x -> 2*x) a
     
     The solution is sqrt(2)
 -}
-λ> let f x = x^2 - 2.0
-λ> 
-λ> let df x = 2*x
-λ> 
-λ> let df x = 2.0*x
-λ> 
-λ> newtonSolver 1e-3 100 f df 5
+> let f x = x^2 - 2.0
+> 
+> let df x = 2*x
+> 
+> let df x = 2.0*x
+> 
+> newtonSolver 1e-3 100 f df 5
 (1.414470981367771,7.281571315052027e-4,4)
-λ> 
-λ> newtonSolver 1e-3 100 f df 50
+> 
+> newtonSolver 1e-3 100 f df 50
 (1.4142150098491113,4.094082521888254e-6,8)
-λ> 
+> 
 ```
 
 **Secant Method**
@@ -6163,12 +6356,12 @@ euler f x0 xf y0 step = xypairs
                      iterator = iterate $ eulerStep f step
                      xypairs = takeWhile (\(x, y) -> x <= xf ) $ iterator (x0, y0)
 
-λ> let dTemp k temp_r (t, temp) = -k*(temp - temp_r)
+> let dTemp k temp_r (t, temp) = -k*(temp - temp_r)
 
-λ> euler (dTemp 0.07 20.0) 0.0 100.0 100.0 5.0
+> euler (dTemp 0.07 20.0) 0.0 100.0 100.0 5.0
 [(0.0,100.0),(5.0,72.0),(10.0,53.8),(15.0,41.97) \.\.\.
 (100.0,20.01449963666907)]
-λ> 
+> 
 
 let t_temp = euler (dTemp 0.07 20.0) 0.0 100.0 100.0 5.0
 
@@ -6203,11 +6396,11 @@ rk4 f x0 xf y0 h = xypairs
                      iterator = iterate $ rk4Step f h
                      xypairs = takeWhile (\(x, y) -> x <= xf ) $ iterator (x0, y0)
 
-λ> let dTemp k temp_r (t, temp) = -k*(temp - temp_r)
-λ> 
-λ> let t_temp = rk4 (dTemp 0.07 20.0) 0.0 100.0 100.0 5.0
-λ> plotList [] t_temp
-λ> 
+> let dTemp k temp_r (t, temp) = -k*(temp - temp_r)
+> 
+> let t_temp = rk4 (dTemp 0.07 20.0) 0.0 100.0 100.0 5.0
+> plotList [] t_temp
+> 
 ```
 
 ### Statistics and Time Series
@@ -6352,34 +6545,34 @@ showSimulation ntimes = do
 
 
 ```
-λ> :r
+> :r
 [1 of 1] Compiling Main             ( coinSimulator.hs, interpreted )
 Ok, modules loaded: Main.
-λ> 
+> 
 
-λ> :t simulateCoinToss 
+> :t simulateCoinToss 
 simulateCoinToss :: Int -> IO ([Double], [Int])
-λ> 
+> 
 
-λ> :t showSimulation 
+> :t showSimulation 
 showSimulation :: Int -> IO ()
-λ> 
+> 
 
 
-λ> simulateCoinToss 30
+> simulateCoinToss 30
 ([0.5666666666666667,0.43333333333333335],[17,13])
-λ> 
-λ> simulateCoinToss 50
+> 
+> simulateCoinToss 50
 ([0.56,0.44],[28,22])
-λ> 
-λ> simulateCoinToss 100
+> 
+> simulateCoinToss 100
 ([0.46,0.54],[46,54])
-λ> 
-λ> simulateCoinToss 1000
+> 
+> simulateCoinToss 1000
 ([0.491,0.509],[491,509])
-λ> 
+> 
 
-λ> mapM_ showSimulation [1000, 10000, 100000, 1000000]
+> mapM_ showSimulation [1000, 10000, 100000, 1000000]
 Number of tosses : 1000
 The number of tails is : 492
 The number of heads is : 508
@@ -6628,28 +6821,28 @@ testIsraelTaxes = testCaseNumeric
     [500.0,609.2,1087.8,2532.9,15068.1]
     1e-3 taxOfIsrael
 
-λ> testIsraelTaxes 
+> testIsraelTaxes 
 True
-λ> 
-λ> 
-λ> taxOfIsrael 5000
+> 
+> 
+> taxOfIsrael 5000
 500.0
-λ> taxOfIsrael 5800
+> taxOfIsrael 5800
 609.2
-λ> taxOfIsrael 1087.8
+> taxOfIsrael 1087.8
 108.78
-λ> taxOfIsrael 15000.0
+> taxOfIsrael 15000.0
 2532.9
-λ> taxOfIsrael 50000.0
+> taxOfIsrael 50000.0
 15068.1
-λ> 
-λ> taxRateOfIsrael 5000
+> 
+> taxRateOfIsrael 5000
 10.0
-λ> taxRateOfIsrael 5800
+> taxRateOfIsrael 5800
 10.50344827586207
-λ> taxRateOfIsrael 15000
+> taxRateOfIsrael 15000
 16.886
-λ> taxRateOfIsrael 50000
+> taxRateOfIsrael 50000
 30.1362
 
 ```
@@ -6791,67 +6984,67 @@ Cup {cupDrink = Americano, cupSize = Venti, cupExtra = [Shot,Syrup]}]
 
 Get current Directory
 ```
-λ> import System.Directory
-λ> 
-λ> getCurrentDirectory 
+> import System.Directory
+> 
+> getCurrentDirectory 
 "/home/tux/PycharmProjects/Haskell"
-λ> 
+> 
 ```
 
 Change Current Directory
 ```haskell
-λ> import System.Directory
-λ> 
-λ> setCurrentDirectory "/"
-λ> 
-λ> getCurrentDirectory 
+> import System.Directory
+> 
+> setCurrentDirectory "/"
+> 
+> getCurrentDirectory 
 "/"
-λ> 
+> 
 getCurrentDirectory :: IO FilePath
-λ> 
-λ> 
-λ> fmap (=="/") getCurrentDirectory 
+> 
+> 
+> fmap (=="/") getCurrentDirectory 
 True
-λ> 
-λ> liftM (=="/") getCurrentDirectory 
+> 
+> liftM (=="/") getCurrentDirectory 
 True
-λ> 
+> 
 ```
 
 List Directory Contents
 ```haskell
-λ> import System.Directory
-λ>
-λ>  getDirectoryContents "/usr"
+> import System.Directory
+>
+>  getDirectoryContents "/usr"
 [".","include","src","local","bin","games","share","sbin","lib",".."]
-λ> 
-λ> :t getDirectoryContents 
+> 
+> :t getDirectoryContents 
 getDirectoryContents :: FilePath -> IO [FilePath]
-λ> 
+> 
 ```
 
 Special Directories Location
 ```haskell
-λ> getHomeDirectory
+> getHomeDirectory
 "/home/tux"
-λ> 
-λ> getAppUserDataDirectory "myApp"
+> 
+> getAppUserDataDirectory "myApp"
 "/home/tux/.myApp"
-λ> 
-λ> getUserDocumentsDirectory
+> 
+> getUserDocumentsDirectory
 "/home/tux"
-λ> 
+> 
 ```
 
 **Running External Commands**
 
 ```haskell
-λ> import System.Cmd
-λ> 
-λ> :t rawSystem
+> import System.Cmd
+> 
+> :t rawSystem
 rawSystem :: String -> [String] -> IO GHC.IO.Exception.ExitCode
-λ> 
-λ> rawSystem "ls" ["-l", "/usr"]
+> 
+> rawSystem "ls" ["-l", "/usr"]
 total 260
 drwxr-xr-x   2 root root 118784 Abr 26 03:38 bin
 drwxr-xr-x   2 root root   4096 Abr 10  2014 games
@@ -6862,7 +7055,7 @@ drwxr-xr-x   2 root root  12288 Abr  3 13:28 sbin
 drwxr-xr-x 460 root root  20480 Abr 26 03:38 share
 drwxr-xr-x  13 root root   4096 Jan 13 21:03 src
 ExitSuccess
-λ>
+>
 ```
 
 **Reading input from a system command in Haskell**
@@ -6874,13 +7067,13 @@ import System.Process
 test = readProcess "ls" ["-a"] ""
 
 
-λ> import System.Process
-λ> let test = readProcess "ls" ["-a"] ""
-λ> 
-λ> :t test
+> import System.Process
+> let test = readProcess "ls" ["-a"] ""
+> 
+> :t test
 test :: IO String
-λ> 
-λ> test >>= putStrLn 
+> 
+> test >>= putStrLn 
 .
 ..
 adt2.py
@@ -6964,66 +7157,66 @@ main = do
 ```haskell
 import Data.Time
 
-λ > :t getCurrentTime
+> :t getCurrentTime
 getCurrentTime :: IO UTCTime
-λ > 
+> 
 
 
-λ > t <- getCurrentTime
-λ > t
+> t <- getCurrentTime
+> t
 2015-03-04 23:22:39.046752 UTC
-λ > 
+> 
 
-λ > :t t
+> :t t
 t :: UTCTime
 
 
-λ > today <- fmap utctDay getCurrentTime 
-λ > today
+> today <- fmap utctDay getCurrentTime 
+> today
 2015-03-04
-λ > :t today
+> :t today
 today :: Day
-λ > 
-λ > 
+> 
+> 
 
-λ >  let (year, _, _) = toGregorian today
-λ > year
+>  let (year, _, _) = toGregorian today
+> year
 2015
-λ > 
+> 
 
-λ > :t fromGregorian 2015 0 0
+> :t fromGregorian 2015 0 0
 fromGregorian 2015 0 0 :: Day
 
-λ > fromGregorian 2015 0 0
+> fromGregorian 2015 0 0
 2015-01-01
-λ > 
+> 
 
-λ > diffDays today (fromGregorian year 0 0)
+> diffDays today (fromGregorian year 0 0)
 62
-λ > 
+> 
 
-λ > import Text.Printf
-λ >
-λ > tm <- getCurrentTime
-λ >  let (year, month, day) = toGregorian (utctDay tm)
-λ > year
+> import Text.Printf
+>
+> tm <- getCurrentTime
+>  let (year, month, day) = toGregorian (utctDay tm)
+> year
 2015
-λ > month
+> month
 3
-λ > day
+> day
 4
-λ > 
+> 
 
-λ > printf "The current date is %04d %02d %02d\n" year month day
+> printf "The current date is %04d %02d %02d\n" year month day
 The current date is 2015 03 04
 
 
-λ > import System.Locale
-λ > 
-λ > fmap (formatTime defaultTimeLocale "%Y-%m-%d") getCurrentTime
+> import System.Locale
+> 
+> fmap (formatTime defaultTimeLocale "%Y-%m-%d") getCurrentTime
 "2015-03-04"
-λ > 
-λ > 
+> 
+> 
 
 ```
 
@@ -7031,129 +7224,129 @@ The current date is 2015 03 04
 
 ```haskell
 
-λ > import Data.Time
-λ > import Data.Time.Clock.POSIX
-λ > 
+> import Data.Time
+> import Data.Time.Clock.POSIX
+> 
 
-λ > let bree = UTCTime (fromGregorian 1981 6 16) (timeOfDayToTime $ TimeOfDay 4 35 25) -- 1981-06-16 04:35:25 UTC
-λ > bree
+> let bree = UTCTime (fromGregorian 1981 6 16) (timeOfDayToTime $ TimeOfDay 4 35 25) -- 1981-06-16 04:35:25 UTC
+> bree
 1981-06-16 04:35:25 UTC
-λ > 
+> 
 
 
-λ > let nat  = UTCTime (fromGregorian 1973 1 18) (timeOfDayToTime $ TimeOfDay 3 45 50) -- 1973-01-18 03:45:50 UTC
-λ > nat
+> let nat  = UTCTime (fromGregorian 1973 1 18) (timeOfDayToTime $ TimeOfDay 3 45 50) -- 1973-01-18 03:45:50 UTC
+> nat
 1973-01-18 03:45:50 UTC
-λ > 
+> 
 
 
-λ > 
-λ > let bree' = read "1981-06-16 04:35:25" :: UTCTime
-λ > bree'
+> 
+> let bree' = read "1981-06-16 04:35:25" :: UTCTime
+> bree'
 1981-06-16 04:35:25 UTC
-λ > :t bree'
+> :t bree'
 bree' :: UTCTime
-λ > 
-λ > let nat'  = read "1973-01-18 03:45:50" :: UTCTime
-λ > 
-λ > nat'
+> 
+> let nat'  = read "1973-01-18 03:45:50" :: UTCTime
+> 
+> nat'
 1973-01-18 03:45:50 UTC
-λ > 
+> 
 
 
-λ > difference = diffUTCTime bree nat / posixDayLength
-λ > difference 
+> difference = diffUTCTime bree nat / posixDayLength
+> difference 
 3071.03443287037s
-λ > 
+> 
 
-λ >  "There were " ++ (show $ round difference) ++ " days between Nat and Bree"
+>  "There were " ++ (show $ round difference) ++ " days between Nat and Bree"
 "There were 3071 days between Nat and Bree"
-λ > 
+> 
 ```
 
 ##### Day in a Week/Month/Year or Week Number
 
 ```haskell
 
-λ > import Data.Time
-λ > import Data.Time.Calendar.MonthDay
-λ > import Data.Time.Calendar.OrdinalDate
-λ > import System.Locale
+> import Data.Time
+> import Data.Time.Calendar.MonthDay
+> import Data.Time.Calendar.OrdinalDate
+> import System.Locale
 
-λ > :t fromGregorian
+> :t fromGregorian
 fromGregorian :: Integer -> Int -> Int -> Day
 
-λ > let (year, month, day) = (1981, 6, 16) :: (Integer , Int , Int )
-λ > 
-λ > let date = (fromGregorian year month day)
-λ > date
+> let (year, month, day) = (1981, 6, 16) :: (Integer , Int , Int )
+> 
+> let date = (fromGregorian year month day)
+> date
 1981-06-16
-λ > 
-λ > let (week, week_day) = sundayStartWeek date
-λ > week
+> 
+> let (week, week_day) = sundayStartWeek date
+> week
 24
-λ > week_day
+> week_day
 2
-λ > 
+> 
 
-λ > let (year_, year_day) = toOrdinalDate date
-λ > year_
+> let (year_, year_day) = toOrdinalDate date
+> year_
 1981
-λ > year_day
+> year_day
 167
-λ > 
+> 
 
 
-λ > let (week_day_name, _) = wDays defaultTimeLocale !! week_day
-λ > week_day_name
+> let (week_day_name, _) = wDays defaultTimeLocale !! week_day
+> week_day_name
 "Tuesday"
-λ > 
+> 
 
-λ > :t defaultTimeLocale 
+> :t defaultTimeLocale 
 defaultTimeLocale :: TimeLocale
-λ > 
-λ > defaultTimeLocale 
+> 
+> defaultTimeLocale 
 TimeLocale {wDays = [("Sunday","Sun"),("Monday","Mon"),("Tuesday","Tue"),("Wednesday","Wed"),("Thursday","Thu"),("Friday","Fri"),("Saturday","Sat")], months = [("January","Jan"),("February","Feb"),("March","Mar"),("April","Apr"),("May","May"),("June","Jun"),("July","Jul"),("August","Aug"),("September","Sep"),("October","Oct"),("November","Nov"),("December","Dec")], intervals = [("year","years"),("month","months"),("day","days"),("hour","hours"),("min","mins"),("sec","secs"),("usec","usecs")], amPm = ("AM","PM"), dateTimeFmt = "%a %b %e %H:%M:%S %Z %Y", dateFmt = "%m/%d/%y", timeFmt = "%H:%M:%S", time12Fmt = "%I:%M:%S %p"}
-λ > 
-λ > 
+> 
+> 
 ```
 
 ##### Parsing Dates and Times from Strings
 
 ```haskell
-λ > import Data.Time
-λ > import Data.Time.Format
-λ > import Data.Time.Clock.POSIX
-λ > import System.Locale
+> import Data.Time
+> import Data.Time.Format
+> import Data.Time.Clock.POSIX
+> import System.Locale
 
-λ > let day:: Day ; day = readTime defaultTimeLocale "%F" "1998-06-03"
-λ > 
-λ > day
+> let day:: Day ; day = readTime defaultTimeLocale "%F" "1998-06-03"
+> 
+> day
 1998-06-03
-λ > 
+> 
 
 ```
 
 ##### Printing a Date
 
 ```haskell
-λ > import Data.Time
-λ > import Data.Time.Format
-λ > import System.Locale
-λ > 
-λ > now <- getCurrentTime
-λ > :t now
+> import Data.Time
+> import Data.Time.Format
+> import System.Locale
+> 
+> now <- getCurrentTime
+> :t now
 now :: UTCTime
-λ > 
-λ > formatTime defaultTimeLocale "The date is %A (%a) %d/%m/%Y" now
+> 
+> formatTime defaultTimeLocale "The date is %A (%a) %d/%m/%Y" now
 "The date is Wednesday (Wed) 04/03/2015"
-λ > 
-λ > 
+> 
+> 
 
-λ > let t = do now <- getCurrentTime ; return $ formatTime defaultTimeLocale "The date is %A (%a) %d/%m/%Y" now
-λ > t
+> let t = do now <- getCurrentTime ; return $ formatTime defaultTimeLocale "The date is %A (%a) %d/%m/%Y" now
+> t
 "The date is Wednesday (Wed) 04/03/2015"
-λ > 
+> 
 
 
 ```
@@ -7188,7 +7381,7 @@ import System.Process (readProcess)
 
 :set -hide-package mtl
 
-:set prompt "\x1b[32mλ>\x1b[0m " -- set the shell prompt to print λ (lambda)
+:set prompt "\x1b[32m>\x1b[0m " -- set the shell prompt to print λ (lambda)
 
 :def hoogle \s -> return $ ":! hoogle --count=15 \"" ++ s ++ "\""
 
@@ -7217,18 +7410,18 @@ Examples:
 
 ```haskell
 
-λ> :pwd
+> :pwd
 /home/tux/PycharmProjects/Haskell
-λ> 
-λ> 
+> 
+> 
 
-λ> :hoogle getCurrentDirectory
+> :hoogle getCurrentDirectory
 Directory getCurrentDirectory :: IO FilePath
 System.Directory getCurrentDirectory :: IO FilePath
-λ> 
+> 
 
 
-λ> :paste
+> :paste
 import Data.Time.Clock
 import Data.Time.Calendar
 import Data.Time.LocalTime
@@ -7243,12 +7436,12 @@ main = do
     putStrLn $ "Day: " ++ show day
 [1 of 1] Compiling Main             ( /tmp/haskTemp.hs, interpreted )
 Ok, modules loaded: Main.
-λ> 
-λ> main
+> 
+> main
 Year: 2015
 Month: 4
 Day: 26
-λ> 
+> 
 
 
 ```
@@ -7259,16 +7452,16 @@ Day: 26
 #### Importing Ambigous Modules in GHCi
 
 ```haskell
-λ> import Control.Monad.State
+> import Control.Monad.State
 
 <no location info>:
     Ambiguous module name `Control.Monad.State':
       it was found in multiple packages: monads-tf-0.1.0.2 mtl-2.2.1
-λ> 
+> 
 
-λ> :set -hide-package mtl
-λ> import Control.Monad.State
-λ> 
+> :set -hide-package mtl
+> import Control.Monad.State
+> 
 ```
 
 Solution: Add the line to ~/.ghci
