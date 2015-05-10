@@ -5,16 +5,18 @@
 @TODO: Update papers repository
 -->
 
-![](images/haskellLogo.png)
+![](pages/images/haskellLogo.png)
 
 The purpose of this tutorial is to illustrate functional programming concepts in the Haskell programming language by providing reusable and useful snippets of code, examples, case studies, and applications.
 
-* Full  URL: https://github.com/caiorss/Functional-Programming
-* Short URL: http://tinyurl.com/fpbyexample
+* Author:   Caio Rodrigues Soares Silva / caiorss.rodrigue@gmail.com 
 
-Notes: 
+You can access this page from:
 
-* The code snippets with the '>' symbol were run in the interactive Haskell Shell (GHCi) and the lines below without the '>' symbol are the output.
+* https://github.com/caiorss/Functional-Programming
+* http://tinyurl.com/fpbyexample
+
+**Summary**
 
 * [Haskell](pages/Haskell.md)
 * [Functional Programming Concepts](pages/Functional_Programming_Concepts.md)
@@ -32,3 +34,10 @@ Notes:
 
 
 * [Papers in this Repository](papers/README.md)
+
+
+**Notes**
+
+
+The code snippets with the '>' symbol were run in the interactive Haskell Shell (GHCi) and the lines below without the '>' symbol are the output.
+

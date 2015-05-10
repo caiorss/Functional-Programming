@@ -1,8 +1,15 @@
 *.o
 *.fi
+__cache__
+*.pyc
+*.pyo
+*.pyd
+*.exe
 *.bin
 *.html
 *.htm
 .idea
 *.back
 *.old
+tmp/
+tags
