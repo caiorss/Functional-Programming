@@ -26,12 +26,14 @@ You can access this page from:
 * [List Comprehension](pages/List_Comprehension.md)
 * [Abstract Data Type](pages/Abstract_Data_Type.md)
 * [Functors, Monads, Applicatives and Monoids](pages/Functors__Monads__Applicatives_and_Monoids.md)
+* [Haskell Libraries](pages/Libraries.md)
+
 * [Useful Custom Functions/ Iterators and Operators](pages/Useful_Custom_Functions__Iterators_and_Operators.md)
 * [Applications](pages/Applications.md)
-* [Libraries](pages/Libraries.md)
-* [Miscelanious](pages/Miscelanious.md)
-* [Documentation and Learning Materials](pages/Documentation_and_Learning_Materials.md)
 
+* [Miscelanious](pages/Miscelanious.md)
+
+* [Documentation and Learning Materials](pages/Documentation_and_Learning_Materials.md)
 
 * [Papers in this Repository](papers/README.md)
 
