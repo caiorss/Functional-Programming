@@ -1,5 +1,7 @@
 # Functional Programming in Haskell by Examples
 
+[Papers](papers/README.md)
+
 <!--
 @TODO: Add the creative commons public domain logo.
 @TODO: Update papers repository
@@ -54,6 +56,7 @@ Notes:
 - [Functions](#functions)
   - [Creating functions](#creating-functions)
   - [Anonymous Functions or Lambda Functions](#anonymous-functions-or-lambda-functions)
+  - [Infix Functions](#infix-functions)
   - [Infix Operators as Functions](#infix-operators-as-functions)
   - [Currying](#currying)
   - [Function Composition / Composition Operator](#function-composition--composition-operator)
@@ -84,6 +87,7 @@ Notes:
     - [Data.List.Split String Functions](#datalistsplit-string-functions)
   - [Useful notations for functions](#useful-notations-for-functions)
 - [Pattern Matching](#pattern-matching)
+- [](#)
 - [List Comprehension](#list-comprehension)
   - [Simple List Comprehension](#simple-list-comprehension)
   - [Comprehensions with multiple generators](#comprehensions-with-multiple-generators)
@@ -129,6 +133,7 @@ Notes:
   - [Applying Multiples Functions](#applying-multiples-functions)
     - [Applying a list of functions to the same argument.](#applying-a-list-of-functions-to-the-same-argument)
     - [Applying a tuple of functions to a same argument.](#applying-a-tuple-of-functions-to-a-same-argument)
+    - [Control Flow Functions](#control-flow-functions)
 - [Applications](#applications)
   - [Mathematics](#mathematics)
   - [Picewise Functions](#picewise-functions)
@@ -136,10 +141,15 @@ Notes:
     - [Polynomial](#polynomial)
     - [Numerical Derivate](#numerical-derivate)
     - [Nonlinear Equation - Root-finding](#nonlinear-equation---root-finding)
+- [     t -> Int -> (t -> t) -> (t -> t) -> t -> (t, t, Int)](#t---int---t---t---t---t---t---t-t-int)
     - [Differential Equations](#differential-equations)
   - [Statistics and Time Series](#statistics-and-time-series)
     - [Some Statistical Functions](#some-statistical-functions)
     - [Monte Carlo Simulation Coin Toss](#monte-carlo-simulation-coin-toss)
+- [](#-1)
+- [](#-2)
+- [](#-3)
+- [](#-4)
   - [Vectors](#vectors)
   - [Tax Brackets](#tax-brackets)
   - [Small DSL Domain Specific Language](#small-dsl-domain-specific-language)
@@ -326,6 +336,7 @@ Some Functional programing languages:
 
 ```
 Notes:
+* AGDT   - Algebraic Data Types
 * JVM    - Java Virtual Machine / Java Platform
 * .NET   - Dot Net Platform
 * NAT    - Native Code
@@ -336,6 +347,8 @@ Notes:
 ```
 
 More Information: [Comparison of Functional Programming Languages](http://en.wikipedia.org/wiki/Comparison_of_functional_programming_languages)
+
+See also: [ML Dialects and Haskell: SML, OCaml, F#, Haskell](http://hyperpolyglot.org/ml)
 
 ### Pure Functions
 
@@ -1217,6 +1230,58 @@ f x y = sqrt ( x^2 + y^2 )
 
 
 ```
+
+### Infix Functions
+
+Any function of two arguments can be used as an infix function or custom operator.
+
+Example:
+
+```haskell
+> let addVectors (a1, a2, a3) (b1, b2, b3) = (a1+b1, a2+b2, a3+b3)
+> let subVectors (a1, a2, a3) (b1, b2, b3) = (a1-b1, a2-b2, a3-b3)
+
+> :t addVectors 
+addVectors :: (Num t, Num t1, Num t2) =>  (t, t1, t2) -> (t, t1, t2) -> (t, t1, t2)
+
+> :t subVectors 
+subVectors   :: (Num t, Num t1, Num t2) => (t, t1, t2) -> (t, t1, t2) -> (t, t1, t2)
+
+
+> addVectors (23, 10, 4) (3, 8, 9)
+(26,18,13)
+
+
+> (23, 10, 4) `addVectors` (3, 8, 9) -- Used as an infix function
+(26,18,13)
+> 
+
+> subVectors (23, 10, 4) (3, 8, 9)
+(20,2,-5)
+> 
+
+> (23, 10, 4) `subVectors` (3, 8, 9)
+(20,2,-5)
+> 
+
+> let f x y = 10*x - y**2
+> 
+> f 10 3
+91.0
+> 10 `f` 3
+91.0
+> 
+
+> let addJust (Just a) (Just b) = Just (a+b)
+> addJust (Just 10) (Just 30)
+Just 40
+> 
+
+> (Just 10) `addJust` (Just 30) -- Used as custom operator
+Just 40
+> 
+```
+
 
 ### Infix Operators as Functions
 

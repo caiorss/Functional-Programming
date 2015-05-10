@@ -42,6 +42,8 @@
                     <div class="comment-body markdown-body markdown-format">
                       <h1>Functional Programming in Haskell by Examples</h1>
 
+<p><a href="papers/README.md">Papers</a></p>
+
 
 
 <p><a href="images/haskellLogo.png" target="_blank"><img src="images/haskellLogo.png" alt="" style="max-width:100%;"></a></p>
@@ -134,6 +136,7 @@
 <ul>
 <li><a href="#creating-functions">Creating functions</a></li>
 <li><a href="#anonymous-functions-or-lambda-functions">Anonymous Functions or Lambda Functions</a></li>
+<li><a href="#infix-functions">Infix Functions</a></li>
 <li><a href="#infix-operators-as-functions">Infix Operators as Functions</a></li>
 <li><a href="#currying">Currying</a></li>
 <li><a href="#function-composition--composition-operator">Function Composition / Composition Operator</a></li>
@@ -176,6 +179,7 @@
 </ul>
 </li>
 <li><a href="#pattern-matching">Pattern Matching</a></li>
+<li><a href="#"></a></li>
 <li>
 <a href="#list-comprehension">List Comprehension</a>
 
@@ -262,6 +266,7 @@
 <ul>
 <li><a href="#applying-a-list-of-functions-to-the-same-argument">Applying a list of functions to the same argument.</a></li>
 <li><a href="#applying-a-tuple-of-functions-to-a-same-argument">Applying a tuple of functions to a same argument.</a></li>
+<li><a href="#control-flow-functions">Control Flow Functions</a></li>
 </ul>
 </li>
 </ul>
@@ -279,9 +284,15 @@
 <li><a href="#polynomial">Polynomial</a></li>
 <li><a href="#numerical-derivate">Numerical Derivate</a></li>
 <li><a href="#nonlinear-equation---root-finding">Nonlinear Equation - Root-finding</a></li>
-<li><a href="#differential-equations">Differential Equations</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li>
+<a href="#t---int---t---t---t---t---t---t-t-int">     t -&gt; Int -&gt; (t -&gt; t) -&gt; (t -&gt; t) -&gt; t -&gt; (t, t, Int)</a>
+
+<ul>
+<li><a href="#differential-equations">Differential Equations</a></li>
 <li>
 <a href="#statistics-and-time-series">Statistics and Time Series</a>
 
@@ -290,6 +301,15 @@
 <li><a href="#monte-carlo-simulation-coin-toss">Monte Carlo Simulation Coin Toss</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a href="#-1"></a></li>
+<li><a href="#-2"></a></li>
+<li><a href="#-3"></a></li>
+<li>
+<a href="#-4"></a>
+
+<ul>
 <li><a href="#vectors">Vectors</a></li>
 <li><a href="#tax-brackets">Tax Brackets</a></li>
 <li>
@@ -717,6 +737,7 @@ cabal install &lt;some package&gt;
 </table>
 
 <pre><code>Notes:
+* AGDT   - Algebraic Data Types
 * JVM    - Java Virtual Machine / Java Platform
 * .NET   - Dot Net Platform
 * NAT    - Native Code
@@ -727,6 +748,8 @@ cabal install &lt;some package&gt;
 </code></pre>
 
 <p>More Information: <a href="http://en.wikipedia.org/wiki/Comparison_of_functional_programming_languages">Comparison of Functional Programming Languages</a></p>
+
+<p>See also: <a href="http://hyperpolyglot.org/ml">ML Dialects and Haskell: SML, OCaml, F#, Haskell</a></p>
 
 <h3>Pure Functions</h3>
 
@@ -1679,6 +1702,55 @@ prefix (possibly empty) of xs of elements that satisfy p:</p>
 &gt;  
 
 </pre></div>
+
+<h3>Infix Functions</h3>
+
+<p>Any function of two arguments can be used as an infix function or custom operator.</p>
+
+<p>Example:</p>
+
+<div class="highlight highlight-haskell"><pre>&gt; <span class="pl-k">let</span> addVectors (a1, a2, a3) (b1, b2, b3) = (a1+b1, a2+b2, a3+b3)
+&gt; <span class="pl-k">let</span> subVectors (a1, a2, a3) (b1, b2, b3) = (a1-b1, a2-b2, a3-b3)
+
+&gt; :t addVectors 
+<span class="pl-en">addVectors</span> <span class="pl-k">::</span> (<span class="pl-k">Num</span> <span class="pl-smi">t</span>, <span class="pl-k">Num</span> <span class="pl-smi">t1</span>, <span class="pl-k">Num</span> <span class="pl-smi">t2</span>) <span class="pl-k">=&gt;</span>  (<span class="pl-smi">t</span>, <span class="pl-smi">t1</span>, <span class="pl-smi">t2</span>) <span class="pl-k">-&gt;</span> (<span class="pl-smi">t</span>, <span class="pl-smi">t1</span>, <span class="pl-smi">t2</span>) <span class="pl-k">-&gt;</span> (<span class="pl-smi">t</span>, <span class="pl-smi">t1</span>, <span class="pl-smi">t2</span>)
+
+&gt; :t subVectors 
+<span class="pl-en">subVectors</span>   <span class="pl-k">::</span> (<span class="pl-k">Num</span> <span class="pl-smi">t</span>, <span class="pl-k">Num</span> <span class="pl-smi">t1</span>, <span class="pl-k">Num</span> <span class="pl-smi">t2</span>) <span class="pl-k">=&gt;</span> (<span class="pl-smi">t</span>, <span class="pl-smi">t1</span>, <span class="pl-smi">t2</span>) <span class="pl-k">-&gt;</span> (<span class="pl-smi">t</span>, <span class="pl-smi">t1</span>, <span class="pl-smi">t2</span>) <span class="pl-k">-&gt;</span> (<span class="pl-smi">t</span>, <span class="pl-smi">t1</span>, <span class="pl-smi">t2</span>)
+
+
+&gt; addVectors (<span class="pl-c1">23</span>, <span class="pl-c1">10</span>, <span class="pl-c1">4</span>) (<span class="pl-c1">3</span>, <span class="pl-c1">8</span>, <span class="pl-c1">9</span>)
+(<span class="pl-c1">26</span>,<span class="pl-c1">18</span>,<span class="pl-c1">13</span>)
+
+
+&gt; (<span class="pl-c1">23</span>, <span class="pl-c1">10</span>, <span class="pl-c1">4</span>) <span class="pl-k">`addVectors`</span> (<span class="pl-c1">3</span>, <span class="pl-c1">8</span>, <span class="pl-c1">9</span>) <span class="pl-c">-- Used as an infix function</span>
+(<span class="pl-c1">26</span>,<span class="pl-c1">18</span>,<span class="pl-c1">13</span>)
+&gt; 
+
+&gt; subVectors (<span class="pl-c1">23</span>, <span class="pl-c1">10</span>, <span class="pl-c1">4</span>) (<span class="pl-c1">3</span>, <span class="pl-c1">8</span>, <span class="pl-c1">9</span>)
+(<span class="pl-c1">20</span>,<span class="pl-c1">2</span>,-<span class="pl-c1">5</span>)
+&gt; 
+
+&gt; (<span class="pl-c1">23</span>, <span class="pl-c1">10</span>, <span class="pl-c1">4</span>) <span class="pl-k">`subVectors`</span> (<span class="pl-c1">3</span>, <span class="pl-c1">8</span>, <span class="pl-c1">9</span>)
+(<span class="pl-c1">20</span>,<span class="pl-c1">2</span>,-<span class="pl-c1">5</span>)
+&gt; 
+
+&gt; <span class="pl-k">let</span> f x y = <span class="pl-c1">10</span>*x - y**<span class="pl-c1">2</span>
+&gt; 
+&gt; f <span class="pl-c1">10</span> <span class="pl-c1">3</span>
+<span class="pl-c1">91.0</span>
+&gt; <span class="pl-c1">10</span> <span class="pl-k">`f`</span> <span class="pl-c1">3</span>
+<span class="pl-c1">91.0</span>
+&gt; 
+
+&gt; <span class="pl-k">let</span> addJust (<span class="pl-c1">Just</span> a) (<span class="pl-c1">Just</span> b) = <span class="pl-c1">Just</span> (a+b)
+&gt; addJust (<span class="pl-c1">Just</span> <span class="pl-c1">10</span>) (<span class="pl-c1">Just</span> <span class="pl-c1">30</span>)
+<span class="pl-c1">Just</span> <span class="pl-c1">40</span>
+&gt; 
+
+&gt; (<span class="pl-c1">Just</span> <span class="pl-c1">10</span>) <span class="pl-k">`addJust`</span> (<span class="pl-c1">Just</span> <span class="pl-c1">30</span>) <span class="pl-c">-- Used as custom operator</span>
+<span class="pl-c1">Just</span> <span class="pl-c1">40</span>
+&gt; </pre></div>
 
 <h3>Infix Operators as Functions</h3>
 
