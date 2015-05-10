@@ -5,7 +5,7 @@ Library to Process README.md file.
 import prelude as p
 import os
 
-from prelude import string as st
+from prelude import Str as st
 from prelude import Chain, Lazy, X
 from prelude import entryPoint
 
@@ -14,6 +14,8 @@ import re
 findTitle  = lambda text: re.findall("^## (.*)", text, re.M)
 findTopics = lambda text: re.findall("^## (.*)", text, re.M)
 
+
+makeLink = lambda topic, link: "[{}]({})".format(topic, link)
 
 findReSpan =  lambda pattern, text: (
                         Chain(re.finditer(pattern, text, re.M))
@@ -30,7 +32,7 @@ findReSpan =  lambda pattern, text: (
 #@entryPoint
 #def main():
 
-text = open("README.md").read()
+text = open("README2.md").read()
 topics = findTopics(text)
 
 span = findReSpan("^## (.*)", text)
@@ -54,7 +56,15 @@ filenames =  p.mapl(
     topics
     )
 
-os.chdir("./pages")
+links = p.compose(
+    st.joinLines, 
+    p.mapl(st.addPrefix("* ")),
+    p.mapl(p.uncurry(makeLink),
+    ) # End of composition
+    )(p.zipl(topics, p.mapl(st.addPrefix("pages/"), filenames)))
+
+
+#os.chdir("./pages")
 
 #p.mapl(p.uncurry(p.writeFile), p.zipl(filenames, subtexts))
 
