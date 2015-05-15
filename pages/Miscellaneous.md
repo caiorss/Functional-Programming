@@ -1,4 +1,4 @@
-## Miscelanious
+## Miscellaneous
 
 ### Haskell IDEs and Text Editors
 
