@@ -31,7 +31,7 @@ You can access this page from:
 * [Useful Custom Functions/ Iterators and Operators](pages/Useful_Custom_Functions__Iterators_and_Operators.md)
 * [Applications](pages/Applications.md)
 
-* [Miscelanious](pages/Miscelanious.md)
+* [Miscellaneous](pages/Miscellaneous.md)
 
 * [Documentation and Learning Materials](pages/Documentation_and_Learning_Materials.md)
 
