@@ -18,7 +18,6 @@ Functional Programming is all about programming with functions.
 * High Order Functions
 * Currying/ Partial Function Application
 * Closure - Returning functions from functions
-
 * Data Immutability
 * Pattern Matching
 * Lists are the fundamental data Structure

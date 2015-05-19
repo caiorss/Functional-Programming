@@ -51,9 +51,9 @@ f x y = sqrt ( x^2 + y^2 )
 >  let f20 = f 20
 >  f20 10
 30
->  x/y + x*y) 10 20
+>  (\x y -> x/y + x*y) 10 20
 200.5
->  x/y + x*y) (10, 20)
+>  (\(x, y) -> x/y + x*y) (10, 20)
 200.5
 >  
 
@@ -129,17 +129,17 @@ x + y is equivalent to add x y or (+ x y)
 
 | Shorthand  |  Equivalence         | Type Signature |
 |------------|----------------------|----------------|
-| (+4)       |  \x -> x 4           |                |
-| (*3)       |  \x -> x * 3           | |
-| (/2)       |  \x -> x / 2           | |
+| (+4)       |  \x -> x + 4         |                |
+| (*3)       |  \x -> x * 3         | |
+| (/2)       |  \x -> x / 2         | |
 | ((-)5)     |  \x -> 5 - x         | |
-| (^2)       |  \x -> x ^ 2           | |
-| (2^)       |  \x -> 2 ^ x           | |
-| (+)        |  \x y -> x + y        | (+) :: Num a => a -> a -> a        |
-| (-)        |  \x y -> x - y         | (-) :: Num a => a -> a -> a        |
-| (/)        |  \x y -> x / y         | (/) :: Fractional a => a -> a -> a |
-| (^)        |  \x y -> x ^ y         | (^) :: (Integral b, Num a) => a -> b -> a |
-| (**)       |  \x y -> x ** y        | (**) :: Floating a => a -> a -> a |
+| (^2)       |  \x -> x ^ 2         | |
+| (2^)       |  \x -> 2 ^ x         | |
+| (+)        |  \x y -> x + y       | (+) :: Num a => a -> a -> a        |
+| (-)        |  \x y -> x - y       | (-) :: Num a => a -> a -> a        |
+| (/)        |  \x y -> x / y       | (/) :: Fractional a => a -> a -> a |
+| (^)        |  \x y -> x ^ y       | (^) :: (Integral b, Num a) => a -> b -> a |
+| (**)       |  \x y -> x ** y      | (**) :: Floating a => a -> a -> a |
 
 **Comparison Operator**
 
@@ -156,9 +156,9 @@ x + y is equivalent to add x y or (+ x y)
 
 | Shorthand  |  Equivalence         | Type Signature | Name |
 |------------|----------------------|----------------|------|
-| (&&)        |  \x y -> x && y         | (&&) :: Bool -> Bool -> Bool | And |
-| (||)       |  \x y z -> x || y        | (||) :: Bool -> Bool -> Bool | Or |
-| (not)       | not x                   |  not :: Bool -> Bool         | Not |
+| (&&)       |  \x y -> x && y      | (&&) :: Bool -> Bool -> Bool   | And |
+| (\|\|)     |  \x y -> x \|\| y    | (\|\|) :: Bool -> Bool -> Bool | Or |
+| (not)      | not x                |  not :: Bool -> Bool           | Not |
 
 **List and Tuples Operators**
 
