@@ -366,6 +366,19 @@ a -> b and b -> c and returns a function of type a -> m b
 h :: ( a -> b) -> (b -> c) -> ( a -> m b)
 ```
 
+Credits: http://yannesposito.com/Scratch/en/blog/Haskell-the-Hard-Way/
+
+```
+x :: Int            ⇔ x is of type Int
+x :: a              ⇔ x can be of any type
+x :: Num a => a     ⇔ x can be any type a
+                      such that a belongs to Num type class 
+f :: a -> b         ⇔ f is a function from a to b
+f :: a -> b -> c    ⇔ f is a function from a to (b→c)
+f :: (a -> b) -> c  ⇔ f is a function from (a→b) to c
+```
+
+
 ### Lists
 
 Haskell lists are built from nils ([]) empty list, and cons (:).

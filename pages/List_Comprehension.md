@@ -1,3 +1,15 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [List Comprehension](#list-comprehension)
+  - [Simple List Comprehension](#simple-list-comprehension)
+  - [Comprehensions with multiple generators](#comprehensions-with-multiple-generators)
+  - [Function Inside List Comprehension](#function-inside-list-comprehension)
+  - [Comprehension with Guards](#comprehension-with-guards)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## List Comprehension
 
 ### Simple List Comprehension

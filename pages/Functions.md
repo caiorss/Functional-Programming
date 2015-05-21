@@ -1,3 +1,42 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Functions](#functions)
+  - [Creating functions](#creating-functions)
+  - [Anonymous Functions or Lambda Functions](#anonymous-functions-or-lambda-functions)
+  - [Infix Functions](#infix-functions)
+  - [Infix Operators as Functions](#infix-operators-as-functions)
+  - [Currying](#currying)
+  - [Function Composition / Composition Operator](#function-composition--composition-operator)
+  - [The $ apply operator.](#the-$-apply-operator)
+  - [Recursion](#recursion)
+  - [Integer Arithmetic Functions](#integer-arithmetic-functions)
+  - [Mathematical Functions](#mathematical-functions)
+  - [Standard Functions](#standard-functions)
+  - [Higher Order Functions](#higher-order-functions)
+    - [Map](#map)
+    - [Filter](#filter)
+    - [Higher-order predicates](#higher-order-predicates)
+    - [Fold](#fold)
+    - [Scanl](#scanl)
+    - [Curry and Uncurrying](#curry-and-uncurrying)
+    - [Flip](#flip)
+    - [Iterate](#iterate)
+    - [takeWhile](#takewhile)
+    - [dropWhile](#dropwhile)
+    - [Zip and Unzip](#zip-and-unzip)
+    - [ZipWith](#zipwith)
+    - [Replicate](#replicate)
+    - [Other Useful higher-order functions](#other-useful-higher-order-functions)
+  - [Functions to Manipulate Characters and Strings](#functions-to-manipulate-characters-and-strings)
+    - [Strings Features](#strings-features)
+    - [Prelude String Functions](#prelude-string-functions)
+    - [Data.Char String Functions](#datachar-string-functions)
+    - [Data.List.Split String Functions](#datalistsplit-string-functions)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Functions
 
 ### Creating functions
@@ -17,14 +56,106 @@ In the GHCI Shell
 > :t f
 f :: Floating a => a -> a -> a
 
+> putStrLn "Hello World"
+Hello World
+> 
+
+
 ```
 
-In a Haskell source file, *.hs
+In a Haskell source file, functions.hs
 
 ```haskell
-f x y = sqrt ( x^2 + y^2 )
+
+{- Triangle Area as function of sides -}
+triangleArea a b c =  sqrt(p * (p - a) * ( p - b) * (p - c))
+    where 
+    p = (a + b + c) / 2.0
+
+triangleArea2 a b c =  sqrt(p * pa * pb  *  pc)
+    where 
+    pa = p - a
+    pb = p - b
+    pc = p - c
+    p = (a + b + c) / 2.0
+    
+
+triangleArea3 a b c =  let pa = p - a
+                           pb = p - b
+                           pc = p - c
+                           p = (a + b + c) / 2.0
+                           in sqrt(p * pa * pb  *  pc)
+
+{- Returning more than one value -}    
+areaAndPerimiter a b c =  (2.0 * p, sqrt(p * (p - a) * ( p - b) * (p - c)))
+    where 
+    p = (a + b + c) / 2.0
+
+    
+ft 0 = 10
+ft 1 = 30
+ft 2 = 50
+ft 3 = 8
+ft _ = error "Invalid Value"
+
+{- Distance between two points in a plane -}
+distance (x1, y1) (x2, y2)= sqrt ((x2 - x1)**2.0 + (y2 - y1)**2.0)
 ```
 
+Loading functions.hs
+
+```haskell
+> :l functions.hs
+[1 of 1] Compiling Main             ( /tmp/functions.hs, interpreted )
+Ok, modules loaded: Main.
+> 
+> :t triangleArea 
+triangleArea :: Floating a => a -> a -> a -> a
+
+> triangleArea 24.0 30.0 18.0
+216.0
+> 
+> triangleArea2 24.0 30.0 18.0
+216.0
+> 
+> triangleArea3 24.0 30.0 18.0
+216.0
+> 
+
+> areaAndPerimiter 24.0 30.0 18.0
+(72.0,216.0)
+> 
+
+> :t distance 
+distance :: Floating a => (a, a) -> (a, a) -> a
+> 
+{- Distance from (0, 0) to (3, 4) -}
+> distance (0, 0) (3, 4)
+5.0
+> 
+> distance (-3, -4) (3, 4)
+10.0
+> 
+
+
+> ft 0
+10
+> ft 1
+30
+> map ft [0, 1, 2, 3]
+[10,30,50,8]
+> ft 10
+*** Exception: Invalid Value
+> ft 9
+*** Exception: Invalid Value
+> 
+
+```
+
+Sources:
+
+* [Heron Formula](http://www.mathopenref.com/heronsformula.html)
+ 
 ### Anonymous Functions or Lambda Functions
 
 <!--
@@ -92,6 +223,23 @@ subVectors   :: (Num t, Num t1, Num t2) => (t, t1, t2) -> (t, t1, t2) -> (t, t1,
 > (23, 10, 4) `subVectors` (3, 8, 9)
 (20,2,-5)
 > 
+
+{- Using Custom Operators -}
+> let (@+) (a1, a2, a3) (b1, b2, b3) = (a1+b1, a2+b2, a3+b3)
+> let (@-) (a1, a2, a3) (b1, b2, b3) = (a1-b1, a2-b2, a3-b3)
+> 
+> 
+> (23, 10, 4) @+ (3, 8, 9)
+(26,18,13)
+> (23, 10, 4) @-  (3, 8, 9)
+(20,2,-5)
+> 
+>
+> (@+) (23, 10, 4) (3, 8, 9)
+(26,18,13)
+> (@-) (23, 10, 4) (3, 8, 9)
+(20,2,-5)
+>
 
 > let f x y = 10*x - y**2
 > 
@@ -467,7 +615,47 @@ OR
 composed x = h . f . g $ x ==>   composed = h . f . g 
 ```
 
-Function Composition with Map and Filter
+Function Composition with Map
+
+
+``` 
+    (map g (map f xs) == (map g . map f) xs = (map g . f) xs
+
+OR
+    map g . map f  == map (g . f)
+        
+Generalizing
+    
+    map f1 (map f2 (map f3 (map f4 xs))) 
+    = (map f1)
+    =  map (f1 . f2 . f3 . f4)  xs     
+    =  f xs
+    
+Where f = map $ f1 . f2 . f3 . f4
+
+Example:
+
+    > map  (+3) [1, 2, 3, 4]
+    [4,5,6,7]
+    > map  (*2) [4, 5, 6, 7]
+    [8,10,12,14]
+    > 
+    > map  (*2) (map (+3)  [1, 2, 3, 4])
+    [8,10,12,14]
+    > 
+    > map  (*2) . map (+3) $  [1, 2, 3, 4]
+    [8,10,12,14]
+    > 
+
+    > map ((*2) . (+3)) [1, 2, 3, 4]
+    [8,10,12,14]
+
+    > let f = map $ (*2) . (+3)
+    > f [1, 2, 3, 4]
+    [8,10,12,14]
+
+```
+
 
 ```
 h :: c -> [a]
@@ -1224,6 +1412,8 @@ Reference:
 
 #### Map
 
+See also: [Map (higher-order function)](http://en.wikipedia.org/wiki/Map_(higher-order_function))
+
 map :: (a -> b) -> [a] -> [b]
 
 The map functional takes a function as its first argument, then applies it to every element of a list. 
@@ -1500,7 +1690,7 @@ f :: Num a => a -> a -> a
 > f 2 4
 ```
 
-The problem is: how to map f over a list of pairs of a tuple of values??
+The problem is: how to map f over a list of tuples ??
 
 ```haskell
 > map f [(1, 2), (4, 5), (9, 10)]
@@ -2313,20 +2503,6 @@ Documentation: http://hackage.haskell.org/package/split-0.1.4.1/docs/Data-List-S
 > 
 > 
 
-```
-
-### Useful notations for functions 
-
-Credits: http://yannesposito.com/Scratch/en/blog/Haskell-the-Hard-Way/
-
-```
-x :: Int            ⇔ x is of type Int
-x :: a              ⇔ x can be of any type
-x :: Num a => a     ⇔ x can be any type a
-                      such that a belongs to Num type class 
-f :: a -> b         ⇔ f is a function from a to b
-f :: a -> b -> c    ⇔ f is a function from a to (b→c)
-f :: (a -> b) -> c  ⇔ f is a function from (a→b) to c
 ```
 
 

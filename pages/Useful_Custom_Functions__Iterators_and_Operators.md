@@ -1,3 +1,21 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Useful Custom Functions/ Iterators and Operators](#useful-custom-functions-iterators-and-operators)
+  - [Pipelining Operators](#pipelining-operators)
+  - [Iterators](#iterators)
+    - [Pair Iterator](#pair-iterator)
+    - [Triples Iterator](#triples-iterator)
+    - [Sliding Window Iterator](#sliding-window-iterator)
+    - [Enumerate Iterator](#enumerate-iterator)
+  - [Applying Multiples Functions](#applying-multiples-functions)
+    - [Applying a list of functions to the same argument.](#applying-a-list-of-functions-to-the-same-argument)
+    - [Applying a tuple of functions to a same argument.](#applying-a-tuple-of-functions-to-a-same-argument)
+    - [Control Flow Functions](#control-flow-functions)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Useful Custom Functions/ Iterators and Operators
 
 This a collection of useful short code snippets. 

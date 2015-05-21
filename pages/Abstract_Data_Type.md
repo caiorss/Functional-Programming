@@ -1,5 +1,16 @@
 ## Abstract Data Type
 
+[Under Contruction]
+
+See also: 
+
+* [Wikipedia / Algebraic data type](http://en.wikipedia.org/wiki/Algebraic_data_type)
+* [Wikipedia / Dijoint Union](http://en.wikipedia.org/wiki/Disjoint_union)
+
+ 
+
+#### Enumerated Data Type
+
 **Example: Days of Week**
 
 Enumerated sets is type which can only have a limited number of values. 
@@ -108,6 +119,7 @@ True
 
 data Shape = Circle  Float 
             | Rect   Float Float 
+            deriving Show
 
 square   :: Float -> Shape
 square n =  Rect n n 
@@ -116,16 +128,71 @@ area            :: Shape -> Float
 area (Circle r)  = pi * r^2
 area (Rect x y)  = x  * y
 
-*Main> area $  Rect 20 30
-600.0
-*Main> area $ Circle 20
-1256.6371
-*Main> area $ square 20
-400.0
-*Main> 
+is_circle (Circle _ ) = True
+is_circle _           = False
 
+is_rect   (Rect _ _)  = True
+is_rect   _           = False
+
+describe (Circle radius) = putStrLn $ "Circle of radius : " ++ show(radius) 
+describe (Rect h w)      = putStrLn $ "Rectangle of " ++ show(h) ++ " x " ++ show(w)
+
+> area $  Rect 20 30
+600.0
+> area $ Circle 20
+1256.6371
+> area $ square 20
+400.0
+> 
+> [Rect 20.0 30.0, Rect 10.0 30.0, Circle 3.0, Circle 4.0]
+[Rect 20.0 30.0,Rect 10.0 30.0,Circle 3.0,Circle 4.0]
+> 
+> map area [Rect 20.0 30.0, Rect 10.0 30.0, Circle 3.0, Circle 4.0]
+[600.0,300.0,28.274334,50.265484]
+> 
+
+> :t is_rect 
+is_rect :: Shape -> Bool
+> :t is_circle 
+is_circle :: Shape -> Bool
+> 
+
+> filter is_rect [Rect 20.0 30.0, Rect 10.0 30.0, Circle 3.0, Circle 4.0]
+[Rect 20.0 30.0,Rect 10.0 30.0]
+
+> filter is_circle [Rect 20.0 30.0, Rect 10.0 30.0, Circle 3.0, Circle 4.0]
+[Circle 3.0,Circle 4.0]
+
+> :t describe 
+describe :: Shape -> IO ()
+> 
+
+> describe (Rect 20 30)
+Rectangle of 20.0 x 30.0
+
+> describe (Circle 3.60)
+Circle of radius : 3.6
+> 
+
+> mapM_ describe [Rect 20.0 30.0, Rect 10.0 30.0, Circle 3.0, Circle 4.0]
+Rectangle of 20.0 x 30.0
+Rectangle of 10.0 x 30.0
+Circle of radius : 3.0
+Circle of radius : 4.0
+> 
+
+> let describe_list = mapM_ describe 
+> 
+> describe_list [Rect 20.0 30.0, Rect 10.0 30.0, Circle 3.0, Circle 4.0]
+Rectangle of 20.0 x 30.0
+Rectangle of 10.0 x 30.0
+Circle of radius : 3.0
+Circle of radius : 4.0
+> 
 
 ```
+
+#### Typeclass without Record Syntax
 
 **Example: Students GPA**
 
@@ -146,22 +213,22 @@ class_gpa myclass = (sum c) / fromIntegral  (length c)
                   c = map get_gpa myclass
 
 
-*Main> let myke = USU "Mike" 4.0
-*Main> 
-*Main> get_name myke
+> let myke = USU "Mike" 4.0
+>  
+>  get_name myke
 "Mike"
-*Main> get_gpa myke
+>  get_gpa myke
 4.0
-*Main> 
+>  
 
-*Main> let myclass = [USU "Mike" 3.7, USU "Steve" 3.9, USU "Fred" 2.9, USU "Joe" 1.5]
-*Main> 
+>  let myclass = [USU "Mike" 3.7, USU "Steve" 3.9, USU "Fred" 2.9, USU "Joe" 1.5]
+>  
 
-*Main> class_gpa myclass 
+>  class_gpa myclass 
 3.0
-*Main
-
 ```
+
+#### Record Syntax
 
 **Example: Typeclass with record Syntax**
 
@@ -235,6 +302,315 @@ Person {firstName = "Nikola", lastName = "Tesla", age = 30}
 "Name: \"Nikola\" - Last Name: \"Tesla\" - Age 30"
 > 
 
+```
+
+#### Recursive Data Types
+
+**Exmple: Custom List Implementation**
+
+
+File: list_cons.hs
+```haskell
+data List a = Nil | Cons a (List a) deriving (Show)
+
+is_empty :: List t -> Bool
+is_empty Nil =  True
+is_empty _   =  False
+
+is_empty2  lst = case lst of 
+                    Nil -> True
+                    _   -> False
+
+count :: List t -> Int
+count lst = 
+    case lst of 
+        Nil             -> 0
+        Cons a next_lst -> 1 + count next_lst
+
+suml lst = 
+    case lst of
+        Nil             -> 0
+        Cons a next_lst -> a + suml next_lst
+        
+headl (Cons a _) = a
+headl Nil        = error "Empty List"
+
+safe_headl (Cons a _) = Just a
+safe_headl Nil        = Nothing
+
+lastl Nil           = error "Failed: Empty List"
+lastl (Cons a Nil)  = a
+lastl (Cons _ t)    = lastl t
+
+{- Converts to Haskell List -}
+to_list Nil         = []
+to_list (Cons x xs) = x:(to_list xs)
+
+
+takel n lst =
+    case (n, lst) of
+    (_, Nil      )  -> Nil
+    (0, _        )  -> Nil
+    (k, Cons h  t)  -> Cons h (takel (n-1) t)
+
+
+nth lst n = 
+    case (n, lst) of
+    (_, Nil)       -> error "Index too large"
+    (0, Cons a _)  -> a
+    (k, Cons h t)  -> nth t (n-1) 
+
+
+mapl f Nil          = Nil
+mapl f (Cons h t)   = Cons (f h) (mapl f t)
+
+filterl  f  Nil        = Nil
+filterl  f (Cons h t)  = 
+    if f h 
+        then  Cons h (filterl f t)
+        else  filterl f t
+
+{- Empty List [] -}
+list0 = Nil
+
+{- Sigle element list -}
+list1 = Cons 10 Nil
+list2 = Cons "Haskell" Nil
+
+list3 = Cons 10 (Cons 20 (Cons 30 Nil))
+list4 = Cons 1.25 (Cons 0.65 (Cons 8.123 ( Cons 9.434 Nil)))
+```
+
+Running in ghci
+```haskell
+
+> :l list_cons.hs 
+[1 of 1] Compiling Main             ( list_cons.hs, interpreted )
+Ok, modules loaded: Main.
+
+> :t is_empty
+is_empty :: List t -> Bool
+> :t count 
+count :: List t -> Int
+
+
+> list0
+Nil
+> list1
+Cons 10 Nil
+> list2
+Cons "Haskell" Nil
+> list3
+Cons 10 (Cons 20 (Cons 30 Nil))
+> list4
+Cons 1.25 (Cons 0.65 (Cons 8.123 (Cons 9.434 Nil)))
+
+> :t list0
+list0 :: List a
+> :t list1
+list1 :: List Integer
+> :t list2
+list2 :: List [Char]
+> :t list3
+list3 :: List Integer
+> :t list4
+list4 :: List Double
+
+> Cons 10.23 list0
+Cons 10.23 Nil
+> 
+> Cons 30 list1
+Cons 30 (Cons 10 Nil)
+>
+> Cons 40 list3
+Cons 40 (Cons 10 (Cons 20 (Cons 30 Nil)))
+> 
+> Cons 50 (Cons 40 list3)
+Cons 50 (Cons 40 (Cons 10 (Cons 20 (Cons 30 Nil))))
+
+
+> is_empty list0
+True
+> is_empty list1
+False
+> is_empty list2
+False
+> is_empty list3
+False
+> 
+
+> is_empty2 list0
+True
+> is_empty2 list1
+False
+> is_empty2 list3
+False
+> 
+
+
+> count list0
+0
+> count list1
+1
+> count list2
+1
+> count list3
+3
+
+{- Getting the first element -}
+> headl list0
+*** Exception: Empty List
+> headl list1
+10
+> headl list2
+"Haskell"
+> headl list3
+10
+> headl list4
+1.25
+> 
+
+{- Safe version of headl -}
+> safe_headl list0
+Nothing
+> safe_headl list1
+Just 10
+> safe_headl list2
+Just "Haskell"
+> safe_headl list3
+Just 10
+> safe_headl list4
+Just 1.25
+> 
+> :t safe_headl 
+safe_headl :: List a -> Maybe a
+> 
+
+{- Getting the last element -}
+> lastl list0
+*** Exception: Failed: Empty List
+> lastl list1
+10
+> lastl list2
+"Haskell"
+> lastl list3
+30
+> lastl list4
+9.434
+> 
+
+{- Converting to Standard Haskell List -}
+> to_list list0
+[]
+> to_list list1
+[10]
+> to_list list2
+["Haskell"]
+> to_list list3
+[10,20,30]
+> to_list list4
+[1.25,0.65,8.123,9.434]
+
+> :t to_list 
+to_list :: List a -> [a]
+
+> takel 0 Nil
+Nil
+> takel 10 Nil
+Nil
+> takel 0 list4
+Nil
+> takel 1 list4
+Cons 1.25 Nil
+> takel 2 list4
+Cons 1.25 (Cons 0.65 Nil)
+> takel 3 list4
+Cons 1.25 (Cons 0.65 (Cons 8.123 Nil))
+> takel 4 list4
+Cons 1.25 (Cons 0.65 (Cons 8.123 (Cons 9.434 Nil)))
+> takel 5 list4
+Cons 1.25 (Cons 0.65 (Cons 8.123 (Cons 9.434 Nil)))
+> takel 6 list4
+Cons 1.25 (Cons 0.65 (Cons 8.123 (Cons 9.434 Nil)))
+> takel 26 list4
+Cons 1.25 (Cons 0.65 (Cons 8.123 (Cons 9.434 Nil)))
+
+{-     
+    Infinite List 
+-}
+
+> let ones = Cons 1 ones
+>
+> takel 1 ones
+Cons 1 Nil
+>
+> takel 3 ones
+Cons 1 (Cons 1 (Cons 1 Nil))
+>
+> takel 5 ones
+Cons 1 (Cons 1 (Cons 1 (Cons 1 (Cons 1 Nil))))
+
+> let from n = Cons n (from (n+1))
+> takel 3 (from 0)
+Cons 0 (Cons 1 (Cons 2 Nil))
+> takel 3 (from 3)
+Cons 3 (Cons 4 (Cons 5 Nil))
+> takel 10 (from 8)
+Cons 8 (Cons 9 (Cons 10 (Cons 11 (Cons 12 (Cons 13 (Cons 14 (Cons 15 (Cons 16 (Cons 17 Nil)))))))))
+
+
+> let from_step start step = Cons start (from_step (start+step) step)
+> takel 3 (from_step 1 3)
+Cons 1 (Cons 4 (Cons 7 Nil))
+> 
+> takel 6 (from_step 2 4)
+Cons 2 (Cons 6 (Cons 10 (Cons 14 (Cons 18 (Cons 22 Nil)))))
+
+> takel 8 (from_step 0 1)
+Cons 0 (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Cons 5 (Cons 6 (Cons 7 Nil)))))))
+
+> nth (from_step 0 1) 0
+0
+> nth (from_step 0 1) 1
+1
+> nth (from_step 0 1) 2
+2
+> nth (from_step 0 1) 6
+6
+> nth (from_step 0 1) 22
+22
+> nth (from_step 0 1) 60
+60
+> 
+>
+> :t nth
+nth :: (Eq t, Num t) => List t1 -> t -> t1
+> 
+
+
+> mapl (\x -> 3*x + 5) list0
+Nil
+> mapl (\x -> 3*x + 5) list3
+Cons 35 (Cons 65 (Cons 95 Nil))
+> mapl (\x -> 3*x + 5) list4
+Cons 8.75 (Cons 6.95 (Cons 29.369 (Cons 33.302 Nil)))
+>
+> :t mapl
+mapl :: (t -> a) -> List t -> List a
+
+
+> 
+> list4
+Cons 1.25 (Cons 0.65 (Cons 8.123 (Cons 9.434 Nil)))
+>
+> filterl (\x -> x > 3.5) list4
+Cons 8.123 (Cons 9.434 Nil)
+>
+> filterl (\x -> x > 8) list4
+Cons 8.123 (Cons 9.434 Nil)
+> 
+> :t filterl
+filterl :: (a -> Bool) -> List a -> List a
 ```
 
 Reference: 
