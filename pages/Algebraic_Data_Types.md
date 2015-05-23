@@ -1,13 +1,58 @@
-## Abstract Data Type
+## Algebraic Data Types
 
 [Under Contruction]
 
+[Algebraic data type](http://en.wikipedia.org/wiki/Algebraic_data_type) is a type formed by combining types. It can be used to implement Records, Enumerated Sets, option type and Recursive types. Note: Algebraic data types must not be confused with [Abstract data types](http://en.wikipedia.org/wiki/Abstract_data_type). 
+
+* Applications of Algebraic Data Types
+    * Build Embedded Domain specific languages - EDSL
+    * Build Interpreters
+    * Self Documenting code
+    * Avoid Null checking error/ Null reference bug
+
+
+* Product Types
+    * Tuples of types   - (Int, Float)
+    * Records
+    
+* Sum Types
+    *  Tagged or disjoint unions or variant types
+
+* Enumerated types
+
+* [Option Type](http://en.wikipedia.org/wiki/Option_type)
+
+Option type is useful in functional programming to avoid boilerplate null checking bug on non-deterministics computations.
+
+|  Language       |     Syntax                             |
+|-----------------|----------------------------------------|
+|   Haskell       | data Maybe a = Nothing | Just a        |
+|   OCaml and F#  | type 'a option = None | Some of 'a     |
+|   Standard ML   | datatype 'a option = NONE | SOME of 'a |
+|   Java 8        | , the option type is defined as parameterized final class Optional<T> |
+
+
 See also: 
 
-* [Wikipedia / Algebraic data type](http://en.wikipedia.org/wiki/Algebraic_data_type)
-* [Wikipedia / Dijoint Union](http://en.wikipedia.org/wiki/Disjoint_union)
+* [The "Designing with types" series - F# for fun and for profiting](http://fsharpforfunandprofit.com/series/designing-with-types.html)
+* [F# : Option Types](http://en.wikibooks.org/wiki/F_Sharp_Programming/Option_Types)
+* [Domain Driven Design](http://fsharpforfunandprofit.com/ddd/)
 
- 
+**Selected Wikipedia Pages**
+
+* [Algebraic data type](http://en.wikipedia.org/wiki/Algebraic_data_type)
+* [Dijoint Union](http://en.wikipedia.org/wiki/Disjoint_union)
+* [Product Type](http://en.wikipedia.org/wiki/Product_type)
+* [Type Theory](http://en.wikipedia.org/wiki/Type_theory)
+* [Recursive data type](http://en.wikipedia.org/wiki/Recursive_data_type)
+* [Record (computer science)](http://en.wikipedia.org/wiki/Record_(computer_science))
+* [Enumerated type](http://en.wikipedia.org/wiki/Enumerated_type)
+* [Option Type](http://en.wikipedia.org/wiki/Option_type)
+
+* [Abstract data type](http://en.wikipedia.org/wiki/Abstract_data_type)
+
+
+
 
 #### Enumerated Data Type
 

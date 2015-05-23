@@ -1481,4 +1481,233 @@ liftM (map $ uncurry (+)) readSquareFile :: IO [Int]
 * http://squing.blogspot.com.br/2008/01/unmonad-tutorial-io-in-haskell-for-non.html
 
 
+### State Monad
 
+A stateless function or pure function is a function that relies only on its input. However sometimes a functions needs state, to remember its previous execution
+
+The library Control.Monad.State provides functions to handle stateful computations. 
+
+
+
+The type (State s a) wraps function that takes an state a and returns a tuple containing a return value a and new state: \s -> (a, s). Where (s) is the state type and (a) is the return value.
+
+Code in Control.State.Monad
+
+```haskell
+
+{- runstate :: State s a -> s -> (a, s) -}
+newtype State s a = State { runState :: s -> (a, s) }
+
+instance Monad (State s) where
+  return a        = State $ \s -> (a,s)
+  (State x) >>= f = State $ \s ->
+    let (v,s') = x s
+    in runState (f v) s'
+
+{- 
+    Get: Set the result value to the state and left it unchanged
+    get :: s -> (s, s)
+-}    
+get :: State s s 
+get = State $ \s -> (s,s) 
+
+{-    
+Put set the result value to the state and leave the state 
+unchanged.
+
+    State s a ==  s -> (a,s) 
+    
+        put :: s -> State s ()
+    Means
+        put :: s -> s -> ((), s)
+      
+-}
+put :: s -> State s ()
+put newState = State $ \s -> ((),newState)     
+
+{-  state-change using a function -}
+modify :: (s -> s) -> State s ()
+modify f = State (\s -> ((), f s))
+
+{- Returns the final value of computation -}
+evalState :: State s a -> s -> a
+evalState act = fst . runstate act
+
+{- Returns the final state of computation -}
+exeCstate :: State s a -> s -> s
+exeCstate act = snd . runstate act
+```
+        
+It takes the current state and returns a new state and a return value.
+
+Pseudo code:
+```
+    (a, s) = processor s
+    (ReturnValue, NewState) = statefun CurrentState
+OR
+    processor :: Current State -> (Return Value, New State)
+OR
+    processor :: state -> (result, state)
+```
+
+The function runState applies a state function / state processor to a state and returns a value and a new state.
+
+```
+runState (s)
+```
+
+Examples: 
+
+```haskell
+> import Control.Monad.State
+> 
+
+{-
+    runState :: State s a -> s -> (a, s)
+    
+    Unwraping State s a to \s -> (a, s)
+    
+    runState :: (\s -> (a, s)) -> s -> (a, s)
+                    |             |       |
+                    |             |       |-- Returns a new value 'a' 
+                    |             |           and a new state 's'
+                    |             |  
+                    |             |------ Current State
+                    |
+                    |------> State Function
+-}
+> :t runState
+runState :: State s a -> s -> (a, s)
+
+{-
+
+    return a        = State $ \s -> (a,s)
+    runState :: (\s -> (a, s)) -> s -> (a, s)
+    
+    
+    => runState (return 10) 1 
+    => runState (\s -> (10,s)) 1 
+    => (\s -> (10,s)) 1 
+    => (10, 1)
+        
+    Generalizing:
+        
+        runstate (return a) s = (a, s)
+    
+-}
+> runState (return 10) 1
+(10,1)
+> runState (return 10) 'a'
+(10,'a')
+> runState (return 'x') 10
+('x',10)
+> 
+
+{-
+    get = State $ \s -> (s,s) 
+    runState :: (\s -> (a, s)) -> s -> (a, s)
+    
+    => runState get 1
+    => runState (\s -> (s,s))  1
+    => (\s -> (s,s)) 1
+    => (1, 1) 
+    
+     runState get x = (x, x)
+-}
+> runState get 1
+(1,1)
+> runState get 'z'
+('z','z')
+> runState get "hello"
+("hello","hello")
+
+{-
+    put :: s -> State s ()
+    put newState = State $ \s -> ((),newState) 
+
+    runState :: (\s -> (a, s)) -> s -> (a, s)
+    
+    => runState  (put 5) 4 
+    => runState  (\s -> ((), 5)) 4 
+    => ((), 5) 
+    
+    runstate (put x) s = ((), x)
+    
+-}
+>  runState  (put 5) 4 
+((),5)
+>  runState  (put 5) 100 
+((),5)
+> 
+
+postincrement = do 
+    x <- get        {- x = s (Current State )-}
+    put (x+1)       {- set the  's' value in (a,s) to x+1. (a, s=x+1)}
+    return x        {- Set the value a (return value to x) => 
+                       (a=x, s=x+1)
+                    
+                    This function is the same as:   
+                    
+                    postincrement x = (x, x+1)     
+                    -}
+
+let postincrement :: State Int Int ; postincrement = do { x <- get ;  put (x + 1) ; return x }
+
+> :t postincrement 
+postincrement :: State Int Int
+>
+> :t runState postincrement 
+runState postincrement :: Int -> (Int, Int)
+
+> runState postincrement 0
+(0,1)
+> runState postincrement 1
+(1,2)
+> runState postincrement 2
+(2,3)
+> runState postincrement 3
+(3,4)
+
+import Control.Monad.State
+{- state :: (s -> (a, s)) -> State s a -}
+--postinc :: State Int Int 
+postinc = state  $ \x -> (x, x+1)
+
+> :t state $ \x -> (x, x+1)
+state $ \x -> (x, x+1) :: (Num a, MonadState a m) => m a
+> 
+> runState (state $ \x -> (x, x+1)) 0
+(0,1)
+> runState (state $ \x -> (x, x+1)) 1
+(1,2)
+> runState (state $ \x -> (x, x+1)) 2
+(2,3)
+> runState (state $ \x -> (x, x+1)) 3
+(3,4)
+> 
+
+
+import Control.Monad.State
+
+type Stack = [Int]
+
+push a = state $ \xs -> ((), a:xs)
+
+pop    = state $ \(x:xs) -> (x, xs)
+let add    = 
+    
+```
+
+References:
+
+* https://wiki.haskell.org/State_Monad
+* http://en.wikibooks.org/wiki/Haskell/Monad_transformers
+* http://en.wikibooks.org/wiki/Haskell/Understanding_monads/State
+* http://www.informatik.uni-bremen.de/agbkb/lehre/ws04-05/fmsd/State.hs
+* https://wiki.haskell.org/State_Monad
+
+* http://stackoverflow.com/questions/24103108/where-is-the-data-constructor-for-state
+
+* http://www.dcc.fc.up.pt/~pbv/aulas/tapf/slides/monads.html
+* http://www2.informatik.uni-freiburg.de/~thiemann/haskell/haskell98-report-html/modules.html
+* http://en.wikibooks.org/wiki/Haskell/Modules
