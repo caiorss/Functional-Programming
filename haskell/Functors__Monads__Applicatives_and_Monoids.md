@@ -1483,19 +1483,113 @@ liftM (map $ uncurry (+)) readSquareFile :: IO [Int]
 
 ### State Monad
 
-A stateless function or pure function is a function that relies only on its input. However sometimes a functions needs state, to remember its previous execution
-
-The library Control.Monad.State provides functions to handle stateful computations. 
+Many Haskell tutorials and examples about State Monad won't run or compile because the Control.Monad.State has changed and State was deprecated in favor of StateT. [Reference](http://stackoverflow.com/questions/9697980/the-state-monad-and-learnyouahaskell-com)
 
 
+Example from  Learn You a Haskell's guide on the state monad:
 
-The type (State s a) wraps function that takes an state a and returns a tuple containing a return value a and new state: \s -> (a, s). Where (s) is the state type and (a) is the return value.
+File: stack.hs
+```haskell
+import Control.Monad.State  
 
-Code in Control.State.Monad
+type Stack = [Int]
+
+pop :: State Stack Int  
+pop = State $ \(x:xs) -> (x,xs)  
+
+push :: Int -> State Stack ()  
+push a = State $ \xs -> ((),a:xs) 
+``` 
+
+Running:
+```
+tux@tux  /tmp
+$ ghci
+
+> :l stack.hs
+[1 of 1] Compiling Main             ( stack.hs, interpreted )
+
+stack.hs:6:7:
+    Not in scope: data constructor `State'
+    Perhaps you meant `StateT' (imported from Control.Monad.State)
+
+stack.hs:9:10:
+    Not in scope: data constructor `State'
+    Perhaps you meant `StateT' (imported from Control.Monad.State)
+Failed, modules loaded: none.
+> 
+
+```
+
+Solutions: Use the old Control.Monad.State implementation. That it is available in the file: [OldState.hs](src/OldState.hs)
+
+File: [stack.hs](src/stack.hs)
+```haskell
+import OldState
+
+{--------------------------------------------------------------}
+--import Control.Monad.State  
+
+type Stack = [Int]
+
+pop :: State Stack Int  
+pop = State $ \(x:xs) -> (x,xs)  
+
+push :: Int -> State Stack ()  
+push a = State $ \xs -> ((),a:xs) 
+
+stackStuff :: State Stack ()  
+stackStuff = do  
+    a <- pop  
+    if a == 5  
+        then push 5  
+        else do  
+            push 3  
+            push 8  
+
+moreStack :: State Stack ()  
+moreStack = do  
+    a <- stackManip  
+    if a == 100  
+        then stackStuff  
+        else return ()  
+```
+
+Running:
+```
+tux@tux  /tmp
+$ ghci
+
+> 
+> :load stack.hs 
+[1 of 1] Compiling Main             ( stack.hs, interpreted )
+Ok, modules loaded: Main.
+> 
+
+> runState stackStuff [9,0,2,1,0]  
+((),[8,3,0,2,1,0])
+> 
+
+> runState stackManip [5,8,2,1] 
+(5,[8,2,1])
+> 
+```
+
+This tutorial will use the old Control.Monad.State implementation due to it be compatible with most of tutprials available.
+
+Module [OldState](src/OldState.hs)
 
 ```haskell
+{-
+   Old Control.Monad.State implementation that is curently outdated, 
+however it provides backward compatibility to compile and run many State
+Monad tutorials available in the internet.
 
-{- runstate :: State s a -> s -> (a, s) -}
+
+-}
+module OldState where
+
+{- runState :: State s a -> s -> (a, s) -}
 newtype State s a = State { runState :: s -> (a, s) }
 
 instance Monad (State s) where
@@ -1516,39 +1610,32 @@ Put set the result value to the state and leave the state
 unchanged.
 
     State s a ==  s -> (a,s) 
-    
+
         put :: s -> State s ()
     Means
         put :: s -> s -> ((), s)
-      
+
 -}
 put :: s -> State s ()
 put newState = State $ \s -> ((),newState)     
 
-{-  state-change using a function -}
+{-  Upadate the State -}
 modify :: (s -> s) -> State s ()
 modify f = State (\s -> ((), f s))
 
 {- Returns the final value of computation -}
 evalState :: State s a -> s -> a
-evalState act = fst . runstate act
+evalState act = fst . runState act
 
 {- Returns the final state of computation -}
 exeCstate :: State s a -> s -> s
-exeCstate act = snd . runstate act
+exeCstate act = snd . runState act
 ```
-        
-It takes the current state and returns a new state and a return value.
 
-Pseudo code:
-```
-    (a, s) = processor s
-    (ReturnValue, NewState) = statefun CurrentState
-OR
-    processor :: Current State -> (Return Value, New State)
-OR
-    processor :: state -> (result, state)
-```
+A stateless function or pure function is a function that only relies on its input. State monad allows to simulate aspects of imperative language in pure a functional language.
+
+
+The type (State s a) wraps function that takes an state a and returns a tuple containing a return value a and new state: \s -> (a, s). Where (s) is the state type and (a) is the return value.
 
 The function runState applies a state function / state processor to a state and returns a value and a new state.
 

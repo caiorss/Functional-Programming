@@ -24,7 +24,7 @@ You can access this page from:
 * [Functions](haskell/Functions.md)
 * [Pattern Matching](haskell/Pattern_Matching.md)
 * [List Comprehension](haskell/List_Comprehension.md)
-* [Abstract Data Type](haskell/Algebraic_Data_Types.md)
+* [Algebraic Data Type](haskell/Algebraic_Data_Types.md)
 * [Functors, Monads, Applicatives and Monoids](haskell/Functors__Monads__Applicatives_and_Monoids.md)
 * [Haskell Libraries](haskell/Libraries.md)
 
