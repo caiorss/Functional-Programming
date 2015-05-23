@@ -5,7 +5,7 @@
 @TODO: Update papers repository
 -->
 
-![](pages/images/haskellLogo.png)
+![](haskell/images/haskellLogo.png)
 
 The purpose of this tutorial is to illustrate functional programming concepts in the Haskell programming language by providing reusable and useful snippets of code, examples, case studies, and applications.
 
@@ -18,22 +18,22 @@ You can access this page from:
 
 **Summary**
 
-* [Haskell](pages/Haskell.md)
-* [Functional Programming Concepts](pages/Functional_Programming_Concepts.md)
-* [Basic Syntax](pages/Basic_Syntax.md)
-* [Functions](pages/Functions.md)
-* [Pattern Matching](pages/Pattern_Matching.md)
-* [List Comprehension](pages/List_Comprehension.md)
-* [Abstract Data Type](pages/Algebraic_Data_Types.md)
-* [Functors, Monads, Applicatives and Monoids](pages/Functors__Monads__Applicatives_and_Monoids.md)
-* [Haskell Libraries](pages/Libraries.md)
+* [Haskell](haskell/Haskell.md)
+* [Functional Programming Concepts](haskell/Functional_Programming_Concepts.md)
+* [Basic Syntax](haskell/Basic_Syntax.md)
+* [Functions](haskell/Functions.md)
+* [Pattern Matching](haskell/Pattern_Matching.md)
+* [List Comprehension](haskell/List_Comprehension.md)
+* [Abstract Data Type](haskell/Algebraic_Data_Types.md)
+* [Functors, Monads, Applicatives and Monoids](haskell/Functors__Monads__Applicatives_and_Monoids.md)
+* [Haskell Libraries](haskell/Libraries.md)
 
-* [Useful Custom Functions/ Iterators and Operators](pages/Useful_Custom_Functions__Iterators_and_Operators.md)
-* [Applications](pages/Applications.md)
+* [Useful Custom Functions/ Iterators and Operators](haskell/Useful_Custom_Functions__Iterators_and_Operators.md)
+* [Applications](haskell/Applications.md)
 
-* [Miscellaneous](pages/Miscellaneous.md)
+* [Miscellaneous](haskell/Miscellaneous.md)
 
-* [Documentation and Learning Materials](pages/Documentation_and_Learning_Materials.md)
+* [Documentation and Learning Materials](haskell/Documentation_and_Learning_Materials.md)
 
 * [Papers in this Repository](papers/README.md)
 
