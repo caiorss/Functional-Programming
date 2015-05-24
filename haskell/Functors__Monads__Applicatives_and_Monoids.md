@@ -1,6 +1,6 @@
 ## Functors, Monads, Applicatives and Monoids
 
-The concepts of functors, monads and applicatives comes from [category theory](http://en.wikipedia.org/wiki/Category_theory).
+The concepts of functors, monads and applicative comes from [category theory](http://en.wikipedia.org/wiki/Category_theory).
 
 ### Functors
 
@@ -1483,10 +1483,19 @@ liftM (map $ uncurry (+)) readSquareFile :: IO [Int]
 
 ### State Monad
 
-Many Haskell tutorials and examples about State Monad won't run or compile because the Control.Monad.State has changed and State was deprecated in favor of StateT. [Reference](http://stackoverflow.com/questions/9697980/the-state-monad-and-learnyouahaskell-com)
+A stateless function or pure function is a function that only relies on its input. State monad allows to simulate aspects of imperative language in pure a functional language. 
+
+Many Haskell tutorials and examples about State Monad won't run or compile because the Control.Monad.State has changed and State was deprecated in favor of StateT, unfortunately it makes many tutorials about State Monads be outdated and it might frustrate newcomers trying to understand it for the first time. To solve this problem this tutorial will use the old implementation of State Monad which the source code is provided here: [OldState](src/OldState.hs). 
 
 
-Example from  Learn You a Haskell's guide on the state monad:
+Some StackOverflow threads describing the problem:
+* [The state monad and learnyouahaskell.com](http://stackoverflow.com/questions/9697980/the-state-monad-and-learnyouahaskell-com) 
+* [Where is the data constructor for 'State'?](http://stackoverflow.com/questions/24103108/where-is-the-data-constructor-for-state)
+* [Has the Control.Monad.State API changed recently?](http://stackoverflow.com/questions/14157090/has-the-control-monad-state-api-changed-recently)
+
+Reproducing the bug:
+
+The example from [Learn You a Haskell's guide on the state monad](http://learnyouahaskell.com/for-a-few-monads-more) will fail when trying to run or compile it.
 
 File: stack.hs
 ```haskell
@@ -1525,10 +1534,9 @@ Solutions: Use the old Control.Monad.State implementation. That it is available 
 
 File: [stack.hs](src/stack.hs)
 ```haskell
+--import Control.Monad.State  
 import OldState
 
-{--------------------------------------------------------------}
---import Control.Monad.State  
 
 type Stack = [Int]
 
@@ -1575,113 +1583,55 @@ Ok, modules loaded: Main.
 > 
 ```
 
-This tutorial will use the old Control.Monad.State implementation due to it be compatible with most of tutprials available.
-
-Module [OldState](src/OldState.hs)
+The type (State s a) wraps function that takes an state a and returns a tuple containing a return value a and new state: \s -> (a, s). Where (s) is the state type and (a) is the return value.
 
 ```haskell
-{-
-   Old Control.Monad.State implementation that is curently outdated, 
-however it provides backward compatibility to compile and run many State
-Monad tutorials available in the internet.
-
-
--}
-module OldState where
-
-{- runState :: State s a -> s -> (a, s) -}
 newtype State s a = State { runState :: s -> (a, s) }
-
-instance Monad (State s) where
-  return a        = State $ \s -> (a,s)
-  (State x) >>= f = State $ \s ->
-    let (v,s') = x s
-    in runState (f v) s'
-
-{- 
-    Get: Set the result value to the state and left it unchanged
-    get :: s -> (s, s)
--}    
-get :: State s s 
-get = State $ \s -> (s,s) 
-
-{-    
-Put set the result value to the state and leave the state 
-unchanged.
-
-    State s a ==  s -> (a,s) 
-
-        put :: s -> State s ()
-    Means
-        put :: s -> s -> ((), s)
-
--}
-put :: s -> State s ()
-put newState = State $ \s -> ((),newState)     
-
-{-  Upadate the State -}
-modify :: (s -> s) -> State s ()
-modify f = State (\s -> ((), f s))
-
-{- Returns the final value of computation -}
-evalState :: State s a -> s -> a
-evalState act = fst . runState act
-
-{- Returns the final state of computation -}
-exeCstate :: State s a -> s -> s
-exeCstate act = snd . runState act
 ```
-
-A stateless function or pure function is a function that only relies on its input. State monad allows to simulate aspects of imperative language in pure a functional language.
-
-
-The type (State s a) wraps function that takes an state a and returns a tuple containing a return value a and new state: \s -> (a, s). Where (s) is the state type and (a) is the return value.
 
 The function runState applies a state function / state processor to a state and returns a value and a new state.
 
-```
-runState (s)
-```
-
-Examples: 
-
 ```haskell
-> import Control.Monad.State
+> :l OldState.hs 
+[1 of 1] Compiling OldState         ( OldState.hs, interpreted )
+Ok, modules loaded: OldState.
+> 
+> :t runState 
+runState :: State s a -> s -> (a, s)
 > 
 
-{-
-    runState :: State s a -> s -> (a, s)
-    
-    Unwraping State s a to \s -> (a, s)
-    
-    runState :: (\s -> (a, s)) -> s -> (a, s)
-                    |             |       |
-                    |             |       |-- Returns a new value 'a' 
-                    |             |           and a new state 's'
-                    |             |  
-                    |             |------ Current State
-                    |
-                    |------> State Function
--}
-> :t runState
-runState :: State s a -> s -> (a, s)
+> let incstate  = State ( \s -> (s+1, s+1) )
+> 
+> :t incstate 
+incstate :: State Integer Integer
+> 
 
-{-
+> runState incstate 2
+(3,3)
+> runState incstate 3
+(4,4)
+> runState incstate 4
+(5,5)
+> 
+```
 
-    return a        = State $ \s -> (a,s)
-    runState :: (\s -> (a, s)) -> s -> (a, s)
-    
-    
-    => runState (return 10) 1 
-    => runState (\s -> (10,s)) 1 
-    => (\s -> (10,s)) 1 
-    => (10, 1)
-        
-    Generalizing:
-        
-        runstate (return a) s = (a, s)
-    
--}
+Get - Getting State
+
+```haskell
+
+	--  return a        = State $ \s -> (a,s)
+	--  runState :: (\s -> (a, s)) -> s -> (a, s)
+	--  
+	--  
+	--  => runState (return 10) 1 
+	--  => runState (\s -> (10,s)) 1 
+	--  => (\s -> (10,s)) 1 
+	--  => (10, 1)
+	--      
+	--  Generalizing:
+	--      
+	--      runstate (return a) s = (a, s)
+	--
 > runState (return 10) 1
 (10,1)
 > runState (return 10) 'a'
@@ -1707,38 +1657,48 @@ runState :: State s a -> s -> (a, s)
 ('z','z')
 > runState get "hello"
 ("hello","hello")
+```
 
-{-
-    put :: s -> State s ()
-    put newState = State $ \s -> ((),newState) 
+Put - Changing State
 
-    runState :: (\s -> (a, s)) -> s -> (a, s)
+```haskell
+--  put :: s -> State s ()
+--  put newState = State $ \s -> ((),newState) 
+--   runState :: (\s -> (a, s)) -> s -> (a, s)
+--  
+--  => runState  (put 5) 4 
+--  => runState  (\s -> ((), 5)) 4 
+--  => ((), 5) 
+--  
+--  runstate (put x) s = ((), x)
     
-    => runState  (put 5) 4 
-    => runState  (\s -> ((), 5)) 4 
-    => ((), 5) 
-    
-    runstate (put x) s = ((), x)
-    
--}
+
 >  runState  (put 5) 4 
 ((),5)
 >  runState  (put 5) 100 
 ((),5)
 > 
+```
 
+**Do Notation**
+
+This function postincrement is the same as: 
+
+```
+postincrement x = (x, x+1) 
+```
+
+where x is the return value of the stateful computation and x + 1 is the new state.
+
+
+```haskell
 postincrement = do 
-    x <- get        {- x = s (Current State )-}
-    put (x+1)       {- set the  's' value in (a,s) to x+1. (a, s=x+1)}
-    return x        {- Set the value a (return value to x) => 
-                       (a=x, s=x+1)
-                    
-                    This function is the same as:   
-                    
-                    postincrement x = (x, x+1)     
-                    -}
+    x <- get        -- x = s (Current State )-}
+    put (x+1)       -- set the  's' value in (a,s) to x+1. (a, s=x+1)}
+    return x        -- Set the value a (return value to x) => 
+                    -- (a=x, s=x+1)
 
-let postincrement :: State Int Int ; postincrement = do { x <- get ;  put (x + 1) ; return x }
+> let postincrement :: State Int Int ; postincrement = do { x <- get ;  put (x + 1) ; return x }
 
 > :t postincrement 
 postincrement :: State Int Int
@@ -1755,10 +1715,26 @@ runState postincrement :: Int -> (Int, Int)
 > runState postincrement 3
 (3,4)
 
-import Control.Monad.State
-{- state :: (s -> (a, s)) -> State s a -}
---postinc :: State Int Int 
-postinc = state  $ \x -> (x, x+1)
+
+> evalState postincrement 0
+0
+> evalState postincrement 1
+1
+> evalState postincrement 2
+2
+> evalState postincrement 3
+3
+> 
+
+> execState postincrement 0
+1
+> execState postincrement 1
+2
+> execState postincrement 2
+3
+> execState postincrement 3
+4
+
 
 > :t state $ \x -> (x, x+1)
 state $ \x -> (x, x+1) :: (Num a, MonadState a m) => m a
@@ -1771,18 +1747,511 @@ state $ \x -> (x, x+1) :: (Num a, MonadState a m) => m a
 (2,3)
 > runState (state $ \x -> (x, x+1)) 3
 (3,4)
+>    
+```
+
+Example:
+
+```haskell
+-- import Control.Monad.State
+import OldState
+
+test1 :: State Int Int
+test1 = do
+  put 3         -- Set the state to 3 --> (\s -> ((), s)) 3 = ((), 3)
+  modify (+1)   -- Apply the infix function (+1) to the state ((), 4)
+  get           -- Set the return value to the state (4, 4)
+
+
+test2 = do
+  put 3         -- Set the state to 3 --> (\s -> ((), s)) 3 = ((), 3)
+  modify (+1)   -- Apply the infix function (+1) to the state ((), 4)
+                -- The return value will be ((), 4) 
+
+test3 = do
+  x <- get          -- x = current State / Passed by runState 
+  let y = 10 * x    
+  put (x+2)         -- Set the current state to x+2 ==> ((), x+2)
+  return y          -- Set the return value to y ==> (y, x+2)
+                    -- It will compute (10 * x, x + 2)
+test4 = do
+    a <- get
+    b <- test1
+    put (a+b)
+    return (a + 2*b)
+    
+> runState test1 0
+(4,4)
+> runState test1 1
+(4,4)
+> runState test1 2
+(4,4)
+> 
+
+> :t test2
+test2 :: State Integer ()
+> 
+> --  State Integer () = State s a  ==> s = Interger and a = ()
+> 
+> runState test2 3
+((),4)
+> runState test2 4
+((),4)
+> runState test2 0
+((),4)
+
+
+> :t test3
+test3 :: State Integer Integer
+
+> runState  test3 0  -- (\x -> 10 * x, x + 2) 0 = (0, 2)
+(0,2)
+> runState  test3 2  -- (\x -> 10 * x, x + 2) 2 = (20, 4)
+(20,4)
+> runState  test3 4  -- (\x -> 10 * x, x + 2) 4 = (10, 6)
+(40,6)
+> runState  test3 6  -- (\x -> 10 * x, x + 2) 6 = (60, 8)
+(60,8)
+
+
+> :t test4
+test4 :: State Int Int
+> 
+> runState test4 0
+(8,4)
+> runState test4 1
+(9,5)
+> runState test4 2
+(10,6)
+> runState test4 8
+(16,12)
+> 
+```
+
+The combinators  evalStateNtimes, runStateNtimes, execStateNtimes, evalStateLoop, runStateLoop and execStateLoop defined in [OldState.hs](src/OldState.hs), although they are not defined in the old Control.State.Monad library, they make easier to compute successive executions of state function.
+
+```haskell
+import OldState
+       
+test3 = do
+  x <- get          -- x = current State / Passed by runState 
+  let y = 10 * x    
+  put (x+2)         -- Set the current state to x+2 ==> ((), x+2)
+  return y          -- Set the return value to y ==> (y, x+2)
+                    -- It will compute (10 * x, x + 2)
+                    
+{- Instead of do it -}
+
+> runState test3 0
+(0,2)
+> runState test3 2
+(20,4)
+> runState test3 4
+(40,6)
+> runState test3 6
+(60,8)
+> runState test3 8
+(80,10)
+> runState test3 10
+(100,12)
+> runState test3 12
+(120,14)
+> 
+
+{- It is better by this way. -}
+
+> evalStateNtimes test3 0 0
+[]
+> evalStateNtimes test3 0 1
+[0]
+> evalStateNtimes test3 0 2
+[0,20]
+> evalStateNtimes test3 0 3
+[0,20,40]
+> evalStateNtimes test3 0 4
+[0,20,40,60]
+> evalStateNtimes test3 0 5
+[0,20,40,60,80]
+> evalStateNtimes test3 0 6
+[0,20,40,60,80,100]
+
+> runStateNtimes test3 0 0
+[]
+> runStateNtimes test3 0 1
+[(0,2)]
+> runStateNtimes test3 0 2
+[(0,2),(20,4)]
+> runStateNtimes test3 0 4
+[(0,2),(20,4),(40,6),(60,8)]
+
+> runStateNtimes test3 0 1
+[(0,2)]
+> runStateNtimes test3 0 2
+[(0,2),(20,4)]
+> runStateNtimes test3 0 4
+[(0,2),(20,4),(40,6),(60,8)]
+> 
+> runStateNtimes test3 0 5
+[(0,2),(20,4),(40,6),(60,8),(80,10)]
+> runStateNtimes test3 0 6
+[(0,2),(20,4),(40,6),(60,8),(80,10),(100,12)]
+
+
+> execStateNtimes test3 0 0
+[]
+> execStateNtimes test3 0 1
+[2]
+> execStateNtimes test3 0 2
+[2,4]
+> execStateNtimes test3 0 3
+[2,4,6]
+> execStateNtimes test3 0 6
+[2,4,6,8,10,12]
 > 
 
 
-import Control.Monad.State
+> take 3 (evalStateLoop test3 0)
+[0,20,40]
+> take 10 (evalStateLoop test3 0)
+[0,20,40,60,80,100,120,140,160,180]
+> 
 
-type Stack = [Int]
+> take 10 (execStateLoop test3 0)
+[2,4,6,8,10,12,14,16,18,20]
+> 
 
-push a = state $ \xs -> ((), a:xs)
+> take 10 (runStateLoop test3 0)
+[(0,2),(20,4),(40,6),(60,8),(80,10),(100,12),(120,14),(140,16),(160,18),(180,20)]
+> 
 
-pop    = state $ \(x:xs) -> (x, xs)
-let add    = 
+> takeWhile (<100) (evalStateLoop  test3 0)
+[0,20,40,60,80]
+> 
+
+> evalNthState test3 0 0
+0
+> 
+> evalNthState test3 0 1
+20
+> evalNthState test3 0 2
+40
+> evalNthState test3 0 3
+60
+> evalNthState test3 0 4
+80
+> evalNthState test3 0 5
+100
+
+```
+
+**Example Random Numbers**
+
+from [For a Few Monads More / Learn You a Haskell book](http://learnyouahaskell.com/for-a-few-monads-more)
+
+threeCoins is a state function (State s a = \s -> (a, s) which the state type is StdGen and the return type is a tuple of Bools (Bool,Bool,Bool)  
+
+file: [randomst.hs](src/randomst.hs)
+
+```haskell
+import System.Random  
+import OldState         -- import Control.Monad.State  
+  
+threeCoins :: State StdGen (Bool,Bool,Bool)  
+threeCoins = do  
+    a <- randomSt  
+    b <- randomSt  
+    c <- randomSt  
+    return (a,b,c) 
+```
+
+Running:
+```haskell
+> :l randomst.hs 
+[1 of 2] Compiling OldState         ( OldState.hs, interpreted )
+[2 of 2] Compiling Main             ( randomst.hs, interpreted )
+Ok, modules loaded: OldState, Main.
+> 
+> 
+> :t random
+random :: (RandomGen g, Random a) => g -> (a, g)
+> 
+> :i random
+class Random a where
+  ...
+  random :: RandomGen g => g -> (a, g)
+  ...
+    -- Defined in `System.Random'
+> 
+> :t mkStdGen 
+mkStdGen :: Int -> StdGen
+>
+> :i mkStdGen 
+mkStdGen :: Int -> StdGen   -- Defined in `System.Random'
+
+> runState threeCoins (mkStdGen 33)
+Loading package random-1.0.1.1 ... linking ... done.
+((True,False,True),680029187 2103410263)
+> 
+
+> runState threeCoins (mkStdGen 100)
+((True,False,False),693699796 2103410263)
+> 
+
+> evalState  threeCoins (mkStdGen 100)
+(True,False,False)
+> 
+
+> execState threeCoins (mkStdGen 100)
+693699796 2103410263
+> 
+
+> evalStateNtimes threeCoins (mkStdGen 33) 3
+[(True,False,True),(True,True,True),(False,False,False)]
+> 
+```
+
+**Example: Fibbonaci Sequence**
+
+The Fibbonaci sequence is defined by the rule:  
+
+```
+a[n+2] = a[n+1] + a[n]
+```
+
+```
+    0 
+        1
+            1 = 1 + 0
+               2  = 1 + 1
+                 3  = 2 + 1
+                    5 = 3 + 2
+                        8 = 5 + 3 
+                            ...
+```
+
+It is obvious that the function needs to keep track of the last two values.
+
+```haskell
+> :l OldState
+[1 of 1] Compiling OldState         ( OldState.hs, interpreted )
+Ok, modules loaded: OldState.
+> 
+
+> -- The new state is set to be (an1, an2) and the return value an2, so
+> -- it means  \(an, an1) -> (an2, (an1, an2))
+>
+> let fibState1 = State $ \(an, an1) -> (an + an1, (an1, an + an1))
+> 
+> :t fibState1 
+fibState1 :: State (Integer, Integer) Integer
+> 
+
+> runState fibState1 (0, 1)
+(1,(1,1))
+> runState fibState1 (1, 1)
+(2,(1,2))
+> runState fibState1 (1, 2)
+(3,(2,3))
+> runState fibState1 (2, 3)
+(5,(3,5))
+> runState fibState1 (3, 5)
+(8,(5,8))
+> runState fibState1 (5, 8)
+(13,(8,13))
+> 
+{-- OR --}
+
+> evalStateNtimes fibState1 (0, 1)  20
+[1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765,10946]
+> 
+```
+
+```haskell
+
+import OldState
+
+type Fib = (Integer, Integer)
+
+fibstate2 :: State Fib Integer
+fibstate2 = do
+    (an, an1) <- get
+    let an2 = an + an1
+    put (an1, an2)
+    return an2
+
+> :t fibstate2 
+fibstate2 :: State Fib Integer
+> 
+
+> runState fibstate2 (0, 1)
+(1,(1,1))
+> runState fibstate2 (1, 1)
+(2,(1,2))
+> runState fibstate2 (1, 2)
+(3,(2,3))
+> runState fibstate2 (2, 3)
+(5,(3,5))
+> runState fibstate2 (3, 5)
+(8,(5,8))
+> runState fibstate2 (5, 8)
+(13,(8,13))
+
+> evalStateNtimes fibstate2 (0, 1)  20
+[1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765,10946]
+>   
+```
+
+**Example: Root Solving / Secant Method**
+
+See: [Secant Method](http://en.wikipedia.org/wiki/Secant_method)
+
+Algorithm:
+```
+    x[n+2] =  x[n] - y[n]*(x[n+1] - x[n])/(y[n+1] - y[n])
+```
+
+Example: Solve the equation  x^2 - 2.0 = 0 whic the solution is sqrt(2) by the secant method.
+
+```haskell
+import OldState
+
+secantStateFactory f = do
+    (xn, xn1) <- get
+    let yn  = f xn
+    let yn1 = f xn1
+    let xn2 = xn - yn * (xn1 - xn)/(yn1 - yn)
     
+    put (xn1, xn2)
+    
+    return xn2
+
+f x = x**2.0 - 2.0
+
+
+
+> 
+> evalStateNtimes (secantStateFactory f) (5.0, 10.0) 8
+[3.466666666666667,2.7227722772277225,1.848139063666418,1.5384375855421741,1.4301305124704486,1.4148796301580984,1.4142172888159419,1.4142135632504291]
+> 
+> -- If the sequence a0, a1, a2, a3, ... is converging then 
+> -- abs(a[i] - a[i-1]) < eps
+>
+
+withinr tol itmax serie =
+    case (itmax, serie) of
+        (_, [])         -> Nothing
+        (0, x:xs)       -> Just x
+        (i, x1:x2:xs)   -> if abs(x1 - x2)  < abs(tol * x2)
+                                then Just x2
+                                else withinr tol (itmax - 1) xs
+    
+
+> withinr 1e-3 1000 $ evalStateLoop  (secantStateFactory f) (5.0, 10.0) 
+Just 1.4142135632504291
+> 
+
+> let secantSolver tol itmax f x0 x1 = withinr tol itmax $ evalStateLoop  (secantStateFactory f) (x0, x1)
+
+> secantSolver 1e-3 100 (\x -> x**3.0 - x - 2) 1.0 2.0
+Just 1.5213797079848717
+> 
+
+
+```
+
+**Example: Bisection Method for Root Solving**
+
+
+[Bisection method](http://en.wikipedia.org/wiki/Bisection_method)
+
+Algorithm:
+
+```
+INPUT: Function f, endpoint values a, b, tolerance TOL, maximum iterations NMAX
+CONDITIONS: a < b, either f(a) < 0 and f(b) > 0 or f(a) > 0 and f(b) < 0
+OUTPUT: value which differs from a root of f(x)=0 by less than TOL
+ 
+N ← 1
+While N ≤ NMAX # limit iterations to prevent infinite loop
+  c ← (a + b)/2 # new midpoint
+  If f(c) = 0 or (b – a)/2 < TOL then # solution found
+    Output(c)
+    Stop
+  EndIf
+  N ← N + 1 # increment step counter
+  If sign(f(c)) = sign(f(a)) then a ← c else b ← c # new interval
+EndWhile
+Output("Method failed.") # max number of steps exceeded
+```
+
+File: [bisection_state.hs](src/bisection_state.hs)
+```haskell
+import OldState
+
+bisecStateFactory f = do
+    (a, b) <- get
+    let c = (a + b) / 2.0
+    
+    --  If sign(f(c)) = sign(f(a))  else b ← c
+    if (f c) * (f a) >= 0   
+        then    put (c, b)  -- then a ← c
+        else    put (a, c)  -- else b ← c
+    
+    return c
+
+findRoot :: Double -> Double -> (Double -> Double) -> [Double] -> Maybe Double
+findRoot eps itmax f serie =
+    case (itmax, serie) of   
+        (_, [])          -> Nothing
+        (0, (x:xs))      -> if abs(f x) < eps then Just x else Nothing
+        (i, (x:xs))      -> if abs(f x) < eps 
+                                then Just x
+                            else
+                                findRoot eps (i - 1) f xs
+    
+bisecSolver eps itmax f x0 x1 =
+    findRoot eps f (evalStateLoop  (bisecStateFactory f (x0, x1)))
+    
+f :: Double -> Double
+f x =  x ** 3.0 - x - 2.0
+```
+
+```haskell
+> :l bisection_state.hs 
+[1 of 2] Compiling OldState         ( OldState.hs, interpreted )
+[2 of 2] Compiling Main             ( bisection_state.hs, interpreted )
+Ok, modules loaded: OldState, Main.
+
+
+> runState (bisecStateFactory f) (1, 2)
+(1.5,(1.5,2.0))
+> runState (bisecStateFactory f) (1.5, 2)
+(1.75,(1.5,1.75))
+> runState (bisecStateFactory f) (1.5,1.75)
+(1.625,(1.5,1.625))
+> 
+> eval (bisecStateFactory f) (1.5,1.75)
+evalNthState     evalState        evalStateLoop    evalStateNtimes
+> evalStateNtimes (bisecStateFactory f) (1.5,1.75) 10
+[1.625,1.5625,1.53125,1.515625,1.5234375,1.51953125,1.521484375,1.5205078125,1.52099609375,1.521240234375]
+> 
+
+> 
+> findRoot 1e-3 1000 f (evalStateLoop  (bisecStateFactory f) (10.0, 20.0))
+Nothing
+> 
+
+> bisecSolver 1e-3 1000 f 1.0 2.0
+Just 1.521484375
+> 
+
+> bisecSolver 1e-3 1000 f 10.0 20.0
+Nothing
+> 
+
+> bisecSolver 1e-3 1000 f (-10.0) 20.0
+Just 1.521453857421875
+> 
 ```
 
 References:

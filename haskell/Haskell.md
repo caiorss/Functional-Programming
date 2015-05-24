@@ -1,5 +1,7 @@
 ## Haskell
 
+**Overview**
+
 * Pure Functional programming language
 * Strong Static Typed Language 
 * Type Inference (The Haskell compiler deduce the types for you). 

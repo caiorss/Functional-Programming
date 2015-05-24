@@ -1,6 +1,6 @@
 ## Algebraic Data Types
 
-[Under Contruction]
+[Under Construction]
 
 [Algebraic data type](http://en.wikipedia.org/wiki/Algebraic_data_type) is a type formed by combining types. It can be used to implement Records, Enumerated Sets, option type and Recursive types. Note: Algebraic data types must not be confused with [Abstract data types](http://en.wikipedia.org/wiki/Abstract_data_type). 
 

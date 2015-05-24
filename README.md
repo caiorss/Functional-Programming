@@ -7,7 +7,7 @@
 
 ![](haskell/images/haskellLogo.png)
 
-The purpose of this tutorial is to illustrate functional programming concepts in the Haskell programming language by providing reusable and useful snippets of code, examples, case studies, and applications.
+The purpose of this tutorial is to illustrate functional programming concepts in the Haskell programming language by providing reusable and useful snippets of code, examples, case studies, and applications. This repository is dedicated to public domain which means that you can use it in whatever way you wish without ask any permission. 
 
 * Author:   Caio Rodrigues Soares Silva / caiorss.rodrigue@gmail.com 
 
@@ -42,4 +42,3 @@ You can access this page from:
 
 
 The code snippets with the '>' symbol were run in the interactive Haskell Shell (GHCi) and the lines below without the '>' symbol are the output.
-

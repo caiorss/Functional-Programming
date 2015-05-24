@@ -46,5 +46,55 @@ evalState :: State s a -> s -> a
 evalState act = fst . runState act
 
 {- Returns the final state of computation -}
-exeCstate :: State s a -> s -> s
-exeCstate act = snd . runState act
+execState :: State s a -> s -> s
+execState act = snd . runState act
+
+
+{-
+    State Sequence Combinators:
+    
+    The functions below are not defined in the old Control.State.Monad library. 
+    They make easier to compute the sucessive executions of the state function.
+-}
+
+evalStateNtimes stateFunc state n =
+    if  n == 0 
+        then []
+    else
+        let (out, new_state) = runState stateFunc state in
+        out:(evalStateNtimes stateFunc new_state (n-1))
+
+runStateNtimes stateFunc state n =
+    if  n == 0 
+        then []
+    else
+        let (out, new_state) = runState stateFunc state in
+        (out, new_state):(runStateNtimes stateFunc new_state (n-1))
+        
+execStateNtimes stateFunc state n =
+    if  n == 0 
+        then []
+    else
+        let (out, new_state) = runState stateFunc state in
+        new_state:(execStateNtimes stateFunc new_state (n-1))
+
+
+evalStateLoop stateFunc state =
+    let (out, new_state) = runState stateFunc state in
+    out:(evalStateLoop stateFunc new_state )
+
+runStateLoop stateFunc state =
+    let (out, new_state) = runState stateFunc state in
+    (out, new_state):(runStateLoop stateFunc new_state )
+    
+execStateLoop stateFunc state =
+    let (out, new_state) = runState stateFunc state in
+    new_state:(execStateLoop stateFunc new_state )
+
+evalNthState stateFunc state n =
+    if  n == 0 
+        then out
+    else        
+        evalNthState stateFunc new_state (n-1)
+    where
+        (out, new_state) = runState stateFunc state        
