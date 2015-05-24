@@ -32,8 +32,7 @@
     - [IO Examples](#io-examples)
     - [Sources](#sources-1)
   - [State Monad](#state-monad)
-- [--   runState :: (\s -> (a, s)) -> s -> (a, s)](#-----runstate--\s---a-s---s---a-s)
-- [--  => ((), 5) ](#------5)
+
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1658,19 +1657,19 @@ Get - Getting State
 
 ```haskell
 
-	--  return a        = State $ \s -> (a,s)
-	--  runState :: (\s -> (a, s)) -> s -> (a, s)
-	--  
-	--  
-	--  => runState (return 10) 1 
-	--  => runState (\s -> (10,s)) 1 
-	--  => (\s -> (10,s)) 1 
-	--  => (10, 1)
-	--      
-	--  Generalizing:
-	--      
-	--      runstate (return a) s = (a, s)
-	--
+    --  return a        = State $ \s -> (a,s)
+    --  runState :: (\s -> (a, s)) -> s -> (a, s)
+    --  
+    --  
+    --  => runState (return 10) 1 
+    --  => runState (\s -> (10,s)) 1 
+    --  => (\s -> (10,s)) 1 
+    --  => (10, 1)
+    --      
+    --  Generalizing:
+    --      
+    --      runstate (return a) s = (a, s)
+    --
 > runState (return 10) 1
 (10,1)
 > runState (return 10) 'a'

@@ -400,3 +400,30 @@ Credits:
 * http://pleac.sourceforge.net/pleac_haskell/datesandtimes.html
 
 
+### GnuPlot
+
+Installation:
+
+```
+$ cabal install gnuplot
+$ sudo apt-get install gnuplot-x11 # Ubuntu/ Debian
+```
+
+Examples:
+
+```haskell
+> import Graphics.Gnuplot.Simple
+> plotList [] [(1, 1), (2, 2), (3, 3)]
+```
+
+```haskell
+> import Graphics.Gnuplot.Simple
+> plotFunc [] (linearScale 1000 (-20,20)) (\x -> sin x / x)
+```
+
+```haskell
+> plotList [Title "A title", XLabel "x label"] [(2,10),(3,15),(4,14),(5,19)]
+> plotList [Title "A title", XLabel "x label", YLabel "the y label"] [(2,10),(3,15),(4,14),(5,19)]
+```
+
+
