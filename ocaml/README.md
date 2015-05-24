@@ -1471,7 +1471,7 @@ $ utop
 utop # #load "example.cma" ;;
 utop # Example.PhysicalConstants.g ;;
 - : float = 9.81 
-```
+
 
 
 $ file example.cmx 
