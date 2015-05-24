@@ -1,3 +1,30 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Applications](#applications)
+  - [Mathematics](#mathematics)
+  - [Picewise Functions](#picewise-functions)
+  - [Numerical Methods](#numerical-methods)
+    - [Polynomial](#polynomial)
+    - [Numerical Derivate](#numerical-derivate)
+    - [Nonlinear Equation - Root-finding](#nonlinear-equation---root-finding)
+- [     t -> Int -> (t -> t) -> (t -> t) -> t -> (t, t, Int)](#t---int---t---t---t---t---t---t-t-int)
+    - [Differential Equations](#differential-equations)
+  - [Statistics and Time Series](#statistics-and-time-series)
+    - [Some Statistical Functions](#some-statistical-functions)
+    - [Monte Carlo Simulation Coin Toss](#monte-carlo-simulation-coin-toss)
+- [](#)
+- [](#-1)
+- [](#-2)
+- [](#-3)
+  - [Vectors](#vectors)
+  - [Tax Brackets](#tax-brackets)
+  - [Small DSL Domain Specific Language](#small-dsl-domain-specific-language)
+    - [String Processing](#string-processing)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Applications
 
 

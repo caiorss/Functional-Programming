@@ -1,3 +1,22 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Libraries](#libraries)
+  - [System Programming in Haskell](#system-programming-in-haskell)
+  - [Data.Time](#datatime)
+    - [System](#system)
+    - [Get current year / month / day in Haskell](#get-current-year--month--day-in-haskell)
+    - [Get Current Time](#get-current-time)
+    - [Documentation By Examples - GHCI shell](#documentation-by-examples---ghci-shell)
+      - [Date Time Manipulation](#date-time-manipulation)
+      - [Difference between two dates](#difference-between-two-dates)
+      - [Day in a Week/Month/Year or Week Number](#day-in-a-weekmonthyear-or-week-number)
+      - [Parsing Dates and Times from Strings](#parsing-dates-and-times-from-strings)
+      - [Printing a Date](#printing-a-date)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Libraries
 
 ### System Programming in Haskell

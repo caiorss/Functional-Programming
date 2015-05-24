@@ -1,3 +1,42 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Functors, Monads, Applicatives and Monoids](#functors-monads-applicatives-and-monoids)
+  - [Functors](#functors)
+  - [Monads](#monads)
+    - [Overview](#overview)
+    - [Bind Operator](#bind-operator)
+    - [Monad Laws](#monad-laws)
+    - [Selected Monad Implementations](#selected-monad-implementations)
+    - [Return - Type constructor](#return---type-constructor)
+    - [Haskell Monads](#haskell-monads)
+    - [Monad function composition](#monad-function-composition)
+    - [Sources](#sources)
+  - [Maybe Monad](#maybe-monad)
+  - [List Monad](#list-monad)
+  - [IO and IO Monad](#io-and-io-monad)
+    - [Main action](#main-action)
+    - [Read and Show](#read-and-show)
+    - [Operator >> (then)](#operator--then)
+    - [Basic I/O Operations](#basic-io-operations)
+    - [Do Notation](#do-notation)
+      - [Basic Do Notation](#basic-do-notation)
+      - [Do Notation and Let keyword](#do-notation-and-let-keyword)
+      - [Do Notation returning a value](#do-notation-returning-a-value)
+      - [Combining functions and I/O actions](#combining-functions-and-io-actions)
+      - [Executing a list of actions](#executing-a-list-of-actions)
+      - [Control Structures](#control-structures)
+        - [For Loops](#for-loops)
+      - [mapM and mapM_](#mapm-and-mapm_)
+    - [IO Examples](#io-examples)
+    - [Sources](#sources-1)
+  - [State Monad](#state-monad)
+- [--   runState :: (\s -> (a, s)) -> s -> (a, s)](#-----runstate--\s---a-s---s---a-s)
+- [--  => ((), 5) ](#------5)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Functors, Monads, Applicatives and Monoids
 
 The concepts of functors, monads and applicative comes from [category theory](http://en.wikipedia.org/wiki/Category_theory).

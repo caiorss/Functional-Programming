@@ -1,3 +1,15 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Algebraic Data Types](#algebraic-data-types)
+    - [Enumerated Data Type](#enumerated-data-type)
+    - [Typeclass without Record Syntax](#typeclass-without-record-syntax)
+    - [Record Syntax](#record-syntax)
+    - [Recursive Data Types](#recursive-data-types)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Algebraic Data Types
 
 [Under Construction]
