@@ -751,6 +751,12 @@ For Loop:
 = 4
 = 5
 - : unit = ()
+
+> for i = 10 downto 1 do
+  Printf.printf "%d .. " i
+done;    
+  ;;
+10 .. 9 .. 8 .. 7 .. 6 .. 5 .. 4 .. 3 .. 2 .. 1 .. - : unit = () 
 ```
 
 While Loop:
@@ -866,6 +872,7 @@ String Module
 Standard Print Functions
 
 ```ocaml
+
 > print_string "Hello world!\n";;
 Hello world!
 - : unit = ()

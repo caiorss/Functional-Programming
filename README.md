@@ -1,22 +1,29 @@
-# Functional Programming in Haskell by Examples
+# Functional Programming in Haskell and OCaml by Examples
 
 <!--
 @TODO: Add the creative commons public domain logo.
 @TODO: Update papers repository
 -->
 
-![](haskell/images/haskellLogo.png)
+<a href="https://www.haskell.org"><img src="haskell/images/haskellLogo.png"/></a>  <a href="https://ocaml.org"><img src="ocaml/images/ocamlogo.png" width="30%" /></a>
+
+<!--
+![](ocaml/images/ocamlogo.png)
+-->
+
+
+
 
 The purpose of this tutorial is to illustrate functional programming concepts in the Haskell programming language by providing reusable and useful snippets of code, examples, case studies, and applications. This repository is dedicated to public domain which means that you can use it in whatever way you wish without ask any permission. 
 
-* Author:   Caio Rodrigues Soares Silva / caiorss.rodrigue@gmail.com 
+* Author:   [Caio Rodrigues](https://www.linkedin.com/in/caiorodrigues) / caiorss.rodrigue@gmail.com 
 
 You can access this page from:
 
 * https://github.com/caiorss/Functional-Programming
 * http://tinyurl.com/fpbyexample
 
-**Summary**
+**Haskell Summary**
 
 * [Haskell](haskell/Haskell.md)
 * [Functional Programming Concepts](haskell/Functional_Programming_Concepts.md)
@@ -37,6 +44,10 @@ You can access this page from:
 
 * [Papers in this Repository](papers/README.md)
 
+
+**OCAMl Summary**
+
+* [OCaml](ocaml/README.md)
 
 **Notes**
 
