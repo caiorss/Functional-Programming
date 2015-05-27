@@ -11,11 +11,12 @@
       - [Misc](#misc)
   - [Basic Syntax](#basic-syntax)
         - [Variable Declaration](#variable-declaration)
-        - [Functions](#functions)
+        - [Operators](#operators)
         - [Polymorphic Functions](#polymorphic-functions)
+        - [Function Declaration](#function-declaration)
         - [Function Composition](#function-composition)
         - [Lambda Functions/ Anonymous Functions](#lambda-functions-anonymous-functions)
-    - [Control Structures](#control-structures)
+        - [Control Structures](#control-structures)
   - [Lists](#lists)
   - [String](#string)
   - [IO - Input / Output](#io---input--output)
@@ -241,6 +242,8 @@ Source:
 
 #### UTOP Interactive Shell
 
+![](images/utopshell.png)
+
 Show UTOP help
 
 ```ocaml
@@ -389,20 +392,11 @@ val a : float = 2.323
 
 ```
 
-##### Functions
+##### Operators
 
-```ocaml
->  let f x = 10 * x + 4 ;;
-val f : int -> int = <fun>
->  f 4 ;;
-- : int = 44
->  f 5 ;;
-- : int = 54
->  
-```
 
 Float Functions must use +. /. -. *. operators since Ocaml doesn't support
-operator overload 
+operator overload.
 
 ```ocaml
 
@@ -416,6 +410,19 @@ val g : float -> float = <fun>
 >  
 ```
 
+```ocaml
+utop # (+) ;;
+- : int -> int -> int = <fun>
+
+ # (-) ;;
+- : int -> int -> int = <fun>
+
+ # (+.) ;;
+- : float -> float -> float = <fun>
+
+ (-.) ;;
+- : float -> float -> float = <fun>
+```
 
 ##### Polymorphic Functions
 
@@ -431,6 +438,197 @@ val id : 'a -> 'a = <fun>
 - : string = "Hello world"
 >  
 
+```
+
+
+##### Function Declaration
+
+```ocaml
+>  let f x = 10 * x + 4 ;;
+val f : int -> int = <fun>
+
+>  f 4 ;;
+- : int = 44
+
+>  f 5 ;;
+- : int = 54
+>  
+
+> let f (x, y) = x +  y ;;
+val f : int * int -> int = <fun>
+
+> f (2, 5) ;;
+- : int = 7 
+
+> f (10, 5) ;;
+- : int = 15  
+
+
+> let add_floats x y = x +. y ;;
+val add_floats : float -> float -> float = <fun> 
+
+> add_floats 10. 50.343 ;;
+- : float = 60.343  
+
+
+> let a_complex_function x y =
+    let a = 10 * x in
+    let b = 5 * y + x in
+    a + b
+;;
+val a_complex_function : int -> int -> int = <fun>    
+
+(*
+    a_complex_function 2 3
+        a = 10 * x -->  a = 10*2 = 20
+        b = 5 * 3  -->  b = 5*3 + 2 = 17
+        a + b      -->  20 + 17 = 37
+*)
+> a_complex_function 2 3 ;;
+- : int = 37
+
+(* Returning More than one value *)
+
+> let g x y =  (10* x, x + y) ;;
+
+> g 4 5 ;;
+- : int * int = (40, 9) 
+```
+
+Declaring Functions with type signature.
+
+```ocaml
+> let func1 (x:int) (y:float) : float = (float_of_int x) +. y ;;
+val func1 : int -> float -> float = <fun> 
+
+> func1 10 2.334 ;;
+- : float = 12.334 
+
+
+> let func2 (xy: (int * int)) : int  = (fst xy) + (snd xy) ;;
+val func2 : int * int -> int = <fun
+
+> func2 (5, 6) ;;
+- : int = 11  
+
+> let show (x:float) = Printf.printf "%.3f" x ;;
+val show : float -> unit = <fun>  
+
+> show 3.232 ;;
+3.232- : unit = ()  
+
+
+> let showxy (x, y) : unit = Printf.printf "%.3f\n" (x +. y) ;;
+val showxy : float * float -> unit = <fun
+
+> showxy (32.323, 100.232) ;;
+132.555 
+- : unit = () 
+
+
+> let double_list (list_of_floats : float list) : float list = 
+    List.map (fun x -> 2.0 *. x) list_of_floats ;;
+val double_list : float list -> float list = <fun>   
+
+> double_list [1. ; 2. ; 3. ; 4. ; 5. ] ;;
+- : float list = [2.; 4.; 6.; 8.; 10.] 
+
+```
+
+Declaring function type with anonymous functions.
+
+```ocaml
+> let func2' : (int * int) -> int = fun (a, b) -> a + b ;;
+val func2' : int * int -> int = <fun>
+
+> func2' (5, 6) ;;
+- : int = 11   
+
+> let showxy' : float * float -> unit = fun (x, y) ->
+   Printf.printf "%.3f\n" (x +. y) ;; 
+
+> showxy' (23.3, 5.342021321) ;; 
+28.642
+- : unit = ()  
+
+(* Declaration functions that takes another function as argument *)
+
+> let apply_to_fst f (x, y) = (f x, y) ;;
+val apply_to_fst : ('a -> 'b) -> 'a * 'c -> 'b * 'c = <fun> 
+
+let apply_to_fst2 : ('a -> 'c) -> 'a * 'b  -> 'c * 'b = 
+    fun f (x, y) ->  (f x, y)
+
+> let f x = x + 10 ;;
+val f : int -> int = <fun>  
+
+> apply_to_fst f (10, "hello world") ;;
+- : int * string = (20, "hello world")
+
+> apply_to_fst2 f (10, "hello world") ;;
+- : int * string = (20, "hello world")
+```
+
+Declaring functions with custom types
+
+```ocaml
+> type tuple_of_int = int * int ;;
+type tuple_of_int = int * int   
+
+> type func_float_to_string = float -> string ;;
+type func_float_to_string = float -> string 
+
+
+> type func_tuple_of_ints_to_float = int * int -> float ;;
+type func_tuple_of_ints_to_float = int * int -> float  
+
+> let x: tuple_of_int = (10, 4) ;;
+val x : tuple_of_int = (10, 4)
+
+> let f : func_float_to_string = fun x -> "x = " ^ (string_of_float x) ;;
+val f : func_float_to_string = <fun>  
+
+> f 2.23 ;;
+- : string = "x = 2.23"   
+
+> let funct : tuple_of_int -> int = fun (x, y) -> x + y ;;
+val funct : tuple_of_int -> int = <fun>  
+
+> funct (10, 100) ;;
+- : int = 11
+
+> let fxy : func_tuple_of_ints_to_float = 
+    fun (x, y) -> 10.4 *. (float_of_int x) -. 3.5 *. (float_of_int y) ;;
+val fxy : func_tuple_of_ints_to_float = <fun>  
+
+> fxy ;;
+- : func_tuple_of_ints_to_float = <fun>  
+
+> fxy (10, 5) ;;
+- : float = 86.5 
+
+
+> type list_of_float = float list ;;
+type list_of_float = float list
+
+> let double (xs: list_of_float) : list_of_float = List.map (fun x -> 2.0 *. x) xs ;;
+val double : list_of_float -> list_of_float = <fun> 
+
+> double [1. ; 2. ; 3. ; 4. ; 5. ] ;;
+- : list_of_float = [2.; 4.; 6.; 8.; 10.]
+
+> double ;;
+- : list_of_float -> list_of_float = <fun> 
+
+> let double2 : list_of_float -> list_of_float = 
+  fun xs -> List.map (fun x -> 2.0 *. x) xs ;;
+val double2 : list_of_float -> list_of_float = <fun>         
+
+> double2 ;;
+- : list_of_float -> list_of_float = <fun> 
+
+> double2 [1. ; 2. ; 3. ; 4. ; 5. ] ;;
+- : list_of_float = [2.; 4.; 6.; 8.; 10.]   
 ```
 
 ##### Function Composition
@@ -498,11 +696,14 @@ Example: Pipe Operators
 > 
  
 
->  
-  10 |> (f3 >> f2 >> f1 ) ;;
-- : int = 14
-> 
+> 10 |> (f1 >> f2 >> f3) ;;
+- : int = 14  
 
+> let f = f1 >> f2 >> f3 ;;
+val f : int -> int = <fun>  
+
+> f 10 ;;
+- : int = 14 
 ```
 
 ##### Lambda Functions/ Anonymous Functions
@@ -518,7 +719,7 @@ fun x y z -> (x,y,z)               : 'a -> 'b -> 'c -> ('a*'b*'c)
 ```
 
 
-### Control Structures
+##### Control Structures
 
 Conditional Expressions
 
@@ -537,6 +738,35 @@ x is positive- : unit = ()
 
 > test (-10) ;;
 x is negative- : unit = ()
+```
+
+For Loop:
+
+```ocaml
+> for i = 0 to 5 do Printf.printf "= %i\n" i  done ;;
+= 0
+= 1
+= 2
+= 3
+= 4
+= 5
+- : unit = ()
+```
+
+While Loop:
+
+```ocaml
+> let j = ref 5 ;;
+val j : int ref = {contents = 5} 
+
+> while !j > 0 do Printf.printf "x = %d\n" !j ; j := !j -1 done ;;
+x = 5
+x = 4
+x = 3
+x = 2
+x = 1
+- : unit = ()
+
 ```
 
 <!--
@@ -633,11 +863,97 @@ String Module
 
 ## IO - Input / Output
 
+Standard Print Functions
+
 ```ocaml
-    # print_string "Hello world!\n";;
-    Hello world!
-    - : unit = ()
-    # 
+> print_string "Hello world!\n";;
+Hello world!
+- : unit = ()
+> 
+
+> print_int 100 ;;
+100- : unit = ()
+
+> print_float 23.23 ;;
+23.23- : unit = ()
+
+> print_char 'c' ;;
+c- : unit = ()
+> 
+
+> let s = Printf.sprintf "x =  %s  y = %f z = %d" "hello" 2.2232 40  ;;
+val s : string = "x =  hello  y = 2.223200 z = 40"
+
+# print_string s ;;
+x =  hello  y = 2.223200 z = 40- : unit = ()  
+```
+
+Printf Module
+
+```ocaml
+> Printf.printf "%d" 100 ;;
+100- : unit = ()  
+
+> Printf.printf "%d %f" 100 2.232 ;;
+100 2.232000- : unit = () 
+
+> Printf.printf "%s %d %f" "This is" 100 2.232 ;;
+This is 100 2.232000- : unit = ()  
+
+> Printf.sprintf "x =  %s  y = %f z = %d" "hello" 2.2232 40 ;;
+- : string = "x =  hello  y = 2.223200 z = 40" 
+```
+
+**Files**
+
+Writing a Text File:
+
+```ocaml
+utop # let file = open_out "/tmp/file.txt" ;;
+val file : out_channel = <abstr> 
+
+utop # output_string file "hello\n" ;;
+- : unit = ()  
+
+utop # output_string file "world\n" ;;
+- : unit = () 
+
+utop # close_out file ;;
+- : unit = ()   
+```
+
+Reading a Text File:
+
+```
+utop # let filein = open_in "/tmp/file.txt" ;;
+val filein : in_channel = <abstr>   
+                                                                             
+utop # input_line filein ;;
+- : string = "hello"    
+                                                                                         
+utop # input_line filein ;;
+- : string = "world"   
+                                                                                          
+utop # input_line filein ;;
+Exception: End_of_file.  
+
+
+utop # let filein = open_in "/tmp/file.txt" ;;
+val filein : in_channel = <abstr>   
+
+utop # input_char ;;
+- : in_channel -> char = <fun>
+
+
+utop # input_char filein ;;
+- : char = 'h'                                                                                                   
+utop # input_char filein ;;
+- : char = 'e'                                                                                                   
+utop # input_char filein ;;
+- : char = 'l'                                                                                                   
+utop # input_char filein ;;
+- : char = 'l'                                                                                                   
+utop # 
 ```
 
 <!--
