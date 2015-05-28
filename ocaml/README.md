@@ -1295,7 +1295,7 @@ hello world / hit return to continue
     ---------------------------------------------------------------
 -->
 
-## Standar Library Modules
+## Standard Library Modules
 
 ### List
 
@@ -1482,6 +1482,15 @@ val f : int -> int = <fun>
 - : float list = [17.; 27.5; 48.5; 101.; 206.]
 > 
 
+(*      MAPI        *)
+(*------------------*)
+> List.mapi ;;
+- : (int -> 'a -> 'b) -> 'a list -> 'b list = <fun>  
+
+> List.mapi (fun  index element -> index, element) [17.; 27.5; 48.5; 101.; 206.] ;;
+- : (int * float) list = [(0, 17.); (1, 27.5); (2, 48.5); (3, 101.); (4, 206.)] 
+
+
 (* MAP2 / Haskell zipWith *)
 
 > List.map2 ;;
@@ -1591,6 +1600,21 @@ Warning 2: this is not the end of a comment.
 - : unit = ()
 > 
 
+(* ITERI    *)
+
+> List.iteri ;;
+- : (int -> 'a -> unit) -> 'a list -> unit = <fun>
+
+> List.iteri (Printf.printf "idendx = %d element = %d\n") [-10; 3; 100; 50; 5; 20] ;;
+idendx = 0 element = -10
+idendx = 1 element = 3
+idendx = 2 element = 100
+idendx = 3 element = 50
+idendx = 4 element = 5
+idendx = 5 element = 20
+- : unit = ()
+
+
 (* ITER2    *)
 > List.iter2 ;;
 - : ('a -> 'b -> unit) -> 'a list -> 'b list -> unit = <fun>
@@ -1616,35 +1640,35 @@ Arrays as oppose to lists are mmutable data structures.
 > let a = [| 10; 2 ; 10; 25 ; 100; 0 ; 1 |]  ;;
 val a : int array = [|10; 2; 10; 25; 100; 0; 1|]  
 
-# a.(0) ;;
+> a.(0) ;;
 - : int = 10
-# a.(1) ;;
+> a.(1) ;;
 - : int = 2
-# a.(4) ;;
+> a.(4) ;;
 - : int = 100
-# a.(10) ;;
+> a.(10) ;;
 Exception: Invalid_argument "index out of bounds".
-# 
+> 
 
-# Array.length ;;
+> Array.length ;;
 - : 'a array -> int = <fun> 
 
-# Array.length a ;;
+> Array.length a ;;
 - : int = 7   
 
-# Array.map ;;
+> Array.map ;;
 - : ('a -> 'b) -> 'a array -> 'b array = <fun>
 
-# Array.map (fun x -> x*2 + 1) a ;;
+> Array.map (fun x -> x*2 + 1) a ;;
 - : int array = [|21; 5; 21; 51; 201; 1; 3|]
 
-# a.(0) <- 56 ;;
+> a.(0) <- 56 ;;
 - : unit = ()
-# a ;;
+> a ;;
 - : int array = [|56; 2; 10; 25; 100; 0; 1|] 
-# a.(5) <- 567 ;;
+> a.(5) <- 567 ;;
 - : unit = () 
-# a ;;
+> a ;;
 - : int array = [|56; 2; 10; 25; 100; 567; 1|]
 
 (*  Maps a function that takes the index of element 
@@ -1653,56 +1677,56 @@ Exception: Invalid_argument "index out of bounds".
     
     f(index, element) 
 *)
-# Array.mapi ;;
+> Array.mapi ;;
 - : (int -> 'a -> 'b) -> 'a array -> 'b array = <fun> 
  Array.mapi (fun idx e -> idx, e) [|56; 2; 10; 25; 100; 567; 1|]  ;;
 - : (int * int) array = [|(0, 56); (1, 2); (2, 10); (3, 25); (4, 100); (5, 567); (6, 1)|]
 
 
- # Array.to_list ;;
+ > Array.to_list ;;
 - : 'a array -> 'a list = <fun> 
-# Array.to_list a ;;
+> Array.to_list a ;;
 - : int list = [56; 2; 10; 25; 100; 567; 1] 
 
 
-# Array.of_list ;;
+> Array.of_list ;;
 - : 'a list -> 'a array = <fun>  
-# Array.of_list [56; 2; 10; 25; 100; 567; 1] ;;
+> Array.of_list [56; 2; 10; 25; 100; 567; 1] ;;
 - : int array = [|56; 2; 10; 25; 100; 567; 1|]    
 
-# Array.get ;;
+> Array.get ;;
 - : 'a array -> int -> 'a = <fun>
- # Array.get a 0 ;;
+ > Array.get a 0 ;;
 - : int = 56
-# Array.get a 20 ;;
+> Array.get a 20 ;;
 Exception: Invalid_argument "index out of bounds".
 
 
  
 
-# let a = [|56; 2; 10; 25; 100; 567; 1|]  ;;
+> let a = [|56; 2; 10; 25; 100; 567; 1|]  ;;
 val a : int array = [|56; 2; 10; 25; 100; 567; 1|] 
-# Array.set ;;
+> Array.set ;;
 - : 'a array -> int -> 'a -> unit = <fun> 
 
-# Array.set a  0 15 ;;
+> Array.set a  0 15 ;;
 - : unit = ()    
-# Array.set a  4 235 ;;
+> Array.set a  4 235 ;;
 - : unit = () 
-# a ;;
+> a ;;
 - : int array = [|15; 2; 10; 25; 235; 567; 1|] 
 
-# Array.fold_right ;;
+> Array.fold_right ;;
 - : ('b -> 'a -> 'a) -> 'b array -> 'a -> 'a = <fun> 
-# Array.fold_right (+) [|56; 2; 10; 25; 100; 567; 1|]  0 ;;
+> Array.fold_right (+) [|56; 2; 10; 25; 100; 567; 1|]  0 ;;
 - : int = 761
 
-# Array.fold_left ;;
+> Array.fold_left ;;
 - : ('a -> 'b -> 'a) -> 'a -> 'b array -> 'a = <fun> 
-# Array.fold_left (+) 0 [|56; 2; 10; 25; 100; 567; 1|]  ;;
+> Array.fold_left (+) 0 [|56; 2; 10; 25; 100; 567; 1|]  ;;
 - : int = 761 
 
-# Array.iter (Printf.printf "x = %d\n") [|56; 2; 10; 25; 100; 567; 1|]  ;;
+> Array.iter (Printf.printf "x = %d\n") [|56; 2; 10; 25; 100; 567; 1|]  ;;
 x = 56
 x = 2
 x = 10
@@ -1711,7 +1735,7 @@ x = 100
 x = 567
 x = 1
 - : unit = ()
-# 
+> 
 
 (*  Applies a function that takes the index of element 
     as first argument and then the element as second 
@@ -1719,10 +1743,10 @@ x = 1
     
     f(index, element) 
 *)
-# Array.iteri ;;
+> Array.iteri ;;
 - : (int -> 'a -> unit) -> 'a array -> unit = <fun>
 
-# Array.iteri (Printf.printf "x[%d] = %d\n") [|56; 2; 10; 25; 100; 567; 1|]  ;;
+> Array.iteri (Printf.printf "x[%d] = %d\n") [|56; 2; 10; 25; 100; 567; 1|]  ;;
 x[0] = 56
 x[1] = 2
 x[2] = 10
@@ -1736,21 +1760,58 @@ x[6] = 1
 
 
 
-# Array.init ;;
+> Array.init ;;
 - : int -> (int -> 'a) -> 'a array = <fun> 
 
-# Array.init 10 (fun x -> 5. *. float_of_int x)  ;;
+> Array.init 10 (fun x -> 5. *. float_of_int x)  ;;
 - : float array = [|0.; 5.; 10.; 15.; 20.; 25.; 30.; 35.; 40.; 45.|]
-# Array.init 10 (fun x -> 5 * x + 10 )  ;;
+> Array.init 10 (fun x -> 5 * x + 10 )  ;;
 - : int array = [|10; 15; 20; 25; 30; 35; 40; 45; 50; 55|]
 
-# Array.make_matrix ;;
+> Array.make_matrix ;;
 - : int -> int -> 'a -> 'a array array = <fun>
-# Array.make_matrix 2 3 1 ;;
+> Array.make_matrix 2 3 1 ;;
 - : int array array = [|[|1; 1; 1|]; [|1; 1; 1|]|] 
 
 ```
 
+### Type Casting
+
+```ocaml
+
+utop # float_of_int 2323 ;;
+- : float = 2323. 
+
+utop # float_of_string "100.04523" ;;
+- : float = 100.04523  
+
+utop # int_of_float 100.04523 ;;
+- : int = 100 
+
+utop # int_of_string "90000" ;;
+- : int = 90000    
+
+utop # let x = [20; 230; 10 ; 40; 50 ] ;;
+val x : int list = [20; 230; 10; 40; 50]
+
+utop # List.map float_of_int x ;;
+- : float list = [20.; 230.; 10.; 40.; 50.]
+
+utop # Array.of_list [20.; 230.; 10.; 40.; 50.]  ;;
+- : float array = [|20.; 230.; 10.; 40.; 50.|]  
+
+utop # Array.to_list [|20.; 230.; 10.; 40.; 50.|]  ;;
+- : float list = [20.; 230.; 10.; 40.; 50.]   
+
+utop # string_of_bool true ;;
+- : string = "true"  
+
+utop # string_of_int 11000 ;;
+- : string = "11000" 
+
+utop # string_of_float 23.2323 ;;
+- : string = "23.2323"  
+```
 
 
 <!--
