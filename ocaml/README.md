@@ -76,7 +76,7 @@ http://stackoverflow.com/questions/3082324/foldl-versus-foldr-behavior-with-infi
 
 # OCaml
 
-OCaml  (formerly known as Objective Caml) is the main implementation of the Caml programming language, created by Xavier Leroy, Jérôme Vouillon, Damien Doligez, Didier Rémy and others in 1996. OCaml is an open source project managed and principally maintained by the French institute INRIA. The Caml's toolset includes an interactive toplevel interpreter, a bytecode compiler, and an optimizing native code compiler.
+OCaml (Objective Categorical Abstract Machine Language) (formerly known as Objective Caml) is the main implementation of the Caml programming language, created by Xavier Leroy, Jérôme Vouillon, Damien Doligez, Didier Rémy and others in 1996. OCaml is an open source project managed and principally maintained by the French institute INRIA. The Caml's toolset includes an interactive toplevel interpreter, a bytecode compiler, and an optimizing native code compiler.
 
 Features:
 
@@ -90,14 +90,6 @@ Features:
     * Compiles to natve code and bytecode
 * Algebraic Data Types
 * Pattern Matching
-
-Known Problemns:
-
-* No single line comment like // dobule slash for C language only (* *)
-
-* There is no operator overload, like in Haskell or C++.
-    * For ints:     + / * - for int and
-    * For Floats:   -. +. *. /.
 
 History:
 
@@ -189,6 +181,12 @@ Object files        *.o     *.cmo       *.cmx2
 Library files       *.a     *.cma       *.cmxa3
 Binary programs     prog    prog        prog.opt4
 ```
+
+Standard Libraries:
+
+* Native Library
+* [Core](https://ocaml.janestreet.com/ocaml-core/111.17.00/doc/core/) - Jane Street Capital's Standard Library
+* Batteries - Maintained by community
 
 Linux:
 ```
@@ -676,6 +674,8 @@ $ ocaml
     
 ```
 
+
+
 ##### Operators
 
 
@@ -921,6 +921,93 @@ val id : 'a -> 'a = <fun>
 
 ```
 
+##### Math / Float Functions
+
+```ocaml
+
+    (* Absolute Value *)
+    # abs_float ;;
+    - : float -> float = <fun>
+    # 
+
+
+    (* Trigonometric *)
+
+    # sin ;;
+    - : float -> float = <fun>
+    # cos ;;
+    - : float -> float = <fun>
+    # tan ;;
+    - : float -> float = <fun>
+    # atan ;;
+    - : float -> float = <fun>
+    # atan2 ;;
+    - : float -> float -> float = <fun>
+    # 
+    # acos ;;
+    - : float -> float = <fun>
+    # asin ;;
+    - : float -> float = <fun>
+    # 
+    
+    (* Hyperbolic Functions *)
+    # cosh ;;
+    - : float -> float = <fun>
+    # sinh ;;
+    - : float -> float = <fun>
+    # tanh ;;
+    - : float -> float = <fun>
+    # 
+
+
+    (* Logarithm *)
+    # log ;;
+    - : float -> float = <fun>
+    # log10 ;;
+    - : float -> float = <fun>
+    
+    (* Remove Decimal Part *)
+    # floor ;;
+    - : float -> float = <fun>
+    # ceil ;;
+    - : float -> float = <fun>
+    # truncate ;;
+    - : float -> int = <fun>
+    # 
+    # int_of_float ;;
+    - : float -> int = <fun>
+    # 
+
+
+    (* Float Constants *)
+
+    # infinity ;;
+    - : float = infinity
+    # 
+    # neg_infinity ;;
+    - : float = neg_infinity
+    # 
+ 
+    # max_float ;;
+    - : float = 1.79769313486231571e+308
+    # min_float ;;
+    - : float = 2.22507385850720138e-308
+
+    # nan ;;
+    - : float = nan
+    # 
+  
+    # 1. /. 0. ;;
+    - : float = infinity
+    # 
+    # -1. /. 0. ;;
+    - : float = neg_infinity
+    # 
+
+
+
+
+```
 
 ##### Function Declaration
 
@@ -1329,6 +1416,14 @@ Example:
 List Functions
 
 ```ocaml
+
+(* Concatenate Lists *)
+> (@) ;;
+- : 'a list -> 'a list -> 'a list = <fun>
+> [1; 2; 3; 4; 5] @ [5; 6; 8] ;;
+- : int list = [1; 2; 3; 4; 5; 5; 6; 8]
+> 
+
 (* First element of a list / head of the list *)
 > List.hd [1 ; 2; 3; 4 ; 6 ; 9] ;;
 - : int = 1
@@ -2797,8 +2892,6 @@ example.cmx: OCaml native object file (.cmx) (Version 011)
 
 
 ### Books
-
-* Practical OCaml,  By Joshua B. Smith
 
 * [Real World OCaml: Functional Programming for the Masses](https://realworldocaml.org/v1/en/html/index.html)
     * Authors: Jason Hickey, Anil Madhavapeddy and Yaron Minsky
