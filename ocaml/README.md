@@ -3,21 +3,25 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [OCaml](#ocaml)
+  - [Setup](#setup)
   - [Toolset](#toolset)
       - [OCAML Interactive Shell](#ocaml-interactive-shell)
       - [UTOP Interactive Shell](#utop-interactive-shell)
       - [OCaml Browser](#ocaml-browser)
-      - [OCaml Find / ocamlfind](#ocaml-find--ocamlfind)
+      - [Troubleshooting](#troubleshooting)
       - [Misc](#misc)
   - [Basic Syntax](#basic-syntax)
-        - [Variable Declaration](#variable-declaration)
+        - [Primitive Types](#primitive-types)
         - [Operators](#operators)
+        - [Variable Declaration](#variable-declaration)
         - [Polymorphic Functions](#polymorphic-functions)
         - [Function Declaration](#function-declaration)
         - [Function Composition](#function-composition)
         - [Lambda Functions/ Anonymous Functions](#lambda-functions-anonymous-functions)
         - [Control Structures](#control-structures)
-  - [Lists](#lists)
+  - [Standar Library Modules](#standar-library-modules)
+    - [List](#list)
+    - [Array](#array)
   - [String](#string)
   - [IO - Input / Output](#io---input--output)
   - [Algebraic Data Types and Pattern Matching](#algebraic-data-types-and-pattern-matching)
@@ -29,7 +33,7 @@
         - [Basic Pattern Matching](#basic-pattern-matching)
         - [Tuple Pattern Matching](#tuple-pattern-matching)
       - [Recursive Data Structures](#recursive-data-structures)
-        - [Lists](#lists-1)
+        - [Lists](#lists)
   - [Lazy Evaluation](#lazy-evaluation)
         - [Infinite Lazy Lists](#infinite-lazy-lists)
   - [Creating Libraries, Modules and Compiling to Bytecode or Machine Code](#creating-libraries-modules-and-compiling-to-bytecode-or-machine-code)
@@ -672,6 +676,188 @@ $ ocaml
     
 ```
 
+##### Operators
+
+
+Float Functions must use +. /. -. *. operators since Ocaml doesn't support
+operator overload.
+
+Boolean Operators
+
+```ocaml
+
+    (* NOT                  *)
+    (*----------------------*)
+    
+    # not ;;
+    - : bool -> bool = <fun>
+    # 
+    
+    # not false ;;
+    - : bool = true
+    # not true ;;
+    - : bool = false
+
+    (* AND                  *)
+    (*----------------------*)
+    
+    # (&&) ;;
+    - : bool -> bool -> bool = <fun>
+    
+    # (&&) true false ;;
+    - : bool = false
+    # 
+
+    
+    # true && true ;;
+    - : bool = true
+    # true && false ;;
+    - : bool = false
+    # 
+
+    (* OR                   *)
+    (*----------------------*)
+    
+    # (||) ;;
+    - : bool -> bool -> bool = <fun>
+    
+    # (||) false true ;;
+    - : bool = true
+    # 
+    
+    # true || true ;;
+    - : bool = true
+    # true || false ;;
+    - : bool = true
+    # false || false ;;
+    - : bool = false
+    #     
+```
+
+Comparison
+```ocaml
+
+    (* Equality *)
+    # (=) ;;
+    - : 'a -> 'a -> bool = <fun>
+    # (==) ;;
+    - : 'a -> 'a -> bool = <fun>
+    
+    (* Inequality *)
+    # (<>) ;;
+    - : 'a -> 'a -> bool = <fun>
+    # (!=) ;;
+    - : 'a -> 'a -> bool = <fun>
+    # 
+
+
+    # (<) ;;
+    - : 'a -> 'a -> bool = <fun>
+    # (<=) ;;
+    - : 'a -> 'a -> bool = <fun>
+    # (>=) ;;
+    - : 'a -> 'a -> bool = <fun>
+    # (>) ;;
+    - : 'a -> 'a -> bool = <fun>
+    # 
+    
+    # max ;;
+    - : 'a -> 'a -> 'a = <fun>
+    # min ;;
+    - : 'a -> 'a -> 'a = <fun>
+
+    
+    # compare ;;
+    - : 'a -> 'a -> int = <fun>
+    # 
+    
+    # 2 <> 4 ;;
+    - : bool = true
+    # 2 <> 2 ;;
+    - : bool = false
+    # 
+    # 3 != 4 ;;
+    - : bool = true
+    # 3 != 3 ;;
+    - : bool = false
+    # 
+
+    
+    # max 3 100 ;;
+    - : int = 100
+    # min 2.323 100.33 ;;
+    - : float = 2.323
+    # 
+
+```
+
+
+```ocaml
+     # (+) ;;
+    - : int -> int -> int = <fun>
+
+     # (-) ;;
+    - : int -> int -> int = <fun>
+
+     # (+.) ;;
+    - : float -> float -> float = <fun>
+
+     (-.) ;;
+    - : float -> float -> float = <fun>
+
+
+    (* Interger Operators *)
+    (*--------------------*)
+    # 23 + 234 ;;
+    - : int = 257
+    # 1000 / 4 ;;
+    - : int = 250
+    # 
+
+    # 1005 mod 10 ;;
+    - : int = 5
+    # 
+
+    # abs (-10) ;;
+    - : int = 10
+    # abs 10 ;;
+    - : int = 10
+    # 
+    # pred 100 ;;
+    - : int = 99
+    # pred 99 ;;
+    - : int = 98
+    # succ 100 ;;
+    - : int = 101
+    # succ 101 ;;
+    - : int = 102
+    # 
+    
+    (* Float Point *)
+    (*-------------*)
+    
+    # 100. +. 23.23 ;;
+    - : float = 123.23
+    # 
+    # 0.545 *. 100. ;;
+    - : float = 54.5000000000000071
+    # 
+    # 1000. /. 4. ;;
+    - : float = 250.
+    # 
+    # 1000.0 -. 4.0 ;;
+    - : float = 996.
+    #   
+    
+    (* Pow function 2^4 = 16 / only works for float points *)
+    # 2.0 ** 4. ;;
+    - : float = 16.
+    # 
+    # ( **) ;;
+    - : float -> float -> float = <fun>
+    # 
+```
+
 ##### Variable Declaration
 
 ```ocaml
@@ -717,37 +903,7 @@ val a : float = 2.323
 
 ```
 
-##### Operators
 
-
-Float Functions must use +. /. -. *. operators since Ocaml doesn't support
-operator overload.
-
-```ocaml
-
->  let g x = 10.5 *.  x**2.0 -. 4.0 *. x +. 5.0 ;;
-val g : float -> float = <fun>
->
-  g 2.23 ;;
-- : float = 48.29545
->  g 5.0 ;;
-- : float = 247.5
->
-```
-
-```ocaml
-utop # (+) ;;
-- : int -> int -> int = <fun>
-
- # (-) ;;
-- : int -> int -> int = <fun>
-
- # (+.) ;;
-- : float -> float -> float = <fun>
-
- (-.) ;;
-- : float -> float -> float = <fun>
-```
 
 ##### Polymorphic Functions
 
@@ -1139,8 +1295,11 @@ hello world / hit return to continue
     ---------------------------------------------------------------
 -->
 
-## Lists
+## Standar Library Modules
 
+### List
+
+The module List has almost all functions to process lists which are immutable data structures. 
 
 Cons and Nil
 ```ocaml
@@ -1170,11 +1329,11 @@ Example:
 List Functions
 
 ```ocaml
-(* First element of a list *)
+(* First element of a list / head of the list *)
 > List.hd [1 ; 2; 3; 4 ; 6 ; 9] ;;
 - : int = 1
 
-(* Remove first Element of a list *)
+(* Remove first Element of a list/ tail of the list *)
   List.tl [1 ; 2; 3; 4; 5; 6; 9] ;;
 - : int list = [2; 3; 4; 5; 6; 9]
 
@@ -1200,16 +1359,399 @@ List Functions
 - : int = 5
 > List.length [0; 1; 2] ;;
 - : int = 3
+
+(* Combine - Equivalent to Haskell zip *)
+> List.combine ;;
+- : 'a list -> 'b list -> ('a * 'b) list = <fun>
+ 
+> List.combine [1; 2; 3] ['a'; 'b'; 'c' ] ;;
+- : (int * char) list = [(1, 'a'); (2, 'b'); (3, 'c')]
+ 
+> List.combine [1; 2; 3; 5 ] ['a'; 'b'; 'c' ] ;;
+Exception: Invalid_argument "List.combine".
+> 
+
+(* Split - Equivalent to Haskell unzip *)
+
+> List.split  [(1, 'a'); (2, 'b'); (3, 'c')] ;;
+- : int list * char list = ([1; 2; 3], ['a'; 'b'; 'c'])
+> 
+
+>  List.split  [(1, 'a'); (2, 'b'); (3, 'c')] ;;
+- : int list * char list = ([1; 2; 3], ['a'; 'b'; 'c'])
+> 
+
+
+(* Equivalent to Haskell (++) *)
+
+> List.append [0; 2; 3; 5; 6 ] [1; 2; 6] ;;
+- : int list = [0; 2; 3; 5; 6; 1; 2; 6]
+
+(* Find *)
+
+> List.find  (fun x -> x < 10) [1; 2 ; 3; 45] ;;
+- : int = 1
+> List.find  (fun x -> x > 10) [1; 2 ; 3; 45] ;;
+- : int = 45
+> 
+> List.find  (fun x -> x > 10) [1; 2 ; 3] ;;
+Exception: Not_found.
+> 
+
+> List.find_all  (fun x -> x > 10) [-10; 20 ; 3; 12; 100; 4; 35] ;;
+- : int list = [20; 12; 100; 35]
+
+> List.exists ;;
+- : ('a -> bool) -> 'a list -> bool = <fun>
+> List.exists ((==) 10) [1; 2; 30; 50 ; 3];;
+- : bool = false  
+> List.exists ((==) 10) [1; 2; 30; 10 ; 50 ; 3];;
+- : bool = true 
+
+> List.for_all2 (>=) [1;2;3] [2;3;4];;
+- : bool = false
+> List.exists2 (<) [1;2;3] [1;2;3] ;;
+- : bool = false
+>  List.exists2 (<) [1;2;0] [1;2;3] ;;
+- : bool = true
+>  List.exists2 (<) [1;2;0] [1;2];;
+Exception: Invalid_argument "List.exists2".
+> 
+
+> List.assoc 3 [(0, "a"); (1, "b"); (2, "c"); (3, "d")] ;;
+- : string = "d"
+> List.assoc 0 [(0, "a"); (1, "b"); (2, "c"); (3, "d")] ;;
+- : string = "a"
+> List.assoc 5 [(0, "a"); (1, "b"); (2, "c"); (3, "d")] ;;
+Exception: Not_found.
+> 
+
+> List.mem_assoc 5 [(0, "a"); (1, "b"); (2, "c"); (3, "d")] ;;
+- : bool = false
+> List.mem_assoc 3 [(0, "a"); (1, "b"); (2, "c"); (3, "d")] ;;
+- : bool = true
+> List.mem_assoc 2 [(0, "a"); (1, "b"); (2, "c"); (3, "d")] ;;
+- : bool = true
+> 
+
+> List.remove_assoc 0 [0,"a"; 1,"b"; 2,"c"; 3,"d"];;
+- : (int * string) list = [(1, "b"); (2, "c"); (3, "d")]
+
+
+
+(* Partition *)
+
+> List.partition ;;
+- : ('a -> bool) -> 'a list -> 'a list * 'a list = <fun>
+> 
+> List.partition   (fun x -> x > 10) [-10; 20 ; 3; 12; 100; 4; 35] ;;
+- : int list * int list = ([20; 12; 100; 35], [-10; 3; 4])
+
+
+(* Flatten  *)
+
+> List.flatten ;;
+- : 'a list list -> 'a list = <fun>
+> 
+
+> List.flatten [[1]; [2; 4] ; [6; 90; 100] ; []] ;;
+- : int list = [1; 2; 4; 6; 90; 100]
+> 
+
+
+(*      MAP         *)
+(*------------------*)
+    
+> List.map ;;
+- : ('a -> 'b) -> 'a list -> 'b list = <fun>
+> 
+> List.map (( *) 10 )  [-10 ; 20 ; 5 ; 50; 100; 3 ] ;;
+- : int list = [-100; 200; 50; 500; 1000; 30]
+ 
+> List.map ((+) 10) [-10 ; 20 ; 5 ; 50; 100; 3 ] ;;
+- : int list = [0; 30; 15; 60; 110; 13]
+> 
+
+> let f x = 10 * x - 5 ;;
+val f : int -> int = <fun>
+> List.map f  [-10 ; 20 ; 5 ; 50; 100; 3 ] ;;
+- : int list = [-105; 195; 45; 495; 995; 25]
+> 
+
+> List.map (fun x -> 10.5 *. x -. 4. ) [2. ; 3. ; 5. ; 10. ; 20. ];;
+- : float list = [17.; 27.5; 48.5; 101.; 206.]
+> 
+
+(* MAP2 / Haskell zipWith *)
+
+> List.map2 ;;
+- : ('a -> 'b -> 'c) -> 'a list -> 'b list -> 'c list = <fun>
+> 
+
+> List.map2 (+) [10; 20; 30; 100] [15; 35; 25; 80] ;;
+- : int list = [25; 55; 55; 180]
+
+> List.map2 ( *) [10; 20; 30; 100] [15; 35; 25; 80] ;;
+Warning 2: this is not the end of a comment.
+- : int list = [150; 700; 750; 8000]
+
+> List.map2 (fun x y -> (x, y)) [10; 20; 30; 100] [15; 35; 25; 80] ;;
+- : (int * int) list = [(10, 15); (20, 35); (30, 25); (100, 80)]
+
+> List.map2 (fun x y -> (x, y)) [10; 20; 30; 100] [15; 35; 25] ;;
+Exception: Invalid_argument "List.map2".
+> 
+
+
+> let fxy x y = 10*x - 4*y ;;
+val fxy : int -> int -> int = <fun>
+> 
+> List.map2 fxy [10; 20; 30; 100] [15; 35; 25; 80] ;;
+- : int list = [40; 60; 200; 680]
+> 
+
+
+(*      FILTER      *)
+(*------------------*)
+> List.filter ;;
+- : ('a -> bool) -> 'a list -> 'a list = <fun>
+> 
+>  List.filter ((<) 10) [-10 ; 20 ; 5 ; 50; 100; 3 ] ;;
+- : int list = [20; 50; 100]
+> 
+
+(*  FOLFR and FOLDL - Equivalent to Haskell foldr and foldl 
+ *   The fold functions are known as reduce. (i.e Python reduce (left fold))
+ *)
+
+> List.fold_right ;;
+- : ('a -> 'b -> 'b) -> 'a list -> 'b -> 'b = <fun>
+
+    (*
+        f x y = x + 10* y
+        foldr  f [1; 2; 3; 5; 6] 0
+    
+    Evaluation:    
+    
+    (f 1 (f 2 (f 3  (f 5 (f 6 0)))))    f 6   0  = 6 + 10*0    =     6
+    (f 1 (f 2 (f 3  (f 5 6))))          f 5   6  = 5 + 10*6    =     65
+    (f 1 (f 2 (f 3  65)))               f 3  65  = 3 + 10*65   =    653
+    (f 1 (f 2 653))                     f 2 653  = 2 + 10*653  =    6532
+    (f 1 6532)                          f 1 6532 = 1 + 10*6532 =   65321
+    65321
+    *)
+> List.fold_right (fun x y -> x + 10*y) [1; 2; 3; 5; 6] 0 ;;
+- : int = 65321
+> 
+
+> List.fold_left ;;
+- : ('a -> 'b -> 'a) -> 'a -> 'b list -> 'a = <fun>
+> 
+    (*
+        f x y = 10*x + y
+        flodl f 0 [1; 2; 3; 5; 6]
+        
+    Evaluation:    
+    
+    (f (f (f ( f (f 0 1) 2 ) 3) 5) 6)     f 0    1 = 10*0    + 1   =    1
+    (f (f (f ( f 1 2 ) 3) 5) 6)           f 1    2 = 10*1    + 2   =   12  
+    (f (f (f 12 3) 5) 6)                  f 12   3 = 10*12   + 3   =   123  
+    (f (f 123 5) 6)                       f 123  5 = 10*123  + 5   =  1235  
+    (f 1235 6)                            f 1235 6 = 10*1235 + 5   = 12356  
+    12356
+    *)
+
+> List.fold_left (fun x y -> 10*x +  y) 0 [1; 2; 3; 5; 6]  ;;
+- : int = 12356
+> 
+
+> List.fold_left (+) 0 [ 1; 2; 3; 4; 5; 6 ] ;;
+- : int = 21
+
+> List.fold_left ( *) 1 [ 1; 2; 3; 4; 5 ] ;;
+Warning 2: this is not the end of a comment.
+- : int = 120
+
+ 
+
+(*    ITER / MAP Non Pure Functions  *)
+(*-----------------------------------*)
+
+> List.iter ;;
+- : ('a -> unit) -> 'a list -> unit = <fun>
+> 
+
+> List.iter (Printf.printf "= %d \n") [-10; 3; 100; 50; 5; 20] ;;
+= -10 
+= 3 
+= 100 
+= 50 
+= 5 
+= 20 
+- : unit = ()
+> 
+
+(* ITER2    *)
+> List.iter2 ;;
+- : ('a -> 'b -> unit) -> 'a list -> 'b list -> unit = <fun>
+>
+> List.iter2 (Printf.printf "%s = %d\n") ["x"; "y"; "z"] [1; 2; 3 ] ;;
+x = 1
+y = 2
+z = 3
+- : unit = ()
+> 
+
+
 ```
 
-Pattern Matching
+### Array
+
+Arrays as oppose to lists are mmutable data structures.
 
 ```ocaml
+> [| 10; 2 ; 10; 25 ; 100; 0 ; 1 |]  ;;
+- : int array = [|10; 2; 10; 25; 100; 0; 1|]  
+
+> let a = [| 10; 2 ; 10; 25 ; 100; 0 ; 1 |]  ;;
+val a : int array = [|10; 2; 10; 25; 100; 0; 1|]  
+
+# a.(0) ;;
+- : int = 10
+# a.(1) ;;
+- : int = 2
+# a.(4) ;;
+- : int = 100
+# a.(10) ;;
+Exception: Invalid_argument "index out of bounds".
+# 
+
+# Array.length ;;
+- : 'a array -> int = <fun> 
+
+# Array.length a ;;
+- : int = 7   
+
+# Array.map ;;
+- : ('a -> 'b) -> 'a array -> 'b array = <fun>
+
+# Array.map (fun x -> x*2 + 1) a ;;
+- : int array = [|21; 5; 21; 51; 201; 1; 3|]
+
+# a.(0) <- 56 ;;
+- : unit = ()
+# a ;;
+- : int array = [|56; 2; 10; 25; 100; 0; 1|] 
+# a.(5) <- 567 ;;
+- : unit = () 
+# a ;;
+- : int array = [|56; 2; 10; 25; 100; 567; 1|]
+
+(*  Maps a function that takes the index of element 
+    as first argument and then the element as second 
+    argument.
+    
+    f(index, element) 
+*)
+# Array.mapi ;;
+- : (int -> 'a -> 'b) -> 'a array -> 'b array = <fun> 
+ Array.mapi (fun idx e -> idx, e) [|56; 2; 10; 25; 100; 567; 1|]  ;;
+- : (int * int) array = [|(0, 56); (1, 2); (2, 10); (3, 25); (4, 100); (5, 567); (6, 1)|]
+
+
+ # Array.to_list ;;
+- : 'a array -> 'a list = <fun> 
+# Array.to_list a ;;
+- : int list = [56; 2; 10; 25; 100; 567; 1] 
+
+
+# Array.of_list ;;
+- : 'a list -> 'a array = <fun>  
+# Array.of_list [56; 2; 10; 25; 100; 567; 1] ;;
+- : int array = [|56; 2; 10; 25; 100; 567; 1|]    
+
+# Array.get ;;
+- : 'a array -> int -> 'a = <fun>
+ # Array.get a 0 ;;
+- : int = 56
+# Array.get a 20 ;;
+Exception: Invalid_argument "index out of bounds".
+
+
+ 
+
+# let a = [|56; 2; 10; 25; 100; 567; 1|]  ;;
+val a : int array = [|56; 2; 10; 25; 100; 567; 1|] 
+# Array.set ;;
+- : 'a array -> int -> 'a -> unit = <fun> 
+
+# Array.set a  0 15 ;;
+- : unit = ()    
+# Array.set a  4 235 ;;
+- : unit = () 
+# a ;;
+- : int array = [|15; 2; 10; 25; 235; 567; 1|] 
+
+# Array.fold_right ;;
+- : ('b -> 'a -> 'a) -> 'b array -> 'a -> 'a = <fun> 
+# Array.fold_right (+) [|56; 2; 10; 25; 100; 567; 1|]  0 ;;
+- : int = 761
+
+# Array.fold_left ;;
+- : ('a -> 'b -> 'a) -> 'a -> 'b array -> 'a = <fun> 
+# Array.fold_left (+) 0 [|56; 2; 10; 25; 100; 567; 1|]  ;;
+- : int = 761 
+
+# Array.iter (Printf.printf "x = %d\n") [|56; 2; 10; 25; 100; 567; 1|]  ;;
+x = 56
+x = 2
+x = 10
+x = 25
+x = 100
+x = 567
+x = 1
+- : unit = ()
+# 
+
+(*  Applies a function that takes the index of element 
+    as first argument and then the element as second 
+    argument.
+    
+    f(index, element) 
+*)
+# Array.iteri ;;
+- : (int -> 'a -> unit) -> 'a array -> unit = <fun>
+
+# Array.iteri (Printf.printf "x[%d] = %d\n") [|56; 2; 10; 25; 100; 567; 1|]  ;;
+x[0] = 56
+x[1] = 2
+x[2] = 10
+x[3] = 25
+x[4] = 100
+x[5] = 567
+x[6] = 1
+- : unit = ()
+ 
 
 
 
+
+# Array.init ;;
+- : int -> (int -> 'a) -> 'a array = <fun> 
+
+# Array.init 10 (fun x -> 5. *. float_of_int x)  ;;
+- : float array = [|0.; 5.; 10.; 15.; 20.; 25.; 30.; 35.; 40.; 45.|]
+# Array.init 10 (fun x -> 5 * x + 10 )  ;;
+- : int array = [|10; 15; 20; 25; 30; 35; 40; 45; 50; 55|]
+
+# Array.make_matrix ;;
+- : int -> int -> 'a -> 'a array array = <fun>
+# Array.make_matrix 2 3 1 ;;
+- : int array array = [|[|1; 1; 1|]; [|1; 1; 1|]|] 
 
 ```
+
+
 
 <!--
     ---------------------------------------------------------------
