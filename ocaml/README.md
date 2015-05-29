@@ -47,6 +47,8 @@
     - [Links](#links)
     - [Books](#books)
     - [Community](#community)
+      - [Online Resources](#online-resources)
+      - [Hacker News Threads](#hacker-news-threads)
     - [References By Subject](#references-by-subject)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
