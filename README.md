@@ -45,7 +45,7 @@ You can access this page from:
 * [Papers in this Repository](papers/README.md)
 
 
-**OCAMl Summary**
+**OCaml Summary**
 
 * [OCaml](ocaml/README.md)
 

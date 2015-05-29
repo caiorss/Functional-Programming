@@ -950,10 +950,15 @@ val id : 'a -> 'a = <fun>
     - : float list = [2.; 4.; 8.; 16.; 32.; 64.; 128.; 256.]  
 
 (* Absolute Value *)
+
     # abs_float ;;
     - : float -> float = <fun>
     # 
 
+(* Square Root *)
+
+    # sqrt ;;
+    - : float -> float = <fun>  
 
 (* Trigonometric *)
 
@@ -2432,9 +2437,165 @@ Source:
 
 * http://xahlee.info/ocaml/pattern_matching.html
 
+
+##### List Recursive Functions
+
+```ocaml
+
+    # let rec factorial1 n =
+        match n with
+        | 0 -> 1
+        | 1 -> 0
+        | k -> k * factorial1 (k - 1)
+    ;;
+    val factorial1 : int -> int = <fun>  
+
+    # let rec factorial2 = function
+        | 0     -> 1
+        | 1     -> 1
+        | n     -> n * factorial2 (n - 1)
+    ;;
+    val factorial2 : int -> int = <fun> 
+    
+    # factorial1 5 ;;
+    - : int = 120    
+
+     # factorial2 5 ;;
+    - : int = 120    
+    
+    # let rec map f xs =   match xs with
+        | []        ->  []
+        | h::tl     ->  (f h)::(map f tl)
+    ;;
+    val map : ('a -> 'b) -> 'a list -> 'b list = <fun>   
+
+    # map ((+) 5) [10; 20; 25 ; 9] ;;
+    - : int list = [15; 25; 30; 14]  
+
+    # let rec sumlist = function 
+        | []        -> 0 
+        | [a]       -> a
+        | (hd::tl)  -> hd + sumlist tl 
+    ;;
+    val sumlist : int list -> int = <fun> 
+
+    # sumlist [1; 2; 4; 5; 6; 7; 8; 9] ;;
+    - : int = 42   
+
+    # let rec prodlist = function 
+        | []        -> 1 
+        | [a]       -> a
+        | (hd::tl)  -> hd * prodlist tl 
+    ;;
+    val prodlist : int list -> int = <fun>   
+
+    # prodlist [1 ; 2; 3; 4; 5; 6 ] ;;
+    - : int = 720 
+
+    # let rec filter f xs = match xs with
+        | []        -> []
+        | h::tl     -> if f h 
+                       then h::(filter f tl) 
+                       else filter f tl
+
+    ;;
+
+     # filter (fun x -> x < 10) [1; 2; 10; 20; 4; 6; 15] ;;
+    - : int list = [1; 2; 4; 6]       
+
+
+    # let rec take n xs =
+        match (n, xs) with
+        | (0, _    ) -> []
+        | (_, []   ) -> []
+        | (k, h::tl) -> k::(take (n-1) tl)
+    ;;val take : int -> 'a list -> int list = <fun>
+    
+    # take 3 [1; 2; 10; 20; 4; 6; 15] ;;
+    - : int list = [3; 2; 1] 
+    # take 20 [1; 2; 10; 20; 4; 6; 15] ;;
+    - : int list = [20; 19; 18; 17; 16; 15; 14]
+
+    # let rec drop n xs =
+        match (n, xs) with
+        | (0, _ )    ->  xs
+        | (_, [])    ->  []
+        | (k, h::tl) ->  drop (n-1) tl
+    ;;
+    val drop : int -> 'a list -> 'a list = <fun> 
+
+    # drop 0 [1; 2; 10; 20; 4; 6; 15] ;;
+    - : int list = [1; 2; 10; 20; 4; 6; 15]
+    # drop 5 [1; 2; 10; 20; 4; 6; 15] ;;
+    - : int list = [6; 15]   
+    # drop 15 [1; 2; 10; 20; 4; 6; 15] ;;
+    - : int list = []  
+
+(* 
+
+    Haskell Function:
+    foldl1 : ( a -> a -> a ) -> [a] -> [a]
+    
+    > foldl1 (\x y -> 10*x + y) [1, 2, 3, 4, 5] 
+    12345
+    
+    foldl1 f  [1, 2, 3, 4, 5]  =
+    f 5 (f 4 (f 3 (f 1 2)))
+    
+    foldl f [x0, x1, x2, x3, x4, x5 ... ] =
+    
+    f xn (f xn-1 (f xn-2 ... (f x3 (f x2 (f x1 x0))))) ....
+    
+    From: http://en.wikipedia.org/wiki/Fold_%28higher-order_function%29
+*)
+
+    let rec foldl1 f xs = 
+        match xs with
+        | []            -> failwith "Empty list"
+        | [x]           -> x
+        | (x::y::tl)    -> foldl1 f (f x y :: tl)
+    ;;
+
+    # foldl1 (fun x y -> 10*x + y) [1; 2; 3; 4; 5] ;;
+    - : int = 12345 
+
+
+    # let rec foldr1 f xs =
+        match xs with
+        | []        -> failwith "Empty list"
+        | [x]       -> x
+        | x::tl     -> f x (foldr1 f tl)
+    ;;
+    val foldr1 : ('a -> 'a -> 'a) -> 'a list -> 'a = <fun>
+    
+    # foldr1 (fun x y -> x + 10*y) [1; 2; 3; 4; 5; 6] ;;
+    - : int = 654321  
+
+    # let rec foldl f acc xs =
+        match xs with 
+        | []     -> acc
+        | x::tl  -> foldl f (f acc x) tl
+    ;;
+    
+    # foldl (fun x y -> 10*x + y) 0  [1; 2; 3; 4; 5; 6] ;;
+    - : int = 123456     
+
+    # let rec foldr f acc xs = 
+        match xs with 
+        | []    -> acc
+        | x::tl -> f x (foldr f acc tl)
+    ;;
+    val foldr : ('a -> 'b -> 'b) -> 'b -> 'a list -> 'b = <fun>
+
+    # foldr (fun x y -> x + 10*y) 0  [1; 2; 3; 4; 5; 6] ;;
+    - : int = 654321 
+
+```
+
+
 #### Recursive Data Structures
 
-##### Lists
+##### Alternative List Implementation
 
 List of Intergers
 
