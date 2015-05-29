@@ -49,6 +49,9 @@
     - [Community](#community)
       - [Online Resources](#online-resources)
       - [Hacker News Threads](#hacker-news-threads)
+      - [Blogs](#blogs)
+      - [See Also](#see-also)
+      - [Quick Reference Sheets](#quick-reference-sheets)
     - [References By Subject](#references-by-subject)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -3455,6 +3458,8 @@ example.cmx: OCaml native object file (.cmx) (Version 011)
 
 * http://blog.enfranchisedmind.com/2007/01/ocaml-lazy-lists-an-introduction/
 
+
+
 <!--
     ---------------------------------------------------------------
 -->
@@ -3474,6 +3479,7 @@ example.cmx: OCaml native object file (.cmx) (Version 011)
 
 * [Introduction to Objective Caml](http://files.metaprl.org/doc/ocaml-book.pdf)
     * Authors: Jason Hickey
+    * Url2: [Introduction to the Objective Caml Programming Language](http://main.metaprl.org/jyh/classes/cs134/cs134b/2007/public_html/assets/hickey.pdf)
 
 * [Unix system programming in OCaml](Unix system programming in OCaml)
     * Authors: Xavier Leroy and Didier Rémy
@@ -3492,8 +3498,27 @@ example.cmx: OCaml native object file (.cmx) (Version 011)
 * StackOverflow
     * http://stackoverflow.com/tags/ocaml/info
     * http://stackoverflow.com/questions/tagged/ocaml
+* Email List (lists.ocaml.org): http://lists.ocaml.org/listinfo
+
+* https://ocaml.org/learn/
+
+* [Resources for Caml users - Inria](http://caml.inria.fr/resources/index.en.html)
+
+* http://langref.org/ocaml/pattern-matching
 
 * http://rosettacode.org/wiki/Category:OCaml
+
+* [PLEAC-Objective CAML](http://pleac.sourceforge.net/pleac_ocaml/)
+
+* [Cornell University - CS3110 Spring 11 :: Data Structures and Functional Programming](http://www.cs.cornell.edu/Courses/cs3110/2011sp/lecturenotes.asp)
+
+* [String Pattern Matching Examples](https://github.com/jimenezrick/ocaml-backpack/blob/master/src/backpackString.ml)
+
+
+* [OCAML exceptions, a small tutorial](http://www.martani.net/2009/04/ocaml-exceptions-small-tutorial.html)
+
+* [First Thoughts on OCaml](http://www.crmarsh.com/intro_to_ocaml/)
+
 
 #### Hacker News Threads
 
@@ -3507,7 +3532,42 @@ example.cmx: OCaml native object file (.cmx) (Version 011)
 
 * [OCaml 4.03 will, “if all goes well”, support multicore (inria.fr)](https://news.ycombinator.com/item?id=9582980)
 
-* [Code iOS Apps in OCaml (psellos.com)](https://news.ycombinator.com/item?id=3740173)
+* [Code iOS Apps in OCaml](https://news.ycombinator.com/item?id=3740173)
+
+* [The fundamental problem of programming language package management](https://news.ycombinator.com/item?id=8226139)
+
+#### Blogs
+
+* https://blogs.janestreet.com/
+
+* http://www.ocamlpro.com/blog
+
+#### See Also
+
+* [Haskell for OCaml programmers](http://science.raphael.poss.name/haskell-for-ocaml-programmers.html)
+* [OCaml for Haskellers](http://blog.ezyang.com/2010/10/ocaml-for-haskellers/)
+* [ML Dialects and Haskell: SML, OCaml, F#, Haskell](http://hyperpolyglot.org/ml)
+* [A Concise Introduction to Objective Caml](http://www.csc.villanova.edu/~dmatusze/resources/ocaml/ocaml.html)
+* [Namespacing Variants in ML](http://keleshev.com/namespacing-variants-in-ml)
+
+* [Haifeng's Random Walk - OCaml: Algebraic Data Types](https://haifengl.wordpress.com/2014/07/07/ocaml-algebraic-data-types/)
+
+* [Appendix B  Variant types and labeled arguments](http://caml.inria.fr/pub/docs/u3-ocaml/ocaml051.html)
+
+* [Thomas Leonard's blog - OCaml Tips](http://roscidus.com/blog/blog/2013/10/13/ocaml-tips/)
+* [Thomas Leonard's blog - Experiences With OCaml Objects](http://roscidus.com/blog/blog/2013/09/28/ocaml-objects/)
+
+
+
+#### Quick Reference Sheets
+
+* https://www.lri.fr/~conchon/IPF/fiches/ocaml-lang.pdf
+
+* http://cl-informatik.uibk.ac.at/teaching/ss06/ocaml/content/w1-2x2.pdf
+
+* https://www.lri.fr/~conchon/IPF/fiches/tuareg-mode.pdf
+
+* [The OCaml Build Process by Example](http://blog.eatonphil.com/2015/03/28/the-ocaml-build-process/)
 
 ### References By Subject
 
