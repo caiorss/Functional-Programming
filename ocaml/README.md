@@ -2714,19 +2714,29 @@ Source:
     # take 20 [1; 2; 10; 20; 4; 6; 15] ;;
     - : int list = [20; 19; 18; 17; 16; 15; 14]
 
+
     # let rec drop n xs =
-        match (n, xs) with
-        | (0, _ )    ->  xs
-        | (_, [])    ->  []
-        | (k, h::tl) ->  drop (n-1) tl
-    ;;
-    val drop : int -> 'a list -> 'a list = <fun> 
+        if n < 0 then failwith "n negative"
+        else
+            match (n, xs) with
+            | (0, _ )    ->  xs
+            | (_, [])    ->  []
+            | (k, h::tl) ->  drop (k-1) tl
+    ;;val drop : int -> 'a list -> 'a list = <fun>
+
+    # drop (-10)  [1; 2; 10; 20; 4; 6; 15] ;;
+    Exception: Failure "n negative".
+
+    # drop 10 [] ;;
+    - : 'a list = []  
 
     # drop 0 [1; 2; 10; 20; 4; 6; 15] ;;
-    - : int list = [1; 2; 10; 20; 4; 6; 15]
+    - : int list = [1; 2; 10; 20; 4; 6; 15] 
+
     # drop 5 [1; 2; 10; 20; 4; 6; 15] ;;
-    - : int list = [6; 15]   
-    # drop 15 [1; 2; 10; 20; 4; 6; 15] ;;
+    - : int list = [6; 15]
+
+    # drop 25 [1; 2; 10; 20; 4; 6; 15] ;;
     - : int list = []  
 
 (* 
