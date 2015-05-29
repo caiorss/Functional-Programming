@@ -188,7 +188,11 @@ Binary programs     prog    prog        prog.opt4
 Standard Libraries:
 
 * [Native Library](http://caml.inria.fr/pub/docs/manual-ocaml/libref/)
-* [Core](https://ocaml.janestreet.com/ocaml-core/111.17.00/doc/core/) - Jane Street Capital's Standard Library
+
+* [Core](https://ocaml.janestreet.com/ocaml-core/111.17.00/doc/core/) - Jane Street Capital's Standard 
+* https://github.com/janestreet/core_kernel
+
+Library
 * [Batteries](http://batteries.forge.ocamlcore.org/) - Maintained by community
 
 Linux:
@@ -1042,6 +1046,26 @@ val id : 'a -> 'a = <fun>
 ##### Function Declaration
 
 ```ocaml
+
+> let x = 34 ;;
+val x : int = 34
+
+> x ;;
+- : int = 34
+
+> let x = 10 in
+  let y = 20 in
+  let z = x*y in
+  z - x - y 
+;;
+- : int = 170    
+
+> let x = 10.25 in
+  let y = 30.   in 
+  x *. y 
+;;
+- : float = 307.5 
+
 >  let f x = 10 * x + 4 ;;
 val f : int -> int = <fun>
 
@@ -1084,6 +1108,26 @@ val a_complex_function : int -> int -> int = <fun>
 *)
 > a_complex_function 2 3 ;;
 - : int = 37
+
+
+(* Function Inside functions *)
+
+> let func1 x y = 
+    let ft1 x y = 10*x + y in
+    let ft2 x y z = x + y - 4 * z in
+    let ft3 x y = x - y in
+    let z = 10 in
+    (ft1 x y) + (ft2 x y z) - (ft3 x y)
+;;
+
+> func1 4 5 ;;
+- : int = 15 
+
+> func1 14 5 ;;
+- : int = 115 
+
+> func1 20 (-10) ;;
+- : int = 130  
 
 (* Returning More than one value *)
 
@@ -1148,9 +1192,11 @@ val func2' : int * int -> int = <fun>
 > showxy' (23.3, 5.342021321) ;;
 28.642
 - : unit = ()
+```
 
-(* Declaration functions that takes another function as argument *)
+Declaration functions that takes another function as argument
 
+```ocaml
 > let apply_to_fst f (x, y) = (f x, y) ;;
 val apply_to_fst : ('a -> 'b) -> 'a * 'c -> 'b * 'c = <fun>
 
@@ -1227,6 +1273,153 @@ val double2 : list_of_float -> list_of_float = <fun>
 
 > double2 [1. ; 2. ; 3. ; 4. ; 5. ] ;;
 - : list_of_float = [2.; 4.; 6.; 8.; 10.]
+```
+
+Functions with Named Parameters
+
+```ocaml
+> let f1 ~x ~y = 10* x - y ;;
+val f1 : x:int -> y:int -> int = <fun>
+
+> f1 ;;
+- : x:int -> y:int -> int = <fun>  
+
+> f1 4 5 ;;
+- : int = 35 
+
+> f1 20 15 ;;
+- : int = 185  
+
+(* Currying Funcctions with named parameters *)
+> f1 20 ;;
+Error: The function applied to this argument has type x:int -> y:int -> int                      This argument cannot be applied without label     
+
+> f1 ~x:20 ;;
+- : y:int -> int = <fun>  
+
+> let f1_20 = f1 ~x:20 ;;
+val f1_20 : y:int -> int = <fun> 
+
+> f1_20 10 ;;
+- : int = 190 
+
+> f1_20 40 ;;
+- : int = 160   
+
+> List.map f1_20 [1; 2; 10; 20; 30] ;;
+Error: This expression has type y:int -> int but an expression was expected of type 'a -> 'b 
+
+> List.map (fun y -> f1_20 y) [1; 2; 10; 20; 30] ;;
+- : int list = [199; 198; 190; 180; 170] 
+
+> let show_msg x ~msg () = Printf.printf "%s = %d" msg x ;;
+val show_msg : int -> msg:string -> unit -> unit = <fun> 
+
+> show_msg 2 "Hello world" () ;;
+Hello world = 2- : unit = ()    
+
+> show_msg 20  ;;
+- : msg:string -> unit -> unit = <fun>  
+
+> let f = show_msg 20 ;;
+val f : msg:string -> unit -> unit = <fun> 
+
+> f "x" ();;
+x = 20- : unit = () 
+
+> f "y" () ;;
+y = 20- : unit = ()  
+
+> List.iter f ["x" ; "y" ; "z" ; "w"] ;;
+Error: This expression has type msg:string -> unit -> unit
+but an expression was expected of type 'a -> unit
+
+> List.iter (fun msg -> f msg ()) ["x" ; "y" ; "z" ; "w"] ;;
+x = 20y = 20z = 20w = 20- : unit = ()     
+```
+
+Functions with Optional Parameters:
+
+```ocaml
+
+(* 
+    If the parameter x is not given, x will be set to 100 
+*)
+> let f ?(x = 100)  y = 10*x - 5*y ;;
+val add : ?x:int -> int -> int = <fun>
+
+> f ;;
+- : ?x:int -> int -> int = <fun> 
+
+(* 
+    f 20 ==> (10*x - 5*y) 100 20 
+             (10 * 10 - 5 * 20 )
+             (1000 - 100)
+             900
+ *)
+> f 20 ;;
+- : int = 900  
+
+
+(*
+    f 60 ==> (10*x - 5*y) 100 60
+             (10*100 - 5*60)
+             (1000 - 300)
+             700
+*)
+> f 60 ;;
+- : int = 700  
+
+> List.map f [10; 20; 30; 40; 50] ;;
+- : int list = [950; 900; 850; 800; 750]
+
+
+> f ~x:40 20 ;;
+- : int = 300  
+
+
+> f ~x:50 20 ;;
+- : int = 400  
+
+> f ~x:40 ;;
+- : int -> int = <fun> 
+
+> let f_x40  = f ~x:40 ;;
+val f_x40 : int -> int = <fun>  
+
+> List.map f_x40 [10; 20; 30; 40; 50] ;;
+- : int list = [350; 300; 250; 200; 150]  
+
+> List.map (f ~x: 40) [10; 20; 30; 40; 50] ;;
+- : int list = [350; 300; 250; 200; 150]
+
+
+> let rectangle_area ?(width = 30) ~height = width*height ;;
+val rectangle_area : ?width:int -> height:int -> int = <fun> 
+
+> rectangle_area 20 ;;
+- : int = 600  
+
+> rectangle_area 30 ;;
+- : int = 900
+
+> List.map rectangle_area [10; 20; 30; 40; 50] ;;
+Error: This expression has type ?width:int -> height:int -> int 
+but an expression was expected of type 'a -> 'b     
+
+> List.map (fun h -> rectangle_area h ) [10; 20; 30; 40; 50] ;;
+- : int list = [300; 600; 900; 1200; 1500]   
+
+> rectangle_area ~width: 200 ;;
+- : height:int -> int = <fun>
+
+>: rectangle_area ~width: 200 ~height: 20 ;;
+- : int = 4000 
+
+> List.map (fun h -> rectangle_area ~height:h ~width:30 ) 
+[10; 20; 30; 40; 50] ;;
+- : int list = [300; 600; 900; 1200; 1500] 
+
 ```
 
 ##### Function Composition
@@ -2593,6 +2786,23 @@ Source:
     # foldr (fun x y -> x + 10*y) 0  [1; 2; 3; 4; 5; 6] ;;
     - : int = 654321 
 
+
+    # let rec range start stop step = 
+        if start > stop 
+        then []
+        else start::(range  (start + step) stop step )
+    ;;
+    val range : int -> int -> int -> int list = <fun> 
+
+    # range 0 30 1 ;;
+    - : int list =                                                                                   [0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14; 15; 16; 17; 18; 19; 20; 21; 22; 23; 24; 25;    26; 27; 28; 29; 30]  
+
+    # range 0 100 10 ;;
+    - : int list = [0; 10; 20; 30; 40; 50; 60; 70; 80; 90; 100] 
+
+    # range (-100) 100 10 ;;
+    - : int list =                                                                                   [-100; -90; -80; -70; -60; -50; -40; -30; -20; -10; 0; 10; 20; 30; 40; 50; 60; 70; 80; 90; 100]
+
 ```
 
 
@@ -3261,6 +3471,8 @@ example.cmx: OCaml native object file (.cmx) (Version 011)
 
 ### Community
 
+#### Online Resources
+
 * Reddit:           http://reddit.com/r/ocaml
 * Usenet:           comp.lang.ocaml
 * StackOverflow
@@ -3268,6 +3480,20 @@ example.cmx: OCaml native object file (.cmx) (Version 011)
     * http://stackoverflow.com/questions/tagged/ocaml
 
 * http://rosettacode.org/wiki/Category:OCaml
+
+#### Hacker News Threads
+
+* [OCaml for the Masses (2011)](https://news.ycombinator.com/item?id=8002188)
+
+* [Python to OCaml: Retrospective (roscidus.com)](https://news.ycombinator.com/item?id=7858276)
+
+* [Why OCaml, Why Now? (spyder.wordpress.com)](https://news.ycombinator.com/item?id=7416203)
+
+* [Ask Hackers: Opinions on OCaml?](https://news.ycombinator.com/item?id=112129)
+
+* [OCaml 4.03 will, “if all goes well”, support multicore (inria.fr)](https://news.ycombinator.com/item?id=9582980)
+
+* [Code iOS Apps in OCaml (psellos.com)](https://news.ycombinator.com/item?id=3740173)
 
 ### References By Subject
 
