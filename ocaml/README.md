@@ -184,9 +184,9 @@ Binary programs     prog    prog        prog.opt4
 
 Standard Libraries:
 
-* Native Library
+* [Native Library](http://caml.inria.fr/pub/docs/manual-ocaml/libref/)
 * [Core](https://ocaml.janestreet.com/ocaml-core/111.17.00/doc/core/) - Jane Street Capital's Standard Library
-* Batteries - Maintained by community
+* [Batteries](http://batteries.forge.ocamlcore.org/) - Maintained by community
 
 Linux:
 ```
@@ -925,13 +925,37 @@ val id : 'a -> 'a = <fun>
 
 ```ocaml
 
-    (* Absolute Value *)
+(* Operators *)
+    
+    # (+.) ;;
+    - : float -> float -> float = <fun>    
+    # (-.) ;;
+    - : float -> float -> float = <fun>  
+    # (/.) ;;
+    - : float -> float -> float = <fun> 
+    # ( *. ) ;;
+    - : float -> float -> float = <fun> 
+    
+     (* Power operator *)
+     # ( ** ) ;;
+    - : float -> float -> float = <fun>
+
+    # List.map ( (+.) 2.323) [10.23; 3.4; 30. ; 12. ] ;;
+    - : float list = [12.553; 5.723; 32.323; 14.323]  
+
+    # List.map ( ( *. ) 3.) [10.23; 3.4; 30. ; 12. ] ;;
+    - : float list = [30.69; 10.2; 90.; 36.] 
+
+    # List.map (fun x -> 2. ** x ) [1. ; 2.; 3.; 4.; 5.; 6.; 7.; 8.] ;;
+    - : float list = [2.; 4.; 8.; 16.; 32.; 64.; 128.; 256.]  
+
+(* Absolute Value *)
     # abs_float ;;
     - : float -> float = <fun>
     # 
 
 
-    (* Trigonometric *)
+(* Trigonometric *)
 
     # sin ;;
     - : float -> float = <fun>
@@ -950,7 +974,7 @@ val id : 'a -> 'a = <fun>
     - : float -> float = <fun>
     # 
     
-    (* Hyperbolic Functions *)
+(* Hyperbolic Functions *)
     # cosh ;;
     - : float -> float = <fun>
     # sinh ;;
@@ -960,13 +984,15 @@ val id : 'a -> 'a = <fun>
     # 
 
 
-    (* Logarithm *)
+(* Logarithm and exp *)
     # log ;;
     - : float -> float = <fun>
     # log10 ;;
     - : float -> float = <fun>
-    
-    (* Remove Decimal Part *)
+    # exp ;;
+    - : float -> float = <fun>  
+
+(* Remove Decimal Part *)
     # floor ;;
     - : float -> float = <fun>
     # ceil ;;
@@ -979,7 +1005,7 @@ val id : 'a -> 'a = <fun>
     # 
 
 
-    (* Float Constants *)
+(* Float Constants *)
 
     # infinity ;;
     - : float = infinity
@@ -1003,10 +1029,6 @@ val id : 'a -> 'a = <fun>
     # -1. /. 0. ;;
     - : float = neg_infinity
     # 
-
-
-
-
 ```
 
 ##### Function Declaration
@@ -1384,9 +1406,13 @@ hello world / hit return to continue
 
 ## Standard Library Modules
 
+* Documentation: http://caml.inria.fr/pub/docs/manual-ocaml/libref/
+
 ### List
 
 The module List has almost all functions to process lists which are immutable data structures. 
+
+* http://caml.inria.fr/pub/docs/manual-ocaml/libref/List.html
 
 Cons and Nil
 ```ocaml
@@ -1728,6 +1754,8 @@ z = 3
 
 Arrays as oppose to lists are mmutable data structures.
 
+* http://caml.inria.fr/pub/docs/manual-ocaml/libref/Array.html
+
 ```ocaml
 > [| 10; 2 ; 10; 25 ; 100; 0 ; 1 |]  ;;
 - : int array = [|10; 2; 10; 25; 100; 0; 1|]  
@@ -1853,8 +1881,6 @@ x[6] = 1
  
 
 
-
-
 > Array.init ;;
 - : int -> (int -> 'a) -> 'a array = <fun> 
 
@@ -1870,55 +1896,166 @@ x[6] = 1
 
 ```
 
-### Type Casting
+### String 
+
+There are more useful string functions on the core library.
+
+* http://caml.inria.fr/pub/docs/manual-ocaml/libref/String.html
+* http://caml.inria.fr/pub/docs/manual-ocaml/libref/Char.html
+* http://caml.inria.fr/pub/docs/manual-ocaml/libref/Str.html
+
+Char Module
 
 ```ocaml
 
-utop # float_of_int 2323 ;;
-- : float = 2323. 
+(* Acii code to Char *)
 
-utop # float_of_string "100.04523" ;;
-- : float = 100.04523  
+    # Char.chr ;;
+    - : int -> char = <fun>
+    
+    # Char.chr 99 ;;
+    - : char = 'c' 
 
-utop # int_of_float 100.04523 ;;
-- : int = 100 
+(* Char to Ascii Code*)
 
-utop # int_of_string "90000" ;;
-- : int = 90000    
 
-utop # let x = [20; 230; 10 ; 40; 50 ] ;;
-val x : int list = [20; 230; 10; 40; 50]
+    # Char.code 'a' ;;
+    - : int = 97
 
-utop # List.map float_of_int x ;;
-- : float list = [20.; 230.; 10.; 40.; 50.]
+    # Char.code ;;
+    - : char -> int = <fun>
 
-utop # Array.of_list [20.; 230.; 10.; 40.; 50.]  ;;
-- : float array = [|20.; 230.; 10.; 40.; 50.|]  
+(* Upper Case / Lower Case *)
 
-utop # Array.to_list [|20.; 230.; 10.; 40.; 50.|]  ;;
-- : float list = [20.; 230.; 10.; 40.; 50.]   
-
-utop # string_of_bool true ;;
-- : string = "true"  
-
-utop # string_of_int 11000 ;;
-- : string = "11000" 
-
-utop # string_of_float 23.2323 ;;
-- : string = "23.2323"  
+    # Char.uppercase 'c' ;;
+    - : char = 'C'            
+    # Char.lowercase 'A' ;;
+    - : char = 'a'   
 ```
-
-
-<!--
-    ---------------------------------------------------------------
--->
-
-## String
 
 String Module
 
 ```ocaml
 
+
+(* Length of String *)
+
+    # String.length "Hello world" ;;
+    - : int = 11
+
+(* Concatenate Strings *)
+    # String.concat "\n" ["Hello"; "World"; "Ocaml" ] ;;
+    - : string = "Hello\nWorld\nOcaml" 
+
+    # "Hello " ^ " World " ^ " Ocaml" ;;
+    - : string = "Hello  World  Ocaml" 
+
+(* Uppercase / Lowercase *)
+    # String.capitalize "hello world" ;;
+    - : string = "Hello world" 
+
+    # String.lowercase "HELLO WORLD" ;;
+    - : string = "hello world" 
+
+(* Get Character at position *)
+    
+    # String.get ;;
+    - : string -> int -> char = <fun>
+    # String.get  "Hello world" 0 ;;
+    - : char = 'H'  
+    # String.get  "Hello world" 1 ;;
+    - : char = 'e'  
+
+    # let str =  "My string" ;;
+    val str : string = "My string"
+    
+    # str.[0] ;;
+    - : char = 'M'
+     # str.[5] ;;
+    - : char = 'r'
+
+(* Setting Characters *)    
+
+    # let str =  "My string" ;;
+    val str : string = "My string"
+    
+    # s.[0] <- 'H' ;;
+    - : unit = ()  
+     # s.[1] <- 'e' ;;
+    - : unit = () 
+     # s ;;
+    - : string = "He to world" 
+
+(* Contains test if character is in the string *)
+    
+    # String.contains ;;
+    - : string -> char -> bool = <fun>  
+    
+    # String.contains "hello" 'c' ;;
+    - : bool = false
+    
+    # String.contains "hello" 'h' ;;
+    - : bool = true  
+
+(* Map Characters *)
+
+    # String.map ;;
+    - : (char -> char) -> string -> string = <fun>
+    
+    # let encode key chr = Char.chr ((Char.code chr) - key) ;;
+    val encode : int -> char -> char = <fun>                        
+    
+    # let decode key chr = Char.chr (Char.code chr + key) ;;
+    val decode : int -> char -> char = <fun>
+
+    # let str = "Hello world" ;;
+    val str : string = "Hello world"
+    
+    # String.map (encode 13) str ;;
+- : string = ";X__b\019jbe_W"
+
+    # String.map (decode 13) ";X__b\019jbe_W" ;;
+    - : string = "Hello world"
+```
+
+
+
+Str Module
+
+* http://caml.inria.fr/pub/docs/manual-ocaml/libref/Str.html
+
+```ocaml
+    
+(* When in the toploop interactive shell *)
+    #load "str.cma"
+    
+(* Compile String to a regular expression*)
+    # Str.regexp ;;
+    - : string -> Str.regexp = <fun> 
+    
+    # Str.regexp ",";;
+    - : Str.regexp = <abstr>
+
+(* Split String *)
+
+    # Str.split ;;
+    - : Str.regexp -> string -> string list = <fun> 
+
+    # Str.split (Str.regexp ",") "23.232,9823,\"Ocaml Haskell FP\"";;
+    - : string list = ["23.232"; "9823"; "\"Ocaml Haskell FP\""] 
+    
+    # Str.split (Str.regexp "[,|;]") "23.232,9823;\"Ocaml Haskell FP\";400";;
+    - : string list = ["23.232"; "9823"; "\"Ocaml Haskell FP\""; "400"] 
+
+    # Str.string_before ;;
+    - : string -> int -> string = <fun>   
+    # Str.string_before "Hello world ocaml" 3 ;;
+    - : string = "Hel"
+    # Str.string_before "Hello world ocaml" 11 ;;
+    - : string = "Hello world"
+
+    # Str.string_after "Hello world ocaml" 11 ;;
+    - : string = " ocaml"   
 ```
 
 <!--
@@ -1949,7 +2086,7 @@ c- : unit = ()
 > let s = Printf.sprintf "x =  %s  y = %f z = %d" "hello" 2.2232 40  ;;
 val s : string = "x =  hello  y = 2.223200 z = 40"
 
-# print_string s ;;
+> print_string s ;;
 x =  hello  y = 2.223200 z = 40- : unit = ()
 ```
 
@@ -2020,6 +2157,50 @@ utop # input_char filein ;;
 - : char = 'l'
 utop #
 ```
+
+### Type Casting
+
+```ocaml
+
+utop # float_of_int 2323 ;;
+- : float = 2323. 
+
+utop # float_of_string "100.04523" ;;
+- : float = 100.04523  
+
+utop # int_of_float 100.04523 ;;
+- : int = 100 
+
+utop # int_of_string "90000" ;;
+- : int = 90000    
+
+utop # let x = [20; 230; 10 ; 40; 50 ] ;;
+val x : int list = [20; 230; 10; 40; 50]
+
+utop # List.map float_of_int x ;;
+- : float list = [20.; 230.; 10.; 40.; 50.]
+
+utop # Array.of_list [20.; 230.; 10.; 40.; 50.]  ;;
+- : float array = [|20.; 230.; 10.; 40.; 50.|]  
+
+utop # Array.to_list [|20.; 230.; 10.; 40.; 50.|]  ;;
+- : float list = [20.; 230.; 10.; 40.; 50.]   
+
+utop # string_of_bool true ;;
+- : string = "true"  
+
+utop # string_of_int 11000 ;;
+- : string = "11000" 
+
+utop # string_of_float 23.2323 ;;
+- : string = "23.2323"  
+```
+
+
+<!--
+    ---------------------------------------------------------------
+-->
+
 
 <!--
     ---------------------------------------------------------------
@@ -2749,6 +2930,7 @@ Loading File From interpreter/ toplevel.
     #
 
 ```
+
 
 ### Compile Module to Bytecode
 
