@@ -1,5 +1,11 @@
 *.o
 *.fi
+*.out
+*.cmi
+*.cmo
+*.cmx
+*.cma
+*.hi
 __cache__
 *.pyc
 *.pyo

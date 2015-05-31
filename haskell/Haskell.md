@@ -1,5 +1,7 @@
 ## Haskell
 
+<a href="https://www.haskell.org"><img src="images/haskellLogo.png"/></a> 
+
 **Overview**
 
 * Pure Functional programming language

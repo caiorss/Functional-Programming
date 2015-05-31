@@ -2,6 +2,8 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+<a href="https://ocaml.org"><img src="images/ocamlogo.png" width="30%" /></a>
+
 - [OCaml](#ocaml)
   - [Setup](#setup)
   - [Toolset](#toolset)
@@ -86,7 +88,7 @@ http://stackoverflow.com/questions/3082324/foldl-versus-foldr-behavior-with-infi
 
 OCaml (Objective Categorical Abstract Machine Language) (formerly known as Objective Caml) is the main implementation of the Caml programming language, created by Xavier Leroy, Jérôme Vouillon, Damien Doligez, Didier Rémy and others in 1996. OCaml is an open source project managed and principally maintained by the French institute INRIA. The Caml's toolset includes an interactive toplevel interpreter, a bytecode compiler, and an optimizing native code compiler.
 
-Features:
+**Features**
 
 * Strong Static Type  - Type Safety
 * Type Inference      - The compiler infers the types for you, you don't need to write all the types;
@@ -99,7 +101,7 @@ Features:
 * Algebraic Data Types
 * Pattern Matching
 
-History:
+**History**
 
 * ML: Meta Language
     * 1973, University of Edinburg
@@ -111,9 +113,13 @@ History:
 * OCaml
     * 1996, INRIA
 
+**Ocaml Shell Online**
+
+You Can try OCaml online in: 
+
+* [OCsigen - JS of Ocaml Toploop](http://ocsigen.org/js_of_ocaml/dev/files/toplevel/index.html)
 
 <!--
-@TODO: Describe OCaml standard library and give more examples.
 @TODO: Optional data Type description and examples / Maybe Monads
 @TODO: Show how to create libraries, project structure, compile
 @TODO: Add more examples about Lazy Evaluation
@@ -506,6 +512,8 @@ $ ocamlmktop -custom -o mytoplevel graphics.cma -cclib -lX11
 -->
 
 ## Basic Syntax
+
+This section describes the OCaml native library and [Pervasives module](http://caml.inria.fr/pub/docs/manual-ocaml/libref/Pervasives.html).
 
 Escape Characters:
 
@@ -933,7 +941,283 @@ val id : 'a -> 'a = <fun>
 
 ```
 
+##### Number Formats
+
+
+* Int   -  Default Interger format 31 bits signed int on 32 bits machine and 63 bits on a 64 bits machine
+* Int32 - 32 bits signed int
+* Int64 - 63 bits signed int
+
+* Num     - Arbitrary Precision Integer
+* Big_Int - Arbitrary Precision Integer
+
+* Float -  IEEE.754 - 64 bits double precision
+
+```ocaml
+
+(* 31 bits signed int, since this machine has 32 bits word lenght*)
+
+    # Pervasives.min_int ;;
+    - : int = -1073741824 
+    # Pervasives.max_int ;;
+    - : int = 1073741823  
+
+(* 32 bits signed int *)
+
+    # Int32.max_int ;;
+    - : int32 = 2147483647l
+    # Int32.min_int ;;
+    - : int32 = -2147483648l
+
+(* 64 bits signed int *)    
+    # Int64.min_int ;;
+    - : int64 = -9223372036854775808L 
+    # Int64.max_int ;;
+    - : int64 = 9223372036854775807L
+
+(* IEEE.754 - 64 bits double precision - float point *)
+
+    # Pervasives.min_float ;;
+    - : float = 2.22507385850720138e-308
+    # Pervasives.max_float ;;
+    - : float = 1.79769313486231571e+308   
+```
+    
+Numeric Literals 
+
+```ocaml    
+(* Default - Pervasives 31 bit signed int (32 bits machine) *)
+    
+    # 23213 ;;
+    - : int = 23213 
+    
+    # 0xf43aaec ;;
+    - : int = 256092908 
+    
+    # 0b10001110011 ;;
+    - : int = 1139     
+    
+(* 32 bits signed int *)
+    
+    # 23213l ;;
+    - : int32 = 23213l
+    
+    # 0xf4123l ;;
+    - : int32 = 999715l
+    
+    # 0b1111100011110011l ;;
+    - : int32 = 63731l 
+    
+(* 64 bits signed int *) 
+    
+    # 1000000L ;;
+    - : int64 = 1000000L 
+
+     # 0xff2562abcL ;;
+    - : int64 = 68490242748L
+
+    # 0b11111000111100110011111101L ;;
+    - : int64 = 65260797L
+```
+
+Number Conversion / Type Casting
+
+```ocaml
+
+    # Int32.of_int 10002373 ;;
+    - : int32 = 10002373l  
+    # Int32.of_float 232322.323 ;;
+    - : int32 = 232322l   
+    # Int32.of_string "98232376" ;;
+    - : int32 = 98232376l 
+
+    # Int32.to_int 100033l ;;
+    - : int = 100033 
+
+
+    # Int64.of_int 100 ;;
+    - : int64 = 100L 
+    # Int64.of_float 1000239823.2323 ;;
+    - : int64 = 1000239823L  
+    # Int64.of_string "34234912" ;;
+    - : int64 = 34234912L
+
+    # Int64.to_int 2323884L ;;
+    - : int = 2323884 
+
+
+     # int_of_float (-1235.34083402321) ;;
+    - : int = -1235    
+    # Pervasives.int_of_float (-1235.34083402321) ;;
+    - : int = -1235 
+     # int_of_string "9123" ;;
+    - : int = 9123     
+
+    # float_of_int 1000 ;;
+    - : float = 1000. 
+```
+
+Math Operations. In Ocaml the same operator cannot be used for more than one type, so to add ints (+) must be used, to add floats (+.), to add Int32, (Int32.add) and to add Int64, (Int64.add).
+
+```ocaml
+
+    # (+) ;;
+    - : int -> int -> int = <fun>   
+
+    # (+.) ;;
+    - : float -> float -> float = <fun>   
+
+    # Int32.add ;;
+    - : int32 -> int32 -> int32 = <fun> 
+
+    # Int64.add ;;
+    - : int64 -> int64 -> int64 = <fun>      
+
+    # Big_int.add_big_int ;;
+    - : Big_int.big_int -> Big_int.big_int -> Big_int.big_int = <fun>    
+
+    # 23423 + 1212 ;;
+    - : int = 24635 
+
+    # 32.34 +. 232.22 ;;
+    - : float = 264.56  
+
+    # Int32.add 2323l 6023l ;;
+    - : int32 = 8346l   
+
+    # Int64.add 232L 3434L ;;
+    - : int64 = 3666L 
+    
+    (* Simplifying Number Operators *)
+
+    # let fun1 x y = 10 * x - 4 * y ;;
+    val fun1 : int -> int -> int = <fun>  
+
+    # fun1 45 23 ;;
+    - : int = 358  
+    
+    # fun1 45L 23L ;;
+    Error: This expression has type int64 but an expression was expected of type int      
+    
+    (* Defining the function to 64 bits *)
+
+     # let fun1L x y = 
+                 let (-) = Int64.sub in 
+                 let ( * ) = Int64.mul in  
+                 10L * x - 4L * y 
+        ;;val fun1L : int64 -> int64 -> int64 = <fun>
+
+    # fun1L 45L 23L ;;
+    - : int64 = 358L
+    
+    (* Trick Creating an Operator Module *)
+    
+    # module OP = 
+    struct
+        module FL =
+        struct
+            let (+) = (+.)
+            let (-) = (-.)
+            let ( * ) = ( *. )
+            let (/) = (/.)
+        end
+        
+        module I32 =
+        struct
+            let (+) = Int32.add
+            let (-) = Int32.sub
+            let (/) = Int32.div
+            let ( * ) = Int32.mul
+        end
+        
+        module I64 = 
+        struct
+            let (+) = Int64.add
+            let (-) = Int64.sub
+            let ( * ) = Int64.mul
+            let (/) = Int64.div
+        end
+
+    end                                                    
+      ;;
+    module OP :
+      sig
+        module FL :
+          sig
+            val ( + ) : float -> float -> float
+            val ( - ) : float -> float -> float
+            val ( * ) : float -> float -> float
+            val ( / ) : float -> float -> float
+          end
+        module I32 :
+          sig
+            val ( + ) : int32 -> int32 -> int32
+            val ( - ) : int32 -> int32 -> int32
+            val ( / ) : int32 -> int32 -> int32
+            val ( * ) : int32 -> int32 -> int32
+          end
+        module I64 :
+          sig
+            val ( + ) : int64 -> int64 -> int64
+            val ( - ) : int64 -> int64 -> int64
+            val ( * ) : int64 -> int64 -> int64
+            val ( / ) : int64 -> int64 -> int64
+          end
+      end
+    # 
+
+(* Defined for int *)
+
+    # let fun1 x y = 10 * x - 4 * y ;;
+    val fun1 : int -> int -> int = <fun> 
+
+    # fun1 100 20 ;;
+    - : int = 920  
+
+(* Defined for Int32 *)
+    
+    # let fun1_int32 x y  = 
+        let open OP.I32 in
+        10l * x - 4l * y
+    ;;
+    val fun1_int32 : int32 -> int32 -> int32 = <fun> 
+
+    # fun1_int32 100l 20l ;;
+    - : int32 = 920l  
+
+(* Defined for Int64 *)
+
+    # let fun1_int64 x y  = 
+            let open OP.I64 in
+            10L * x - 4L * y
+        ;;
+    val fun1_int64 : int64 -> int64 -> int64 = <fun>  
+
+    # fun1_int64 100L 20L ;;
+    - : int64 = 920L            
+
+(* Defined for Float *)
+
+    # let fun1_float x y  = 
+                let open OP.FL in
+                10. * x - 4. * y
+            ;;
+    val fun1_float : float -> float -> float = <fun>  
+    
+    
+    # fun1_float 100. 20. ;;
+    - : float = 920. 
+    
+```
+
+
 ##### Math / Float Functions
+
+Documentation: 
+
+OCaml's floating-point complies with the [IEEE 754 standard](http://en.wikipedia.org/wiki/IEEE_floating_point),  double precision (64 bits) numbers. 
+
+* http://caml.inria.fr/pub/docs/manual-ocaml/libref/Pervasives.html
 
 ```ocaml
 
@@ -948,7 +1232,7 @@ val id : 'a -> 'a = <fun>
     # ( *. ) ;;
     - : float -> float -> float = <fun> 
     
-     (* Power operator *)
+     (* Power operator/ Exponentiation *)
      # ( ** ) ;;
     - : float -> float -> float = <fun>
 
@@ -1008,6 +1292,15 @@ val id : 'a -> 'a = <fun>
     - : float -> float = <fun>
     # exp ;;
     - : float -> float = <fun>  
+    
+    (* exp x -. 1.0, *)
+    # expm1 ;;
+    - : float -> float = <fun>
+    
+    (*  log(1.0 +. x)  *)
+    # log1p ;;
+- : float -> float = <fun>
+    
 
 (* Remove Decimal Part *)
     # floor ;;
@@ -1035,7 +1328,8 @@ val id : 'a -> 'a = <fun>
     - : float = 1.79769313486231571e+308
     # min_float ;;
     - : float = 2.22507385850720138e-308
-
+    
+    
     # nan ;;
     - : float = nan
     # 
@@ -3557,9 +3851,16 @@ example.cmx: OCaml native object file (.cmx) (Version 011)
 * [Thomas Leonard's blog - OCaml Tips](http://roscidus.com/blog/blog/2013/10/13/ocaml-tips/)
 * [Thomas Leonard's blog - Experiences With OCaml Objects](http://roscidus.com/blog/blog/2013/09/28/ocaml-objects/)
 
+* [Unreliable Guide to OCaml Modules](http://lambdafoo.com/blog/2015/05/15/unreliable-guide-to-ocaml-modules/)
 
+
+* [A draft of library to handle physical units in OCaml](http://blog.bentobako.org/index.php?post/2011/12/02/A-draft-of-library-to-handle-physical-units-in-OCaml)
+
+* [Detecting and removing computer virus with OCaml](http://javiermunhoz.com/blog/2014/04/19/detecting-and-removing-computer-virus-with-ocaml.html)
 
 #### Quick Reference Sheets
+
+* [OCaml Cheat Sheets](http://www.ocamlpro.com/blog/2011/06/03/cheatsheets.html)
 
 * https://www.lri.fr/~conchon/IPF/fiches/ocaml-lang.pdf
 

@@ -16,6 +16,11 @@ instance Monad (State s) where
     let (v,s') = x s
     in runState (f v) s'
 
+instance Functor (State s) where
+    fmap f (State g) = 
+        State (\st -> let (a,  snext) = g st 
+                       in (f a, snext))
+
 {- 
     Get: Set the result value to the state and left it unchanged
     get :: s -> (s, s)
