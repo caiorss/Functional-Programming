@@ -2,8 +2,6 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-<a href="https://ocaml.org"><img src="images/ocamlogo.png" width="30%" /></a>
-
 - [OCaml](#ocaml)
   - [Setup](#setup)
   - [Toolset](#toolset)
@@ -17,6 +15,7 @@
         - [Operators](#operators)
         - [Variable Declaration](#variable-declaration)
         - [Polymorphic Functions](#polymorphic-functions)
+        - [Number Formats](#number-formats)
         - [Math / Float Functions](#math--float-functions)
         - [Function Declaration](#function-declaration)
         - [Function Composition](#function-composition)
