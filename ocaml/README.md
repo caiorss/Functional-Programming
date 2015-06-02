@@ -944,13 +944,13 @@ val id : 'a -> 'a = <fun>
 
 
 * Int   -  Default Interger format 31 bits signed int on 32 bits machine and 63 bits on a 64 bits machine
-* Int32 - 32 bits signed int
-* Int64 - 63 bits signed int
+* [Int32](http://caml.inria.fr/pub/docs/manual-ocaml/libref/Int32.html) - 32 bits signed int
+* [Int64](http://caml.inria.fr/pub/docs/manual-ocaml/libref/Int64.html) - 63 bits signed int
 
-* Num     - Arbitrary Precision Integer
-* Big_Int - Arbitrary Precision Integer
+* Float -  IEEE.754 - 64 bits double precision float point numbers.
 
-* Float -  IEEE.754 - 64 bits double precision
+* [Num](http://caml.inria.fr/pub/docs/manual-ocaml/libref/Num.html) - Arbitrary Precision Integer
+* [Big_Int](http://caml.inria.fr/pub/docs/manual-ocaml/libref/Big_int.html) - Arbitrary Precision Integer
 
 ```ocaml
 
@@ -1733,6 +1733,9 @@ let (>>) f g x = g( f x) ;;
 
 (* F# Piping Operator *)
 let (|>) x f  = f x ;;
+
+let (<|) f x = f x ;;
+
 ```
 
 Example: Composition Operator
@@ -1785,10 +1788,14 @@ Example: Pipe Operators
 >
 
 
-> 10 |> (f1 >> f2 >> f3) ;;
+> 10 |> (f3 >> f2 >> f1) ;;
 - : int = 14
 
-> let f = f1 >> f2 >> f3 ;;
+> f3 >> f2 >> f1  <| 10 ;;
+- : int = 14
+
+
+> let f = f3 >> f2 >> f1 ;;
 val f : int -> int = <fun>
 
 > f 10 ;;
@@ -2561,6 +2568,163 @@ Str Module
     ---------------------------------------------------------------
 -->
 
+### Sys
+
+http://caml.inria.fr/pub/docs/manual-ocaml/libref/Sys.html
+
+```ocaml
+
+(* Command Line Arguments *)
+
+    > Sys.argv ;;
+    - : string array = [|"/home/tux/bin/ocaml"|]
+    > 
+
+(* Current Directory *)
+
+    > Sys.getcwd ;;
+    - : unit -> string = <fun>
+
+    > Sys.getcwd() ;;
+    - : string = "/home/tux/PycharmProjects/ocaml/prelude"
+
+(* Change Current Directory *)
+
+    > Sys.chdir ;;
+    - : string -> unit = <fun>
+
+    > Sys.chdir "/" ;;
+    - : unit = ()
+    > Sys.getcwd () ;;
+    - : string = "/"
+    > 
+
+(* List directory *)
+
+    > Sys.readdir ;;
+    - : string -> string array = <fun>
+    > 
+
+    > Sys.readdir("/") ;;
+    - : string array =
+    [|"tftpboot"; "var"; "cdrom"; "home"; "lost+found"; "netinterface.log";
+      "opt"; "root.tar"; "tmp"; "sys"; "etc"; "root"; "srv"; "bin";
+      "vmlinuz.old"; "sbin"; "backup.log"; "initrd.img.old"; "run"; "initrd.img";
+      "lib"; "usr"; "vmlinuz"; "mnt"; "dev"; "media"; "boot"; "proc"|]
+    > 
+
+(* Test if is directory *)
+
+    > Sys.is_directory "/etc" ;;
+    - : bool = true
+    > Sys.is_directory "/etca" ;;
+    Exception: Sys_error "/etca: No such file or directory".
+    > Sys.is_directory "/etc/fstab" ;;
+    - : bool = false
+    > 
+
+
+(* Test if File exists *)
+
+    > Sys.file_exists ;;
+    - : string -> bool = <fun>
+     
+    > Sys.file_exists "/etc" ;;
+    - : bool = true
+    > 
+      Sys.file_exists "/etca" ;;
+    - : bool = false
+    > 
+
+    (* Execute shell command and return exit code 
+     *   0    For success
+     *  not 0 For failure
+     *)
+
+    > Sys.command ;;
+    - : string -> int = <fun>
+
+    > Sys.command "uname -a" ;;
+    Linux tux-I3000 3.13.0-36-generic >63-Ubuntu SMP Wed Sep 3 21:30:45 UTC 2014 i686 i686 i686 GNU/Linux
+    - : int = 0
+    > 
+
+    > Sys.command "nam" ;;
+    sh: 1: nam: not found
+    - : int = 127
+    > 
+
+
+(* Constants and Flags *)
+
+    (* Machine Word Size in bits *)
+    >  Sys.word_size ;;
+    - : int = 32
+    > 
+
+    (* Machine Endianess *)
+    > Sys.big_endian ;;
+    - : bool = false
+    > 
+
+    (* 
+     *  For Linux/BSD or OSX  --> "Unix"
+     *  Windows               --> "Win32"
+    *)
+    > Sys.os_type ;;
+    - : string = "Unix"
+    > 
+    
+    (*  Maximum length of strings and byte sequences. =  
+     *   =~  16 MB
+     *)
+    > Sys.max_string_length ;;
+    - : int = 16777211
+    > 
+```
+
+Extra Example:
+
+```ocaml
+
+    # let (|> x f = f x ;;
+
+    # let (<|) f x = f x ;;
+    val ( <| ) : ('a -> 'b) -> 'a -> 'b = <fun>
+
+    # Sys.chdir "/boot" ;;
+    - : unit = ()
+
+    # Sys.readdir "." ;;
+    - : string array =
+    [|"abi-3.13.0-35-generic"; "System.map-3.13.0-35-generic";
+      "vmlinuz-3.13.0-35-generic"; "abi-3.13.0-36-generic";
+      "config-3.13.0-35-generic"; "memtest86+_multiboot.bin";
+      "initrd.img-3.13.0-35-generic"; "memtest86+.elf"; "memtest86+.bin";
+      "System.map-3.13.0-36-generic"; "initrd.img-3.13.0-36-generic";
+      "xen-4.4-amd64.gz"; "extlinux"; "config-3.13.0-36-generic";
+      "vmlinuz-3.13.0-36-generic"; "grub"|]
+    # 
+
+
+    (* List only directories *)
+    # "." |> Sys.readdir |> Array.to_list  |> List.filter Sys.is_directory ;;
+    - : string list = ["extlinux"; "grub"]
+    
+    (* List only files *)
+
+    # "." |> Sys.readdir |> Array.to_list  |> List.filter (fun d -> not <| Sys.is_directory d );;
+    - : string list =
+    ["abi-3.13.0-35-generic"; "System.map-3.13.0-35-generic";
+     "vmlinuz-3.13.0-35-generic"; "abi-3.13.0-36-generic";
+     "config-3.13.0-35-generic"; "memtest86+_multiboot.bin";
+     "initrd.img-3.13.0-35-generic"; "memtest86+.elf"; "memtest86+.bin";
+     "System.map-3.13.0-36-generic"; "initrd.img-3.13.0-36-generic";
+     "xen-4.4-amd64.gz"; "config-3.13.0-36-generic"; "vmlinuz-3.13.0-36-generic"]
+    # 
+
+```
+
 ## IO - Input / Output
 
 Standard Print Functions
@@ -2740,6 +2904,46 @@ val brazil : country =
 
 > brazil.id ;;
 - : int = 100
+
+
+> let countries = [
+    {name = "Brazil" ; domain = ".br" ; language = "Porguese" ; id = 100 } ; 
+    {name = "United Kingdom" ; domain = ".co.uk" ; language = "English" ; id = 10 } ;
+    {name = "South Africa" ; domain = ".co.za" ; language = "English" ; id = 40 } ;
+    {name = "France" ; domain = ".fr" ; language = "French" ; id = 20 } ;
+    {name = "Taiwan ROC" ; domain = ".tw" ; language = "Chinese" ; id = 54 } ;
+    {name = "Australia" ; domain = ".au" ; language = "English" ; id = 354 } ;
+      ]
+  ;;
+val countries : country list =
+  [{name = "Brazil"; domain = ".br"; language = "Porguese"; id = 100};
+   {name = "United Kingdom"; domain = ".co.uk"; language = "English";
+    id = 10};
+   {name = "South Africa"; domain = ".co.za"; language = "English"; id = 40};
+   {name = "France"; domain = ".fr"; language = "French"; id = 20};
+   {name = "Taiwan ROC"; domain = ".tw"; language = "Chinese"; id = 54};
+   {name = "Australia"; domain = ".au"; language = "English"; id = 354}]
+ 
+
+> List.map (fun c -> c.name ) countries ;;
+- : string list =
+["Brazil"; "United Kingdom"; "South Africa"; "France"; "Taiwan ROC";
+ "Australia"]
+ 
+
+> List.map (fun c -> c.domain ) countries ;;
+- : string list = [".br"; ".co.uk"; ".co.za"; ".fr"; ".tw"; ".au"]
+
+> List.filter (fun c -> c.name = "France") countries ;;
+- : country list =
+[{name = "France"; domain = ".fr"; language = "French"; id = 20}]
+ 
+> List.filter (fun c -> c.language = "English") countries ;;
+- : country list =
+[{name = "United Kingdom"; domain = ".co.uk"; language = "English"; id = 10};
+ {name = "South Africa"; domain = ".co.za"; language = "English"; id = 40};
+ {name = "Australia"; domain = ".au"; language = "English"; id = 354}]
+
 ```
 
 #### Disjoint Union
@@ -3827,7 +4031,11 @@ example.cmx: OCaml native object file (.cmx) (Version 011)
 
 * [Code iOS Apps in OCaml](https://news.ycombinator.com/item?id=3740173)
 
+* [OCaml Briefly (mads379.github.io)](https://news.ycombinator.com/item?id=8653207)
+
 * [The fundamental problem of programming language package management](https://news.ycombinator.com/item?id=8226139)
+
+* [Why did Microsoft invest so much in F#?](https://news.ycombinator.com/item?id=1883679)
 
 #### Blogs
 
