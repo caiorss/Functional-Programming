@@ -25,6 +25,8 @@
     - [List](#list)
     - [Array](#array)
     - [String](#string)
+    - [Sys](#sys)
+    - [Unix](#unix)
   - [IO - Input / Output](#io---input--output)
     - [Type Casting](#type-casting)
   - [Algebraic Data Types and Pattern Matching](#algebraic-data-types-and-pattern-matching)
@@ -43,14 +45,17 @@
   - [Creating Libraries, Modules and Compiling to Bytecode or Machine Code](#creating-libraries-modules-and-compiling-to-bytecode-or-machine-code)
     - [Loading Files in Interactive Shell](#loading-files-in-interactive-shell)
     - [Compile Module to Bytecode](#compile-module-to-bytecode)
+  - [Batteries Standard Library](#batteries-standard-library)
+  - [Getting Started](#getting-started)
   - [References](#references)
     - [Articles](#articles)
     - [Links](#links)
     - [Books](#books)
     - [Community](#community)
       - [Online Resources](#online-resources)
-      - [Hacker News Threads](#hacker-news-threads)
       - [Blogs](#blogs)
+      - [Hacker News Threads](#hacker-news-threads)
+      - [Stack Overflow Highlighted Questions](#stack-overflow-highlighted-questions)
       - [See Also](#see-also)
       - [Quick Reference Sheets](#quick-reference-sheets)
     - [References By Subject](#references-by-subject)
@@ -490,6 +495,44 @@ num.core            (version: [internal])
 
 $ ocamlfind list | grep -i batteries
 batteries           (version: 2.3
+```
+
+Get information about compiled files:
+```
+
+$ ocamlobjinfo seq.cmo
+File seq.cmo
+Unit name: Seq
+Interfaces imported:
+    54ba2685e6ed154753718e9c8becb28b    String
+    6e0efdddf4b33e30be4cc8ff056b56ff    Seq
+    4836c254f0eacad92fbf67abc525fdda    Pervasives
+Uses unsafe features: no
+Force link: no
+
+
+$ ocamlobjinfo seq.cma 
+File seq.cma
+Force custom: no
+Extra C object files:
+Extra C options:
+Extra dynamically-loaded libraries:
+Unit name: Seq
+Interfaces imported:
+    54ba2685e6ed154753718e9c8becb28b    String
+    4387952f7aad2695faf187cd3feeb5e5    Seq
+    4836c254f0eacad92fbf67abc525fdda    Pervasives
+Uses unsafe features: no
+Force link: no
+
+
+$ ocamlobjinfo seq.cmi
+File seq.cmi
+Unit name: Seq
+Interfaces imported:
+    4387952f7aad2695faf187cd3feeb5e5    Seq
+    4836c254f0eacad92fbf67abc525fdda    Pervasives
+
 ```
 
 #### Misc
@@ -2725,6 +2768,61 @@ Extra Example:
 
 ```
 
+### Unix 
+
+Despite the name Unix, this is a multi platform module and work in Windows OS.
+
+Compile Standalone programs with Unix Library.
+
+```
+$ ocamlfind ocamlc -package more,unix program.ml -linkpkg -o program
+$ ocamlfind ocamlopt -package more,unix program.ml -linkpkg -o progra
+```
+
+```ocaml
+
+
+    (* It is only needed on the toploop shell *)
+    # #load "unix.cma" ;;
+
+    (* Get an environment variable *)
+    # Unix.getenv "PATH" ;;
+    - : string =
+    "/home/tux/.opam/4.02.1/bin:/home/tux/bin:/usr/local/sbin:/usr/local/bin:
+    /usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/tux/bin:
+    /home/tux/usr/bin:/home/tux/.apps
+
+    (*  Return the current time since 00:00:00 GMT, Jan. 1, 1970, in seconds 
+     *
+     *)
+
+      Unix.time ;;
+    - : unit -> float = <fun>
+    # Unix.time () ;;
+    - : float = 1433237870.
+    # 
+
+    (* Convert a time in seconds, as returned by Unix.time, into a date 
+     * and a time. Assumes UTC (Coordinated Universal Time), also known as GMT. 
+     *)
+
+    # Unix.gmtime ;;
+    - : float -> Unix.tm = <fun>
+    # 
+
+    # Unix.gmtime @@ Unix.time () ;;
+    - : Unix.tm =
+    {Unix.tm_sec = 36; tm_min = 39; tm_hour = 9; tm_mday = 2; tm_mon = 5;
+     tm_year = 115; tm_wday = 2; tm_yday = 152; tm_isdst = false}
+    # 
+
+      Unix.gethostname () ;;
+    - : string = "tux-I3000"
+    # 
+
+
+```
+
 ## IO - Input / Output
 
 Standard Print Functions
@@ -3929,6 +4027,41 @@ $ file example.cmx
 example.cmx: OCaml native object file (.cmx) (Version 011)
 ```
 
+## Batteries Standard Library
+
+[Batteries Documentation Reference](http://batteries.forge.ocamlcore.org/doc.preview:batteries-beta1/html/api/)
+
+Install
+
+```
+$ opam install batteries
+
+$ utop
+> #require "batteries";;
+> open Batteries ;;
+> 
+```
+
+## Getting Started
+
+From: [Batteries Wiki](https://github.com/ocaml-batteries-team/batteries-included/wiki/Getting-started)
+
+```ocaml
+> #require "batteries";;
+> open Batteries ;;
+> 
+let main () =
+  (1--999) (* the enum that counts from 1 to 999 *)
+  |> Enum.filter (fun i -> i mod 3 = 0 || i mod 5 = 0)
+  |> Enum.reduce (+) (* add all remaining values together *)
+  |> Int.print stdout
+;;
+val main : unit -> unit = <fun>  
+
+> main () ;;
+233168- : unit = ()
+```
+
 ## References
 
 ### Articles
@@ -4009,12 +4142,33 @@ example.cmx: OCaml native object file (.cmx) (Version 011)
 
 * [Cornell University - CS3110 Spring 11 :: Data Structures and Functional Programming](http://www.cs.cornell.edu/Courses/cs3110/2011sp/lecturenotes.asp)
 
+
+* [Universytet Wroclawiski | Lukaz Stafiniak / Functional Lectures] (http://www.ii.uni.wroc.pl/~lukstafi/pmwiki/index.php?n=Functional.Functional)
+
+* [University of Southampton | Tutorial: OCaml for scientific computation - Dr. Thomas Fischbacher, Hans Fangohr](http://www.southampton.ac.uk/~fangohr/software/ocamltutorial/)
+
 * [String Pattern Matching Examples](https://github.com/jimenezrick/ocaml-backpack/blob/master/src/backpackString.ml)
 
 
 * [OCAML exceptions, a small tutorial](http://www.martani.net/2009/04/ocaml-exceptions-small-tutorial.html)
 
 * [First Thoughts on OCaml](http://www.crmarsh.com/intro_to_ocaml/)
+
+
+#### Blogs
+
+* https://blogs.janestreet.com/
+
+* http://www.ocamlpro.com/blog
+
+* [Blog - Mirage OS](openmirage.org/blog/)
+
+* [OCaml at LexiFi | LexiFi](https://www.lexifi.com/blogs/ocaml)
+
+* [Alaska Ataca a Kamtchatka](alaska-kamtchatka.blogspot.com)
+
+* [Oleg Kiselyov](http://okmij.org/ftp/ML/)
+
 
 
 #### Hacker News Threads
@@ -4035,13 +4189,20 @@ example.cmx: OCaml native object file (.cmx) (Version 011)
 
 * [The fundamental problem of programming language package management](https://news.ycombinator.com/item?id=8226139)
 
+* [Four MLs (and a Python) (thebreakfastpost.com)](https://news.ycombinator.com/item?id=9463254)
+
+* [Jane Street releases open source alternative to OCaml's stdlib](https://news.ycombinator.com/item?id=3438084)
+
 * [Why did Microsoft invest so much in F#?](https://news.ycombinator.com/item?id=1883679)
 
-#### Blogs
 
-* https://blogs.janestreet.com/
+#### Stack Overflow Highlighted Questions
 
-* http://www.ocamlpro.com/blog
+* [How stable and widespread is “OCaml Batteries Included” and is it recommended?](http://stackoverflow.com/questions/3307936/how-stable-and-widespread-is-ocaml-batteries-included-and-is-it-recommended)
+
+* [Cygwin & OCaml: OPAM + Batteries](http://stackoverflow.com/questions/15751851/cygwin-ocaml-opam-batteries)
+
+* [What is the preferred way to structure and build OCaml projects?](http://stackoverflow.com/questions/5956317/what-is-the-preferred-way-to-structure-and-build-ocaml-projects?rq=1)
 
 #### See Also
 
