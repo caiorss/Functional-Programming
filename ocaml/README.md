@@ -4198,11 +4198,230 @@ val main : unit -> unit = <fun>
 
 #### Stack Overflow Highlighted Questions
 
+
+**Syntax / Implementation**
+
+* [What does “let () = ” mean in Ocaml?](http://stackoverflow.com/questions/7524487/what-does-let-mean-in-ocaml)
+
+* [What is the different between `fun` and `function` keywords?](http://stackoverflow.com/questions/1604270/what-is-the-different-between-fun-and-function-keywords)
+
+* [Why is OCaml's (+) not polymorphic?](http://stackoverflow.com/questions/8017172/why-is-ocamls-not-polymorphic)
+
+* [What are “`” in OCaml?](http://stackoverflow.com/questions/19498928/what-are-in-ocaml)
+
+* [Explaining pattern matching vs switch](http://stackoverflow.com/questions/199918/explaining-pattern-matching-vs-switch)
+
+* [Ocaml Variant Types](http://stackoverflow.com/questions/4777744/ocaml-variant-types)
+
+* [Why is an int in OCaml only 31 bits?](http://stackoverflow.com/questions/3773985/why-is-an-int-in-ocaml-only-31-bits)
+
+* [OCaml insert an element in list](http://stackoverflow.com/questions/9498746/ocaml-insert-an-element-in-list)
+
+* [Ocaml - Accessing components in an array of records](http://stackoverflow.com/questions/14001569/ocaml-accessing-components-in-an-array-of-records)
+
+* [What's the difference between “equal (=)” and “identical (==)” in ocaml?](http://stackoverflow.com/questions/13590307/whats-the-difference-between-equal-and-identical-in-ocaml/13590433#13590433)
+
+
+* [Why is “1.0 == 1.0” false in Ocaml?](http://stackoverflow.com/questions/25878382/why-is-1-0-1-0-false-in-ocaml)
+
+* [How to curry a function w.r.t. its optional arguments in OCaml](http://stackoverflow.com/questions/9647307/how-to-curry-a-function-w-r-t-its-optional-arguments-in-ocaml)
+
+* [What's the difference between “let ()=” and “let _=” ;](http://stackoverflow.com/questions/11515240/whats-the-difference-between-let-and-let)
+
+* [In OCaml, what type definition is this: 'a. unit -> 'a](http://stackoverflow.com/questions/23323032/in-ocaml-what-type-definition-is-this-a-unit-a?rq=1)
+
+* [Hashtables in ocaml - Is it possible to store different types in the same hashtable (Hashtbl) in Ocaml? Are hashtables really restricted to just one type?](http://stackoverflow.com/questions/8962895/hashtables-in-ocaml/8963057#8963057)
+
+* [How do you append a char to a string in OCaml?](http://stackoverflow.com/questions/8326926/how-do-you-append-a-char-to-a-string-in-ocaml/8329852#8329852)
+
+* [Ocaml int to binary string conversion](http://stackoverflow.com/questions/9776245/ocaml-int-to-binary-string-conversion)
+
+* [OCaml regex: specify a number of occurrences](http://stackoverflow.com/questions/14425762/ocaml-regex-specify-a-number-of-occurrences)
+
+* [Side-effects and top-level expressions in OCaml](http://stackoverflow.com/questions/10459363/side-effects-and-top-level-expressions-in-ocaml)
+
+* [OCaml passing labeled function as parameter / labeled function type equivalence](http://stackoverflow.com/questions/20931144/ocaml-passing-labeled-function-as-parameter-labeled-function-type-equivalence)
+
+* [ocaml bitstring within a script](http://stackoverflow.com/questions/21225701/ocaml-bitstring-within-a-script)
+
+* [What's the most-used data structure in OCaml to represent a Graph?](http://stackoverflow.com/questions/22067339/whats-the-most-used-data-structure-in-ocaml-to-represent-a-graph)
+
+
+**Functional Programming**
+
+* [State monad in OCaml](http://stackoverflow.com/questions/5843773/state-monad-in-ocaml)
+
+* [The reverse state monad in OCaml](http://stackoverflow.com/questions/24943140/the-reverse-state-monad-in-ocaml)
+
+* [What is the use of monads in OCaml?](http://stackoverflow.com/questions/29851449/what-is-the-use-of-monads-in-ocaml)
+
+* [Monadic buffers in OCaml](http://stackoverflow.com/questions/25790177/monadic-buffers-in-ocaml)
+
+* [Does OCaml have fusion laws](http://stackoverflow.com/questions/21031920/does-ocaml-have-fusion-laws)
+
+* [Composite functions in ocaml](http://stackoverflow.com/questions/4997661/composite-functions-in-ocaml)
+
+* [OCaml |> operator](http://stackoverflow.com/questions/30493644/ocaml-operator)
+
+* [Is it possible to use pipes in OCaml?](http://stackoverflow.com/questions/8986010/is-it-possible-to-use-pipes-in-ocaml)
+
+* [Is there an infix function composition operator in OCaml?](http://stackoverflow.com/questions/16637015/is-there-an-infix-function-composition-operator-in-ocaml/16637073#16637073)
+
+* [List of Functional code snippets for Procedural Programmers?](http://stackoverflow.com/questions/832569/list-of-functional-code-snippets-for-procedural-programmers)
+
+* [Application of Tail-Recursion in OCaml](http://stackoverflow.com/questions/19771283/application-of-tail-recursion-in-ocaml)
+
+* [In Functional Programming, what is a functor?](http://stackoverflow.com/questions/2030863/in-functional-programming-what-is-a-functor)
+
+
+* [In pure functional languages, is there an algorithm to get the inverse function?](http://stackoverflow.com/questions/13404208/in-pure-functional-languages-is-there-an-algorithm-to-get-the-inverse-function)
+
+* [What is the benefit of purely functional data structure?](http://stackoverflow.com/questions/4399837/what-is-the-benefit-of-purely-functional-data-structure)
+
+
+* [What's the closest thing to Haskell's typeclasses in OCaml?](http://stackoverflow.com/questions/14934242/whats-the-closest-thing-to-haskells-typeclasses-in-ocaml)
+
+
+* [Defining functions pointfree-style in functional programming. What are the cons/pros?](http://stackoverflow.com/questions/7367655/defining-functions-pointfree-style-in-functional-programming-what-are-the-cons)
+
+
+* [ What is **lenses** in OCaml's world ](http://stackoverflow.com/questions/28177263/what-is-lenses-in-ocamls-world)
+
+* [Linked List Ocaml](http://stackoverflow.com/questions/1738758/linked-list-ocaml)
+
+* [Functional programming languages introspection](http://stackoverflow.com/questions/3660957/functional-programming-languages-introspection)
+
+* [When should objects be used in OCaml?](http://stackoverflow.com/questions/10779283/when-should-objects-be-used-in-ocaml)
+
+
+* [Open and closed union types in Ocaml](http://stackoverflow.com/questions/5131954/open-and-closed-union-types-in-ocaml)
+
+* [Choosing between continuation passing style and memoization](http://stackoverflow.com/questions/14781875/choosing-between-continuation-passing-style-and-memoization)
+
+
+* [An concrete simple example to demonstrate GADT in OCaml?](http://stackoverflow.com/questions/27864200/an-concrete-simple-example-to-demonstrate-gadt-in-ocaml)
+
+* [Generating primes without blowing the stack](http://stackoverflow.com/questions/18213973/generating-primes-without-blowing-the-stack)
+
+* [Executing a list of functions](http://stackoverflow.com/questions/9054613/executing-a-list-of-functions)
+
+* [Best way to represent a file/folder structure](http://stackoverflow.com/questions/30241118/best-way-to-represent-a-file-folder-structure)
+
+* [How would you implement a Grid in a functional language?](http://stackoverflow.com/questions/27285170/how-would-you-implement-a-grid-in-a-functional-language)
+
+* [OCaml recursive function to apply a function n times](http://stackoverflow.com/questions/15285386/ocaml-recursive-function-to-apply-a-function-n-times)
+
+* [OCaml - Read csv file into array](http://stackoverflow.com/questions/28732351/ocaml-read-csv-file-into-array)
+
+
+**Lazy Evaluation/ Delayed Evaluation/ Generators / Yield**
+
+* [Are streams in ocaml really used?](http://stackoverflow.com/questions/30197961/are-streams-in-ocaml-really-used)
+
+* [Ocaml: Lazy Lists - How can I make a lazy list representing a sequence of doubling numbers?](http://stackoverflow.com/questions/1631968/ocaml-lazy-lists)
+
+* [Ocaml - Lazy.force](http://stackoverflow.com/questions/18401178/ocaml-lazy-force)
+
+* [Simple Generators](http://stackoverflow.com/questions/13146128/simple-generators)
+
+* [What does `[< >]` mean in OCaml?](http://stackoverflow.com/questions/16150173/what-does-mean-in-ocaml)
+
+* [What is the purpose of OCaml's Lazy.lazy_from_val?](http://stackoverflow.com/questions/9760580/what-is-the-purpose-of-ocamls-lazy-lazy-from-val)
+
+* [converting ocaml function to stream](http://stackoverflow.com/questions/16027627/converting-ocaml-function-to-stream)
+
+* [Lazy “n choose k” in OCaml](http://stackoverflow.com/questions/3969321/lazy-n-choose-k-in-ocaml)
+
+* [Thread safe lazy in OCaml](http://stackoverflow.com/questions/24123294/thread-safe-lazy-in-ocaml)
+
+**SML Dialects**
+
+* [What are the differences between SML and Ocaml?](http://stackoverflow.com/questions/699689/what-are-the-differences-between-sml-and-ocaml)
+
+* [F# changes to OCaml](http://stackoverflow.com/questions/179492/f-changes-to-ocaml)
+
+
+* [Converting F# seq expressions to OCaml](http://stackoverflow.com/questions/14428420/converting-f-seq-expressions-to-ocaml)
+
+
+* [IEnumerable<T> in OCaml](http://stackoverflow.com/questions/6589959/ienumerablet-in-ocaml)
+
+* [code compatibility between OCaml and F#](http://stackoverflow.com/questions/4239121/code-compatibility-between-ocaml-and-f)
+
+* [If SML.NET had functors why can't F#?](http://stackoverflow.com/questions/14777522/if-sml-net-had-functors-why-cant-f)
+
+
+* [Streams (aka “lazy lists”) and tail recursion](http://stackoverflow.com/questions/27045225/streams-aka-lazy-lists-and-tail-recursion)
+
+**Standard Library**
+
 * [How stable and widespread is “OCaml Batteries Included” and is it recommended?](http://stackoverflow.com/questions/3307936/how-stable-and-widespread-is-ocaml-batteries-included-and-is-it-recommended)
 
 * [Cygwin & OCaml: OPAM + Batteries](http://stackoverflow.com/questions/15751851/cygwin-ocaml-opam-batteries)
 
+* [using OCaml Batteries Included as a vanilla cma](http://stackoverflow.com/questions/10667329/using-ocaml-batteries-included-as-a-vanilla-cma?rq=1)
+
+* [What are the pros and cons of Batteries and Core?](http://stackoverflow.com/questions/3889117/what-are-the-pros-and-cons-of-batteries-and-core?rq=1)
+
+
+**Build / Compile**
+
+* [Building library with ocamlbuild, installing it with ocamlfind - what's the best practice?](http://stackoverflow.com/questions/27771452/building-library-with-ocamlbuild-installing-it-with-ocamlfind-whats-the-best)
+
 * [What is the preferred way to structure and build OCaml projects?](http://stackoverflow.com/questions/5956317/what-is-the-preferred-way-to-structure-and-build-ocaml-projects?rq=1)
+
+* [How to make OCaml bytecode that works on Windows and Linux](http://stackoverflow.com/questions/17315402/how-to-make-ocaml-bytecode-that-works-on-windows-and-linux)
+
+**Tool Chain**
+
+* [IDE for OCaml language](http://stackoverflow.com/questions/14747939/ide-for-ocaml-language)
+
+* [Saving my running toplevel for later](http://stackoverflow.com/questions/3966925/saving-my-running-toplevel-for-later)
+
+* [Is there an enhanced interpreter toploop for OCaml?](http://stackoverflow.com/questions/1849245/is-there-an-enhanced-interpreter-toploop-for-ocaml)
+
+* [Is it possible to use arrow keys in OCaml interpreter?](http://stackoverflow.com/questions/13225070/is-it-possible-to-use-arrow-keys-in-ocaml-interpreter/13225113#13225113)
+
+* [Is it possible to make an opam “sandbox”?](http://stackoverflow.com/questions/27640897/is-it-possible-to-make-an-opam-sandbox)
+
+* [For OCaml, is there a tool to quickly access function or library documentation from the command line?](http://stackoverflow.com/questions/24824849/for-ocaml-is-there-a-tool-to-quickly-access-function-or-library-documentation-f)
+
+* [Annotations in OCaml](http://stackoverflow.com/questions/4063039/annotations-in-ocaml)
+
+* [About the “topfind”?](http://stackoverflow.com/questions/8059657/about-the-topfind)
+
+* [Get ocamlmerlin autocomplete in vim](http://stackoverflow.com/questions/21132371/get-ocamlmerlin-autocomplete-in-vim)
+
+* [Is there a reason to retain .cmo or only .cma?](http://stackoverflow.com/questions/8630599/is-there-a-reason-to-retain-cmo-or-only-cma)
+
+
+* [Ocaml utop library paths, Core module](http://stackoverflow.com/questions/20927592/ocaml-utop-library-paths-core-module?rq=1)
+
+* [How to trace a program for debugging in OCaml ?](http://stackoverflow.com/questions/9426560/how-to-trace-a-program-for-debugging-in-ocaml)
+
+
+* [Which is the current setup to use OCaml in Vim?](http://stackoverflow.com/questions/15514908/which-is-the-current-setup-to-use-ocaml-in-vim)
+
+
+* [How can I use ocamlbrowser with opam packages?](http://stackoverflow.com/questions/26032055/how-can-i-use-ocamlbrowser-with-opam-packages)
+
+**Misc**
+
+* [How do I inteface OCaml with iPhone API?](http://stackoverflow.com/questions/1094866/how-do-i-inteface-ocaml-with-iphone-api)
+
+* [Accessing libraries written in OCaml and C++ from Ruby code](http://stackoverflow.com/questions/13535149/accessing-libraries-written-in-ocaml-and-c-from-ruby-code)
+
+
+* [Code generation for mathematical 
+problems](http://stackoverflow.com/questions/13203089/code-generation-for-mathematical-problems)
+
+* [Ocaml for ARM cortex M4?](http://stackoverflow.com/questions/27061506/ocaml-for-arm-cortex-m4)
+
+* [Cross-compiling ocaml apps for ARM](http://stackoverflow.com/questions/9472371/cross-compiling-ocaml-apps-for-arm)
+
+* [How to represent a simple finite state machine in Ocaml?](http://stackoverflow.com/questions/9434050/how-to-represent-a-simple-finite-state-machine-in-ocaml)
+
+* [How to convert numbers among hex, oct, decimal and binary in OCaml?](http://stackoverflow.com/questions/15524450/how-to-convert-numbers-among-hex-oct-decimal-and-binary-in-ocaml)
 
 #### See Also
 
