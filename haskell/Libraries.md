@@ -14,6 +14,11 @@
       - [Day in a Week/Month/Year or Week Number](#day-in-a-weekmonthyear-or-week-number)
       - [Parsing Dates and Times from Strings](#parsing-dates-and-times-from-strings)
       - [Printing a Date](#printing-a-date)
+  - [Bytestring](#bytestring)
+    - [Overview](#overview)
+    - [Example](#example)
+    - [Documentation in Hackage](#documentation-in-hackage)
+  - [GnuPlot](#gnuplot)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

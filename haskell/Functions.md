@@ -9,7 +9,7 @@
   - [Infix Operators as Functions](#infix-operators-as-functions)
   - [Currying](#currying)
   - [Function Composition / Composition Operator](#function-composition--composition-operator)
-  - [The $ apply operator.](#the-$-apply-operator)
+  - [The $ apply operator.](#the--apply-operator)
   - [Recursion](#recursion)
   - [Integer Arithmetic Functions](#integer-arithmetic-functions)
   - [Mathematical Functions](#mathematical-functions)

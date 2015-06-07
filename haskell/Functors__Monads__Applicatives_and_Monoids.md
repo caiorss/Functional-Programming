@@ -32,7 +32,8 @@
     - [IO Examples](#io-examples)
     - [Sources](#sources-1)
   - [State Monad](#state-monad)
-
+- [--   runState :: (\s -> (a, s)) -> s -> (a, s)](#-----runstate--%5Cs---a-s---s---a-s)
+- [--  => ((), 5) ](#------5)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

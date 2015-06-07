@@ -1,3 +1,28 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Basic Syntax](#basic-syntax)
+  - [Operators](#operators)
+    - [Logic Operators](#logic-operators)
+    - [Powers](#powers)
+    - [Application Operator - $](#application-operator---)
+    - [Misc. Operators](#misc-operators)
+  - [Defining Values and Types](#defining-values-and-types)
+  - [Type System](#type-system)
+    - [Basic Types](#basic-types)
+    - [Basic Type Classes](#basic-type-classes)
+    - [Standard Haskell Types](#standard-haskell-types)
+    - [Standard Haskell Classes](#standard-haskell-classes)
+    - [Numeric Types Conversion](#numeric-types-conversion)
+    - [Haskell-Style Syntax for types:](#haskell-style-syntax-for-types)
+  - [Lists](#lists)
+    - [Creating Lists](#creating-lists)
+    - [List Operations](#list-operations)
+    - [Chekings Lists](#chekings-lists)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Basic Syntax
 
 ### Operators

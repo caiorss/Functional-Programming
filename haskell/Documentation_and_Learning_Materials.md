@@ -1,3 +1,23 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Documentation and Learning Materials](#documentation-and-learning-materials)
+  - [Code Search Engine](#code-search-engine)
+  - [Libraries Documentation](#libraries-documentation)
+    - [Prelude](#prelude)
+    - [Type Classe](#type-classe)
+    - [Online Books](#online-books)
+    - [Books](#books)
+    - [Papers and Articles](#papers-and-articles)
+    - [Selected Wikipedia Articles](#selected-wikipedia-articles)
+    - [Community](#community)
+    - [References by Subject](#references-by-subject)
+    - [Video Lectures](#video-lectures)
+  - [Hacker News Threads](#hacker-news-threads)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Documentation and Learning Materials
 
 ### Code Search Engine

@@ -1,3 +1,15 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Haskell](#haskell)
+  - [Suffixes of file names for Haskell](#suffixes-of-file-names-for-haskell)
+  - [Toolset](#toolset)
+  - [Install Haskell Platform](#install-haskell-platform)
+  - [GHCI Reference](#ghci-reference)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Haskell
 
 <a href="https://www.haskell.org"><img src="images/haskellLogo.png"/></a> 
