@@ -400,6 +400,270 @@ Credits:
 * http://pleac.sourceforge.net/pleac_haskell/datesandtimes.html
 
 
+### Bytestring
+
+Bytestring is a built in library for fast and efficient string and binary data processing. ByteStrings are not designed for Unicode. For Unicode strings the Text type must be used from the text package. 
+
+
+There are two flavours of bytestring, the lazy and strict.
+
+* Strict Bytestring: Data.ByteString
+
+String as a single large array, suitable for passing data between C and Haskell. 
+
+* Lazy   Bytestring: Data.ByteString.Lazy 
+
+Lazy list of strict chunks which makes it suitable for I/O streaming tasks
+
+To avoid name conflicts the modules must be imported as qualified.
+
+```haskell
+
+import qualified Data.ByteString as B
+import qualified Data.ByteString.Char8 as BC
+
+import qualified Data.ByteString.Lazy as BL
+import qualified Data.ByteString.Lazy.Char8 as BLC
+```
+
+Examples:
+
+```haskell
+
+> import qualified Data.ByteString as B
+> import qualified Data.ByteString.Char8 as BC
+> 
+> import qualified Data.ByteString.Lazy as BL
+> import qualified Data.ByteString.Lazy.Char8 as BLC
+> 
+
+{- String to Bytestring -}
+{---------------------------------------------}
+
+> BC.pack "hello world" 
+"hello world"
+
+> BC.pack "čušpajž日本語"
+"\ruapaj~\229,\158"
+> 
+> :t BC.pack "čušpajž日本語"
+BC.pack "čušpajž日本語" :: B.ByteString
+> 
+
+{- Strict to Lazy Conversion -}
+{---------------------------------------------}
+
+> let s_strict = BC.pack  "čušpajž日本語"
+> s_strict 
+"\ruapaj~\229,\158"
+> 
+
+> let s_lazy = BLC.pack  "čušpajž日本語" 
+> s_lazy 
+"\ruapaj~\229,\158"
+> 
+> :t s_
+s_lazy    s_strict
+> :t s_lazy 
+s_lazy :: BL.ByteString
+> 
+
+{- Strict to Lazy -}
+   
+> :t BL.fromChunks
+BL.fromChunks :: [B.ByteString] -> BL.ByteString
+> 
+
+> let new_lazy = BL.fromChunks [s_strict]
+> new_lazy 
+"\ruapaj~\229,\158"
+> :t new_lazy
+new_lazy :: BL.ByteString
+> 
+
+
+{- Lazy to Strict -}
+{---------------------------------------------}
+
+> let new_strict = B.concat $ BL.toChunks s_lazy 
+> new_strict 
+"\ruapaj~\229,\158"
+> :t new_strict
+new_strict :: B.ByteString
+> 
+
+> BC.putStrLn new_strict 
+uapaj~�,�
+> 
+
+> BLC.putStrLn new_lazy 
+uapaj~�,�
+> 
+
+
+{- Serialization -}
+{---------------------------------------------}
+
+> import qualified Data.Binary as D
+> {- Serializes Haskell Data to Lazy Bytestring -}
+> 
+
+> :t D.encode
+D.encode :: D.Binary a => a -> BL.ByteString
+> 
+
+> :t D.decode
+D.decode :: D.Binary a => BL.ByteString -> a
+>
+
+
+> let a = D.encode 10 
+> a
+"\NUL\NUL\NUL\NUL\n"
+> :t a
+a :: BL.ByteString
+> 
+> D.decode a
+()
+> D.decode a :: Int
+*** Exception: Data.Binary.Get.runGet at position 0: demandInput: not enough bytes
+> D.decode a :: Integer
+10
+> 
+
+
+
+> let b = D.encode (Just 10 :: Maybe Int)
+> :t b
+b :: BL.ByteString
+> b
+"\SOH\NUL\NUL\NUL\NUL\NUL\NUL\NUL\n"
+> 
+
+> D.decode b :: Maybe Int
+Just 10
+>
+
+> let c = D.encode (Nothing :: Maybe Int)
+> c
+"\NUL"
+>
+> D.decode c :: Maybe Int
+Nothing
+>
+
+
+> let d = D.encode (3.11415e4 :: Double)
+> d
+"\SOH\SOH\NUL\NUL\NUL\NUL\NUL\NUL\NUL\a\NUL\NUL\NUL\NUL`i\RS\255\255\255\255\255\255\255\218"
+> 
+
+{- Bytes to Bytestring -}
+{---------------------------------------------}
+
+{- Bytes are encoded as Word8 -}
+
+> :t B.pack
+B.pack :: [GHC.Word.Word8] -> B.ByteString
+> :t B.unpack
+B.unpack :: B.ByteString -> [GHC.Word.Word8]
+> 
+> :t BL.pack
+BL.pack :: [GHC.Word.Word8] -> BL.ByteString
+> :t BL.unpack
+BL.unpack :: BL.ByteString -> [GHC.Word.Word8]
+> 
+
+> let msg = B.pack [72,101,108,108,111,32,119,111,114,108,100]
+> msg
+"Hello world"
+
+> let bytes = B.unpack msg
+> bytes
+[72,101,108,108,111,32,119,111,114,108,100]
+> 
+
+> :t msg
+msg :: B.ByteString
+
+> :t bytes
+bytes :: [GHC.Word.Word8]
+> 
+
+    {- Word8 to Int -}
+
+> :t fromIntegral 
+fromIntegral :: (Num b, Integral a) => a -> b
+> 
+
+> let x = 100 :: GHC.Word.Word8
+> x
+100
+> :t x
+x :: GHC.Word.Word8
+> 
+
+> let y = fromIntegral x :: Int
+> y
+100
+> :t y
+y :: Int
+> 
+
+> fromIntegral ( 100 :: GHC.Word.Word8) :: Int
+100
+> 
+
+> let bytes_int = map (\x -> fromIntegral x :: Int) bytes
+> bytes_int 
+[72,101,108,108,111,32,119,111,114,108,100]
+> :t bytes_int 
+bytes_int :: [Int]
+> 
+
+> let bytes_word8 = map (\x -> fromIntegral x ::  GHC.Word.Word8) bytes_int 
+> bytes_word8 
+[72,101,108,108,111,32,119,111,114,108,100]
+> :t bytes_word8 
+bytes_word8 :: [GHC.Word.Word8]
+> 
+
+
+
+```
+
+#### Documentation in Hackage
+
+**ByteString**
+
+*An efficient compact, immutable byte string type (both strict and lazy) suitable for binary or 8-bit character data.*
+
+*The ByteString type represents sequences of bytes or 8-bit characters. It is suitable for high performance use, both in terms of large data quantities, or high speed requirements. The ByteString functions follow the same style as Haskell's ordinary lists, so it is easy to convert code from using String to ByteString.*
+
+* [Bytestring Package](http://hackage.haskell.org/package/bytestring)
+* [Data.ByteString](http://hackage.haskell.org/package/bytestring-0.10.6.0/docs/Data-ByteString.html)
+* [Data.ByteString.Char8](http://hackage.haskell.org/package/bytestring-0.10.6.0/docs/Data-ByteString-Char8.html)
+* [Data.ByteString.Lazy.Char8](http://hackage.haskell.org/package/bytestring-0.10.6.0/docs/Data-ByteString-Lazy-Char8.html)
+
+**Data.Word**
+
+*Unsigned integer types.*
+
+[Data.Word](http://hackage.haskell.org/package/base-4.7.0.1/docs/Data-Word.html)
+
+**Data.Binary package**
+
+*Binary serialisation of Haskell values to and from lazy ByteStrings. The Binary library provides methods for encoding Haskell values as streams of bytes directly in memory. The resulting ByteString can then be written to disk, sent over the network, or futher processed (for example, compressed with gzip).*
+
+* [Data.Binary](http://hackage.haskell.org/package/binary-0.5.0.2)
+
+
+**Data.Bits package**
+
+*This module defines bitwise operations for signed and unsigned integers. Instances of the class Bits for the Int and Integer types are available from this module, and instances for explicitly sized integral types are available from the Data.Int and Data.Word modules.*
+
+* [Data.Bits](https://downloads.haskell.org/~ghc/latest/docs/html/libraries/base/Data-Bits.html)
+
 ### GnuPlot
 
 Installation:
