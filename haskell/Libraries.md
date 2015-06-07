@@ -402,10 +402,13 @@ Credits:
 
 ### Bytestring
 
+#### Overview
+
 Bytestring is a built in library for fast and efficient string and binary data processing. ByteStrings are not designed for Unicode. For Unicode strings the Text type must be used from the text package. 
 
 
 There are two flavours of bytestring, the lazy and strict.
+
 
 * Strict Bytestring: Data.ByteString
 
@@ -415,10 +418,11 @@ String as a single large array, suitable for passing data between C and Haskell.
 
 Lazy list of strict chunks which makes it suitable for I/O streaming tasks
 
+**Import Bytestring**
+
 To avoid name conflicts the modules must be imported as qualified.
 
 ```haskell
-
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Char8 as BC
 
@@ -426,210 +430,311 @@ import qualified Data.ByteString.Lazy as BL
 import qualified Data.ByteString.Lazy.Char8 as BLC
 ```
 
-Examples:
+#### Example
 
 ```haskell
 
-> import qualified Data.ByteString as B
-> import qualified Data.ByteString.Char8 as BC
-> 
-> import qualified Data.ByteString.Lazy as BL
-> import qualified Data.ByteString.Lazy.Char8 as BLC
-> 
+    > import qualified Data.ByteString as B
+    > import qualified Data.ByteString.Char8 as BC
+    > 
+    > import qualified Data.ByteString.Lazy as BL
+    > import qualified Data.ByteString.Lazy.Char8 as BLC
+    > 
+    > let (|>) x f = f x
+    > 
+
 
 {- String to Bytestring -}
 {---------------------------------------------}
 
-> BC.pack "hello world" 
-"hello world"
+    > BC.pack "hello world" 
+    "hello world"
 
-> BC.pack "čušpajž日本語"
-"\ruapaj~\229,\158"
-> 
-> :t BC.pack "čušpajž日本語"
-BC.pack "čušpajž日本語" :: B.ByteString
-> 
+    > BC.pack "čušpajž日本語"
+    "\ruapaj~\229,\158"
+    > 
+    > :t BC.pack "čušpajž日本語"
+    BC.pack "čušpajž日本語" :: B.ByteString
+    > 
 
 {- Strict to Lazy Conversion -}
 {---------------------------------------------}
 
-> let s_strict = BC.pack  "čušpajž日本語"
-> s_strict 
-"\ruapaj~\229,\158"
-> 
+    > let s_strict = BC.pack  "čušpajž日本語"
+    > s_strict 
+    "\ruapaj~\229,\158"
+    > 
 
-> let s_lazy = BLC.pack  "čušpajž日本語" 
-> s_lazy 
-"\ruapaj~\229,\158"
-> 
-> :t s_
-s_lazy    s_strict
-> :t s_lazy 
-s_lazy :: BL.ByteString
-> 
+    > let s_lazy = BLC.pack  "čušpajž日本語" 
+    > s_lazy 
+    "\ruapaj~\229,\158"
+    > 
+    > :t s_
+    s_lazy    s_strict
+    > :t s_lazy 
+    s_lazy :: BL.ByteString
+    > 
 
-{- Strict to Lazy -}
-   
-> :t BL.fromChunks
-BL.fromChunks :: [B.ByteString] -> BL.ByteString
-> 
+    {- Strict to Lazy -}
+       
+    > :t BL.fromChunks
+    BL.fromChunks :: [B.ByteString] -> BL.ByteString
+    > 
 
-> let new_lazy = BL.fromChunks [s_strict]
-> new_lazy 
-"\ruapaj~\229,\158"
-> :t new_lazy
-new_lazy :: BL.ByteString
-> 
+    > let new_lazy = BL.fromChunks [s_strict]
+    > new_lazy 
+    "\ruapaj~\229,\158"
+    > :t new_lazy
+    new_lazy :: BL.ByteString
+    > 
 
 
 {- Lazy to Strict -}
 {---------------------------------------------}
 
-> let new_strict = B.concat $ BL.toChunks s_lazy 
-> new_strict 
-"\ruapaj~\229,\158"
-> :t new_strict
-new_strict :: B.ByteString
-> 
+    > let new_strict = B.concat $ BL.toChunks s_lazy 
+    > new_strict 
+    "\ruapaj~\229,\158"
+    > :t new_strict
+    new_strict :: B.ByteString
+    > 
 
-> BC.putStrLn new_strict 
-uapaj~�,�
-> 
+    > BC.putStrLn new_strict 
+    uapaj~�,�
+    > 
 
-> BLC.putStrLn new_lazy 
-uapaj~�,�
-> 
+    > BLC.putStrLn new_lazy 
+    uapaj~�,�
+    > 
 
 
 {- Serialization -}
 {---------------------------------------------}
 
-> import qualified Data.Binary as D
-> {- Serializes Haskell Data to Lazy Bytestring -}
-> 
+    > import qualified Data.Binary as D
+    > {- Serializes Haskell Data to Lazy Bytestring -}
+    > 
 
-> :t D.encode
-D.encode :: D.Binary a => a -> BL.ByteString
-> 
+    > :t D.encode
+    D.encode :: D.Binary a => a -> BL.ByteString
+    > 
 
-> :t D.decode
-D.decode :: D.Binary a => BL.ByteString -> a
->
-
-
-> let a = D.encode 10 
-> a
-"\NUL\NUL\NUL\NUL\n"
-> :t a
-a :: BL.ByteString
-> 
-> D.decode a
-()
-> D.decode a :: Int
-*** Exception: Data.Binary.Get.runGet at position 0: demandInput: not enough bytes
-> D.decode a :: Integer
-10
-> 
+    > :t D.decode
+    D.decode :: D.Binary a => BL.ByteString -> a
+    >
 
 
-
-> let b = D.encode (Just 10 :: Maybe Int)
-> :t b
-b :: BL.ByteString
-> b
-"\SOH\NUL\NUL\NUL\NUL\NUL\NUL\NUL\n"
-> 
-
-> D.decode b :: Maybe Int
-Just 10
->
-
-> let c = D.encode (Nothing :: Maybe Int)
-> c
-"\NUL"
->
-> D.decode c :: Maybe Int
-Nothing
->
+    > let a = D.encode 10 
+    > a
+    "\NUL\NUL\NUL\NUL\n"
+    > :t a
+    a :: BL.ByteString
+    > 
+    > D.decode a
+    ()
+    > D.decode a :: Int
+    *** Exception: Data.Binary.Get.runGet at position 0: demandInput: not enough bytes
+    > D.decode a :: Integer
+    10
+    > 
 
 
-> let d = D.encode (3.11415e4 :: Double)
-> d
-"\SOH\SOH\NUL\NUL\NUL\NUL\NUL\NUL\NUL\a\NUL\NUL\NUL\NUL`i\RS\255\255\255\255\255\255\255\218"
-> 
+
+    > let b = D.encode (Just 10 :: Maybe Int)
+    > :t b
+    b :: BL.ByteString
+    > b
+    "\SOH\NUL\NUL\NUL\NUL\NUL\NUL\NUL\n"
+    > 
+
+    > D.decode b :: Maybe Int
+    Just 10
+    >
+
+    > let c = D.encode (Nothing :: Maybe Int)
+    > c
+    "\NUL"
+    >
+    > D.decode c :: Maybe Int
+    Nothing
+    >
+
+
+    > let d = D.encode (3.11415e4 :: Double)
+    > d
+    "\SOH\SOH\NUL\NUL\NUL\NUL\NUL\NUL\NUL\a\NUL\NUL\NUL\NUL`i\RS\255\255\255\255\255\255\255\218"
+    > 
 
 {- Bytes to Bytestring -}
 {---------------------------------------------}
 
-{- Bytes are encoded as Word8 -}
+    {- Bytes are encoded as Word8 -}
 
-> :t B.pack
-B.pack :: [GHC.Word.Word8] -> B.ByteString
-> :t B.unpack
-B.unpack :: B.ByteString -> [GHC.Word.Word8]
-> 
-> :t BL.pack
-BL.pack :: [GHC.Word.Word8] -> BL.ByteString
-> :t BL.unpack
-BL.unpack :: BL.ByteString -> [GHC.Word.Word8]
-> 
+    > :t B.pack
+    B.pack :: [GHC.Word.Word8] -> B.ByteString
+    > :t B.unpack
+    B.unpack :: B.ByteString -> [GHC.Word.Word8]
+    > 
+    > :t BL.pack
+    BL.pack :: [GHC.Word.Word8] -> BL.ByteString
+    > :t BL.unpack
+    BL.unpack :: BL.ByteString -> [GHC.Word.Word8]
+    > 
 
-> let msg = B.pack [72,101,108,108,111,32,119,111,114,108,100]
-> msg
-"Hello world"
+    > let msg = B.pack [72,101,108,108,111,32,119,111,114,108,100]
+    > msg
+    "Hello world"
 
-> let bytes = B.unpack msg
-> bytes
-[72,101,108,108,111,32,119,111,114,108,100]
-> 
+    > let bytes = B.unpack msg
+    > bytes
+    [72,101,108,108,111,32,119,111,114,108,100]
+    > 
 
-> :t msg
-msg :: B.ByteString
+    > :t msg
+    msg :: B.ByteString
 
-> :t bytes
-bytes :: [GHC.Word.Word8]
-> 
+    > :t bytes
+    bytes :: [GHC.Word.Word8]
+    > 
 
     {- Word8 to Int -}
 
-> :t fromIntegral 
-fromIntegral :: (Num b, Integral a) => a -> b
-> 
+    > :t fromIntegral 
+    fromIntegral :: (Num b, Integral a) => a -> b
+    > 
 
-> let x = 100 :: GHC.Word.Word8
-> x
-100
-> :t x
-x :: GHC.Word.Word8
-> 
+    > let x = 100 :: GHC.Word.Word8
+    > x
+    100
+    > :t x
+    x :: GHC.Word.Word8
+    > 
 
-> let y = fromIntegral x :: Int
-> y
-100
-> :t y
-y :: Int
-> 
+    > let y = fromIntegral x :: Int
+    > y
+    100
+    > :t y
+    y :: Int
+    > 
 
-> fromIntegral ( 100 :: GHC.Word.Word8) :: Int
-100
-> 
+    > fromIntegral ( 100 :: GHC.Word.Word8) :: Int
+    100
+    > 
 
-> let bytes_int = map (\x -> fromIntegral x :: Int) bytes
-> bytes_int 
-[72,101,108,108,111,32,119,111,114,108,100]
-> :t bytes_int 
-bytes_int :: [Int]
-> 
+    > let bytes_int = map (\x -> fromIntegral x :: Int) bytes
+    > bytes_int 
+    [72,101,108,108,111,32,119,111,114,108,100]
+    > :t bytes_int 
+    bytes_int :: [Int]
+    > 
 
-> let bytes_word8 = map (\x -> fromIntegral x ::  GHC.Word.Word8) bytes_int 
-> bytes_word8 
-[72,101,108,108,111,32,119,111,114,108,100]
-> :t bytes_word8 
-bytes_word8 :: [GHC.Word.Word8]
-> 
+    > let bytes_word8 = map (\x -> fromIntegral x ::  GHC.Word.Word8) bytes_int 
+    > bytes_word8 
+    [72,101,108,108,111,32,119,111,114,108,100]
+    > :t bytes_word8 
+    bytes_word8 :: [GHC.Word.Word8]
+    > 
 
+{- Bytes in Hexadecimal and Binary Format -}
 
+    > import Numeric (showHex, showIntAtBase)
+    > import Data.Char (intToDigit)
+    > import Data.Bits (shiftL, shiftR, (.&.), (.|.))
+    > import Data.Word (Word8)
 
+    > 
+        {- Bytes in Hexadecimal Format Low Endian -}
+    > map (\n -> showHex n "") bytes
+    ["48","65","6c","6c","6f","20","77","6f","72","6c","64"]
+    > 
+    > 
+
+    {- Bytes in Hexadecimal Format Big Endian -}
+
+    > reverse $ map (\n -> showHex n "") bytes
+    ["64","6c","72","6f","77","20","6f","6c","6c","65","48"]
+    > 
+
+    {- Hexadecimal String Low Endian -}
+
+    > concat $ map (\n -> showHex n "") bytes
+    "48656c6c6f20776f726c64"
+    > 
+
+    {- Hexadecimal String Bing Ending -}
+    > concat $ reverse $ map (\n -> showHex n "") bytes
+    "646c726f77206f6c6c6548"
+    > 
+
+    {- Hexadecimal number to bytes -}
+
+    
+    > 
+    > let num2hex = \n -> showHex n ""
+    > 
+    > let x = 0x646c726f77206f6c6c6548
+    > x
+    121404708502361365413651784
+    > 
+    > num2hex x
+    "646c726f77206f6c6c6548"
+    > 
+    
+    {- Split Bytes -}
+    {-------------------------------------------}
+    
+    > iterate (\x -> shiftR x 8) 0x646c726f77206f6c6c6548 |> takeWhile ((/=) 0) |> map (.&. 0xFF)
+    [72,101,108,108,111,32,119,111,114,108,100]
+    > 
+    >  map num2hex .  map (.&. 0xFF) . takeWhile ((/=) 0) .  iterate (\x -> shiftR x 8) $  0x646c726f77206f6c6c6548
+    ["48","65","6c","6c","6f","20","77","6f","72","6c","64"]
+    >
+
+    > iterate (\x -> shiftR x 8) 0x646c726f77206f6c6c6548 |> takeWhile ((/=) 0) |> map (.&. 0xFF) |> map num2hex
+    ["48","65","6c","6c","6f","20","77","6f","72","6c","64"]
+    > 
+
+    > iterate (\x -> shiftR x 8) 0x646c726f77206f6c6c6548 |> takeWhile ((/=) 0) |> map (.&. 0xFF) |> map num2hex |> concat
+    "48656c6c6f20776f726c64"
+    > 
+    > iterate (\x -> shiftR x 8) 0x646c726f77206f6c6c6548 |> takeWhile ((/=) 0) |> map (.&. 0xFF) |> map num2hex |> reverse |> concat
+    "646c726f77206f6c6c6548"
+    > 
+
+    > let int2word8 = \x -> fromIntegral x :: Word8
+    > 
+    > let num2bytes = map int2word8 . map (.&. 0xFF) . takeWhile ((/=) 0) .  iterate (\x -> shiftR x 8)
+
+    > :t num2bytes
+    num2bytes :: (Data.Bits.Bits a, Integral a) => a -> [Word8]
+    > 
+    > 
+    > num2bytes 0x646c726f77206f6c6c6548
+    [72,101,108,108,111,32,119,111,114,108,100]
+    > 
+    > num2bytes 0x646c726f77206f6c6c6548 |> map num2hex
+    ["48","65","6c","6c","6f","20","77","6f","72","6c","64"]
+    > 
+
+    > num2bytes 0x646c726f77206f6c6c6548 |> BL.pack 
+    "Hello world"
+    > 
+    > 
+    
+    {- Bytes to Int -}
+    
+    > let bytes = [72,101,108,108,111,32,119,111,114,108,100]
+    > foldr (\b0 b1 -> (shiftL b1 8) + b0) 0 bytes
+    121404708502361365413651784
+
+    > num2hex . foldr (\b0 b1 -> (shiftL b1 8) + b0) 0 $ bytes 
+    "646c726f77206f6c6c6548"
+    > 
+
+    > let bytes2int =  foldr (\b0 b1 -> (shiftL b1 8) + b0) 0
+    > bytes2int bytes
+    121404708502361365413651784
+    > 
 ```
 
 #### Documentation in Hackage
@@ -647,7 +752,7 @@ bytes_word8 :: [GHC.Word.Word8]
 
 **Data.Word**
 
-*Unsigned integer types.*
+*Unsigned integer types: Word8, Word16, Word32, Word64*
 
 [Data.Word](http://hackage.haskell.org/package/base-4.7.0.1/docs/Data-Word.html)
 
@@ -663,6 +768,19 @@ bytes_word8 :: [GHC.Word.Word8]
 *This module defines bitwise operations for signed and unsigned integers. Instances of the class Bits for the Int and Integer types are available from this module, and instances for explicitly sized integral types are available from the Data.Int and Data.Word modules.*
 
 * [Data.Bits](https://downloads.haskell.org/~ghc/latest/docs/html/libraries/base/Data-Bits.html)
+
+
+**Numeric**
+
+*Odds and ends, mostly functions for reading and showing RealFloat-like kind of values.*
+
+[Numeric](http://hackage.haskell.org/package/base-4.7.0.1/docs/Numeric.html)
+
+**Data.Char**
+
+*The Char type and associated operations.*
+
+[Data.Char](http://hackage.haskell.org/package/base-4.8.0.0/docs/Data-Char.html)
 
 ### GnuPlot
 
@@ -690,4 +808,9 @@ Examples:
 > plotList [Title "A title", XLabel "x label", YLabel "the y label"] [(2,10),(3,15),(4,14),(5,19)]
 ```
 
+**Doucumentation**
 
+*This is a wrapper to gnuplot which lets you create 2D and 3D plots.*
+*Start a simple session with make ghci. This loads the module Graphics.Gnuplot.Simple which is ready for use in GHCi. It does not address all fancy gnuplot features in order to stay simple. For more sophisticated plots, especially batch generated graphics, I recommend Graphics.Gnuplot.Advanced. This module contains also an overview of the hierarchy of objects.*
+
+[Graphics.Gnuplot](https://hackage.haskell.org/package/gnuplot)

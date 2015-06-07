@@ -253,3 +253,75 @@ Good video lectures about Category theory and Haskell programing language.
 
 * http://school.looprecur.com/
 
+
+### Hacker News Threads
+
+
+**Discussions**
+
+* [Letter to a Young Haskell Enthusiast (comonad.com)](https://news.ycombinator.com/item?id=8118696)
+
+* [Haskell, and Why It Might Be My New Favourite Language (unbui.lt)](https://news.ycombinator.com/item?id=7804880)
+* [Ask HN: Any downsides of programming in Haskell?](https://news.ycombinator.com/item?id=5893442)
+
+* [Confession of a Haskell Hacker (r6.ca)](https://news.ycombinator.com/item?id=4214589)
+
+* [Why learning Haskell makes you a better programmer (dubhrosa.blogspot.co.uk)](https://news.ycombinator.com/item?id=4961340)
+
+* [Becoming Productive in Haskell (mechanical-elephant.com)](https://news.ycombinator.com/item?id=9431944)
+
+* [I find the Haskell type system much easier than the Python type system](https://news.ycombinator.com/item?id=7723244)
+
+**Applications**
+
+* [A Haskell kernel for IPython (github.com)](https://news.ycombinator.com/item?id=6591160)
+
+* [Haskell School of Music by Paul Hudak (yale.edu)](https://news.ycombinator.com/item?id=3868282)
+
+* [Automatic SIMD Vectorization for Haskell [pdf] (leafpetersen.com)](https://news.ycombinator.com/item?id=6100967)
+
+* [Using Emacs for Haskell development (github.com)](https://news.ycombinator.com/item?id=8218307)
+
+* [Write You a Haskell: Building a modern functional compiler from first principles (stephendiehl.com)](https://news.ycombinator.com/item?id=8838712)
+
+* [Implementing a JIT Compiled Language with Haskell and LLVM (stephendiehl.com)](https://news.ycombinator.com/item?id=7031998)
+
+* [Haskell Lenses In Pictures (adit.io)](https://news.ycombinator.com/item?id=6082645)
+
+**Questions**
+
+* [Ask HN: Anyone using Haskell in production?](https://news.ycombinator.com/item?id=1909093)
+
+* [Ask HN: How did you really learn Haskell?](https://news.ycombinator.com/item?id=5370824)
+
+* [Out of curiosity: Who has written Haskell & deployed to production in the last 24h and if yes for what kind of app?](https://news.ycombinator.com/item?id=9052269)
+
+* [What it's like to use Haskell (imvu.com)](https://news.ycombinator.com/item?id=7472452)
+
+* [Ask YC: if Haskell is the hammer, what should be the nail?](https://news.ycombinator.com/item?id=305349)
+
+* [Ask HN: What is bad about Haskell?](https://news.ycombinator.com/item?id=9434516)
+
+**Haskell Comparison**
+
+* [Why Lisp is a Big Hack (And Haskell is Doomed to Succeed) (axisofeval.blogspot.com)](https://news.ycombinator.com/item?id=2062436)
+
+* [Could someone comment on Haskell in comparison to Erlang, Clojure or Scala?](https://news.ycombinator.com/item?id=2413816)
+
+**What Haskell Taught Me**
+
+* [What Haskell taught me about writing Swift (realm.io)](https://news.ycombinator.com/item?id=9630621)
+
+* [Learn from Haskell - Functional, Reusable JavaScript (github.com)](https://news.ycombinator.com/item?id=3614099)
+
+* [Why Haskell is Kinda Cool (github.com)](https://news.ycombinator.com/item?id=2924971)
+
+**Problemns**
+
+* [I think I've solved the Haskell records problem (nikita-volkov.github.io)](https://news.ycombinator.com/item?id=8909126)
+* [Use Haskell for shell scripting (haskellforall.com)](https://news.ycombinator.com/item?id=8970733)
+
+* [Why is Haskell used so little in the industry? (stackoverflow.com)](https://news.ycombinator.com/item?id=4029056)
+
+* [Haskell Is Exceptionally Unsafe (2012) (existentialtype.wordpress.com)](https://news.ycombinator.com/item?id=8480551)
+
