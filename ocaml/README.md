@@ -40,6 +40,7 @@
         - [List Recursive Functions](#list-recursive-functions)
       - [Recursive Data Structures](#recursive-data-structures)
         - [Alternative List Implementation](#alternative-list-implementation)
+        - [File Tree Recursive Directory Walk](#file-tree-recursive-directory-walk)
   - [Lazy Evaluation](#lazy-evaluation)
         - [Infinite Lazy Lists](#infinite-lazy-lists)
   - [Creating Libraries, Modules and Compiling to Bytecode or Machine Code](#creating-libraries-modules-and-compiling-to-bytecode-or-machine-code)
@@ -3642,9 +3643,88 @@ Exception: Failure "Error empty list".
 = 4
 = 5
 - : unit = ()
-
-
 ```
+
+##### File Tree Recursive Directory Walk
+
+```ocaml
+> type fileTree =
+  | File of string 
+  | Folder of string * fileTree list
+  
+let neg f x = not (f x) ;;
+type fileTree = File of string | Folder of string * fileTree list
+val neg : ('a -> bool) -> 'a -> bool = <fun>
+ 
+let relpath p str = p ^ "/" ^ str
+  
+let scand_dir path = 
+    Sys.readdir path 
+    |> Array.to_list 
+    
+let is_dir_relpath path rel = 
+    Sys.is_directory (relpath path rel)
+  
+let rec walkdir path = 
+           
+    let files = path 
+    |> scand_dir 
+    |> List.filter @@ neg  (is_dir_relpath path)
+    |> List.map (fun x -> File x) in
+    
+    let dirs = path 
+    |> scand_dir 
+    |> List.filter (is_dir_relpath path)
+    |> List.map (fun x -> Folder (x, walkdir (relpath path x ))) in
+    
+      dirs @ files
+  ;;
+val relpath : string -> string -> string = <fun>
+val scand_dir : string -> string list = <fun>
+val is_dir_relpath : string -> string -> bool = <fun>
+val walkdir : string -> fileTree list = <fun>
+> 
+
+> Folder ("Documents", [File "file1.txt"; File "filte2.txt" ; Folder("Pictures", []) ; Folder("bin",[File "cmd.dat" ; File "thumbs.db" ]) ]) ;;
+- : fileTree =
+Folder ("Documents",
+ [File "file1.txt"; File "filte2.txt"; Folder ("Pictures", []);
+  Folder ("bin", [File "cmd.dat"; File "thumbs.db"])])
+
+
+> walkdir "/boot" ;;
+- : fileTree list =
+[Folder ("grub",
+  [Folder ("i386-pc",
+    [File "cpio_be.mod"; File "reiserfs.mod"; File "disk.mod";
+     File "dm_nv.mod"; File "xfs.mod"; File "zfscrypt.mod";
+     File "setjmp.mod"; File "boot.img"; File "uhci.mod"; File "hwmatch.mod";
+     File "ohci.mod"; File "xzio.mod"; File "btrfs.mod"; File "echo.mod";
+     File "efiemu.mod"; File "ufs1_be.mod"; File "romfs.mod";
+     File "minix2_be.mod"; File "fs.lst"; File "gdb.mod"; File "search.mod";
+     File "part_gpt.mod"; File "halt.mod"; File "setjmp_test.mod";
+    ...
+    
+>  walkdir "/home/tux/PycharmProjects/Haskell/haskell" ;;
+- : fileTree list =
+[Folder ("src",
+  [File "stack.hs"; File "a.out"; File "OldState.hs";
+   File "bisection_state.hs"; File "FPUtils.hs"; File "randomst.hs"]);
+ Folder ("images",
+  [File "haskellLogo.png"; File "number-system-in-haskell-9-638.jpg";
+   File "euler_newton_cooling.png"; File "monadTable.png";
+   File "coinflip.gid"; File "coinflip.gif"; File "chartF2table.png";
+   File "chartF1table.png"; File "classes.gif"; File "qrcode_url.png"]);
+ File "Functions.md"; File "List_Comprehension.md"; File "Haskell.md";
+ File "Useful_Custom_Functions__Iterators_and_Operators.md";
+ File "Miscellaneous.md"; File "Pattern_Matching.md"; File "Basic_Syntax.md";
+ File "Functors__Monads__Applicatives_and_Monoids.md";
+ File "Algebraic_Data_Types.md"; File "Libraries.md";
+ File "Documentation_and_Learning_Materials.md"; File "Applications.md";
+ File "Functional_Programming_Concepts.md"]
+```
+
+
 
 Sources:
 

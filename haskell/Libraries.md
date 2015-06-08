@@ -742,6 +742,16 @@ import qualified Data.ByteString.Lazy.Char8 as BLC
     > 
 ```
 
+
+**See also**
+
+**Base64 Algorithm**
+
+* [RFC4648 - The Base16, Base32, and Base64 Data Encodings](http://web.archive.org/web/20131125120025/http://www.apps.ietf.org/rfc/rfc4648.html)
+
+* [Ten Minute Tutor - Base64 encoding](http://tenminutetutor.com/base64-encoding)
+
+
 #### Documentation in Hackage
 
 **ByteString**
