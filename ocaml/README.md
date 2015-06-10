@@ -43,12 +43,18 @@
         - [File Tree Recursive Directory Walk](#file-tree-recursive-directory-walk)
   - [Lazy Evaluation](#lazy-evaluation)
         - [Infinite Lazy Lists](#infinite-lazy-lists)
+  - [Foreign Function Interface FFI](#foreign-function-interface-ffi)
+    - [Calling C Standard Library and Unix System Calls](#calling-c-standard-library-and-unix-system-calls)
+    - [Calling Shared Libraries](#calling-shared-libraries)
+      - [Calling GNU Scientific Library](#calling-gnu-scientific-library)
+      - [Calling Python](#calling-python)
+    - [References](#references)
   - [Creating Libraries, Modules and Compiling to Bytecode or Machine Code](#creating-libraries-modules-and-compiling-to-bytecode-or-machine-code)
     - [Loading Files in Interactive Shell](#loading-files-in-interactive-shell)
     - [Compile Module to Bytecode](#compile-module-to-bytecode)
   - [Batteries Standard Library](#batteries-standard-library)
-  - [Getting Started](#getting-started)
-  - [References](#references)
+    - [Getting Started](#getting-started)
+  - [References](#references-1)
     - [Articles](#articles)
     - [Links](#links)
     - [Books](#books)
@@ -120,7 +126,7 @@ OCaml (Objective Categorical Abstract Machine Language) (formerly known as Objec
 
 **Ocaml Shell Online**
 
-You Can try OCaml online in: 
+You Can try OCaml online in:
 
 * [OCsigen - JS of Ocaml Toploop](http://ocsigen.org/js_of_ocaml/dev/files/toplevel/index.html)
 
@@ -205,7 +211,7 @@ Standard Libraries:
 
 * [Native Library](http://caml.inria.fr/pub/docs/manual-ocaml/libref/)
 
-* [Core](https://ocaml.janestreet.com/ocaml-core/111.17.00/doc/core/) - Jane Street Capital's Standard 
+* [Core](https://ocaml.janestreet.com/ocaml-core/111.17.00/doc/core/) - Jane Street Capital's Standard
 * https://github.com/janestreet/core_kernel
 
 Library
@@ -512,7 +518,7 @@ Uses unsafe features: no
 Force link: no
 
 
-$ ocamlobjinfo seq.cma 
+$ ocamlobjinfo seq.cma
 File seq.cma
 Force custom: no
 Extra C object files:
@@ -567,11 +573,11 @@ Sequence  ASCII     Name
 \'        '         Double Quote
 \n        LF        Line Feed
 \r        CR        Carriage Return
-\t        TAB       Horizontal tabulation   
+\t        TAB       Horizontal tabulation
 \b        BS        Backspace
 '\ '      SPC       Space
 \nnnn     nnn       Decimal Code of Acii Character
-\xhhh     xhh       Hexadecimal Code of Ascii Character  
+\xhhh     xhh       Hexadecimal Code of Ascii Character
 ```
 
 ```ocaml
@@ -604,12 +610,12 @@ $ ocaml
 
     (* Boolean          *)
     (*------------------*)
-    
+
     # true ;;
     - : bool = true
     # false ;;
     - : bool = false
-    # 
+    #
 
     (* Int              *)
     (*--------------------
@@ -695,16 +701,16 @@ $ ocaml
 
      # [|123.23; 10.23; 50.53; -80.23; 30.9734; 50.25 |] ;;
     - : float array = [|123.23; 10.23; 50.53; -80.23; 30.9734; 50.25|]
-    
+
      # [|'o'; 'c'; 'a' ; 'm' ; 'l' |] ;;
-    - : char array = [|'o'; 'c'; 'a'; 'm'; 'l'|] 
+    - : char array = [|'o'; 'c'; 'a'; 'm'; 'l'|]
 
     (* Unit / Represents side effects (Similar to Haskell IO ()*)
     (*-------------------------------------------------------- *)
 
     # ();;
     - : unit = ()
-    # 
+    #
 
     # print_string ;;
     - : string -> unit = <fun>
@@ -716,13 +722,13 @@ $ ocaml
     val read_two_lines : unit -> unit = <fun>
 
     # read_two_lines () ;;
-    2323 
+    2323
     5353535
     two lines- : unit = ()
-    
-    
+
+
     (* Option Type / Equivalent to Haskell Maybe *)
-    
+
     # None ;;
     - : 'a option = None
     # Some 10 ;;
@@ -731,10 +737,10 @@ $ ocaml
     - : char option = Some 'a'
     # Some "OCaml" ;;
     - : string option = Some "OCaml"
-    # 
+    #
 
 
-    
+
 ```
 
 
@@ -751,11 +757,11 @@ Boolean Operators
 
     (* NOT                  *)
     (*----------------------*)
-    
+
     # not ;;
     - : bool -> bool = <fun>
-    # 
-    
+    #
+
     # not false ;;
     - : bool = true
     # not true ;;
@@ -763,38 +769,38 @@ Boolean Operators
 
     (* AND                  *)
     (*----------------------*)
-    
+
     # (&&) ;;
     - : bool -> bool -> bool = <fun>
-    
+
     # (&&) true false ;;
     - : bool = false
-    # 
+    #
 
-    
+
     # true && true ;;
     - : bool = true
     # true && false ;;
     - : bool = false
-    # 
+    #
 
     (* OR                   *)
     (*----------------------*)
-    
+
     # (||) ;;
     - : bool -> bool -> bool = <fun>
-    
+
     # (||) false true ;;
     - : bool = true
-    # 
-    
+    #
+
     # true || true ;;
     - : bool = true
     # true || false ;;
     - : bool = true
     # false || false ;;
     - : bool = false
-    #     
+    #
 ```
 
 Comparison
@@ -805,13 +811,13 @@ Comparison
     - : 'a -> 'a -> bool = <fun>
     # (==) ;;
     - : 'a -> 'a -> bool = <fun>
-    
+
     (* Inequality *)
     # (<>) ;;
     - : 'a -> 'a -> bool = <fun>
     # (!=) ;;
     - : 'a -> 'a -> bool = <fun>
-    # 
+    #
 
 
     # (<) ;;
@@ -822,35 +828,35 @@ Comparison
     - : 'a -> 'a -> bool = <fun>
     # (>) ;;
     - : 'a -> 'a -> bool = <fun>
-    # 
-    
+    #
+
     # max ;;
     - : 'a -> 'a -> 'a = <fun>
     # min ;;
     - : 'a -> 'a -> 'a = <fun>
 
-    
+
     # compare ;;
     - : 'a -> 'a -> int = <fun>
-    # 
-    
+    #
+
     # 2 <> 4 ;;
     - : bool = true
     # 2 <> 2 ;;
     - : bool = false
-    # 
+    #
     # 3 != 4 ;;
     - : bool = true
     # 3 != 3 ;;
     - : bool = false
-    # 
+    #
 
-    
+
     # max 3 100 ;;
     - : int = 100
     # min 2.323 100.33 ;;
     - : float = 2.323
-    # 
+    #
 
 ```
 
@@ -875,17 +881,17 @@ Comparison
     - : int = 257
     # 1000 / 4 ;;
     - : int = 250
-    # 
+    #
 
     # 1005 mod 10 ;;
     - : int = 5
-    # 
+    #
 
     # abs (-10) ;;
     - : int = 10
     # abs 10 ;;
     - : int = 10
-    # 
+    #
     # pred 100 ;;
     - : int = 99
     # pred 99 ;;
@@ -894,31 +900,31 @@ Comparison
     - : int = 101
     # succ 101 ;;
     - : int = 102
-    # 
-    
+    #
+
     (* Float Point *)
     (*-------------*)
-    
+
     # 100. +. 23.23 ;;
     - : float = 123.23
-    # 
+    #
     # 0.545 *. 100. ;;
     - : float = 54.5000000000000071
-    # 
+    #
     # 1000. /. 4. ;;
     - : float = 250.
-    # 
+    #
     # 1000.0 -. 4.0 ;;
     - : float = 996.
-    #   
-    
+    #
+
     (* Pow function 2^4 = 16 / only works for float points *)
     # 2.0 ** 4. ;;
     - : float = 16.
-    # 
+    #
     # ( **) ;;
     - : float -> float -> float = <fun>
-    # 
+    #
 ```
 
 ##### Variable Declaration
@@ -1001,9 +1007,9 @@ val id : 'a -> 'a = <fun>
 (* 31 bits signed int, since this machine has 32 bits word lenght*)
 
     # Pervasives.min_int ;;
-    - : int = -1073741824 
+    - : int = -1073741824
     # Pervasives.max_int ;;
-    - : int = 1073741823  
+    - : int = 1073741823
 
 (* 32 bits signed int *)
 
@@ -1012,9 +1018,9 @@ val id : 'a -> 'a = <fun>
     # Int32.min_int ;;
     - : int32 = -2147483648l
 
-(* 64 bits signed int *)    
+(* 64 bits signed int *)
     # Int64.min_int ;;
-    - : int64 = -9223372036854775808L 
+    - : int64 = -9223372036854775808L
     # Int64.max_int ;;
     - : int64 = 9223372036854775807L
 
@@ -1023,38 +1029,38 @@ val id : 'a -> 'a = <fun>
     # Pervasives.min_float ;;
     - : float = 2.22507385850720138e-308
     # Pervasives.max_float ;;
-    - : float = 1.79769313486231571e+308   
+    - : float = 1.79769313486231571e+308
 ```
-    
-Numeric Literals 
 
-```ocaml    
+Numeric Literals
+
+```ocaml
 (* Default - Pervasives 31 bit signed int (32 bits machine) *)
-    
+
     # 23213 ;;
-    - : int = 23213 
-    
+    - : int = 23213
+
     # 0xf43aaec ;;
-    - : int = 256092908 
-    
+    - : int = 256092908
+
     # 0b10001110011 ;;
-    - : int = 1139     
-    
+    - : int = 1139
+
 (* 32 bits signed int *)
-    
+
     # 23213l ;;
     - : int32 = 23213l
-    
+
     # 0xf4123l ;;
     - : int32 = 999715l
-    
+
     # 0b1111100011110011l ;;
-    - : int32 = 63731l 
-    
-(* 64 bits signed int *) 
-    
+    - : int32 = 63731l
+
+(* 64 bits signed int *)
+
     # 1000000L ;;
-    - : int64 = 1000000L 
+    - : int64 = 1000000L
 
      # 0xff2562abcL ;;
     - : int64 = 68490242748L
@@ -1068,36 +1074,36 @@ Number Conversion / Type Casting
 ```ocaml
 
     # Int32.of_int 10002373 ;;
-    - : int32 = 10002373l  
+    - : int32 = 10002373l
     # Int32.of_float 232322.323 ;;
-    - : int32 = 232322l   
+    - : int32 = 232322l
     # Int32.of_string "98232376" ;;
-    - : int32 = 98232376l 
+    - : int32 = 98232376l
 
     # Int32.to_int 100033l ;;
-    - : int = 100033 
+    - : int = 100033
 
 
     # Int64.of_int 100 ;;
-    - : int64 = 100L 
+    - : int64 = 100L
     # Int64.of_float 1000239823.2323 ;;
-    - : int64 = 1000239823L  
+    - : int64 = 1000239823L
     # Int64.of_string "34234912" ;;
     - : int64 = 34234912L
 
     # Int64.to_int 2323884L ;;
-    - : int = 2323884 
+    - : int = 2323884
 
 
      # int_of_float (-1235.34083402321) ;;
-    - : int = -1235    
+    - : int = -1235
     # Pervasives.int_of_float (-1235.34083402321) ;;
-    - : int = -1235 
+    - : int = -1235
      # int_of_string "9123" ;;
-    - : int = 9123     
+    - : int = 9123
 
     # float_of_int 1000 ;;
-    - : float = 1000. 
+    - : float = 1000.
 ```
 
 Math Operations. In Ocaml the same operator cannot be used for more than one type, so to add ints (+) must be used, to add floats (+.), to add Int32, (Int32.add) and to add Int64, (Int64.add).
@@ -1105,57 +1111,57 @@ Math Operations. In Ocaml the same operator cannot be used for more than one typ
 ```ocaml
 
     # (+) ;;
-    - : int -> int -> int = <fun>   
+    - : int -> int -> int = <fun>
 
     # (+.) ;;
-    - : float -> float -> float = <fun>   
+    - : float -> float -> float = <fun>
 
     # Int32.add ;;
-    - : int32 -> int32 -> int32 = <fun> 
+    - : int32 -> int32 -> int32 = <fun>
 
     # Int64.add ;;
-    - : int64 -> int64 -> int64 = <fun>      
+    - : int64 -> int64 -> int64 = <fun>
 
     # Big_int.add_big_int ;;
-    - : Big_int.big_int -> Big_int.big_int -> Big_int.big_int = <fun>    
+    - : Big_int.big_int -> Big_int.big_int -> Big_int.big_int = <fun>
 
     # 23423 + 1212 ;;
-    - : int = 24635 
+    - : int = 24635
 
     # 32.34 +. 232.22 ;;
-    - : float = 264.56  
+    - : float = 264.56
 
     # Int32.add 2323l 6023l ;;
-    - : int32 = 8346l   
+    - : int32 = 8346l
 
     # Int64.add 232L 3434L ;;
-    - : int64 = 3666L 
-    
+    - : int64 = 3666L
+
     (* Simplifying Number Operators *)
 
     # let fun1 x y = 10 * x - 4 * y ;;
-    val fun1 : int -> int -> int = <fun>  
+    val fun1 : int -> int -> int = <fun>
 
     # fun1 45 23 ;;
-    - : int = 358  
-    
+    - : int = 358
+
     # fun1 45L 23L ;;
-    Error: This expression has type int64 but an expression was expected of type int      
-    
+    Error: This expression has type int64 but an expression was expected of type int
+
     (* Defining the function to 64 bits *)
 
-     # let fun1L x y = 
-                 let (-) = Int64.sub in 
-                 let ( * ) = Int64.mul in  
-                 10L * x - 4L * y 
+     # let fun1L x y =
+                 let (-) = Int64.sub in
+                 let ( * ) = Int64.mul in
+                 10L * x - 4L * y
         ;;val fun1L : int64 -> int64 -> int64 = <fun>
 
     # fun1L 45L 23L ;;
     - : int64 = 358L
-    
+
     (* Trick Creating an Operator Module *)
-    
-    # module OP = 
+
+    # module OP =
     struct
         module FL =
         struct
@@ -1164,7 +1170,7 @@ Math Operations. In Ocaml the same operator cannot be used for more than one typ
             let ( * ) = ( *. )
             let (/) = (/.)
         end
-        
+
         module I32 =
         struct
             let (+) = Int32.add
@@ -1172,8 +1178,8 @@ Math Operations. In Ocaml the same operator cannot be used for more than one typ
             let (/) = Int32.div
             let ( * ) = Int32.mul
         end
-        
-        module I64 = 
+
+        module I64 =
         struct
             let (+) = Int64.add
             let (-) = Int64.sub
@@ -1181,7 +1187,7 @@ Math Operations. In Ocaml the same operator cannot be used for more than one typ
             let (/) = Int64.div
         end
 
-    end                                                    
+    end
       ;;
     module OP :
       sig
@@ -1207,97 +1213,97 @@ Math Operations. In Ocaml the same operator cannot be used for more than one typ
             val ( / ) : int64 -> int64 -> int64
           end
       end
-    # 
+    #
 
 (* Defined for int *)
 
     # let fun1 x y = 10 * x - 4 * y ;;
-    val fun1 : int -> int -> int = <fun> 
+    val fun1 : int -> int -> int = <fun>
 
     # fun1 100 20 ;;
-    - : int = 920  
+    - : int = 920
 
 (* Defined for Int32 *)
-    
-    # let fun1_int32 x y  = 
+
+    # let fun1_int32 x y  =
         let open OP.I32 in
         10l * x - 4l * y
     ;;
-    val fun1_int32 : int32 -> int32 -> int32 = <fun> 
+    val fun1_int32 : int32 -> int32 -> int32 = <fun>
 
     # fun1_int32 100l 20l ;;
-    - : int32 = 920l  
+    - : int32 = 920l
 
 (* Defined for Int64 *)
 
-    # let fun1_int64 x y  = 
+    # let fun1_int64 x y  =
             let open OP.I64 in
             10L * x - 4L * y
         ;;
-    val fun1_int64 : int64 -> int64 -> int64 = <fun>  
+    val fun1_int64 : int64 -> int64 -> int64 = <fun>
 
     # fun1_int64 100L 20L ;;
-    - : int64 = 920L            
+    - : int64 = 920L
 
 (* Defined for Float *)
 
-    # let fun1_float x y  = 
+    # let fun1_float x y  =
                 let open OP.FL in
                 10. * x - 4. * y
             ;;
-    val fun1_float : float -> float -> float = <fun>  
-    
-    
+    val fun1_float : float -> float -> float = <fun>
+
+
     # fun1_float 100. 20. ;;
-    - : float = 920. 
-    
+    - : float = 920.
+
 ```
 
 
 ##### Math / Float Functions
 
-Documentation: 
+Documentation:
 
-OCaml's floating-point complies with the [IEEE 754 standard](http://en.wikipedia.org/wiki/IEEE_floating_point),  double precision (64 bits) numbers. 
+OCaml's floating-point complies with the [IEEE 754 standard](http://en.wikipedia.org/wiki/IEEE_floating_point),  double precision (64 bits) numbers.
 
 * http://caml.inria.fr/pub/docs/manual-ocaml/libref/Pervasives.html
 
 ```ocaml
 
 (* Operators *)
-    
+
     # (+.) ;;
-    - : float -> float -> float = <fun>    
+    - : float -> float -> float = <fun>
     # (-.) ;;
-    - : float -> float -> float = <fun>  
+    - : float -> float -> float = <fun>
     # (/.) ;;
-    - : float -> float -> float = <fun> 
+    - : float -> float -> float = <fun>
     # ( *. ) ;;
-    - : float -> float -> float = <fun> 
-    
+    - : float -> float -> float = <fun>
+
      (* Power operator/ Exponentiation *)
      # ( ** ) ;;
     - : float -> float -> float = <fun>
 
     # List.map ( (+.) 2.323) [10.23; 3.4; 30. ; 12. ] ;;
-    - : float list = [12.553; 5.723; 32.323; 14.323]  
+    - : float list = [12.553; 5.723; 32.323; 14.323]
 
     # List.map ( ( *. ) 3.) [10.23; 3.4; 30. ; 12. ] ;;
-    - : float list = [30.69; 10.2; 90.; 36.] 
+    - : float list = [30.69; 10.2; 90.; 36.]
 
     # List.map (fun x -> 2. ** x ) [1. ; 2.; 3.; 4.; 5.; 6.; 7.; 8.] ;;
-    - : float list = [2.; 4.; 8.; 16.; 32.; 64.; 128.; 256.]  
+    - : float list = [2.; 4.; 8.; 16.; 32.; 64.; 128.; 256.]
 
 (* Absolute Value *)
 
     # abs_float ;;
     - : float -> float = <fun>
-    # 
+    #
 
 (* Square Root *)
 
     # sqrt ;;
-    - : float -> float = <fun>  
+    - : float -> float = <fun>
 
 (* Trigonometric *)
 
@@ -1311,13 +1317,13 @@ OCaml's floating-point complies with the [IEEE 754 standard](http://en.wikipedia
     - : float -> float = <fun>
     # atan2 ;;
     - : float -> float -> float = <fun>
-    # 
+    #
     # acos ;;
     - : float -> float = <fun>
     # asin ;;
     - : float -> float = <fun>
-    # 
-    
+    #
+
 (* Hyperbolic Functions *)
     # cosh ;;
     - : float -> float = <fun>
@@ -1325,7 +1331,7 @@ OCaml's floating-point complies with the [IEEE 754 standard](http://en.wikipedia
     - : float -> float = <fun>
     # tanh ;;
     - : float -> float = <fun>
-    # 
+    #
 
 
 (* Logarithm and exp *)
@@ -1334,16 +1340,16 @@ OCaml's floating-point complies with the [IEEE 754 standard](http://en.wikipedia
     # log10 ;;
     - : float -> float = <fun>
     # exp ;;
-    - : float -> float = <fun>  
-    
+    - : float -> float = <fun>
+
     (* exp x -. 1.0, *)
     # expm1 ;;
     - : float -> float = <fun>
-    
+
     (*  log(1.0 +. x)  *)
     # log1p ;;
 - : float -> float = <fun>
-    
+
 
 (* Remove Decimal Part *)
     # floor ;;
@@ -1352,37 +1358,37 @@ OCaml's floating-point complies with the [IEEE 754 standard](http://en.wikipedia
     - : float -> float = <fun>
     # truncate ;;
     - : float -> int = <fun>
-    # 
+    #
     # int_of_float ;;
     - : float -> int = <fun>
-    # 
+    #
 
 
 (* Float Constants *)
 
     # infinity ;;
     - : float = infinity
-    # 
+    #
     # neg_infinity ;;
     - : float = neg_infinity
-    # 
- 
+    #
+
     # max_float ;;
     - : float = 1.79769313486231571e+308
     # min_float ;;
     - : float = 2.22507385850720138e-308
-    
-    
+
+
     # nan ;;
     - : float = nan
-    # 
-  
+    #
+
     # 1. /. 0. ;;
     - : float = infinity
-    # 
+    #
     # -1. /. 0. ;;
     - : float = neg_infinity
-    # 
+    #
 ```
 
 ##### Function Declaration
@@ -1398,15 +1404,15 @@ val x : int = 34
 > let x = 10 in
   let y = 20 in
   let z = x*y in
-  z - x - y 
+  z - x - y
 ;;
-- : int = 170    
+- : int = 170
 
 > let x = 10.25 in
-  let y = 30.   in 
-  x *. y 
+  let y = 30.   in
+  x *. y
 ;;
-- : float = 307.5 
+- : float = 307.5
 
 >  let f x = 10 * x + 4 ;;
 val f : int -> int = <fun>
@@ -1454,7 +1460,7 @@ val a_complex_function : int -> int -> int = <fun>
 
 (* Function Inside functions *)
 
-> let func1 x y = 
+> let func1 x y =
     let ft1 x y = 10*x + y in
     let ft2 x y z = x + y - 4 * z in
     let ft3 x y = x - y in
@@ -1463,13 +1469,13 @@ val a_complex_function : int -> int -> int = <fun>
 ;;
 
 > func1 4 5 ;;
-- : int = 15 
+- : int = 15
 
 > func1 14 5 ;;
-- : int = 115 
+- : int = 115
 
 > func1 20 (-10) ;;
-- : int = 130  
+- : int = 130
 
 (* Returning More than one value *)
 
@@ -1624,83 +1630,83 @@ Functions with Named Parameters
 val f1 : x:int -> y:int -> int = <fun>
 
 > f1 ;;
-- : x:int -> y:int -> int = <fun>  
+- : x:int -> y:int -> int = <fun>
 
 > f1 4 5 ;;
-- : int = 35 
+- : int = 35
 
 > f1 20 15 ;;
-- : int = 185  
+- : int = 185
 
 (* Currying Funcctions with named parameters *)
 > f1 20 ;;
-Error: The function applied to this argument has type x:int -> y:int -> int                      This argument cannot be applied without label     
+Error: The function applied to this argument has type x:int -> y:int -> int                      This argument cannot be applied without label
 
 > f1 ~x:20 ;;
-- : y:int -> int = <fun>  
+- : y:int -> int = <fun>
 
 > let f1_20 = f1 ~x:20 ;;
-val f1_20 : y:int -> int = <fun> 
+val f1_20 : y:int -> int = <fun>
 
 > f1_20 10 ;;
-- : int = 190 
+- : int = 190
 
 > f1_20 40 ;;
-- : int = 160   
+- : int = 160
 
 > List.map f1_20 [1; 2; 10; 20; 30] ;;
-Error: This expression has type y:int -> int but an expression was expected of type 'a -> 'b 
+Error: This expression has type y:int -> int but an expression was expected of type 'a -> 'b
 
 > List.map (fun y -> f1_20 y) [1; 2; 10; 20; 30] ;;
-- : int list = [199; 198; 190; 180; 170] 
+- : int list = [199; 198; 190; 180; 170]
 
 > let show_msg x ~msg () = Printf.printf "%s = %d" msg x ;;
-val show_msg : int -> msg:string -> unit -> unit = <fun> 
+val show_msg : int -> msg:string -> unit -> unit = <fun>
 
 > show_msg 2 "Hello world" () ;;
-Hello world = 2- : unit = ()    
+Hello world = 2- : unit = ()
 
 > show_msg 20  ;;
-- : msg:string -> unit -> unit = <fun>  
+- : msg:string -> unit -> unit = <fun>
 
 > let f = show_msg 20 ;;
-val f : msg:string -> unit -> unit = <fun> 
+val f : msg:string -> unit -> unit = <fun>
 
 > f "x" ();;
-x = 20- : unit = () 
+x = 20- : unit = ()
 
 > f "y" () ;;
-y = 20- : unit = ()  
+y = 20- : unit = ()
 
 > List.iter f ["x" ; "y" ; "z" ; "w"] ;;
 Error: This expression has type msg:string -> unit -> unit
 but an expression was expected of type 'a -> unit
 
 > List.iter (fun msg -> f msg ()) ["x" ; "y" ; "z" ; "w"] ;;
-x = 20y = 20z = 20w = 20- : unit = ()     
+x = 20y = 20z = 20w = 20- : unit = ()
 ```
 
 Functions with Optional Parameters:
 
 ```ocaml
 
-(* 
-    If the parameter x is not given, x will be set to 100 
+(*
+    If the parameter x is not given, x will be set to 100
 *)
 > let f ?(x = 100)  y = 10*x - 5*y ;;
 val add : ?x:int -> int -> int = <fun>
 
 > f ;;
-- : ?x:int -> int -> int = <fun> 
+- : ?x:int -> int -> int = <fun>
 
-(* 
-    f 20 ==> (10*x - 5*y) 100 20 
+(*
+    f 20 ==> (10*x - 5*y) 100 20
              (10 * 10 - 5 * 20 )
              (1000 - 100)
              900
  *)
 > f 20 ;;
-- : int = 900  
+- : int = 900
 
 
 (*
@@ -1710,57 +1716,57 @@ val add : ?x:int -> int -> int = <fun>
              700
 *)
 > f 60 ;;
-- : int = 700  
+- : int = 700
 
 > List.map f [10; 20; 30; 40; 50] ;;
 - : int list = [950; 900; 850; 800; 750]
 
 
 > f ~x:40 20 ;;
-- : int = 300  
+- : int = 300
 
 
 > f ~x:50 20 ;;
-- : int = 400  
+- : int = 400
 
 > f ~x:40 ;;
-- : int -> int = <fun> 
+- : int -> int = <fun>
 
 > let f_x40  = f ~x:40 ;;
-val f_x40 : int -> int = <fun>  
+val f_x40 : int -> int = <fun>
 
 > List.map f_x40 [10; 20; 30; 40; 50] ;;
-- : int list = [350; 300; 250; 200; 150]  
+- : int list = [350; 300; 250; 200; 150]
 
 > List.map (f ~x: 40) [10; 20; 30; 40; 50] ;;
 - : int list = [350; 300; 250; 200; 150]
 
 
 > let rectangle_area ?(width = 30) ~height = width*height ;;
-val rectangle_area : ?width:int -> height:int -> int = <fun> 
+val rectangle_area : ?width:int -> height:int -> int = <fun>
 
 > rectangle_area 20 ;;
-- : int = 600  
+- : int = 600
 
 > rectangle_area 30 ;;
 - : int = 900
 
 > List.map rectangle_area [10; 20; 30; 40; 50] ;;
-Error: This expression has type ?width:int -> height:int -> int 
-but an expression was expected of type 'a -> 'b     
+Error: This expression has type ?width:int -> height:int -> int
+but an expression was expected of type 'a -> 'b
 
 > List.map (fun h -> rectangle_area h ) [10; 20; 30; 40; 50] ;;
-- : int list = [300; 600; 900; 1200; 1500]   
+- : int list = [300; 600; 900; 1200; 1500]
 
 > rectangle_area ~width: 200 ;;
 - : height:int -> int = <fun>
 
 >: rectangle_area ~width: 200 ~height: 20 ;;
-- : int = 4000 
+- : int = 4000
 
-> List.map (fun h -> rectangle_area ~height:h ~width:30 ) 
+> List.map (fun h -> rectangle_area ~height:h ~width:30 )
 [10; 20; 30; 40; 50] ;;
-- : int list = [300; 600; 900; 1200; 1500] 
+- : int list = [300; 600; 900; 1200; 1500]
 
 ```
 
@@ -1960,7 +1966,7 @@ hello world / hit return to continue
 
 ### List
 
-The module List has almost all functions to process lists which are immutable data structures. 
+The module List has almost all functions to process lists which are immutable data structures.
 
 * http://caml.inria.fr/pub/docs/manual-ocaml/libref/List.html
 
@@ -1998,7 +2004,7 @@ List Functions
 - : 'a list -> 'a list -> 'a list = <fun>
 > [1; 2; 3; 4; 5] @ [5; 6; 8] ;;
 - : int list = [1; 2; 3; 4; 5; 5; 6; 8]
-> 
+>
 
 (* First element of a list / head of the list *)
 > List.hd [1 ; 2; 3; 4 ; 6 ; 9] ;;
@@ -2034,23 +2040,23 @@ List Functions
 (* Combine - Equivalent to Haskell zip *)
 > List.combine ;;
 - : 'a list -> 'b list -> ('a * 'b) list = <fun>
- 
+
 > List.combine [1; 2; 3] ['a'; 'b'; 'c' ] ;;
 - : (int * char) list = [(1, 'a'); (2, 'b'); (3, 'c')]
- 
+
 > List.combine [1; 2; 3; 5 ] ['a'; 'b'; 'c' ] ;;
 Exception: Invalid_argument "List.combine".
-> 
+>
 
 (* Split - Equivalent to Haskell unzip *)
 
 > List.split  [(1, 'a'); (2, 'b'); (3, 'c')] ;;
 - : int list * char list = ([1; 2; 3], ['a'; 'b'; 'c'])
-> 
+>
 
 >  List.split  [(1, 'a'); (2, 'b'); (3, 'c')] ;;
 - : int list * char list = ([1; 2; 3], ['a'; 'b'; 'c'])
-> 
+>
 
 
 (* Equivalent to Haskell (++) *)
@@ -2064,10 +2070,10 @@ Exception: Invalid_argument "List.combine".
 - : int = 1
 > List.find  (fun x -> x > 10) [1; 2 ; 3; 45] ;;
 - : int = 45
-> 
+>
 > List.find  (fun x -> x > 10) [1; 2 ; 3] ;;
 Exception: Not_found.
-> 
+>
 
 > List.find_all  (fun x -> x > 10) [-10; 20 ; 3; 12; 100; 4; 35] ;;
 - : int list = [20; 12; 100; 35]
@@ -2075,9 +2081,9 @@ Exception: Not_found.
 > List.exists ;;
 - : ('a -> bool) -> 'a list -> bool = <fun>
 > List.exists ((==) 10) [1; 2; 30; 50 ; 3];;
-- : bool = false  
+- : bool = false
 > List.exists ((==) 10) [1; 2; 30; 10 ; 50 ; 3];;
-- : bool = true 
+- : bool = true
 
 > List.for_all2 (>=) [1;2;3] [2;3;4];;
 - : bool = false
@@ -2087,7 +2093,7 @@ Exception: Not_found.
 - : bool = true
 >  List.exists2 (<) [1;2;0] [1;2];;
 Exception: Invalid_argument "List.exists2".
-> 
+>
 
 > List.assoc 3 [(0, "a"); (1, "b"); (2, "c"); (3, "d")] ;;
 - : string = "d"
@@ -2095,7 +2101,7 @@ Exception: Invalid_argument "List.exists2".
 - : string = "a"
 > List.assoc 5 [(0, "a"); (1, "b"); (2, "c"); (3, "d")] ;;
 Exception: Not_found.
-> 
+>
 
 > List.mem_assoc 5 [(0, "a"); (1, "b"); (2, "c"); (3, "d")] ;;
 - : bool = false
@@ -2103,7 +2109,7 @@ Exception: Not_found.
 - : bool = true
 > List.mem_assoc 2 [(0, "a"); (1, "b"); (2, "c"); (3, "d")] ;;
 - : bool = true
-> 
+>
 
 > List.remove_assoc 0 [0,"a"; 1,"b"; 2,"c"; 3,"d"];;
 - : (int * string) list = [(1, "b"); (2, "c"); (3, "d")]
@@ -2114,7 +2120,7 @@ Exception: Not_found.
 
 > List.partition ;;
 - : ('a -> bool) -> 'a list -> 'a list * 'a list = <fun>
-> 
+>
 > List.partition   (fun x -> x > 10) [-10; 20 ; 3; 12; 100; 4; 35] ;;
 - : int list * int list = ([20; 12; 100; 35], [-10; 3; 4])
 
@@ -2123,50 +2129,50 @@ Exception: Not_found.
 
 > List.flatten ;;
 - : 'a list list -> 'a list = <fun>
-> 
+>
 
 > List.flatten [[1]; [2; 4] ; [6; 90; 100] ; []] ;;
 - : int list = [1; 2; 4; 6; 90; 100]
-> 
+>
 
 
 (*      MAP         *)
 (*------------------*)
-    
+
 > List.map ;;
 - : ('a -> 'b) -> 'a list -> 'b list = <fun>
-> 
+>
 > List.map (( *) 10 )  [-10 ; 20 ; 5 ; 50; 100; 3 ] ;;
 - : int list = [-100; 200; 50; 500; 1000; 30]
- 
+
 > List.map ((+) 10) [-10 ; 20 ; 5 ; 50; 100; 3 ] ;;
 - : int list = [0; 30; 15; 60; 110; 13]
-> 
+>
 
 > let f x = 10 * x - 5 ;;
 val f : int -> int = <fun>
 > List.map f  [-10 ; 20 ; 5 ; 50; 100; 3 ] ;;
 - : int list = [-105; 195; 45; 495; 995; 25]
-> 
+>
 
 > List.map (fun x -> 10.5 *. x -. 4. ) [2. ; 3. ; 5. ; 10. ; 20. ];;
 - : float list = [17.; 27.5; 48.5; 101.; 206.]
-> 
+>
 
 (*      MAPI        *)
 (*------------------*)
 > List.mapi ;;
-- : (int -> 'a -> 'b) -> 'a list -> 'b list = <fun>  
+- : (int -> 'a -> 'b) -> 'a list -> 'b list = <fun>
 
 > List.mapi (fun  index element -> index, element) [17.; 27.5; 48.5; 101.; 206.] ;;
-- : (int * float) list = [(0, 17.); (1, 27.5); (2, 48.5); (3, 101.); (4, 206.)] 
+- : (int * float) list = [(0, 17.); (1, 27.5); (2, 48.5); (3, 101.); (4, 206.)]
 
 
 (* MAP2 / Haskell zipWith *)
 
 > List.map2 ;;
 - : ('a -> 'b -> 'c) -> 'a list -> 'b list -> 'c list = <fun>
-> 
+>
 
 > List.map2 (+) [10; 20; 30; 100] [15; 35; 25; 80] ;;
 - : int list = [25; 55; 55; 180]
@@ -2180,27 +2186,27 @@ Warning 2: this is not the end of a comment.
 
 > List.map2 (fun x y -> (x, y)) [10; 20; 30; 100] [15; 35; 25] ;;
 Exception: Invalid_argument "List.map2".
-> 
+>
 
 
 > let fxy x y = 10*x - 4*y ;;
 val fxy : int -> int -> int = <fun>
-> 
+>
 > List.map2 fxy [10; 20; 30; 100] [15; 35; 25; 80] ;;
 - : int list = [40; 60; 200; 680]
-> 
+>
 
 
 (*      FILTER      *)
 (*------------------*)
 > List.filter ;;
 - : ('a -> bool) -> 'a list -> 'a list = <fun>
-> 
+>
 >  List.filter ((<) 10) [-10 ; 20 ; 5 ; 50; 100; 3 ] ;;
 - : int list = [20; 50; 100]
-> 
+>
 
-(*  FOLFR and FOLDL - Equivalent to Haskell foldr and foldl 
+(*  FOLFR and FOLDL - Equivalent to Haskell foldr and foldl
  *   The fold functions are known as reduce. (i.e Python reduce (left fold))
  *)
 
@@ -2210,9 +2216,9 @@ val fxy : int -> int -> int = <fun>
     (*
         f x y = x + 10* y
         foldr  f [1; 2; 3; 5; 6] 0
-    
-    Evaluation:    
-    
+
+    Evaluation:
+
     (f 1 (f 2 (f 3  (f 5 (f 6 0)))))    f 6   0  = 6 + 10*0    =     6
     (f 1 (f 2 (f 3  (f 5 6))))          f 5   6  = 5 + 10*6    =     65
     (f 1 (f 2 (f 3  65)))               f 3  65  = 3 + 10*65   =    653
@@ -2222,28 +2228,28 @@ val fxy : int -> int -> int = <fun>
     *)
 > List.fold_right (fun x y -> x + 10*y) [1; 2; 3; 5; 6] 0 ;;
 - : int = 65321
-> 
+>
 
 > List.fold_left ;;
 - : ('a -> 'b -> 'a) -> 'a -> 'b list -> 'a = <fun>
-> 
+>
     (*
         f x y = 10*x + y
         flodl f 0 [1; 2; 3; 5; 6]
-        
-    Evaluation:    
-    
+
+    Evaluation:
+
     (f (f (f ( f (f 0 1) 2 ) 3) 5) 6)     f 0    1 = 10*0    + 1   =    1
-    (f (f (f ( f 1 2 ) 3) 5) 6)           f 1    2 = 10*1    + 2   =   12  
-    (f (f (f 12 3) 5) 6)                  f 12   3 = 10*12   + 3   =   123  
-    (f (f 123 5) 6)                       f 123  5 = 10*123  + 5   =  1235  
-    (f 1235 6)                            f 1235 6 = 10*1235 + 5   = 12356  
+    (f (f (f ( f 1 2 ) 3) 5) 6)           f 1    2 = 10*1    + 2   =   12
+    (f (f (f 12 3) 5) 6)                  f 12   3 = 10*12   + 3   =   123
+    (f (f 123 5) 6)                       f 123  5 = 10*123  + 5   =  1235
+    (f 1235 6)                            f 1235 6 = 10*1235 + 5   = 12356
     12356
     *)
 
 > List.fold_left (fun x y -> 10*x +  y) 0 [1; 2; 3; 5; 6]  ;;
 - : int = 12356
-> 
+>
 
 > List.fold_left (+) 0 [ 1; 2; 3; 4; 5; 6 ] ;;
 - : int = 21
@@ -2252,24 +2258,24 @@ val fxy : int -> int -> int = <fun>
 Warning 2: this is not the end of a comment.
 - : int = 120
 
- 
+
 
 (*    ITER / MAP Non Pure Functions  *)
 (*-----------------------------------*)
 
 > List.iter ;;
 - : ('a -> unit) -> 'a list -> unit = <fun>
-> 
+>
 
 > List.iter (Printf.printf "= %d \n") [-10; 3; 100; 50; 5; 20] ;;
-= -10 
-= 3 
-= 100 
-= 50 
-= 5 
-= 20 
+= -10
+= 3
+= 100
+= 50
+= 5
+= 20
 - : unit = ()
-> 
+>
 
 (* ITERI    *)
 
@@ -2295,7 +2301,7 @@ x = 1
 y = 2
 z = 3
 - : unit = ()
-> 
+>
 
 
 ```
@@ -2308,10 +2314,10 @@ Arrays as oppose to lists are mmutable data structures.
 
 ```ocaml
 > [| 10; 2 ; 10; 25 ; 100; 0 ; 1 |]  ;;
-- : int array = [|10; 2; 10; 25; 100; 0; 1|]  
+- : int array = [|10; 2; 10; 25; 100; 0; 1|]
 
 > let a = [| 10; 2 ; 10; 25 ; 100; 0 ; 1 |]  ;;
-val a : int array = [|10; 2; 10; 25; 100; 0; 1|]  
+val a : int array = [|10; 2; 10; 25; 100; 0; 1|]
 
 > a.(0) ;;
 - : int = 10
@@ -2321,13 +2327,13 @@ val a : int array = [|10; 2; 10; 25; 100; 0; 1|]
 - : int = 100
 > a.(10) ;;
 Exception: Invalid_argument "index out of bounds".
-> 
+>
 
 > Array.length ;;
-- : 'a array -> int = <fun> 
+- : 'a array -> int = <fun>
 
 > Array.length a ;;
-- : int = 7   
+- : int = 7
 
 > Array.map ;;
 - : ('a -> 'b) -> 'a array -> 'b array = <fun>
@@ -2338,34 +2344,34 @@ Exception: Invalid_argument "index out of bounds".
 > a.(0) <- 56 ;;
 - : unit = ()
 > a ;;
-- : int array = [|56; 2; 10; 25; 100; 0; 1|] 
+- : int array = [|56; 2; 10; 25; 100; 0; 1|]
 > a.(5) <- 567 ;;
-- : unit = () 
+- : unit = ()
 > a ;;
 - : int array = [|56; 2; 10; 25; 100; 567; 1|]
 
-(*  Maps a function that takes the index of element 
-    as first argument and then the element as second 
+(*  Maps a function that takes the index of element
+    as first argument and then the element as second
     argument.
-    
-    f(index, element) 
+
+    f(index, element)
 *)
 > Array.mapi ;;
-- : (int -> 'a -> 'b) -> 'a array -> 'b array = <fun> 
+- : (int -> 'a -> 'b) -> 'a array -> 'b array = <fun>
  Array.mapi (fun idx e -> idx, e) [|56; 2; 10; 25; 100; 567; 1|]  ;;
 - : (int * int) array = [|(0, 56); (1, 2); (2, 10); (3, 25); (4, 100); (5, 567); (6, 1)|]
 
 
  > Array.to_list ;;
-- : 'a array -> 'a list = <fun> 
+- : 'a array -> 'a list = <fun>
 > Array.to_list a ;;
-- : int list = [56; 2; 10; 25; 100; 567; 1] 
+- : int list = [56; 2; 10; 25; 100; 567; 1]
 
 
 > Array.of_list ;;
-- : 'a list -> 'a array = <fun>  
+- : 'a list -> 'a array = <fun>
 > Array.of_list [56; 2; 10; 25; 100; 567; 1] ;;
-- : int array = [|56; 2; 10; 25; 100; 567; 1|]    
+- : int array = [|56; 2; 10; 25; 100; 567; 1|]
 
 > Array.get ;;
 - : 'a array -> int -> 'a = <fun>
@@ -2375,29 +2381,29 @@ Exception: Invalid_argument "index out of bounds".
 Exception: Invalid_argument "index out of bounds".
 
 
- 
+
 
 > let a = [|56; 2; 10; 25; 100; 567; 1|]  ;;
-val a : int array = [|56; 2; 10; 25; 100; 567; 1|] 
+val a : int array = [|56; 2; 10; 25; 100; 567; 1|]
 > Array.set ;;
-- : 'a array -> int -> 'a -> unit = <fun> 
+- : 'a array -> int -> 'a -> unit = <fun>
 
 > Array.set a  0 15 ;;
-- : unit = ()    
+- : unit = ()
 > Array.set a  4 235 ;;
-- : unit = () 
+- : unit = ()
 > a ;;
-- : int array = [|15; 2; 10; 25; 235; 567; 1|] 
+- : int array = [|15; 2; 10; 25; 235; 567; 1|]
 
 > Array.fold_right ;;
-- : ('b -> 'a -> 'a) -> 'b array -> 'a -> 'a = <fun> 
+- : ('b -> 'a -> 'a) -> 'b array -> 'a -> 'a = <fun>
 > Array.fold_right (+) [|56; 2; 10; 25; 100; 567; 1|]  0 ;;
 - : int = 761
 
 > Array.fold_left ;;
-- : ('a -> 'b -> 'a) -> 'a -> 'b array -> 'a = <fun> 
+- : ('a -> 'b -> 'a) -> 'a -> 'b array -> 'a = <fun>
 > Array.fold_left (+) 0 [|56; 2; 10; 25; 100; 567; 1|]  ;;
-- : int = 761 
+- : int = 761
 
 > Array.iter (Printf.printf "x = %d\n") [|56; 2; 10; 25; 100; 567; 1|]  ;;
 x = 56
@@ -2408,13 +2414,13 @@ x = 100
 x = 567
 x = 1
 - : unit = ()
-> 
+>
 
-(*  Applies a function that takes the index of element 
-    as first argument and then the element as second 
+(*  Applies a function that takes the index of element
+    as first argument and then the element as second
     argument.
-    
-    f(index, element) 
+
+    f(index, element)
 *)
 > Array.iteri ;;
 - : (int -> 'a -> unit) -> 'a array -> unit = <fun>
@@ -2428,11 +2434,11 @@ x[4] = 100
 x[5] = 567
 x[6] = 1
 - : unit = ()
- 
+
 
 
 > Array.init ;;
-- : int -> (int -> 'a) -> 'a array = <fun> 
+- : int -> (int -> 'a) -> 'a array = <fun>
 
 > Array.init 10 (fun x -> 5. *. float_of_int x)  ;;
 - : float array = [|0.; 5.; 10.; 15.; 20.; 25.; 30.; 35.; 40.; 45.|]
@@ -2442,11 +2448,11 @@ x[6] = 1
 > Array.make_matrix ;;
 - : int -> int -> 'a -> 'a array array = <fun>
 > Array.make_matrix 2 3 1 ;;
-- : int array array = [|[|1; 1; 1|]; [|1; 1; 1|]|] 
+- : int array array = [|[|1; 1; 1|]; [|1; 1; 1|]|]
 
 ```
 
-### String 
+### String
 
 There are more useful string functions on the core library.
 
@@ -2462,9 +2468,9 @@ Char Module
 
     # Char.chr ;;
     - : int -> char = <fun>
-    
+
     # Char.chr 99 ;;
-    - : char = 'c' 
+    - : char = 'c'
 
 (* Char to Ascii Code*)
 
@@ -2478,9 +2484,9 @@ Char Module
 (* Upper Case / Lower Case *)
 
     # Char.uppercase 'c' ;;
-    - : char = 'C'            
+    - : char = 'C'
     # Char.lowercase 'A' ;;
-    - : char = 'a'   
+    - : char = 'a'
 ```
 
 String Module
@@ -2495,72 +2501,72 @@ String Module
 
 (* Concatenate Strings *)
     # String.concat "\n" ["Hello"; "World"; "Ocaml" ] ;;
-    - : string = "Hello\nWorld\nOcaml" 
+    - : string = "Hello\nWorld\nOcaml"
 
     # "Hello " ^ " World " ^ " Ocaml" ;;
-    - : string = "Hello  World  Ocaml" 
+    - : string = "Hello  World  Ocaml"
 
 (* Uppercase / Lowercase *)
     # String.capitalize "hello world" ;;
-    - : string = "Hello world" 
+    - : string = "Hello world"
 
     # String.lowercase "HELLO WORLD" ;;
-    - : string = "hello world" 
+    - : string = "hello world"
 
 (* Get Character at position *)
-    
+
     # String.get ;;
     - : string -> int -> char = <fun>
     # String.get  "Hello world" 0 ;;
-    - : char = 'H'  
+    - : char = 'H'
     # String.get  "Hello world" 1 ;;
-    - : char = 'e'  
+    - : char = 'e'
 
     # let str =  "My string" ;;
     val str : string = "My string"
-    
+
     # str.[0] ;;
     - : char = 'M'
      # str.[5] ;;
     - : char = 'r'
 
-(* Setting Characters *)    
+(* Setting Characters *)
 
     # let str =  "My string" ;;
     val str : string = "My string"
-    
+
     # s.[0] <- 'H' ;;
-    - : unit = ()  
+    - : unit = ()
      # s.[1] <- 'e' ;;
-    - : unit = () 
+    - : unit = ()
      # s ;;
-    - : string = "He to world" 
+    - : string = "He to world"
 
 (* Contains test if character is in the string *)
-    
+
     # String.contains ;;
-    - : string -> char -> bool = <fun>  
-    
+    - : string -> char -> bool = <fun>
+
     # String.contains "hello" 'c' ;;
     - : bool = false
-    
+
     # String.contains "hello" 'h' ;;
-    - : bool = true  
+    - : bool = true
 
 (* Map Characters *)
 
     # String.map ;;
     - : (char -> char) -> string -> string = <fun>
-    
+
     # let encode key chr = Char.chr ((Char.code chr) - key) ;;
-    val encode : int -> char -> char = <fun>                        
-    
+    val encode : int -> char -> char = <fun>
+
     # let decode key chr = Char.chr (Char.code chr + key) ;;
     val decode : int -> char -> char = <fun>
 
     # let str = "Hello world" ;;
     val str : string = "Hello world"
-    
+
     # String.map (encode 13) str ;;
 - : string = ";X__b\019jbe_W"
 
@@ -2575,37 +2581,37 @@ Str Module
 * http://caml.inria.fr/pub/docs/manual-ocaml/libref/Str.html
 
 ```ocaml
-    
+
 (* When in the toploop interactive shell *)
     #load "str.cma"
-    
+
 (* Compile String to a regular expression*)
     # Str.regexp ;;
-    - : string -> Str.regexp = <fun> 
-    
+    - : string -> Str.regexp = <fun>
+
     # Str.regexp ",";;
     - : Str.regexp = <abstr>
 
 (* Split String *)
 
     # Str.split ;;
-    - : Str.regexp -> string -> string list = <fun> 
+    - : Str.regexp -> string -> string list = <fun>
 
     # Str.split (Str.regexp ",") "23.232,9823,\"Ocaml Haskell FP\"";;
-    - : string list = ["23.232"; "9823"; "\"Ocaml Haskell FP\""] 
-    
+    - : string list = ["23.232"; "9823"; "\"Ocaml Haskell FP\""]
+
     # Str.split (Str.regexp "[,|;]") "23.232,9823;\"Ocaml Haskell FP\";400";;
-    - : string list = ["23.232"; "9823"; "\"Ocaml Haskell FP\""; "400"] 
+    - : string list = ["23.232"; "9823"; "\"Ocaml Haskell FP\""; "400"]
 
     # Str.string_before ;;
-    - : string -> int -> string = <fun>   
+    - : string -> int -> string = <fun>
     # Str.string_before "Hello world ocaml" 3 ;;
     - : string = "Hel"
     # Str.string_before "Hello world ocaml" 11 ;;
     - : string = "Hello world"
 
     # Str.string_after "Hello world ocaml" 11 ;;
-    - : string = " ocaml"   
+    - : string = " ocaml"
 ```
 
 <!--
@@ -2622,7 +2628,7 @@ http://caml.inria.fr/pub/docs/manual-ocaml/libref/Sys.html
 
     > Sys.argv ;;
     - : string array = [|"/home/tux/bin/ocaml"|]
-    > 
+    >
 
 (* Current Directory *)
 
@@ -2641,13 +2647,13 @@ http://caml.inria.fr/pub/docs/manual-ocaml/libref/Sys.html
     - : unit = ()
     > Sys.getcwd () ;;
     - : string = "/"
-    > 
+    >
 
 (* List directory *)
 
     > Sys.readdir ;;
     - : string -> string array = <fun>
-    > 
+    >
 
     > Sys.readdir("/") ;;
     - : string array =
@@ -2655,7 +2661,7 @@ http://caml.inria.fr/pub/docs/manual-ocaml/libref/Sys.html
       "opt"; "root.tar"; "tmp"; "sys"; "etc"; "root"; "srv"; "bin";
       "vmlinuz.old"; "sbin"; "backup.log"; "initrd.img.old"; "run"; "initrd.img";
       "lib"; "usr"; "vmlinuz"; "mnt"; "dev"; "media"; "boot"; "proc"|]
-    > 
+    >
 
 (* Test if is directory *)
 
@@ -2665,22 +2671,22 @@ http://caml.inria.fr/pub/docs/manual-ocaml/libref/Sys.html
     Exception: Sys_error "/etca: No such file or directory".
     > Sys.is_directory "/etc/fstab" ;;
     - : bool = false
-    > 
+    >
 
 
 (* Test if File exists *)
 
     > Sys.file_exists ;;
     - : string -> bool = <fun>
-     
+
     > Sys.file_exists "/etc" ;;
     - : bool = true
-    > 
+    >
       Sys.file_exists "/etca" ;;
     - : bool = false
-    > 
+    >
 
-    (* Execute shell command and return exit code 
+    (* Execute shell command and return exit code
      *   0    For success
      *  not 0 For failure
      *)
@@ -2691,12 +2697,12 @@ http://caml.inria.fr/pub/docs/manual-ocaml/libref/Sys.html
     > Sys.command "uname -a" ;;
     Linux tux-I3000 3.13.0-36-generic >63-Ubuntu SMP Wed Sep 3 21:30:45 UTC 2014 i686 i686 i686 GNU/Linux
     - : int = 0
-    > 
+    >
 
     > Sys.command "nam" ;;
     sh: 1: nam: not found
     - : int = 127
-    > 
+    >
 
 
 (* Constants and Flags *)
@@ -2704,27 +2710,27 @@ http://caml.inria.fr/pub/docs/manual-ocaml/libref/Sys.html
     (* Machine Word Size in bits *)
     >  Sys.word_size ;;
     - : int = 32
-    > 
+    >
 
     (* Machine Endianess *)
     > Sys.big_endian ;;
     - : bool = false
-    > 
+    >
 
-    (* 
+    (*
      *  For Linux/BSD or OSX  --> "Unix"
      *  Windows               --> "Win32"
     *)
     > Sys.os_type ;;
     - : string = "Unix"
-    > 
-    
-    (*  Maximum length of strings and byte sequences. =  
+    >
+
+    (*  Maximum length of strings and byte sequences. =
      *   =~  16 MB
      *)
     > Sys.max_string_length ;;
     - : int = 16777211
-    > 
+    >
 ```
 
 Extra Example:
@@ -2748,13 +2754,13 @@ Extra Example:
       "System.map-3.13.0-36-generic"; "initrd.img-3.13.0-36-generic";
       "xen-4.4-amd64.gz"; "extlinux"; "config-3.13.0-36-generic";
       "vmlinuz-3.13.0-36-generic"; "grub"|]
-    # 
+    #
 
 
     (* List only directories *)
     # "." |> Sys.readdir |> Array.to_list  |> List.filter Sys.is_directory ;;
     - : string list = ["extlinux"; "grub"]
-    
+
     (* List only files *)
 
     # "." |> Sys.readdir |> Array.to_list  |> List.filter (fun d -> not <| Sys.is_directory d );;
@@ -2765,11 +2771,11 @@ Extra Example:
      "initrd.img-3.13.0-35-generic"; "memtest86+.elf"; "memtest86+.bin";
      "System.map-3.13.0-36-generic"; "initrd.img-3.13.0-36-generic";
      "xen-4.4-amd64.gz"; "config-3.13.0-36-generic"; "vmlinuz-3.13.0-36-generic"]
-    # 
+    #
 
 ```
 
-### Unix 
+### Unix
 
 Despite the name Unix, this is a multi platform module and work in Windows OS.
 
@@ -2793,7 +2799,7 @@ $ ocamlfind ocamlopt -package more,unix program.ml -linkpkg -o progra
     /usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/tux/bin:
     /home/tux/usr/bin:/home/tux/.apps
 
-    (*  Return the current time since 00:00:00 GMT, Jan. 1, 1970, in seconds 
+    (*  Return the current time since 00:00:00 GMT, Jan. 1, 1970, in seconds
      *
      *)
 
@@ -2801,25 +2807,25 @@ $ ocamlfind ocamlopt -package more,unix program.ml -linkpkg -o progra
     - : unit -> float = <fun>
     # Unix.time () ;;
     - : float = 1433237870.
-    # 
+    #
 
-    (* Convert a time in seconds, as returned by Unix.time, into a date 
-     * and a time. Assumes UTC (Coordinated Universal Time), also known as GMT. 
+    (* Convert a time in seconds, as returned by Unix.time, into a date
+     * and a time. Assumes UTC (Coordinated Universal Time), also known as GMT.
      *)
 
     # Unix.gmtime ;;
     - : float -> Unix.tm = <fun>
-    # 
+    #
 
     # Unix.gmtime @@ Unix.time () ;;
     - : Unix.tm =
     {Unix.tm_sec = 36; tm_min = 39; tm_hour = 9; tm_mday = 2; tm_mon = 5;
      tm_year = 115; tm_wday = 2; tm_yday = 152; tm_isdst = false}
-    # 
+    #
 
       Unix.gethostname () ;;
     - : string = "tux-I3000"
-    # 
+    #
 
 
 ```
@@ -2925,16 +2931,16 @@ utop #
 ```ocaml
 
 utop # float_of_int 2323 ;;
-- : float = 2323. 
+- : float = 2323.
 
 utop # float_of_string "100.04523" ;;
-- : float = 100.04523  
+- : float = 100.04523
 
 utop # int_of_float 100.04523 ;;
-- : int = 100 
+- : int = 100
 
 utop # int_of_string "90000" ;;
-- : int = 90000    
+- : int = 90000
 
 utop # let x = [20; 230; 10 ; 40; 50 ] ;;
 val x : int list = [20; 230; 10; 40; 50]
@@ -2943,19 +2949,19 @@ utop # List.map float_of_int x ;;
 - : float list = [20.; 230.; 10.; 40.; 50.]
 
 utop # Array.of_list [20.; 230.; 10.; 40.; 50.]  ;;
-- : float array = [|20.; 230.; 10.; 40.; 50.|]  
+- : float array = [|20.; 230.; 10.; 40.; 50.|]
 
 utop # Array.to_list [|20.; 230.; 10.; 40.; 50.|]  ;;
-- : float list = [20.; 230.; 10.; 40.; 50.]   
+- : float list = [20.; 230.; 10.; 40.; 50.]
 
 utop # string_of_bool true ;;
-- : string = "true"  
+- : string = "true"
 
 utop # string_of_int 11000 ;;
-- : string = "11000" 
+- : string = "11000"
 
 utop # string_of_float 23.2323 ;;
-- : string = "23.2323"  
+- : string = "23.2323"
 ```
 
 
@@ -3006,7 +3012,7 @@ val brazil : country =
 
 
 > let countries = [
-    {name = "Brazil" ; domain = ".br" ; language = "Porguese" ; id = 100 } ; 
+    {name = "Brazil" ; domain = ".br" ; language = "Porguese" ; id = 100 } ;
     {name = "United Kingdom" ; domain = ".co.uk" ; language = "English" ; id = 10 } ;
     {name = "South Africa" ; domain = ".co.za" ; language = "English" ; id = 40 } ;
     {name = "France" ; domain = ".fr" ; language = "French" ; id = 20 } ;
@@ -3022,13 +3028,13 @@ val countries : country list =
    {name = "France"; domain = ".fr"; language = "French"; id = 20};
    {name = "Taiwan ROC"; domain = ".tw"; language = "Chinese"; id = 54};
    {name = "Australia"; domain = ".au"; language = "English"; id = 354}]
- 
+
 
 > List.map (fun c -> c.name ) countries ;;
 - : string list =
 ["Brazil"; "United Kingdom"; "South Africa"; "France"; "Taiwan ROC";
  "Australia"]
- 
+
 
 > List.map (fun c -> c.domain ) countries ;;
 - : string list = [".br"; ".co.uk"; ".co.za"; ".fr"; ".tw"; ".au"]
@@ -3036,7 +3042,7 @@ val countries : country list =
 > List.filter (fun c -> c.name = "France") countries ;;
 - : country list =
 [{name = "France"; domain = ".fr"; language = "French"; id = 20}]
- 
+
 > List.filter (fun c -> c.language = "English") countries ;;
 - : country list =
 [{name = "United Kingdom"; domain = ".co.uk"; language = "English"; id = 10};
@@ -3245,60 +3251,60 @@ Source:
         | 1 -> 0
         | k -> k * factorial1 (k - 1)
     ;;
-    val factorial1 : int -> int = <fun>  
+    val factorial1 : int -> int = <fun>
 
     # let rec factorial2 = function
         | 0     -> 1
         | 1     -> 1
         | n     -> n * factorial2 (n - 1)
     ;;
-    val factorial2 : int -> int = <fun> 
-    
+    val factorial2 : int -> int = <fun>
+
     # factorial1 5 ;;
-    - : int = 120    
+    - : int = 120
 
      # factorial2 5 ;;
-    - : int = 120    
-    
+    - : int = 120
+
     # let rec map f xs =   match xs with
         | []        ->  []
         | h::tl     ->  (f h)::(map f tl)
     ;;
-    val map : ('a -> 'b) -> 'a list -> 'b list = <fun>   
+    val map : ('a -> 'b) -> 'a list -> 'b list = <fun>
 
     # map ((+) 5) [10; 20; 25 ; 9] ;;
-    - : int list = [15; 25; 30; 14]  
+    - : int list = [15; 25; 30; 14]
 
-    # let rec sumlist = function 
-        | []        -> 0 
+    # let rec sumlist = function
+        | []        -> 0
         | [a]       -> a
-        | (hd::tl)  -> hd + sumlist tl 
+        | (hd::tl)  -> hd + sumlist tl
     ;;
-    val sumlist : int list -> int = <fun> 
+    val sumlist : int list -> int = <fun>
 
     # sumlist [1; 2; 4; 5; 6; 7; 8; 9] ;;
-    - : int = 42   
+    - : int = 42
 
-    # let rec prodlist = function 
-        | []        -> 1 
+    # let rec prodlist = function
+        | []        -> 1
         | [a]       -> a
-        | (hd::tl)  -> hd * prodlist tl 
+        | (hd::tl)  -> hd * prodlist tl
     ;;
-    val prodlist : int list -> int = <fun>   
+    val prodlist : int list -> int = <fun>
 
     # prodlist [1 ; 2; 3; 4; 5; 6 ] ;;
-    - : int = 720 
+    - : int = 720
 
     # let rec filter f xs = match xs with
         | []        -> []
-        | h::tl     -> if f h 
-                       then h::(filter f tl) 
+        | h::tl     -> if f h
+                       then h::(filter f tl)
                        else filter f tl
 
     ;;
 
      # filter (fun x -> x < 10) [1; 2; 10; 20; 4; 6; 15] ;;
-    - : int list = [1; 2; 4; 6]       
+    - : int list = [1; 2; 4; 6]
 
 
     # let rec take n xs =
@@ -3307,9 +3313,9 @@ Source:
         | (_, []   ) -> []
         | (k, h::tl) -> k::(take (n-1) tl)
     ;;val take : int -> 'a list -> int list = <fun>
-    
+
     # take 3 [1; 2; 10; 20; 4; 6; 15] ;;
-    - : int list = [3; 2; 1] 
+    - : int list = [3; 2; 1]
     # take 20 [1; 2; 10; 20; 4; 6; 15] ;;
     - : int list = [20; 19; 18; 17; 16; 15; 14]
 
@@ -3327,36 +3333,36 @@ Source:
     Exception: Failure "n negative".
 
     # drop 10 [] ;;
-    - : 'a list = []  
+    - : 'a list = []
 
     # drop 0 [1; 2; 10; 20; 4; 6; 15] ;;
-    - : int list = [1; 2; 10; 20; 4; 6; 15] 
+    - : int list = [1; 2; 10; 20; 4; 6; 15]
 
     # drop 5 [1; 2; 10; 20; 4; 6; 15] ;;
     - : int list = [6; 15]
 
     # drop 25 [1; 2; 10; 20; 4; 6; 15] ;;
-    - : int list = []  
+    - : int list = []
 
-(* 
+(*
 
     Haskell Function:
     foldl1 : ( a -> a -> a ) -> [a] -> [a]
-    
-    > foldl1 (\x y -> 10*x + y) [1, 2, 3, 4, 5] 
+
+    > foldl1 (\x y -> 10*x + y) [1, 2, 3, 4, 5]
     12345
-    
+
     foldl1 f  [1, 2, 3, 4, 5]  =
     f 5 (f 4 (f 3 (f 1 2)))
-    
+
     foldl f [x0, x1, x2, x3, x4, x5 ... ] =
-    
+
     f xn (f xn-1 (f xn-2 ... (f x3 (f x2 (f x1 x0))))) ....
-    
+
     From: http://en.wikipedia.org/wiki/Fold_%28higher-order_function%29
 *)
 
-    let rec foldl1 f xs = 
+    let rec foldl1 f xs =
         match xs with
         | []            -> failwith "Empty list"
         | [x]           -> x
@@ -3364,7 +3370,7 @@ Source:
     ;;
 
     # foldl1 (fun x y -> 10*x + y) [1; 2; 3; 4; 5] ;;
-    - : int = 12345 
+    - : int = 12345
 
 
     # let rec foldr1 f xs =
@@ -3374,46 +3380,46 @@ Source:
         | x::tl     -> f x (foldr1 f tl)
     ;;
     val foldr1 : ('a -> 'a -> 'a) -> 'a list -> 'a = <fun>
-    
+
     # foldr1 (fun x y -> x + 10*y) [1; 2; 3; 4; 5; 6] ;;
-    - : int = 654321  
+    - : int = 654321
 
     # let rec foldl f acc xs =
-        match xs with 
+        match xs with
         | []     -> acc
         | x::tl  -> foldl f (f acc x) tl
     ;;
-    
-    # foldl (fun x y -> 10*x + y) 0  [1; 2; 3; 4; 5; 6] ;;
-    - : int = 123456     
 
-    # let rec foldr f acc xs = 
-        match xs with 
+    # foldl (fun x y -> 10*x + y) 0  [1; 2; 3; 4; 5; 6] ;;
+    - : int = 123456
+
+    # let rec foldr f acc xs =
+        match xs with
         | []    -> acc
         | x::tl -> f x (foldr f acc tl)
     ;;
     val foldr : ('a -> 'b -> 'b) -> 'b -> 'a list -> 'b = <fun>
 
     # foldr (fun x y -> x + 10*y) 0  [1; 2; 3; 4; 5; 6] ;;
-    - : int = 654321 
+    - : int = 654321
 
 
-    # let rec range start stop step = 
-        if start > stop 
+    # let rec range start stop step =
+        if start > stop
         then []
         else start::(range  (start + step) stop step )
     ;;
-    val range : int -> int -> int -> int list = <fun> 
+    val range : int -> int -> int -> int list = <fun>
 
     # range 0 30 1 ;;
-    - : int list =  [0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14; 
-    15; 16; 17; 18; 19; 20; 21; 22; 23; 24; 25;    26; 27; 28; 29; 30]  
+    - : int list =  [0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14;
+    15; 16; 17; 18; 19; 20; 21; 22; 23; 24; 25;    26; 27; 28; 29; 30]
 
     # range 0 100 10 ;;
-    - : int list = [0; 10; 20; 30; 40; 50; 60; 70; 80; 90; 100] 
+    - : int list = [0; 10; 20; 30; 40; 50; 60; 70; 80; 90; 100]
 
     # range (-100) 100 10 ;;
-    - : int list = [-100; -90; -80; -70; -60; -50; -40; -30; -20; 
+    - : int list = [-100; -90; -80; -70; -60; -50; -40; -30; -20;
     -10; 0; 10; 20; 30; 40; 50; 60; 70; 80; 90; 100]
 
 ```
@@ -3649,41 +3655,41 @@ Exception: Failure "Error empty list".
 
 ```ocaml
 > type fileTree =
-  | File of string 
+  | File of string
   | Folder of string * fileTree list
-  
+
 let neg f x = not (f x) ;;
 type fileTree = File of string | Folder of string * fileTree list
 val neg : ('a -> bool) -> 'a -> bool = <fun>
- 
+
 let relpath p str = p ^ "/" ^ str
-  
-let scand_dir path = 
-    Sys.readdir path 
-    |> Array.to_list 
-    
-let is_dir_relpath path rel = 
+
+let scand_dir path =
+    Sys.readdir path
+    |> Array.to_list
+
+let is_dir_relpath path rel =
     Sys.is_directory (relpath path rel)
-  
-let rec walkdir path = 
-           
-    let files = path 
-    |> scand_dir 
+
+let rec walkdir path =
+
+    let files = path
+    |> scand_dir
     |> List.filter @@ neg  (is_dir_relpath path)
     |> List.map (fun x -> File x) in
-    
-    let dirs = path 
-    |> scand_dir 
+
+    let dirs = path
+    |> scand_dir
     |> List.filter (is_dir_relpath path)
     |> List.map (fun x -> Folder (x, walkdir (relpath path x ))) in
-    
+
       dirs @ files
   ;;
 val relpath : string -> string -> string = <fun>
 val scand_dir : string -> string list = <fun>
 val is_dir_relpath : string -> string -> bool = <fun>
 val walkdir : string -> fileTree list = <fun>
-> 
+>
 
 > Folder ("Documents", [File "file1.txt"; File "filte2.txt" ; Folder("Pictures", []) ; Folder("bin",[File "cmd.dat" ; File "thumbs.db" ]) ]) ;;
 - : fileTree =
@@ -3704,7 +3710,7 @@ Folder ("Documents",
      File "minix2_be.mod"; File "fs.lst"; File "gdb.mod"; File "search.mod";
      File "part_gpt.mod"; File "halt.mod"; File "setjmp_test.mod";
     ...
-    
+
 >  walkdir "/home/tux/PycharmProjects/Haskell/haskell" ;;
 - : fileTree list =
 [Folder ("src",
@@ -3862,6 +3868,414 @@ Documentation of Lazy Module:
 <!--
     ---------------------------------------------------------------
 -->
+
+## Foreign Function Interface FFI 
+
+The OCaml library C Types allows easy and fast access to C libraries, Operating System services, shared libraries and to call functions and libraries written in another languages.
+
+**Installation**
+
+```
+$ opam install ctypes ctypes-foreign
+```
+
+Unix Standard system calls on Linux.  You can see the Linux C lib functions documentation by typing
+
+```
+man puts
+man getcwd
+```
+
+### Calling C Standard Library and Unix System Calls
+
+**Examples**
+
+```ocaml
+
+> #require "ctypes" ;;
+> #require "ctypes.foreign" ;;
+> open Foreign ;;
+> open PosixTypes ;;
+> open Ctypes ;;
+
+
+(*
+ *    int puts(const char *s);
+ *)
+
+> let puts = foreign "puts" (string @-> returning int);;
+val puts : bytes -> int = <fun>
+
+> puts "hello world" ;;
+hello world
+- : int = 12
+>
+
+(*   int chdir  (const char *path);
+ *
+ *   Changes  the current working directory of the calling
+ *   process to the directory specified  in path.
+ *
+ *------------------------------------------------------------------
+ *)
+
+> let chdir_ = foreign "chdir" (string @-> returning int) ;;
+val chdir_ : bytes -> int = <fun>
+
+chdir_ "/" ;;
+- : int = 0
+
+chdir_ "/wrong directory" ;;
+- : int = -1
+
+> let chdir path  =
+      let _  = chdir_  path in ()
+;;
+val chdir : bytes -> unit = <fun>
+
+> chdir "/" ;;
+- : unit = ()
+
+> chdir "/wrong directory" ;;
+- : unit = ()
+
+(*
+ *   char *getcwd(char *buf, size_t size);
+ *
+ *   getcwd  get current working directory
+ *------------------------------------------------------------------
+ *)
+
+> let getcwd =  foreign "getcwd" (void @-> returning string);;
+val getcwd : unit -> bytes = <fun>
+
+> getcwd () ;;
+- : bytes = "/home" 
+>
+
+(*  
+ *  int system(const char *command);
+ *
+ *  system - execute a shell command
+ *)
+
+> let system = foreign "system" (string @-> returning int) ;;
+val system : bytes -> int = <fun>
+
+
+> system "uname -a" ;;
+Linux tuxhorse 3.19.0-18-generic #18-Ubuntu SMP Tue May 19 18:30:59 UTC 2015 i686 i686 i686 GNU/Linux
+- : int = 0
+
+> system "pwd" ;;
+/home/tux/PycharmProjects/Haskell/ocaml
+- : int = 0
+>
+
+> system "wrong command" ;;
+sh: 1: wrong: not found
+- : int = 32512
+> 
+
+(*
+ *  unsigned int sleep(unsigned int seconds);
+ * 
+ *  sleep - sleep for the specified number of seconds 
+ *)
+
+> let sleep1 = foreign "sleep" (int @-> returning int) ;; 
+val sleep : int -> int = <fun>
+
+> sleep1 3 ;;
+- : int = 0
+
+> let sleep2 = foreign "sleep" (int @-> returning void) ;; 
+val sleep2 : int -> unit = <fun>
+> sleep2 4 ;;
+- : unit = ()
+
+(*
+ *  
+ *  int gethostname(char *name, size_t len);
+ *
+ *  returns the null-terminated hostname in the character array name,
+ *   which has a length of len bytes.
+ *
+ *  On success, zero is returned.  On error, -1 is returned, and errno 
+ *  is set appropriately
+ *
+ *   On  Linux,  HOST_NAME_MAX is defined with the value 64 (bytes - chars)
+ *
+ * ------------------------------------------------------------------
+ *) 
+ 
+> let get_host = foreign "gethostname" (ptr char @-> int @-> returning int) ;;
+val get_host : char Ctypes_static.ptr -> int -> int = <fun>
+
+> let host_name_max = 64 ;;
+val host_name_max : int = 64
+
+> let s = allocate_n char ~count:host_name_max ;;
+val s : char Ctypes.ptr = Ctypes_static.CPointer <abstr>
+ 
+> get_host s host_name_max ;;
+- : int = 0
+
+> string_from_ptr s ~length:host_name_max ;;
+- : string =
+"tuxhorse\000\000\000\000\.....\000\000\000\000"
+
+> coerce (ptr char) string s ;;
+- : string = "tuxhorse"
+
+   (* Everything together      *)
+   (* ---------------------------------*)
+   
+> let get_host = foreign "gethostname" (ptr char @-> int @-> returning int) ;;
+val get_host : char Ctypes_static.ptr -> int -> int = <fun>
+
+> let gethostname () = 
+       let host_name_max = 64 in
+       let s = allocate_n char ~count:host_name_max in
+       let _ = get_host s host_name_max in
+       coerce (ptr char) string s
+    ;;
+val gethostname : unit -> string = <fun>
+
+> gethostname () ;;
+- : string = "tuxhorse"
+ 
+ 
+(*
+ *  Cube Root Function
+ *
+ *  #include <math.h>
+ *  double cbrt(double x);
+ *
+ *  The  cbrt()  function  returns the (real) cube root of x. 
+ *  
+ * ------------------------------------------------------------------
+ *)
+
+> let cbrt = foreign "cbrt" (double @-> returning double) ;;
+val cbrt : float -> float = <fun>
+
+> List.map cbrt [1.; 8.; 64.; 125.; 216.; 1000.] ;;
+- : float list = [1.; 2.; 4.; 5.; 6.; 10.]
+```
+
+
+### Calling Shared Libraries
+
+#### Calling GNU Scientific Library
+
+* Calling GSL - GNU Scientific Library
+
+* [GSL Manual](https://www.gnu.org/software/gsl/manual/html_node)
+
+```ocaml
+
+> #require "ctypes" ;;
+> #require "ctypes" ;;
+> #require "ctypes.foreign" ;;
+> open Foreign ;;
+> open PosixTypes ;;
+> open Ctypes ;;
+
+> let gsl_lib = Dl.dlopen ~filename:"libgsl.so" ~flags:[Dl.RTLD_LAZY; Dl.RTLD_GLOBAL];;
+val gsl_lib : Dl.library = <abstr>
+> 
+
+
+(*
+ *   double gsl_sf_bessel_J0 (double x)
+ *  
+ *  gsl_sf_bessel_J0(5) = -1.775967713143382920e-01
+ *
+ *------------------------------------------------------------------
+ *)
+ 
+> let gsl_sf_bessel_J0 = foreign ~from:gsl_lib "gsl_sf_bessel_J0" (double @-> returning double ) ;;
+val gsl_sf_bessel_J0 : float -> float = <fun>
+
+> gsl_sf_bessel_J0 5.0 ;;
+- : float = -0.177596771314338292
+ 
+> List.map gsl_sf_bessel_J0 [1.0; 10.0; 100.0; 1000.0 ] ;;
+- : float list =
+[0.765197686557966494; -0.245935764451348265; 0.0199858503042231184;
+ 0.024786686152420169]
+
+(*
+ *   Polynomial Evaluation
+ *  
+ *  double gsl_poly_eval (const double c[], const int len, const double x)
+ *   
+ *   The functions described here evaluate the polynomial 
+ *   P(x) = c[0] + c[1] x + c[2] x^2 + ... + c[len-1] x^{len-1} 
+ *   
+ *   using Horner’s method for stability. Inline versions of these 
+ *   functions are used when HAVE_INLINE is defined. 
+ *
+ *   This function evaluates a polynomial with real coefficients for 
+ *   the real variable x. 
+ *
+ * ------------------------------------------------------------------
+ *)
+
+    (*
+     *  Let's evaluate  3 * x^2 + 2 * x + 1
+     * 
+     *  so it becomes:  [1. ; 2. ; 3. ]
+     *
+     *
+     *  (3 * x^2 + 2 * x + 1) 5 = 86
+     *  (3 * x^2 + 2 * x + 1) 7 = 162
+     *  (3 * x^2 + 2 * x + 1) 9 = 262
+     *)
+
+> let gsl_poly_eval_ = foreign ~from:gsl_lib "gsl_poly_eval" 
+(ptr double @-> int @-> double @-> returning double);;
+val gsl_poly_eval_ : float Ctypes_static.ptr -> int -> float -> float = <fun>
+
+> let poly =  CArray.of_list double  [1. ; 2. ; 3. ] ;;
+val poly : float Ctypes.CArray.t =
+  {Ctypes_static.astart = Ctypes_static.CPointer <abstr>; alength = 3}
+
+> CArray.start poly ;;
+- : float Ctypes.ptr = Ctypes_static.CPointer <abstr>
+ 
+> gsl_poly_eval_ (CArray.start poly)  3 5.0 ;;
+- : float = 86.
+> gsl_poly_eval_ (CArray.start poly)  3 7.0 ;;
+- : float = 162.
+> gsl_poly_eval_ (CArray.start poly)  3 9.0 ;;
+- : float = 262.
+
+
+    (* Assemblying all pieces of code *)
+
+> let gsl_poly_eval_ = foreign ~from:gsl_lib "gsl_poly_eval" 
+  (ptr double @-> int @-> double @-> returning double);;
+val gsl_poly_eval_ : float Ctypes_static.ptr -> int -> float -> float = <fun>
+ 
+> let gsl_poly_val poly x = 
+       let p = CArray.of_list double poly in
+       gsl_poly_eval_ (CArray.start p) (List.length poly) x
+  ;;
+val gsl_poly_val : float list -> float -> float = <fun>
+ 
+
+>  List.map (gsl_poly_val [1. ; 2. ; 3. ] ) [5.0 ; 7.0 ; 9.0] ;;
+- : float list = [86.; 162.; 262.]
+
+> let mypoly = gsl_poly_val [1. ; 2. ; 3. ]  ;;
+val mypoly : float -> float = <fun>
+
+> List.map mypoly [5.0 ; 7.0 ; 9.0] ;;
+- : float list = [86.; 162.; 262.]
+> 
+
+```
+
+#### Calling Python
+
+* [Embedding Python in Another Application](https://docs.python.org/2/extending/embedding.html)
+
+* [Initializing and finalizing the interpreter - Python/C API Reference Manual](https://docs.python.org/2/c-api/init.html)
+
+* [The Very High Level Layer - Python/C API Reference Manual](https://docs.python.org/2/c-api/veryhigh.html)
+
+```ocaml
+> 
+  open Foreign ;;
+>  open PosixTypes ;;
+> open Ctypes ;;
+> 
+  
+>  let pylib = Dl.dlopen ~filename:"libpython2.7.so" ~flags:[Dl.RTLD_LAZY; Dl.RTLD_GLOBAL];;
+val pylib : Dl.library = <abstr>
+> let py_init = foreign "Py_Initialize" ~from:pylib (void @-> returning void) ;;
+val py_init : unit -> unit = <fun>
+> py_init () ;;
+- : unit = ()
+
+> let py_getPath = foreign "Py_GetPath" ~from:pylib (void @-> returning string) ;;
+val py_getPath : unit -> string = <fun>
+> py_getPath () ;;
+- : string =
+"/home/tux/lib:/usr/lib/python2.7/:/usr/lib/python2.7/plat-i386-linux-gnu:/usr/lib/python2.7/lib-tk:/usr/lib/python2.7/lib-old:/usr/lib/python2.7/lib-dynload"
+> 
+  
+> let py_getVersion = foreign "Py_GetVersion" ~from:pylib (void @-> returning string) ;;
+val py_getVersion : unit -> string = <fun>
+> 
+> py_getVersion() ;;
+- : string = "2.7.9 (default, Apr  2 2015, 15:39:13) \n[GCC 4.9.2]"
+> 
+  
+  let py_GetPlatform = foreign "Py_GetPlatform" ~from:pylib (void @-> returning string) ;;
+val py_GetPlatform : unit -> string = <fun>
+> py_GetPlatform () ;;
+- : string = "linux2"
+> 
+  
+> let pyRunSimpleString = foreign "PyRun_SimpleString" ~from:pylib (string @-> returning int) ;;
+val pyRunSimpleString : string -> int = <fun>
+> 
+  pyRunSimpleString "print 'hello world'" ;;
+hello world
+- : int = 0
+
+> pyRunSimpleString "f = lambda x: 10.5 * x - 4" ;;
+- : int = 0
+> pyRunSimpleString "print (map(f, [1, 2, 3, 4, 5, 6, 7])" ;;
+  File "<string>", line 1
+    print (map(f, [1, 2, 3, 4, 5, 6, 7])
+                                       ^
+SyntaxError: unexpected EOF while parsing
+- : int = -1
+
+> pyRunSimpleString "print (map(f, [1, 2, 3, 4, 5, 6, 7]))" ;;
+[6.5, 17.0, 27.5, 38.0, 48.5, 59.0, 69.5]
+- : int = 0
+
+> pyRunSimpleString "import sys ; print sys.executable" ;;
+/usr/bin/python
+- : int = 0
+> 
+
+> let py_finalize = foreign "Py_Finalize" ~from:pylib (void @-> returning void) 
+  ;;
+val py_finalize : unit -> unit = <fun>
+> py_finalize () ;;
+- : unit = ()
+> 
+
+```
+
+### References
+
+**OCAML Ctypes**
+
+
+* [Book - Real World OCAML - Chapter 19. Foreign Function Interface](https://realworldocaml.org/v1/en/html/foreign-function-interface.html)
+
+* [OCAML Ctypes Documentation](http://ocamllabs.github.io/ocaml-ctypes)
+* [Ctypes FAQ - OCAML Labs](https://github.com/ocamllabs/ocaml-ctypes/wiki/FAQ)
+* [Ctypes tutorial - OCAML Labs](https://github.com/ocamllabs/ocaml-ctypes/wiki/ctypes-tutorial)
+* [Github - OCAML Labs - Ctypes](https://github.com/ocamllabs/ocaml-ctypes)
+
+**C Libraries Used in this section**
+
+* [ Linux kernel and C library interfaces - Kernel.Org](https://www.kernel.org/doc/man-pages/)
+* [Wikipedia - System call](http://en.wikipedia.org/wiki/System_call)
+* [Linux System Call Table](http://docs.cs.up.ac.za/programming/asm/derick_tut/syscalls.html)
+* [Linux Programmer's Manual SYSCALLS(2)](http://man7.org/linux/man-pages/man2/syscalls.2.html)
+* [Linux System Calls Quick Reference](http://libflow.com/d/fz1qu63i/LINUX_System_Call_Quick_Reference)
+
+
+* [GSL - GNU Scientific Library](https://www.gnu.org/software/gsl/)
 
 ## Creating Libraries, Modules and Compiling to Bytecode or Machine Code
 
@@ -4119,24 +4533,24 @@ $ opam install batteries
 $ utop
 > #require "batteries";;
 > open Batteries ;;
-> 
+>
 ```
 
-## Getting Started
+### Getting Started
 
 From: [Batteries Wiki](https://github.com/ocaml-batteries-team/batteries-included/wiki/Getting-started)
 
 ```ocaml
 > #require "batteries";;
 > open Batteries ;;
-> 
+>
 let main () =
   (1--999) (* the enum that counts from 1 to 999 *)
   |> Enum.filter (fun i -> i mod 3 = 0 || i mod 5 = 0)
   |> Enum.reduce (+) (* add all remaining values together *)
   |> Int.print stdout
 ;;
-val main : unit -> unit = <fun>  
+val main : unit -> unit = <fun>
 
 > main () ;;
 233168- : unit = ()
@@ -4492,7 +4906,7 @@ val main : unit -> unit = <fun>
 * [Accessing libraries written in OCaml and C++ from Ruby code](http://stackoverflow.com/questions/13535149/accessing-libraries-written-in-ocaml-and-c-from-ruby-code)
 
 
-* [Code generation for mathematical 
+* [Code generation for mathematical
 problems](http://stackoverflow.com/questions/13203089/code-generation-for-mathematical-problems)
 
 * [Ocaml for ARM cortex M4?](http://stackoverflow.com/questions/27061506/ocaml-for-arm-cortex-m4)
