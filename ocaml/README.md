@@ -1234,6 +1234,14 @@ Math Operations. In Ocaml the same operator cannot be used for more than one typ
     # fun1_int32 100l 20l ;;
     - : int32 = 920l
 
+    (* OR for short *)
+    
+    # let fun1_int32_ x y  = OP.I32.(10l  * x - 4l * y) ;;
+    val fun1_int32_ : int32 -> int32 -> int32 = <fun>                               
+    
+    # fun1_int32_ 100l 20l ;;
+    - : int32 = 920l  
+
 (* Defined for Int64 *)
 
     # let fun1_int64 x y  =
@@ -1245,6 +1253,11 @@ Math Operations. In Ocaml the same operator cannot be used for more than one typ
     # fun1_int64 100L 20L ;;
     - : int64 = 920L
 
+    (* OR *)
+    
+    # let fun1_int64_ x y = OP.I64.(10L * x - 4L * y) ;;
+    val fun1_int64_ : int64 -> int64 -> int64 = <fun>
+
 (* Defined for Float *)
 
     # let fun1_float x y  =
@@ -1253,9 +1266,16 @@ Math Operations. In Ocaml the same operator cannot be used for more than one typ
             ;;
     val fun1_float : float -> float -> float = <fun>
 
-
     # fun1_float 100. 20. ;;
     - : float = 920.
+
+    (* OR *)
+    
+    # let fun1_float_ x y  = OP.FL.(10.  * x - 4. * y) ;;
+    val fun1_float_ : float -> float -> float = <fun>
+    
+    # fun1_float_ 100. 20. ;;
+    - : float = 920.    
 
 ```
 
@@ -2460,7 +2480,7 @@ There are more useful string functions on the core library.
 * http://caml.inria.fr/pub/docs/manual-ocaml/libref/Char.html
 * http://caml.inria.fr/pub/docs/manual-ocaml/libref/Str.html
 
-Char Module
+**Char Module**
 
 ```ocaml
 
@@ -2489,7 +2509,7 @@ Char Module
     - : char = 'a'
 ```
 
-String Module
+**String Module**
 
 ```ocaml
 
@@ -2521,6 +2541,10 @@ String Module
     - : char = 'H'
     # String.get  "Hello world" 1 ;;
     - : char = 'e'
+    
+    # List.map (String.get "Buffalo") [0; 1; 2; 3; 4; 5; 6] ;;
+    - : char list = ['B'; 'u'; 'f'; 'f'; 'a'; 'l'; 'o']
+    # 
 
     # let str =  "My string" ;;
     val str : string = "My string"
@@ -2576,7 +2600,7 @@ String Module
 
 
 
-Str Module
+**Str Module**
 
 * http://caml.inria.fr/pub/docs/manual-ocaml/libref/Str.html
 
@@ -2603,6 +2627,9 @@ Str Module
     # Str.split (Str.regexp "[,|;]") "23.232,9823;\"Ocaml Haskell FP\";400";;
     - : string list = ["23.232"; "9823"; "\"Ocaml Haskell FP\""; "400"]
 
+    # Str.split (Str.regexp "[ ]") "23.232 9823 Ocaml Haskell FP 400";;
+    - : string list = ["23.232"; "9823"; "Ocaml"; "Haskell"; "FP"; "400"]
+
     # Str.string_before ;;
     - : string -> int -> string = <fun>
     # Str.string_before "Hello world ocaml" 3 ;;
@@ -2612,7 +2639,331 @@ Str Module
 
     # Str.string_after "Hello world ocaml" 11 ;;
     - : string = " ocaml"
+    
+    
+    #  Str.split (Str.regexp "[ ]") "23.232 9823 Ocaml Haskell FP 400";;
+    - : string list = ["23.232"; "9823"; "Ocaml"; "Haskell"; "FP"; "400"]
 ```
+
+**Buffer Module**
+
+* http://caml.inria.fr/pub/docs/manual-ocaml/libref/Str.html
+
+It provides accumulative concatenation of strings in quasi-linear time (instead of quadratic time when strings are concatenated pairwise).
+
+```ocaml
+
+> Buffer.create ;;
+- : int -> Buffer.t = <fun> 
+
+(* Converts Buffer to String *)
+Buffer.contents ;;
+- : Buffer.t -> bytes = <fun>
+> 
+
+(* Add Char to Buffer *)
+> Buffer.add_char ;;
+- : Buffer.t -> char -> unit = <fun> 
+
+Buffer.add_bytes ;;
+- : Buffer.t -> bytes -> unit = <fun>
+> 
+
+(* Add String to Buffer *)
+> Buffer.add_string ;;
+- : Buffer.t -> bytes -> unit = <fun> 
+>
+
+(* Reset Buffer -> buffer = "" *)
+> Buffer.reset ;;
+- : Buffer.t -> unit = <fun>
+> 
+
+> let b = Buffer.create  0 ;;
+val b : Buffer.t = <abstr> 
+
+> Buffer.contents b ;;
+- : bytes = ""
+
+
+> Buffer.add_string  b "ocaml fp rocks ! ocaml is amazing" ;;
+- : unit = ()
+
+> Buffer.contents b ;;
+- : bytes = "ocaml fp rocks ! ocaml is amazing"
+
+> Buffer.add_string b " - Ocaml is strict FP" ;;
+- : unit = ()  
+
+Buffer.length b ;;
+- : int = 33
+
+> Buffer.contents b ;;
+- : bytes = "ocaml fp rocks ! ocaml is amazing - Ocaml is strict FP"
+> 
+
+
+Buffer.reset b ;;
+- : unit = () 
+
+> Buffer.contents b ;;
+- : bytes = ""
+
+
+
+let c = Buffer.create 0 ;;
+val c : Buffer.t = <abstr>
+> Buffer.add_char c 'o' ;;
+- : unit = ()
+> Buffer.add_char c 'c' ;;
+- : unit = ()
+> Buffer.add_char c 'a' ;;
+- : unit = () 
+> Buffer.add_char c 'm' ;;
+- : unit = () 
+> Buffer.add_char c 'l' ;;
+- : unit = () 
+
+> Buffer.contents c ;;
+- : bytes = "ocaml"
+
+print_string (Buffer.contents c) ;;
+ocaml- : unit = ()
+
+
+> Buffer.nth c 0 ;;
+- : char = 'o'
+> Buffer.nth c 1 ;;
+- : char = 'c'
+> Buffer.nth c 2 ;;
+- : char = 'a
+> Buffer.nth c 3 ;;
+- : char = 'm'
+> Buffer.nth c 4 ;;
+- : char = 'l'
+
+List.map (Buffer.nth c) [0; 1; 2; 3; 4] ;;
+- : char list = ['o'; 'c'; 'a'; 'm'; 'l']
+
+> let s = "hindler milner type system" ;;
+val s : bytes = "hindler milner type system"
+
+> let b = Buffer.create 0 ;;
+val b : Buffer.t = <abstr>
+
+> Buffer.add_substring ;;
+- : Buffer.t -> bytes -> int -> int -> unit = <fun>
+
+Buffer.add_substring b s 0 4 ;;
+- : unit = ()
+
+> Buffer.contents b ;;
+- : bytes = "hind"
+
+Buffer.add_substring b s 4 5 ;;
+- : unit = ()
+
+> Buffer.contents b ;;
+- : bytes = "hindler m"
+
+> Buffer.add_substring b s 6 10 ;;
+- : unit = ()
+
+> Buffer.contents b ;;
+- : bytes = "hindler mr milner t"
+
+
+> Buffer.sub ;;
+- : Buffer.t -> int -> int -> bytes = <fun>
+
+
+let c = Buffer.create 0 ;;
+val c : Buffer.t = <abstr>
+> Buffer.add_string c "Ocaml is almost fast as C" ;;
+- : unit = ()
+> Buffer.sub c 0 1 ;;
+- : bytes = "O" 
+> Buffer.sub c 0 5 ;;
+- : bytes = "Ocaml" 
+> Buffer.sub c 0 10 ;;
+- : bytes = "Ocaml is a"
+> Buffer.sub c 5 15 ;;
+- : bytes = " is almost fast"
+> 
+```
+
+**String Processing**
+
+Splitting a string into characters.
+
+```ocaml
+
+> let s = "p2p peer to peer connection" ;;
+val s : bytes = "p2p peer to peer connection"
+
+(* Imperative Approach *)
+
+
+> let arr = Array.make ;;
+val arr : int -> 'a -> 'a array = <fun>
+
+let arr = Array.make (String.length s) '\000' ;;
+val arr : char array = 
+[|'\000'; '\000'; '\000'; '\000'; '\000'; '\000'; '\000'; '\000'; '\000';
+'\000'; '\000'; '\000'; '\000'; '\000'; '\000'; '\000'; '\000'; '\000';
+'\000'; '\000'; '\000'; '\000'; '\000'; '\000'; '\000'; '\000'; '\000'|]
+
+> for i = 0 to (String.length s - 1) do
+      arr.(i) <- s.[i]
+  done ;;
+- : unit = () 
+
+
+> arr ;;
+- : char array = 
+[|'p'; '2'; 'p'; ' '; 'p'; 'e'; 'e'; 'r'; ' '; 't'; 'o'; ' '; 'p'; 'e'; 'e';
+'r'; ' '; 'c'; 'o'; 'n'; 'n'; 'e'; 'c'; 't'; 'i'; 'o'; 'n'|]
+
+let str2chars s = 
+    let arr = Array.make (String.length s) '\000' in
+    for i = 0 to (String.length s - 1) do
+        arr.(i) <- s.[i]
+    done ;
+    arr 
+;;
+val str2chars : bytes -> char array = <fun> 
+> 
+
+str2chars "fox" ;;
+- : char array = [|'f'; 'o'; 'x'|]
+
+
+
+> str2chars "fox" |> Array.map Char.code ;;
+- : int array = [|102; 111; 120|] 
+
+> let str2chars_ s = 
+    let arr = Array.make (String.length s) '\000' in
+    for i = 0 to (String.length s - 1) do
+        arr.(i) <- s.[i]
+    done ;
+    Array.to_list arr 
+;;
+val str2chars_ : bytes -> char list = <fun>
+> 
+
+> str2chars_ "UNIX" ;;
+- : char list = ['U'; 'N'; 'I'; 'X']
+
+> str2chars_ "UNIX" |> List.map Char.code ;;
+- : int list = [85; 78; 73; 88]
+
+(* Functional Approach *)
+
+> let str2chars s = 
+    let n = String.length s in
+    let rec aux i alist = 
+        if i =0 
+        then []
+        else s.[n-i]::(aux (i-1) alist)
+    in aux n []
+;;
+val str2chars : bytes -> char list = <fun>
+
+> str2chars "UNIX" ;;
+- : char list = ['U'; 'N'; 'I'; 'X']
+
+str2chars "UNIX" |> List.map Char.code ;;
+- : int list = [85; 78; 73; 88]
+
+
+(* Extract Digits *)
+
+let digit_of_char c = 
+    match c with
+    | '0' -> 0
+    | '1' -> 1
+    | '2' -> 2
+    | '3' -> 3
+    | '4' -> 4
+    | '5' -> 5
+    | '6' -> 6
+    | '7' -> 7
+    | '8' -> 8
+    | '9' -> 9
+    | _   -> failwith "Not a digit"
+;;
+;;val digit_of_char : char -> int = <fun>
+
+> str2chars "12334" |> List.map digit_of_char ;;
+- : int list = [1; 2; 3; 3; 4]
+
+> str2chars "12334x" |> List.map digit_of_char ;;
+Exception: Failure "Not a digit".
+
+> let str2digits s =  str2chars s |> List.map digit_of_char ;;
+val str2digits : bytes -> int list = <fun>
+
+> str2digits "1234" ;;
+- : int list = [1; 2; 3; 4]
+
+```
+
+Join Chars
+
+```ocaml
+> let cs = ['o' ; 'c'; 'a'; 'm'; 'l' ] ;;
+val cs : char list = ['o'; 'c'; 'a'; 'm'; 'l'] 
+
+> Buffer.add_char ;;
+- : Buffer.t -> char -> unit = <fun>
+
+> List.iter ;;
+- : ('a -> unit) -> 'a list -> unit = <fun>
+
+List.iter (Buffer.add_char b) cs ;;
+- : unit = ()
+
+> Buffer.contents b ;;
+- : bytes = "ocaml"
+
+let chars2str cs = 
+    let b = Buffer.create 0 in
+    List.iter (Buffer.add_char b) cs ;
+    Buffer.contents b 
+;;
+val chars2str : char list -> bytes = <fun> 
+> 
+
+> chars2str ['o' ; 'c'; 'a'; 'm'; 'l' ] ;;
+- : bytes = "ocaml"
+
+```
+
+Strip Left Chars
+
+```ocaml
+
+> let trim chars s = 
+    let n = String.length s in
+    let b = Buffer.create 0 in
+    
+    for i = 0 to n - 1 do
+        if List.mem s.[i] chars 
+            then ()
+            else Buffer.add_char b s.[i]
+    done ;
+    Buffer.contents b
+;;
+
+
+> trim ['-'; '.']  "-.--.--.....-trim chars---...----.-.-" ;;
+- : bytes = "trim chars"
+
+```
+
+
+
 
 <!--
     ---------------------------------------------------------------
@@ -2777,7 +3128,7 @@ Extra Example:
 
 ### Unix
 
-Despite the name Unix, this is a multi platform module and work in Windows OS.
+Despite the name Unix, this is a multi platform module and also works in Windows OS.
 
 Compile Standalone programs with Unix Library.
 
@@ -2994,9 +3345,9 @@ utop # string_of_float 23.2323 ;;
   ;;
 
 
-> let brazil = {name = "Brazil" ; domain = ".br" ; language = "Porguese" ; id = 100 } ;;
+> let brazil = {name = "Brazil" ; domain = ".br" ; language = "Portuguese" ; id = 100 } ;;
 val brazil : country =
-  {name = "Brazil"; domain = ".br"; language = "Porguese"; id = 100}
+  {name = "Brazil"; domain = ".br"; language = "Portuguese"; id = 100}
 
 >  brazil.name ;;
 - : string = "Brazil"
@@ -3005,14 +3356,14 @@ val brazil : country =
 - : string = ".br"
 
 > brazil.language ;;
-- : string = "Porguese"
+- : string = "Portuguese"
 
 > brazil.id ;;
 - : int = 100
 
 
 > let countries = [
-    {name = "Brazil" ; domain = ".br" ; language = "Porguese" ; id = 100 } ;
+    {name = "Brazil" ; domain = ".br" ; language = "Portuguese" ; id = 100 } ;
     {name = "United Kingdom" ; domain = ".co.uk" ; language = "English" ; id = 10 } ;
     {name = "South Africa" ; domain = ".co.za" ; language = "English" ; id = 40 } ;
     {name = "France" ; domain = ".fr" ; language = "French" ; id = 20 } ;
@@ -3021,7 +3372,7 @@ val brazil : country =
       ]
   ;;
 val countries : country list =
-  [{name = "Brazil"; domain = ".br"; language = "Porguese"; id = 100};
+  [{name = "Brazil"; domain = ".br"; language = "Portuguese"; id = 100};
    {name = "United Kingdom"; domain = ".co.uk"; language = "English";
     id = 10};
    {name = "South Africa"; domain = ".co.za"; language = "English"; id = 40};
@@ -3879,12 +4230,7 @@ The OCaml library C Types allows easy and fast access to C libraries, Operating 
 $ opam install ctypes ctypes-foreign
 ```
 
-Unix Standard system calls on Linux.  You can see the Linux C lib functions documentation by typing
 
-```
-man puts
-man getcwd
-```
 
 ### Calling C Standard Library and Unix System Calls
 
@@ -4254,6 +4600,85 @@ val py_finalize : unit -> unit = <fun>
 
 ```
 
+### Finding Shared Libraries
+
+
+Unix Standard system calls on Linux.  You can see the Linux lib-C functions documentation by using the commands:
+
+```bash
+$ man puts
+$ man getcwd
+```
+
+It is possible to find shared libraries used by executables by using the ldd command.
+
+```bash
+$ which rlwrap 
+/usr/bin/rlwrap
+
+$ ldd $(which rlwrap)
+    linux-gate.so.1 =>  (0xb77bf000)
+    libutil.so.1 => /lib/i386-linux-gnu/libutil.so.1 (0xb779f000)
+    libreadline.so.6 => /lib/i386-linux-gnu/libreadline.so.6 (0xb775a000)
+    libtinfo.so.5 => /lib/i386-linux-gnu/libtinfo.so.5 (0xb7736000)
+    libc.so.6 => /lib/i386-linux-gnu/libc.so.6 (0xb757b000)
+    /lib/ld-linux.so.2 (0xb77c0000)
+
+$ ldd $(which ssh)
+    linux-gate.so.1 =>  (0xb774a000)
+    libselinux.so.1 => /lib/i386-linux-gnu/libselinux.so.1 (0xb763f000)
+    libresolv.so.2 => /lib/i386-linux-gnu/libresolv.so.2 (0xb7626000)
+    libcrypto.so.1.0.0 => /lib/i386-linux-gnu/libcrypto.so.1.0.0 (0xb7452000)
+    libdl.so.2 => /lib/i386-linux-gnu/libdl.so.2 (0xb744d000)
+    libz.so.1 => /lib/i386-linux-gnu/libz.so.1 (0xb7432000)
+    libgssapi_krb5.so.2 => /usr/lib/i386-linux-gnu/libgssapi_krb5.so.2 (0xb73e2000)
+    libc.so.6 => /lib/i386-linux-gnu/libc.so.6 (0xb7227000)
+    libpcre.so.3 => /lib/i386-linux-gnu/libpcre.so.3 (0xb71b4000)
+    /lib/ld-linux.so.2 (0xb774b000)
+    libkrb5.so.3 => /usr/lib/i386-linux-gnu/libkrb5.so.3 (0xb70e1000)
+    libk5crypto.so.3 => /usr/lib/i386-linux-gnu/libk5crypto.so.3 (0xb70af000)
+    libcom_err.so.2 => /lib/i386-linux-gnu/libcom_err.so.2 (0xb70aa000)
+    libkrb5support.so.0 => /usr/lib/i386-linux-gnu/libkrb5support.so.0 (0xb709d000)
+    libpthread.so.0 => /lib/i386-linux-gnu/libpthread.so.0 (0xb707f000)
+    libkeyutils.so.1 => /lib/i386-linux-gnu/libkeyutils.so.1 (0xb707a000)
+    
+$ # Trace System Calls
+
+$ strace -c ls
+build.sh  codes    haskell  Make      ocaml   README.back.md  README.md  Test.html
+clean.sh  dict.sh  LICENSE  Makefile  papers  README.html     tags   tmp
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+  0.00    0.000000           0         9           read
+  0.00    0.000000           0         2           write
+  0.00    0.000000           0        11           open
+  0.00    0.000000           0        14           close
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         9         9 access
+  0.00    0.000000           0         3           brk
+  0.00    0.000000           0         2           ioctl
+  0.00    0.000000           0         3           munmap
+  ... ....
+
+$ ######### For Ubuntu / Debian Only Only ###########################
+$ #
+$ apt-cache search gsl | grep -i dev | grep -i lib
+libgsl0-dev - GNU Scientific Library (GSL) -- development package
+libghc-hmatrix-dev - Linear algebra and numerical computation in Haskell
+libocamlgsl-ocaml-dev - GNU scientific library for OCaml
+
+
+$ apt-cache search gsl | grep -i dev | grep -i lib
+libgsl0-dev - GNU Scientific Library (GSL) -- development package
+libghc-hmatrix-dev - Linear algebra and numerical computation in Haskell
+
+
+$ apt-cache search python lib dev | grep -i dev | grep -i libpython
+libpython-all-dev - package depending on all supported Python development packages
+libpython-dev - header files and a static library for Python (default)
+libpython2.7-dev - Header files and a static library for Python (v2.7)
+```
+
 ### References
 
 **OCAML Ctypes**
@@ -4265,6 +4690,8 @@ val py_finalize : unit -> unit = <fun>
 * [Ctypes FAQ - OCAML Labs](https://github.com/ocamllabs/ocaml-ctypes/wiki/FAQ)
 * [Ctypes tutorial - OCAML Labs](https://github.com/ocamllabs/ocaml-ctypes/wiki/ctypes-tutorial)
 * [Github - OCAML Labs - Ctypes](https://github.com/ocamllabs/ocaml-ctypes)
+* [Mail List: ocaml-ctypes, a library for calling C functions directly from OCaml](https://sympa.inria.fr/sympa/arc/caml-list/2013-06/msg00046.html)
+* [Repository Examples - OCAML Labs](https://github.com/ocamllabs/ocaml-ctypes/tree/master/examples)
 
 **C Libraries Used in this section**
 
