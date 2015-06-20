@@ -9,6 +9,7 @@
       - [UTOP Interactive Shell](#utop-interactive-shell)
       - [OCaml Browser](#ocaml-browser)
       - [Troubleshooting](#troubleshooting)
+      - [Opam Package Manager](#opam-package-manager)
       - [Misc](#misc)
   - [Basic Syntax](#basic-syntax)
         - [Primitive Types](#primitive-types)
@@ -48,6 +49,7 @@
     - [Calling Shared Libraries](#calling-shared-libraries)
       - [Calling GNU Scientific Library](#calling-gnu-scientific-library)
       - [Calling Python](#calling-python)
+    - [Finding Shared Libraries](#finding-shared-libraries)
     - [References](#references)
   - [Creating Libraries, Modules and Compiling to Bytecode or Machine Code](#creating-libraries-modules-and-compiling-to-bytecode-or-machine-code)
     - [Loading Files in Interactive Shell](#loading-files-in-interactive-shell)
@@ -182,6 +184,7 @@ opam install utop core batteries
 
 ## Toolset
 
+See also: https://github.com/OCamlPro/ocaml-cheat-sheets
 
 | Program      | Description                                |
 |--------------|--------------------------------------------|
@@ -378,10 +381,12 @@ down        : history-next                  -> go to the next entry of the histo
 
 #### OCaml Browser
 
-Browser OCaml documentation.
+Browser OCaml Type Signatures.
 
 ```
 $ ocamlfind browser -all
+$ ocamlfind ocamlbrowser -package core
+$ ocamlfind browser -package batterie
 ```
 
 ![](images/ocamlbrowser.png)
@@ -409,6 +414,121 @@ Standard library directory: /usr/lib/ocaml
 
 $ utop -version
 The universal toplevel for OCaml, version 1.17, compiled for OCaml version 4.01.0
+```
+
+Get information about compiled files:
+
+```
+$ ocamlobjinfo seq.cmo
+File seq.cmo
+Unit name: Seq
+Interfaces imported:
+    54ba2685e6ed154753718e9c8becb28b    String
+    6e0efdddf4b33e30be4cc8ff056b56ff    Seq
+    4836c254f0eacad92fbf67abc525fdda    Pervasives
+Uses unsafe features: no
+Force link: no
+
+
+$ ocamlobjinfo seq.cma
+File seq.cma
+Force custom: no
+Extra C object files:
+Extra C options:
+Extra dynamically-loaded libraries:
+Unit name: Seq
+Interfaces imported:
+    54ba2685e6ed154753718e9c8becb28b    String
+    4387952f7aad2695faf187cd3feeb5e5    Seq
+    4836c254f0eacad92fbf67abc525fdda    Pervasives
+Uses unsafe features: no
+Force link: no
+
+
+$ ocamlobjinfo seq.cmi
+File seq.cmi
+Unit name: Seq
+Interfaces imported:
+    4387952f7aad2695faf187cd3feeb5e5    Seq
+    4836c254f0eacad92fbf67abc525fdda    Pervasives
+
+```
+
+#### Opam Package Manager
+
+Opam Version
+
+```
+$ opam --version
+1.2.2
+```
+
+List Installed Versions of OCaml compilers:
+
+```
+$ opam switch list
+--     -- 3.11.2             Official 3.11.2 release
+--     -- 3.12.1             Official 3.12.1 release
+--     -- 4.00.0             Official 4.00.0 release
+--     -- 4.00.1             Official 4.00.1 release
+4.01.0  C 4.01.0             Official 4.01.0 release
+--     -- 4.02.0             Official 4.02.0 release
+4.02.1  I 4.02.1             Official 4.02.1 release
+--     -- ocamljava-preview  
+doc     I system             System compiler (4.00.1)
+ # 111 more patched or experimental compilers, use '--all' to show
+```
+
+Switch to a ocaml version 4.02.1:
+
+```
+$ opam switch 4.02.1
+# To setup the new switch in the current shell, you need to run:
+eval `opam config env`
+
+```
+
+Search Packages
+
+```
+$ opam search core
+# Existing packages for 4.01.0:
+async               --  Monadic concurrency library
+async_core          --  Monadic concurrency library
+async_extended      --  Additional utilities for async
+...
+```
+
+Install Packages
+
+```
+opam install lablgtk ocamlfind
+```
+
+Upgrade Packages
+
+```
+$ opam upgrade
+```
+
+Show all Installed Packages
+
+```
+$  ocamlfind list
+archimedes          (version: 0.4.17)
+archimedes.graphics (version: 0.4.17)
+archimedes.internals (version: 0.4.17)
+archimedes.top      (version: 0.4.17)
+batteries           (version: 2.3)
+bigarray            (version: [distributed with Ocaml])
+bin_prot            (version: 111.03.00)
+bin_prot.syntax     (version: 111.03.00)
+bytes               (version: [OCaml strictly before 4.02])
+camlp4              (version: [distributed with Ocaml])
+camlp4.exceptiontracer (version: [distributed with Ocaml])
+camlp4.extend       (version: [distributed with Ocaml])
+camlp4.foldgenerator (version: [distributed with Ocaml])
+..
 ```
 
 Finding Opam Settings
@@ -466,28 +586,8 @@ PKG:hash         # Hash of the package archive
 
 ```
 
-
-Show all Installed Packages
-
-```
-$  ocamlfind list
-archimedes          (version: 0.4.17)
-archimedes.graphics (version: 0.4.17)
-archimedes.internals (version: 0.4.17)
-archimedes.top      (version: 0.4.17)
-batteries           (version: 2.3)
-bigarray            (version: [distributed with Ocaml])
-bin_prot            (version: 111.03.00)
-bin_prot.syntax     (version: 111.03.00)
-bytes               (version: [OCaml strictly before 4.02])
-camlp4              (version: [distributed with Ocaml])
-camlp4.exceptiontracer (version: [distributed with Ocaml])
-camlp4.extend       (version: [distributed with Ocaml])
-camlp4.foldgenerator (version: [distributed with Ocaml])
-..
-```
-
 Filter Installed Packages
+
 ```
 $ ocamlfind list | grep -i core
 cohttp.lwt-core     (version: 0.17.1)
@@ -502,44 +602,6 @@ num.core            (version: [internal])
 
 $ ocamlfind list | grep -i batteries
 batteries           (version: 2.3
-```
-
-Get information about compiled files:
-```
-
-$ ocamlobjinfo seq.cmo
-File seq.cmo
-Unit name: Seq
-Interfaces imported:
-    54ba2685e6ed154753718e9c8becb28b    String
-    6e0efdddf4b33e30be4cc8ff056b56ff    Seq
-    4836c254f0eacad92fbf67abc525fdda    Pervasives
-Uses unsafe features: no
-Force link: no
-
-
-$ ocamlobjinfo seq.cma
-File seq.cma
-Force custom: no
-Extra C object files:
-Extra C options:
-Extra dynamically-loaded libraries:
-Unit name: Seq
-Interfaces imported:
-    54ba2685e6ed154753718e9c8becb28b    String
-    4387952f7aad2695faf187cd3feeb5e5    Seq
-    4836c254f0eacad92fbf67abc525fdda    Pervasives
-Uses unsafe features: no
-Force link: no
-
-
-$ ocamlobjinfo seq.cmi
-File seq.cmi
-Unit name: Seq
-Interfaces imported:
-    4387952f7aad2695faf187cd3feeb5e5    Seq
-    4836c254f0eacad92fbf67abc525fdda    Pervasives
-
 ```
 
 #### Misc
@@ -4042,7 +4104,10 @@ val is_dir_relpath : string -> string -> bool = <fun>
 val walkdir : string -> fileTree list = <fun>
 >
 
-> Folder ("Documents", [File "file1.txt"; File "filte2.txt" ; Folder("Pictures", []) ; Folder("bin",[File "cmd.dat" ; File "thumbs.db" ]) ]) ;;
+> Folder ("Documents", [File "file1.txt"; File "filte2.txt" ; 
+Folder("Pictures", []) ; Folder("bin",[File "cmd.dat" ; File "thumbs.db" ]) 
+]) 
+;;
 - : fileTree =
 Folder ("Documents",
  [File "file1.txt"; File "filte2.txt"; Folder ("Pictures", []);
@@ -4243,12 +4308,19 @@ $ opam install ctypes ctypes-foreign
 > open Foreign ;;
 > open PosixTypes ;;
 > open Ctypes ;;
+```
 
+**Puts**
 
-(*
- *    int puts(const char *s);
- *)
+C prototype
 
+```C
+int puts(const char *s);
+```
+
+Ocaml
+
+```ocaml
 > let puts = foreign "puts" (string @-> returning int);;
 val puts : bytes -> int = <fun>
 
@@ -4256,15 +4328,23 @@ val puts : bytes -> int = <fun>
 hello world
 - : int = 12
 >
+```
 
-(*   int chdir  (const char *path);
- *
- *   Changes  the current working directory of the calling
- *   process to the directory specified  in path.
- *
- *------------------------------------------------------------------
- *)
+**Chdir**
 
+C prototype
+
+```C
+int chdir  (const char *path);
+
+// Changes  the current working directory of the calling
+// process to the directory specified  in path.
+
+```
+
+OCaml
+ 
+```ocaml 
 > let chdir_ = foreign "chdir" (string @-> returning int) ;;
 val chdir_ : bytes -> int = <fun>
 
@@ -4284,27 +4364,40 @@ val chdir : bytes -> unit = <fun>
 
 > chdir "/wrong directory" ;;
 - : unit = ()
+``` 
 
-(*
- *   char *getcwd(char *buf, size_t size);
- *
- *   getcwd  get current working directory
- *------------------------------------------------------------------
- *)
+**Getcwd**
 
+C prototype
+
+```C
+char *getcwd(char *buf, size_t size);
+//  getcwd  get current working directory
+```   
+
+Ocaml
+
+```ocaml 
 > let getcwd =  foreign "getcwd" (void @-> returning string);;
 val getcwd : unit -> bytes = <fun>
 
 > getcwd () ;;
 - : bytes = "/home" 
 >
+```
 
-(*  
- *  int system(const char *command);
- *
- *  system - execute a shell command
- *)
+**System**
 
+C prototype
+
+```C
+int system(const char *command);
+// system - execute a shell command
+```
+
+Ocaml
+
+```ocaml
 > let system = foreign "system" (string @-> returning int) ;;
 val system : bytes -> int = <fun>
 
@@ -4322,13 +4415,20 @@ Linux tuxhorse 3.19.0-18-generic #18-Ubuntu SMP Tue May 19 18:30:59 UTC 2015 i68
 sh: 1: wrong: not found
 - : int = 32512
 > 
+```
 
-(*
- *  unsigned int sleep(unsigned int seconds);
- * 
- *  sleep - sleep for the specified number of seconds 
- *)
+**Sleep**
 
+C prototype
+
+```C
+unsigned int sleep(unsigned int seconds);
+// sleep - sleep for the specified number of seconds 
+```
+
+Ocaml
+
+```ocaml
 > let sleep1 = foreign "sleep" (int @-> returning int) ;; 
 val sleep : int -> int = <fun>
 
@@ -4339,22 +4439,26 @@ val sleep : int -> int = <fun>
 val sleep2 : int -> unit = <fun>
 > sleep2 4 ;;
 - : unit = ()
+```
 
-(*
- *  
- *  int gethostname(char *name, size_t len);
- *
- *  returns the null-terminated hostname in the character array name,
- *   which has a length of len bytes.
- *
- *  On success, zero is returned.  On error, -1 is returned, and errno 
- *  is set appropriately
- *
- *   On  Linux,  HOST_NAME_MAX is defined with the value 64 (bytes - chars)
- *
- * ------------------------------------------------------------------
- *) 
+**Get host name**
+
+C prototype
+
+```C
+int gethostname(char *name, size_t len);
  
+ //  returns the null-terminated hostname in the character array name,
+ //   which has a length of len bytes.
+ 
+ //  On success, zero is returned.  On error, -1 is returned, and errno 
+ //  is set appropriately
+ // On  Linux,  HOST_NAME_MAX is defined with the value 64 (bytes - chars)
+```
+
+Ocaml 
+
+```ocaml
 > let get_host = foreign "gethostname" (ptr char @-> int @-> returning int) ;;
 val get_host : char Ctypes_static.ptr -> int -> int = <fun>
 
@@ -4390,19 +4494,22 @@ val gethostname : unit -> string = <fun>
 
 > gethostname () ;;
 - : string = "tuxhorse"
+``` 
  
- 
-(*
- *  Cube Root Function
- *
- *  #include <math.h>
- *  double cbrt(double x);
- *
- *  The  cbrt()  function  returns the (real) cube root of x. 
- *  
- * ------------------------------------------------------------------
- *)
+**Cube Root Function**
 
+C prototype
+
+```C
+ #include <math.h>
+
+ // The  cbrt()  function  returns the (real) cube root of x. 
+ double cbrt(double x);
+``` 
+
+Ocaml 
+
+```ocaml
 > let cbrt = foreign "cbrt" (double @-> returning double) ;;
 val cbrt : float -> float = <fun>
 
@@ -4410,6 +4517,89 @@ val cbrt : float -> float = <fun>
 - : float list = [1.; 2.; 4.; 5.; 6.; 10.]
 ```
 
+**Popen**
+
+Get command output to string.
+
+C prototype
+
+```C
+ #include <stdio.h>
+
+ FILE *popen(const char *command, const char *type);
+
+ // popen, pclose - pipe stream to or from a process
+ // The  popen()  function  opens  a  process  by creating a pipe, forking, 
+ // and invoking the shell.  Since a pipe is by definition unidirectional, 
+ // the type argument may specify only reading  or  writing,  not  both;  
+ // the  resulting stream is correspondingly read-only or write-only
+```
+
+Ocaml
+
+```ocaml
+ #require "ctypes" ;;
+ #require "ctypes.foreign" ;;
+open PosixTypes ;;
+open Ctypes ;;
+open Foreign ;;
+
+let is_null_ptr pointer_type pointer = 
+ ptr_compare pointer (from_voidp pointer_type null) = 0 ;;
+
+let string_of_ptrchar ptrch =  coerce (ptr char)  string ptrch ;;
+
+let fgets = 
+ foreign "fgets" (ptr char @-> int @-> ptr int @-> returning (ptr char)) ;;
+
+let popen_ = 
+ foreign "popen" (string @-> string @-> returning (ptr int)) ;;
+
+let make_null_ptr ptrtype = from_voidp  ptrtype null ;;
+
+exception Exit_loop ;;
+
+
+let read_fd file_descriptor =
+    let buffsize = 4000 in (* Buffer of 4000 bytes *)
+    let v = Pervasives.ref (from_voidp  char null) in
+    let b = Buffer.create buffsize in    
+    let s = allocate_n char ~count:buffsize in
+    
+    let closure () = 
+        try while true do
+          v :=  fgets s (buffsize - 1) file_descriptor ;  
+          if is_null_ptr char !v then raise Exit_loop ;
+          Buffer.add_string b  (string_of_ptrchar s) ;
+        done
+        with Exit_loop -> () ;
+    
+    in closure () ; Buffer.contents b 
+;;
+
+
+let popen command = read_fd (popen_ command "r");;
+
+> popen "ls" ;;
+- : bytes = "images\nocamldep-sorter\nREADME.hml\nREADME.html\nREADME.md\nsrc\nTest.html\n" > 
+
+
+> popen "ls" |> print_string ;;
+images
+ocamldep-sorter
+README.hml
+README.html
+README.md
+src
+Test.html
+- : unit = ()
+> 
+
+> popen "pwd" |> print_string ;;
+/home/tux/PycharmProjects/Haskell/ocaml
+- : unit = ()
+>
+```
 
 ### Calling Shared Libraries
 
@@ -5367,6 +5557,8 @@ problems](http://stackoverflow.com/questions/13203089/code-generation-for-mathem
 * [Detecting and removing computer virus with OCaml](http://javiermunhoz.com/blog/2014/04/19/detecting-and-removing-computer-virus-with-ocaml.html)
 
 #### Quick Reference Sheets
+
+* https://github.com/OCamlPro/ocaml-cheat-sheets
 
 * [OCaml Cheat Sheets](http://www.ocamlpro.com/blog/2011/06/03/cheatsheets.html)
 
