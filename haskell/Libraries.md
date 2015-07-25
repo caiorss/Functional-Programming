@@ -797,6 +797,122 @@ import qualified Data.ByteString.Lazy.Char8 as BLC
 
 [Data.Char](http://hackage.haskell.org/package/base-4.8.0.0/docs/Data-Char.html)
 
+### Parse Binary Files
+
+To decode a binary file it is necessary to know:
+
+* The Binary file format or specification
+* File Signature that comes in the file header.
+* Data Size (8 bits signed, 8 bits unsigned, ....)
+* Byte Endianess or Byte order (Little Endian or Big Endian)
+* 
+
+This section will show how to parse the windows executable, PE32 executable.
+
+**PE32 Layout Specification**
+
+* [Undocumented PECOFF - Reversing Labs](https://media.blackhat.com/bh-us-11/Vuksan/BH_US_11_VuksanPericin_PECOFF_WP.pdf)
+
+* https://en.wikipedia.org/wiki/Portable_Executable 
+
+* http://www.csn.ul.ie/~caolan/publink/winresdump/winresdump/doc/pefile.html 
+
+
+```haskell
+import Data.Word --- Unsigned integer types: Word8, Word16, Word32, Word64 
+
+import Data.ByteString.Lazy as BL
+import Data.ByteString.Char8 as BC
+import Data.Binary
+import Data.Binary.Get
+
+> let (|>) x f = f x
+> 
+
+> :t BL.readFile 
+BL.readFile :: FilePath -> IO BL.ByteString
+
+> fdata <- BL.readFile "notepad.exe" 
+> 
+> :t fdata
+fdata :: BL.ByteString
+> 
+
+> :t BL.take 
+BL.take :: GHC.Int.Int64 -> BL.ByteString -> BL.ByteString
+
+
+{- Read File Signare 2 bytes, always 0x5A4D OR ("MZ")
+ - 
+ -}
+> BL.take 2 fdata
+"MZ"
+> 
+
+> let toHex :: [Word8] -> [String] ;toHex = Prelude.map ( (\n -> showHex n "") . (\x -> fromIntegral x :: Int) )
+> 
+>  BL.take 2 fdata |> BL.unpack |> toHex 
+["4d","5a"]
+> 
+
+read_dosHeader = do
+  
+
+```
+
+**PE32 Documentation**
+
+* https://en.wikibooks.org/wiki/X86_Disassembly/Windows_Executable_Files#MS-DOS_COM_Files
+
+![](https://commons.wikimedia.org/wiki/File:RevEngPEFile.JPG)
+
+Dos Header Structure
+
+From:
+
+* http://www.joachim-bauch.de/tutorials/loading-a-dll-from-memory/ 
+
+```C
+
+typedef struct _IMAGE_DOS_HEADER {      // DOS .EXE header
+    WORD   e_magic;                     // Magic number
+    WORD   e_cblp;                      // Bytes on last page of file
+    WORD   e_cp;                        // Pages in file
+    WORD   e_crlc;                      // Relocations
+    WORD   e_cparhdr;                   // Size of header in paragraphs
+    WORD   e_minalloc;                  // Minimum extra paragraphs needed
+    WORD   e_maxalloc;                  // Maximum extra paragraphs needed
+    WORD   e_ss;                        // Initial (relative) SS value
+    WORD   e_sp;                        // Initial SP value
+    WORD   e_csum;                      // Checksum
+    WORD   e_ip;                        // Initial IP value
+    WORD   e_cs;                        // Initial (relative) CS value
+    WORD   e_lfarlc;                    // File address of relocation table
+    WORD   e_ovno;                      // Overlay number
+    WORD   e_res[4];                    // Reserved words
+    WORD   e_oemid;                     // OEM identifier (for e_oeminfo)
+    WORD   e_oeminfo;                   // OEM information; e_oemid specific
+    WORD   e_res2[10];                  // Reserved words
+    LONG   e_lfanew;                    // File address of new exe header
+  } IMAGE_DOS_HEADER, *PIMAGE_DOS_HEADER;
+```
+
+COFF Header
+
+```
+ struct COFFHeader
+ {
+    short Machine;
+    short NumberOfSections;
+    long TimeDateStamp;
+    long PointerToSymbolTable;
+    long NumberOfSymbols;
+    short SizeOfOptionalHeader;
+    short Characteristics;
+ }
+``` 
+
+
 ### GnuPlot
 
 Installation:

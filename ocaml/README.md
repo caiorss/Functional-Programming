@@ -321,6 +321,12 @@ Source:
 
 #### UTOP Interactive Shell
 
+Install Utop:
+
+```
+# opam install utop
+```
+
 ![](images/utopshell.png)
 
 Show UTOP help
@@ -474,7 +480,7 @@ $ opam switch list
 4.01.0  C 4.01.0             Official 4.01.0 release
 --     -- 4.02.0             Official 4.02.0 release
 4.02.1  I 4.02.1             Official 4.02.1 release
---     -- ocamljava-preview  
+--     -- ocamljava-preview
 doc     I system             System compiler (4.00.1)
  # 111 more patched or experimental compilers, use '--all' to show
 ```
@@ -1297,12 +1303,12 @@ Math Operations. In Ocaml the same operator cannot be used for more than one typ
     - : int32 = 920l
 
     (* OR for short *)
-    
+
     # let fun1_int32_ x y  = OP.I32.(10l  * x - 4l * y) ;;
-    val fun1_int32_ : int32 -> int32 -> int32 = <fun>                               
-    
+    val fun1_int32_ : int32 -> int32 -> int32 = <fun>
+
     # fun1_int32_ 100l 20l ;;
-    - : int32 = 920l  
+    - : int32 = 920l
 
 (* Defined for Int64 *)
 
@@ -1316,7 +1322,7 @@ Math Operations. In Ocaml the same operator cannot be used for more than one typ
     - : int64 = 920L
 
     (* OR *)
-    
+
     # let fun1_int64_ x y = OP.I64.(10L * x - 4L * y) ;;
     val fun1_int64_ : int64 -> int64 -> int64 = <fun>
 
@@ -1332,12 +1338,12 @@ Math Operations. In Ocaml the same operator cannot be used for more than one typ
     - : float = 920.
 
     (* OR *)
-    
+
     # let fun1_float_ x y  = OP.FL.(10.  * x - 4. * y) ;;
     val fun1_float_ : float -> float -> float = <fun>
-    
+
     # fun1_float_ 100. 20. ;;
-    - : float = 920.    
+    - : float = 920.
 
 ```
 
@@ -1936,6 +1942,8 @@ val f : int -> int = <fun>
 
 ##### Lambda Functions/ Anonymous Functions
 
+Anonymous functions, also known as lambda functions, are useful to pass already existing functions to another functions as arguments and create closures.  They are specially useful when used with map filter and another higher order functions. They can be seen as bolts that connect one part to another.
+
 ```ocaml
 fun x -> x+1                       : int -> int
 fun x -> x +. 1.0                  : float -> float
@@ -1946,6 +1954,100 @@ fun x y -> (x,y)                   : 'a -> 'b -> ('a*'b)
 fun x y z -> (x,y,z)               : 'a -> 'b -> 'c -> ('a*'b*'c)
 ```
 
+In the shell:
+
+```ocaml
+
+> fun x -> x+1  ;;
+- : int -> int = <fun>
+
+> (fun x -> x+1) 10 ;;
+- : int = 11
+
+> let f = fun x -> x+1 ;;
+val f : int -> int = <fun>
+
+> f 10 ;;
+- : int = 11
+
+> List.map (fun x -> x+1) [1; 2; 3; 4; 5 ] ;;
+- : int list = [2; 3; 4; 5; 6]
+
+> 
+
+
+> (fun x y z ->  10 * x + 4 * z - 3 * x * y) 1 ;;
+- : int -> int -> int = <fun>
+
+(* x = 1 *) 
+> (fun x y z ->  10 * x + 4 * z - 3 * x * y) 1 ;; 
+- : int -> int -> int = <fun>
+
+(* x = 1 y = 2 *) 
+> (fun x y z ->  10 * x + 4 * z - 3 * x * y) 1 2 ;;  
+- : int -> int = <fun>
+
+(* x = 1 y = 2  z = 3 *) 
+> (fun x y z ->  10 * x + 4 * z - 3 * x * y) 1 2 3 ;; 
+- : int = 16 
+
+(** Partial Evaluation **)
+(*----------------------*)
+
+> let f = fun x y z ->  10 * x + 4 * z - 3 * x * y ;;
+val f : int -> int -> int -> int = <fun>
+
+> (f 1) ;;
+- : int -> int -> int = <fun>
+
+> ((f 1) 2) ;;
+- : int -> int = <fun>
+
+> (((f 1) 2) 3) ;;
+- : int = 16
+
+> f 1 2 3 ;;
+- : int = 16
+
+
+(* x= ?, y=?, z=3 The variables x and y varies *)
+> List.map (fun (x, y) -> f x y 3) [(1, 2); (3, 4); (5, 6)]  ;;
+- : int list = [16; 6; -28]
+ 
+
+(* x= ?, y=2, z=? The variables x and z varies *) 
+> List.map (fun (x, z) -> f x 2 z) [(1, 2); (3, 4); (5, 6)]  ;;
+- : int list = [12; 28; 44]
+
+ 
+(* All variables varies *)
+> List.map (fun (x, y, z) -> f x y z) [(1, 2, 3); (2, 3, 1); (3, 4, 5)] ;;
+- : int list = [16; 6; 14]
+
+(** Filtering                      *)
+(**--------------------------------*)
+
+> List.filter (fun x -> x > 5) [1; 2; 3; -3; 10; 4; 50] ;;
+- : int list = [10; 50]
+
+> List.filter (fun (x, y) -> x + y > 10) [(-10, 30); (5, 4); (12, -8); (9, 8)] ;;
+- : (int * int) list = [(-10, 30); (9, 8)]
+
+
+> [(-10, 30); (5, 4); (12, -8); (9, 8)]
+|> List.filter (fun (x, y) -> x + y > 10)
+;;
+- : (int * int) list = [(-10, 30); (9, 8)]
+
+(** Filters and maps be combined with the (|>) pipelining operator to process data *)
+
+> [(-10, 30); (5, 4); (12, -8); (9, 8)]
+|> List.filter (fun (x, y) -> x + y > 10)
+|> List.map (fun (x, y) -> 4 * x + 3 * y) 
+;;
+- : int list = [50; 60]
+
+```
 
 ##### Control Structures
 
@@ -1966,6 +2068,21 @@ x is positive- : unit = ()
 
 > test (-10) ;;
 x is negative- : unit = ()
+
+
+> let sign x =
+  if x = 0
+    then 0
+  else if x > 0
+       then 1
+       else (-1)
+;;
+val sign : int -> int = <fun>
+
+> List.map sign [1; -1; 0; 2; 3] ;;
+- : int list = [1; -1; 0; 1; 1]
+
+> 
 ```
 
 For Loop:
@@ -2603,10 +2720,10 @@ There are more useful string functions on the core library.
     - : char = 'H'
     # String.get  "Hello world" 1 ;;
     - : char = 'e'
-    
+
     # List.map (String.get "Buffalo") [0; 1; 2; 3; 4; 5; 6] ;;
     - : char list = ['B'; 'u'; 'f'; 'f'; 'a'; 'l'; 'o']
-    # 
+    #
 
     # let str =  "My string" ;;
     val str : string = "My string"
@@ -2701,8 +2818,8 @@ There are more useful string functions on the core library.
 
     # Str.string_after "Hello world ocaml" 11 ;;
     - : string = " ocaml"
-    
-    
+
+
     #  Str.split (Str.regexp "[ ]") "23.232 9823 Ocaml Haskell FP 400";;
     - : string list = ["23.232"; "9823"; "Ocaml"; "Haskell"; "FP"; "400"]
 ```
@@ -2716,33 +2833,33 @@ It provides accumulative concatenation of strings in quasi-linear time (instead 
 ```ocaml
 
 > Buffer.create ;;
-- : int -> Buffer.t = <fun> 
+- : int -> Buffer.t = <fun>
 
 (* Converts Buffer to String *)
 Buffer.contents ;;
 - : Buffer.t -> bytes = <fun>
-> 
+>
 
 (* Add Char to Buffer *)
 > Buffer.add_char ;;
-- : Buffer.t -> char -> unit = <fun> 
+- : Buffer.t -> char -> unit = <fun>
 
 Buffer.add_bytes ;;
 - : Buffer.t -> bytes -> unit = <fun>
-> 
+>
 
 (* Add String to Buffer *)
 > Buffer.add_string ;;
-- : Buffer.t -> bytes -> unit = <fun> 
+- : Buffer.t -> bytes -> unit = <fun>
 >
 
 (* Reset Buffer -> buffer = "" *)
 > Buffer.reset ;;
 - : Buffer.t -> unit = <fun>
-> 
+>
 
 > let b = Buffer.create  0 ;;
-val b : Buffer.t = <abstr> 
+val b : Buffer.t = <abstr>
 
 > Buffer.contents b ;;
 - : bytes = ""
@@ -2755,18 +2872,18 @@ val b : Buffer.t = <abstr>
 - : bytes = "ocaml fp rocks ! ocaml is amazing"
 
 > Buffer.add_string b " - Ocaml is strict FP" ;;
-- : unit = ()  
+- : unit = ()
 
 Buffer.length b ;;
 - : int = 33
 
 > Buffer.contents b ;;
 - : bytes = "ocaml fp rocks ! ocaml is amazing - Ocaml is strict FP"
-> 
+>
 
 
 Buffer.reset b ;;
-- : unit = () 
+- : unit = ()
 
 > Buffer.contents b ;;
 - : bytes = ""
@@ -2780,11 +2897,11 @@ val c : Buffer.t = <abstr>
 > Buffer.add_char c 'c' ;;
 - : unit = ()
 > Buffer.add_char c 'a' ;;
-- : unit = () 
+- : unit = ()
 > Buffer.add_char c 'm' ;;
-- : unit = () 
+- : unit = ()
 > Buffer.add_char c 'l' ;;
-- : unit = () 
+- : unit = ()
 
 > Buffer.contents c ;;
 - : bytes = "ocaml"
@@ -2844,14 +2961,14 @@ val c : Buffer.t = <abstr>
 > Buffer.add_string c "Ocaml is almost fast as C" ;;
 - : unit = ()
 > Buffer.sub c 0 1 ;;
-- : bytes = "O" 
+- : bytes = "O"
 > Buffer.sub c 0 5 ;;
-- : bytes = "Ocaml" 
+- : bytes = "Ocaml"
 > Buffer.sub c 0 10 ;;
 - : bytes = "Ocaml is a"
 > Buffer.sub c 5 15 ;;
 - : bytes = " is almost fast"
-> 
+>
 ```
 
 **String Processing**
@@ -2870,7 +2987,7 @@ val s : bytes = "p2p peer to peer connection"
 val arr : int -> 'a -> 'a array = <fun>
 
 let arr = Array.make (String.length s) '\000' ;;
-val arr : char array = 
+val arr : char array =
 [|'\000'; '\000'; '\000'; '\000'; '\000'; '\000'; '\000'; '\000'; '\000';
 '\000'; '\000'; '\000'; '\000'; '\000'; '\000'; '\000'; '\000'; '\000';
 '\000'; '\000'; '\000'; '\000'; '\000'; '\000'; '\000'; '\000'; '\000'|]
@@ -2878,23 +2995,23 @@ val arr : char array =
 > for i = 0 to (String.length s - 1) do
       arr.(i) <- s.[i]
   done ;;
-- : unit = () 
+- : unit = ()
 
 
 > arr ;;
-- : char array = 
+- : char array =
 [|'p'; '2'; 'p'; ' '; 'p'; 'e'; 'e'; 'r'; ' '; 't'; 'o'; ' '; 'p'; 'e'; 'e';
 'r'; ' '; 'c'; 'o'; 'n'; 'n'; 'e'; 'c'; 't'; 'i'; 'o'; 'n'|]
 
-let str2chars s = 
+let str2chars s =
     let arr = Array.make (String.length s) '\000' in
     for i = 0 to (String.length s - 1) do
         arr.(i) <- s.[i]
     done ;
-    arr 
+    arr
 ;;
-val str2chars : bytes -> char array = <fun> 
-> 
+val str2chars : bytes -> char array = <fun>
+>
 
 str2chars "fox" ;;
 - : char array = [|'f'; 'o'; 'x'|]
@@ -2902,17 +3019,17 @@ str2chars "fox" ;;
 
 
 > str2chars "fox" |> Array.map Char.code ;;
-- : int array = [|102; 111; 120|] 
+- : int array = [|102; 111; 120|]
 
-> let str2chars_ s = 
+> let str2chars_ s =
     let arr = Array.make (String.length s) '\000' in
     for i = 0 to (String.length s - 1) do
         arr.(i) <- s.[i]
     done ;
-    Array.to_list arr 
+    Array.to_list arr
 ;;
 val str2chars_ : bytes -> char list = <fun>
-> 
+>
 
 > str2chars_ "UNIX" ;;
 - : char list = ['U'; 'N'; 'I'; 'X']
@@ -2922,10 +3039,10 @@ val str2chars_ : bytes -> char list = <fun>
 
 (* Functional Approach *)
 
-> let str2chars s = 
+> let str2chars s =
     let n = String.length s in
-    let rec aux i alist = 
-        if i =0 
+    let rec aux i alist =
+        if i =0
         then []
         else s.[n-i]::(aux (i-1) alist)
     in aux n []
@@ -2941,7 +3058,7 @@ str2chars "UNIX" |> List.map Char.code ;;
 
 (* Extract Digits *)
 
-let digit_of_char c = 
+let digit_of_char c =
     match c with
     | '0' -> 0
     | '1' -> 1
@@ -2975,7 +3092,7 @@ Join Chars
 
 ```ocaml
 > let cs = ['o' ; 'c'; 'a'; 'm'; 'l' ] ;;
-val cs : char list = ['o'; 'c'; 'a'; 'm'; 'l'] 
+val cs : char list = ['o'; 'c'; 'a'; 'm'; 'l']
 
 > Buffer.add_char ;;
 - : Buffer.t -> char -> unit = <fun>
@@ -2989,13 +3106,13 @@ List.iter (Buffer.add_char b) cs ;;
 > Buffer.contents b ;;
 - : bytes = "ocaml"
 
-let chars2str cs = 
+let chars2str cs =
     let b = Buffer.create 0 in
     List.iter (Buffer.add_char b) cs ;
-    Buffer.contents b 
+    Buffer.contents b
 ;;
-val chars2str : char list -> bytes = <fun> 
-> 
+val chars2str : char list -> bytes = <fun>
+>
 
 > chars2str ['o' ; 'c'; 'a'; 'm'; 'l' ] ;;
 - : bytes = "ocaml"
@@ -3006,12 +3123,12 @@ Strip Left Chars
 
 ```ocaml
 
-> let trim chars s = 
+> let trim chars s =
     let n = String.length s in
     let b = Buffer.create 0 in
-    
+
     for i = 0 to n - 1 do
-        if List.mem s.[i] chars 
+        if List.mem s.[i] chars
             then ()
             else Buffer.add_char b s.[i]
     done ;
@@ -3199,6 +3316,8 @@ $ ocamlfind ocamlc -package more,unix program.ml -linkpkg -o program
 $ ocamlfind ocamlopt -package more,unix program.ml -linkpkg -o progra
 ```
 
+System
+
 ```ocaml
 
 
@@ -3211,12 +3330,23 @@ $ ocamlfind ocamlopt -package more,unix program.ml -linkpkg -o progra
     "/home/tux/.opam/4.02.1/bin:/home/tux/bin:/usr/local/sbin:/usr/local/bin:
     /usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/tux/bin:
     /home/tux/usr/bin:/home/tux/.apps
+    
+    
+    #  Unix.gethostname () ;;
+    - : string = "tux-I3000"
+    #
+```
 
+Date and Time
+
+```ocaml
+    
+    # #load "unix.cma" ;;
+  
     (*  Return the current time since 00:00:00 GMT, Jan. 1, 1970, in seconds
      *
      *)
-
-      Unix.time ;;
+    # Unix.time ;;
     - : unit -> float = <fun>
     # Unix.time () ;;
     - : float = 1433237870.
@@ -3235,12 +3365,201 @@ $ ocamlfind ocamlopt -package more,unix program.ml -linkpkg -o progra
     {Unix.tm_sec = 36; tm_min = 39; tm_hour = 9; tm_mday = 2; tm_mon = 5;
      tm_year = 115; tm_wday = 2; tm_yday = 152; tm_isdst = false}
     #
+    
+    # Unix.time () |> Unix.gmtime ;;
+    - : Unix.tm =
+    {Unix.tm_sec = 20; tm_min = 9; tm_hour = 22; tm_mday = 25; tm_mon = 6;
+     tm_year = 115; tm_wday = 6; tm_yday = 205; tm_isdst = false}
+    # 
+    
 
-      Unix.gethostname () ;;
-    - : string = "tux-I3000"
-    #
+   # let print_dtime tm = 
+      let open Unix in
+      Printf.printf "Year %d\n" (tm.tm_year + 1900) ;
+      Printf.printf "Month %d\n" (tm.tm_mon + 1) ;
+      Printf.printf "Day   %d\n" tm.tm_mday; 
+      Printf.printf "Hour  %d\n" tm.tm_hour;
+      Printf.printf "Min   %d\n" tm.tm_min;
+      Printf.printf "Sec   %d\n" tm.tm_sec
+   ;;
 
 
+    #  Unix.time () |> Unix.gmtime |> print_dtime ;;
+    Year 2015
+    Month 7
+    Day   25
+    Hour  22
+    Min   16
+    Sec   58
+    - : unit = ()
+    # 
+
+    (** Zero date 
+      *
+      *)
+    # 0.0  |> Unix.gmtime |>  print_dtime ;;
+    Year 1970
+    Month 1
+    Day   1
+    Hour  0
+    Min   0
+    Sec   0
+    - : unit = ()
+    # 
+        
+    
+    # let today_date () = 
+          let open Unix in 
+          let tm = time () |> gmtime in
+          (tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday)
+      ;;
+    val today_date : unit -> int * int * int = <fun>
+    # 
+    
+    #   today_date () ;;
+    - : int * int * int = (2015, 7, 25)
+    # 
+    
+    # let  make_date (y, m, d) =
+      let open Unix in 
+      { 
+       tm_sec = 0 ;
+       tm_min = 0 ;
+       tm_hour = 0 ;
+       tm_mday = d ;
+       tm_mon  = m - 1;
+       tm_year = y - 1900 ;
+       tm_yday = 0;
+       tm_wday = 0 ;
+       tm_isdst = false ;
+      }
+  ;;
+  
+
+    # make_date (2013, 10, 15) ;;
+    - : Unix.tm =
+    {Unix.tm_sec = 0; tm_min = 0; tm_hour = 0; tm_mday = 15; tm_mon = 9;
+     tm_year = 113; tm_wday = 0; tm_yday = 0; tm_isdst = false}
+    # 
+
+
+    #  make_date (2013, 10, 15) |> print_dtime ;;
+    Year 2013
+    Month 10
+    Day   15
+    Hour  0
+    Min   0
+    Sec   0
+    - : unit = ()
+    # 
+
+
+    (** Get the timezone
+        The time zone is the difference between the current UTC time 
+        and the localtime hour
+           
+     *)
+     
+    # let timezone () = 
+          let open Unix in
+          let epoch = time () in
+          let tm_utc = gmtime epoch in
+          let tm_loc = localtime epoch in
+          (tm_utc.tm_hour - tm_loc.tm_hour)
+    ;;
+    val timezone : unit -> int = <fun>
+    # 
+
+    timezone () ;;
+    - : int = 3
+    #      
+    
+    (** Or *)
+    
+    let timezone () = 
+      let open Unix in
+      let epoch = time () in  
+      ((gmtime epoch).tm_hour - (localtime epoch).tm_hour)
+    ;;    
+    
+      timezone () ;;
+    - : int = 3
+    # 
+    
+    (** Convert time records to Epoch Time 
+      *
+      * The function Unix.mktime converts a time record to epoch time
+      *
+      *)
+       
+    (* Current time in Epoch time format *)      
+    # let ec = Unix.time () ;;
+    val ec : float = 1437864615.
+    # 
+
+    (* Current time as time record in Local Time record *)
+    #  let tm = ec |> Unix.localtime ;;
+    val tm : Unix.tm =
+      {Unix.tm_sec = 15; tm_min = 50; tm_hour = 19; tm_mday = 25; tm_mon = 6;
+       tm_year = 115; tm_wday = 6; tm_yday = 205; tm_isdst = false}
+    # 
+
+
+    #  tm |> print_dtime ;;
+    Year 2015
+    Month 7
+    Day   25
+    Hour  19
+    Min   50
+    Sec   15
+    - : unit = ()
+    # 
+
+    #  Unix.mktime ;;
+    - : Unix.tm -> float * Unix.tm = <fun>
+    # 
+
+    #  let (epoch, tm2) = Unix.mktime tm;;
+    val epoch : float = 1437864615.
+    val tm2 : Unix.tm =
+      {Unix.tm_sec = 15; tm_min = 50; tm_hour = 19; tm_mday = 25; tm_mon = 6;
+       tm_year = 115; tm_wday = 6; tm_yday = 205; tm_isdst = false}
+    
+    # epoch = ec ;;
+    - : bool = true
+    
+    # tm2 = tm ;;
+    - : bool = true
+    # 
+
+
+
+    (** Count the number of days between two dates 
+        
+        1 day = 24 h * 60 h/min * 60 min/sec =
+              = 86400 seconds  
+              
+        The two date times dt1 and dt2 are assumed to be in UTC (GM time)
+    *)
+    
+    # let dtime_to_epoch tm = 
+          let (ep, _) = Unix.mktime tm in
+          ep   
+          ;;
+    val dtime_to_epoch : Unix.tm -> float = <fun>
+    # 
+
+    
+    # let day_count dtm1 dtm2 =        
+         let seconds = (dtime_to_epoch dtm2) -. (dtime_to_epoch dtm1) in
+         (int_of_float (seconds /. 86400. )) + 1
+    ;;     
+    val day_count : Unix.tm -> Unix.tm -> int = <fun>
+    
+    
+    # day_count (make_date (2003, 5, 12)) (make_date (2008, 9, 10)) ;;
+    - : int = 1949
+    # 
 ```
 
 ## IO - Input / Output
@@ -4104,9 +4423,9 @@ val is_dir_relpath : string -> string -> bool = <fun>
 val walkdir : string -> fileTree list = <fun>
 >
 
-> Folder ("Documents", [File "file1.txt"; File "filte2.txt" ; 
-Folder("Pictures", []) ; Folder("bin",[File "cmd.dat" ; File "thumbs.db" ]) 
-]) 
+> Folder ("Documents", [File "file1.txt"; File "filte2.txt" ;
+Folder("Pictures", []) ; Folder("bin",[File "cmd.dat" ; File "thumbs.db" ])
+])
 ;;
 - : fileTree =
 Folder ("Documents",
@@ -4285,7 +4604,7 @@ Documentation of Lazy Module:
     ---------------------------------------------------------------
 -->
 
-## Foreign Function Interface FFI 
+## Foreign Function Interface FFI
 
 The OCaml library C Types allows easy and fast access to C libraries, Operating System services, shared libraries and to call functions and libraries written in another languages.
 
@@ -4343,8 +4662,8 @@ int chdir  (const char *path);
 ```
 
 OCaml
- 
-```ocaml 
+
+```ocaml
 > let chdir_ = foreign "chdir" (string @-> returning int) ;;
 val chdir_ : bytes -> int = <fun>
 
@@ -4364,7 +4683,7 @@ val chdir : bytes -> unit = <fun>
 
 > chdir "/wrong directory" ;;
 - : unit = ()
-``` 
+```
 
 **Getcwd**
 
@@ -4373,16 +4692,16 @@ C prototype
 ```C
 char *getcwd(char *buf, size_t size);
 //  getcwd  get current working directory
-```   
+```
 
 Ocaml
 
-```ocaml 
+```ocaml
 > let getcwd =  foreign "getcwd" (void @-> returning string);;
 val getcwd : unit -> bytes = <fun>
 
 > getcwd () ;;
-- : bytes = "/home" 
+- : bytes = "/home"
 >
 ```
 
@@ -4414,7 +4733,7 @@ Linux tuxhorse 3.19.0-18-generic #18-Ubuntu SMP Tue May 19 18:30:59 UTC 2015 i68
 > system "wrong command" ;;
 sh: 1: wrong: not found
 - : int = 32512
-> 
+>
 ```
 
 **Sleep**
@@ -4423,19 +4742,19 @@ C prototype
 
 ```C
 unsigned int sleep(unsigned int seconds);
-// sleep - sleep for the specified number of seconds 
+// sleep - sleep for the specified number of seconds
 ```
 
 Ocaml
 
 ```ocaml
-> let sleep1 = foreign "sleep" (int @-> returning int) ;; 
+> let sleep1 = foreign "sleep" (int @-> returning int) ;;
 val sleep : int -> int = <fun>
 
 > sleep1 3 ;;
 - : int = 0
 
-> let sleep2 = foreign "sleep" (int @-> returning void) ;; 
+> let sleep2 = foreign "sleep" (int @-> returning void) ;;
 val sleep2 : int -> unit = <fun>
 > sleep2 4 ;;
 - : unit = ()
@@ -4447,16 +4766,16 @@ C prototype
 
 ```C
 int gethostname(char *name, size_t len);
- 
+
  //  returns the null-terminated hostname in the character array name,
  //   which has a length of len bytes.
- 
- //  On success, zero is returned.  On error, -1 is returned, and errno 
+
+ //  On success, zero is returned.  On error, -1 is returned, and errno
  //  is set appropriately
  // On  Linux,  HOST_NAME_MAX is defined with the value 64 (bytes - chars)
 ```
 
-Ocaml 
+Ocaml
 
 ```ocaml
 > let get_host = foreign "gethostname" (ptr char @-> int @-> returning int) ;;
@@ -4467,7 +4786,7 @@ val host_name_max : int = 64
 
 > let s = allocate_n char ~count:host_name_max ;;
 val s : char Ctypes.ptr = Ctypes_static.CPointer <abstr>
- 
+
 > get_host s host_name_max ;;
 - : int = 0
 
@@ -4480,11 +4799,11 @@ val s : char Ctypes.ptr = Ctypes_static.CPointer <abstr>
 
    (* Everything together      *)
    (* ---------------------------------*)
-   
+
 > let get_host = foreign "gethostname" (ptr char @-> int @-> returning int) ;;
 val get_host : char Ctypes_static.ptr -> int -> int = <fun>
 
-> let gethostname () = 
+> let gethostname () =
        let host_name_max = 64 in
        let s = allocate_n char ~count:host_name_max in
        let _ = get_host s host_name_max in
@@ -4494,8 +4813,8 @@ val gethostname : unit -> string = <fun>
 
 > gethostname () ;;
 - : string = "tuxhorse"
-``` 
- 
+```
+
 **Cube Root Function**
 
 C prototype
@@ -4503,11 +4822,11 @@ C prototype
 ```C
  #include <math.h>
 
- // The  cbrt()  function  returns the (real) cube root of x. 
+ // The  cbrt()  function  returns the (real) cube root of x.
  double cbrt(double x);
-``` 
+```
 
-Ocaml 
+Ocaml
 
 ```ocaml
 > let cbrt = foreign "cbrt" (double @-> returning double) ;;
@@ -4529,9 +4848,9 @@ C prototype
  FILE *popen(const char *command, const char *type);
 
  // popen, pclose - pipe stream to or from a process
- // The  popen()  function  opens  a  process  by creating a pipe, forking, 
- // and invoking the shell.  Since a pipe is by definition unidirectional, 
- // the type argument may specify only reading  or  writing,  not  both;  
+ // The  popen()  function  opens  a  process  by creating a pipe, forking,
+ // and invoking the shell.  Since a pipe is by definition unidirectional,
+ // the type argument may specify only reading  or  writing,  not  both;
  // the  resulting stream is correspondingly read-only or write-only
 ```
 
@@ -4544,15 +4863,15 @@ open PosixTypes ;;
 open Ctypes ;;
 open Foreign ;;
 
-let is_null_ptr pointer_type pointer = 
+let is_null_ptr pointer_type pointer =
  ptr_compare pointer (from_voidp pointer_type null) = 0 ;;
 
 let string_of_ptrchar ptrch =  coerce (ptr char)  string ptrch ;;
 
-let fgets = 
+let fgets =
  foreign "fgets" (ptr char @-> int @-> ptr int @-> returning (ptr char)) ;;
 
-let popen_ = 
+let popen_ =
  foreign "popen" (string @-> string @-> returning (ptr int)) ;;
 
 let make_null_ptr ptrtype = from_voidp  ptrtype null ;;
@@ -4563,25 +4882,25 @@ exception Exit_loop ;;
 let read_fd file_descriptor =
     let buffsize = 4000 in (* Buffer of 4000 bytes *)
     let v = Pervasives.ref (from_voidp  char null) in
-    let b = Buffer.create buffsize in    
+    let b = Buffer.create buffsize in
     let s = allocate_n char ~count:buffsize in
-    
-    let closure () = 
+
+    let closure () =
         try while true do
-          v :=  fgets s (buffsize - 1) file_descriptor ;  
+          v :=  fgets s (buffsize - 1) file_descriptor ;
           if is_null_ptr char !v then raise Exit_loop ;
           Buffer.add_string b  (string_of_ptrchar s) ;
         done
         with Exit_loop -> () ;
-    
-    in closure () ; Buffer.contents b 
+
+    in closure () ; Buffer.contents b
 ;;
 
 
 let popen command = read_fd (popen_ command "r");;
 
 > popen "ls" ;;
-- : bytes = "images\nocamldep-sorter\nREADME.hml\nREADME.html\nREADME.md\nsrc\nTest.html\n" > 
+- : bytes = "images\nocamldep-sorter\nREADME.hml\nREADME.html\nREADME.md\nsrc\nTest.html\n" >
 
 
 > popen "ls" |> print_string ;;
@@ -4593,7 +4912,7 @@ README.md
 src
 Test.html
 - : unit = ()
-> 
+>
 
 > popen "pwd" |> print_string ;;
 /home/tux/PycharmProjects/Haskell/ocaml
@@ -4620,23 +4939,23 @@ Test.html
 
 > let gsl_lib = Dl.dlopen ~filename:"libgsl.so" ~flags:[Dl.RTLD_LAZY; Dl.RTLD_GLOBAL];;
 val gsl_lib : Dl.library = <abstr>
-> 
+>
 
 
 (*
  *   double gsl_sf_bessel_J0 (double x)
- *  
+ *
  *  gsl_sf_bessel_J0(5) = -1.775967713143382920e-01
  *
  *------------------------------------------------------------------
  *)
- 
+
 > let gsl_sf_bessel_J0 = foreign ~from:gsl_lib "gsl_sf_bessel_J0" (double @-> returning double ) ;;
 val gsl_sf_bessel_J0 : float -> float = <fun>
 
 > gsl_sf_bessel_J0 5.0 ;;
 - : float = -0.177596771314338292
- 
+
 > List.map gsl_sf_bessel_J0 [1.0; 10.0; 100.0; 1000.0 ] ;;
 - : float list =
 [0.765197686557966494; -0.245935764451348265; 0.0199858503042231184;
@@ -4644,24 +4963,24 @@ val gsl_sf_bessel_J0 : float -> float = <fun>
 
 (*
  *   Polynomial Evaluation
- *  
- *  double gsl_poly_eval (const double c[], const int len, const double x)
- *   
- *   The functions described here evaluate the polynomial 
- *   P(x) = c[0] + c[1] x + c[2] x^2 + ... + c[len-1] x^{len-1} 
- *   
- *   using Horner’s method for stability. Inline versions of these 
- *   functions are used when HAVE_INLINE is defined. 
  *
- *   This function evaluates a polynomial with real coefficients for 
- *   the real variable x. 
+ *  double gsl_poly_eval (const double c[], const int len, const double x)
+ *
+ *   The functions described here evaluate the polynomial
+ *   P(x) = c[0] + c[1] x + c[2] x^2 + ... + c[len-1] x^{len-1}
+ *
+ *   using Horner’s method for stability. Inline versions of these
+ *   functions are used when HAVE_INLINE is defined.
+ *
+ *   This function evaluates a polynomial with real coefficients for
+ *   the real variable x.
  *
  * ------------------------------------------------------------------
  *)
 
     (*
      *  Let's evaluate  3 * x^2 + 2 * x + 1
-     * 
+     *
      *  so it becomes:  [1. ; 2. ; 3. ]
      *
      *
@@ -4670,7 +4989,7 @@ val gsl_sf_bessel_J0 : float -> float = <fun>
      *  (3 * x^2 + 2 * x + 1) 9 = 262
      *)
 
-> let gsl_poly_eval_ = foreign ~from:gsl_lib "gsl_poly_eval" 
+> let gsl_poly_eval_ = foreign ~from:gsl_lib "gsl_poly_eval"
 (ptr double @-> int @-> double @-> returning double);;
 val gsl_poly_eval_ : float Ctypes_static.ptr -> int -> float -> float = <fun>
 
@@ -4680,7 +4999,7 @@ val poly : float Ctypes.CArray.t =
 
 > CArray.start poly ;;
 - : float Ctypes.ptr = Ctypes_static.CPointer <abstr>
- 
+
 > gsl_poly_eval_ (CArray.start poly)  3 5.0 ;;
 - : float = 86.
 > gsl_poly_eval_ (CArray.start poly)  3 7.0 ;;
@@ -4691,16 +5010,16 @@ val poly : float Ctypes.CArray.t =
 
     (* Assemblying all pieces of code *)
 
-> let gsl_poly_eval_ = foreign ~from:gsl_lib "gsl_poly_eval" 
+> let gsl_poly_eval_ = foreign ~from:gsl_lib "gsl_poly_eval"
   (ptr double @-> int @-> double @-> returning double);;
 val gsl_poly_eval_ : float Ctypes_static.ptr -> int -> float -> float = <fun>
- 
-> let gsl_poly_val poly x = 
+
+> let gsl_poly_val poly x =
        let p = CArray.of_list double poly in
        gsl_poly_eval_ (CArray.start p) (List.length poly) x
   ;;
 val gsl_poly_val : float list -> float -> float = <fun>
- 
+
 
 >  List.map (gsl_poly_val [1. ; 2. ; 3. ] ) [5.0 ; 7.0 ; 9.0] ;;
 - : float list = [86.; 162.; 262.]
@@ -4710,7 +5029,7 @@ val mypoly : float -> float = <fun>
 
 > List.map mypoly [5.0 ; 7.0 ; 9.0] ;;
 - : float list = [86.; 162.; 262.]
-> 
+>
 
 ```
 
@@ -4723,12 +5042,12 @@ val mypoly : float -> float = <fun>
 * [The Very High Level Layer - Python/C API Reference Manual](https://docs.python.org/2/c-api/veryhigh.html)
 
 ```ocaml
-> 
+>
   open Foreign ;;
 >  open PosixTypes ;;
 > open Ctypes ;;
-> 
-  
+>
+
 >  let pylib = Dl.dlopen ~filename:"libpython2.7.so" ~flags:[Dl.RTLD_LAZY; Dl.RTLD_GLOBAL];;
 val pylib : Dl.library = <abstr>
 > let py_init = foreign "Py_Initialize" ~from:pylib (void @-> returning void) ;;
@@ -4741,24 +5060,24 @@ val py_getPath : unit -> string = <fun>
 > py_getPath () ;;
 - : string =
 "/home/tux/lib:/usr/lib/python2.7/:/usr/lib/python2.7/plat-i386-linux-gnu:/usr/lib/python2.7/lib-tk:/usr/lib/python2.7/lib-old:/usr/lib/python2.7/lib-dynload"
-> 
-  
+>
+
 > let py_getVersion = foreign "Py_GetVersion" ~from:pylib (void @-> returning string) ;;
 val py_getVersion : unit -> string = <fun>
-> 
+>
 > py_getVersion() ;;
 - : string = "2.7.9 (default, Apr  2 2015, 15:39:13) \n[GCC 4.9.2]"
-> 
-  
+>
+
   let py_GetPlatform = foreign "Py_GetPlatform" ~from:pylib (void @-> returning string) ;;
 val py_GetPlatform : unit -> string = <fun>
 > py_GetPlatform () ;;
 - : string = "linux2"
-> 
-  
+>
+
 > let pyRunSimpleString = foreign "PyRun_SimpleString" ~from:pylib (string @-> returning int) ;;
 val pyRunSimpleString : string -> int = <fun>
-> 
+>
   pyRunSimpleString "print 'hello world'" ;;
 hello world
 - : int = 0
@@ -4779,14 +5098,14 @@ SyntaxError: unexpected EOF while parsing
 > pyRunSimpleString "import sys ; print sys.executable" ;;
 /usr/bin/python
 - : int = 0
-> 
+>
 
-> let py_finalize = foreign "Py_Finalize" ~from:pylib (void @-> returning void) 
+> let py_finalize = foreign "Py_Finalize" ~from:pylib (void @-> returning void)
   ;;
 val py_finalize : unit -> unit = <fun>
 > py_finalize () ;;
 - : unit = ()
-> 
+>
 
 ```
 
@@ -4803,7 +5122,7 @@ $ man getcwd
 It is possible to find shared libraries used by executables by using the ldd command.
 
 ```bash
-$ which rlwrap 
+$ which rlwrap
 /usr/bin/rlwrap
 
 $ ldd $(which rlwrap)
@@ -4831,7 +5150,7 @@ $ ldd $(which ssh)
     libkrb5support.so.0 => /usr/lib/i386-linux-gnu/libkrb5support.so.0 (0xb709d000)
     libpthread.so.0 => /lib/i386-linux-gnu/libpthread.so.0 (0xb707f000)
     libkeyutils.so.1 => /lib/i386-linux-gnu/libkeyutils.so.1 (0xb707a000)
-    
+
 $ # Trace System Calls
 
 $ strace -c ls

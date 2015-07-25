@@ -5,6 +5,7 @@ Monad tutorials available in the internet.
 
 
 -}
+
 module OldState where
 
 {- runState :: State s a -> s -> (a, s) -}
@@ -102,4 +103,7 @@ evalNthState stateFunc state n =
     else        
         evalNthState stateFunc new_state (n-1)
     where
-        (out, new_state) = runState stateFunc state        
+        (out, new_state) = runState stateFunc state
+
+ 
+  
