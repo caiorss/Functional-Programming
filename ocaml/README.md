@@ -3307,6 +3307,8 @@ Extra Example:
 
 ### Unix
 
+[Documention](http://caml.inria.fr/pub/docs/manual-ocaml/libref/Unix.html)
+
 Despite the name Unix, this is a multi platform module and also works in Windows OS.
 
 Compile Standalone programs with Unix Library.
@@ -3316,28 +3318,161 @@ $ ocamlfind ocamlc -package more,unix program.ml -linkpkg -o program
 $ ocamlfind ocamlopt -package more,unix program.ml -linkpkg -o progra
 ```
 
-System
+**System**
 
 ```ocaml
 
 
     (* It is only needed on the toploop shell *)
-    # #load "unix.cma" ;;
+    > #load "unix.cma" ;;
+
+    (* Get the current working directory *)
+    Unix.getcwd () ;;
+    - : bytes = "/home/tux/PycharmProjects/ocaml/prelude"
+
+    (* Change the current working directory *)
+    > Unix.chdir "/" ;;
+    - : unit = ()
+
+    Unix.getcwd () ;;
+    - : bytes = "/"
+
 
     (* Get an environment variable *)
-    # Unix.getenv "PATH" ;;
+    > Unix.getenv "PATH" ;;
     - : string =
     "/home/tux/.opam/4.02.1/bin:/home/tux/bin:/usr/local/sbin:/usr/local/bin:
     /usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/tux/bin:
-    /home/tux/usr/bin:/home/tux/.apps
+    /home/tux/usr/bin:/home/tux/.apps ...
     
     
-    #  Unix.gethostname () ;;
+    (* Set an environment variable *)
+    >
+    Unix.putenv "DUMMYVAR" "Test value"  ;;
+    - : unit = ()
+
+    > Unix.getenv "DUMMYVAR" ;;
+    - : bytes = "Test value"
+    >    
+    
+    (* Get all Environment Variables *)
+    > Unix.environment () ;;
+    - : bytes array =
+    [|"XDG_VTNR=7"; "LC_PAPER=pt_BR.UTF-8";
+    "CAML_LD_LIBRARY_PATH=/home/tux/.opam/4.02.1/lib/stublibs";
+    "MANPATH=:/home/tux/.opam/4.02.1/man"; "HTTP_HOME=www.google.co.uk";
+      "SSH_AGENT_PID=1055"; "LC_ADDRESS=pt_BR.UTF-8"; "XDG_SESSION_ID=c1";
+      "XDG_GREETER_DATA_DIR=/var/lib/lightdm-data/tux"; "LC_MONETARY=pt_BR.UTF-8";
+      "SAL_USE_VCLPLUGIN=gtk"; "CLUTTER_IM_MODULE=xim"; "COMP_WORDBREAKS= \t\n\"'><;|&(:";
+      "TERM=xterm"; "XDG_MENU_PREFIX=lxde-"; "SHELL=/bin/bash"; "MAKEFLAGS=";
+      "PERL5LIB=/home/tux/.opam/4.02.1/lib/perl5:"; "LC_NUMERIC=pt_BR.UTF-8";
+      "OCAML_TOPLEVEL_PATH=/home/tux/.opam/4.02.1/lib/toplevel"; "USER=tux";
+      "LC_TELEPHONE=pt_BR.UTF-8";  
+      ...
+    
+    >  Unix.gethostname () ;;
     - : string = "tux-I3000"
-    #
+    >
+
+    (** Get the current process ID, PID *)
+    Unix.getpid () ;;
+    - : int = 31582
+
+    (** Pid of the parent process *)
+    >    Unix.getppid () ;;
+    - : int = 26778
+
+    > 
+    
+    (* Reading Input Channel *)
+    
+    let read_channel ch =
+       let b = Buffer.create 0 in
+    
+       let reader chn =
+        try Some (input_line chn)
+        with End_of_file -> None
+    
+       in let rec aux () =
+         match reader ch with
+          | None -> ()
+          | Some line -> Buffer.add_string b (line ^ "\n") ; aux ()
+       in aux () ;
+       Buffer.contents b 
+    ;;
+    val read_channel : in_channel -> bytes = <fun>
+
+    > 
+    
+    > open_in ;;
+    - : string -> in_channel = <fun>
+     
+    
+    > let fd = open_in "/tmp/literate.ml" ;;
+    val fd : in_channel = <abstr>
+     
+    > read_channel fd |> print_string ;;
+        > fun x -> x+1  ;;
+        - : int -> int = <fun>
+        > (fun x -> x+1) 10 ;;
+        - : int = 11
+        > let f = fun x -> x+1 ;;
+        val f : int -> int = <fun>
+        > f 10 ;;
+        - : int = 11
+        > List.map (fun x -> x+1) [1; 2; 3; 4; 5 ] ;;
+        - : int list = [2; 3; 4; 5; 6]
+        > 
+        - : unit = ()
+        # 
+   
+    > let fd = open_in "/tmp/data.txt" ;;
+    val fd : in_channel = <abstr>
+    
+    > read_channel fd |> print_string ;;
+    character \n as a line break, instead of recognizing all line break characters from the Unicode standard. Whether they match or don't match (at) line breaks depends on (?s) and (?m).
+    (?b) makes Tcl interpret the regex as a POSIX BRE.
+    (?e) makes Tcl interpret the regex as a POSIX ERE.
+    - : unit = ()
+     
+
+    > Unix.open_process_in ;;
+    - : string -> in_channel = <fun>
+    
+     
+    > Unix.open_process_in ;;
+    - : string -> in_channel = <fun>
+    # 
+      let fd = Unix.open_process_in "ls" ;;
+    val fd : in_channel = <abstr>
+    # read_channel fd |> print_string ;;
+    _build
+    codetools.ml
+    _local.ml
+    Makefile
+    META
+    opam
+    others
+    prelude.docdir
+    prelude.ml
+    prelude.mllib
+    prelude.odocl
+    seq.ml
+    ...
+    
+    > let popen_in cmd =
+          let fd = Unix.open_process_in cmd in
+          read_channel fd 
+      ;;          
+    val popen_in : string -> string = <fun>    
+
+    > popen_in "uname -r" ;;
+    - : string = "3.19.0-21-generic\n"
+    > 
+        
 ```
 
-Date and Time
+**Date and Time**
 
 ```ocaml
     
