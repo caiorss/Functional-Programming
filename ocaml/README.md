@@ -329,7 +329,7 @@ Install Utop:
 
 ![](images/utopshell.png)
 
-Show UTOP help
+**Show UTOP help**
 
 ```ocaml
     utop # #utop_help;;
@@ -342,7 +342,9 @@ Show UTOP help
     For a complete description of utop, look at the utop(1) manual page.
 ```
 
-Load a library
+Note: Those commands below also works in the native ocaml interpreter (ocaml).
+
+**Load a library**
 
 ```ocaml
     utop # #use "topfind";;
@@ -357,7 +359,7 @@ Load a library
     - : unit = ()
 ```
 
-List Installed Packages
+**List Installed Packages**
 
 ```ocaml
     utop # #list ;;
@@ -370,19 +372,87 @@ List Installed Packages
 ```
 
 
-Load Installed OCaml Packages
+**Load Installed OCaml Packages**
+
 ```
     utop # #require "batteries";;
     utop # #require "gnuplot";;
 ```
 
-Show Key Bindings
-```
+**Show UTOP Key Bindings**
+```ocaml
 utop # #utop_bindings;;
 enter       : accept                        -> accept the current input.                                  escape      : cancel-search                 -> cancel search mode.                                        tab         : complete                      -> complete current input.
 up          : history-prev                  -> go to the previous entry of the history.
 down        : history-next                  -> go to the next entry of the history.
 ...
+```
+
+**Load ML file, source code**
+
+```ocaml
+    # #use "text.ml" ;;
+    val split_lines : string -> string list = <fun>
+    val split_space : string -> string list = <fun>
+    val split_delim : string -> string -> string list = <fun>
+    val add_prefix : string -> string -> string = <fun>
+    val add_suffix : string -> string -> string = <fun>
+    # 
+    
+    #  split_space "Hello world ocaml" ;; 
+    - : string list = ["Hello"; "world"; "ocaml"]
+    #        
+```
+
+**Load ML file as module**
+
+```ocaml
+  # #mod_use "text.ml" ;;
+    module Text :
+      sig
+        val split_lines : string -> string list
+        val split_space : string -> string list
+        val split_delim : string -> string -> string list
+        val add_prefix : string -> string -> string
+        val add_suffix : string -> string -> string
+      end
+    # 
+
+    #  Text.split_space "Hello world ocaml" ;;
+    - : string list = ["Hello"; "world"; "ocaml"]
+    # 
+
+```
+
+**Show a Module Sinature**
+
+(Ocaml version >= 4.2)
+
+```ocaml
+    # #show Filename ;;
+    module Filename :
+      sig
+        val current_dir_name : string
+        val parent_dir_name : string
+        val dir_sep : string
+        val concat : string -> string -> string
+        val is_relative : string -> bool
+        val is_implicit : string -> bool
+        val check_suffix : string -> string -> bool
+        val chop_suffix : string -> string -> string
+        val chop_extension : string -> string
+        val basename : string -> string
+        val dirname : string -> string
+        val temp_file : ?temp_dir:string -> string -> string -> string
+        val open_temp_file :
+          ?mode:open_flag list ->
+          ?temp_dir:string -> string -> string -> string * out_channel
+        val get_temp_dir_name : unit -> string
+        val set_temp_dir_name : string -> unit
+        val temp_dir_name : string
+        val quote : string -> string
+      end
+    # 
 ```
 
 #### OCaml Browser
