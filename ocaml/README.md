@@ -5878,7 +5878,7 @@ $ utop
     # List.remove_at  2 ['x'; 'd'; 'a'; 'i'; 'o'; 'a']  ;;
     - : char list = ['x'; 'd'; 'i'; 'o'; 'a']
 
-       (* Removes the first element that satisfies the predicate )
+       (* Removes the first element that satisfies the predicate *)
     #  List.remove_if (fun x -> x mod 2 = 0) [1; 2; 4; 5; 10; 11] ;;
     - : int list = [1; 4; 5; 10; 11]
     # 
