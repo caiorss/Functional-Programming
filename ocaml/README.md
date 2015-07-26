@@ -55,10 +55,14 @@
     - [Loading Files in Interactive Shell](#loading-files-in-interactive-shell)
     - [Compile Module to Bytecode](#compile-module-to-bytecode)
   - [Batteries Standard Library](#batteries-standard-library)
+    - [Batteries Modules](#batteries-modules)
+      - [Batteries List](#batteries-list)
+      - [Lazy List](#lazy-list)
     - [Getting Started](#getting-started)
   - [References](#references-1)
     - [Articles](#articles)
     - [Links](#links)
+      - [Bat Enum](#bat-enum)
     - [Books](#books)
     - [Community](#community)
       - [Online Resources](#online-resources)
@@ -5659,7 +5663,7 @@ example.cmx: OCaml native object file (.cmx) (Version 011)
 
 ## Batteries Standard Library
 
-[Batteries Documentation Reference](http://batteries.forge.ocamlcore.org/doc.preview:batteries-beta1/html/api/)
+[Batteries Documentation Reference](http://ocaml-batteries-team.github.io/batteries-included/hdoc2/)
 
 Install
 
@@ -5671,6 +5675,601 @@ $ utop
 > open Batteries ;;
 >
 ```
+
+### Batteries Modules
+
+#### Batteries List
+
+[Documentation](http://ocaml-batteries-team.github.io/batteries-included/hdoc2/BatList.html)
+
+```ocaml
+  # #require "batteries" ;;
+
+  (** Function Signatures *)
+  #show BatList ;;
+    module BatList :
+      sig
+        type 'a t = 'a list
+        type 'a enumerable = 'a t
+        type 'a mappable = 'a t
+        val is_empty : 'a list -> bool
+        val cons : 'a -> 'a list -> 'a list
+        val first : 'a list -> 'a
+        val hd : 'a list -> 'a
+        val tl : 'a list -> 'a list
+        val last : 'a list -> 'a
+        val length : 'a list -> int
+        val at : 'a list -> int -> 'a
+        val rev : 'a list -> 'a list
+        val append : 'a list -> 'a list -> 'a list
+        val rev_append : 'a list -> 'a list -> 'a list
+        val concat : 'a list list -> 'a list
+        val flatten : 'a list list -> 'a list
+        val singleton : 'a -> 'a list
+        val make : int -> 'a -> 'a list
+        val range : int -> [< `Downto | `To ] -> int -> int list
+        val init : int -> (int -> 'a) -> 'a list
+        val unfold : 'b -> ('b -> ('a * 'b) option) -> 'a list
+        val unfold_exc : (unit -> 'a) -> 'a list * exn
+        val iter : ('a -> unit) -> 'a list -> unit
+        val iteri : (int -> 'a -> unit) -> 'a list -> unit
+        val map : ('a -> 'b) -> 'a list -> 'b list
+        val rev_map : ('a -> 'b) -> 'a list -> 'b list
+        val mapi : (int -> 'a -> 'b) -> 'a list -> 'b list
+        val fold_left : ('a -> 'b -> 'a) -> 'a -> 'b list -> 'a
+        val fold_lefti : ('a -> int -> 'b -> 'a) -> 'a -> 'b list -> 'a
+        val fold_right : ('a -> 'b -> 'b) -> 'a list -> 'b -> 'b
+        val fold_righti : (int -> 'b -> 'a -> 'a) -> 'b list -> 'a -> 'a
+        val reduce : ('a -> 'a -> 'a) -> 'a list -> 'a
+        val max : 'a list -> 'a
+        val min : 'a list -> 'a
+        val sum : int list -> int
+        val fsum : float list -> float
+        val kahan_sum : float list -> float
+        val min_max : ?cmp:('a -> 'a -> int) -> 'a list -> 'a * 'a
+        val iter2 : ('a -> 'b -> unit) -> 'a list -> 'b list -> unit
+        val map2 : ('a -> 'b -> 'c) -> 'a list -> 'b list -> 'c list
+        val rev_map2 : ('a -> 'b -> 'c) -> 'a list -> 'b list -> 'c list
+        val fold_left2 : ('a -> 'b -> 'c -> 'a) -> 'a -> 'b list -> 'c list -> 'a
+        val fold_right2 :
+          ('a -> 'b -> 'c -> 'c) -> 'a list -> 'b list -> 'c -> 'c
+        val mem : 'a -> 'a list -> bool
+        val mem_cmp : ('a -> 'a -> int) -> 'a -> 'a list -> bool
+        val memq : 'a -> 'a list -> bool
+        val for_all : ('a -> bool) -> 'a list -> bool
+        val exists : ('a -> bool) -> 'a list -> bool
+        val for_all2 : ('a -> 'b -> bool) -> 'a list -> 'b list -> bool
+        val exists2 : ('a -> 'b -> bool) -> 'a list -> 'b list -> bool
+        val subset : ('a -> 'b -> int) -> 'a list -> 'b list -> bool
+        val find : ('a -> bool) -> 'a list -> 'a
+        val find_exn : ('a -> bool) -> exn -> 'a list -> 'a
+        val findi : (int -> 'a -> bool) -> 'a list -> int * 'a
+        val find_map : ('a -> 'b option) -> 'a list -> 'b
+        val rfind : ('a -> bool) -> 'a list -> 'a
+        val filter : ('a -> bool) -> 'a list -> 'a list
+        val filteri : (int -> 'a -> bool) -> 'a list -> 'a list
+        val filter_map : ('a -> 'b option) -> 'a list -> 'b list
+        val filteri_map : (int -> 'a -> 'b option) -> 'a list -> 'b list
+        val find_all : ('a -> bool) -> 'a list -> 'a list
+        val partition : ('a -> bool) -> 'a list -> 'a list * 'a list
+        val index_of : 'a -> 'a list -> int option
+        val index_ofq : 'a -> 'a list -> int option
+        val rindex_of : 'a -> 'a list -> int option
+        val rindex_ofq : 'a -> 'a list -> int option
+        val unique : ?eq:('a -> 'a -> bool) -> 'a list -> 'a list
+        val unique_cmp : ?cmp:('a -> 'a -> int) -> 'a list -> 'a list
+        val unique_hash :
+          ?hash:('a -> int) -> ?eq:('a -> 'a -> bool) -> 'a list -> 'a list
+        val assoc : 'a -> ('a * 'b) list -> 'b
+        val assoc_inv : 'b -> ('a * 'b) list -> 'a
+        val remove_assoc : 'a -> ('a * 'b) list -> ('a * 'b) list
+        val mem_assoc : 'a -> ('a * 'b) list -> bool
+        val assq : 'a -> ('a * 'b) list -> 'b
+        val assq_inv : 'b -> ('a * 'b) list -> 'a
+        val remove_assq : 'a -> ('a * 'b) list -> ('a * 'b) list
+        val mem_assq : 'a -> ('a * 'b) list -> bool
+        val modify : 'a -> ('b -> 'b) -> ('a * 'b) list -> ('a * 'b) list
+        val modify_def :
+          'b -> 'a -> ('b -> 'b) -> ('a * 'b) list -> ('a * 'b) list
+        val modify_opt :
+          'a -> ('b option -> 'b option) -> ('a * 'b) list -> ('a * 'b) list
+        val modify_at : int -> ('a -> 'a) -> 'a list -> 'a list
+        val modify_opt_at : int -> ('a -> 'a option) -> 'a list -> 'a list
+        val split_at : int -> 'a list -> 'a list * 'a list
+        val split_nth : int -> 'a list -> 'a list * 'a list
+        val remove : 'a list -> 'a -> 'a list
+        val remove_if : ('a -> bool) -> 'a list -> 'a list
+        val remove_at : int -> 'a list -> 'a list
+        val remove_all : 'a list -> 'a -> 'a list
+        val take : int -> 'a list -> 'a list
+        val ntake : int -> 'a list -> 'a list list
+        val drop : int -> 'a list -> 'a list
+        val takedrop : int -> 'a list -> 'a list * 'a list
+        val take_while : ('a -> bool) -> 'a list -> 'a list
+        val drop_while : ('a -> bool) -> 'a list -> 'a list
+        val span : ('a -> bool) -> 'a list -> 'a list * 'a list
+        val nsplit : ('a -> bool) -> 'a list -> 'a list list
+        val group_consecutive : ('a -> 'a -> bool) -> 'a list -> 'a list list
+        val interleave : ?first:'a -> ?last:'a -> 'a -> 'a list -> 'a list
+        val enum : 'a list -> 'a BatEnum.t
+        val of_enum : 'a BatEnum.t -> 'a list
+        val backwards : 'a list -> 'a BatEnum.t
+        val of_backwards : 'a BatEnum.t -> 'a list
+        val split : ('a * 'b) list -> 'a list * 'b list
+        val combine : 'a list -> 'b list -> ('a * 'b) list
+        val sort : ('a -> 'a -> int) -> 'a list -> 'a list
+        val stable_sort : ('a -> 'a -> int) -> 'a list -> 'a list
+        val fast_sort : ('a -> 'a -> int) -> 'a list -> 'a list
+        val merge : ('a -> 'a -> int) -> 'a list -> 'a list -> 'a list
+        val sort_uniq : ('a -> 'a -> int) -> 'a list -> 'a list
+        val sort_unique : ('a -> 'a -> int) -> 'a list -> 'a list
+        val group : ('a -> 'a -> int) -> 'a list -> 'a list list
+        val cartesian_product : 'a list -> 'b list -> ('a * 'b) list
+        val n_cartesian_product : 'a list list -> 'a list list
+        val transpose : 'a list list -> 'a list list
+        val print :
+          ?first:string ->
+          ?last:string ->
+          ?sep:string ->
+          ('a BatInnerIO.output -> 'b -> unit) ->
+          'a BatInnerIO.output -> 'b list -> unit
+        val eq : 'a BatOrd.eq -> 'a list BatOrd.eq
+        val ord : 'a BatOrd.ord -> 'a list BatOrd.ord
+        val compare : 'a BatOrd.comp -> 'a list BatOrd.comp
+        module Eq : functor (T : BatOrd.Eq) -> sig  end
+        module Ord : functor (T : BatOrd.Ord) -> sig  end
+        module Comp : functor (T : BatOrd.Comp) -> sig  end
+        val nth : 'a list -> int -> 'a
+        val takewhile : ('a -> bool) -> 'a list -> 'a list
+        val dropwhile : ('a -> bool) -> 'a list -> 'a list
+        module Exceptionless : sig  end
+        module Infix : sig  end
+        module Labels : sig  end
+        val ( @ ) : 'a list -> 'a list -> 'a list
+      end
+    # 
+
+    # module List = BatList ;;
+
+
+    (** Head, Tail and Last **)
+    
+    # List.hd [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
+    - : int = 1
+    # List.tl [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
+    - : int list = [2; 3; 4; 5; 6; 7; 8; 9; 10]
+    # 
+
+    # List.first [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
+    - : int = 1
+    # List.last [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
+    - : int = 10
+    # 
+
+    (** Nth Element **)
+    
+    # List.at [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] 0;;
+    - : int = 1
+    # List.at [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] 1;;
+    - : int = 2
+    # List.map (List.at [1; 2; 3; 4; 5; 6; 7; 8; 9; 10]) [0; 5; 2] ;;
+    - : int list = [1; 6; 3]
+    # 
+    
+    (** Min and Max **)
+    # List.max  [1; 2; 3; 4; 5 ;6] ;;
+    - : int = 6
+    # List.min  [1; 2; 3; 4; 5 ;6] ;;
+    - : int = 1
+    # 
+
+    (** Remove an element **)
+    
+    #  List.remove  ['x'; 'd'; 'a'; 'i'; 'o'; 'a'] 'a' ;;
+    - : char list = ['x'; 'd'; 'i'; 'o'; 'a']
+    # 
+    
+    #  List.remove_all  ['x'; 'd'; 'a'; 'i'; 'o'; 'a'] 'a' ;;
+    - : char list = ['x'; 'd'; 'i'; 'o']
+    # 
+    
+    #  List.remove_at  0 ['x'; 'd'; 'a'; 'i'; 'o'; 'a']  ;;
+    - : char list = ['d'; 'a'; 'i'; 'o'; 'a']
+    # List.remove_at  2 ['x'; 'd'; 'a'; 'i'; 'o'; 'a']  ;;
+    - : char list = ['x'; 'd'; 'i'; 'o'; 'a']
+
+       (* Removes the first element that satisfies the predicate )
+    #  List.remove_if (fun x -> x mod 2 = 0) [1; 2; 4; 5; 10; 11] ;;
+    - : int list = [1; 4; 5; 10; 11]
+    # 
+
+
+    (** Sum **)
+    
+    # List.sum ;;
+    - : int list -> int = <fun>
+    # 
+
+    # List.sum  [1; 2; 3; 4; 5 ;6] ;;
+    - : int = 21
+    # 
+    
+    (** Sum of floats **)
+    
+    # List.fsum ;;
+    - : float list -> float = <fun>
+    # 
+    
+    # List.fsum [1. ; 2.3323; 3.1415; 10.] ;;
+    - : float = 16.4738
+    # 
+        
+
+    (** Map / Iter **)
+    #  List.map ;;
+    - : ('a -> 'b) -> 'a list -> 'b list = <fun>
+    
+
+    #  List.map (fun x -> 10 * x + 3) [1; 2; 3; 4; 5] ;;
+    - : int list = [13; 23; 33; 43; 53]
+    #    
+
+    #  List.iter ;;
+    - : ('a -> unit) -> 'a list -> unit = <fun>
+    # 
+
+    #  List.iter (Printf.printf "= %d\n") [1; 2; 3; 4] ;;
+    = 1
+    = 2
+    = 3
+    = 4
+    - : unit = ()
+    # 
+
+    
+    (** Take and Drop **)
+    
+    # List.take 3 [1; 3; 4; 5; 6; 7] ;;
+    - : int list = [1; 3; 4]
+    # List.take 13 [1; 3; 4; 5; 6; 7] ;;
+    - : int list = [1; 3; 4; 5; 6; 7]
+    # 
+        
+    # List.drop 4 [1; 3; 4; 5; 6; 7] ;;
+    - : int list = [6; 7]
+    # List.drop 14 [1; 3; 4; 5; 6; 7] ;;
+    - : int list = []
+    # 
+            
+
+    (** Take While **)
+    
+    #  List.takewhile (fun x -> x < 5) [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
+    - : int list = [1; 2; 3; 4]
+    # 
+
+    (** Drop While *)
+    
+    # List.dropwhile (fun x -> x < 5) [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
+    - : int list = [5; 6; 7; 8; 9; 10]
+    # 
+
+    (** Partition **)
+    
+    #  List.partition (fun x -> x < 5) [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
+    - : int list * int list = ([1; 2; 3; 4], [5; 6; 7; 8; 9; 10])
+    # 
+
+    #  List.split_nth 3 [0; 1; 2; 3; 4; 5; 6] ;;
+    - : int list * int list = ([0; 1; 2], [3; 4; 5; 6])
+    # List.split_nth 4 [0; 1; 2; 3; 4; 5; 6] ;;
+    - : int list * int list = ([0; 1; 2; 3], [4; 5; 6])
+
+    (** Combine/ Split Lists **)
+    
+    #  List.combine [1; 2; 3] ['a'; 'b'; 'c'] ;;
+    - : (int * char) list = [(1, 'a'); (2, 'b'); (3, 'c')]
+    # 
+      List.combine [1; 2; 3] ['a'; 'b'; 'c'; 'd'] ;;
+    Exception: Invalid_argument "combine: Different_list_size".
+    # 
+
+
+    #  List.split [(1, 'a'); (2, 'b'); (3, 'c')] ;;
+    - : int list * char list = ([1; 2; 3], ['a'; 'b'; 'c'])
+    # 
+
+
+    (** Range **)
+
+    #  List.range ;;
+    - : int -> [< `Downto | `To ] -> int -> int list = <fun>
+    # 
+
+    #  List.range 1 `To 10 ;;
+    - : int list = [1; 2; 3; 4; 5; 6; 7; 8; 9; 10]
+    # 
+
+    #  List.range 100 `Downto 90 ;;
+    - : int list = [100; 99; 98; 97; 96; 95; 94; 93; 92; 91; 90]
+    # 
+
+
+    (** Reverse a List **)
+    #  List.rev [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
+    - : int list = [10; 9; 8; 7; 6; 5; 4; 3; 2; 1]
+    # 
+
+    (** Lenght **)
+    # List.length [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
+    - : int = 10
+    # 
+
+    (** Wrap a Value to a list *)
+    # List.singleton 10 ;;
+    - : int list = [10]
+    # 
+    
+    (** Append Two Lists **)
+    # List.append [1; 2; 3; 4; 5 ;6] [100; 32] ;;
+    - : int list = [1; 2; 3; 4; 5; 6; 100; 32]
+    # 
+
+    (** Concat Lists **)
+    
+    # List.concat [[1]; [2; 3; 4; 5]; [13]; []] ;;
+    - : int list = [1; 2; 3; 4; 5; 13]
+    # 
+
+    # List.flatten [[1]; [2; 3; 4; 5]; [13]; []] ;;
+    - : int list = [1; 2; 3; 4; 5; 13]
+    # 
+
+
+    (** Index of ELement **)
+    
+    # List.index_of ;;
+    - : 'a -> 'a list -> int option = <fun>
+    # 
+
+    #  List.index_of "a" ["i"; "o"; "b"; "a"; "d" ] ;;
+    - : int option = Some 3
+    # List.index_of "x" ["i"; "o"; "b"; "a"; "d" ] ;;
+    - : int option = None
+    # 
+
+    (** Cartesian Product **)
+    
+    #  List.cartesian_product [10; 20; 30] ['a'; 'b'; 'c'; 'd'] ;;
+    - : (int * char) list =
+    [(10, 'a'); (10, 'b'); (10, 'c'); (10, 'd'); (20, 'a'); (20, 'b'); (20, 'c');
+     (20, 'd'); (30, 'a'); (30, 'b'); (30, 'c'); (30, 'd')]
+    # 
+
+    (** Transpose, similar to transpose a matrix *)
+    #  List.transpose [[1; 2; 3; 4]; [10; 20; 30; 100]];;
+    - : int list list = [[1; 10]; [2; 20]; [3; 30]; [4; 100]]
+    # 
+    
+    #  List.group_consecutive ;;
+    - : ('a -> 'a -> bool) -> 'a list -> 'a list list = <fun>
+    # 
+    
+    
+```
+
+#### Lazy List 
+
+[Documentation](http://ocaml-batteries-team.github.io/batteries-included/hdoc2/BatLazyList.html)
+
+Lazy lists are similar to Haskell Lists that uses lazy evaluation.
+
+```ocaml
+
+    #require "batteries" ;;
+
+    # module Lz = BatLazyList ;;
+    module Lz = BatLazyList
+    # 
+
+    (** List to Lazy List*)
+    
+    #  Lz.of_list ;;
+    - : 'a list -> 'a Lz.t = <fun>
+    # 
+    #  Lz.of_list [1; 2; 3; 4; 5] ;;
+    - : int Lz.t = <lazy>
+    # 
+
+    # let s = Lz.of_list [1; 2; 3; 4; 5] ;;
+    val s : int Lz.t = <lazy>
+    # 
+    
+    
+    (** Lazy list to List *)
+        
+    # Lz.to_list s ;;
+    - : int list = [1; 2; 3; 4; 5]
+    # 
+
+
+    (** Range  **)
+    
+    # let st = Lz.range 2 15 ;;
+    val st : int Lz.t = <lazy>
+    # 
+    
+    # Lz.to_list st ;;
+    - : int list = [2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14; 15]
+    # 
+    
+(** Lazy Operations **)
+
+    (** Take **)
+    # Lz.range 2 15000 |> Lz.take 5 ;;
+    - : int Lz.t = lazy <cycle>
+    #   
+    
+    # Lz.range 2 15000 |> Lz.take 5 |> Lz.to_list ;;
+    - : int list = [2; 3; 4; 5; 6]
+
+
+
+    (** Hd - Head, Tl tail and last *)
+    
+    # Lz.range 2 15000 |> Lz.hd ;;
+    - : int = 2
+    # 
+
+    # Lz.range 2 15000 |> Lz.tl ;;
+    - : int Lz.t = <lazy>
+    # 
+
+    # Lz.range 2 15000 |> Lz.tl |> Lz.take 4 |> Lz.to_list ;;
+    - : int list = [3; 4; 5; 6]
+    #     
+    
+    #  Lz.range 2 15000 |> Lz.tl |> Lz.take 4 |> Lz.last ;;
+    - : int = 6
+    # 
+    
+
+    (** Take While **)
+
+    # Lz.take_while ;;
+    - : ('a -> bool) -> 'a Lz.t -> 'a Lz.t = <fun>
+    # 
+    
+    # Lz.range 2 15000 |> Lz.take_while (fun x -> x < 10) ;;
+    - : int Lz.t = lazy <cycle>
+    # 
+      Lz.range 2 15000 |> Lz.take_while (fun x -> x < 10) |> Lz.to_list ;;
+    - : int list = [2; 3; 4; 5; 6; 7; 8; 9]
+    # 
+
+
+    (** Drop While *)
+    
+    Lz.of_list [2 ; 5; 9; 8; 10; 230; 100] 
+    |> Lz.drop_while (fun x -> x < 10) 
+    |> Lz.to_list ;;
+    - : int list = [10; 230; 100]
+    #     
+    
+    # [2 ; 5; 9; 8; 10; 230; 100] 
+      |> Lz.of_list
+      |> Lz.drop_while (fun x -> x < 10)
+      |> Lz.to_list ;;
+    - : int list = [10; 230; 100]
+    # 
+    
+
+    (** Map **)
+    
+    # Lz.range 2 15000 |> Lz.map (fun x -> 3 * x - 5) |> Lz.take 10 |> Lz.to_list ;;
+    - : int list = [1; 4; 7; 10; 13; 16; 19; 22; 25; 28]
+    # 
+    
+    (** Iter **)
+    
+    #  let z = Lz.range 2 15000 |> Lz.map (fun x -> 3 * x - 5) |> Lz.take 10 ;;
+    val z : int Lz.t = lazy <cycle>
+    # 
+      Lz.iter (fun x -> Printf.printf "x = %d\n" x) z ;;
+    x = 1
+    x = 4
+    x = 7
+    x = 10
+    x = 13
+    x = 16
+    x = 19
+    x = 22
+    x = 25
+    x = 28
+    - : unit = ()
+    # 
+    
+    (** Filter **)
+    
+    #  Lz.range 2 15000 |> Lz.filter (fun x -> x < 15) |> Lz.to_list ;;
+    - : int list = [2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14]
+    # 
+    
+    #  Lz.range 2 15000 
+      |> Lz.filter (fun x -> x mod 2 = 0 ) 
+      |> Lz.take 10 
+      |> Lz.to_list ;;
+    - : int list = [2; 4; 6; 8; 10; 12; 14; 16; 18; 20]
+    #     
+    
+    (** checks if at least one element of the list satisfies the predicate p.  *)
+    # Lz.range 2 15000 |> Lz.exists (fun x -> x = 10) ;;
+    - : bool = true
+    # 
+    
+    (** for_all p [^ a0; a1; ... ^] checks if all elements of the 
+        list satisfy the predicate p. 
+        That is, it returns (p a0) && (p a1) && ... .
+    *)
+
+    #  Lz.range 2 15000 
+      |> Lz.take 10 
+      |> Lz.for_all (fun x -> x mod 2  = 0) ;;
+    - : bool = false
+    
+    # let xs = Lz.range 2 15000 |> Lz.take 10 |> Lz.filter (fun x -> x mod 2 = 0) ;;
+    val xs : int Lz.t = <lazy>
+   
+    # Lz.to_list xs ;;
+    - : int list = [2; 4; 6; 8; 10]
+    # 
+
+      xs |> Lz.for_all (fun x -> x mod 2  = 0) ;;
+    - : bool = true
+    # 
+
+
+    (** Filter Map 
+    
+    Lazily eliminate some elements and transform others.
+    filter_map f [^ a0; a1; ... ^] applies lazily f to each a0, a1... 
+    If f ai evaluates to None, the element is not included in the result. 
+    Otherwise, if f ai evaluates to Some x, element x is included 
+    in the result.
+    
+    **)
+    
+    # let f x = 
+        if x > 10 then None else Some x 
+      ;;
+    val f : int -> int option = <fun>
+    #   
+    
+    #  Lz.filter_map f (Lz.of_list [-20; -10; 0; 2; 10; 20; 30; 60; 3]) ;;
+    - : int Lz.t = <lazy>
+    
+    # Lz.filter_map f (Lz.of_list [-20; -10; 0; 2; 10; 20; 30; 60; 3]) 
+    |> Lz.to_list ;;
+    - : int list = [-20; -10; 0; 2; 10; 3]
+    # 
+    
+    (** Combine/ Zip **)
+    
+    #  Lz.combine (Lz.of_list [1; 2; 3]) (Lz.of_list ['a'; 'b'; 'c']) |> Lz.to_list;;
+    - : (int * char) list = [(1, 'a'); (2, 'b'); (3, 'c')]
+    # 
+
+    # Lz.of_list [(1, 'a'); (2, 'b'); (3, 'c')] |> Lz.uncombine ;;
+    - : int Lz.t * char Lz.t = (<lazy>, <lazy>)
+    # 
+
+    # Lz.of_list [(1, 'a'); (2, 'b'); (3, 'c')] |> Lz.uncombine 
+      |> fun (a, b) -> (Lz.to_list a, Lz.to_list b) ;;
+    - : int list * char list = ([1; 2; 3], ['a'; 'b'; 'c'])
+    # 
+    
+```
+
 
 ### Getting Started
 
@@ -5724,7 +6323,320 @@ val main : unit -> unit = <fun>
     ---------------------------------------------------------------
 -->
 
+#### Bat Enum
 
+[Documentation](http://ocaml-batteries-team.github.io/batteries-included/hdoc2/BatEnum.html)
+
+
+Enumeration over abstract collection of elements. Enumerations are a representation of finite or infinite sequences of elements. In Batteries Included, enumerations are used pervasively, both as a uniform manner of reading and manipulating the contents of a data structure, or as a simple manner of reading or writing sequences of characters, numbers, strings, etc. from/to files, network connections or other inputs/outputs.
+
+Note Enumerations are not thread-safe. You should not attempt to access one enumeration from different threads.
+Author(s): Nicolas Cannasse, David Rajchenbach-Teller
+
+
+```ocaml
+
+    #require "batteries" ;;
+    module Enum = BatEnum ;;
+    # 
+
+    (** List to Enum *)
+    
+    # List.enum [1; 2; 30; 40; 50; 60] ;;
+    - : int BatEnum.t = <abstr>
+     
+    #  let en = List.enum [1; 2; 30; 40; 50; 60] ;;
+    val en : int BatEnum.t = <abstr>
+    # 
+
+    (** Enum to List *)
+    
+    #  List.of_enum en ;;
+    - : int list = [1; 2; 30; 40; 50; 60]
+    # 
+
+
+    (** 
+        init n f creates a new enumeration over elements 
+        f 0, f 1, ..., f (n-1)
+    *)
+      Enum.init 10 (fun x -> 5 * x - 4 );;
+    - : int Enum.t = <abstr>
+
+    # Enum.init 10 (fun x -> 5 * x - 4 ) |> List.of_enum ;;
+    - : int list = [-4; 1; 6; 11; 16; 21; 26; 31; 36; 41]
+    # 
+      
+    (** repeat ~times:n x 
+        creates a enum sequence filled with n times 
+        of x. It return infinite enum when ~times is absent. 
+        It returns empty enum when times <= 0
+    *)
+
+    #  Enum.repeat ;;
+    - : ?times:int -> 'a -> 'a Enum.t = <fun>
+    # 
+
+    #  Enum.repeat 10 |> Enum.take 10 ;;
+    - : int Enum.t = <abstr>
+    # 
+    
+    # Enum.repeat 10 |> Enum.take 10 |> List.of_enum ;;
+    - : int list = [10; 10; 10; 10; 10; 10; 10; 10; 10; 10]
+    # 
+    
+    (** Count the number of elements in the enum *)
+
+    #  Enum.repeat 10 |> Enum.take 10 |> Enum.count ;;
+    - : int = 10
+    # 
+
+
+    (** val seq : 'a -> ('a -> 'a) -> ('a -> bool) -> 'a t
+        seq init step cond 
+        
+        creates a sequence of data, which starts 
+        from init, extends by step, until the condition cond fails. 
+        E.g. seq 1 ((+) 1) ((>) 100) returns 1, 2, ... 99. 
+        If cond init is false, the result is empty.
+    *)
+    
+    # Enum.seq ;;
+    - : 'a -> ('a -> 'a) -> ('a -> bool) -> 'a Enum.t = <fun>
+    # 
+    
+    #  let en = Enum.seq 2.3 (fun x -> 10.0 *. x ) (fun x -> x < 100.) ;;
+    val en : float Enum.t = <abstr>
+    
+    #  List.of_enum en ;;
+    - : float list = [2.3; 23.]
+    
+    # let en = Enum.seq 2.3 (fun x -> 10.0 *. x ) (fun x -> true) 
+    |> Enum.take 10 
+    |> List.of_enum ;;
+    val en : float list =
+      [2.3; 23.; 230.; 2300.; 23000.; 230000.; 2300000.; 
+      23000000.; 230000000.; 2300000000.]
+
+    
+    (** Cycle **)
+    
+    #  Enum.cycle (List.enum ['a'; 'b'; 'c']) |> Enum.take 3 |>  List.of_enum ;;
+    - : char list = ['a'; 'b'; 'c']
+    # Enum.cycle (List.enum ['a'; 'b'; 'c']) |> Enum.take 5 |>  List.of_enum ;;
+    - : char list = ['a'; 'b'; 'c'; 'a'; 'b']
+    # Enum.cycle (List.enum ['a'; 'b'; 'c']) |> Enum.take 7 |>  List.of_enum ;;
+    - : char list = ['a'; 'b'; 'c'; 'a'; 'b'; 'c'; 'a']
+    # 
+
+    (** Combine **)
+    
+    #  Enum.combine ;;
+    - : 'a Enum.t * 'b Enum.t -> ('a * 'b) Enum.t = <fun>
+    # 
+        
+    #  Enum.combine ((List.enum ['a'; 'b'; 'c']), (List.enum [10; 20; 30; 40; 50])) 
+    |> List.of_enum ;;
+    - : (char * int) list = [('a', 10); ('b', 20); ('c', 30)]
+    # 
+        
+    #  Enum.uncombine ;;
+    - : ('a * 'b) Enum.t -> 'a Enum.t * 'b Enum.t = <fun>
+    # 
+
+    # List.enum [('a', 10); ('b', 20); ('c', 30)] 
+    |> Enum.uncombine ;;
+    - : char Enum.t * int Enum.t = (<abstr>, <abstr>)
+    # 
+
+
+    # List.enum [('a', 10); ('b', 20); ('c', 30)] |> Enum.uncombine 
+      |> fun (a, b) -> (List.of_enum a, List.of_enum b) ;;
+    - : char list * int list = (['a'; 'b'; 'c'], [10; 20; 30])
+    # 
+        
+    
+    (** From While 
+    
+        val from_while : (unit -> 'a option) -> 'a t
+        
+        from_while next creates an enumeration from the next function. 
+        next shall return Some x where x is the next element of the 
+        enumeration or None when no more elements can be enumerated. 
+        Since the enumeration definition is incomplete, a call to clone 
+        or count will result in a call to force that will enumerate all 
+        elements in order to return a correct value.        
+    **)
+
+    #  Enum.from_while ;;
+    - : (unit -> 'a option) -> 'a Enum.t = <fun>
+    # 
+
+    let generator start step stop =
+      let x = ref start in
+      fun () ->
+        x := !x + step ;
+        if !x < stop
+        then  Some (!x)
+        else  None
+      ;;        
+    val generator : int -> int -> int -> unit -> int option = <fun>
+    #       
+    
+    # let g = generator 2 3 20  ;;
+    val g : unit -> int option = <fun>
+    # 
+      g () ;;
+    - : int option = Some 5
+    # g () ;;
+    - : int option = Some 8
+    # g () ;;
+    - : int option = Some 11
+    # g () ;;
+    - : int option = Some 14
+    # g () ;;
+    - : int option = Some 17
+    # g () ;;
+    - : int option = None
+    # g () ;;
+    - : int option = None
+    # 
+
+    # Enum.from_while (generator 2 3 20) |> List.of_enum ;;
+    - : int list = [5; 8; 11; 14; 17]
+    # 
+
+    # let read_line_gen chin () = 
+          try Some ( input_line chin)
+              with End_of_file -> None ;;
+    val read_line_gen : in_channel -> unit -> string option = <fun>
+    # 
+    
+    #  let g = read_line_gen (open_in "/etc/fstab") ;;
+    val g : unit -> string option = <fun>
+    # 
+    
+    # let g = read_line_gen (open_in "/tmp/data.txt") ;;
+    val g : unit -> string option = <fun>
+    # 
+    
+    # Enum.from_while g |> List.of_enum  ;;
+    - : string list =
+    ["character \\n as a line break, instead of recognizing 
+    all line break characters from the Unicode standard. Whether they 
+    match or don't match (at) line breaks depends on (?s) and (?m).";
+     "(?b) makes Tcl interpret the regex as a POSIX BRE.";
+     "(?e) makes Tcl interpret the regex as a POSIX ERE."]
+    # 
+    
+    (** 
+    val unfold : 'b -> ('b -> ('a * 'b) option) -> 'a t
+    
+    unfold : state -> (state -> (output, state) option) -> output enum 
+               |       ------------------------         |
+               |                |                       |
+               |                |--- State Function     Output 
+               |                                        of every state
+               |
+               |----> Start state
+    
+    
+    As from_loop, except uses option type to signal the end of 
+    the enumeration. The enumeration ends whenever the function 
+    returns None
+
+    State Function:          
+          state -> (output, state) option
+    
+        > (output, new_sate) option = state_function current_state
+    
+    ---------------------------------------------------------------
+    *)
+    
+    
+    #  let state_iterator a = Some (2 * a, a + 1) ;;
+    val state_iterator : int -> (int * int) option = <fun>
+    
+    (*
+        state_iterator a = Some (2 * a, a + 1)
+        state_iterator 3 = (Some (2 * a, a + 1)) 3 = Some (6, 4)
+                                                              |
+                                                           Next State
+                                                           
+        state_iterator 4 = (Some (2 * a, a + 1)) 4 = Some (8, 5)
+        
+        state_iterator 5 = (Some (2 * a, a + 1)) 5 = Some (10, 6)
+        
+        state_iterator 5 = (Some (2 * a, a + 1)) 5 = Some (14, 7)
+        
+        output:  [6; 8; 10; 14; ...]
+    *)
+    # Enum.unfold 3 state_iterator |> Enum.take 10 |> List.of_enum ;;
+    - : int list = [6; 8; 10; 12; 14; 16; 18; 20; 22; 24]
+    # 
+    
+    #  let state_iter x = 
+          if x < 30 then Some (x * 3, x + 3) else None ;;
+    val state_iter : int -> (int * int) option = <fun>
+    #     
+    
+    # Enum.unfold 3 state_iter |> List.of_enum ;;
+    - : int list = [9; 18; 27; 36; 45; 54; 63; 72; 81]
+    # 
+
+    #  Enum.while_do;;
+    - : ('a -> bool) -> ('a Enum.t -> 'a Enum.t) -> 'a Enum.t -> 'a Enum.t = <fun>
+    # 
+
+  # Enum.while_do 
+    (fun x -> x < 10) 
+    (Enum.map (fun x -> 3 * x + 2)) 
+    (List.enum [1; 2; 4; 7; 9; 10; 20; 30]) 
+    |> List.of_enum;;
+    - : int list = [5; 8; 14; 23; 29; 10; 20; 30]
+    
+# 
+  Enum.while_do (fun x -> x < 20) (Enum.map (fun x -> 3 * x + 2)) (List.enum [1; 2; 4; 7; 9; 10; 20; 30]) |> List.of_enum;;
+- : int list = [5; 8; 14; 23; 29; 32; 20; 30]
+# 
+    
+    
+(** Infix Operators *)
+
+      #show Enum.Infix ;;
+    module Infix :
+      sig
+        val ( -- ) : int -> int -> int Enum.t
+        val ( --^ ) : int -> int -> int Enum.t
+        val ( --. ) : float * float -> float -> float Enum.t
+        val ( --- ) : int -> int -> int Enum.t
+        val ( --~ ) : char -> char -> char Enum.t
+        val ( // ) : 'a Enum.t -> ('a -> bool) -> 'a Enum.t
+        val ( /@ ) : 'a Enum.t -> ('a -> 'b) -> 'b Enum.t
+        val ( @/ ) : ('a -> 'b) -> 'a Enum.t -> 'b Enum.t
+        val ( //@ ) : 'a Enum.t -> ('a -> 'b option) -> 'b Enum.t
+        val ( @// ) : ('a -> 'b option) -> 'a Enum.t -> 'b Enum.t
+      end
+    # 
+
+    (** Range Operator *)
+    #  4 -- 10 ;;
+    - : int Enum.t = <abstr>
+    # 
+    #  4 -- 10 |> List.of_enum ;;
+    - : int list = [4; 5; 6; 7; 8; 9; 10]
+    # 
+    
+    (** Range Operator without the end *)
+    #  4 --^ 10  ;;
+    - : int Enum.t = <abstr>
+    # 
+
+    #  4 --^ 10 |> List.of_enum ;;
+    - : int list = [4; 5; 6; 7; 8; 9]
+    # 
+
+```
 
 ### Books
 
