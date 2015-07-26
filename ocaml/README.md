@@ -58,11 +58,11 @@
     - [Batteries Modules](#batteries-modules)
       - [Batteries List](#batteries-list)
       - [Lazy List](#lazy-list)
+      - [Bat Enum](#bat-enum)
     - [Getting Started](#getting-started)
   - [References](#references-1)
     - [Articles](#articles)
     - [Links](#links)
-      - [Bat Enum](#bat-enum)
     - [Books](#books)
     - [Community](#community)
       - [Online Resources](#online-resources)
@@ -6271,57 +6271,6 @@ Lazy lists are similar to Haskell Lists that uses lazy evaluation.
 ```
 
 
-### Getting Started
-
-From: [Batteries Wiki](https://github.com/ocaml-batteries-team/batteries-included/wiki/Getting-started)
-
-```ocaml
-> #require "batteries";;
-> open Batteries ;;
->
-let main () =
-  (1--999) (* the enum that counts from 1 to 999 *)
-  |> Enum.filter (fun i -> i mod 3 = 0 || i mod 5 = 0)
-  |> Enum.reduce (+) (* add all remaining values together *)
-  |> Int.print stdout
-;;
-val main : unit -> unit = <fun>
-
-> main () ;;
-233168- : unit = ()
-```
-
-## References
-
-### Articles
-
-
-* [Ocaml for the masses - by Yaron Minks, Jane Stree Capital](http://cacm.acm.org/magazines/2011/11/138203-ocaml-for-the-masses/fulltext)
-
-
-<!--
-    ---------------------------------------------------------------
--->
-
-### Links
-
-* [OCaml Best Practices for Developers / Xen](http://wiki.xen.org/wiki/OCaml_Best_Practices_for_Developers#OCaml_Best_Practices_Guide)
-
-* http://pleac.sourceforge.net/pleac_ocaml/packagesetc.html
-
-* http://projects.camlcity.org/projects/dl/findlib-1.2.6/doc/guide-html/quickstart.html
-
-* http://caml.inria.fr/pub/docs/manual-ocaml/extn.html
-
-* http://www.loria.fr/~shornus/ocaml/slides-ocaml-3.pdf
-
-* http://blog.enfranchisedmind.com/2007/01/ocaml-lazy-lists-an-introduction/
-
-
-
-<!--
-    ---------------------------------------------------------------
--->
 
 #### Bat Enum
 
@@ -6595,10 +6544,13 @@ Author(s): Nicolas Cannasse, David Rajchenbach-Teller
     |> List.of_enum;;
     - : int list = [5; 8; 14; 23; 29; 10; 20; 30]
     
-# 
-  Enum.while_do (fun x -> x < 20) (Enum.map (fun x -> 3 * x + 2)) (List.enum [1; 2; 4; 7; 9; 10; 20; 30]) |> List.of_enum;;
-- : int list = [5; 8; 14; 23; 29; 32; 20; 30]
-# 
+    # 
+      Enum.while_do (fun x -> x < 20) 
+      (Enum.map (fun x -> 3 * x + 2)) 
+      (List.enum [1; 2; 4; 7; 9; 10; 20; 30]) 
+      |> List.of_enum;;
+    - : int list = [5; 8; 14; 23; 29; 32; 20; 30]
+    # 
     
     
 (** Infix Operators *)
@@ -6637,6 +6589,61 @@ Author(s): Nicolas Cannasse, David Rajchenbach-Teller
     # 
 
 ```
+
+
+
+### Getting Started
+
+From: [Batteries Wiki](https://github.com/ocaml-batteries-team/batteries-included/wiki/Getting-started)
+
+```ocaml
+> #require "batteries";;
+> open Batteries ;;
+>
+let main () =
+  (1--999) (* the enum that counts from 1 to 999 *)
+  |> Enum.filter (fun i -> i mod 3 = 0 || i mod 5 = 0)
+  |> Enum.reduce (+) (* add all remaining values together *)
+  |> Int.print stdout
+;;
+val main : unit -> unit = <fun>
+
+> main () ;;
+233168- : unit = ()
+```
+
+## References
+
+### Articles
+
+
+* [Ocaml for the masses - by Yaron Minks, Jane Stree Capital](http://cacm.acm.org/magazines/2011/11/138203-ocaml-for-the-masses/fulltext)
+
+
+<!--
+    ---------------------------------------------------------------
+-->
+
+### Links
+
+* [OCaml Best Practices for Developers / Xen](http://wiki.xen.org/wiki/OCaml_Best_Practices_for_Developers#OCaml_Best_Practices_Guide)
+
+* http://pleac.sourceforge.net/pleac_ocaml/packagesetc.html
+
+* http://projects.camlcity.org/projects/dl/findlib-1.2.6/doc/guide-html/quickstart.html
+
+* http://caml.inria.fr/pub/docs/manual-ocaml/extn.html
+
+* http://www.loria.fr/~shornus/ocaml/slides-ocaml-3.pdf
+
+* http://blog.enfranchisedmind.com/2007/01/ocaml-lazy-lists-an-introduction/
+
+
+
+<!--
+    ---------------------------------------------------------------
+-->
+
 
 ### Books
 
