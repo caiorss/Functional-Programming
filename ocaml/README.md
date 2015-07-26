@@ -6590,6 +6590,178 @@ Author(s): Nicolas Cannasse, David Rajchenbach-Teller
 
 ```
 
+#### String 
+
+[Documentation](http://ocaml-batteries-team.github.io/batteries-included/hdoc2/BatString.html)
+
+```ocaml
+
+    # #require "batteries" ;;
+    
+    
+    #  module String = BatString ;;
+    module String = BatString
+    # 
+  
+  
+        #show BatString ;;
+    module BatString :
+      sig
+        val init : int -> (int -> char) -> string
+        val is_empty : string -> bool
+        external length : string -> int = "%string_length"
+        external get : string -> int -> char = "%string_safe_get"
+        external set : string -> int -> char -> unit = "%string_safe_set"
+        external create : int -> string = "caml_create_string"
+        val make : int -> char -> string
+        val copy : string -> string
+        val sub : string -> int -> int -> string
+        val fill : string -> int -> int -> char -> unit
+        val blit : string -> int -> string -> int -> int -> unit
+        val concat : string -> string list -> string
+        val iter : (char -> unit) -> string -> unit
+        val mapi : (int -> char -> char) -> string -> string
+        val escaped : string -> string
+        val index : string -> char -> int
+        val rindex : string -> char -> int
+        val index_from : string -> int -> char -> int
+        val rindex_from : string -> int -> char -> int
+        val contains : string -> char -> bool
+        val contains_from : string -> int -> char -> bool
+        val rcontains_from : string -> int -> char -> bool
+        val uppercase : string -> string
+        val lowercase : string -> string
+        val capitalize : string -> string
+        val uncapitalize : string -> string
+        type t = string
+        val enum : string -> char BatEnum.t
+        val of_enum : char BatEnum.t -> string
+        val backwards : string -> char BatEnum.t
+        val of_backwards : char BatEnum.t -> string
+        val of_list : char list -> string
+        val to_list : string -> char list
+        val of_int : int -> string
+        val of_float : float -> string
+        val of_char : char -> string
+        val to_int : string -> int
+        val to_float : string -> float
+        val map : (char -> char) -> string -> string
+        val fold_left : ('a -> char -> 'a) -> 'a -> string -> 'a
+        val fold_lefti : ('a -> int -> char -> 'a) -> 'a -> string -> 'a
+        val fold_right : (char -> 'a -> 'a) -> string -> 'a -> 'a
+        val fold_righti : (int -> char -> 'a -> 'a) -> string -> 'a -> 'a
+        val filter : (char -> bool) -> string -> string
+        val filter_map : (char -> char option) -> string -> string
+        val iteri : (int -> char -> unit) -> string -> unit
+        val find : string -> string -> int
+        val find_from : string -> int -> string -> int
+        val rfind : string -> string -> int
+        val rfind_from : string -> int -> string -> int
+        val find_all : string -> string -> int BatEnum.t
+        val ends_with : string -> string -> bool
+        val starts_with : string -> string -> bool
+        val exists : string -> string -> bool
+        val lchop : ?n:int -> string -> string
+        val rchop : ?n:int -> string -> string
+        val trim : string -> string
+        val quote : string -> string
+        val left : string -> int -> string
+        val right : string -> int -> string
+        val head : string -> int -> string
+        val tail : string -> int -> string
+        val strip : ?chars:string -> string -> string
+        val replace_chars : (char -> string) -> string -> string
+        val replace : str:string -> sub:string -> by:string -> bool * string
+        val nreplace : str:string -> sub:string -> by:string -> string
+        val repeat : string -> int -> string
+        val rev : string -> string
+        val rev_in_place : string -> unit
+        val in_place_mirror : string -> unit
+        val split : string -> by:string -> string * string
+        val rsplit : string -> by:string -> string * string
+        val nsplit : string -> by:string -> string list
+        val join : string -> string list -> string
+        val slice : ?first:int -> ?last:int -> string -> string
+        val splice : string -> int -> int -> string -> string
+        val explode : string -> char list
+        val implode : char list -> string
+        val equal : t -> t -> bool
+        val ord : t -> t -> BatOrd.order
+        val compare : t -> t -> int
+        val icompare : t -> t -> int
+        module IString : sig  end
+        val numeric_compare : t -> t -> int
+        module NumString : sig  end
+        val edit_distance : t -> t -> int
+        val print : 'a BatInnerIO.output -> string -> unit
+        val println : 'a BatInnerIO.output -> string -> unit
+        val print_quoted : 'a BatInnerIO.output -> string -> unit
+        module Exceptionless : sig  end
+        module Cap : sig  end
+        external unsafe_get : string -> int -> char = "%string_unsafe_get"
+        external unsafe_set : string -> int -> char -> unit
+          = "%string_unsafe_set"
+        external unsafe_blit : string -> int -> string -> int -> int -> unit
+          = "caml_blit_string" "noalloc"
+        external unsafe_fill : string -> int -> int -> char -> unit
+          = "caml_fill_string" "noalloc"
+      end
+    # 
+
+    # String.starts_with "foobar" "foo" ;;
+    - : bool = true
+    # 
+      String.starts_with "foobar" "baz" ;;
+    - : bool = false
+    # 
+
+    # String.ends_with "foobar" "foo" ;;
+    - : bool = false
+    # String.ends_with "foobar" "bar" ;;
+    - : bool = true
+    # 
+
+    # String.explode "foobar" ;;
+    - : char list = ['f'; 'o'; 'o'; 'b'; 'a'; 'r']
+    # 
+      String.implode ['P'; 'o'; 'r'; 't'; 'u'; 'g'; 'a'; 'l' ] ;;
+    - : string = "Portugal"
+    # 
+    
+    #  String.trim "    helllo world     " ;;
+    - : string = "helllo world"
+    # 
+
+    # String.strip ~chars:".-?; "  " .-....helllo world   ...;;;???  " ;;
+    - : string = "helllo world"
+    # 
+      
+    #  String.join ", " ["Mexico" ; "Honduras"; "Guatemala"; "Colombia"] ;;
+    - : string = "Mexico, Honduras, Guatemala, Colombia"
+    # 
+
+    #  String.concat ", " ["Mexico" ; "Honduras"; "Guatemala"; "Colombia"] ;;
+    - : string = "Mexico, Honduras, Guatemala, Colombia"
+    # 
+
+    # String.repeat "foobar" 4 ;;
+    - : string = "foobarfoobarfoobarfoobar"
+    # 
+
+    # String.repeat "foobar" 4 |> String.rev ;;
+    - : string = "raboofraboofraboofraboof"
+    # 
+
+
+    #  String.split  "hello????world???ocaml" ~by:"?" ;;
+    - : string * string = ("hello", "???world???ocaml")
+
+    #  String.nsplit  "hello????world???ocaml" ~by:"?" ;;
+    - : string list = ["hello"; ""; ""; ""; "world"; ""; ""; "ocaml"]
+
+    # 
+
+```
 
 
 ### Getting Started
