@@ -3406,26 +3406,8 @@ $ ocamlfind ocamlopt -package more,unix program.ml -linkpkg -o progra
     
     > open_in ;;
     - : string -> in_channel = <fun>
-     
-    
-    > let fd = open_in "/tmp/literate.ml" ;;
-    val fd : in_channel = <abstr>
-     
-    > read_channel fd |> print_string ;;
-        > fun x -> x+1  ;;
-        - : int -> int = <fun>
-        > (fun x -> x+1) 10 ;;
-        - : int = 11
-        > let f = fun x -> x+1 ;;
-        val f : int -> int = <fun>
-        > f 10 ;;
-        - : int = 11
-        > List.map (fun x -> x+1) [1; 2; 3; 4; 5 ] ;;
-        - : int list = [2; 3; 4; 5; 6]
-        > 
-        - : unit = ()
-        # 
-   
+       
+  
     > let fd = open_in "/tmp/data.txt" ;;
     val fd : in_channel = <abstr>
     
