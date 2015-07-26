@@ -3644,34 +3644,47 @@ $ ocamlfind ocamlopt -package more,unix program.ml -linkpkg -o progra
     (** Get the timezone
         The time zone is the difference between the current UTC time 
         and the localtime hour
+        
+        UTC_Time = Local_Time + TimeZone
+        
+        For example if your local time is 10h and your time zone is +3h,
+        then the UTC time will be 10h + 3h => 13h or 1h PM
+        
+        1 h ==> 60 min/h * 60 sec/min = 3600 sec/h
            
      *)
      
-    # let timezone () = 
+    # let tzone () =
           let open Unix in
-          let epoch = time () in
-          let tm_utc = gmtime epoch in
-          let tm_loc = localtime epoch in
-          (tm_utc.tm_hour - tm_loc.tm_hour)
+          let epc1 = time () in
+          let epc2, _ = epc1 |> gmtime |> mktime in
+          int_of_float @@ (epc2 -. epc1) /. 3600.
     ;;
-    val timezone : unit -> int = <fun>
-    # 
+            
+    (** Recife/ Brazil Timezone *)  
+    tzone () ;;
+      - : int = 3
+    #       
+    
+    # let test_time_zone epoch =
+      let tm1 =
+        epoch +. (float_of_int (tzone ())) *. 3600.0
+        |> Unix.localtime in
+      
+      let tm2 = Unix.gmtime epoch in
+      tm1 = tm2
+    ;;          
 
-    timezone () ;;
-    - : int = 3
-    #      
-    
-    (** Or *)
-    
-    let timezone () = 
-      let open Unix in
-      let epoch = time () in  
-      ((gmtime epoch).tm_hour - (localtime epoch).tm_hour)
-    ;;    
-    
-      timezone () ;;
-    - : int = 3
+    # let t1 = Unix.time () ;;
+    val t1 : float = 1437879090.
+    # let t2 = Unix.time () ;;
+    val t2 : float = 1437879096.
+    # let t3 = Unix.time () ;;
+    val t3 : float = 1437879195.
     # 
+    List.map test_time_zone [t1; t2; t3] ;;
+      - : bool list = [true; true; true]
+    #   
     
     (** Convert time records to Epoch Time 
       *
