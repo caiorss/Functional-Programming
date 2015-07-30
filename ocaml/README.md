@@ -62,6 +62,7 @@
       - [String](#string-1)
   - [Miscellaneous](#miscellaneous)
     - [Adding Directives to Toploop Shell](#adding-directives-to-toploop-shell)
+    - [Using Ocaml as Shell Scripts](#using-ocaml-as-shell-scripts)
   - [References](#references-1)
     - [Articles](#articles)
     - [Links](#links)
@@ -6870,6 +6871,21 @@ The toploop, interpreter directives can be defined by the user to create customi
         #pwd ;;
         #version ;;
     *)   
+    # let add_directive_none command_name func =
+      Hashtbl.add
+        Toploop.directive_table
+        command_name
+          (Toploop.Directive_none func)  ;;
+    val add_directive_none : string -> (unit -> unit) -> unit = <fun>
+    
+    
+    
+    (** Add directive that requires a string argument, like
+      
+      #cat "string_utils.ml" ;;
+      #use "something.ml" ;;
+      
+    *) 
     # let add_directive_str command_name func = 
           Hashtbl.add
             Toploop.directive_table
@@ -6972,7 +6988,96 @@ The toploop, interpreter directives can be defined by the user to create customi
     
 ```
 
+### Using Ocaml as Shell Scripts
 
+Ocaml can be a great script language with a high level composability, modularity and composability thanks to first class functions, currying (partial application of a function), higher order functions and the module system. Ocaml scripts can be executed in batch mode, be compiled to bytecode or machine code and also cross compiled.   
+
+Script Template:
+
+File: [script.ml](src/script.ml)
+```ocaml
+#!/usr/bin/env ocaml 
+(**
+    
+    Note that: there is no main function, entry point in Ocaml lang, 
+    a function can run at any point of a program.
+*)
+
+#load "unix.cma" ;;
+#load "str.cma" ;;
+
+let main () =        
+    if (Array.length Sys.argv) = 1 
+    then print_endline "No arguments given"
+    else (
+        print_endline ("The argument is : " ^ Sys.argv.(1)) ;
+        print_endline ("All parameter : " ^ String.concat " " (Array.to_list Sys.argv))
+    )
+        
+
+let () =
+    if not !Sys.interactive 
+    then main ()   (** If it is being run in batch mode, run main *)
+    else ()        (** If ocaml is being run in interactive mode, It doesn't run main *)
+```
+
+Running the script:
+
+```bash
+
+$ ocaml script.ml 
+No arguments given
+
+$ ocaml script.ml run
+The argument is : run
+All parameter : script.ml run
+
+$ ocaml script.ml run make install
+The argument is : run
+All parameter : script.ml run make install
+
+## Or
+
+$ chmod +x script.ml 
+
+$ ./script.ml run
+The argument is : run
+All parameter : ./script.ml run
+
+$ ./script.ml make
+The argument is : make
+All parameter : ./script.ml make
+```
+
+Loading the Script in the Toplevel for debugging, testing and interactively development:
+
+```
+    $ rlwrap ocaml
+            OCaml version 4.02.1
+
+    # #use "script.ml" ;;
+    val main : unit -> unit = <fun>
+
+    # main () ;;
+    No arguments given
+    - : unit = ()
+    # 
+
+    #  Sys.argv ;;
+    - : string array = [|"/home/tux/.opam/4.02.1/bin/ocaml"|]
+    # 
+        
+```
+
+See also:
+
+* [OCaml as a scripting language - by Yaron Minsky](https://blogs.janestreet.com/ocaml-as-a-scripting-language/)
+
+* [Command-line utilities for Real World OCaml](https://github.com/realworldocaml/scripts)
+
+* [Ocaml the scripting language - blog Enfranchised Mind](http://blog.enfranchisedmind.com/2006/05/ocaml-the-scripting-language/)
+
+* [Video  - OCAML Tutorial 32/33: OCAML Scripting (OCAML Shell Scripts) by Dr Noureddin Sadawi](https://www.youtube.com/watch?v=hXiz2_VlwMU)
 
 ## References
 
@@ -6980,6 +7085,8 @@ The toploop, interpreter directives can be defined by the user to create customi
 
 
 * [Ocaml for the masses - by Yaron Minks, Jane Stree Capital](http://cacm.acm.org/magazines/2011/11/138203-ocaml-for-the-masses/fulltext)
+
+* [ocamlscript: natively-compiled OCaml scripts]
 
 
 <!--
