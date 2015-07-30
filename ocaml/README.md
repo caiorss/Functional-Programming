@@ -1,3 +1,5 @@
+![](images/ocamlogo.png)
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
@@ -6829,6 +6831,15 @@ The toploop, interpreter directives can be defined by the user to create customi
     val add_functions : ('a -> int) -> ('a -> int) -> 'a -> int = <fun>
     val listdir : string -> string list = <fun>
     - : unit = ()
+
+    # f 3 ;;
+    - : int = 30
+
+    # let g = add_functions (fun x -> x * 3) (fun x -> x + 5) ;;
+    val g : int -> int = <fun>
+
+    # List.map g [1; 3; 5 ] ;;
+    - : int list = [9; 17; 25]
     # 
     
 
@@ -6979,6 +6990,8 @@ The toploop, interpreter directives can be defined by the user to create customi
 
     (** Load the file _local.ml in current directory 
         that can install pretty printers, load projects files ...
+        
+        It can be executed with the command: #local ;;
     *)
 
     # add_directive_none "local"
@@ -7003,8 +7016,8 @@ File: [script.ml](src/script.ml)
     a function can run at any point of a program.
 *)
 
-#load "unix.cma" ;;
-#load "str.cma" ;;
+ #load "unix.cma" ;;
+ #load "str.cma" ;;
 
 let main () =        
     if (Array.length Sys.argv) = 1 
@@ -7079,7 +7092,156 @@ See also:
 
 * [Video  - OCAML Tutorial 32/33: OCAML Scripting (OCAML Shell Scripts) by Dr Noureddin Sadawi](https://www.youtube.com/watch?v=hXiz2_VlwMU)
 
-## References
+
+#### Generating OCaml html API Doc
+
+It is very handy to have the documentation of installed packages locally available. The script provided here, that is written in Ocaml has only one dependency the PCRE library. It is a wrapper to ocamldoc that builds the html documentation of almost any package installed.
+
+File:[docgen.ml](src/docgen.ml)
+
+
+List Installed Packages
+
+```bash
+ # List installed packages
+ #  
+$ opam list
+ # Installed packages for 4.02.1:
+async                  112.24.00  Monadic concurrency library
+async_extra            112.24.00  Monadic concurrency library
+async_kernel           112.24.00  Monadic concurrency library
+async_unix             112.24.00  Monadic concurrency library
+atd                        1.1.2  Parser for the ATD data format description langu
+atdgen                     1.6.1  Generates efficient JSON serializers, deserializ
+base-bigarray               base  Bigarray library distributed with the OCaml comp
+base-bytes                  base  Bytes library distributed with the OCaml compile
+base-threads                base  Threads library distributed with the OCaml compi
+base-unix                   base  Unix library distributed with the OCaml compiler
+base64                     2.0.0  Base64 encoding and decoding library
+...
+
+
+ ## Or
+
+$ ocamlfind list
+async               (version: 112.24.00)
+async_extra         (version: 112.24.00)
+async_kernel        (version: 112.24.00)
+async_unix          (version: 112.24.00)
+atd                 (version: 1.1.2)
+atdgen              (version: 1.6.1)
+base64              (version: 2.0.0)
+batteries           (version: 2.3)
+...
+
+```
+
+Installation and Usage:
+
+```
+$ opam install pcre # or install pcre manually 
+
+ # Put the script at any directory you want
+$ mkdir ocamlapidoc
+$ cd ocamlapidoc
+
+ # Download the script
+$ https://raw.githubusercontent.com/caiorss/Functional-Programming/master/ocaml/src/docgen.ml
+$ chmod +x docgen.ml
+
+
+$ ./docgen.ml 
+
+Ocaml docgen wrapper to ocamlfind 
+                  
+        Usage:                                   
+                                                 
+        List all packages               
+        $ ./docgen.ml -list                      
+                                                 
+        Generate package documentation           
+        $ ./docgen.ml -doc <name of package>    
+
+        Generate the documentation of all packages
+        $ ./docgen.ml -doc all
+
+        Get Package Directory
+        $ ./docgen.ml -dir <name of package> 
+
+        Generate package documentation and open index.html in the browser.
+        $ ./docgen.ml -browser <name of package>
+
+
+```
+
+Generating html documentation of Batteries package:
+
+```
+ ## Get the directory of the package batteries
+
+$ ./docgen.ml -dir batteries
+/home/tux/.opam/4.02.1/lib/batteries
+
+ ## Generate the docs
+
+$ pwd
+/home/tux/windows/ocamlapidoc
+ 
+$ ./docgen.ml -doc batteries
+
+ # It will put the documentation inside the directory
+ # ./batteries  
+
+$ ls
+batteries/  docgen.ml*
+
+$ ls batteries/
+
+BatInterfaces.Monad.html
+BatInterfaces.OrderedType.html
+BatInt.html
+BatInt.Infix.html
+BatInt.Safe_int.Compare.html
+BatInt.Safe_int.html
+BatInt.Safe_int.Infix.ht
+...
+
+ ## Open the documentation in the browser
+
+$ chromium-browser batteries/index.html 
+
+ ### Or use
+ #
+ #  Docgen uses chromium-browser hardcoded, but you can 
+ #  change to whatever browser you wish
+ $ ./docgen.ml -browser batteries
+
+```
+
+**Generated Documentation Screenshots**
+
+Documentation Directory
+
+![](images/apidoc_directory.png)
+
+Batteries modules:
+
+![](images/apidoc1.png)
+
+Batteries BattList module:
+
+![](images/apidoc2.png)
+
+Batteries BattList Functions Signatures and Descriptions:
+
+![](images/apidoc3.png)
+
+Generated Files
+
+![](images/apidoc_generated_files.png)
+
+
+## Resources
 
 ### Articles
 
@@ -7116,26 +7278,39 @@ See also:
 
 ### Books
 
-* [Real World OCaml: Functional Programming for the Masses](https://realworldocaml.org/v1/en/html/index.html)
+#### Online Books
+
+**Real World OCaml: Functional Programming for the Masses**
+* [Link](https://realworldocaml.org/v1/en/html/index.html)
     * Authors: Jason Hickey, Anil Madhavapeddy and Yaron Minsky
     * Publisher: O'Reilly
-
-* [Developing Applications With Objective OCaml](http://caml.inria.fr/pub/docs/oreilly-book/)
+    
+**Developing Applications With Objective OCaml**
+* [Link](http://caml.inria.fr/pub/docs/oreilly-book/)
     * Authors: Emmanuel Chailloux, Pascal Manoury and Bruno Pagano
     * Publisher: O'Reilly France.
     * http://caml.inria.fr/pub/docs/oreilly-book/html/index.html
 
-* [Introduction to Objective Caml](http://files.metaprl.org/doc/ocaml-book.pdf)
+**Introduction to Objective Caml**
+* [Link](http://files.metaprl.org/doc/ocaml-book.pdf)
     * Authors: Jason Hickey
     * Url2: [Introduction to the Objective Caml Programming Language](http://main.metaprl.org/jyh/classes/cs134/cs134b/2007/public_html/assets/hickey.pdf)
 
-* [Unix system programming in OCaml](Unix system programming in OCaml)
+**Unix system programming in OCaml**
+* [Link](Unix system programming in OCaml)
     * Authors: Xavier Leroy and Didier Rémy
 
-* [Using, Understanding, and Unraveling - The OCaml Language From Practice to Theory and vice versa](http://caml.inria.fr/pub/docs/u3-ocaml/index.html), Didier Rémy
+**Using, Understanding, and Unraveling - The OCaml Language From Practice to Theory and vice versa**
+* [Link](http://caml.inria.fr/pub/docs/u3-ocaml/index.html), Didier Rémy
 
-* OCaml Inria Manual:
-    http://caml.inria.fr/pub/docs/manual-ocaml-4.00/
+
+**Think Ocaml - How to Think Like a (Functional) Programmer**
+* [Link](http://www.greenteapress.com/thinkocaml/index.html)
+    * Authors: Allen Downey, Nicholas Monje 
+    * Pùblisher: Green Tea Press
+    
+**OCaml Inria Manual v4.02**
+* [Link](http://caml.inria.fr/pub/docs/manual-ocaml-4.02-1/)
 
 ### Community
 
