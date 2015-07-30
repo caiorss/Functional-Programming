@@ -59,7 +59,9 @@
       - [Batteries List](#batteries-list)
       - [Lazy List](#lazy-list)
       - [Bat Enum](#bat-enum)
-    - [Getting Started](#getting-started)
+      - [String](#string-1)
+  - [Miscellaneous](#miscellaneous)
+    - [Adding Directives to Toploop Shell](#adding-directives-to-toploop-shell)
   - [References](#references-1)
     - [Articles](#articles)
     - [Links](#links)
@@ -6764,25 +6766,213 @@ Author(s): Nicolas Cannasse, David Rajchenbach-Teller
 ```
 
 
-### Getting Started
+## Miscellaneous
 
-From: [Batteries Wiki](https://github.com/ocaml-batteries-team/batteries-included/wiki/Getting-started)
+### Adding Directives to Toploop Shell
+
+The toploop, interpreter directives can be defined by the user to create customized commands. The code below can be put in thhe Ocaml startup file: ~/.ocamlinit.
 
 ```ocaml
-> #require "batteries";;
-> open Batteries ;;
->
-let main () =
-  (1--999) (* the enum that counts from 1 to 999 *)
-  |> Enum.filter (fun i -> i mod 3 = 0 || i mod 5 = 0)
-  |> Enum.reduce (+) (* add all remaining values together *)
-  |> Int.print stdout
-;;
-val main : unit -> unit = <fun>
 
-> main () ;;
-233168- : unit = ()
+    (** [use_file mlfile]
+    
+        Equivalent to the directive:  
+    
+        # #use "myfile.ml"  ;;
+        
+        or
+        
+        # use_file "myfile.ml" ;;
+        
+        It can programatically load a file.
+        
+    *)
+    #let use_file mlfile =
+        Topdirs.dir_use Format.std_formatter  mlfile
+    ;;
+    val use_file : string -> unit = <fun>
+
+
+    (** [use_module mlfile]
+    
+        Equivalent to directive 
+                
+        # #mod_use "afile.ml" ;;
+        
+        # use_module "afile.ml" ;; 
+        
+        Load the file as module, it will load the file as a module named,
+        Afile
+     *)                  
+    # let use_module mlfile =
+            Toploop.mod_use_file Format.std_formatter mlfile ;;
+    val use_module : string -> bool = <fun>    
+
+    (**  Example, let the file dummy.ml have the content:
+    
+    
+        let f x = 10 * x 
+
+        let add_functions f1 f2 x =
+            (f1 x) + (f2 x) 
+            
+            
+        let listdir path = 
+            path
+            |> Sys.readdir
+            |> Array.to_list        
+    *)
+
+    # use_file "dummy.ml" ;;
+    val f : int -> int = <fun>
+    val add_functions : ('a -> int) -> ('a -> int) -> 'a -> int = <fun>
+    val listdir : string -> string list = <fun>
+    - : unit = ()
+    # 
+    
+
+    #  use_module "dummy.ml" ;;
+    module Dummy :
+      sig
+        val f : int -> int
+        val add_functions : ('a -> int) -> ('a -> int) -> 'a -> int
+        val listdir : string -> string list
+      end
+    - : bool = true
+    #     
+
+    # Dummy.f 3 ;;
+    - : int = 30
+    
+    # let f = Dummy.add_functions (fun x -> x * 3) (fun x -> x + 5) ;;
+    val f : int -> int = <fun>
+    
+    # List.map f [1; 3; 5 ] ;;
+    - : int list = [9; 17; 25]
+    # 
+
+
+    (*********************************************************)
+
+    (** Execute System Commands  *)
+    # let run_cmd cmd =
+        let _ = Sys.command cmd in ()
+      ;;
+    val run_cmd : string -> unit = <fun>
+    #
+
+    #  run_cmd "uname -r" ;;
+    3.19.0-21-generic
+    - : unit = ()
+    # 
+
+    (** Add directive that doesn't require argument, like
+        #pwd ;;
+        #version ;;
+    *)   
+    # let add_directive_str command_name func = 
+          Hashtbl.add
+            Toploop.directive_table
+            command_name
+              (Toploop.Directive_string  func) ;;  
+    val add_directive_str : string -> (string -> unit) -> unit = <fun>
+    
+
+    (** Show Current Directories *) 
+    add_directive_none "pwd"
+          (fun () -> print_endline  (Sys.getcwd ()) );;
+    - : unit = ()
+     
+    # #pwd ;;
+    /home/tux
+    # 
+    
+    
+    (** List all files in current directory *)
+    # add_directive_none "ls"
+          (fun () -> Sys.readdir "." |> Array.iter print_endline );;
+    - : unit = ()
+    # 
+    
+    # #ls ;;
+    connect.sh~
+    .utop-history
+    .davfs2
+    .emacs.d
+    hsk.hs~
+    .atftp_history
+    ...
+
+    (** Execute Shell Command *)
+
+    # add_directive_str  "sh"
+       (fun command -> run_cmd command  ) ;;
+    - : unit = ()
+    
+    #sh "pwd" ;;
+    /home/tux
+
+    # #sh "cat /etc/protocols" ;;
+    # Internet (IP) protocols
+    #
+    # Updated from http://www.iana.org/assignments/protocol-numbers and other
+    # sources.
+    # New protocols will be added on request if they have been officially
+    # assigned by IANA and are not historical.    
+    ...
+    
+    (** Open Current Directory in File Manager
+    
+        It uses the pcmanfm file manager in Linux, but it can be customized
+        to run any file manager.
+    *)
+    add_directive_none "open_dir"
+         (fun () -> run_cmd "pcmanfm") ;;
+    - : unit = ()
+    
+    # #open_dir ;;
+    
+    
+    (** 
+       >> Summary run the code in the clipboard.
+    
+       Write the content of clipboard to the file /tmp/tmp.ml and execute
+       it. It uses the Linux app xclip to get content of clipboard.
+       
+       The advantage of this directive is that the user doesn't need to
+       paste the code manually clicking.
+       
+       It only needs a simple paste: #paste ;; to run the code 
+       from clipboard.    
+    
+    *)
+
+    # add_directive_none "paste"
+        (fun () ->
+          run_cmd "xclip -o -clipboard > /tmp/tmp.ml" ;
+          use_file "/tmp/tmp.ml"         
+          ) ;;
+- : unit = ()
+
+    # #paste ;;
+    val f : int -> int = <fun>
+    val add_functions : ('a -> int) -> ('a -> int) -> 'a -> int = <fun>
+    val listdir : string -> string list = <fun>
+    # 
+
+
+    (** Load the file _local.ml in current directory 
+        that can install pretty printers, load projects files ...
+    *)
+
+    # add_directive_none "local"
+      (fun () -> use_file "_local.ml" );;
+    - : unit = ()
+
+    
 ```
+
+
 
 ## References
 
