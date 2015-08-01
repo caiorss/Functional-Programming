@@ -1,4 +1,4 @@
-# Functional Programming in Haskell and OCaml by Examples
+# Functional Programming in Haskell, OCaml and Python by Examples
 
 <!--
 @TODO: Add the creative commons public domain logo.
@@ -11,10 +11,11 @@
 ![](ocaml/images/ocamlogo.png)
 -->
 
+The purpose of this tutorial is to illustrate functional programming concepts in the Haskell programming language by providing reusable and useful snippets of code, examples, case studies, and applications. Despite most of examples examples be in Haskell, it can be applied to any language which the functions are first class citizens, can be passed as arguments, returned from functions like Python, Javascript and others.
 
+This repository is dedicated to public domain which means that you can use it at will. 
 
-
-The purpose of this tutorial is to illustrate functional programming concepts in the Haskell programming language by providing reusable and useful snippets of code, examples, case studies, and applications. This repository is dedicated to public domain which means that you can use it in whatever way you wish without ask any permission. 
+Notice: This still a work in progress.
 
 * Author:   [Caio Rodrigues](https://www.linkedin.com/in/caiorodrigues) / caiorss.rodrigue@gmail.com 
 
@@ -45,11 +46,8 @@ You can access this page from:
 * [Papers in this Repository](papers/README.md)
 
 
+The code snippets with the '>' symbol were run in the interactive Haskell Shell (GHCi) and the lines below without the '>' symbol are the output.
+
 **OCaml Summary**
 
 * [OCaml](ocaml/README.md)
-
-**Notes**
-
-
-The code snippets with the '>' symbol were run in the interactive Haskell Shell (GHCi) and the lines below without the '>' symbol are the output.

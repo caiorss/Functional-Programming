@@ -268,9 +268,12 @@ f = lambda x: x**5
 
 ### Function Composition 
 
-In Haskell the operator (.) dot is used for composing functions. Pure functions can be composed like math functions.
+Function composition promotes shorter code, code reuse and higher modularity by creating new functions from previous defined ones. They also allow optimization of functional code when there is many maps. Only pure functions can be composed, function composition works like math functions, the output of one function is the input of another function.  Haskell, ML, Ocaml and F# has features that makes easier to use function composition, like a lightweight syntax, currying, partially applied functions, static typing and composition operators that are built in to the language.  In Haskell the operator (.) dot is used for composing functions. 
 
 See also: [Function composition (computer science)](http://en.wikipedia.org/wiki/Function_composition_%28computer_science%29)
+
+
+#### Function Composition In Haskell
 
 ```
 (.) :: (b -> c) -> (a -> b) -> a -> c
@@ -615,6 +618,216 @@ let sum_ord = sum . map r . ordStr
 > 
 
 ```
+
+#### Function Composition in Python
+
+```python
+
+def compose(funclist):   
+    
+    def _(x):
+        y = x 
+        
+        for f in reversed(funclist):
+            y = f(y)
+        return y
+    
+    return _
+
+>>> add10 = lambda x: x + 10
+
+>>> mul3 = lambda x: x * 3
+
+>>> x = 3
+>>> a = add10(x)
+>>> a
+    13
+>>> b = mul3(a)
+>>> b
+    39
+
+
+>>> def f_without_composition (x):
+ ...    a = add10(x)
+ ...    b = mul3(a)
+ ...    return b
+ ...
+
+>>> f_without_composition(3)
+    39
+
+>>> f_without_composition(4)
+    42
+
+ # It will create the function f = (mul3 ° add10)(x)
+ # The flow is from right to left
+ #
+ #                   
+ #     (mul3 . add10) 3 
+ #   =  mul3 (add10 3) 
+ #   =  mul3 13 
+ #   =  39 
+ #
+>>> f = compose ([mul3, add10])  
+
+>>> f(3)
+    39
+
+>>> f(4)
+    42
+
+>>> f
+    <function __main__.compose.<locals>._>
+
+>>> compose ([add10, mul3])(3)
+    39
+
+>>> compose ([add10, mul3])(4)
+    42
+
+ #
+ # Composition is more intuitive when the flow is from
+ # left to right, the functions in the left side are
+ # executed first. 
+ #
+ #
+
+ # Compose Forward
+def composef (funclist):   
+    
+    def _(x):
+        y = x         
+        for f in funclist:
+            y = f(y)
+        return y
+    
+    return _
+
+ #
+ #   The symbol (>>>) from F# will be used to mean forward composition
+ #   here
+ #
+ #      (add10 >>> mul3) 3 
+ #    = mul3 (add10 3) 
+ #    = mul3 13 
+ #    = 39
+ #
+ #    Input  .................................................  Output
+ #           .    |----------|           |---------|         .   39
+ #   3  ---> .--> |  add10   | --------> |   mul3  | ------->.  ------->  
+ #           .  3 |----------| 13 =(10+3)|---------|  39     .
+ #           .                                39 = 3 * 13    .
+ #           .................................................        
+ #       
+ #  The execution flow is from left to right, in the same order as the
+ #  functions are written in the code.
+ #
+ 
+>>> g = composef ([add10, mul3])
+
+>>> g(3)
+    39
+
+>>> g(4)
+    42
+
+
+>>> ### A more useful example: parse the following table:
+
+text = """
+ 12.23,30.23,892.2323
+ 23.23,90.23,1000.23
+ 3563.23,100.23,45.23
+
+"""
+
+
+
+ # Unfortunately Python, don't have a favorable syntax to function 
+ # composition like: composition operator, lightweight lambda and function
+ # application without parenthesis.
+ #
+
+>>> mapl = lambda f: lambda xs: list(map(f, xs))
+>>> filterl = lambda f: lambda xs: list(filter(f, xs))
+
+
+>>> splitlines = lambda s: s.splitlines()
+>>> reject_empty = lambda xs: list(filter(lambda x: x, xs))
+>>> strip = lambda s: s.strip()
+>>> split = lambda sep: lambda s: s.split(sep)
+
+
+>>> composef([splitlines])(text)
+    ['',
+ ' 12.23,30.23,892.2323',
+ ' 23.23,90.23,1000.23',
+ ' 3563.23,100.23,45.23',
+ '']
+ 
+ 
+>>> composef([splitlines, reject_empty])(text)
+    [' 12.23,30.23,892.2323', 
+    ' 23.23,90.23,1000.23', 
+    ' 3563.23,100.23,45.23']
+
+    
+>>> composef([splitlines, reject_empty, mapl(strip)])(text)
+    ['12.23,30.23,892.2323', '23.23,90.23,1000.23', 
+    '3563.23,100.23,45.23']
+
+
+>>> composef([splitlines, reject_empty, mapl(strip), mapl(split(","))])(text)
+    [['12.23', '30.23', '892.2323'],
+ ['23.23', '90.23', '1000.23'],
+ ['3563.23', '100.23', '45.23']]
+
+>>> composef([splitlines, reject_empty, mapl(strip), mapl(split(",")), mapl(mapl(float))])(text)
+    [[12.23000, 30.23000, 892.23230],
+ [23.23000, 90.23000, 1000.23000],
+ [3563.23000, 100.23000, 45.23000]]
+
+parse_csvtable =  composef(
+    [splitlines, 
+    reject_empty, 
+    mapl(strip), 
+    mapl(split(",")), 
+    mapl(mapl(float))]
+    )
+
+
+>>> parse_csvtable(text)
+    [[12.23000, 30.23000, 892.23230],
+ [23.23000, 90.23000, 1000.23000],
+ [3563.23000, 100.23000, 45.23000]]
+
+    #  Notice there is three maps together, so that it can be optimized 
+    #  each map is like a for loop, by composing the functions in map1,  
+    #  map2 and map3 the code can be more faster.
+    #
+    # parse_csvtable =  composef(
+    # [splitlines, 
+    # reject_empty, 
+    # mapl(strip),          ---> map1
+    # mapl(split(",")),     ---> map2
+    # mapl(mapl(float))]    ---> map3
+    # )
+
+
+parse_csvtable_optmized =  composef(
+    [splitlines, 
+    reject_empty, 
+    mapl(composef([strip, split(","), mapl(float)]))
+    ])
+    
+>>> parse_csvtable_optmized(text)
+    [[12.23000, 30.23000, 892.23230],
+ [23.23000, 90.23000, 1000.23000],
+ [3563.23000, 100.23000, 45.23000]]
+
+    
+```
+
 
 <!--
 -->

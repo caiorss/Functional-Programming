@@ -335,7 +335,7 @@ Source:
 Install Utop:
 
 ```
-# opam install utop
+ # opam install utop
 ```
 
 ![](images/utopshell.png)
@@ -570,7 +570,7 @@ Switch to a ocaml version 4.02.1:
 
 ```
 $ opam switch 4.02.1
-# To setup the new switch in the current shell, you need to run:
+ # To setup the new switch in the current shell, you need to run:
 eval `opam config env`
 
 ```
@@ -2242,7 +2242,9 @@ hello world / hit return to continue
 
 ## Standard Library Modules
 
-* Documentation: http://caml.inria.fr/pub/docs/manual-ocaml/libref/
+Then standard library is very small and lacks many things someone would like and most functions are not tail recursive, it means that it will blow up the stack for a very big number of iterations. For a better standard library see: Batteries and Core.
+
+* [Documentation](http://caml.inria.fr/pub/docs/manual-ocaml/libref)
 
 ### List
 
@@ -2348,12 +2350,18 @@ Exception: Invalid_argument "List.combine".
 
 > List.find  (fun x -> x < 10) [1; 2 ; 3; 45] ;;
 - : int = 1
+
 > List.find  (fun x -> x > 10) [1; 2 ; 3; 45] ;;
 - : int = 45
+
 >
 > List.find  (fun x -> x > 10) [1; 2 ; 3] ;;
 Exception: Not_found.
 >
+
+> List.find  (fun x -> x > 100) [1; 2 ; 3; 45] ;;
+Exception: Not_found.
+ 
 
 > List.find_all  (fun x -> x > 10) [-10; 20 ; 3; 12; 100; 4; 35] ;;
 - : int list = [20; 12; 100; 35]
@@ -3386,6 +3394,141 @@ Extra Example:
 
 ```
 
+### Filename
+
+It provides file name combinators.
+
+```ocaml
+
+    # #show Filename ;;
+    module Filename :
+      sig
+        val current_dir_name : string
+        val parent_dir_name : string
+        val dir_sep : string
+        val concat : string -> string -> string
+        val is_relative : string -> bool
+        val is_implicit : string -> bool
+        val check_suffix : string -> string -> bool
+        val chop_suffix : string -> string -> string
+        val chop_extension : string -> string
+        val basename : string -> string
+        val dirname : string -> string
+        val temp_file : ?temp_dir:string -> string -> string -> string
+        val open_temp_file :
+          ?mode:open_flag list ->
+          ?temp_dir:string -> string -> string -> string * out_channel
+        val get_temp_dir_name : unit -> string
+        val set_temp_dir_name : string -> unit
+        val temp_dir_name : string
+        val quote : string -> string
+      end
+    # 
+
+    (** Note:  Directory Separtor, on Windows it is (\), but is written 
+    in Ocaml as (\\) , but you can also use Unix path conventions, "/" 
+    the root is translater as C:\\ and "/" as \\ and "." as the current
+    directory.   
+    *)
+    # Filename.dir_sep ;;
+    - : string = "/"
+    # 
+    
+    (** Concat Concat File Paths *)
+    
+    # Filename.concat "/home/dummy/Documents/" "blueprints.doc" ;;
+    - : string = "/home/dummy/Documents/blueprints.doc"
+    # 
+    
+    # Filename.concat "/home/dummy/Documents" "blueprints.doc" ;;
+    - : string = "/home/dummy/Documents/blueprints.doc"        
+
+    # List.map (Filename.concat "/opt")  ["dir1"; "dir2"; "dir3"] ;;
+    - : string list = ["/opt/dir1"; "/opt/dir2"; "/opt/dir3"]
+    # 
+    
+    # let concat_paths pathlist = List.fold_right  Filename.concat  pathlist "" ;;
+    val concat_paths : string list -> string = <fun>
+    # 
+    # concat_paths ["/" ; "etc" ; "fstab" ] ;;
+    - : string = "/etc/fstab/"
+
+
+    (** Get the file name without path to file *)
+     Filename.basename "/etc/fstab" ;;
+    - : string = "fstab"
+    # 
+    
+    (** Get the path where is the file or directory*)
+    
+    # Filename.dirname "/home/tux/windows/ocamlapidoc/index.html" ;;
+    - : string = "/home/tux/windows/ocamlapidoc"
+    # 
+    
+    # Filename.dirname "/home/tux/windows/ocamlapidoc" ;;
+    - : string = "/home/tux/windows"
+    # 
+
+    (** Test if file ends with extension *)
+    
+    # Filename.check_suffix  "test.ml" "ml" ;;
+    - : bool = true
+    # 
+    
+    # Filename.check_suffix  "test.ml" "sh" ;;
+    - : bool = false
+    #     
+    # "/etc" 
+     |> Sys.readdir 
+     |> Array.to_list 
+     |> List.filter (fun x -> Filename.check_suffix  x "conf") ;;
+    - : string list =
+    ["nsswitch.conf"; "ntp.conf"; "mke2fs.conf"; "mtools.conf"; ...]
+    
+    (* You can can create combinators to enhance the composability, 
+       reusability and modularity   
+    *)
+    
+    #  let listdir path = Sys.readdir path |> Array.to_list ;;
+    val litsdir : string -> string list = <fun>
+    # 
+
+    # let is_file_type ext fname = Filename.check_suffix  fname ext ;;
+    val is_file_type : string -> string -> bool = <fun>
+
+    # listdir "/etc" |> List.filter (is_file_type ".conf") ;;
+    - : string list =
+    ["nsswitch.conf"; "ntp.conf"; "mke2fs.conf"; "mtools.conf"; 
+    "gai.conf"; "pnm2ppa.conf"; "inetd.conf"; "deluser.conf"; 
+    "resolv.conf"; "rsyslog.conf" ...]
+
+    
+    # List.map Filename.chop_extension ["file1.ml"; "filex.hs"; "file3.py"] ;;
+    - : string list = ["file1"; "filex"; "file3"]
+    # 
+    
+    # Filename.chop_suffix "archive.tar.gz" ".tar.gz" ;;
+    - : string = "archive"
+    # 
+
+    # Filename.chop_suffix "archive.tar.gz" ".tar.bz2" ;;
+    - : string = "archiv"
+    # 
+
+
+    # Filename.quote "separated file name is not good.txt" ;;
+    - : string = "'separated file name is not good.txt'"
+    # 
+    
+    # Filename.quote "separated file name is not good.txt" 
+    |> print_endline ;;
+    'separated file name is not good.txt'
+    - : unit = ()
+    # 
+    
+
+```
+
 ### Unix
 
 [Documention](http://caml.inria.fr/pub/docs/manual-ocaml/libref/Unix.html)
@@ -3773,7 +3916,7 @@ $ ocamlfind ocamlopt -package more,unix program.ml -linkpkg -o progra
     # 
 ```
 
-## IO - Input / Output
+### IO - Input / Output
 
 Standard Print Functions
 
@@ -5672,6 +5815,11 @@ example.cmx: OCaml native object file (.cmx) (Version 011)
 
 [Batteries Documentation Reference](http://ocaml-batteries-team.github.io/batteries-included/hdoc2/)
 
+
+See also: 
+
+* [Introduction to batEnum](https://github.com/ocaml-batteries-team/batteries-included/wiki/Introduction-to-batEnum)
+
 Install
 
 ```
@@ -6770,6 +6918,111 @@ Author(s): Nicolas Cannasse, David Rajchenbach-Teller
 
 ```
 
+#### BatOption 
+
+```ocaml
+> #require "batteries";;
+> module Option = BatOption ;;
+module Option = BatOption                                                         > 
+Option.some 100 ;;
+- : int option = Some 100                                                         > 
+
+> Option.map ;;
+- : ('a -> 'b) -> 'a option -> 'b option = <fun>                                  > 
+
+> Option.map (fun x -> 2 * x) (Some 20) ;;
+- : int option = Some 40                                                          > 
+
+> Option.map (fun x -> 2 * x) None ;;
+- : int option = None                                                             > 
+
+(** Similar to Maybe from Haskell Maybe monad *)
+
+> Option.bind ;;
+- : 'a option -> ('a -> 'b option) -> 'b option = <fun>  
+
+> List.find (fun x -> x > 10) [1; 2; 3; 4] ;;
+Exception: Not_found.                                                             > 
+
+> List.find (fun x -> x > 3) [1; 2; 3; 4] ;;
+- : int = 4                                                                       >                         
+
+> let safe_find p xs  = 
+    try Some (List.find p xs)
+    with Not_found -> None
+;;
+val safe_find : ('a -> bool) -> 'a list -> 'a option = <fun> 
+
+
+> safe_find (fun x -> x > 3) [1; 2; 3; 4] ;;
+- : int option = Some 4                                                           > 
+
+> safe_find (fun x -> x > 30) [1; 2; 3; 4] ;;
+- : int option = None                                                             > 
+
+
+
+```
+
+#### BatFiles 
+
+The module BatFile defines combinators for file manipulation.
+
+```ocaml
+
+    (** Documentation: line_of name reads the contents of file name as 
+    an enumeration of lines. The file is automatically closed once the 
+    last line has been reached or the enumeration is garbage-collected.
+    *)
+    #  BatFile.lines_of ;;
+    - : string -> string BatEnum.t = <fun>
+    # 
+    
+    # BatFile.lines_of "/etc/protocols" ;;
+    - : string BatEnum.t = <abstr>
+    # 
+    
+    #  let lines_enum = BatFile.lines_of "/etc/protocols" ;;
+    val lines_enum : string BatEnum.t = <abstr>
+    # 
+    
+
+    # lines_enum |> BatEnum.take 5 
+      |> BatList.of_enum 
+      ;;
+    - : string list =
+    ["# Internet (IP) protocols"; "#";
+     "# Updated from http://www.iana.org/assignments/protocol-numbers and other";
+     "# sources.";
+     "# New protocols will be added on request if they have been officially"]
+    # 
+
+    # lines_enum |> BatEnum.take 5 |> BatList.of_enum ;;
+    - : string list =
+    ["icmp\t1\tICMP\t\t# internet control message protocol";
+     "igmp\t2\tIGMP\t\t# Internet Group Management";
+     "ggp\t3\tGGP\t\t# gateway-gateway protocol";
+     "ipencap\t4\tIP-ENCAP\t# IP encapsulated in IP (officially ``IP'')";
+     "st\t5\tST\t\t# ST datagram mode"]
+    # 
+
+    # lines_enum |> BatEnum.take 4 |> BatEnum.iter print_endline ;;
+    tcp 6   TCP     # transmission control protocol
+    egp 8   EGP     # exterior gateway protocol
+    igp 9   IGP     # any private interior gateway (Cisco)
+    pup 12  PUP     # PARC universal packet protocol
+    - : unit = ()
+    # 
+
+
+    (** size_of name returns the size of file name in bytes. *)
+    #  BatFile.size_of "/etc/magic" ;;
+    - : int = 111
+    
+
+  
+    
+```
 
 ## Miscellaneous
 
@@ -7051,7 +7304,7 @@ $ ocaml script.ml run make install
 The argument is : run
 All parameter : script.ml run make install
 
-## Or
+ ## Or
 
 $ chmod +x script.ml 
 
