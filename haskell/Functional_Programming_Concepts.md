@@ -6,8 +6,12 @@
   - [Overview](#overview)
   - [Functional Programming Languages](#functional-programming-languages)
   - [Pure Functions](#pure-functions)
+  - [Currying and Partial Application](#currying-and-partial-application)
   - [Lazy Evaluation](#lazy-evaluation)
   - [Function Composition](#function-composition)
+    - [Function Composition In Haskell](#function-composition-in-haskell)
+    - [Function Composition in Python](#function-composition-in-python)
+    - [Selected Wikipedia Articles](#selected-wikipedia-articles)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -45,13 +49,14 @@ Non Essential Features:
 
 * Curry/ Partial function application  - Creating new functions by holding a parameter constant
 * Closure - Return functions from functions
+* Pure Functions: separate pure code from impure code.
 * Function composition
 * Composable functions
 * High Order Functions
 * MapReduce Algorithms - Split computation in multiple computers cores.
 * Lazy Evaluation ( aka Delayed evaluation)
 * Pattern Matching
-
+* Monads
 
 ### Functional Programming Languages
 
@@ -192,6 +197,313 @@ Reverse list function purified:
 
 ```
 
+
+### Currying and Partial Application
+
+
+Currying is the decomposition of a function of multiples arguments in a chained sequence of functions of a single argument. The name currying comes from the mathematician [Haskell Curry](https://en.wikipedia.org/wiki/Haskell_Curry) who developed the concept of curried functions.
+
+In Haskell, Standard ML, OCaml and F# all functions are curryfied by default:
+
+```
+    f (x, y) = 10*x - 3*y   
+    
+    f (4, 3)  = 10* 4 - 3*3 = 40 - 9 = 31
+    f (4, 3)  = 31
+    
+In the curried form becomes:
+
+     g(x) = (x -> y -> 10 * x - 3*y)
+     
+To evaluate f(4, 3): 
+
+    h(y)  = (x -> y -> 10 * x - 3*y) 4 
+          = ( y -> 10 * 4 -  3*y )
+          =  y -> 40 - 3*y
+          
+    h(3)  = (y -> 40 - 3*y) 3
+          = 40 - 3*3
+          = 31
+          
+Or:
+    (x -> y -> 10 * x - 3*y) 4 3 
+      = (x -> (y -> 10 * x - 3*y)) 4 3 
+      = ((x -> (y -> 10 * x - 3*y)) 4) 3 
+      = (y -> 10 * 4 - 3 * y) 3
+      = 10 * 4 - 3 * 3 
+      = 31
+```
+          
+The same function h(y) can be reused: applied to another arguments, used in mapping, filtering and another higher order functions.
+
+```
+Ex1
+    h(y) = (y -> 40 - 3*y)
+    
+    h(10) = 40 - 3*10 = 40 - 30 = 10
+
+Ex2    
+    map(h, [2, 3, 4])
+      = [h 2, h 3, h 4] 
+      = [(y -> 40 - 3*y) 2, (y -> 40 - 3*y) 3, (y -> 40 - 3*y) 4]
+      = [34, 31, 28]
+```
+
+**Example in Haskell GHCI**
+
+```haskell
+> let f x y = 10 * x - 3 * y
+> :t f
+f :: Num a => a -> a -> a
+> 
+> f 4 3 
+31
+> let h_y = f 4
+> :t h_y
+h_y :: Integer -> Integer
+> 
+> h_y 3
+31
+> map h_y [2, 3, 4]
+[34,31,28]
+> 
+
+> -- It is evaluated as:
+
+> ((f 4) 3)
+31
+> 
+
+{-
+   The function f can be also seen in this way
+-}   
+
+> let f' = \x -> \y -> 10 * x - 3 * y 
+> 
+
+> :t f'
+f' :: Integer -> Integer -> Integer
+> 
+
+> f' 4 3
+31
+> 
+
+> (f' 4 ) 3
+31
+> 
+
+> let h__x_is_4_of_y = f' 4
+
+> h__x_is_4_of_y 3
+31
+> 
+{-
+    (\x -> \y -> 10 * x - 3 * y) 4 3
+    =  (\x -> (\y -> 10 * x - 3 * y) 4) 3
+    =  (\y -> 10 * 4 - 3 * y) 3
+    =  (10 * 4 - 3 * 3)
+    =  40 - 9 
+    =  31    
+-}
+> (\x -> \y -> 10 * x - 3 * y) 4 3
+31
+> 
+
+> ((\x -> (\y -> 10 * x - 3 * y)) 4) 3
+31
+> 
+
+
+{-
+Curried functions are suitable for composition, pipelining 
+(F#, OCaml with the |> operator),  mapping/ filtering operations,
+and to create new function from previous defined increasing code reuse.
+
+-}
+
+> map (f 4) [2, 3, 4]
+[34,31,28]
+> 
+
+> map ((\x -> \y -> 10 * x - 3 * y) 4) [2, 3, 4]
+[34,31,28]
+> 
+
+
+> -- ----------------- 
+
+> let f_of_x_y_z x y z = 10 * x + 3 * y + 4 * z
+> 
+
+> :t f_of_x_y_z 
+f_of_x_y_z :: Num a => a -> a -> a -> a
+
+> f_of_x_y_z 2 3 5
+49
+> 
+
+> let g_of_y_z = f_of_x_y_z 2
+
+> :t g_of_y_z 
+g_of_y_z :: Integer -> Integer -> Integer
+> 
+
+> g_of_y_z 3 5
+49
+> 
+
+> let h_of_z = g_of_y_z 3
+> :t h_of_z 
+h_of_z :: Integer -> Integer
+> 
+
+> h_of_z 5
+49
+> 
+
+> -- So it is evaluated as 
+> (((f_of_x_y_z 2) 3) 5)
+49
+> 
+```
+
+**Example in Python 3**
+
+```python
+
+ # In Python, the functions are not curried by default as in Haskell, 
+ # Standard ML, OCaml and F#
+ #
+>>> def f(x, y): return 10 * x - 3*y
+
+>>> f(4, 3)
+    31
+
+ # However the user can create the curried form of the function f:
+
+>>> curried_f = lambda x: lambda y: 10*x - 3*y
+
+>>> curried_f(4)
+    <function __main__.<lambda>.<locals>.<lambda>>
+
+>>> curried_f(4)(3)
+    31
+
+>>> h_y = curried_f(4) # x = 4 constant
+
+>>> h_y(3)
+    31
+
+>>> h_y(5)
+    25
+
+>>> mapl = lambda f_x, xs: list(map(f_x, xs))
+
+>>> mapl(h_y, [2, 3, 4])
+    [34, 31, 28]
+
+ # Or 
+
+>>> mapl(curried_f(4), [2, 3, 4])
+    [34, 31, 28]
+
+ # Without currying the mapping would be:
+
+>>> mapl(lambda y: f(4, y), [2, 3, 4])
+    [34, 31, 28]
+
+   ########################################
+
+>> f_of_x_y_z = lambda x, y, z: 10 * x + 3 * y + 4 * z
+
+ ## Curried form:
+ 
+>>> curried_f_of_x_y_z = lambda x: lambda y: lambda z: 10 * x + 3 * y + 4 * z
+
+>>> f_of_x_y_z (2, 3, 5)
+    49
+
+>>> curried_f_of_x_y_z (2)(3)(5)
+    49
+
+>>> g_of_y_z = curried_f_of_x_y_z(2)
+
+>>> g_of_y_z
+    <function __main__.<lambda>.<locals>.<lambda>>
+
+>>> g_of_y_z (3)(5)
+    49
+
+
+>>> h_of_z = g_of_y_z(3)
+
+>>> h_of_z
+    <function __main__.<lambda>.<locals>.<lambda>.<locals>.<lambda>>
+
+>>> h_of_z(5)
+    49
+
+
+```
+
+**Example in Ocaml and F#**
+
+```ocaml
+
+    # let f x y = 10 * x - 3 * y ;;
+    val f : int -> int -> int = <fun>
+
+    # f 4 3 ;;
+    - : int = 31
+
+    # f 4 ;;
+    - : int -> int = <fun>
+
+    # (f 4) 3 ;;
+    - : int = 31
+    # 
+
+    # let h_y = f 4 ;;
+    val h_y : int -> int = <fun>
+
+    # h_y 3 ;;
+    - : int = 31
+    # 
+
+    # List.map h_y [2; 3; 4] ;;
+    - : int list = [34; 31; 28]
+    # 
+
+    # List.map (f 4) [2; 3; 4] ;;
+    - : int list = [34; 31; 28]
+
+    # let f' = fun x -> fun y -> 10 * x - 3 * y ;;
+    val f' : int -> int -> int = <fun>
+
+    # (f' 4) 3 ;;
+    - : int = 31
+
+    # (fun x -> fun y -> 10 * x - 3 * y) 4 3 ;;
+    - : int = 31
+    # 
+
+    # List.map ((fun x -> fun y -> 10 * x - 3 * y) 4) [2; 3; 4] ;;
+    - : int list = [34; 31; 28]
+
+```
+
+
+<!--
+Vocabulary:
+
+* Arity: Number of arguments of a function
+    *  Unary function: Takes only one argument .
+    *  Binary function: Takes two arguments.
+    *  Ternary function: Takes three arguments.
+    *  Polyadic function: Takes more than one argument.
+    *  Variadic function: Takes a variable number of arguments.
+-->
 
 ### Lazy Evaluation
 
@@ -704,14 +1016,14 @@ def composef (funclist):
     return _
 
  #
- #   The symbol (>>>) from F# will be used to mean forward composition
+ #   The symbol (>>) from F# will be used to mean forward composition
  #   here
  #
- #      (add10 >>> mul3) 3 
+ #      (add10 >> mul3) 3 
  #    = mul3 (add10 3) 
  #    = mul3 13 
  #    = 39
- #
+ #                          add10 >> mul3
  #    Input  .................................................  Output
  #           .    |----------|           |---------|         .   39
  #   3  ---> .--> |  add10   | --------> |   mul3  | ------->.  ------->  
@@ -828,6 +1140,45 @@ parse_csvtable_optmized =  composef(
     
 ```
 
+
+
+#### Selected Wikipedia Articles
+
+Selected Wikipedia Pages:
+
+* [List of functional programming topics](http://en.wikipedia.org/wiki/List_of_functional_programming_topics)
+* [Comparison of Functional Programming Languages](http://en.wikipedia.org/wiki/Comparison_of_functional_programming_languages)
+* [Functional programming](http://en.wikipedia.org/wiki/Functional_programming)
+
+
+* [Declarative programming](http://en.wikipedia.org/wiki/Declarative_programming)
+* [Aspect-oriented programming](http://en.wikipedia.org/wiki/Aspect-oriented_programming)
+
+**Pure Functions/ Lambda Calculus/ Closure/ Currying**
+
+* [Lambda calculus](http://en.wikipedia.org/wiki/Lambda_calculus)
+* [Higher-order function](http://en.wikipedia.org/wiki/Higher-order_function)
+* [Referential transparency (computer science)](http://en.wikipedia.org/wiki/Referential_transparency_(computer_science))
+* [Closure (computer programming)](http://en.wikipedia.org/wiki/Closure_(computer_programming))
+* [Callback (computer programming)](http://en.wikipedia.org/wiki/Callback_(computer_programming))
+* [Coroutine](http://en.wikipedia.org/wiki/Coroutine)
+
+**Evaluation**
+
+* [Eager Evaluation](http://en.wikipedia.org/wiki/Eager_evaluation)
+* [Lazy Evaluation](http://en.wikipedia.org/wiki/Lazy_evaluation)
+* [Short-circuit evaluation](http://en.wikipedia.org/wiki/Short-circuit_evaluation)
+
+**Monads**
+
+* [Monads Functional Programming](http://en.wikipedia.org/wiki/Monad_(functional_programming))
+* [Haskell/Understanding monads](http://en.wikibooks.org/wiki/Haskell/Understanding_monads)
+* [Monad transformer](http://en.wikipedia.org/wiki/Monad_transformer)
+
+**Continuations**
+
+* [Continuation](http://en.wikipedia.org/wiki/Continuation)
+* [Continuation-passing style](http://en.wikipedia.org/wiki/Continuation-passing_style)
 
 <!--
 -->

@@ -11,7 +11,7 @@
 ![](ocaml/images/ocamlogo.png)
 -->
 
-The purpose of this tutorial is to illustrate functional programming concepts in the Haskell programming language by providing reusable and useful snippets of code, examples, case studies, and applications. Despite most of examples examples be in Haskell, it can be applied to any language which the functions are first class citizens, can be passed as arguments, returned from functions like Python, Javascript and others.
+The purpose of this tutorial is to illustrate functional programming concepts in the Haskell programming language by providing reusable and useful snippets of code, examples, case studies, and applications. Despite most of examples examples be in Haskell, it can be applied to any language which the functions are first class citizens, can be passed as arguments, returned from functions like Python, Javascript.
 
 This repository is dedicated to public domain which means that you can use it at will. 
 

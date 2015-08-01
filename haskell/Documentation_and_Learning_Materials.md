@@ -108,43 +108,6 @@ Articles:
 * http://paulkoerbitz.de/posts/Why-I-love-Haskell.html
 
 
-#### Selected Wikipedia Articles
-
-Selected Wikipedia Pages:
-
-* [List of functional programming topics](http://en.wikipedia.org/wiki/List_of_functional_programming_topics)
-* [Comparison of Functional Programming Languages](http://en.wikipedia.org/wiki/Comparison_of_functional_programming_languages)
-* [Functional programming](http://en.wikipedia.org/wiki/Functional_programming)
-
-
-* [Declarative programming](http://en.wikipedia.org/wiki/Declarative_programming)
-* [Aspect-oriented programming](http://en.wikipedia.org/wiki/Aspect-oriented_programming)
-
-**Pure Functions/ Lambda Calculus/ Closure/ Currying**
-
-* [Lambda calculus](http://en.wikipedia.org/wiki/Lambda_calculus)
-* [Higher-order function](http://en.wikipedia.org/wiki/Higher-order_function)
-* [Referential transparency (computer science)](http://en.wikipedia.org/wiki/Referential_transparency_(computer_science))
-* [Closure (computer programming)](http://en.wikipedia.org/wiki/Closure_(computer_programming))
-* [Callback (computer programming)](http://en.wikipedia.org/wiki/Callback_(computer_programming))
-* [Coroutine](http://en.wikipedia.org/wiki/Coroutine)
-
-**Evaluation**
-
-* [Eager Evaluation](http://en.wikipedia.org/wiki/Eager_evaluation)
-* [Lazy Evaluation](http://en.wikipedia.org/wiki/Lazy_evaluation)
-* [Short-circuit evaluation](http://en.wikipedia.org/wiki/Short-circuit_evaluation)
-
-**Monads**
-
-* [Monads Functional Programming](http://en.wikipedia.org/wiki/Monad_(functional_programming))
-* [Haskell/Understanding monads](http://en.wikibooks.org/wiki/Haskell/Understanding_monads)
-* [Monad transformer](http://en.wikipedia.org/wiki/Monad_transformer)
-
-**Continuations**
-
-* [Continuation](http://en.wikipedia.org/wiki/Continuation)
-* [Continuation-passing style](http://en.wikipedia.org/wiki/Continuation-passing_style)
 
 #### Community
 
