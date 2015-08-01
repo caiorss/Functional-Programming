@@ -5,8 +5,11 @@
 - [Functional Programming Concepts](#functional-programming-concepts)
   - [Overview](#overview)
   - [Functional Programming Languages](#functional-programming-languages)
+  - [Notable People](#notable-people)
   - [Pure Functions](#pure-functions)
   - [Currying and Partial Application](#currying-and-partial-application)
+    - [Currying](#currying)
+    - [Partial Application](#partial-application)
   - [Lazy Evaluation](#lazy-evaluation)
   - [Function Composition](#function-composition)
     - [Function Composition In Haskell](#function-composition-in-haskell)
@@ -91,6 +94,29 @@ Notes:
 More Information: [Comparison of Functional Programming Languages](http://en.wikipedia.org/wiki/Comparison_of_functional_programming_languages)
 
 See also: [ML Dialects and Haskell: SML, OCaml, F#, Haskell](http://hyperpolyglot.org/ml)
+
+
+### Notable People
+
+A selection of people who influenced functional programming:
+
+* [Alonzo Church](https://en.wikipedia.org/wiki/Alonzo_Church), Mathematician -> Lambda Calculus
+
+* [Haskell Curry](https://en.wikipedia.org/wiki/Haskell_Curry), Mathematician -> Concept of currying
+
+* [Robin Milner](https://en.wikipedia.org/wiki/Robin_Milner), Computer Scientist -> Type inference, [Hindley–Milner type system](https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system), [ML language](https://en.wikipedia.org/wiki/ML_(programming_language))
+
+* [John McCarthy](https://en.wikipedia.org/wiki/John_McCarthy_(computer_scientist)),  Computer Scientist -> [Lisp](https://en.wikipedia.org/wiki/Lisp_(programming_language)), Artificial intelligence
+
+* [Simon Peyton Jones](https://en.wikipedia.org/wiki/Simon_Peyton_Jones), Computer Scientist -> Major contributor to the design of the Haskell programming language.
+
+* [John Hughes](https://en.wikipedia.org/wiki/John_Hughes_(computer_scientist), Computer Scientist -> One of the most influentials papers in FP field: Why functional programing matters.
+
+* [Gerald Jay Sussman](https://en.wikipedia.org/wiki/Gerald_Jay_Sussman), Mathematician and Computer Scientist
+   * [Scheme Lisp](https://en.wikipedia.org/wiki/Scheme_(programming_language) Language
+   * Book: [Structure and Interpretation of Computer Programs](https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Computer_Programs)
+   * Book: [Structure and Interpretation of Classical Mechanics](https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Classical_Mechanics)
+
 
 ### Pure Functions
 
@@ -200,6 +226,7 @@ Reverse list function purified:
 
 ### Currying and Partial Application
 
+#### Currying
 
 Currying is the decomposition of a function of multiples arguments in a chained sequence of functions of a single argument. The name currying comes from the mathematician [Haskell Curry](https://en.wikipedia.org/wiki/Haskell_Curry) who developed the concept of curried functions.
 
@@ -504,6 +531,71 @@ Vocabulary:
     *  Polyadic function: Takes more than one argument.
     *  Variadic function: Takes a variable number of arguments.
 -->
+
+
+#### Partial Application
+
+A function of multiple arguments is converted into a new function that takes fewer arguments, some arguments are supplied and returns function with signature consisting of remaining arguments. **Partially applied** functions must not be confused with **currying**.
+
+Example in Python:
+
+```python
+>>> from functools import partial
+
+>>> def f(x, y, z): return 10 * x + 3 * y + 4 * z
+
+>>> f(2, 3, 5)
+    49
+
+>>> f_yz = partial(f, 2) # x = 2
+>>> f_yz(3, 5)
+    49
+
+>>> f_z = partial(f_yz, 3)
+
+>>> f_z(5)
+    49
+    
+>>> partial(f, 2, 3)(5)
+    49
+  
+>>> list(map(partial(f, 2, 3), [2, 3, 5]))
+    [37, 41, 49]
+```
+
+In languages like Haskell, Standard ML, OCaml and F# currying is similar to partial application.
+
+Example in OCaml:
+
+```ocaml
+
+    # let f x y z = 10 * x + 3 *y + 4 * z ;;
+    val f : int -> int -> int -> int = <fun>
+    # 
+
+    # (f 2 3) ;;
+    - : int -> int = <fun>
+    
+    # let f_z = f 2 3 ;;
+    val f_z : int -> int = <fun>
+
+    # f_z 5 ;;
+    - : int = 49
+    #    
+    
+    (** Write (f 2 3) is the same as write (f 2)(3)  *)
+    # List.map (f 2 3) [2; 3; 5] ;;
+    - : int list = [37; 41; 49]
+    # 
+    
+```
+
+
+See also:
+
+* [Java.next: Currying and partial application](http://www.ibm.com/developerworks/library/j-jn9/)
+* [Partial application - Wikipedia](https://en.wikipedia.org/wiki/Partial_application)
+* [What's Wrong with Java 8: Currying vs Closures](https://dzone.com/articles/whats-wrong-java-8-currying-vs)
 
 ### Lazy Evaluation
 
@@ -1182,3 +1274,5 @@ Selected Wikipedia Pages:
 
 <!--
 -->
+
+
