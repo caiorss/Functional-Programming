@@ -106,14 +106,17 @@ A selection of people who influenced functional programming:
 
 * [Robin Milner](https://en.wikipedia.org/wiki/Robin_Milner), Computer Scientist -> Type inference, [Hindley–Milner type system](https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system), [ML language](https://en.wikipedia.org/wiki/ML_(programming_language))
 
-* [John McCarthy](https://en.wikipedia.org/wiki/John_McCarthy_(computer_scientist)),  Computer Scientist -> [Lisp](https://en.wikipedia.org/wiki/Lisp_(programming_language)), Artificial intelligence
+* [John McCarthy](https://en.wikipedia.org/wiki/John_McCarthy_(computer_scientist)),  Computer Scientist -> Creator of [Lisp](https://en.wikipedia.org/wiki/Lisp_(programming_language)), Artificial intelligence
+
+* [John Backus](https://en.wikipedia.org/wiki/John_Backus), Computer Scientist ->  Backus-Naur form (BNF), Fortran Language, 
+    * [Can Programming Be Liberated from the von Neumann Style? A Functional Style and Its Algebra of Programs](https://web.stanford.edu/class/cs242/readings/backus.pdf)
 
 * [Simon Peyton Jones](https://en.wikipedia.org/wiki/Simon_Peyton_Jones), Computer Scientist -> Major contributor to the design of the Haskell programming language.
 
-* [John Hughes](https://en.wikipedia.org/wiki/John_Hughes_(computer_scientist), Computer Scientist -> One of the most influentials papers in FP field: Why functional programing matters.
+* [John Hughes](https://en.wikipedia.org/wiki/John_Hughes_(computer_scientist)), Computer Scientist -> One of the most influentials papers in FP field: Why functional programing matters.
 
 * [Gerald Jay Sussman](https://en.wikipedia.org/wiki/Gerald_Jay_Sussman), Mathematician and Computer Scientist
-   * [Scheme Lisp](https://en.wikipedia.org/wiki/Scheme_(programming_language) Language
+   * [Scheme Lisp](https://en.wikipedia.org/wiki/Scheme_(programming_language)) Language
    * Book: [Structure and Interpretation of Computer Programs](https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Computer_Programs)
    * Book: [Structure and Interpretation of Classical Mechanics](https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Classical_Mechanics)
 

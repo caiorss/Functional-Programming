@@ -24,10 +24,11 @@ You can access this page from:
 * https://github.com/caiorss/Functional-Programming
 * http://tinyurl.com/fpbyexample
 
+
 **Haskell Summary**
 
-* [Haskell](haskell/Haskell.md)
 * [Functional Programming Concepts](haskell/Functional_Programming_Concepts.md)
+* [Haskell](haskell/Haskell.md)
 * [Basic Syntax](haskell/Basic_Syntax.md)
 * [Functions](haskell/Functions.md)
 * [Pattern Matching](haskell/Pattern_Matching.md)
