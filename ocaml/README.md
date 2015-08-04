@@ -7026,6 +7026,26 @@ The module BatFile defines combinators for file manipulation.
 
 ## Miscellaneous
 
+### Changing Toploop Prompt
+
+It is possible to change the Toploop default prompt # to > for example:
+
+From: [Setting the prompt in an OCaml custom toplevel](http://stackoverflow.com/questions/6158596/setting-the-prompt-in-an-ocaml-custom-toplevel)
+
+```
+    # Toploop.read_interactive_input := 
+            let old = !Toploop.read_interactive_input 
+              in fun prompt buffer len -> old "> " buffer len ;;
+    - : unit = ()
+    > 
+    > 
+    > 
+    > let f x = 10.23 *. x ;;
+    val f : float -> float = <fun>
+    > 
+
+```
+
 ### Adding Directives to Toploop Shell
 
 The toploop, interpreter directives can be defined by the user to create customized commands. The code below can be put in thhe Ocaml startup file: ~/.ocamlinit.
@@ -7552,7 +7572,7 @@ Generated Files
     * Url2: [Introduction to the Objective Caml Programming Language](http://main.metaprl.org/jyh/classes/cs134/cs134b/2007/public_html/assets/hickey.pdf)
 
 **Unix system programming in OCaml**
-* [Link](Unix system programming in OCaml)
+* [Link](http://ocaml.github.io/ocamlunix/)
     * Authors: Xavier Leroy and Didier Rémy
 
 **Using, Understanding, and Unraveling - The OCaml Language From Practice to Theory and vice versa**
@@ -7582,9 +7602,9 @@ Generated Files
 
 * [Resources for Caml users - Inria](http://caml.inria.fr/resources/index.en.html)
 
-* http://langref.org/ocaml/pattern-matching
+* [Lang Ref / Ocaml](http://langref.org/ocaml)
 
-* http://rosettacode.org/wiki/Category:OCaml
+* [Rosetta Wiki Code Ocaml](http://rosettacode.org/wiki/Category:OCaml)
 
 * [PLEAC-Objective CAML](http://pleac.sourceforge.net/pleac_ocaml/)
 
@@ -7602,22 +7622,35 @@ Generated Files
 
 * [First Thoughts on OCaml](http://www.crmarsh.com/intro_to_ocaml/)
 
+* [OCaml for the Skeptical - Compiling and Running Programs](http://www2.lib.uchicago.edu/keith/ocaml-class/compiling.html)
 
 #### Blogs
 
-* https://blogs.janestreet.com/
+* [Jane Street Capital - Blog](https://blogs.janestreet.com)
 
-* http://www.ocamlpro.com/blog
+* [Ocamlpro Blog](http://www.ocamlpro.com/blog)
 
-* [Blog - Mirage OS](openmirage.org/blog/)
+* [The MirageOS Blog on building functional operating systems](openmirage.org/blog/)
 
 * [OCaml at LexiFi | LexiFi](https://www.lexifi.com/blogs/ocaml)
+
+* [Rosciuds Blog](http://roscidus.com/blog/)
 
 * [Alaska Ataca a Kamtchatka](alaska-kamtchatka.blogspot.com)
 
 * [Oleg Kiselyov](http://okmij.org/ftp/ML/)
 
+* [Ambassador to the Computers Mostly OCaml.](http://ambassadortothecomputers.blogspot.com/2009/05/lwt-and-concurrent-ml.html)
 
+* [Functional Orbitz](http://functional-orbitz.blogspot.com)
+
+* [An Overview of Ocaml - Simon Grondin - An Adventure in Software Industry](http://simongrondin.name/?p=330#more-330)
+
+* [Matt Mcdonnel - Ocaml](http://www.matt-mcdonnell.com/blog/blog_ocaml/blog_ocaml.html)
+
+* http://aubedesheros.blogspot.com/search/label/ocaml  (In French)
+
+* [Ruby,Lisp,Emacs,Clojure.OCaml,Haskell,Raspberry Piのメモ](http://takeisamemo.blogspot.com.br/search/label/OCaml) (In Japanese)
 
 #### Hacker News Threads
 
@@ -7643,6 +7676,30 @@ Generated Files
 
 * [Why did Microsoft invest so much in F#?](https://news.ycombinator.com/item?id=1883679)
 
+
+#### Slides and Presentations
+
+* [An Introduction to Objective Caml - Stephen A. Edwards - Columbia University](http://www.cs.columbia.edu/~sedwards/classes/2012/w4115-spring/ocaml.pdf)
+
+* [Slideshare - Introduction to functional programming using Ocaml](http://www.slideshare.net/pramode_ce/fp-29715231?next_slideshow=1)
+
+* [Camomile : A Unicode library for OCaml](http://www.slideshare.net/yoriyuki/camomile-a-unicode-library-for-ocaml?related=4)
+
+* [OCaml Labs introduction at OCaml Consortium 2012](http://www.slideshare.net/AnilMadhavapeddy/ocaml-labs-introduction-at-ocaml-consortium-2012?related=1)
+
+
+* [Abstractions and Types for Concurrent Programming - Yaron Minsky
+Jane Street](http://www.cs.princeton.edu/~dpw/courses/cos326-12/lec/asynch-and-rpc.pdf)
+
+* [Ocaml - Objective Caml](http://www.slideshare.net/cyber_jso/ocaml-13036522?related=3)
+
+* [Succeeding with Functional-first Programming in Enterprise - by Dr. Don Syme - Microsoft Research](http://www.slideshare.net/dsyme/fp-successv4redist?related=5s)
+
+* [LibreS3: design, challenges, and steps toward reusable libraries](https://ocaml.org/meetings/ocaml/2014/ocaml2014_13.pdf)
+
+* [NYC OCaml Meetup: Js_of_ocaml](http://files.meetup.com/1887771/2013-07-11%20Js_of_ocaml%20The%20OCaml%20to%20Javascript%20Compiler.pdf)
+
+* [Managing and Analyzing Big-Data in Genomics](http://ashishagarwal.org/wp-content/uploads/2012/06/IBM_PL_Day_2012.pdf)
 
 #### Stack Overflow Highlighted Questions
 
