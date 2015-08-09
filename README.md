@@ -15,7 +15,7 @@ The purpose of this tutorial is to illustrate functional programming concepts in
 
 This repository is dedicated to public domain which means that you can use it at will. 
 
-Notice: This still a work in progress.
+Note: This still a work in progress.
 
 * Author:   [Caio Rodrigues](https://www.linkedin.com/in/caiorodrigues) / caiorss.rodrigue@gmail.com 
 

@@ -14,23 +14,26 @@
       - [Opam Package Manager](#opam-package-manager)
       - [Misc](#misc)
   - [Basic Syntax](#basic-syntax)
-        - [Primitive Types](#primitive-types)
-        - [Operators](#operators)
-        - [Variable Declaration](#variable-declaration)
-        - [Polymorphic Functions](#polymorphic-functions)
-        - [Number Formats](#number-formats)
-        - [Math / Float Functions](#math--float-functions)
-        - [Function Declaration](#function-declaration)
-        - [Function Composition](#function-composition)
-        - [Lambda Functions/ Anonymous Functions](#lambda-functions-anonymous-functions)
-        - [Control Structures](#control-structures)
-  - [Standard Library Modules](#standard-library-modules)
+    - [Primitive Types](#primitive-types)
+    - [Operators](#operators)
+    - [Variable Declaration](#variable-declaration)
+    - [Polymorphic Functions](#polymorphic-functions)
+    - [Number Formats](#number-formats)
+    - [Math / Float Functions](#math--float-functions)
+    - [Function Declaration](#function-declaration)
+    - [Function Composition](#function-composition)
+    - [Lambda Functions/ Anonymous Functions](#lambda-functions-anonymous-functions)
+    - [Recursive Functions](#recursive-functions)
+    - [Mutable References](#mutable-references)
+    - [Control Structures](#control-structures)
+  - [Standard (Native) Library Modules](#standard-native-library-modules)
     - [List](#list)
     - [Array](#array)
     - [String](#string)
     - [Sys](#sys)
+    - [Filename](#filename)
     - [Unix](#unix)
-  - [IO - Input / Output](#io---input--output)
+    - [IO - Input / Output](#io---input--output)
     - [Type Casting](#type-casting)
   - [Algebraic Data Types and Pattern Matching](#algebraic-data-types-and-pattern-matching)
     - [Algebraic Data Types](#algebraic-data-types)
@@ -40,7 +43,6 @@
       - [Pattern Matching](#pattern-matching)
         - [Basic Pattern Matching](#basic-pattern-matching)
         - [Tuple Pattern Matching](#tuple-pattern-matching)
-        - [List Recursive Functions](#list-recursive-functions)
       - [Recursive Data Structures](#recursive-data-structures)
         - [Alternative List Implementation](#alternative-list-implementation)
         - [File Tree Recursive Directory Walk](#file-tree-recursive-directory-walk)
@@ -62,7 +64,11 @@
       - [Lazy List](#lazy-list)
       - [Bat Enum](#bat-enum)
       - [String](#string-1)
+      - [BatOption](#batoption)
+      - [BatRef](#batref)
+      - [BatFiles](#batfiles)
   - [Miscellaneous](#miscellaneous)
+    - [Changing Toploop Prompt](#changing-toploop-prompt)
     - [Adding Directives to Toploop Shell](#adding-directives-to-toploop-shell)
     - [Using Ocaml as Shell Scripts](#using-ocaml-as-shell-scripts)
       - [Generating OCaml html API Doc](#generating-ocaml-html-api-doc)
@@ -75,6 +81,7 @@
       - [Online Resources](#online-resources)
       - [Blogs](#blogs)
       - [Hacker News Threads](#hacker-news-threads)
+      - [Slides and Presentations](#slides-and-presentations)
       - [Stack Overflow Highlighted Questions](#stack-overflow-highlighted-questions)
       - [See Also](#see-also)
       - [Quick Reference Sheets](#quick-reference-sheets)
@@ -751,7 +758,7 @@ Sequence  ASCII     Name
 ```
 
 
-##### Primitive Types
+### Primitive Types
 
 ```ocaml
 $ ocaml
@@ -894,7 +901,7 @@ $ ocaml
 
 
 
-##### Operators
+### Operators
 
 
 Float Functions must use +. /. -. *. operators since Ocaml doesn't support
@@ -1076,7 +1083,7 @@ Comparison
     #
 ```
 
-##### Variable Declaration
+### Variable Declaration
 
 ```ocaml
 > let x = 2 ;;
@@ -1121,9 +1128,84 @@ val a : float = 2.323
 
 ```
 
+Local Binding 
+
+```ocaml 
+
+    # let  x = 10 in 
+      let  y = 3  in
+      let  z = 4  in 
+      (x, y, z)
+      ;;
+    - : int * int * int = (10, 3, 4)
+
+    # x ;;
+    Error: Unbound value x
+    # y ;;
+    Error: Unbound value y
+    # z ;;
+    Error: Unbound value z
+    # 
+
+    (************************)
+
+    # let z = 
+        let x = 10 in
+        let y = 20 in
+        x + 2*y
+      ;;
+    val z : int = 50
+    # z ;;
+    - : int = 50
+    # x ;;
+    Error: Unbound value x
+    # y ;;
+    Error: Unbound value y
+    # 
+
+    (************************)
+    
+    # let a = 
+        let f1 x = 10 *x in
+        let fxy x y = 3*x + 4*y in 
+        let z = 3 in
+        f1 z + fxy 3 4 + f1 6 ;;
+    val a : int = 115
+
+    # a ;;
+    - : int = 115
+    # 
+
+    # f1 ;;
+    Error: Unbound value f1
+    # fxy ;;
+    Error: Unbound value fxy
 
 
-##### Polymorphic Functions
+    (************************)
+    
+    # let a, b, c = 
+         let f1 x  = 3 * x in 
+         let f2 x y = 5 * x - 3 * y in
+         let a = 3 in
+         let b = 4 in 
+         let c = a + b in 
+         (f1 a, f2 a b, a + b + c)
+      ;;
+    val a : int = 9
+    val b : int = 3
+    val c : int = 14
+    # 
+
+    # f1 ;;
+    Error: Unbound value f1
+    # f2 ;;
+    Error: Unbound value f2
+    # 
+
+```
+
+### Polymorphic Functions
 
 ```ocaml
 > let id = fun x -> x ;;
@@ -1139,7 +1221,7 @@ val id : 'a -> 'a = <fun>
 
 ```
 
-##### Number Formats
+### Number Formats
 
 
 * Int   -  Default Interger format 31 bits signed int on 32 bits machine and 63 bits on a 64 bits machine
@@ -1429,7 +1511,7 @@ Math Operations. In Ocaml the same operator cannot be used for more than one typ
 ```
 
 
-##### Math / Float Functions
+### Math / Float Functions
 
 Documentation:
 
@@ -1560,7 +1642,7 @@ OCaml's floating-point complies with the [IEEE 754 standard](http://en.wikipedia
     #
 ```
 
-##### Function Declaration
+### Function Declaration
 
 ```ocaml
 
@@ -1939,7 +2021,7 @@ but an expression was expected of type 'a -> 'b
 
 ```
 
-##### Function Composition
+### Function Composition
 
 Operators:
 
@@ -2021,7 +2103,7 @@ val f : int -> int = <fun>
 - : int = 14
 ```
 
-##### Lambda Functions/ Anonymous Functions
+### Lambda Functions/ Anonymous Functions
 
 Anonymous functions, also known as lambda functions, are useful to pass already existing functions to another functions as arguments and create closures.  They are specially useful when used with map filter and another higher order functions. They can be seen as bolts that connect one part to another.
 
@@ -2130,7 +2212,415 @@ val f : int -> int -> int -> int = <fun>
 
 ```
 
-##### Control Structures
+
+### Recursive Functions
+
+```ocaml
+
+    # let rec factorial1 n =
+        match n with
+        | 0 -> 1
+        | 1 -> 0
+        | k -> k * factorial1 (k - 1)
+    ;;
+    val factorial1 : int -> int = <fun>
+
+    # let rec factorial2 = function
+        | 0     -> 1
+        | 1     -> 1
+        | n     -> n * factorial2 (n - 1)
+    ;;
+    val factorial2 : int -> int = <fun>
+
+    # factorial1 5 ;;
+    - : int = 120
+
+     # factorial2 5 ;;
+    - : int = 120
+
+    # let rec map f xs =   match xs with
+        | []        ->  []
+        | h::tl     ->  (f h)::(map f tl)
+    ;;
+    val map : ('a -> 'b) -> 'a list -> 'b list = <fun>
+
+    # map ((+) 5) [10; 20; 25 ; 9] ;;
+    - : int list = [15; 25; 30; 14]
+
+    # let rec sumlist = function
+        | []        -> 0
+        | [a]       -> a
+        | (hd::tl)  -> hd + sumlist tl
+    ;;
+    val sumlist : int list -> int = <fun>
+
+    # sumlist [1; 2; 4; 5; 6; 7; 8; 9] ;;
+    - : int = 42
+
+    # let rec prodlist = function
+        | []        -> 1
+        | [a]       -> a
+        | (hd::tl)  -> hd * prodlist tl
+    ;;
+    val prodlist : int list -> int = <fun>
+
+    # prodlist [1 ; 2; 3; 4; 5; 6 ] ;;
+    - : int = 720
+
+    # let rec filter f xs = match xs with
+        | []        -> []
+        | h::tl     -> if f h
+                       then h::(filter f tl)
+                       else filter f tl
+
+    ;;
+
+     # filter (fun x -> x < 10) [1; 2; 10; 20; 4; 6; 15] ;;
+    - : int list = [1; 2; 4; 6]
+
+
+    # let rec take n xs =
+        match (n, xs) with
+        | (0, _    ) -> []
+        | (_, []   ) -> []
+        | (k, h::tl) -> k::(take (n-1) tl)
+    ;;val take : int -> 'a list -> int list = <fun>
+
+    # take 3 [1; 2; 10; 20; 4; 6; 15] ;;
+    - : int list = [3; 2; 1]
+    # take 20 [1; 2; 10; 20; 4; 6; 15] ;;
+    - : int list = [20; 19; 18; 17; 16; 15; 14]
+
+
+    # let rec drop n xs =
+        if n < 0 then failwith "n negative"
+        else
+            match (n, xs) with
+            | (0, _ )    ->  xs
+            | (_, [])    ->  []
+            | (k, h::tl) ->  drop (k-1) tl
+    ;;val drop : int -> 'a list -> 'a list = <fun>
+
+    # drop (-10)  [1; 2; 10; 20; 4; 6; 15] ;;
+    Exception: Failure "n negative".
+
+    # drop 10 [] ;;
+    - : 'a list = []
+
+    # drop 0 [1; 2; 10; 20; 4; 6; 15] ;;
+    - : int list = [1; 2; 10; 20; 4; 6; 15]
+
+    # drop 5 [1; 2; 10; 20; 4; 6; 15] ;;
+    - : int list = [6; 15]
+
+    # drop 25 [1; 2; 10; 20; 4; 6; 15] ;;
+    - : int list = []
+
+(*
+
+    Haskell Function:
+    foldl1 : ( a -> a -> a ) -> [a] -> [a]
+
+    > foldl1 (\x y -> 10*x + y) [1, 2, 3, 4, 5]
+    12345
+
+    foldl1 f  [1, 2, 3, 4, 5]  =
+    f 5 (f 4 (f 3 (f 1 2)))
+
+    foldl f [x0, x1, x2, x3, x4, x5 ... ] =
+
+    f xn (f xn-1 (f xn-2 ... (f x3 (f x2 (f x1 x0))))) ....
+
+    From: http://en.wikipedia.org/wiki/Fold_%28higher-order_function%29
+*)
+
+    let rec foldl1 f xs =
+        match xs with
+        | []            -> failwith "Empty list"
+        | [x]           -> x
+        | (x::y::tl)    -> foldl1 f (f x y :: tl)
+    ;;
+
+    # foldl1 (fun x y -> 10*x + y) [1; 2; 3; 4; 5] ;;
+    - : int = 12345
+
+
+    # let rec foldr1 f xs =
+        match xs with
+        | []        -> failwith "Empty list"
+        | [x]       -> x
+        | x::tl     -> f x (foldr1 f tl)
+    ;;
+    val foldr1 : ('a -> 'a -> 'a) -> 'a list -> 'a = <fun>
+
+    # foldr1 (fun x y -> x + 10*y) [1; 2; 3; 4; 5; 6] ;;
+    - : int = 654321
+
+    # let rec foldl f acc xs =
+        match xs with
+        | []     -> acc
+        | x::tl  -> foldl f (f acc x) tl
+    ;;
+
+    # foldl (fun x y -> 10*x + y) 0  [1; 2; 3; 4; 5; 6] ;;
+    - : int = 123456
+
+    # let rec foldr f acc xs =
+        match xs with
+        | []    -> acc
+        | x::tl -> f x (foldr f acc tl)
+    ;;
+    val foldr : ('a -> 'b -> 'b) -> 'b -> 'a list -> 'b = <fun>
+
+    # foldr (fun x y -> x + 10*y) 0  [1; 2; 3; 4; 5; 6] ;;
+    - : int = 654321
+
+
+    # let rec range start stop step =
+        if start > stop
+        then []
+        else start::(range  (start + step) stop step )
+    ;;
+    val range : int -> int -> int -> int list = <fun>
+
+    # range 0 30 1 ;;
+    - : int list =  [0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14;
+    15; 16; 17; 18; 19; 20; 21; 22; 23; 24; 25;    26; 27; 28; 29; 30]
+
+    # range 0 100 10 ;;
+    - : int list = [0; 10; 20; 30; 40; 50; 60; 70; 80; 90; 100]
+
+    # range (-100) 100 10 ;;
+    - : int list = [-100; -90; -80; -70; -60; -50; -40; -30; -20;
+    -10; 0; 10; 20; 30; 40; 50; 60; 70; 80; 90; 100]
+
+```
+
+
+### Mutable References
+
+```ocaml
+
+(** Declare a reference *)
+
+    #  let x = ref 0 ;;
+    val x : int ref = {contents = 0}
+    # 
+    
+(** Get the value of a reference *)
+    
+    # !x ;;
+    - : int = 0
+    # 
+
+(** Set the value of a reference *)
+
+    # (:=) ;;
+    - : 'a ref -> 'a -> unit = <fun>
+    # 
+       
+    # x := 100 ;;
+    - : unit = ()
+    # 
+
+(** Update a reference *)
+
+    #  x:= !x + 100 ;;
+    - : unit = ()
+
+    # x ;;
+    - : int ref = {contents = 100}
+    # 
+
+(** A reference can be accessed inside a function *)
+
+
+    # let x = ref 10 ;;
+    val x : int ref = {contents = 10}
+    # 
+
+    let add_10_to_x () = 
+              x := !x + 10 
+            ;;
+    val add_10_to_x : unit -> unit = <fun>
+    # 
+
+    #  add_10_to_x () ;;
+    - : unit = ()
+    # x ;;
+    - : int ref = {contents = 20}
+
+    # add_10_to_x () ;;
+    - : unit = ()
+    # x ;;
+    - : int ref = {contents = 30}
+    # 
+
+(** Functions that operates references *)
+
+    # let y = ref 10 ;;
+    val y : int ref = {contents = 10}
+    # 
+    
+    #  let get_ref x = !x ;;
+    val get_ref : 'a ref -> 'a = <fun>
+    
+    #  get_ref y ;;
+    - : int = 10
+    #     
+    
+    # let set_ref r new_value = 
+          r := new_value 
+      ;;
+    val set_ref : 'a ref -> 'a -> unit = <fun>
+    # 
+    
+    #  set_ref y 100 ;;
+    - : unit = ()
+    # y ;;
+    - : int ref = {contents = 100}
+    # 
+
+    #  let add_x_to_ref r x = 
+         r := !r + x 
+      ;;
+    val add_x_to_ref : int ref -> int -> unit = <fun>
+    # 
+
+
+    #  add_x_to_ref y 200 ;;
+    - : unit = ()
+
+    # y ;;
+    - : int ref = {contents = 300}
+    # 
+
+    (* 
+        y <-- y + 1 + 2 + 3 + 4 + 5 + 6 
+    *)
+    # List.iter (add_x_to_ref y) [1; 2; 3; 4; 5; 6] ;;
+    - : unit = ()
+    # y ;;
+    - : int ref = {contents = 321}
+    # 
+
+
+    (*********************)
+    
+    # let y = ref 10 ;;
+    val y : int ref = {contents = 10}
+    #     
+
+    #  let add_10_to_ref r =
+         r := !r + 10 
+      ;;
+    val add_10_to_ref : int ref -> unit = <fun>
+    # 
+
+    # add_10_to_ref y ;;
+    - : unit = ()
+    # y ;;
+    - : int ref = {contents = 20}
+    # 
+
+    #  add_10_to_ref y ;;
+    - : unit = ()
+    # y ;;
+    - : int ref = {contents = 30}
+    # 
+
+    (***********************************)
+    
+    #  let swap_ref a b = 
+          let c = !a in
+            a := !b ;
+            b := c
+      ;;
+    val swap_ref : 'a ref -> 'a ref -> unit = <fun>
+    # 
+    
+    #  let x = ref 10 ;;
+    val x : int ref = {contents = 10}
+    # let y = ref 20 ;;
+    val y : int ref = {contents = 20}
+    # 
+      swap_ref x y ;;
+    - : unit = ()
+    # x ;;
+    - : int ref = {contents = 20}
+    # y ;;
+    - : int ref = {contents = 10}
+    # 
+
+(** Capturing references with closures *)
+
+
+    let make_counter () = 
+              let i = ref 0 in
+              fun () ->
+                i:= !i + 1 ;
+                !i
+                ;;
+    val make_counter : unit -> unit -> int = <fun>
+    # 
+
+
+    # let counter1 = make_counter () ;;
+    val counter1 : unit -> int = <fun>
+    # 
+      counter1 () ;;
+    - : int = 1
+    # counter1 () ;;
+    - : int = 2
+    # counter1 () ;;
+    - : int = 3
+    # counter1 () ;;
+    - : int = 4
+    # 
+
+    #  let counter2 = make_counter () ;;
+    val counter2 : unit -> int = <fun>
+    # counter2 () ;;
+    - : int = 1
+    # counter2 () ;;
+    - : int = 2
+    # counter1 () ;;
+    - : int = 5
+    #         
+    
+(** Miscellaneous *)
+
+
+    # let lst = ref [1.0; 2.0; 3.0] ;;
+    val lst : float list ref = {contents = [1.; 2.; 3.]}
+    
+    # !lst ;;
+    - : float list = [1.; 2.; 3.]
+
+    # List.nth (!lst) 0 ;;
+    - : float = 1.
+    # List.nth (!lst) 2 ;;
+    - : float = 3.
+    # 
+
+    # List.map (fun x -> x *. 2.) !lst ;;
+    - : float list = [2.; 4.; 6.]
+    # 
+
+    # lst := List.map (fun x -> x *. 2.) !lst ;;
+    - : unit = ()
+    # lst ;;
+    - : float list ref = {contents = [2.; 4.; 6.]}
+    # 
+    
+    #  lst := !lst @ [3.23; 832.23; 90.23] ;;
+    - : unit = ()
+    # lst ;;
+    - : float list ref = {contents = [2.; 4.; 6.; 3.23; 832.23; 90.23]}
+    #     
+```
+
+### Control Structures
 
 Conditional Expressions
 
@@ -2240,9 +2730,10 @@ hello world / hit return to continue
     ---------------------------------------------------------------
 -->
 
-## Standard Library Modules
+## Standard (Native) Library Modules
 
-Then standard library is very small and lacks many things someone would like and most functions are not tail recursive, it means that it will blow up the stack for a very big number of iterations. For a better standard library see: Batteries and Core.
+Then native library is small and lacks many things someone would like and most functions are [not tail recursive](https://blogs.janestreet.com/optimizing-list-map/), it means that it will overflow stack for a very big number of iterations. For a better standard library see: Batteries and Core.
+
 
 * [Documentation](http://caml.inria.fr/pub/docs/manual-ocaml/libref)
 
@@ -4327,188 +4818,6 @@ Source:
 * http://xahlee.info/ocaml/pattern_matching.html
 
 
-##### List Recursive Functions
-
-```ocaml
-
-    # let rec factorial1 n =
-        match n with
-        | 0 -> 1
-        | 1 -> 0
-        | k -> k * factorial1 (k - 1)
-    ;;
-    val factorial1 : int -> int = <fun>
-
-    # let rec factorial2 = function
-        | 0     -> 1
-        | 1     -> 1
-        | n     -> n * factorial2 (n - 1)
-    ;;
-    val factorial2 : int -> int = <fun>
-
-    # factorial1 5 ;;
-    - : int = 120
-
-     # factorial2 5 ;;
-    - : int = 120
-
-    # let rec map f xs =   match xs with
-        | []        ->  []
-        | h::tl     ->  (f h)::(map f tl)
-    ;;
-    val map : ('a -> 'b) -> 'a list -> 'b list = <fun>
-
-    # map ((+) 5) [10; 20; 25 ; 9] ;;
-    - : int list = [15; 25; 30; 14]
-
-    # let rec sumlist = function
-        | []        -> 0
-        | [a]       -> a
-        | (hd::tl)  -> hd + sumlist tl
-    ;;
-    val sumlist : int list -> int = <fun>
-
-    # sumlist [1; 2; 4; 5; 6; 7; 8; 9] ;;
-    - : int = 42
-
-    # let rec prodlist = function
-        | []        -> 1
-        | [a]       -> a
-        | (hd::tl)  -> hd * prodlist tl
-    ;;
-    val prodlist : int list -> int = <fun>
-
-    # prodlist [1 ; 2; 3; 4; 5; 6 ] ;;
-    - : int = 720
-
-    # let rec filter f xs = match xs with
-        | []        -> []
-        | h::tl     -> if f h
-                       then h::(filter f tl)
-                       else filter f tl
-
-    ;;
-
-     # filter (fun x -> x < 10) [1; 2; 10; 20; 4; 6; 15] ;;
-    - : int list = [1; 2; 4; 6]
-
-
-    # let rec take n xs =
-        match (n, xs) with
-        | (0, _    ) -> []
-        | (_, []   ) -> []
-        | (k, h::tl) -> k::(take (n-1) tl)
-    ;;val take : int -> 'a list -> int list = <fun>
-
-    # take 3 [1; 2; 10; 20; 4; 6; 15] ;;
-    - : int list = [3; 2; 1]
-    # take 20 [1; 2; 10; 20; 4; 6; 15] ;;
-    - : int list = [20; 19; 18; 17; 16; 15; 14]
-
-
-    # let rec drop n xs =
-        if n < 0 then failwith "n negative"
-        else
-            match (n, xs) with
-            | (0, _ )    ->  xs
-            | (_, [])    ->  []
-            | (k, h::tl) ->  drop (k-1) tl
-    ;;val drop : int -> 'a list -> 'a list = <fun>
-
-    # drop (-10)  [1; 2; 10; 20; 4; 6; 15] ;;
-    Exception: Failure "n negative".
-
-    # drop 10 [] ;;
-    - : 'a list = []
-
-    # drop 0 [1; 2; 10; 20; 4; 6; 15] ;;
-    - : int list = [1; 2; 10; 20; 4; 6; 15]
-
-    # drop 5 [1; 2; 10; 20; 4; 6; 15] ;;
-    - : int list = [6; 15]
-
-    # drop 25 [1; 2; 10; 20; 4; 6; 15] ;;
-    - : int list = []
-
-(*
-
-    Haskell Function:
-    foldl1 : ( a -> a -> a ) -> [a] -> [a]
-
-    > foldl1 (\x y -> 10*x + y) [1, 2, 3, 4, 5]
-    12345
-
-    foldl1 f  [1, 2, 3, 4, 5]  =
-    f 5 (f 4 (f 3 (f 1 2)))
-
-    foldl f [x0, x1, x2, x3, x4, x5 ... ] =
-
-    f xn (f xn-1 (f xn-2 ... (f x3 (f x2 (f x1 x0))))) ....
-
-    From: http://en.wikipedia.org/wiki/Fold_%28higher-order_function%29
-*)
-
-    let rec foldl1 f xs =
-        match xs with
-        | []            -> failwith "Empty list"
-        | [x]           -> x
-        | (x::y::tl)    -> foldl1 f (f x y :: tl)
-    ;;
-
-    # foldl1 (fun x y -> 10*x + y) [1; 2; 3; 4; 5] ;;
-    - : int = 12345
-
-
-    # let rec foldr1 f xs =
-        match xs with
-        | []        -> failwith "Empty list"
-        | [x]       -> x
-        | x::tl     -> f x (foldr1 f tl)
-    ;;
-    val foldr1 : ('a -> 'a -> 'a) -> 'a list -> 'a = <fun>
-
-    # foldr1 (fun x y -> x + 10*y) [1; 2; 3; 4; 5; 6] ;;
-    - : int = 654321
-
-    # let rec foldl f acc xs =
-        match xs with
-        | []     -> acc
-        | x::tl  -> foldl f (f acc x) tl
-    ;;
-
-    # foldl (fun x y -> 10*x + y) 0  [1; 2; 3; 4; 5; 6] ;;
-    - : int = 123456
-
-    # let rec foldr f acc xs =
-        match xs with
-        | []    -> acc
-        | x::tl -> f x (foldr f acc tl)
-    ;;
-    val foldr : ('a -> 'b -> 'b) -> 'b -> 'a list -> 'b = <fun>
-
-    # foldr (fun x y -> x + 10*y) 0  [1; 2; 3; 4; 5; 6] ;;
-    - : int = 654321
-
-
-    # let rec range start stop step =
-        if start > stop
-        then []
-        else start::(range  (start + step) stop step )
-    ;;
-    val range : int -> int -> int -> int list = <fun>
-
-    # range 0 30 1 ;;
-    - : int list =  [0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14;
-    15; 16; 17; 18; 19; 20; 21; 22; 23; 24; 25;    26; 27; 28; 29; 30]
-
-    # range 0 100 10 ;;
-    - : int list = [0; 10; 20; 30; 40; 50; 60; 70; 80; 90; 100]
-
-    # range (-100) 100 10 ;;
-    - : int list = [-100; -90; -80; -70; -60; -50; -40; -30; -20;
-    -10; 0; 10; 20; 30; 40; 50; 60; 70; 80; 90; 100]
-
-```
 
 
 #### Recursive Data Structures
@@ -5839,6 +6148,11 @@ $ utop
 
 ```ocaml
   # #require "batteries" ;;
+  
+  #  open Batteries ;;
+
+  # #show List ;;
+  module List = BatList
 
   (** Function Signatures *)
   #show BatList ;;
@@ -5983,8 +6297,6 @@ $ utop
         val ( @ ) : 'a list -> 'a list -> 'a list
       end
     # 
-
-    # module List = BatList ;;
 
 
     (** Head, Tail and Last **)
@@ -6423,6 +6735,75 @@ Lazy lists are similar to Haskell Lists that uses lazy evaluation.
     - : int list * char list = ([1; 2; 3], ['a'; 'b'; 'c'])
     # 
     
+    
+(** Cons and Nils / Creating Lazy Lists *)
+
+    #  let empty_lazy_list = let open Lz in Lazy.from_val Nil ;;
+    val empty_lazy_list : 'a Lz.node_t Lazy.t = lazy Lz.Nil
+    # 
+
+    # Lz.to_list empty_lazy_list ;;
+    - : 'a list = []
+    # 
+    
+    # let open Lz in  lazy (Cons (2, lazy Nil)) ;;
+    - : int Lz.node_t lazy_t = <lazy>
+    # 
+    
+    
+    #  let open Lz in  lazy (Cons (2, lazy Nil)) |> to_list ;;
+    - : int list = [2]
+    # 
+
+
+    # Lz.to_list xs ;;
+    - : int list = [2]
+    # 
+
+    #  let xs2 = let open Lz in Lazy.from_val 
+        (Cons (2, Lazy.from_val (Cons (3, Lazy.from_val (Cons (5, Lazy.from_val Nil))))))  ;;
+    val xs2 : int Lz.node_t Lazy.t = lazy <cycle>
+    # 
+
+    #  Lz.to_list xs2 ;;
+    - : int list = [2; 3; 5]
+    #
+
+
+    (** Generating Infinite Lists *)
+    
+    #  let rec ones () =
+          let open Lz in 
+          lazy (Cons (1,  ones ()))
+      ;;
+    val ones : unit -> int Lz.t = <fun>
+    # 
+
+    #  ones () ;;
+    - : int Lz.t = <lazy>
+    #     
+
+    #  ones () |> Lz.take 5 |> Lz.to_list ;;
+    - : int list = [1; 1; 1; 1; 1]
+
+    # ones () |> Lz.take 10 |> Lz.to_list ;;
+    - : int list = [1; 1; 1; 1; 1; 1; 1; 1; 1; 1]
+    # 
+
+
+    #  let rec naturals n () =
+          let open Lz in 
+          lazy (Cons (n, (naturals  (n+1) ()) ))
+      ;;    
+    
+    #  naturals 0 () |> Lz.take 10 |> Lz.to_list ;;
+    - : int list = [0; 1; 2; 3; 4; 5; 6; 7; 8; 9]
+    
+    #  naturals 0 () |> Lz.take 6 |> Lz.to_list ;;
+    - : int list = [0; 1; 2; 3; 4; 5]
+    # 
+    
+            
 ```
 
 
@@ -6863,26 +7244,40 @@ Author(s): Nicolas Cannasse, David Rajchenbach-Teller
       end
     # 
 
-    # String.starts_with "foobar" "foo" ;;
-    - : bool = true
-    # 
-      String.starts_with "foobar" "baz" ;;
-    - : bool = false
-    # 
-
-    # String.ends_with "foobar" "foo" ;;
-    - : bool = false
-    # String.ends_with "foobar" "bar" ;;
-    - : bool = true
-    # 
-
-    # String.explode "foobar" ;;
-    - : char list = ['f'; 'o'; 'o'; 'b'; 'a'; 'r']
-    # 
-      String.implode ['P'; 'o'; 'r'; 't'; 'u'; 'g'; 'a'; 'l' ] ;;
-    - : string = "Portugal"
-    # 
+    (** Strip and Chop *)
     
+    #  String.rchop ~n:3 "hello world ocaml ml F#" ;;
+    - : string = "hello world ocaml ml"
+    #
+    # String.rchop ~n:13 "hello world ocaml ml F#" ;;
+    - : string = "hello worl"
+    #
+    
+    # String.lchop ~n:3 "hello world ocaml ml F#" ;;
+    - : string = "lo world ocaml ml F#"
+    # 
+    # String.lchop ~n:13 "hello world ocaml ml F#" ;;
+    - : string = "caml ml F#"    
+    
+   
+    # String.right "hello world ocaml ml F#" 0 ;;
+    - : string = ""
+    # String.right "hello world ocaml ml F#" 1 ;;
+    - : string = "#"
+    # String.right "hello world ocaml ml F#" 5 ;;
+    - : string = "ml F#"
+    # String.right "hello world ocaml ml F#" 10 ;;
+    - : string = "caml ml F#"
+    #       
+       
+    # String.left "hello world ocaml ml F#" 0 ;;
+    - : string = ""
+    # String.left "hello world ocaml ml F#" 1 ;;
+    - : string = "h"
+    # String.left "hello world ocaml ml F#" 10 ;;
+    - : string = "hello worl"
+    #       
+   
     #  String.trim "    helllo world     " ;;
     - : string = "helllo world"
     # 
@@ -6890,6 +7285,10 @@ Author(s): Nicolas Cannasse, David Rajchenbach-Teller
     # String.strip ~chars:".-?; "  " .-....helllo world   ...;;;???  " ;;
     - : string = "helllo world"
     # 
+      
+      
+    (** Join, Concat, Repeat *)
+    (********************************)          
       
     #  String.join ", " ["Mexico" ; "Honduras"; "Guatemala"; "Colombia"] ;;
     - : string = "Mexico, Honduras, Guatemala, Colombia"
@@ -6915,6 +7314,86 @@ Author(s): Nicolas Cannasse, David Rajchenbach-Teller
     - : string list = ["hello"; ""; ""; ""; "world"; ""; ""; "ocaml"]
 
     # 
+    
+    (** String X Characters         *)
+    (********************************)    
+
+    # String.explode "foobar" ;;
+    - : char list = ['f'; 'o'; 'o'; 'b'; 'a'; 'r']
+    # 
+      String.implode ['P'; 'o'; 'r'; 't'; 'u'; 'g'; 'a'; 'l' ] ;;
+    - : string = "Portugal"
+    #     
+
+
+    (** Lowercase / Uppercase  conversion *)
+    (**************************************)        
+    
+    # String.uppercase "mexico" ;;
+    - : string = "MEXICO"
+    # 
+
+    # String.lowercase "MEXICO" ;;
+    - : string = "mexico"
+    # 
+
+    #  String.capitalize "mexico" ;;
+    - : string = "Mexico"
+    # String.capitalize "MEXICO" ;;
+    - : string = "MEXICO"
+    # 
+
+    # String.uncapitalize "MEXICO" ;;
+    - : string = "mEXICO"
+    # 
+      String.uncapitalize "Mexico" ;;
+    - : string = "mexico"
+    # 
+
+    (** Replace string              *)
+    (********************************)   
+    
+    # String.nreplace ~str:"On the long highway to Mexico" ~sub:"Mexico" ~by:"Guatemala" ;; 
+    - : string = "On the long highway to Guatemala"
+    # 
+    
+    
+    (** Predicates                  *)
+    (********************************)
+    
+    
+    #  String.starts_with  "prefix something else" "prefix" ;;
+    - : bool = true
+    # 
+      String.starts_with "prefix" "prefix something else" ;;
+    - : bool = false
+
+
+    #  String.ends_with  "something else suffix" "suffix" ;;
+    - : bool = true
+    # 
+
+    # String.ends_with  "something else suff" "suffix" ;;
+    - : bool = false
+    #   
+    
+    (** Type Casting *)
+    (********************************)
+        
+    #  String.of_char 'x' ;;
+    - : string = "x"
+    #     
+    # String.of_int 10023 ;;
+    - : string = "10023"
+    # 
+      String.of_float 203.23 ;;
+    - : string = "203.23"
+    # 
+
+    #  String.of_list ['T'; 'e'; 'x'; 'a'; 's'] ;;
+    - : string = "Texas"
+
+
 
 ```
 
@@ -6962,6 +7441,159 @@ val safe_find : ('a -> bool) -> 'a list -> 'a option = <fun>
 
 
 
+```
+
+#### BatRef 
+
+It provide combinators to manipulate mutable references.
+
+```ocaml
+    # #require "batteries" ;;
+    # open Batteries ;;
+    
+    # #show BatRef ;;
+    module BatRef :
+      sig
+        type 'a t = 'a ref
+        external ref : 'a -> 'a ref = "%makemutable"
+        external ( ! ) : 'a ref -> 'a = "%field0"
+        external ( := ) : 'a ref -> 'a -> unit = "%setfield0"
+        external set : 'a ref -> 'a -> unit = "%setfield0"
+        external get : 'a ref -> 'a = "%field0"
+        val copy : 'a ref -> 'a ref
+        val pre : 'a ref -> ('a -> 'a) -> 'a
+        val post : 'a ref -> ('a -> 'a) -> 'a
+        val swap : 'a ref -> 'a ref -> unit
+        val post_incr : int ref -> int
+        val post_decr : int ref -> int
+        val pre_incr : int ref -> int
+        val pre_decr : int ref -> int
+        val protect : 'a ref -> 'a -> (unit -> 'b) -> 'b
+        val toggle : bool ref -> unit
+        val oset : 'a option ref -> 'a -> unit
+        val oget_exn : 'a option ref -> 'a
+        val print :
+          ('b BatInnerIO.output -> 'a -> unit) ->
+          'b BatInnerIO.output -> 'a t -> unit
+        val compare : 'a BatOrd.comp -> 'a ref BatOrd.comp
+        val ord : 'a BatOrd.ord -> 'a ref BatOrd.ord
+        val eq : 'a BatOrd.eq -> 'a ref BatOrd.eq
+      end
+    # 
+
+    #  let x = ref 10.223 ;;
+    val x : float Batteries.ref = {contents = 10.223}
+    # 
+
+    #  Ref.set x 100.23 ;;
+    - : unit = ()
+
+    # x ;;
+    - : float Batteries.ref = {contents = 100.23}
+    # 
+
+    # Ref.get x ;;
+    - : float = 100.23
+    # 
+
+    (****************************************)
+    
+    # let a = ref 1000 ;;
+    val a : int Batteries.ref = {contents = 1000}
+    # let b = ref 200 ;;
+    val b : int Batteries.ref = {contents = 200}
+    # 
+      Ref.swap a b ;;
+    - : unit = ()
+    # a ;;
+    - : int Batteries.ref = {contents = 200}
+    # b ;;
+    - : int Batteries.ref = {contents = 1000}
+    # 
+
+   (****************************************)    
+    
+    # let myflag = ref false ;;
+    val myflag : bool Batteries.ref = {contents = false}
+    # 
+      Ref.toggle myflag ;;
+    - : unit = ()
+
+    # myflag ;;
+    - : bool Batteries.ref = {contents = true}
+    # 
+    
+    # Ref.toggle myflag ;;
+    - : unit = ()
+    # myflag ;;
+    - : bool Batteries.ref = {contents = false}
+    # 
+    
+    
+    (*****************************************)
+    
+    # let x = ref  100 ;;
+    val x : int Batteries.ref = {contents = 100}
+    # 
+    
+    # Ref.pre ;;
+    - : 'a ref -> ('a -> 'a) -> 'a = <fun>
+    # 
+
+    #  Ref.pre x (fun x -> x + 30)  ;;
+    - : int = 130
+
+    # x ;;
+    - : int Batteries.ref = {contents = 130}
+    # 
+    
+
+    (*****************************************)
+
+    #  let x = ref 100 ;;
+    val x : int Batteries.ref = {contents = 100}
+    # 
+      Ref.post x (fun x -> x + 30) ;;
+    - : int = 100
+    # x ;;
+    - : int Batteries.ref = {contents = 130}
+    # 
+
+    (*****************************************)
+    
+    # let idx = ref 0 ;;
+    val idx : int Batteries.ref = {contents = 0}
+    # 
+    
+    #  Ref.post_incr idx ;;
+    - : int = 0
+    
+    # idx ;;
+    - : int Batteries.ref = {contents = 1}
+    # 
+
+    (*****************************************)
+    
+    # let idx = ref 0 ;;
+    val idx : int Batteries.ref = {contents = 0}
+    # 
+        
+    #  Ref.pre_incr idx ;;
+    - : int = 1
+    # !idx ;;
+    - : int = 1
+    # Ref.pre_incr idx ;;
+    - : int = 2
+    # !idx ;;
+    - : int = 2
+    # Ref.pre_incr idx ;;
+    - : int = 3
+    # !idx ;;
+    - : int = 3
+    # 
+
+
+    
 ```
 
 #### BatFiles 
@@ -7646,6 +8278,8 @@ Generated Files
 
 * [An Overview of Ocaml - Simon Grondin - An Adventure in Software Industry](http://simongrondin.name/?p=330#more-330)
 
+* [Mega Nerd blog / Ocaml](http://www.mega-nerd.com/erikd/Blog/CodeHacking/Ocaml/index.html)
+
 * [Matt Mcdonnel - Ocaml](http://www.matt-mcdonnell.com/blog/blog_ocaml/blog_ocaml.html)
 
 * http://aubedesheros.blogspot.com/search/label/ocaml  (In French)
@@ -7700,6 +8334,9 @@ Jane Street](http://www.cs.princeton.edu/~dpw/courses/cos326-12/lec/asynch-and-r
 * [NYC OCaml Meetup: Js_of_ocaml](http://files.meetup.com/1887771/2013-07-11%20Js_of_ocaml%20The%20OCaml%20to%20Javascript%20Compiler.pdf)
 
 * [Managing and Analyzing Big-Data in Genomics](http://ashishagarwal.org/wp-content/uploads/2012/06/IBM_PL_Day_2012.pdf)
+
+* [Programmation fonctionnelle avec OCaml](http://www.loria.fr/~shornus/ocaml/slides-ocaml-3.pdf)
+
 
 #### Stack Overflow Highlighted Questions
 
