@@ -111,15 +111,23 @@ A selection of people who influenced functional programming:
 * [John Backus](https://en.wikipedia.org/wiki/John_Backus), Computer Scientist ->  Backus-Naur form (BNF), Fortran Language, 
     * [Can Programming Be Liberated from the von Neumann Style? A Functional Style and Its Algebra of Programs](https://web.stanford.edu/class/cs242/readings/backus.pdf)
 
+* [Philip Wadler](https://en.wikipedia.org/wiki/Philip_Wadler),  Theory behind functional programming and the use of monads in functional programming, the design of the purely functional language Haskell.
+
+* [Eugenio Moggi](https://en.wikipedia.org/wiki/Eugenio_Moggi), Professor of computer science at the University of Genoa, Italy. - He first described the general use of monads to structure programs.
+
+    * [Notions of computation and monads - Eugenio Moggi](http://www.disi.unige.it/person/MoggiE/ftp/ic91.pdf)
+
 * [Simon Peyton Jones](https://en.wikipedia.org/wiki/Simon_Peyton_Jones), Computer Scientist -> Major contributor to the design of the Haskell programming language.
 
 * [John Hughes](https://en.wikipedia.org/wiki/John_Hughes_(computer_scientist)), Computer Scientist -> One of the most influentials papers in FP field: Why functional programing matters.
+
 
 * [Gerald Jay Sussman](https://en.wikipedia.org/wiki/Gerald_Jay_Sussman), Mathematician and Computer Scientist
    * [Scheme Lisp](https://en.wikipedia.org/wiki/Scheme_(programming_language)) Language
    * Book: [Structure and Interpretation of Computer Programs](https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Computer_Programs)
    * Book: [Structure and Interpretation of Classical Mechanics](https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Classical_Mechanics)
 
+   * [Lambda Papers](https://en.wikipedia.org/wiki/History_of_the_Scheme_programming_language#The_Lambda_Papers): A series of MIT AI Memos published between 1975 and 1980, developing the Scheme programming language and a number of influential concepts in programming language design and implementation.
 
 ### Pure Functions
 
@@ -1242,27 +1250,91 @@ parse_csvtable_optmized =  composef(
 Selected Wikipedia Pages:
 
 * [List of functional programming topics](http://en.wikipedia.org/wiki/List_of_functional_programming_topics)
+
 * [Comparison of Functional Programming Languages](http://en.wikipedia.org/wiki/Comparison_of_functional_programming_languages)
 * [Functional programming](http://en.wikipedia.org/wiki/Functional_programming)
-
 
 * [Declarative programming](http://en.wikipedia.org/wiki/Declarative_programming)
 * [Aspect-oriented programming](http://en.wikipedia.org/wiki/Aspect-oriented_programming)
 
-**Pure Functions/ Lambda Calculus/ Closure/ Currying**
+**Functions**
 
-* [Lambda calculus](http://en.wikipedia.org/wiki/Lambda_calculus)
-* [Higher-order function](http://en.wikipedia.org/wiki/Higher-order_function)
-* [Referential transparency (computer science)](http://en.wikipedia.org/wiki/Referential_transparency_(computer_science))
+First Class Functions
+
+* [First-class function](https://en.wikipedia.org/wiki/First-class_function)
+* [Pure function](https://en.wikipedia.org/wiki/Pure_function)
+* [Side effect (computer science)](https://en.wikipedia.org/wiki/Side_effect_%28computer_science%29)
+* [Purely functional](https://en.wikipedia.org/wiki/Purely_functional)
+
+* [Referential transparency (computer science)](https://en.wikipedia.org/wiki/Referential_transparency_%28computer_science%29)
+* [Function type](https://en.wikipedia.org/wiki/Function_type)
+
+* [Arity](https://en.wikipedia.org/wiki/Arity)
+* [Variadic function](https://en.wikipedia.org/wiki/Variadic_function)
+
+Composition
+
+* [Function composition (computer science)](https://en.wikipedia.org/wiki/Function_composition_%28computer_science%29)
+* [Function composition - Mathematics](https://en.wikipedia.org/wiki/Function_composition)
+* [Composability](https://en.wikipedia.org/wiki/Composability)
+
+* [Functional decomposition](https://en.wikipedia.org/wiki/Functional_decomposition)
+
+Scope
+
+* [Scope (computer science)](https://en.wikipedia.org/wiki/Scope_%28computer_science%29)
+
+Currying and Partial Evaluation
+
+* [Currying](https://en.wikipedia.org/wiki/Currying)
+* [Partial evaluation](https://en.wikipedia.org/wiki/Partial_evaluation)
+
+Higher Order Functions, Closures, Anonymous Functions
+
+* [Anonymous function](https://en.wikipedia.org/wiki/Anonymous_function)
+* [Closure (computer programming)](https://en.wikipedia.org/wiki/Closure_%28computer_programming%29)
+* [Higher-order function](https://en.wikipedia.org/wiki/Higher-order_function)
+* [Fixed-point combinator](https://en.wikipedia.org/wiki/Fixed-point_combinator)
+* [Defunctionalization](https://en.wikipedia.org/wiki/Defunctionalization)
+
 * [Closure (computer programming)](http://en.wikipedia.org/wiki/Closure_(computer_programming))
 * [Callback (computer programming)](http://en.wikipedia.org/wiki/Callback_(computer_programming))
 * [Coroutine](http://en.wikipedia.org/wiki/Coroutine)
 
+
+Recursion
+
+* [Recursion (computer science)](https://en.wikipedia.org/wiki/Recursion_%28computer_science%29)
+* [Tail call](https://en.wikipedia.org/wiki/Tail_call)
+* [Double recursion](https://en.wikipedia.org/wiki/Double_recursion)
+* [Primitive recursive function](https://en.wikipedia.org/wiki/Primitive_recursive_function)
+
+
+* [Ackermann function](https://en.wikipedia.org/wiki/Ackermann_function)
+* [Tak (function)](https://en.wikipedia.org/wiki/Tak_%28function%29)
+
+
+Lambda Calculus and Process Calculus
+
+* [Typed lambda calculus](https://en.wikipedia.org/wiki/Typed_lambda_calculus)
+* [Lambda calculus](http://en.wikipedia.org/wiki/Lambda_calculus)
+* [Process calculus](https://en.wikipedia.org/wiki/Process_calculus)
+
+
+* [Futures and promises](https://en.wikipedia.org/wiki/Futures_and_promises)
+* [Combinatory logic](https://en.wikipedia.org/wiki/Combinatory_logic)
+
+
 **Evaluation**
 
+* [Evaluation strategy](https://en.wikipedia.org/wiki/Evaluation_strategy)
+
 * [Eager Evaluation](http://en.wikipedia.org/wiki/Eager_evaluation)
-* [Lazy Evaluation](http://en.wikipedia.org/wiki/Lazy_evaluation)
 * [Short-circuit evaluation](http://en.wikipedia.org/wiki/Short-circuit_evaluation)
+
+Related to Lazy Evaluation
+* [Lazy Evaluation](http://en.wikipedia.org/wiki/Lazy_evaluation)
+* [Thunk](https://en.wikipedia.org/wiki/Thunk)
 
 **Monads**
 
@@ -1274,6 +1346,57 @@ Selected Wikipedia Pages:
 
 * [Continuation](http://en.wikipedia.org/wiki/Continuation)
 * [Continuation-passing style](http://en.wikipedia.org/wiki/Continuation-passing_style)
+
+**Fundamental Data Structure**
+
+* [List (abstract data type)](https://en.wikipedia.org/wiki/List_%28abstract_data_type%29)
+* [Array data structure](https://en.wikipedia.org/wiki/Array_data_structure)
+* [Array data type](https://en.wikipedia.org/wiki/Array_data_type)
+
+
+**Types**
+
+* [Category theory](https://en.wikipedia.org/wiki/Category_theory)
+* [Type Theory](https://en.wikipedia.org/wiki/Type_theory)
+* [Type System](https://en.wikipedia.org/wiki/Type_system)
+
+* [Algebraic data type](https://en.wikipedia.org/wiki/Algebraic_data_type)
+
+* [Type signature](https://en.wikipedia.org/wiki/Type_signature)
+* [Enumerated type](https://en.wikipedia.org/wiki/Enumerated_type)
+* [Product type](https://en.wikipedia.org/wiki/Product_type)
+* [Tagged union](https://en.wikipedia.org/wiki/Tagged_union)
+* [Dependent type](https://en.wikipedia.org/wiki/Dependent_type)
+
+
+* [Recursive data type](https://en.wikipedia.org/wiki/Recursive_data_type)
+
+* [Generalized algebraic data type](https://en.wikipedia.org/wiki/Generalized_algebraic_data_type)
+
+* [Disjoint union](https://en.wikipedia.org/wiki/Disjoint_union)
+
+**Miscellaneous**
+
+* [Call stack](https://en.wikipedia.org/wiki/Call_stack)
+* [Call graph](https://en.wikipedia.org/wiki/Call_graph)
+
+* [Reflection (computer programming)](https://en.wikipedia.org/wiki/Reflection_%28computer_programming%29)
+
+* [Function object](https://en.wikipedia.org/wiki/Function_object)
+
+* [Memoization](https://en.wikipedia.org/wiki/Memoization)
+
+* [Garbage collection (computer science)](https://en.wikipedia.org/wiki/Garbage_collection_%28computer_science%29)
+
+**Functional Languages**
+
+* [Lisp (programming language)](https://en.wikipedia.org/wiki/Lisp_%28programming_language%29)
+* [Scheme Lisp](https://en.wikipedia.org/wiki/Scheme_%28programming_language%29)
+
+* [ML (programming language)](https://en.wikipedia.org/wiki/ML_%28programming_language%29)
+* [Standard ML](https://en.wikipedia.org/wiki/Standard_ML)
+* [OCaml](https://en.wikipedia.org/wiki/OCaml)
+
 
 <!--
 -->
