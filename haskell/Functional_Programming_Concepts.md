@@ -113,6 +113,9 @@ A selection of people who influenced functional programming:
 
 * [Philip Wadler](https://en.wikipedia.org/wiki/Philip_Wadler),  Theory behind functional programming and the use of monads in functional programming, the design of the purely functional language Haskell.
 
+    * [The essence of functional programing](http://www.eliza.ch/doc/wadler92essence_of_FP.pdf)
+    * [Philip Wadler on Functional Programming - Interview](http://www.infoq.com/interviews/wadler-functional-programming)
+
 * [Eugenio Moggi](https://en.wikipedia.org/wiki/Eugenio_Moggi), Professor of computer science at the University of Genoa, Italy. - He first described the general use of monads to structure programs.
 
     * [Notions of computation and monads - Eugenio Moggi](http://www.disi.unige.it/person/MoggiE/ftp/ic91.pdf)
@@ -1393,9 +1396,12 @@ Related to Lazy Evaluation
 * [Lisp (programming language)](https://en.wikipedia.org/wiki/Lisp_%28programming_language%29)
 * [Scheme Lisp](https://en.wikipedia.org/wiki/Scheme_%28programming_language%29)
 
+* [Haskell](https://en.wikipedia.org/wiki/Haskell)
+
 * [ML (programming language)](https://en.wikipedia.org/wiki/ML_%28programming_language%29)
 * [Standard ML](https://en.wikipedia.org/wiki/Standard_ML)
 * [OCaml](https://en.wikipedia.org/wiki/OCaml)
+* [F# - Fsharp](https://en.wikipedia.org/wiki/F_Sharp_%28programming_language%29)
 
 
 <!--
