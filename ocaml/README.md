@@ -57,6 +57,9 @@
     - [Finding Shared Libraries](#finding-shared-libraries)
     - [References](#references)
   - [Module System](#module-system)
+    - [Opening Modules](#opening-modules)
+    - [Defining a module in the Toplevel](#defining-a-module-in-the-toplevel)
+    - [Loading file as module in the toplevel](#loading-file-as-module-in-the-toplevel)
   - [Creating Libraries, Modules and Compiling to Bytecode or Machine Code](#creating-libraries-modules-and-compiling-to-bytecode-or-machine-code)
     - [Loading Files in Interactive Shell](#loading-files-in-interactive-shell)
     - [Compile Module to Bytecode](#compile-module-to-bytecode)
@@ -4625,6 +4628,17 @@ val countries : country list =
  {name = "South Africa"; domain = ".co.za"; language = "English"; id = 40};
  {name = "Australia"; domain = ".au"; language = "English"; id = 354}]
 
+> List.find (fun x -> x.id = 100) countries ;;
+- : country =
+{name = "Brazil"; domain = ".br"; language = "Portuguese"; id = 100}
+
+> List.find (fun x -> x.id = 354) countries ;;
+- : country =
+{name = "Australia"; domain = ".au"; language = "English"; id = 354}
+ 
+>  List.find (fun x -> x.id = 1354) countries ;;
+Exception: Not_found.
+
 ```
 
 #### Disjoint Union
@@ -5878,7 +5892,398 @@ libpython2.7-dev - Header files and a static library for Python (v2.7)
 
 ## Module System 
 
+### Opening Modules
 
+```ocaml
+
+    (** Show Module Contents *)
+    
+    # #show Filename ;;
+    module Filename :
+      sig
+        val current_dir_name : string
+        val parent_dir_name : string
+        val dir_sep : string
+        val concat : string -> string -> string
+        val is_relative : string -> bool
+        val is_implicit : string -> bool
+        val check_suffix : string -> string -> bool
+        val chop_suffix : string -> string -> string
+        val chop_extension : string -> string
+        val basename : string -> string
+        val dirname : string -> string
+        val temp_file : ?temp_dir:string -> string -> string -> string
+        val open_temp_file :
+          ?mode:open_flag list ->
+          ?temp_dir:string -> string -> string -> string * out_channel
+        val get_temp_dir_name : unit -> string
+        val set_temp_dir_name : string -> unit
+        val temp_dir_name : string
+        val quote : string -> string
+      end
+    # 
+
+
+    (** Open a module Locally *)
+
+    #  let open List in map ;;
+    - : ('a -> 'b) -> 'a list -> 'b list = <fun>
+    # 
+
+    #  let open List in map (fun x -> x +1) [1; 2; 3; 4; 5] ;;
+    - : int list = [2; 3; 4; 5; 6]
+    # 
+    
+    # map (fun x -> x +1) [1; 2; 3; 4; 5] ;;
+    Error: Unbound value map
+    Hint: Did you mean max?
+    # 
+
+    # let open Array in  map ;;
+    - : ('a -> 'b) -> 'a array -> 'b array = <fun>
+    # 
+
+    #  let open Array in map (fun x -> x +1) [| 1; 2; 3; 4; 5 |] ;;
+    - : int array = [|2; 3; 4; 5; 6|]
+    #     
+
+    (** Open a module inside parenthesis *)
+
+    # List.(map) ;;
+    - : ('a -> 'b) -> 'a list -> 'b list = <fun>
+
+    # Array.(map) ;;
+    - : ('a -> 'b) -> 'a array -> 'b array = <fun>
+    # 
+
+    # List.(map (fun x -> x +1) [1; 2; 3; 4; 5]) ;;
+    - : int list = [2; 3; 4; 5; 6]
+    # 
+
+    # Array.(map (fun x -> x +1) [| 1; 2; 3; 4; 5 |]) ;;
+    - : int array = [|2; 3; 4; 5; 6|]
+
+    (** Module Alias *)
+    
+    # module L = List ;;
+    module L = List
+
+    # #show L ;;
+    module L = List
+    # 
+        
+    # L.map ;;
+    - : ('a -> 'b) -> 'a list -> 'b list = <fun>
+    # 
+      L.map ((+) 1)  [1 ; 2; 3; 4; 5; 6] ;;
+    - : int list = [2; 3; 4; 5; 6; 7]
+    # 
+
+    # let open L in map ;;
+    - : ('a -> 'b) -> 'a list -> 'b list = <fun>
+    # 
+
+    #  let open L in map (fun x -> x +1) [1; 2; 3; 4; 5] ;;
+    - : int list = [2; 3; 4; 5; 6]
+    # 
+    
+    (** Open a module inside a function *)
+    
+
+    # let dummy_function xs ys = 
+          let open List in 
+          map (fun (x, y) -> 3 * x + 5 * y) (combine xs ys)
+      ;;
+    val dummy_function : int list -> int list -> int list = <fun>
+    # 
+    
+    # dummy_function [2; 3; 4; 5] [1; 2; 3; 4] ;;
+    - : int list = [11; 19; 27; 35]
+    # 
+
+    (** Open a module inside a function *)
+    
+    # let dummy_function xs ys = 
+          let module L = List in 
+          L.map (fun (x, y) -> 3 * x + 5 * y) (L.combine xs ys)
+      ;;
+    val dummy_function : int list -> int list -> int list = <fun>
+    # 
+    
+    (** Open a module globally in the toplevel or inside another module
+        if the module is opened in a file.
+     *)
+
+    # open List ;;
+    # 
+
+    #  map ;;
+    - : ('a -> 'b) -> 'a list -> 'b list = <fun>
+    # find ;;
+    - : ('a -> bool) -> 'a list -> 'a = <fun>
+    # filter ;;
+    - : ('a -> bool) -> 'a list -> 'a list = <fun>
+    # 
+
+    # map (fun x -> x +1) [1; 2; 3; 4; 5] ;;
+    - : int list = [2; 3; 4; 5; 6]
+    # 
+
+    # map ((+) 1)  [1; 2; 3; 4; 5] ;;
+    - : int list = [2; 3; 4; 5; 6]
+
+    # map ((+) 1)  [1; 2; 3; 4; 5] |> find (fun x -> x > 2) ;;
+    - : int = 3
+
+```
+
+### Defining a module in the Toplevel
+
+```ocaml
+
+    # module MyModule = 
+             struct 
+          
+             let f1 x = 10 * x 
+             let f x y = 4 * x + y 
+          
+             let const1 = 100.232
+             let msg1  = "hello world"
+             
+             let (+) x y  = 10 * x + 3 * y
+             
+             end 
+            ;;
+    module MyModule :
+      sig
+        val f1 : int -> int
+        val f : int -> int -> int
+        val const1 : float
+        val msg1 : string
+        val ( + ) : int -> int -> int
+      end
+
+
+    (** Using the module functions *)
+
+    # MyModule.f1 ;;
+    - : int -> int = <fun>
+    
+    # MyModule.f ;;
+    - : int -> int -> int = <fun>
+    
+    # MyModule.(+) ;;
+    - : int -> int -> int = <fun>
+    # 
+    
+    
+    # MyModule.const1 ;;
+    - : float = 100.232
+    # 
+
+    # MyModule.f 90 10 ;;
+    - : int = 370
+    # 
+      List.map (MyModule.f 90) [10; 20; 30; 40; 50] ;;
+    - : int list = [370; 380; 390; 400; 410]
+    # 
+
+
+    (** Using a operator defined inside the module 
+                
+        16  = 10 * 1 + 3 * 2
+    *)
+    
+    # MyModule.( 1 + 2) ;;
+    - : int = 16
+
+    
+    (** Open a module locally *)
+    
+    # let open MyModule in f1 20 ;;
+    - : int = 200
+
+    # f1 20 ;;
+    Error: Unbound value f1
+    # 
+     
+    # let open MyModule in List.map f1 [10; 20; 30; 40; 50] ;;
+    - : int list = [100; 200; 300; 400; 500]
+    # 
+    
+    # let open MyModule in let open List in map f1 [10; 20; 30; 40; 50] ;;
+    - : int list = [100; 200; 300; 400; 500]    
+    
+    # List.map f1 [10; 20; 30; 40; 50] ;;
+    Error: Unbound value f1
+
+    (** Show module signature *)
+    
+    # #show MyModule ;;
+    module MyModule :
+      sig
+        val f1 : int -> int
+        val f : int -> int -> int
+        val const1 : float
+        val msg1 : string
+        val ( + ) : int -> int -> int
+      end
+    #    
+
+    (** Module Alias, give a short name to a module *)
+    
+    # module M = MyModule ;;
+    module M = MyModule
+    # 
+
+    # M.f 20 30 ;;
+    - : int = 110
+    # 
+
+    # M.f1 50 ;;
+    - : int = 500
+    # 
+
+    # M.(1 + 2);;
+    - : int = 16
+    # 
+    
+    #  let x = let open M in 1 + 2 ;;
+    val x : int = 16
+
+    # 1 + 2 ;;
+    - : int = 3
+    #    
+
+    # let open M in List.map f1 [10; 20; 30; 40; 50] ;;
+    - : int list = [100; 200; 300; 400; 500]
+
+    #  let xs = let open M in List.map f1 [10; 20; 30; 40; 50] ;;
+    val xs : int list = [100; 200; 300; 400; 500]
+    # xs ;;
+    - : int list = [100; 200; 300; 400; 500]
+
+
+    (** Open a module inside a function *)
+    
+    #  let fun1 x = 
+          let open MyModule in
+          f 3 (f1 4 + f1 x)
+      ;;
+
+    #  fun1 4 ;;
+    - : int = 532
+
+    # fun1 8 ;;
+    - : int = 652
+    # 
+    
+    
+    (** Module Alias inside a Function *)
+    
+    # let fun1 x = 
+          let module A = MyModule in
+          A.(f 3 ((f1 4) + (f1 x)))
+      ;;
+    val fun1 : int -> int = <fun>
+    # 
+    
+    # fun1 3 ;;
+    - : int = 502
+    # fun1 8 ;;
+    - : int = 652
+    # 
+
+
+    (** Open a Module Globally *)
+    
+    # open MyModule ;;    
+    
+    # f1 3 ;;
+    - : int = 30
+    # f1 10 ;;
+    - : int = 100
+    # List.map f1 [10; 20; 30; 40; 50] ;;
+    - : int list = [100; 200; 300; 400; 500]
+    # 
+    
+    # 1 + 2 ;;
+    - : int = 16
+    #     
+```
+
+### Loading file as module in the toplevel
+
+Let the file myModule.ml have the content:
+
+```ocaml
+let f1 x = 10 * x 
+let f x y = 4 * x + y 
+
+let const1 = 100.232
+let msg1  = "hello world"
+
+let () = Printf.printf "Hello Ocaml FP" 
+```
+
+Load file 
+
+```
+    $ rlwrap ocaml
+    
+    # #use "myModule.ml" ;;
+    val f1 : int -> int = <fun>
+    val f : int -> int -> int = <fun>
+    val const1 : float = 100.232
+    val msg1 : string = "hello world"
+    Hello Ocaml FP# 
+
+    # f1 4 ;;
+    - : int = 40
+    # f1 3 ;;
+    - : int = 30
+    # 
+          
+    # List.map (f 3) [4; 5; 6; 7; 8 ] ;;
+    - : int list = [16; 17; 18; 19; 20]
+    # 
+```
+
+Load file as module
+
+```
+    $ rlwrap ocaml
+
+    # #mod_use "myModule.ml" ;;
+    Hello Ocaml FPmodule MyModule :
+      sig
+        val f1 : int -> int
+        val f : int -> int -> int
+        val const1 : float
+        val msg1 : string
+      end
+    # 
+
+    # MyModule.f1 ;;
+    - : int -> int = <fun>
+    
+    # 
+      MyModule.f ;;
+    - : int -> int -> int = <fun>
+    
+    # MyModule.f 3 4 ;;
+    - : int = 16
+    
+    #  List.map (MyModule.f 3) [4; 5; 6; 7; 8 ] ;;
+    - : int list = [16; 17; 18; 19; 20]
+    # 
+    
+    # open MyModule ;;
+
+    # List.map (f 3) [4; 5; 6; 7; 8 ] ;;
+    - : int list = [16; 17; 18; 19; 20]
+    # 
+```
 
 ## Creating Libraries, Modules and Compiling to Bytecode or Machine Code
 
@@ -8087,7 +8492,7 @@ n = 5 ; fib(n - 1) = 5 ; fib (n - 2) = 3 ; fib n = 8
     ;;
 val fibonacci : int -> int = <fun>
 
-> >trace fibonacci ;;
+> #trace fibonacci ;;
 fibonacci is now traced.
 > 
 
@@ -8119,7 +8524,7 @@ fibonacci --> 3
 - : int = 3
 > 
 
-> >untrace fibonacci ;;
+> #untrace fibonacci ;;
 fibonacci is no longer traced.
 > 
 
