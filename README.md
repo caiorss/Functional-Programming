@@ -55,5 +55,5 @@ The code snippets with the '>' symbol were run in the interactive Haskell Shell 
 
 **Functional Programming in Scheme**
 
-* [Scheme LISP](ocaml/README.md)
+* [Scheme LISP](scheme/README.md)
 
