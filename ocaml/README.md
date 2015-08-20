@@ -17,6 +17,7 @@
     - [Primitive Types](#primitive-types)
     - [Operators](#operators)
     - [Variable Declaration](#variable-declaration)
+    - [Local Binding](#local-binding)
     - [Polymorphic Functions](#polymorphic-functions)
     - [Number Formats](#number-formats)
     - [Math / Float Functions](#math--float-functions)
@@ -55,6 +56,7 @@
       - [Calling Python](#calling-python)
     - [Finding Shared Libraries](#finding-shared-libraries)
     - [References](#references)
+  - [Module System](#module-system)
   - [Creating Libraries, Modules and Compiling to Bytecode or Machine Code](#creating-libraries-modules-and-compiling-to-bytecode-or-machine-code)
     - [Loading Files in Interactive Shell](#loading-files-in-interactive-shell)
     - [Compile Module to Bytecode](#compile-module-to-bytecode)
@@ -71,7 +73,8 @@
     - [Changing Toploop Prompt](#changing-toploop-prompt)
     - [Adding Directives to Toploop Shell](#adding-directives-to-toploop-shell)
     - [Using Ocaml as Shell Scripts](#using-ocaml-as-shell-scripts)
-      - [Generating OCaml html API Doc](#generating-ocaml-html-api-doc)
+    - [Debugging](#debugging)
+    - [Generating OCaml html API Doc](#generating-ocaml-html-api-doc)
   - [Resources](#resources)
     - [Articles](#articles)
     - [Links](#links)
@@ -288,9 +291,6 @@ Extension Files:
 | .o         | C object file (native)           |
 | .a         | C library object file (native)   |
 
-
-From:
-* http://caml.inria.fr/pub/docs/oreilly-book/html/book-ora066.html
 
 
 
@@ -894,9 +894,6 @@ $ ocaml
     # Some "OCaml" ;;
     - : string option = Some "OCaml"
     #
-
-
-
 ```
 
 
@@ -1102,19 +1099,21 @@ val a : float = 2.323
 
 (* Lists *)
 
->  [1, 2, 3, 4 , 5, 6] ;;
-- : (int * int * int * int * int * int) list = [(1, 2, 3, 4, 5, 6)]
->
+> [1; 2; 3; 4 ; 5; 6] ;;
+- : int list = [1; 2; 3; 4; 5; 6]
 
->  [2.323, 534.23, 83.434, 54.3323 ] ;;
-- : (float * float * float * float) list = [(2.323, 534.23, 83.434, 54.3323)]
->
 
->  ["hello", "world", "ocaml", "amazing" ] ;;
-- : (string * string * string * string) list = [("hello", "world", "ocaml", "amazing")]
->
+> [2.323; 534.23; 83.434; 54.3323 ] ;;
+- : float list = [2.323; 534.23; 83.434; 54.3323]
 
-(* Tuples *)
+
+> ["hello"; "world"; "ocaml"; "amazing" ] ;;
+- : string list = ["hello"; "world"; "ocaml"; "amazing"]
+
+
+
+(******* Tuples ************)
+
 >  (90, 100 ) ;;
 - : int * int = (90, 100)
 
@@ -1128,7 +1127,7 @@ val a : float = 2.323
 
 ```
 
-Local Binding 
+### Local Binding 
 
 ```ocaml 
 
@@ -5876,6 +5875,11 @@ libpython2.7-dev - Header files and a static library for Python (v2.7)
 
 * [GSL - GNU Scientific Library](https://www.gnu.org/software/gsl/)
 
+
+## Module System 
+
+
+
 ## Creating Libraries, Modules and Compiling to Bytecode or Machine Code
 
 ### Loading Files in Interactive Shell
@@ -7915,8 +7919,9 @@ Ocaml can be a great script language with a high level composability, modularity
 Script Template:
 
 File: [script.ml](src/script.ml)
+
 ```ocaml
-#!/usr/bin/env ocaml 
+ #!/usr/bin/env ocaml 
 (**
     
     Note that: there is no main function, entry point in Ocaml lang, 
@@ -8000,7 +8005,134 @@ See also:
 * [Video  - OCAML Tutorial 32/33: OCAML Scripting (OCAML Shell Scripts) by Dr Noureddin Sadawi](https://www.youtube.com/watch?v=hXiz2_VlwMU)
 
 
-#### Generating OCaml html API Doc
+### Debugging
+
+Ocaml has many features that makes debugging easier like:
+
+* Toplevel debugging: Just type the functions in the toplevel and see what they return.
+* Print inside functions
+* Trace function calls
+
+**Print Inside Function**
+
+```ocaml
+> let rec fibonacci = 
+      function
+      | 0 -> 1
+      | 1 -> 1
+      | n -> fibonacci (n-1) + fibonacci (n-2)
+    ;;
+val fibonacci : int -> int = <fun>
+
+> fibonacci 0 ;;
+- : int = 1
+> 
+  fibonacci 3 ;;
+- : int = 3
+> fibonacci 13 ;;
+- : int = 377
+> 
+
+> let rec fibonacci = 
+      function
+      | 0 -> 1
+      | 1 -> 1
+      | n -> let fibn1 = fibonacci (n-1) in
+             let fibn2  = fibonacci (n-2) in
+             let fibn = fibn1 + fibn2 in
+             let () = Printf.printf "n = %d ; fib(n - 1) = %d ; fib (n - 2) = %d ; fib n = %d \n" n fibn1 fibn2 fibn in
+             fibn
+             
+  ;;
+val fibonacci : int -> int = <fun>
+
+
+> fibonacci 0 ;;
+- : int = 1
+> 
+  fibonacci 1 ;;
+- : int = 1
+
+
+> fibonacci 3 ;;
+n = 2 ; fib(n - 1) = 1 ; fib (n - 2) = 1 ; fib n = 2 
+n = 3 ; fib(n - 1) = 2 ; fib (n - 2) = 1 ; fib n = 3 
+- : int = 3
+>    
+  
+> fibonacci 5 ;;
+n = 2 ; fib(n - 1) = 1 ; fib (n - 2) = 1 ; fib n = 2 
+n = 3 ; fib(n - 1) = 2 ; fib (n - 2) = 1 ; fib n = 3 
+n = 2 ; fib(n - 1) = 1 ; fib (n - 2) = 1 ; fib n = 2 
+n = 4 ; fib(n - 1) = 3 ; fib (n - 2) = 2 ; fib n = 5 
+n = 2 ; fib(n - 1) = 1 ; fib (n - 2) = 1 ; fib n = 2 
+n = 3 ; fib(n - 1) = 2 ; fib (n - 2) = 1 ; fib n = 3 
+n = 5 ; fib(n - 1) = 5 ; fib (n - 2) = 3 ; fib n = 8 
+- : int = 8
+> 
+
+
+```
+
+**Tracing function calls**
+
+```ocaml
+
+(* Generates the nth term of fibonnaci sequence *)
+> let rec fibonacci = 
+      function
+      | 0 -> 1
+      | 1 -> 1
+      | n -> fibonacci (n-1) + fibonacci (n-2)
+    ;;
+val fibonacci : int -> int = <fun>
+
+> >trace fibonacci ;;
+fibonacci is now traced.
+> 
+
+> fibonacci 0 ;;
+fibonacci <-- 0
+fibonacci --> 1
+- : int = 1
+
+> fibonacci 2 ;;
+fibonacci <-- 2
+fibonacci <-- 0
+fibonacci --> 1
+fibonacci <-- 1
+fibonacci --> 1
+fibonacci --> 2
+- : int = 2
+
+> fibonacci 3 ;;
+fibonacci <-- 3
+fibonacci <-- 1
+fibonacci --> 1
+fibonacci <-- 2
+fibonacci <-- 0
+fibonacci --> 1
+fibonacci <-- 1
+fibonacci --> 1
+fibonacci --> 2
+fibonacci --> 3
+- : int = 3
+> 
+
+> >untrace fibonacci ;;
+fibonacci is no longer traced.
+> 
+
+> fibonacci 3 ;;
+- : int = 3
+> fibonacci 13 ;;
+- : int = 377
+> 
+
+```
+
+
+### Generating OCaml html API Doc
 
 It is very handy to have the documentation of installed packages locally available. The script provided here, that is written in Ocaml has only one dependency the PCRE library. It is a wrapper to ocamldoc that builds the html documentation of almost any package installed.
 
