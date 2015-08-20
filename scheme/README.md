@@ -14,6 +14,10 @@
     - [Type Testing](#type-testing)
     - [Defining Functions](#defining-functions)
     - [List Operations](#list-operations)
+    - [Java API With Kawa Scheme](#java-api-with-kawa-scheme)
+      - [Install and Run](#install-and-run)
+      - [Calling Java Methods in Kawa Scheme](#calling-java-methods-in-kawa-scheme)
+    - [Create a GUI](#create-a-gui)
   - [Books](#books)
   - [Articles](#articles)
 
@@ -973,8 +977,17 @@ Anonymous Functions/ Lambda Functions
 * [Kawa Scheme](http://www.gnu.org/software/kawa/Getting-Kawa.html)
 * https://en.wikipedia.org/wiki/Kawa_(Scheme_implementation)
 
+* [Kawa scheme and event handlers](http://www.redmountainsw.com/wordpress/1395/kawa-scheme-and-event-handlers/)
+
+* [Exploring LISP on the JVM](http://www.infoq.com/articles/lisp-for-jvm)
+* [EXPLORING LISP ON THE JVM](http://pjacobsson.com/articles/lisp-on-the-jvm.html)
+
 
 Product built with Kawa Scheme: [App Inventor for Android](https://en.wikipedia.org/wiki/App_Inventor_for_Android)
+
+* [Kawa: Compiling Scheme to Java](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.24.5572&rep=rep1&type=pdf)
+
+* [Kawa: Compiling Scheme to Java](http://www.delorie.com/gnu/docs/kawa/kawa-tour_2.html)
 
 #### Install and Run
 
@@ -1175,6 +1188,98 @@ Run the file:
 ```
 $ java -jar kawa-2.0.jar java_swing_gui1.scm
 ```
+
+**Temperature Conversion GUI**
+
+![](images/temperature_conversion_gui.png)
+
+File: [FahrenheitGUI.scm](src/FahrenheitGUI.scm)
+```scheme
+;; Must be used with Kawa
+;; 
+;; Based on: http://www.cs.dartmouth.edu/~cs5/lectures/0509/FahrenheitGUI.java 
+;; 
+;;
+;;
+
+
+;; import java.awt.*;
+;; import java.awt.event.*;
+;;import javax.swing.*;
+;;
+
+(define JFrame javax.swing.JFrame)
+(define JLabel javax.swing.JLabel)
+(define JPanel javax.swing.JPanel)
+(define JTextField javax.swing.JTextField)
+
+(define WIDTH 300)
+(define HEIGHT 75)
+
+(define (fahrenheit2celcius f) (* (- f 32.0) (/ 5.0 9.0)))
+
+;; frame = new JFrame("Temperature Conversion");
+;;
+(define frame (JFrame "Temperature Conversion"))
+
+;;frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+;;
+(frame:setDefaultCloseOperation JFrame:EXIT_ON_CLOSE)
+
+(define inputLabel (JLabel "Enter Fahrenheit temperature (Hit Return to Compute the temperature):"))
+
+;;JLabel outputLabel = new JLabel("Temperature in Celsius: ") 
+(define outputLabel (JLabel "Temperature in Celsius: ")) 
+
+(define resultLabel (JLabel "---"))  
+ 
+;; fahrenheit = new JTextField(5); 
+;; 
+(define fahrenheit (JTextField 5))  
+  
+;; panel = new JPanel(); 
+;; 
+(define panel (JPanel))
+
+;; panel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+(panel:setPreferredSize (java.awt.Dimension WIDTH HEIGHT))
+(panel:setBackground java.awt.Color:yellow)
+
+;;(panel:setPreferredSize (new Dimension(WIDTH, HEIGHT))
+
+(panel:add inputLabel)
+(panel:add fahrenheit)
+(panel:add outputLabel)
+(panel:add resultLabel)
+(frame:add panel)
+(frame:pack)
+
+(define show_frame (lambda () (frame:setVisible #t)))
+
+
+(define (update-temperature)   
+   (resultLabel:setText 
+     (number->string (fahrenheit2celcius (string->number (fahrenheit:getText))))))
+
+(define-namespace ActionListener <java.awt.event.ActionListener>)
+(define-namespace ActionEvent <java.awt.event.ActionEvent>)
+
+
+; ; fahrenheit.addActionListener(new TempListener());    
+;;(frame:addActionListener (lambda (evt) (update-temperature)))
+;;
+(define action-listener
+  (object (ActionListener)
+    ((action-performed e :: ActionEvent) :: <void>
+      (update-temperature))))
+
+(fahrenheit:addActionListener action-listener)
+
+(show_frame)
+
+```
+
+
 
 ## Books
 
