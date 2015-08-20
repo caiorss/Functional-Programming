@@ -4628,6 +4628,33 @@ val countries : country list =
  {name = "South Africa"; domain = ".co.za"; language = "English"; id = 40};
  {name = "Australia"; domain = ".au"; language = "English"; id = 354}]
 
+> countries 
+  |> List.filter (fun c -> c.language = "English") 
+  |> List.map (fun c -> c.name)
+  ;;
+- : string list = ["United Kingdom"; "South Africa"; "Australia"]
+ 
+> let english_speaking_countries = 
+  countries 
+  |> List.filter (fun c -> c.language = "English") 
+  |> List.map (fun c -> c.name)
+  ;;
+val english_speaking_countries : string list =
+  ["United Kingdom"; "South Africa"; "Australia"]
+
+
+> english_speaking_countries ;;
+- : string list = ["United Kingdom"; "South Africa"; "Australia"] 
+
+> countries 
+  |> List.filter (fun c -> c.language = "English")
+  |> List.map (fun c -> c.name, c.domain)
+  ;;
+- : (string * string) list =
+[("United Kingdom", ".co.uk"); ("South Africa", ".co.za");
+ ("Australia", ".au")]
+
+
 > List.find (fun x -> x.id = 100) countries ;;
 - : country =
 {name = "Brazil"; domain = ".br"; language = "Portuguese"; id = 100}
@@ -4638,6 +4665,12 @@ val countries : country list =
  
 >  List.find (fun x -> x.id = 1354) countries ;;
 Exception: Not_found.
+
+> countries 
+  |> List.find (fun x -> x.id = 100)
+  |> fun x -> x.name
+  ;;
+- : string = "Brazil"
 
 ```
 
