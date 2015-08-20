@@ -49,6 +49,11 @@ You can access this page from:
 
 The code snippets with the '>' symbol were run in the interactive Haskell Shell (GHCi) and the lines below without the '>' symbol are the output.
 
-**OCaml Summary**
+**Functional Programming in OCaml**
 
 * [OCaml](ocaml/README.md)
+
+**Functional Programming in Scheme**
+
+* [Scheme LISP](ocaml/README.md)
+
