@@ -60,6 +60,12 @@
     - [Opening Modules](#opening-modules)
     - [Defining a module in the Toplevel](#defining-a-module-in-the-toplevel)
     - [Loading file as module in the toplevel](#loading-file-as-module-in-the-toplevel)
+    - [Loading Libraries Modules](#loading-libraries-modules)
+    - [Including Modules](#including-modules)
+  - [Compiling](#compiling)
+    - [Compiling a single file](#compiling-a-single-file)
+    - [Compiling a single File and a single Module](#compiling-a-single-file-and-a-single-module)
+    - [See also](#see-also)
   - [Creating Libraries, Modules and Compiling to Bytecode or Machine Code](#creating-libraries-modules-and-compiling-to-bytecode-or-machine-code)
     - [Loading Files in Interactive Shell](#loading-files-in-interactive-shell)
     - [Compile Module to Bytecode](#compile-module-to-bytecode)
@@ -75,7 +81,7 @@
   - [Miscellaneous](#miscellaneous)
     - [Changing Toploop Prompt](#changing-toploop-prompt)
     - [Adding Directives to Toploop Shell](#adding-directives-to-toploop-shell)
-    - [Using Ocaml as Shell Scripts](#using-ocaml-as-shell-scripts)
+    - [Shell Script in Ocaml](#shell-script-in-ocaml)
     - [Debugging](#debugging)
     - [Generating OCaml html API Doc](#generating-ocaml-html-api-doc)
   - [Resources](#resources)
@@ -5925,6 +5931,9 @@ libpython2.7-dev - Header files and a static library for Python (v2.7)
 
 ## Module System 
 
+The Ocaml module system helps to organize the code, avoid names collision, provides local namespacing and hide implementation details.
+
+
 ### Opening Modules
 
 ```ocaml
@@ -6317,6 +6326,683 @@ Load file as module
     - : int list = [16; 17; 18; 19; 20]
     # 
 ```
+
+### Loading Libraries Modules
+
+It will load the library pcre, that can be installed with $ opam install pcre
+
+```ocaml
+
+    # #use "topfind" ;;
+
+    # #require "pcre" ;;
+    /home/tux/.opam/4.02.1/lib/bytes: added to search path
+    /home/tux/.opam/4.02.1/lib/pcre: added to search path
+    /home/tux/.opam/4.02.1/lib/pcre/pcre.cma: loaded
+    # 
+    
+    # #show Pcre ;;
+    module Pcre :
+      sig
+        type error =
+            Partial
+          | BadPartial
+          | BadPattern of string * int
+          | BadUTF8
+          | BadUTF8Offset
+          | MatchLimit
+          | RecursionLimit
+          | InternalError of string
+        exception Error of error
+        exception Backtrack
+        exception Regexp_or of string * error
+        type icflag
+    
+    #  Pcre.pmatch ~pat:"\\d+,\\d+" "1000,2323" ;;
+    - : bool = true
+    # 
+    # Pcre.pmatch ~pat:"\\d+,\\d+" "sadasdas" ;;
+    - : bool = false
+    # 
+
+    # let open Pcre in  pmatch ~pat:"\\d+,\\d+" "1000,2323" ;;
+    - : bool = true
+    #
+    
+    # let open Pcre in extract_all ~pat:"(\\d+),(\\d+)" "10023,2323" ;;
+    - : string array array = [|[|"10023,2323"; "10023"; "2323"|]|]
+
+    # let open Pcre in
+    "23213,132345"
+    |>  extract_all ~pat:"(\\d+),(\\d+)"
+    |>  fun c ->  c.(0)
+    ;;
+    - : string array = [|"23213,132345"; "23213"; "132345"|]
+
+    # let open Pcre in
+    "23213,132345"
+    |>  extract_all ~pat:"(\\d+),(\\d+)"
+    |>  fun c ->  c.(0)
+    |>  fun c ->  int_of_string c.(1), int_of_string c.(2)
+    ;;
+    - : int * int = (23213, 132345)
+ 
+```
+
+### Including Modules
+
+All functions of the native library module List will be included in the new module List that
+defines the functions take, drop and range.
+
+```ocaml
+    module List =
+        struct 
+        
+        include List
+      
+        let rec take n xs =
+                match (n, xs) with
+                | (0, _    ) -> []
+                | (_, []   ) -> []
+                | (k, h::tl) -> k::(take (n-1) tl)
+      
+        let rec drop n xs =
+                if n < 0 then failwith "n negative"
+                else
+                    match (n, xs) with
+                    | (0, _ )    ->  xs
+                    | (_, [])    ->  []
+                    | (k, h::tl) ->  drop (k-1) tl
+                    
+        let rec range start stop step =
+                if start > stop
+                then []
+                else start::(range  (start + step) stop step )                
+            
+        end 
+          ;;        
+    module List :
+      sig
+        val length : 'a list -> int
+        val hd : 'a list -> 'a
+        val tl : 'a list -> 'a list
+        val nth : 'a list -> int -> 'a
+        val rev : 'a list -> 'a list
+        val append : 'a list -> 'a list -> 'a list
+        val rev_append : 'a list -> 'a list -> 'a list
+        val concat : 'a list list -> 'a list
+        val flatten : 'a list list -> 'a list
+        val iter : ('a -> unit) -> 'a list -> unit
+        val iteri : (int -> 'a -> unit) -> 'a list -> unit
+        val map : ('a -> 'b) -> 'a list -> 'b list
+        val mapi : (int -> 'a -> 'b) -> 'a list -> 'b list
+        val rev_map : ('a -> 'b) -> 'a list -> 'b list
+        val fold_left : ('a -> 'b -> 'a) -> 'a -> 'b list -> 'a
+        val fold_right : ('a -> 'b -> 'b) -> 'a list -> 'b -> 'b
+        val iter2 : ('a -> 'b -> unit) -> 'a list -> 'b list -> unit
+        val map2 : ('a -> 'b -> 'c) -> 'a list -> 'b list -> 'c list
+        val rev_map2 : ('a -> 'b -> 'c) -> 'a list -> 'b list -> 'c list
+        val fold_left2 : ('a -> 'b -> 'c -> 'a) -> 'a -> 'b list -> 'c list -> 'a
+        val fold_right2 :
+          ('a -> 'b -> 'c -> 'c) -> 'a list -> 'b list -> 'c -> 'c
+        val for_all : ('a -> bool) -> 'a list -> bool
+        val exists : ('a -> bool) -> 'a list -> bool
+        val for_all2 : ('a -> 'b -> bool) -> 'a list -> 'b list -> bool
+        val exists2 : ('a -> 'b -> bool) -> 'a list -> 'b list -> bool
+        val mem : 'a -> 'a list -> bool
+        val memq : 'a -> 'a list -> bool
+        val find : ('a -> bool) -> 'a list -> 'a
+        val filter : ('a -> bool) -> 'a list -> 'a list
+        val find_all : ('a -> bool) -> 'a list -> 'a list
+        val partition : ('a -> bool) -> 'a list -> 'a list * 'a list
+        val assoc : 'a -> ('a * 'b) list -> 'b
+        val assq : 'a -> ('a * 'b) list -> 'b
+        val mem_assoc : 'a -> ('a * 'b) list -> bool
+        val mem_assq : 'a -> ('a * 'b) list -> bool
+        val remove_assoc : 'a -> ('a * 'b) list -> ('a * 'b) list
+        val remove_assq : 'a -> ('a * 'b) list -> ('a * 'b) list
+        val split : ('a * 'b) list -> 'a list * 'b list
+        val combine : 'a list -> 'b list -> ('a * 'b) list
+        val sort : ('a -> 'a -> int) -> 'a list -> 'a list
+        val stable_sort : ('a -> 'a -> int) -> 'a list -> 'a list
+        val fast_sort : ('a -> 'a -> int) -> 'a list -> 'a list
+        val sort_uniq : ('a -> 'a -> int) -> 'a list -> 'a list
+        val merge : ('a -> 'a -> int) -> 'a list -> 'a list -> 'a list
+        val take : int -> 'a list -> int list
+        val drop : int -> 'a list -> 'a list
+        val range : int -> int -> int -> int list
+      end
+    # 
+    
+    # List.range 100 500 10 ;;
+    - : int list =
+    [100; 110; 120; 130; 140; 150; 160; 170; 
+    180; 190; 200; 210; 220; 230; 240;
+     250; 260; 270; 280; 290; 300; 310; 
+     320; 330; 340; 350; 360; 370; 380; 390;
+     400; 410; 420; 430; 440; 450; 460; 470; 
+     480; 490; 500]
+    # 
+    
+
+    
+    # List.range 100 500 10 |> List.take 10 ;;
+    - : int list = [10; 9; 8; 7; 6; 5; 4; 3; 2; 1]
+    # 
+    
+    # List.range 100 500 10 
+    |> List.filter (fun x -> x mod 5 = 0  && x mod 3 =  0) ;;
+    - : int list =
+    [120; 150; 180; 210; 240; 270; 300; 330; 360; 390; 420; 450; 480]
+    # 
+    
+       
+```
+
+## Compiling
+
+[Under Construction]
+
+See also:
+
+* [Compiling OCaml projects](https://ocaml.org/learn/tutorials/compiling_ocaml_projects.html)
+* [OCaml for the Skeptical](http://www2.lib.uchicago.edu/keith/ocaml-class/compiling.html)
+* [The ocamlbuild users manua](https://nicolaspouillard.fr/ocamlbuild/ocamlbuild-user-guide.html)
+* [OCaml Pro - OCaml Standard Tools Cheat Sheet](http://www.ocamlpro.com/files/ocaml-tools.pdf)
+
+### Compiling a single file
+
+It requires the packages lwt and cohttp that can be installed with
+
+```
+$ opam instal lwt cohttp 
+[NOTE] Package lwt is already installed (current version is 2.4.8).
+[NOTE] Package cohttp is already installed (current version is 0.18.1).
+```
+
+Let the file [curl.ml](src/curl/curl.ml) have the content 
+
+```ocaml
+#use "topfind" ;;
+#require "uri" ;;
+#require "cohttp.lwt" ;;
+
+let fetch uri =
+    let open Lwt in
+    Cohttp_lwt_unix.Client.get uri >>= fun (resp, body) ->
+        Cohttp_lwt_body.to_string body >>= fun b ->
+            Lwt_io.printl b
+
+let fetch_string uri =
+    let open Lwt in
+    Cohttp_lwt_unix.Client.get uri >>= fun (resp, body) ->
+        Cohttp_lwt_body.to_string body 
+    
+  
+let url_content url = 
+    let uri = Uri.of_string url 
+    in Lwt_main.run (fetch_string uri)
+    
+let main () = 
+    url_content Sys.argv.(1)
+    |> print_endline
+
+let () = 
+    if !Sys.interactive 
+    then ()
+    else main ()
+```
+
+Running as script
+
+```ocaml
+$ ocaml curl.ml http://httpbin.org/xml
+<?xml version='1.0' encoding='us-ascii'?>
+
+<!--  A SAMPLE set of slides  -->
+
+<slideshow 
+    title="Sample Slide Show"
+    date="Date of publication"
+    author="Yours Truly"
+    >
+
+    <!-- TITLE SLIDE -->
+    <slide type="all">
+      <title>Wake up to WonderWidgets!</title>
+    </slide>
+
+    <!-- OVERVIEW -->
+    <slide type="all">
+        <title>Overview</title>
+        <item>Why <em>WonderWidgets</em> are great</item>
+        <item/>
+        <item>Who <em>buys</em> WonderWidgets</item>
+    </slide>
+
+</slideshow>
+
+```
+
+**Compiling to bytecode**
+
+To compile the file the toplevel directives #use, #mod_use, #load must be removed
+
+```
+$ ocamlfind ocamlc -o curl.byte curl.ml -package lwt,cohttp -linkpkg 
+File "curl.ml", line 1:
+Error: I/O error: curl.ml: No such file or directory
+```
+
+It is possible to remove the directives without change the file by using the -pp option to invoke the preprocessor. To see the byte compiler messages use the option "-verbose".
+
+```
+$ ocamlfind ocamlc -o curl.byte curl.ml -package uri,lwt,lwt.unix,cohttp.lwt -linkpkg -pp 'sed "s/^#.*;;//"'
+
+$ file curl.byte 
+curl.byte: a /home/tux/.opam/4.02.1/bin/ocamlrun script executable (binary data)
+
+$ ./curl.byte http://httpbin.org/status/418
+
+    -=[ teapot ]=-
+
+       _...._
+     .'  _ _ `.
+    | ."` ^ `". _,
+    \_;`"---"`|//
+      |       ;/
+      \_     _/
+        `"""`
+
+```
+
+**Compiling to Native Code**
+
+```ocaml
+$ ocamlfind ocamlopt -o curl.bin curl.ml -package uri,lwt,lwt.unix,cohttp.lwt -linkpkg -pp 'sed "s/^#.*;;//"'
+
+$ file curl.bin
+curl.bin: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.32, BuildID[sha1]=6ee2b5087bb4f7e83a87216bd5078eea91c98661, not stripped
+
+$ ./curl.bin http://httpbin.org/status/418
+
+    -=[ teapot ]=-
+
+       _...._
+     .'  _ _ `.
+    | ."` ^ `". _,
+    \_;`"---"`|//
+      |       ;/
+      \_     _/
+        `"""`
+```
+
+**Simple Makefile**
+
+
+File: [Makefile](src/curl/Makefile)
+```Makefile
+all: curl.byte curl.bin
+
+curl.byte:
+    ocamlfind ocamlc -o curl.byte curl.ml -package uri,lwt,lwt.unix,cohttp.lwt -linkpkg -pp 'sed "s/^#.*;;//"'
+
+curl.bin:
+    ocamlfind ocamlopt -o curl.bin curl.ml -package uri,lwt,lwt.unix,cohttp.lwt -linkpkg -pp 'sed "s/^#.*;;//"'
+
+test: test.byte test.bin
+
+test.byte:
+    @echo "Testing curl.byte"
+    ./curl.byte http://httpbin.org/status/418
+
+test.bin:
+    @echo "Testing curl.bin"
+    ./curl.byte http://httpbin.org/status/418
+
+clean: 
+    rm -rf *.cmo *.cmi *.o *.cmx *.bin *.byte
+```
+
+Building and Testing 
+
+```
+$ make
+ocamlfind ocamlc -o curl.byte curl.ml -package uri,lwt,lwt.unix,cohttp.lwt -linkpkg -pp 'sed "s/^#.*;;//"'
+ocamlfind ocamlopt -o curl.bin curl.ml -package uri,lwt,lwt.unix,cohttp.lwt -linkpkg -pp 'sed "s/^#.*;;//"'
+
+$ make test.byte
+Testing curl.byte
+./curl.byte http://httpbin.org/status/418
+
+    -=[ teapot ]=-
+
+       _...._
+     .'  _ _ `.
+    | ."` ^ `". _,
+    \_;`"---"`|//
+      |       ;/
+      \_     _/
+        `"""`
+$ make test.bin
+Testing curl.bin
+./curl.byte http://httpbin.org/status/418
+
+    -=[ teapot ]=-
+
+       _...._
+     .'  _ _ `.
+    | ."` ^ `". _,
+    \_;`"---"`|//
+      |       ;/
+      \_     _/
+        `"""`
+
+$ make test
+Testing curl.byte
+./curl.byte http://httpbin.org/status/418
+
+    -=[ teapot ]=-
+
+       _...._
+     .'  _ _ `.
+    | ."` ^ `". _,
+    \_;`"---"`|//
+      |       ;/
+      \_     _/
+        `"""`
+
+Testing curl.bin
+./curl.byte http://httpbin.org/status/418
+
+    -=[ teapot ]=-
+
+       _...._
+     .'  _ _ `.
+    | ."` ^ `". _,
+    \_;`"---"`|//
+      |       ;/
+      \_     _/
+        `"
+
+$ make clean 
+rm -rf *.cmo *.cmi *.o *.cmx *.bin *.byte        
+```
+
+
+### Compiling a single File and a single Module
+
+Let the file tools.ml have the content:
+
+file: [tools.ml](src/tools/tools.ml)
+
+```ocaml
+(** 
+    To a file be compiled all preprocessor directives like that below
+    must be removed or commented like in this file.
+    
+    #require "unix" ;;
+*)
+    
+
+let read_channel ch =
+       let b = Buffer.create 0 in
+
+       let reader chn =
+        try Some (input_line chn)
+        with End_of_file -> None
+
+       in let rec aux () =
+         match reader ch with
+          | None -> ()
+          | Some line -> Buffer.add_string b (line ^ "\n") ; aux ()
+       in aux () ;
+       Buffer.contents b 
+       
+       
+let popen_in cmd =
+          let fd = Unix.open_process_in cmd in
+          read_channel fd 
+
+(** Execute a command in a directory and return the command output and 
+    finally go back to the start directory
+*)
+let execute_in_dir dir command = 
+    let this = Sys.getcwd () in
+    Unix.chdir dir ;
+    let out = popen_in command in
+    Unix.chdir this ;
+    out
+    
+```
+
+Let the file main.ml be
+
+file: [main.ml](src/tools/main.ml)
+
+```ocaml
+(*
+ #use "topfind" ;;
+ #require "unix" ;;
+ #load "tools.ml" ;;
+*)
+let main () =
+    Tools.execute_in_dir Sys.argv.(1) "ls"
+    |> print_endline
+
+let () = main ()
+```
+
+Loading in the Toplevel
+
+```
+$ rlwrap ocaml -noinit 
+```
+
+```ocaml
+    # #use "tools.ml" ;;
+    val read_channel : in_channel -> string = <fun>
+    File "tools.ml", line 1:
+    Error: Reference to undefined global `Unix'
+    # 
+
+    # #use "topfind" ;;
+    - : unit = ()
+    Findlib has been successfully loaded. Additional directives:
+      #require "package";;      to load a package
+      #list;;                   to list the available packages
+      #camlp4o;;                to load camlp4 (standard syntax)
+      #camlp4r;;                to load camlp4 (revised syntax)
+      #predicates "p,q,...";;   to set these predicates
+      Topfind.reset();;         to force that packages will be reloaded
+      #thread;;                 to enable threads
+
+    - : unit = ()
+    # #require "unix" ;;
+    /home/tux/.opam/4.02.1/lib/ocaml/unix.cma: loaded
+    # 
+    
+    # #use "tools.ml" ;;
+    val read_channel : in_channel -> string = <fun>
+    val popen_in : string -> string = <fun>
+    val execute_in_dir : string -> string -> string = <fun>
+    # 
+    
+    # popen_in "uname -a" ;;
+    - : string =
+    "Linux tuxhorse 3.19.0-21-generic #21-Ubuntu SMP Sun Jun 14 18:34:06 UTC 2015 i686 i686 i686 GNU/Linux\n"
+    # 
+
+    # #mod_use "tools.ml" ;;
+    module Tools :
+      sig
+        val read_channel : in_channel -> string
+        val popen_in : string -> string
+        val execute_in_dir : string -> string -> string
+      end
+    # 
+
+```
+
+Compiling to bytecode 
+
+```
+$ ocamlfind ocamlc -c tools.ml -package unix -linkpkg
+
+$ file tools.cmi
+tools.cmi: OCaml interface file (.cmi) (Version 017)
+
+$ file tools.cmo
+tools.cmo: OCaml object file (.cmo) (Version 010)
+```
+
+Loading in the Toplevel
+
+```ocaml
+$ rlwrap ocaml -noinit 
+
+            OCaml version 4.02.1
+
+    # #load "tools.cmo" ;;
+    Error: Reference to undefined global `Unix'
+    # 
+      #use "topfind" ;;
+    - : unit = ()
+    Findlib has been successfully loaded. Additional directives:
+      #require "package";;      to load a package
+      #list;;                   to list the available packages
+      #camlp4o;;                to load camlp4 (standard syntax)
+      #camlp4r;;                to load camlp4 (revised syntax)
+      #predicates "p,q,...";;   to set these predicates
+      Topfind.reset();;         to force that packages will be reloaded
+      #thread;;                 to enable threads
+
+    - : unit = ()
+    
+    
+    (** All modules dependencies must be loaded 
+        before it is loaded in the REPL 
+        
+        Instead of #load "unix.cma" it could be #require "unix" ;;
+    *)
+    # #load "unix.cma" ;;
+    # 
+    
+    # #load "tools.cmo" ;;
+    # 
+      #show Tools ;;
+    module Tools :
+      sig
+        val read_channel : in_channel -> string
+        val popen_in : string -> string
+        val execute_in_dir : string -> string -> string
+      end
+    
+    # 
+      Tools.execute_in_dir ;;
+    - : string -> string -> string = <fun>
+    
+    # 
+      Sys.getcwd () ;;
+    - : string = "/home/tux/PycharmProjects/Haskell/ocaml/src"
+     
+    # Tools.execute_in_dir "/etc/boot" "ls" ;;
+    Exception: Unix.Unix_error (Unix.ENOENT, "chdir", "/etc/boot").
+    # 
+      Tools.execute_in_dir "/boot" "ls" ;;
+    - : string =
+    "abi-3.19.0-15-generic\nabi-3.19.0-18-generic\n..."
+    
+    # Sys.getcwd () ;;
+    - : string = "/home/tux/PycharmProjects/Haskell/ocaml/src"
+    # 
+
+```
+
+Compiling main.ml to bytecode executable and linking it to unix.cma and tools module
+
+```
+  # It will yield main.cmi and main.cmo
+
+$ ocamlfind ocamlc -o main.byte tools.ml main.ml  -package unix -linkpkg -verbose
+Effective set of compiler predicates: pkg_unix,autolink,byte
++ ocamlc.opt -o main.byte -verbose /home/tux/.opam/4.02.1/lib/ocaml/unix.cma tools.ml main.ml
+
+$ file main.byte
+main.byte: a /home/tux/.opam/4.02.1/bin/ocamlrun script executable (binary data)
+
+$ ./main.byte /boot
+abi-3.19.0-15-generic
+abi-3.19.0-18-generic
+abi-3.19.0-20-generic
+abi-3.19.0-21-generic
+config-3.19.0-15-generic
+config-3.19.0-18-generic
+config-3.19.0-20-generic
+config-3.19.0-21-generic
+grub
+...
+
+```
+
+Compiling main.ml to main.bin, elf executable (Unix executable)
+
+```
+$ ocamlfind ocamlopt -o main.bin tools.ml main.ml  -package unix -linkpkg -verbose
+Effective set of compiler predicates: pkg_unix,autolink,native
++ ocamlopt.opt -o main.bin -verbose /home/tux/.opam/4.02.1/lib/ocaml/unix.cmxa tools.ml main.ml
++ as -o 'tools.o' '/tmp/camlasm78e933.s'
++ as -o 'main.o' '/tmp/camlasmb3767b.s'
++ as -o '/tmp/camlstartup24f721.o' '/tmp/camlstartup77e48a.s'
++ gcc -o 'main.bin'   '-L/home/tux/.opam/4.02.1/lib/ocaml'  '/tmp/camlstartup24f721.o' '/home/tux/.opam/4.02.1/lib/ocaml/std_exit.o' 'main.o' 'tools.o' '/home/tux/.opam/4.02.1/lib/ocaml/unix.a' '/home/tux/.opam/4.02.1/lib/ocaml/stdlib.a' '-lunix' '/home/tux/.opam/4.02.1/lib/ocaml/libasmrun.a' -lm  -ldl
+
+$ du -h main.bin
+600K    main.bin
+600K    tota
+
+$ file main.bin 
+main.bin: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.32, BuildID[sha1]=ab01870292ad80ccb6ec8b74dca2cd2f342bd96d, not stripped
+
+$ ./main.bin /boot
+abi-3.19.0-15-generic
+abi-3.19.0-18-generic
+abi-3.19.0-20-generic
+abi-3.19.0-21-generic
+config-3.19.0-15-generic
+config-3.19.0-18-generic
+config-3.19.0-20-generic
+config-3.19.0-21-generic
+grub
+initr
+```
+
+Simple Makefile
+
+[Makefile](src/tools/Makefile)
+```Makefile
+main.byte:
+    ocamlfind ocamlc -o main.byte tools.ml main.ml  -package unix -linkpkg -verbose
+
+main.bin:
+    ocamlfind ocamlopt -o main.bin tools.ml main.ml  -package unix -linkpkg -verbose
+    
+clean:
+    rm -rf *.cmo *.cmi *.o *.cmx *.bin *.byte
+```
+
+### See also
+
+* [OCaml User Manual - Chapter 4  The module language](http://caml.inria.fr/pub/docs/u3-ocaml/ocaml-modules.html)
+* [Unreliable Guide to OCaml Modules](http://lambdafoo.com/blog/2015/05/15/unreliable-guide-to-ocaml-modules/)
+* [Real World OCaml - Chapter 4. Files, Modules, and Programs](https://realworldocaml.org/v1/en/html/files-modules-and-programs.html)
+* [Haifeng's Random Walk - OCaml: Modules](https://haifengl.wordpress.com/2014/07/15/ocaml-modules/)
+* [First-class modules: hidden power and tantalizing promises](http://okmij.org/ftp/ML/first-class-modules/)
+* [The OCaml Module System - Faculty of Engineering Pontificia Universidad Javeriana](http://cic.puj.edu.co/wiki/lib/exe/fetch.php?id=materias%3Aleng2&cache=cache&media=materias:leng2:resources:lecture10-ocaml-adv.pdf)
+* [OCaml Pro - Packing and Functors](http://www.ocamlpro.com/blog/2011/08/10/ocaml-pack-functors.html)
+* [Caml for the Skeptical](http://www2.lib.uchicago.edu/keith/ocaml-class/modules.html)
+* [Lecture 9: Functors — Parameterized Modules](http://www.cs.cornell.edu/courses/cs3110/2011sp/lectures/lec09-functors/functors.htm)
+* [How to use modules with ocaml](http://cseweb.ucsd.edu/classes/sp00/cse231/tutorialeng/node3.html)
+
 
 ## Creating Libraries, Modules and Compiling to Bytecode or Machine Code
 
@@ -8350,7 +9036,7 @@ The toploop, interpreter directives can be defined by the user to create customi
     
 ```
 
-### Using Ocaml as Shell Scripts
+### Shell Script in Ocaml
 
 Ocaml can be a great script language with a high level composability, modularity and composability thanks to first class functions, currying (partial application of a function), higher order functions and the module system. Ocaml scripts can be executed in batch mode, be compiled to bytecode or machine code and also cross compiled.   
 
