@@ -16,15 +16,21 @@
     - [Operators](#operators)
     - [Math Functions](#math-functions)
     - [Type Testing](#type-testing)
+    - [String Functions](#string-functions)
     - [List Operations](#list-operations)
       - [Define a List](#define-a-list)
       - [Primitive List Operations](#primitive-list-operations)
       - [List Functions](#list-functions)
-      - [Higher Order Functions](#higher-order-functions)
-    - [Java API With Kawa Scheme](#java-api-with-kawa-scheme)
+  - [Higher Order Functions](#higher-order-functions)
+    - [Special Functions](#special-functions)
+    - [Functions Composition](#functions-composition)
+    - [Applying Multiple Functions to a Single Argument](#applying-multiple-functions-to-a-single-argument)
+    - [Miscellaneous](#miscellaneous)
+  - [Kawa Scheme - Access Java API from Scheme](#kawa-scheme---access-java-api-from-scheme)
       - [Install and Run](#install-and-run)
       - [Calling Java Methods in Kawa Scheme](#calling-java-methods-in-kawa-scheme)
     - [Create a GUI](#create-a-gui)
+    - [See also](#see-also)
   - [Books](#books)
   - [Articles](#articles)
 
@@ -714,7 +720,156 @@ Image saved on Tuesday October 22, 2013 at 12:31:09 PM
 
 ```
 
+### String Functions
 
+**Predicates**
+
+```scheme
+
+;;;; Test if is String
+
+1 ]=> (string? "scheme")
+
+;Value: #t
+
+1 ]=> (string? 1000)
+
+;Value: #f
+
+;;; Test is String is null, empty
+
+1 ]=> (string-null? "")
+
+;Value: #t
+
+1 ]=> (string-null? "scheme")
+
+;Value: #f
+
+;;;; Test if String starts with prefix
+
+1 ]=> (string-prefix?  "example" "example-11232.x")
+
+;Value: #t
+
+1 ]=> (string-prefix?  "example" "11232.x")
+
+;Value: #f
+
+
+;;;; Test if String ends with suffix
+
+1 ]=> (string-suffix? "class" "machine.class")
+
+;Value: #t
+
+1 ]=> (string-suffix? "class" "machine.dex")
+
+;Value: #f
+
+
+```
+
+**Misc**
+
+```scheme
+
+;;;; String Construction
+
+1 ]=> (make-string 10 #\x)
+
+;Value 21: "xxxxxxxxxx"
+
+1 ]=> (make-string 20 #\a)
+
+;Value 22: "aaaaaaaaaaaaaaaaaaaa
+
+1 ]=> (string #\s #\c #\h #\e #\m #\e)
+
+;Value 23: "scheme"
+
+;;;; Length of a String
+
+1 ]=> (string-length "1234567890")
+
+;Value: 10
+
+;;;; Trim String
+
+1 ]=> (string-trim " \n\nlisp\n scheme    \n\n")
+
+;Value 18: "lisp\n scheme"
+
+1 ]=> (string-trim-left " \n\nlisp\n scheme    \n\n")
+
+;Value 19: "lisp\n scheme    \n\n"
+
+1 ]=> (string-trim-right " \n\nlisp\n scheme    \n\n")
+
+;Value 20: " \n\nlisp\n scheme"
+
+1 ]=> 
+
+;;;; Append Strings
+
+1 ]=> (string-append "hello " "world" "  scheme" " lisp ")
+
+;Value 25: "hello world  scheme lisp "
+
+
+;;; Split String 
+;;
+;; Not defined in MIT-Scheme, but defined in 
+;; Chicken Scheme (csi Repl), GNU Guile and others.
+;;
+> (string-split "hello world")
+("hello" "world")
+
+> (string-split "hello:world"  ":")
+("hello" "world")
+ 
+
+
+```
+
+**To String**
+
+```scheme
+1 ]=> (number->string 12.323)
+
+;Value 11: "12.323"
+
+1 ]=> (symbol->string 'asymbol)
+
+;Value 12: "asymbol"
+
+1 ]=> 
+
+1 ]=> (list->string '(#\h #\e #\l #\l #\o #\space #\w #\o #\r #\l #\d))
+
+;Value 16: "hello world"
+```
+
+**From String**
+
+```scheme
+1 ]=> (string->number "222.23")
+
+;Value: 222.23
+
+1 ]=> (string->symbol  "asymbol")
+
+;Value: asymbol
+
+
+;;; To list of characters
+;;
+1 ]=> (string->list "hello world")
+
+;Value 15: (#\h #\e #\l #\l #\o #\space #\w #\o #\r #\l #\d)
+
+
+```
 
 ### List Operations
 
@@ -841,13 +996,175 @@ Image saved on Tuesday October 22, 2013 at 12:31:09 PM
 
 
 
-#### Higher Order Functions
+## Higher Order Functions
 
 All the functions defined are in the file: [hof_functions.scm](src/hof_functions.scm) that can be loaded in scheme by typing:
 
-```
+```scheme
 scheme@(guile-user) [1]>  (load "hof_functions.scm")
 ```
+
+### Special Functions
+
+```scheme
+;;; Constant function - Will return a,
+;;  regardless the value of x
+;;
+(define (constant a)
+  (lambda (x) a))
+
+(define (id x) x)
+
+1 ]=> (id 10)
+
+;Value: 10
+
+1 ]=> (map id '(1 2 3 4 6))
+
+;Value 11: (1 2 3 4 6)
+
+1 ]=> ((constant 10) 20)
+
+;Value: 10
+
+1 ]=> ((constant 10) 2000)
+
+;Value: 10
+
+1 ]=> (define f (constant 10))
+
+;Value: f
+
+1 ]=> f
+
+;Value 12: #[compound-procedure 12]
+
+1 ]=> (f 45)
+
+;Value: 10
+
+1 ]=> (f 100)
+
+;Value: 10
+
+1 ]=> (map (constant 5) '(1 2 3 4 5 6))
+
+;Value 13: (5 5 5 5 5 5)
+
+```
+
+### Functions Composition
+
+**Basic Functiona Composition**
+
+
+```scheme
+1 ]=> (define (compose f g) (lambda (x) (f (g x))))
+
+;Value: compose
+
+;; Foward Composition
+1 ]=> (define (fcompose f g) (lambda (x) (g (f x))))
+
+;Value: fcompose
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+1 ]=> (define pi (* 4 (atan 1.0)))
+
+;Value: pi
+
+1 ]=> pi
+
+;Value: 3.141592653589793
+
+1 ]=> (define (deg2rad deg) (* (/ deg 180) pi))
+
+;Value: deg2rad
+
+1 ]=> (map sind '(0 45 60 90 180 270))
+
+;Value 13: (0 .7071067811865475 .8660254037844386 1. 1.2246467991473532e-16 -1.)
+
+;;---------------
+
+1 ]=> (define sind (fcompose deg2rad sin))
+
+;Value: sind
+
+1 ]=> (map sind '(0 45 60 90 180 270))
+
+;Value 15: (0 .7071067811865475 .8660254037844386 1. 1.2246467991473532e-16 -1.)
+
+```
+
+**Composition of a list of Functions**
+
+```scheme 
+
+(define (__compose-funcs list-of-functions x)
+  (if (null? list-of-functions)
+      x
+      (__compose-funcs (cdr list-of-functions) ((car list-of-functions) x))
+  ))      
+
+(define (compose-funcs . list-of-functions)
+  (lambda (x)(__compose-funcs list-of-functions x)))
+
+;;;------------------------------;;;
+
+1 ]=> ((compose-funcs log exp sin asin) 0.60)
+
+;Value: .6000000000000001
+
+1 ]=> 
+(define sind (compose-funcs deg2rad sin))
+
+;Value: sind
+
+1 ]=> (sind 30)
+
+;Value: .49999999999999994
+
+1 ]=> (sind 90)
+
+;Value: 1.
+
+
+```
+
+### Applying Multiple Functions to a Single Argument
+
+
+Returns a functions that takes a list of functions and applies it to a single value.
+
+```scheme
+(define (juxt . fxs)
+  (lambda (x)
+    (map (lambda (f) (f x)) fxs)))
+
+1 ]=> ((juxt sqrt exp log) 3.0)
+
+;Value 20: (1.7320508075688772 20.08553692318767 1.0986122886681098)
+
+1 ]=> (define f (juxt sqrt exp log))
+
+;Value: f
+
+1 ]=> (f 3)
+
+;Value 21: (1.7320508075688772 20.08553692318767 1.0986122886681098)
+
+
+(map f '(1 2 3))
+
+;Value 23: ((1 2.718281828459045 0) (1.4142135623730951 7.38905609893065 .6931471805599453) (1.7320508075688772 20.08553692318767 1.0986122886681098))
+
+
+```
+
+### Miscellaneous
 
 **Replicate N times a value**
 
@@ -1373,22 +1690,48 @@ $7 = ((1 230 1000 434) (a b sym con) ("c" "xs" "ccw" "xyzw"))
 
 ```
 
-### Java API With Kawa Scheme 
+**Zip With**
 
-* [Kawa Scheme](http://www.gnu.org/software/kawa/Getting-Kawa.html)
-* https://en.wikipedia.org/wiki/Kawa_(Scheme_implementation)
+```scheme
 
-* [Kawa scheme and event handlers](http://www.redmountainsw.com/wordpress/1395/kawa-scheme-and-event-handlers/)
+(define (zip_aux list-of-lists)
+    (if (any null? list-of-lists)
+        ;; Then
+        '()
+        ;; Else
+        (cons (map car list-of-lists) (zip_aux (map cdr list-of-lists)))
+    )
+)
 
-* [Exploring LISP on the JVM](http://www.infoq.com/articles/lisp-for-jvm)
-* [EXPLORING LISP ON THE JVM](http://pjacobsson.com/articles/lisp-on-the-jvm.html)
+(define (zip_with f list-of-lists)
+    (map (lambda (xs) (apply f xs)) (zip_aux list-of-lists))
+)
 
+1 ]=> (define (f x y z) (+ (* 3 x) (* 4 y) (* -5 z)))
 
-Product built with Kawa Scheme: [App Inventor for Android](https://en.wikipedia.org/wiki/App_Inventor_for_Android)
+;Value: f
 
-* [Kawa: Compiling Scheme to Java](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.24.5572&rep=rep1&type=pdf)
+;;
+;;  -22 = f 1 5 9 = (+ (* 3 1) (* 4 5) (* -5 9))) = (+ 3 20 -45) = -22
+;;   -5 = f 2 6 7 = (+ (* 3 2) (* 4 6) (* -5 7))) = (+ 6 24 -35) = -5
+;;   22 = f 3 7 3 = (+ (* 3 3) (* 4 7) (* -5 3))) = (+ 9 28 -15) =  22
+;;
+1 ]=> (zip_with f '((1 2 3) (5 6 7) (9 7 3)))
+;Value 15: (-22 -5 22)
 
-* [Kawa: Compiling Scheme to Java](http://www.delorie.com/gnu/docs/kawa/kawa-tour_2.html)
+```
+
+## Kawa Scheme - Access Java API from Scheme
+
+[Kawa Scheme](http://www.gnu.org/software/kawa) is a implementation of the language in Java that can compile to Java bytecodes and has access to the Java API.
+
+Features:
+
+* Compiles to JVM
+* Can be embedded as  scripting language for Java applications.
+* Can call Java API in the REPL, provides interactive Java development.
+* With some tricks can compile to Android "Java", Dalvik VM.
+* Product built with Kawa Scheme: [App Inventor for Android](https://en.wikipedia.org/wiki/App_Inventor_for_Android)
 
 #### Install and Run
 
@@ -1680,6 +2023,19 @@ File: [FahrenheitGUI.scm](src/FahrenheitGUI.scm)
 
 ```
 
+### See also
+
+
+* https://en.wikipedia.org/wiki/Kawa_(Scheme_implementation)
+
+* [Kawa scheme and event handlers](http://www.redmountainsw.com/wordpress/1395/kawa-scheme-and-event-handlers/)
+
+* [Exploring LISP on the JVM](http://www.infoq.com/articles/lisp-for-jvm)
+* [EXPLORING LISP ON THE JVM](http://pjacobsson.com/articles/lisp-on-the-jvm.html)
+
+* [Kawa: Compiling Scheme to Java](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.24.5572&rep=rep1&type=pdf)
+* [Kawa: Compiling Scheme to Java](http://www.delorie.com/gnu/docs/kawa/kawa-tour_2.html)
+
 
 
 ## Books
@@ -1702,6 +2058,8 @@ File: [FahrenheitGUI.scm](src/FahrenheitGUI.scm)
 ## Articles
 
 * [Beating the Average - The Secret Weapon - By Paul Graham](http://www.paulgraham.com/avg.html)
+
+* [Why Structure and Interpretation of Computer Programs matters](https://www.cs.berkeley.edu/~bh/sicp.html)
 
 * [7 lines of code, 3 minutes: Implement a programming language from scratch](http://matt.might.net/articles/implementing-a-programming-language/)
 

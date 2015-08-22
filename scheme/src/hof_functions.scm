@@ -7,6 +7,43 @@
 ;;                                                          ;;
 ;;----------------------------------------------------------;;
 
+
+;;; Constant function - Will return a,
+;;  regardless the value of x
+;;
+(define (constant a)
+  (lambda (x) a))
+
+(define (id x) x)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(define (compose f g) (lambda (x) (f (g x))))
+
+(define (fcompose f g) (lambda (x) (g (f x))))
+
+(define (__compose-funcs list-of-functions x)
+  (if (null? list-of-functions)
+      x
+      (__compose-funcs (cdr list-of-functions) ((car list-of-functions) x))
+  ))      
+
+(define (compose-funcs . list-of-functions)
+  (lambda (x)(__compose-funcs list-of-functions x)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; 
+;; Returns a functions that takes a list of functions and applies it
+;; to a single value
+;;
+(define (juxt . fxs)
+  (lambda (x)
+    (map (lambda (f) (f x)) fxs)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (define (replicate n x)
     (if (zero? n)
         ;; Then
@@ -165,11 +202,7 @@
 ;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; Constant function - Will return a,
-;;  regardless the value of x
-;;
-(define (constant a)
-  (lambda (x) a))
+
 
 (define (unzip-aux alist)
     (map (lambda (x) (list x)) alist)
@@ -200,3 +233,8 @@
 ;; Variadic version of unzip
 ;;
 (define (unzip-v . lists) (unzip lists))
+
+
+(define (zip_with f list-of-lists)
+    (map (lambda (xs) (apply f xs)) (zip_aux list-of-lists))
+)
