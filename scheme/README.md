@@ -8,12 +8,19 @@
   - [Scheme Implementations](#scheme-implementations)
   - [Basic Syntax](#basic-syntax)
     - [Data Types](#data-types)
+    - [Defining Functions and Variables](#defining-functions-and-variables)
+      - [Global Variable](#global-variable)
+      - [Local Variable](#local-variable)
+      - [Functions](#functions)
     - [Arithmetic](#arithmetic)
     - [Operators](#operators)
     - [Math Functions](#math-functions)
     - [Type Testing](#type-testing)
-    - [Defining Functions](#defining-functions)
     - [List Operations](#list-operations)
+      - [Define a List](#define-a-list)
+      - [Primitive List Operations](#primitive-list-operations)
+      - [List Functions](#list-functions)
+      - [Higher Order Functions](#higher-order-functions)
     - [Java API With Kawa Scheme](#java-api-with-kawa-scheme)
       - [Install and Run](#install-and-run)
       - [Calling Java Methods in Kawa Scheme](#calling-java-methods-in-kawa-scheme)
@@ -50,11 +57,11 @@ Products that use lisp:
 
 | Implementation | Feature                                  |
 |----------------|------------------------------------------|
-| [MIT/Scheme](http://www.gnu.org/software/mit-scheme/)   | Classical Scheme Implementation  used by SCIP  |
-| [Kawa](http://www.gnu.org/software/kawa/)           | Scheme for the JVM - Can use Java API and compile to the JVM |
-| [Iron Scheme](https://ironscheme.codeplex.com/)    | Scheme for .NET platform - Can Use .NET API                |
-| [GNU Guile](http://www.gnu.org/software/guile/docs/docs.html) | Used as embedded extension language for many apps  |
-| [Chicken](http://www.call-cc.org/)  | Compile to Native Code, produces C code  | 
+| [MIT - Scheme](http://www.gnu.org/software/mit-scheme/)   | Classical Scheme Implementation  used by [SCIP](https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Computer_Programs)  |
+| [Kawa](http://www.gnu.org/software/kawa/)           | Scheme for the JVM - Java API access. Compiles to the JVM |
+| [Iron Scheme](https://ironscheme.codeplex.com/)    | Scheme for .NET platform - .NET API Acess       |
+| [GNU Guile](http://www.gnu.org/software/guile/docs/docs.html) | Used as embedded extension language for many apps like GIMP, GNUCash, GEDA |
+| [Chicken](http://www.call-cc.org/)  | Compiles to Native Code, produces C code  | 
 | [Chibi Scheme](https://github.com/ashinn/chibi-scheme) | Minimal Scheme Implementation for use as an Extension Language |
 | [Racket](http://racket-lang.org/)   | IDE and Debugger. Superset of scheme, not fully compatible.  | 
 
@@ -152,6 +159,186 @@ See also: [An opinionated guide to scheme implementations](https://wingolog.org/
 
 ;Value 33: (1 2 3 4 5 6)
 
+
+```
+
+### Defining Functions and Variables
+
+#### Global Variable
+
+```scheme
+1 ]=> (define g 9.81)
+
+;Value: g
+
+1 ]=> g
+
+;Value: 9.81
+
+1 ]=> (define (speed v0 t) (+ (* g t) v0))
+
+;Value: speed
+
+1 ]=> (speed 3 2.4)
+
+;Value: 26.544
+
+```
+
+#### Local Variable
+
+```scheme 
+(let 
+    (
+     (x 10)
+     (y 20)
+     (f (lambda (a) (* a 10)))
+    )
+    (f (+ x y))
+)
+
+;Value: 300
+
+1 ]=> x
+;Unbound variable: x
+
+1 ]=> y
+;Unbound variable: y
+
+1 ]=> f
+;Unbound variable: f
+```
+
+#### Functions
+
+```scheme
+]=> (define (f x) (* x 10))
+
+;Value: f
+
+]=> f
+
+;Value 11: #[compound-procedure 11 f]
+
+]=> (f 10)
+
+;Value: 100
+
+;; Map a function over a list
+;;;; 
+]=> (map f '(1 2 3 4 5 6))
+
+;Value 12: (10 20 30 40 50 60)
+
+;; Define a function of multiple variables
+;;;;;
+
+]=> (define (fxy x y) (+ (* 4 x) (* 3 y)))
+
+;Value: fxy
+
+]=> (fxy 3 5)
+
+;Value: 27
+
+;; Map a fucntion multiple variables over alist
+;;;;
+]=> (map (lambda (y) (fxy 3 y)) '(1 2 3 4 5 6))
+
+;Value 14: (15 18 21 24 27 30)
+
+;; Apply a list as function argument
+;;;;;
+1 ]=> (apply fxy '( 5 6))
+
+;Value: 38
+
+;; Transforms a function f into a new function that accepts
+;; a list of arguments
+;;
+;;;;;;;
+1 ]=> (define (currify f) (lambda (x) (apply f x)))
+
+;Value: currify
+
+1 ]=> (define fxy_c (currify fxy))
+
+;Value: fxy_c
+
+1 ]=> (fxy_c '( 3 4))
+
+;Value: 24
+
+1 ]=> (fxy_c '( 5 6))
+
+;Value: 38
+
+1 ]=> 
+
+1 ]=> (map fxy_c (list '(5 6) '(3 7) '(8 9) '( 1 5)))
+
+;Value 29: (38 33 59 19)
+
+  ;;; OR
+  
+1 ]=> (map (currify fxy)  (list '(5 6) '(3 7) '(8 9) '( 1 5)))
+
+;Value 30: (38 33 59 19)
+```
+
+Anonymous Functions/ Lambda Functions
+
+```scheme
+1 ]=> (lambda (x) (+ (* x 4) 10))
+
+;Value 31: #[compound-procedure 31]
+
+1 ]=> ((lambda (x) (+ (* x 4) 10))  10)
+
+;Value: 50
+
+1 ]=> (map (lambda (x) (+ (* x 4) 10))  '(10 20 30 40 50))
+
+;Value 32: (50 90 130 170 210)
+
+1 ]=> (define f (lambda (x) (+ (* x 4) 10)))
+
+;Value: f
+
+1 ]=> f
+
+;Value 33: #[compound-procedure 33 f]
+
+1 ]=> (map f '(10 20 30 40 50))
+
+;Value 34: (50 90 130 170 210)
+
+;; Scheme is a Functional Programming Language,
+;;  so it can return functions from fucntions that
+;;  can be used to define curried functions
+;;
+1 ]=> (define (addxy x y) (lambda (x) (lambda (y) (+ x y))))
+
+;Value: addxy
+
+1 ]=> ((addxy 10) 20)
+
+;Value: 30
+
+1 ]=> (define add10 (addxy 10))
+
+;Value: add10
+
+1 ]=> (add10 20)
+
+;Value: 30
+
+1 ]=> 
+
+
+1 ]=> (map (addxy 10) '(10 20 30 40 50 60))
+
+;Value 37: (20 30 40 50 60 70)
 
 ```
 
@@ -527,142 +714,104 @@ Image saved on Tuesday October 22, 2013 at 12:31:09 PM
 
 ```
 
-### Defining Functions
 
-```scheme
-]=> (define (f x) (* x 10))
-
-;Value: f
-
-]=> f
-
-;Value 11: #[compound-procedure 11 f]
-
-]=> (f 10)
-
-;Value: 100
-
-;; Map a function over a list
-;;;; 
-]=> (map f '(1 2 3 4 5 6))
-
-;Value 12: (10 20 30 40 50 60)
-
-;; Define a function of multiple variables
-;;;;;
-
-]=> (define (fxy x y) (+ (* 4 x) (* 3 y)))
-
-;Value: fxy
-
-]=> (fxy 3 5)
-
-;Value: 27
-
-;; Map a fucntion multiple variables over alist
-;;;;
-]=> (map (lambda (y) (fxy 3 y)) '(1 2 3 4 5 6))
-
-;Value 14: (15 18 21 24 27 30)
-
-;; Apply a list as function argument
-;;;;;
-1 ]=> (apply fxy '( 5 6))
-
-;Value: 38
-
-;; Transforms a function f into a new function that accepts
-;; a list of arguments
-;;
-;;;;;;;
-1 ]=> (define (currify f) (lambda (x) (apply f x)))
-
-;Value: currify
-
-1 ]=> (define fxy_c (currify fxy))
-
-;Value: fxy_c
-
-1 ]=> (fxy_c '( 3 4))
-
-;Value: 24
-
-1 ]=> (fxy_c '( 5 6))
-
-;Value: 38
-
-1 ]=> 
-
-1 ]=> (map fxy_c (list '(5 6) '(3 7) '(8 9) '( 1 5)))
-
-;Value 29: (38 33 59 19)
-
-  ;;; OR
-  
-1 ]=> (map (currify fxy)  (list '(5 6) '(3 7) '(8 9) '( 1 5)))
-
-;Value 30: (38 33 59 19)
-```
-
-Anonymous Functions/ Lambda Functions
-
-```scheme
-1 ]=> (lambda (x) (+ (* x 4) 10))
-
-;Value 31: #[compound-procedure 31]
-
-1 ]=> ((lambda (x) (+ (* x 4) 10))  10)
-
-;Value: 50
-
-1 ]=> (map (lambda (x) (+ (* x 4) 10))  '(10 20 30 40 50))
-
-;Value 32: (50 90 130 170 210)
-
-1 ]=> (define f (lambda (x) (+ (* x 4) 10)))
-
-;Value: f
-
-1 ]=> f
-
-;Value 33: #[compound-procedure 33 f]
-
-1 ]=> (map f '(10 20 30 40 50))
-
-;Value 34: (50 90 130 170 210)
-
-;; Scheme is a Functional Programming Language,
-;;  so it can return functions from fucntions that
-;;  can be used to define curried functions
-;;
-1 ]=> (define (addxy x y) (lambda (x) (lambda (y) (+ x y))))
-
-;Value: addxy
-
-1 ]=> ((addxy 10) 20)
-
-;Value: 30
-
-1 ]=> (define add10 (addxy 10))
-
-;Value: add10
-
-1 ]=> (add10 20)
-
-;Value: 30
-
-1 ]=> 
-
-
-1 ]=> (map (addxy 10) '(10 20 30 40 50 60))
-
-;Value 37: (20 30 40 50 60 70)
-
-```
 
 ### List Operations
 
-**List Functions**
+#### Define a List
+
+```scheme
+1 ]=> '(1 2 3 4 5 6 7 8)
+
+;Value 11: (1 2 3 4 5 6 7 8)
+
+1 ]=> (list 1 2 3 4 5 -100)
+
+;Value 15: (1 2 3 4 5 -100)
+
+;;--------------------------------------;;
+
+1 ]=> '("hello" "world" "scheme" "lisp")
+
+;Value 12: ("hello" "world" "scheme" "lisp")
+
+
+1 ]=> (list "hello" "world" "scheme" "lisp")
+
+;Value 16: ("hello" "world" "scheme" "lisp")
+
+;;--------------------------------------;;
+
+1 ]=> '(list of symbols)
+
+;Value 13: (list of symbols)
+
+1 ]=> '((+ 10 20) (* 30 50) (+ 10 (* 3 4)))
+
+;Value 14: ((+ 10 20) (* 30 50) (+ 10 (* 3 4)))
+
+;;--------------------------------------;;
+
+```
+
+#### Primitive List Operations
+
+* **Nil** - Empty List '()
+
+* **Cons** - List constructor, Construct a list cell 
+
+```scheme 
+1 ]=> (define Nil '())
+
+;Value: nil
+
+1 ]=> Nil
+
+;Value: ()
+
+1 ]=> (Cons 5 Nil)
+
+;Value 19: (5)
+
+1 ]=> (Cons 5 (Cons 6 Nil))
+
+;Value 20: (5 6)
+
+1 ]=> (Cons 4 (Cons 5 (Cons 6 Nil)))
+
+;Value 21: (4 5 6)
+```
+
+* **car** - Select the first element, "head" of a list cell
+
+```scheme
+1 ]=> (car (list 1 2 3 4))
+
+;Value: 1
+
+1 ]=> (car '(2 3 4))
+
+;Value: 2
+
+1 ]=> (car '(x y z))
+
+;Value: x
+
+```
+
+* **cdr** - Select the "tail" of a list, removes the first element
+
+```scheme 
+1 ]=> (cdr (list 1 2 3 4))
+
+;Value 17: (2 3 4)
+
+1 ]=> (cdr '(x y z w))
+
+;Value 18: (y z w)
+```
+
+#### List Functions
 
 ```scheme
 
@@ -690,63 +839,77 @@ Anonymous Functions/ Lambda Functions
 
 ```
 
-**Car, Cdr, Cons**
+
+
+#### Higher Order Functions
+
+All the functions defined are in the file: [hof_functions.scm](src/hof_functions.scm) that can be loaded in scheme by typing:
+
+```
+scheme@(guile-user) [1]>  (load "hof_functions.scm")
+```
+
+**Replicate N times a value**
 
 ```scheme
 
-1 ]=> (define Nil '())
-
-;Value: nil
-
-1 ]=> nil
-
-;Value: ()
-
-;;; Cons - List Constructor
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-1 ]=> (cons 4 nil)
-
-;Value 11: (4)
-
-1 ]=> (cons 4 (cons 10 nil))
-
-;Value 12: (4 10
-
-1 ]=> '(1 2 3 4 5 6)
-
-;Value 38: (1 2 3 4 5 6)
-
-1 ]=> (cons 1 (cons 2 (cons 3 (cons 4 (cons 5 (cons 6 '() ))))))
-
-;Value 39: (1 2 3 4 5 6)
-
-1 ]=> (cons 10 '( 1 2 3))
-
-;Value 15: (10 1 2 3)
-
-1 ]=> (cons 4 (cons 10 '( 1 2 3)))
-
-;Value 16: (4 10 1 2 3)
-
-;; Car - List Head
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-1 ]=> (car '(10 2 3 4 5 6))
-
-;Value: 10
+(define (replicate n x)
+    (if (zero? n)
+        ;; Then
+        '()
+        ;; Else
+        (cons x (replicate (- n 1) x))
+    )
+);; End of replicate
 
 
-;; Cdr  - List tail
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+1 ]=> (replicate 4 0)
+$12 = (0 0 0 0)
 
-1 ]=> (cdr '(10 2 3 4 5 6))
+1 ]=> (replicate 8 "abc")
+$13 = ("abc" "abc" "abc" "abc" "abc" "abc" "abc" "abc")
 
-;Value 13: (2 3 4 5 6)
+1 ]=> (replicate 3 'symbol)
+$15 = (symbol symbol symbol)
 
 ```
 
-**Recursive Functions Over Lists**
+**Cycle**
+
+```scheme
+
+(define (cycle_aux n xs acc)
+    (if  (zero? n)     ;;(or (zero? n) (null? xs))
+        ;; Then
+        '()
+        ;; Else
+        (if (null? xs)
+            (cycle_aux (- n 1) acc acc)
+            (cons (car xs) (cycle_aux (- n 1) (cdr xs) acc))
+        )
+    );; End if
+);; End of cycle_aux
+        
+
+
+1 ]=> (cycle_aux 10 '(1 2 3) '(1 2 3))
+$16 = (1 2 3 1 2 3 1 2)
+
+1 ]=> (cycle_aux 20 '(1 2 3) '(1 2 3))
+$17 = (1 2 3 1 2 3 1 2 3 1 2 3 1 2 3)
+
+(define (cycle n xs)
+    (cycle_aux n xs xs))
+    
+1 ]=> (cycle 10 '(a b c))
+$18 = (a b c a b c a b)
+
+1 ]=> (cycle 20 '(0 1))
+$19 = (0 1 0 1 0 1 0 1 0 1 0 1 0 1)
+    
+```
+
+**Count Number of Elements**
 
 ```scheme
 
@@ -769,6 +932,11 @@ Anonymous Functions/ Lambda Functions
 
 ;Value: 7
 
+```
+
+**Sum of list elements**
+
+```scheme
 (define (sum-list alist)
     (if (null? alist)
         0
@@ -778,7 +946,11 @@ Anonymous Functions/ Lambda Functions
 
 ;Value: 21
 
+```
 
+**Find Element in a List**
+
+```scheme
 (define (find predicate alist)
     (if (null? alist)
         (error "Error: Predicate not found")
@@ -803,6 +975,11 @@ Anonymous Functions/ Lambda Functions
 
 2 error> 
 
+```
+
+**Drop / Take n elements**
+
+```scheme
 
 (define (take n alist)
     (if (or (null? alist) (= n 0))
@@ -849,8 +1026,11 @@ Anonymous Functions/ Lambda Functions
 ;Value: ()
 
 1 ]=> 
+```
 
+**Take while and Drop While**
 
+```scheme
 (define (take_while predicate alist)
     (if (or (null? alist) (not (predicate (car alist))))
         '()
@@ -883,7 +1063,11 @@ Anonymous Functions/ Lambda Functions
 
 ;Value: ()
 
+```
 
+**Select (Filter) / Reject list elements**
+
+```scheme
 (define (select predicate alist)
     (if (null? alist)
     '()
@@ -931,6 +1115,15 @@ Anonymous Functions/ Lambda Functions
 
 ;Value 13: (2 4 6 8)
 
+```
+
+
+
+
+**Folds: Fold Right/ Fold Left**
+
+```scheme
+
 ;; Fold Right - https://en.wikipedia.org/wiki/Fold_(higher-order_function)
 ;;
 ;; foldr :: (a -> b -> b) -> b -> [a] -> b
@@ -969,6 +1162,214 @@ Anonymous Functions/ Lambda Functions
 1 ]=> (foldl (lambda (el acc) (+ (* 10 el)  acc)) 0 '(1 2 3 4 5 6))
 
 ;Value: 123456
+
+```
+
+**Zip Lists**
+
+```scheme
+
+(define (zip2 list1 list2)
+    
+    (if (or (null? list1) (null? list2))
+        ;; Then
+        '()        
+        ;; Else
+        (cons (list (car list1) (car list2)) 
+            (zip2 (cdr list1) (cdr list2)))
+    )
+)
+
+1 ]=> (zip2 '() '())
+
+;Value: ()
+
+1 ]=> (zip2 '() '(1 2 3 4))
+
+;Value: ()
+
+1 ]=> (zip2 '(1 2 3 4 5) '())
+
+;Value: ()
+
+1 ]=> (zip2 '(1 2 3 4 5) '(a b c d e f g i j l m n))
+
+;Value 11: ((1 a) (2 b) (3 c) (4 d) (5 e))
+
+1 ]=> 
+
+;;
+;; The function zip is defined in MIT-Scheme, but not in other Schemes
+;; like GNU-Guile.
+;;
+
+;;; Returns true if any element of a list satisfies the predicate 
+;;  function
+;;
+(define (any predicate alist)
+    (if (null? alist)
+        ;; Then
+        #f
+        ;; Else
+        (if (predicate (car alist))
+            #t
+            (any predicate (cdr alist))
+        )
+    ) ;; End if
+);; End of any
+
+
+1 ]=> (any (lambda (x) (> x 10))  '( -3 4 5 8 9))
+$1 = #f
+
+1 ]=> (any (lambda (x) (> x 10))  '( -3 10 4 5 8 20 9))
+$2 = #t
+
+1 ]=> (any (lambda (x) (> x 10))  '())
+$3 = #f
+
+
+1 ]=> (any null? (list '(1 2) '(3 5)))
+$5 = #f
+
+1 ]=> (any null? (list '(1 2) '(3 5) '()))
+$6 = #t
+
+
+(define (zip_aux list-of-lists)
+    (if (any null? list-of-lists)
+        ;; Then
+        '()
+        ;; Else
+        (cons (map car list-of-lists) (zip_aux (map cdr list-of-lists)))
+    )
+)
+
+(define (zip . lists) (zip_aux lists))
+
+1 ]=> (zip_aux (list '( 1 2 3 4 5) '(a b c d e f g h) '("hello" "schme" "lisp" "fp")))
+$7 = ((1 a "hello") (2 b "schme") (3 c "lisp") (4 d "fp"))
+
+1 ]=> (zip '( 1 2 3 4 5) '(a b c d e f g h) '("hello" "schme" "lisp" "fp"))
+$7 = ((1 a "hello") (2 b "schme") (3 c "lisp") (4 d "fp"))
+
+
+
+```
+
+**Unzip Lists**
+
+```scheme
+
+(define (unzip2 list-of-pairs)
+    (if (null? list-of-pairs)
+        ;; Then
+        '()
+        ;; Else        
+        (list (map car list-of-pairs)  (map (lambda (xy) (car (cdr xy)))  list-of-pairs))
+    )
+)
+    
+1 ]=> (define xys '((1 a) (2 b) (3 c) (4 d)))
+
+1 ]=> xys
+$9 = ((1 a) (2 b) (3 c) (4 d))
+
+1 ]=> (unzip2 xys)
+$11 = ((1 2 3 4) (a b c d))
+
+;;  Unzip with foldr
+;;
+;; Haskell:
+;; 
+;; unzip :: [(a, b)] -> ([a], [b])
+;; unzip = foldr f ([],[])
+;;  where f (x,y) ~(xs,ys) = (x:xs,y:ys)
+;;
+
+(define (foldr f_el_acc acc alist)
+    (if (null? alist)
+        acc
+        (f_el_acc (car alist) (foldr f_el_acc acc (cdr alist)))))
+
+(define fst car)
+(define (snd xs) (car (cdr xs)))
+        
+(define (unzip2f list-of-pairs)
+    (if (null? list-of-pairs)
+        '()
+        (foldr 
+            (lambda (xy xys)  
+                (list 
+                    (cons (fst xy) (fst xys))
+                    (cons (snd xy) (snd xys))
+                )
+            )
+            (list '() '()) ;; ([],[])
+            list-of-pairs
+        )
+    )
+)
+
+1 ]=> (unzip2f '((1 a) (2 b) (3 c) (4 d)))
+$24 = ((1 2 3 4) (a b c d))
+            
+1 ]=> (unzip2f '())
+$25 = ()
+    
+
+;;;;; Unzip for list of multiple lists
+;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;; Constant function - Will return a,
+;;  regardless the value of x
+;;
+(define (constant a)
+  (lambda (x) a))
+
+(define (unzip-aux alist)
+    (map (lambda (x) (list x)) alist)
+    )
+
+(define (unzip list-of-list)
+    (if (null? list-of-list)
+        ;; Then
+        '()        
+        ;; Else
+        (foldr 
+            (lambda (t ts)
+              
+               (map
+                (lambda (x) (cons (car x) (car (cdr x)))) 
+                (zip t ts)
+               )             
+              );; End lambda
+
+            (map (constant '()) list-of-list)
+            list-of-list
+                         
+        );; End foldr
+
+    );; End If
+)
+
+;; Variadic version of unzip
+;;
+(define (unzip-v . lists) (unzip lists))
+
+1 ]=> (unzip '( (1 2 3) (11 10 20) (30 40 50)))
+$4 = ((1 11 30) (2 10 40) (3 20 50)
+
+1 ]=> (unzip '( (1 a "c") (230 b "xs") (1000 sym "ccw") (434 con "xyzw")))
+$5 = ((1 230 1000 434) (a b sym con) ("c" "xs" "ccw" "xyzw"))
+
+1 ]=> (unzip-v '(1 2 3) '(11 10 20) '(30 40 50))
+$6 = ((1 11 30) (2 10 40) (3 20 50))
+
+1 ]=> (unzip-v '(1 a "c") '(230 b "xs") '(1000 sym "ccw") '(434 con "xyzw"))
+$7 = ((1 230 1000 434) (a b sym con) ("c" "xs" "ccw" "xyzw"))
 
 ```
 
