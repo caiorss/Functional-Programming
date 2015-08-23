@@ -2686,7 +2686,7 @@ it will now kill itself with the same signal
 
 warnings can be silenced by the --no-warnings (-n) option
 Aborted (core dumped)
-
+```
 
 ### Procedure as returned value
 
@@ -2771,7 +2771,6 @@ f(x) = x  - g(x)/Dg(x)
 ### Exercises
 
 
-```
 **Exercise 1.3** 
 
 The sum procedure above generates a linear recursion. The procedure can be rewritten so that the sum is performed iteratively. Show how to do this by filling in the missing expressions in the following definition:
