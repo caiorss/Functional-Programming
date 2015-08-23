@@ -26,6 +26,12 @@
     - [Functions Composition](#functions-composition)
     - [Applying Multiple Functions to a Single Argument](#applying-multiple-functions-to-a-single-argument)
     - [Miscellaneous](#miscellaneous)
+  - [Debugging](#debugging)
+    - [MIT Scheme](#mit-scheme)
+    - [GNU Guile](#gnu-guile)
+  - [SCIP](#scip)
+    - [Tail Recursion (Iteration)](#tail-recursion-iteration)
+    - [Higher Order Procedure](#higher-order-procedure)
   - [Kawa Scheme - Access Java API from Scheme](#kawa-scheme---access-java-api-from-scheme)
       - [Install and Run](#install-and-run)
       - [Calling Java Methods in Kawa Scheme](#calling-java-methods-in-kawa-scheme)
@@ -40,7 +46,10 @@
 
 # Functional Programming in Scheme
 
+[Under Construction]
+
 ## Why Lisp
+
 
 * Lisp is used as embedded script language in many products
     * Autocad -> Autolisp
@@ -48,8 +57,8 @@
     * GIMP Editor -> GNU Guile Scheme 
 
 Products that use lisp:
-* Emacs -> Emacs Lisp
-* GNU Maxima -> Common Lisp
+* Emacs -> Emacs Lisp, A lisp dialect based on Common Lisp
+* GNU Maxima -> Cumputer Algebra System (CAS), Common Lisp
 
 ## Usefulness Of Scheme
 
@@ -74,7 +83,11 @@ Products that use lisp:
 | [Racket](http://racket-lang.org/)   | IDE and Debugger. Superset of scheme, not fully compatible.  | 
 
 
-See also: [An opinionated guide to scheme implementations](https://wingolog.org/archives/2013/01/07/an-opinionated-guide-to-scheme-implementations)
+See also: 
+
+* [An opinionated guide to scheme implementations](https://wingolog.org/archives/2013/01/07/an-opinionated-guide-to-scheme-implementations)
+
+* [About Scheme implementations -  The Adventures of a Pythonista in Schemeland](http://www.phyast.pitt.edu/~micheles/scheme/scheme2.html)
 
 ## Basic Syntax
 
@@ -444,11 +457,27 @@ $9 = 10946
 scheme@(guile-user)> (fib 30)
 $10 = 1346269
 
-(define (fib-fast n acc)
-    (if (or (= n 0) (= n 1))
-        (cons 1 acc)
-        (+ (car acc) (cadr acc))))
-    
+
+(define (fib-aux n a b)
+  (if (or (= n 0) (= n 1))
+      b
+      (fib-aux (- n 1) b (+ a b))))
+
+(define (fib-fast n) (fib-aux n 1 1))
+   
+> (fib-aux 30 1 1)
+$4 = 1346269
+> (fib-aux 40 1 1)
+$5 = 165580141
+> (fib-aux 100 1 1)
+$6 = 573147844013817084101
+
+> (fib-fast 30)
+$9 = 1346269
+> (fib-fast 130)
+$10 = 1066340417491710595814572169
+> 
+
 ```
 
 **Internal Definition**
@@ -1972,6 +2001,1029 @@ $7 = ((1 230 1000 434) (a b sym con) ("c" "xs" "ccw" "xyzw"))
 ;Value 15: (-22 -5 22)
 
 ```
+
+## Debugging
+
+### MIT Scheme 
+
+| Command                       |  Description                          |
+|-------------------------------|---------------------------------------|
+| ```(pp <object>)```           | Print source code of a procedure      |
+| ```(pa <procedure>)```        | Print arguments of a procedure        |
+| ```(trace <procedure>)```     | Trace procedure, fucntion calls       |
+| ```(untrace <procedure>)```   | No longer trace procedure             |
+| ```(apropos "<string>")```    | Print matching bound names            |
+
+**Examples**
+
+```scheme
+$ rlwrap -c -S "> " --remember scheme
+MIT/GNU Scheme running under GNU/Linux
+Type `^C' (control-C) followed by `H' to obtain information about interrupts.
+
+> Copyright (C) 2011 Massachusetts Institute of Technology
+This is free software; see the source for copying conditions. There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Image saved on Tuesday October 22, 2013 at 12:31:09 PM
+  Release 9.1.1 || Microcode 15.3 || Runtime 15.7 || SF 4.41 || LIAR/i386 4.118
+  Edwin 3.116
+
+
+
+(define (factorial n)
+   (if (= n 1)
+       1
+       (* n (factorial (- n 1)))))
+
+;Value: factorial
+
+> (pp factorial)
+(named-lambda (factorial n)
+  (if (= n 1)
+      1
+      (* n (factorial (- n 1)))))
+;Unspecified return value
+
+
+> (pa factorial)
+(n)
+;Unspecified return value
+
+> (trace factorial)
+
+;Unspecified return value
+
+
+> (factorial 5)
+
+[Entering #[compound-procedure 14 factorial]
+    Args: 5]
+[Entering #[compound-procedure 14 factorial]
+    Args: 4]
+[Entering #[compound-procedure 14 factorial]
+    Args: 3]
+[Entering #[compound-procedure 14 factorial]
+    Args: 2]
+[Entering #[compound-procedure 14 factorial]
+    Args: 1]
+[1
+      <== #[compound-procedure 14 factorial]
+    Args: 1]
+[2
+      <== #[compound-procedure 14 factorial]
+    Args: 2]
+[6
+      <== #[compound-procedure 14 factorial]
+    Args: 3]
+[24
+      <== #[compound-procedure 14 factorial]
+    Args: 4]
+[120
+      <== #[compound-procedure 14 factorial]
+    Args: 5]
+;Value: 120
+
+
+> (untrace factorial)
+
+;Unspecified return value
+
+> (factorial 6)
+
+;Value: 720
+
+> 
+
+> (apropos "string->")
+
+ #[package 11 (user)]
+ #[package 12 ()]
+bit-string->signed-integer
+bit-string->unsigned-integer
+camel-case-string->lisp
+ctime-string->decoded-time
+ctime-string->file-time
+ctime-string->universal-time
+iso8601-string->decoded-time
+iso8601-string->file-time
+iso8601-string->universal-time
+lisp-string->camel-case
+rfc2822-string->decoded-time
+string->absolute-uri$ rlwrap -c -S "> " --remember scheme
+MIT/GNU Scheme running under GNU/Linux
+Type `^C' (control-C) followed by `H' to obtain information about interrupts.
+
+> Copyright (C) 2011 Massachusetts Institute of Technology
+This is free software; see the source for copying conditions. There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Image saved on Tuesday October 22, 2013 at 12:31:09 PM
+  Release 9.1.1 || Microcode 15.3 || Runtime 15.7 || SF 4.41 || LIAR/i386 4.118
+  Edwin 3.116
+
+
+string->alphabet
+string->char-set
+string->char-syntax
+string->day-of-week
+string->decoded-time
+string->file-time
+...
+
+
+```
+
+
+See also:
+
+* [MIT Scheme debugging](http://cs.wellesley.edu/~cs251/spring02/mit-scheme.pdf)
+
+
+### GNU Guile
+
+
+| Command                               |  Description                           |
+|---------------------------------------|----------------------------------------|
+| ```(version)```                       | Return version string                  |
+| ```,bt```                             | Backtrace, display call stack          |
+| ```,trace (<procedure> <args>)```     | Trace procedure, fucntion calls        |
+| ```,time <exp>```                     | Measure execution time.                |
+| ```,expand <form>```                  | Show macro expansion of ```<form>```   |
+| ```,apropos "<string>"```            | Print matching bound names             | 
+| ```(exit 0)```                        | Quit GNU Guile                         |
+
+**Examples**
+
+```scheme
+$ rlwrap -c -S "> " --remember guile
+> GNU Guile 2.0.11
+Copyright (C) 1995-2014 Free Software Foundation, Inc.
+
+Guile comes with ABSOLUTELY NO WARRANTY; for details type `,show w'.
+This program is free software, and you are welcome to redistribute it
+under certain conditions; type `,show c' for details.
+
+Enter `,help' for help
+
+> (version)
+$2 = "2.0.11"
+> 
+
+(define (factorial n)
+    (if (= n 1)
+        1
+        (* n (factorial (- n 1)))))
+ 
+
+> ,trace (factorial 5)
+trace: |  (#<procedure 9a94210> #(#<directory (guile-user) 979b630> …))
+trace: |  #(#<directory (guile-user) 979b630> factorial)
+trace: (#<procedure 9aaa820 at <current input>:11:7 ()>)
+trace: (factorial 5)
+trace: |  (factorial 4)
+trace: |  |  (factorial 3)
+trace: |  |  |  (factorial 2)
+trace: |  |  |  |  (factorial 1)
+trace: |  |  |  |  1
+trace: |  |  |  2
+trace: |  |  6
+trace: |  24
+trace: 120
+> 
+
+> ,time (factorial 10)
+$9 = 3628800
+;; 0.001000s real time, 0.002000s run time.  0.000000s spent in GC.
+> 
+
+
+(define-syntax-rule (swap! x y) ; -! is idomatic for mutation
+    (let ((tmp x))
+    (set! x y)
+    (set! y tmp)))
+    
+> 
+> (define a 10)
+> (define b 20)
+> a
+$1 = 10
+> b
+$2 = 20
+
+> (swap! a b)
+> a
+$3 = 20
+> b
+$4 = 10
+> 
+
+> ,expand (swap! a b)
+$6 = (let ((tmp a)) (set! a b) (set! b tmp))
+> 
+
+> ,apropos "string->"
+(guile): string->char-set!  #<procedure string->char-set! (_ _)>
+(guile): string->char-set   #<procedure string->char-set (_ #:optional _)>
+(guile): string->number #<procedure string->number (_ #:optional _)>
+(guile): string->symbol #<procedure string->symbol (_)>
+(guile): string->list   #<procedure string->list (_ #:optional _ _)>
+(guile): string->obarray-symbol #<procedure string->obarray-symbol (_ _ #:optional _)>
+> 
+
+> ,apropos "digit"
+(guile): char-set:hex-digit
+(guile): char-set:letter+digit
+(guile): char-set:digit
+> 
+
+
+```
+
+
+## SCIP 
+
+Notes about SCIP
+
+Conventions used by SCIP:
+
+|  SCIP Terminology            |                          |
+|------------------------------|--------------------------|
+|  procedure                   | functions                |
+|  predicate                   | A function that returns a boolean, true or false |
+|  Iteration (recursion)       | Tail Recursion  |
+
+
+**Strategies to handle complexity**
+
+* Build Abstractions
+* Hide Details
+* Separate specification from implementation
+* Stablishing conventional interfaces
+* Standard Modules
+
+
+### Tail Recursion (Iteration)
+
+The examples bellow are in GNU Guile.
+
+    
+Non tail recursive functions:
+* Uses a growing amount of stack frames, for a big number of iterations it can cause a stack overflow.
+    
+
+Tail recursive functions:
+
+* A function is said to be **tail recursive** when the recursive call is the last function executed in the body of the function.
+* It uses a fixed amount stack frame, threfore there is no risk of stack overflow.
+* It can be turned into loops
+* Sometimes non tail recursive functions can be changed to tail recursive by adding a new function with extra parameters (accumulators) to store partial results (state).
+
+Example1: Factorial
+
+```scheme
+(define (factorial n)
+    (if (or (= n 0) (= n 1))
+        1
+        (* n  (factorial (- n 1)))))
+        
+> (factorial 10)
+$1 = 3628800
+> 
+
+;;  For a very big number of iteration, non tail recursive functions
+;;  will cause a stack overflow.
+;;
+> (factorial 20000000)
+warnings can be silenced by the --no-warnings (-n) option
+Aborted (core dumped)
+
+;;
+;; This execution requires 5 stack frames
+;;
+;;  (factorial 5)
+;;  (* 5 (factorial 4))
+;;  (* 5 (* 4 (factorial 3)))
+;;  (* 5 (* 4 (3 * (factorial 2))))
+;;  (* 5 (* 4 (* 3 (factorial 2))))
+;;  (* 5 (* 4 (* 3 (* 2 (factorial 1)))))
+;;
+;;  (* 5 (* 4 (* 3 (* 2 1))))
+;;  (* 5 (* 4 (* 3 2)))
+;;  (* 5 (* 4 6))
+;;  (* 5 24)
+;;  120
+;;
+;;
+;;
+;;
+> ,trace (factorial 5)
+trace: |  (#<procedure 99450c0> #(#<directory (guile-user) 95c3630> …))
+trace: |  #(#<directory (guile-user) 95c3630> factorial)
+trace: (#<procedure 9953350 at <current input>:8:7 ()>)
+trace: (factorial 5)
+trace: |  (factorial 4)
+trace: |  |  (factorial 3)
+trace: |  |  |  (factorial 2)
+trace: |  |  |  |  (factorial 1)
+trace: |  |  |  |  1
+trace: |  |  |  2
+trace: |  |  6
+trace: |  24
+trace: 120
+> 
+
+;;
+;; It requires 10 stack frames
+;;
+;;        
+> ,trace (factorial 10)
+trace: |  (#<procedure 985cbd0> #(#<directory (guile-user) 95c3630> …))
+trace: |  #(#<directory (guile-user) 95c3630> factorial)
+trace: (#<procedure 9880800 at <current input>:6:7 ()>)
+trace: (factorial 10)
+trace: |  (factorial 9)
+trace: |  |  (factorial 8)
+trace: |  |  |  (factorial 7)
+trace: |  |  |  |  (factorial 6)
+trace: |  |  |  |  |  (factorial 5)
+trace: |  |  |  |  |  |  (factorial 4)
+trace: |  |  |  |  |  |  |  (factorial 3)
+trace: |  |  |  |  |  |  |  |  (factorial 2)
+trace: |  |  |  |  |  |  |  |  |  (factorial 1)
+trace: |  |  |  |  |  |  |  |  |  1
+trace: |  |  |  |  |  |  |  |  2
+trace: |  |  |  |  |  |  |  6
+trace: |  |  |  |  |  |  24
+trace: |  |  |  |  |  120
+trace: |  |  |  |  720
+trace: |  |  |  5040
+trace: |  |  40320
+trace: |  362880
+trace: 3628800
+>        
+
+(define (factorial-aux n acc)
+    (if (or (= n 0) (= n 1))
+        acc
+        (factorial-aux (- n 1) (* n acc))))
+    
+> (factorial-aux 5 1)
+$1 = 120
+> 
+> (factorial-aux 10 1)
+$2 = 3628800
+> 
+
+> (define (factorial2 n) (factorial-aux n 1))
+
+> (factorial2 5)
+$3 = 120
+
+> (factorial2 10)
+$4 = 3628800
+> 
+
+
+;; It only uses one stack frame
+;;
+;;
+> ,trace (factorial-aux 5 1)
+trace: |  (#<procedure 85d6340> #(#<directory (guile-user) 82ca630> …))
+trace: |  #(#<directory (guile-user) 82ca630> factorial-aux)
+trace: (#<procedure 85eb910 at <current input>:10:7 ()>)
+trace: (factorial-aux 5 1)
+trace: (factorial-aux 4 5)
+trace: (factorial-aux 3 20)
+trace: (factorial-aux 2 60)
+trace: (factorial-aux 1 120)
+trace: 120
+> 
+
+> ,trace (factorial-aux 10 1)
+trace: |  (#<procedure 8644730> #(#<directory (guile-user) 82ca630> …))
+trace: |  #(#<directory (guile-user) 82ca630> factorial-aux)
+trace: (#<procedure 8657a00 at <current input>:13:7 ()>)
+trace: (factorial-aux 10 1)
+trace: (factorial-aux 9 10)
+trace: (factorial-aux 8 90)
+trace: (factorial-aux 7 720)
+trace: (factorial-aux 6 5040)
+trace: (factorial-aux 5 30240)
+trace: (factorial-aux 4 151200)
+trace: (factorial-aux 3 604800)
+trace: (factorial-aux 2 1814400)
+trace: (factorial-aux 1 3628800)
+trace: 3628800
+>
+
+
+;;; Assembling all pieces of code 
+;;
+
+   
+(define (factorial3 n) 
+    (define (factorial-aux n acc)
+        (if (or (= n 0) (= n 1))
+            acc
+            (factorial-aux (- n 1) (* n acc))))        
+    (factorial-aux n 1))
+
+> (factorial3 4)
+$2 = 24
+> (factorial3 5)
+$3 = 120
+> (factorial3 10)
+$4 = 3628800
+> 
+
+
+
+```
+
+Example2: Summation
+
+```scheme
+
+(define (sum-ints a b)
+    (if (> a b)
+        0
+        (+ a (sum-ints (+ a 1) b))))
+
+> (sum-ints 1 10)
+$5 = 55
+
+> (sum-ints 1 100)
+$6 = 5050
+> 
+
+;; 
+;;  Stack Overflow Error
+;;
+> (sum-ints 1 10000)
+> <unnamed port>:4:13: In procedure sum-ints:
+<unnamed port>:4:13: Throw to key `vm-error' with args `(vm-run "VM: Stack overflow" ())'.
+
+;;
+;; Using the trace command is possible to see the growing amount of stack frame
+;; In this case it requires 11 stack frames.
+
+> ,trace (sum-ints 1 10)
+trace: |  (#<procedure a415810> #(#<directory (guile-user) a00e630> …))
+trace: |  #(#<directory (guile-user) a00e630> sum-ints)
+trace: (#<procedure a41abc0 at <current input>:10:7 ()>)
+trace: (sum-ints 1 10)
+trace: |  (sum-ints 2 10)
+trace: |  |  (sum-ints 3 10)
+trace: |  |  |  (sum-ints 4 10)
+trace: |  |  |  |  (sum-ints 5 10)
+trace: |  |  |  |  |  (sum-ints 6 10)
+trace: |  |  |  |  |  |  (sum-ints 7 10)
+trace: |  |  |  |  |  |  |  (sum-ints 8 10)
+trace: |  |  |  |  |  |  |  |  (sum-ints 9 10)
+trace: |  |  |  |  |  |  |  |  |  (sum-ints 10 10)
+trace: |  |  |  |  |  |  |  |  |  |  (sum-ints 11 10)
+trace: |  |  |  |  |  |  |  |  |  |  0
+trace: |  |  |  |  |  |  |  |  |  10
+trace: |  |  |  |  |  |  |  |  19
+trace: |  |  |  |  |  |  |  27
+trace: |  |  |  |  |  |  34
+trace: |  |  |  |  |  40
+trace: |  |  |  |  45
+trace: |  |  |  49
+trace: |  |  52
+trace: |  54
+trace: 55
+> 
+
+(define (sum-ints-aux a b acc)
+    (if (> a b)
+        acc
+        (sum-ints-aux (+ a 1) b (+ a acc))))
+    
+> (sum-ints-aux 1 10 0)
+$4 = 55
+> 
+
+;; It didn't fail like before.
+;;
+> (sum-ints-aux 1 10000 0)
+$5 = 50005000
+> 
+
+;;
+;; It uses only one stack frame each call
+;;
+> ,trace (sum-ints-aux 1 10 0)
+trace: |  (#<procedure 985a270> #(#<directory (guile-user) 93fd630> …))
+trace: |  #(#<directory (guile-user) 93fd630> sum-ints-aux)
+trace: (#<procedure 98646a0 at <current input>:31:7 ()>)
+trace: (sum-ints-aux 1 10 0)
+trace: (sum-ints-aux 2 10 1)
+trace: (sum-ints-aux 3 10 3)
+trace: (sum-ints-aux 4 10 6)
+trace: (sum-ints-aux 5 10 10)
+trace: (sum-ints-aux 6 10 15)
+trace: (sum-ints-aux 7 10 21)
+trace: (sum-ints-aux 8 10 28)
+trace: (sum-ints-aux 9 10 36)
+trace: (sum-ints-aux 10 10 45)
+trace: (sum-ints-aux 11 10 55)
+trace: 55
+> 
+
+(define (sum-ints-safe a b)
+    (define (sum-ints-aux a b acc)
+        (if (> a b)
+            acc
+            (sum-ints-aux (+ a 1) b (+ a acc))))    
+    (sum-ints-aux a b 0))
+
+> (sum-ints-safe 1 10)
+$6 = 55
+> (sum-ints-safe 1 100)
+$7 = 5050
+> 
+
+> (sum-ints-safe 1 10000)
+$8 = 50005000
+> 
+
+> (sum-ints-safe 1 100000)
+> $9 = 5000050000
+> 
+
+```
+
+See also:
+
+* [Tail call - Wikipedia](https://en.wikipedia.org/wiki/Tail_call)
+
+* [Berkeley lecture - Tail calls](https://inst.eecs.berkeley.edu/~cs61a/fa14/assets/slides/28-Tail_Calls_8pp.pdf)
+
+* [Repetition through recursion. Tail-recursive function definitions](http://web.info.uvt.ro/~mmarin/lectures/FP/lecture-05.pdf)
+
+* [Tail recursion and loops](http://www.owlnet.rice.edu/~comp210/96spring/Labs/lab09.html)
+
+* [CPS 343/543 Lecture notes: Tail calls and continuation-passing style](http://academic.udayton.edu/SaverioPerugini/courses/cps343/lecture_notes/CPS.html)
+
+### Higher Order Procedure
+
+Higher order functions or procedures are a powerful abstraction mechanism.
+
+Page 63. Summation
+
+```
+
+Summation:
+
+ b=0
+___
+\     
+/__   f(n) = f(a) + ... + f(b)
+ n =a
+ 
+Pi Sum 
+ 
+ π/8 = 1/1*3 + 1/5*7 + 1/9*11 + 1/13*15 + ... 
+ 
+```
+
+```scheme
+
+
+(define (summation term next)
+
+    (define (summation_ term next a b)
+        (if (> a b)
+            0
+            (+ (term a)
+               (summation_ term next (next a) b))))
+           
+    (lambda (a b) (summation_ term next a b))
+    
+) ;; End of summation
+
+
+(define sum-cubes     
+     (summation 
+        (lambda (x) (* x x x))
+        (lambda (n) (+ n 1))
+))
+
+scheme@(guile-user)> (sum-cubes 1 10)
+$1 = 3025
+scheme@(guile-user)>   
+
+
+(define sum-integers
+    (summation
+        (lambda (x) x)          ;; Identity Function
+        (lambda (n) (+ n 1))))
+
+
+scheme@(guile-user) [1]> (sum-integers 1 10)
+$2 = 55
+
+(define pi-sum 
+    (summation
+        (lambda (x) (/ 1.0 (* x (+ x 2))))
+        (lambda (x) (+ x 4))))
+    
+scheme@(guile-user) [1]> (* 8 (pi-sum 1 1000))
+$4 = 3.139592655589783
+         
+```
+
+Integral of f from a to b
+
+```
+ a
+∫  f = [f( a + dx/2) + f(a + 2dx/2) + f(a + 3dx/2) + f(a + 4dx/2) ...].dx
+ b
+```
+
+```scheme
+
+(define (integral f dx)
+    (lambda (a b)
+        (* dx 
+           ((summation
+            f
+            (lambda (x) (+ x dx)))
+             (+ a (/ dx 2.0)) b))))
+
+scheme@(guile-user) [1]> (define (cube x) (* x x x))
+
+;; Create a new function that computes the intergral from the cube function
+;; from a to b
+;;
+scheme@(guile-user) [1]> (define integral-cube (integral cube 0.01))
+
+scheme@(guile-user)> (integral-cube 0 1)
+$2 = 0.24998750000000042
+scheme@(guile-user)> 
+
+scheme@(guile-user)> ((integral cube 0.001) 0 1)
+$3 = 0.249999875000001
+
+;; This function is not tail recursive, it will fail for a big number of
+;; iterations
+;;
+;;;;;;;;;;;;;
+scheme@(guile-user) [1]> ((integral cube 0.001) 0 1)
+$1 = 0.249999875000001
+scheme@(guile-user) [1]> ((integral cube 0.0001) 0 1)
+<unnamed port>:8:37: In procedure summation_:
+<unnamed port>:8:37: Throw to key `vm-error' with args `(vm-run "VM: Stack overflow" ())'.
+
+Entering a new prompt.  Type `,bt' for a backtrace or `,q' to continue.
+scheme@(guile-user) [2]> ((integral cube 0.00001) 0 1)
+rlwrap: warning: guile crashed, killed by SIGABRT (core dumped).
+rlwrap itself has not crashed, but for transparency,
+it will now kill itself with the same signal
+
+
+warnings can be silenced by the --no-warnings (-n) option
+Aborted (core dumped)
+
+
+### Procedure as returned value
+
+
+**Fixed Point**
+
+```scheme
+(define tolerance 0.0001)
+
+;;
+;;   abs(v1 -v2) < tolerance
+;;
+(define (close-enough? v1 v2)
+        (< (abs (- v1 v2)) tolerance)) 
+
+
+(define (fixed-point f first-guess)
+       
+    (define (try guess)
+        (let ((next (f guess)))
+            (if (close-enough? guess next)
+            next
+            (try next))))
+    
+    (try first-guess))           
+
+>  (fixed-point cos 1.0)
+
+;Value: .7390547907469174
+
+> 
+
+```
+
+
+**Derivate Higher Order Function**
+
+```
+df(x) = (f(x +dx) - f(x))/dx
+```
+
+```scheme
+(define (deriv dx f) 
+    (lambda (x)
+        (/  (- (f (+ x dx)) (f x)) dx)))
+        
+> (define (cube x) (* x x x))
+> 
+ 
+ > ((deriv 0.00001 cube) 5)
+$26 = 75.00014999664018
+> 
+> (define dcube (deriv 0.00001 cube))
+> 
+> (dcube 5)
+$27 = 75.00014999664018
+> 
+```
+
+Newton Method 
+
+```
+f(x) = x  - g(x)/Dg(x)
+```
+
+```scheme
+
+
+(define (newton-transform g)
+    (lambda (x)
+        (- 
+            x
+            (/ (g x) ((deriv 0.001 g) x)))))
+
+(define (newton-method g guess)
+    (fixed-point (newton-transform g) guess))
+    
+(define (sqrt2 x)
+    (newton-method (lambda (y) (- (square x) x)) 1.0))
+```
+
+### Exercises
+
+
+```
+**Exercise 1.3** 
+
+The sum procedure above generates a linear recursion. The procedure can be rewritten so that the sum is performed iteratively. Show how to do this by filling in the missing expressions in the following definition:
+
+```scheme
+(define (sum term a next b)
+  (define (iter a result)
+    (if <??>
+        <??>
+        (iter <??> <??>)))
+  (iter <??> <??>))
+```  
+
+
+Solution: The assignment is asking to turn the function sum into a tail recursive function.
+
+```scheme
+
+(define (sum term a next b)
+  (define (iter a result)
+    (if (> a b)
+        result
+        (iter (next a) (+ (term a) result))))
+  (iter a 0))
+
+> (define (inc n) (+ n 1))
+> (define (cube n) (* n n n ))
+> 
+> (define (sum-cubes a b)
+>     (sum cube a inc b))
+> 
+> (sum-cubes 1 10)
+$13 = 3025
+> 
+
+;;
+;; As any tail recursive function, it uses a fixed amount of stack frames.
+;;
+
+> ,trace (sum cube 1 inc 4)
+trace: |  (#<procedure 9cde860> #(#<directory (guile-user) 955f630> …))
+trace: |  #(#<directory (guile-user) 955f630> sum cube inc)
+trace: (#<procedure 9ce4910 at <current input>:72:7 ()>)
+trace: (sum #<procedure cube (n)> 1 #<procedure inc (n)> 4)
+trace: |  (inc 1)
+trace: |  2
+trace: |  (cube 1)
+trace: |  1
+trace: |  (inc 2)
+trace: |  3
+trace: |  (cube 2)
+trace: |  8
+trace: |  (inc 3)
+trace: |  4
+trace: |  (cube 3)
+trace: |  27
+trace: |  (inc 4)
+trace: |  5
+trace: |  (cube 4)
+trace: |  64
+trace: 100
+> 
+
+
+```
+
+**Exercise 1.31.**
+
+a.  The sum procedure is only the simplest of a vast number of similar abstractions that can be captured as higher-order procedures.51 Write an analogous procedure called product that returns the product of the values of a function at points over a given range. Show how to define factorial in terms of product. Also use product to compute approximations to using the formula52
+
+```
+π/4 = 2/3 * 4/3 * 4/5 * 6/5 * 6/7 * 8/7 ...
+```
+
+b.  If your product procedure generates a recursive process, write one that generates an iterative process. If it generates an iterative process, write one that generates a recursive process. 
+
+
+Solution:
+
+.a 
+.b The function below is already tail recursive ( iterative process).
+
+```scheme
+(define (product term a next b)
+  (define (iter a result)
+    (if (> a b)
+        result
+        (iter (next a) (* (term a) result))))
+  (iter a 1))
+  
+  
+> (define (id n) n)
+> (define (inc n) (+ n 1))
+> 
+> (product id 1 inc 5)
+$24 = 120
+> 
+
+> (define (factorial n) (product id 1 inc n))
+
+> (factorial 5)
+$25 = 120
+> (factorial 6)
+$26 = 720
+> 
+
+```
+
+
+**Exercise 1.32.**  
+
+a. Show that sum and product (exercise 1.31) are both special cases of a still more general notion called accumulate that combines a collection of terms, using some general accumulation function:
+
+```
+(accumulate combiner null-value term a next b)
+```
+
+Accumulate takes as arguments the same term and range specifications as sum and product, together with a combiner procedure (of two arguments) that specifies how the current term is to be combined with the accumulation of the preceding terms and a null-value that specifies what base value to use when the terms run out. Write accumulate and show how sum and product can both be defined as simple calls to accumulate.
+
+b. If your accumulate procedure generates a recursive process, write one that generates an iterative process. If it generates an iterative process, write one that generates a recursive process. 
+
+Solution:
+
+a.
+b. It is already tail recursive.
+
+```scheme
+(define (accumulate combiner null-value term a next b)
+  (define (iter a result)
+    (if (> a b)
+        result
+        (iter (next a) (combiner (term a) result))))
+  (iter a null-value))
+
+> (define (sum term a next b) (accumulate + 0 term a next b))
+> (define (product term a next b) (accumulate * 1 term a next b))
+> 
+
+> (define (inc n) (+ n 1))
+> (define (cube n) (* n n n ))
+> (define (id n) n)
+> 
+
+> (define (sum-cubes a b) (sum cube a inc b))
+>  (sum-cubes 1 10)
+$1 = 3025
+> 
+
+> (define (factorial n) (product id 1 inc n))
+
+> (factorial 5)
+$2 = 120
+
+> (factorial 6)
+$3 = 720
+> 
+
+```
+
+**Exercise 1.33.**  
+
+You can obtain an even more general version of accumulate (exercise 1.32) by introducing the notion of a filter on the terms to be combined. That is, combine only those terms derived from values in the range that satisfy a specified condition. The resulting filtered-accumulate abstraction takes the same arguments as accumulate, together with an additional predicate of one argument that specifies the filter. Write filtered-accumulate as a procedure. Show how to express the following using filtered-accumulate:
+
+a. the sum of the squares of the prime numbers in the interval a to b (assuming that you have a prime? predicate already written)
+
+b. the product of all the positive integers less than n that are relatively prime to n (i.e., all positive integers i < n such that GCD(i,n) = 1). 
+
+Solution:
+
+```scheme
+(define (filtered-accumulate combiner null-value term a next b pred?)
+  (define (iter a result)
+    (if (> a b)
+        result
+        (iter (next a) (if (pred? a) 
+                           (combiner (term a) result)
+                           result))))
+  (iter a null-value))
+  
+(define (divisor? n) (lambda (i) (= 0 (modulo n i))))
+
+(define (range a b step)
+  (if (> a b)
+      '()
+      (cons a  (range (+ a step) b step))))
+  
+(define (prime? n)
+  (null? (filter (divisor? n) (range 2 (- n 1) 1))))
+        
+> (filter prime? (range 1 100 1))
+$8 = (1 2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97)
+> 
+
+
+;;;;;;;;; Letter .a
+
+(define (inc n) (+ n 1))
+(define (square n) (* n n))
+(define (id n) n)
+
+
+(define (sum-of-square-primes a b)
+    (filtered-accumulate + 0 square a inc b prime?))
+
+> (sum-of-square-primes 1 10)
+$9 = 88
+> 
+
+> (sum-of-square-primes 1 100)
+$17 = 65797
+> 
+
+
+> (filter prime? (range 1 10 1))
+$10 = (1 2 3 5 7)
+> (map square (filter prime? (range 1 10 1)))
+$11 = (1 4 9 25 49)
+> (apply + (map square (filter prime? (range 1 10 1))))
+$12 = 88
+> 
+
+> (define (ssum-of-square-primes2 a b) (apply + (map square (filter prime? (range a b 1)))))
+> 
+> (sum-of-square-primes2 10)
+$14 = 88
+> (sum-of-square-primes2 1 100)
+$15 = 65797
+> 
+    
+;;;;;;;;;   letter b
+
+(define (relprime? n) 
+    (lambda (i) (= (gcd i n) 1)))
+
+
+(define (product-primes n)
+    (filtered-accumulate * 1 id 1 inc (- n 1) (relprime? n)))
+
+> (filter (relprime? 18) (range 1 18 1))
+$22 = (1 5 7 11 13 17)
+
+> (apply * (filter (relprime? 18) (range 1 18 1)))
+$23 = 85085
+> 
+
+> (product-primes 18)
+$24 = 85085
+> 
+
+        
+```
+
 
 ## Kawa Scheme - Access Java API from Scheme
 
