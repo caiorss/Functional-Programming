@@ -13,7 +13,7 @@
       - [Local Variable](#local-variable)
       - [Functions](#functions)
     - [Arithmetic](#arithmetic)
-    - [Operators](#operators)
+    - [Comparison](#comparison)
     - [Math Functions](#math-functions)
     - [Type Testing](#type-testing)
     - [String Functions](#string-functions)
@@ -31,8 +31,10 @@
       - [Calling Java Methods in Kawa Scheme](#calling-java-methods-in-kawa-scheme)
     - [Create a GUI](#create-a-gui)
     - [See also](#see-also)
-  - [Books](#books)
-  - [Articles](#articles)
+  - [Resources](#resources)
+    - [Books](#books)
+    - [Articles](#articles)
+    - [Misc](#misc)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -66,7 +68,7 @@ Products that use lisp:
 | [MIT - Scheme](http://www.gnu.org/software/mit-scheme/)   | Classical Scheme Implementation  used by [SCIP](https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Computer_Programs)  |
 | [Kawa](http://www.gnu.org/software/kawa/)           | Scheme for the JVM - Java API access. Compiles to the JVM |
 | [Iron Scheme](https://ironscheme.codeplex.com/)    | Scheme for .NET platform - .NET API Acess       |
-| [GNU Guile](http://www.gnu.org/software/guile/docs/docs.html) | Used as embedded extension language for many apps like GIMP, GNUCash, GEDA |
+| [GNU Guile](http://www.gnu.org/software/guile/gnu-guile-projects.html#Applications) | Used as embedded extension language for many apps like GIMP, [GNUCash](http://wiki.gnucash.org/wiki/Custom_Reports), GEDA |
 | [Chicken](http://www.call-cc.org/)  | Compiles to Native Code, produces C code  | 
 | [Chibi Scheme](https://github.com/ashinn/chibi-scheme) | Minimal Scheme Implementation for use as an Extension Language |
 | [Racket](http://racket-lang.org/)   | IDE and Debugger. Superset of scheme, not fully compatible.  | 
@@ -217,6 +219,10 @@ See also: [An opinionated guide to scheme implementations](https://wingolog.org/
 
 #### Functions
 
+**Defining adn applying fucntions**
+
+In Scheme functions are first class, they can be passed as arguments to other functions and be returned from another functions, in other words, functions are data.
+
 ```scheme
 ]=> (define (f x) (* x 10))
 
@@ -292,7 +298,9 @@ See also: [An opinionated guide to scheme implementations](https://wingolog.org/
 ;Value 30: (38 33 59 19)
 ```
 
-Anonymous Functions/ Lambda Functions
+**Anonymous Functions/ Lambda Functions**
+
+Anonymous functions are useful to pass functions as arguments to other functions, callbacks and connect one function to another.
 
 ```scheme
 1 ]=> (lambda (x) (+ (* x 4) 10))
@@ -348,7 +356,139 @@ Anonymous Functions/ Lambda Functions
 
 ```
 
+**Functions With Control Structure**
+
+```scheme
+
+(define (sign x)
+    (cond 
+        ((> x 0)  1)
+        ((= x 0)  0)
+        ((< x 0) -1)
+))
+
+
+1 ]=> (sign -10)
+$49 = -1
+1 ]=> (sign 100)
+$50 = 1
+1 ]=> (sign 0)
+$51 = 0
+ 
+
+(define (absolute x)
+    (cond 
+        ((>= x 0)     x)
+        ((<  x 0) (- x))
+))
+        
+1 ]=> (absolute -10)
+$52 = 10
+1 ]=> (absolute 10)
+$53 = 10
+1 ]=> (absolute 0)
+$54 = 0
+
+
+(define (absolute2 x)
+    (cond 
+        ((> x 0) x    )
+        (else    (- x))
+))
+
+1 ]=> (map absolute2 '(-10 -9 0 1 2 3))
+$57 = (10 9 0 1 2 3)
+
+
+```
+
+**Variadic Function**
+
+Function of many arguments
+
+```scheme
+1 ]=> (define (variadic-fun . args) args)
+
+1 ]=> (variadic-fun  10 20 30 40 50 100)
+$55 = (10 20 30 40 50 100)
+
+(define (variadic2 . args)
+    (- (apply * args) (apply + args)))
+
+;;  (- (* 10 20 30) (+ 10 20 30))
+;;  (- 6000 60)
+;;  5940
+;;
+1 ]=> (variadic2 10 20 30)
+$56 = 5940
+```
+
+**Recursive Functions**
+
+```scheme
+
+(define (fib n)
+    (cond 
+        ((= n 0) 1)
+        ((= n 1) 1)
+        (else    (+ (fib (- n 1))  (fib (- n 2))))))
+
+scheme@(guile-user)> (fib 1)
+$6 = 1
+scheme@(guile-user)> (fib 5)
+$7 = 8
+scheme@(guile-user)> (fib 15)
+$8 = 987
+scheme@(guile-user)> (fib 20)
+$9 = 10946
+scheme@(guile-user)> (fib 30)
+$10 = 1346269
+
+(define (fib-fast n acc)
+    (if (or (= n 0) (= n 1))
+        (cons 1 acc)
+        (+ (car acc) (cadr acc))))
+    
+```
+
+**Internal Definition**
+
+```scheme
+
+(define (f x y)
+    (define a 10)
+    (define (f1 x) (+ (* x 2) 4))
+    (define (f2 i) (+ i 1))
+    (+ (f1 x) (f2 y) a))
+
+;; 
+;;  (+ (f1 3) (f2 4) 10))
+;;  (+ (+ (* 3 2) 4)))   (+ 4 1) 10)
+;;  (+ 10 5 10) 
+;;  25
+;;
+scheme@(guile-user) [2]> (f 3 4)
+$12 = 25
+
+scheme@(guile-user) [2]> (f 2 3)
+$13 = 22
+
+
+scheme@(guile-user) [4]> f1
+;;; <unknown-location>: warning: possibly unbound variable `f1'
+
+scheme@(guile-user) [2]> a
+;;; <unknown-location>:
+
+scheme@(guile-user) [3]> f2
+;;; <unknown-location>: warning: possibly unbound variable `f2'
+
+```
+
+
 ### Arithmetic 
+
+The Scheme operators are functions of two arguments and are written in the infix notation, also known as [polish notation](https://en.wikipedia.org/wiki/Polish_notation).
 
 ```scheme
 $ rlwrap scheme
@@ -423,7 +563,7 @@ Image saved on Tuesday October 22, 2013 at 12:31:09 PM
 
 ```
 
-### Operators
+### Comparison
 
 ```scheme
 
@@ -456,9 +596,11 @@ Image saved on Tuesday October 22, 2013 at 12:31:09 PM
 ;Value: #t
 
 ]=> 
+```
 
-;;; Logical Operators
+**Logical Operators**
 
+```scheme
 1 ]=> (not #t)
 
 ;Value: #f
@@ -501,6 +643,24 @@ Image saved on Tuesday October 22, 2013 at 12:31:09 PM
 
 ;Value: 10
 
+1 ]=> (map sqrt '(4 9 16 25 36))
+$44 = (2.0000000929222947 3.00009155413138 4.000000636692939 5.000023178253949 6.000000005333189)
+
+
+;;========================================
+
+;;;  x ^ y
+;;
+;;
+1 ]=> (expt 2 2)
+$40 = 4
+1 ]=> (expt 2 3)
+$41 = 8
+
+(map (lambda (x) (expt 2 x)) '(2 3 4 5 6 7 8))
+$42 = (4 8 16 32 64 128 256)
+
+;;========================================
 
 1 ]=> (exp 1.0)
 
@@ -647,6 +807,15 @@ Image saved on Tuesday October 22, 2013 at 12:31:09 PM
 
 ;Value 26: (0. 26.565051177077986 45. 63.43494882292201 89.99999999427042)
 
+;;==================================;;
+
+1 ]=>  (abs -10)
+$46 = 10
+1 ]=>  (abs 100)
+$47 = 100
+1 ]=>  (abs 0)
+$48 = 0
+ 
 
 ```
 
@@ -868,6 +1037,13 @@ Image saved on Tuesday October 22, 2013 at 12:31:09 PM
 
 ;Value 15: (#\h #\e #\l #\l #\o #\space #\w #\o #\r #\l #\d)
 
+1 ]=> (char->integer #\x)
+
+;Value: 120
+
+1 ]=> (map char->integer (string->list "lisp"))
+
+;Value 28: (108 105 115 112)
 
 ```
 
@@ -937,7 +1113,7 @@ Image saved on Tuesday October 22, 2013 at 12:31:09 PM
 ;Value 21: (4 5 6)
 ```
 
-* **car** - Select the first element, "head" of a list cell
+* **car** - It selects the first element, "head" of a list cell
 
 ```scheme
 1 ]=> (car (list 1 2 3 4))
@@ -954,7 +1130,7 @@ Image saved on Tuesday October 22, 2013 at 12:31:09 PM
 
 ```
 
-* **cdr** - Select the "tail" of a list, removes the first element
+* **cdr** - It selects the "tail" of a list, removes the first element
 
 ```scheme 
 1 ]=> (cdr (list 1 2 3 4))
@@ -964,6 +1140,28 @@ Image saved on Tuesday October 22, 2013 at 12:31:09 PM
 1 ]=> (cdr '(x y z w))
 
 ;Value 18: (y z w)
+```
+
+* **caddr** - It gets the second element of a list
+
+```scheme
+scheme@(guile-user) [6]> (cadr '(a b c d e f))
+$14 = b
+scheme@(guile-user) [6]> 
+```
+
+* **caddr** - It gets the third element of a list 
+
+```scheme
+scheme@(guile-user) [6]> (caddr '(a b c d e f))
+$16 = c
+```
+
+* **cadddr** - It gets the forth element of alist.
+
+```scheme
+scheme@(guile-user) [6]> (cadddr '(a b c d e f))
+$17 = d
 ```
 
 #### List Functions
@@ -992,6 +1190,54 @@ Image saved on Tuesday October 22, 2013 at 12:31:09 PM
 
 ;Value: #t
 
+;;; Test if a value is member of a list
+
+1 ]=> (member 'y '(x y z w))
+
+;Value 24: (y z w)
+
+1 ]=> (member 'a '(x y z w))
+
+;Value: #f
+
+1 ]=> (member 'x '(x y z w))
+
+;Value 25: (x y z w)
+
+1 ]=> (member 'k '(x y z w))
+
+;Value: #f
+
+
+;;;; Reverse a list
+
+1 ]=> (reverse '(x y z w))
+
+;Value 26: (w z y x
+
+
+;;; First and Last Element
+
+1 ]=> (first '(x y z w))
+
+;Value: x
+
+1 ]=> (last '(x y z w))
+
+;Value: w
+
+;;; Pick the nth element of a list
+
+1 ]=> (list-ref '(x y z w) 0)
+
+;Value: x
+
+1 ]=> (list-ref '(x y z w) 1)
+
+;Value: y
+
+1 ]=> (list-ref '(x y z w) 2)
+
 ```
 
 
@@ -1001,7 +1247,11 @@ Image saved on Tuesday October 22, 2013 at 12:31:09 PM
 All the functions defined are in the file: [hof_functions.scm](src/hof_functions.scm) that can be loaded in scheme by typing:
 
 ```scheme
-scheme@(guile-user) [1]>  (load "hof_functions.scm")
+$ curl -O https://raw.githubusercontent.com/caiorss/Functional-Programming/master/scheme/src/hof_functions.scm
+
+$ rlwrap -c --remember scheme
+
+1 ]=>   (load "hof_functions.scm")
 ```
 
 ### Special Functions
@@ -1082,6 +1332,8 @@ scheme@(guile-user) [1]>  (load "hof_functions.scm")
 1 ]=> (define (deg2rad deg) (* (/ deg 180) pi))
 
 ;Value: deg2rad
+
+1 ]=> (define sind (compose sin deg2rad))
 
 1 ]=> (map sind '(0 45 60 90 180 270))
 
@@ -2038,7 +2290,9 @@ File: [FahrenheitGUI.scm](src/FahrenheitGUI.scm)
 
 
 
-## Books
+## Resources
+
+### Books
 
 * [Structure and Interpretation of Computer Programs - SCIP / Abelson, Sussman, and Sussman.](https://mitpress.mit.edu/sicp/)
 * [Structure and Interpretation of Computer Programs - Video Lectures by Hal Abelson and Gerald Jay Sussman](http://groups.csail.mit.edu/mac/classes/6.001/abelson-sussman-lectures/)
@@ -2049,13 +2303,18 @@ File: [FahrenheitGUI.scm](src/FahrenheitGUI.scm)
 * [Structure and Interpretation of Classical Mechanics - Geral Jay Sussman and Jack Wisdom](https://mitpress.mit.edu/books/structure-and-interpretation-classical-mechanics)
 
 
+* [The Scheme Programming Language, Second Edition - R. Kent Dybvig](http://www.scheme.com/tspl2d/)
+
+* [Teach Yourself Scheme in Fixnum Day](http://download.plt-scheme.org/doc/360/html/t-y-scheme/t-y-scheme-Z-H-1.html)
+
+* [How to Design Programs - by Felleisen, Findler, Flatt and Krishnamurthi](http://htdp.org/)
+
 * [Wikibok - Programming with Scheme](https://en.wikibooks.org/wiki/Scheme_Programming)
 * [The Scheme Programming Language Fourth Edition - R. Kent Dybvig - Illustrations by Jean-Pierre Hébert](http://www.scheme.com/tspl4/)
 
-* [MIT/GNU Scheme Reference Manual](http://www.gnu.org/software/mit-scheme/documentation/mit-scheme-ref.pdf)
+* [MIT/GNU Scheme Reference Manual](http://sicp.ai.mit.edu/Fall-2004/manuals/scheme-7.5.5/doc/scheme_toc.html)
 
-
-## Articles
+### Articles
 
 * [Beating the Average - The Secret Weapon - By Paul Graham](http://www.paulgraham.com/avg.html)
 
@@ -2063,6 +2322,15 @@ File: [FahrenheitGUI.scm](src/FahrenheitGUI.scm)
 
 * [7 lines of code, 3 minutes: Implement a programming language from scratch](http://matt.might.net/articles/implementing-a-programming-language/)
 
+
+* [IBM - The art of metaprogramming, Part 1: Introduction to metaprogramming
+Write programs to generate other programs](http://www.ibm.com/developerworks/library/l-metaprog1/)
+
+
+### Misc
+
+* [Scheme Requests for Implementation](http://srfi.schemers.org/)
+* [Functional Package Management with Guix](http://arxiv.org/pdf/1305.4584.pdf)
 
 * [Canonical S-expression](https://en.wikipedia.org/wiki/Canonical_S-expressions)
 * [SEXP---(S-expressions)](http://people.csail.mit.edu/rivest/sexp.html)
