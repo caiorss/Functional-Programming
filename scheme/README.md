@@ -3,11 +3,16 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Functional Programming in Scheme](#functional-programming-in-scheme)
-  - [Why Lisp](#why-lisp)
-  - [Usefulness Of Scheme](#usefulness-of-scheme)
-  - [Scheme Implementations](#scheme-implementations)
+  - [Overview](#overview)
+    - [Why Lisp](#why-lisp)
+    - [Usefulness Of Scheme](#usefulness-of-scheme)
+    - [Scheme Implementations](#scheme-implementations)
   - [Basic Syntax](#basic-syntax)
+    - [Name Conventions](#name-conventions)
     - [Data Types](#data-types)
+      - [Basic Data Types](#basic-data-types)
+      - [Type Predicates](#type-predicates)
+      - [Type Conversion](#type-conversion)
     - [Defining Functions and Variables](#defining-functions-and-variables)
       - [Global Variable](#global-variable)
       - [Local Variable](#local-variable)
@@ -15,23 +20,30 @@
     - [Arithmetic](#arithmetic)
     - [Comparison](#comparison)
     - [Math Functions](#math-functions)
-    - [Type Testing](#type-testing)
     - [String Functions](#string-functions)
     - [List Operations](#list-operations)
       - [Define a List](#define-a-list)
       - [Primitive List Operations](#primitive-list-operations)
       - [List Functions](#list-functions)
+  - [S expressions and Serialization](#s-expressions-and-serialization)
+    - [Association Lists](#association-lists)
+    - [Convert String to Scheme object](#convert-string-to-scheme-object)
   - [Higher Order Functions](#higher-order-functions)
     - [Special Functions](#special-functions)
     - [Functions Composition](#functions-composition)
     - [Applying Multiple Functions to a Single Argument](#applying-multiple-functions-to-a-single-argument)
     - [Miscellaneous](#miscellaneous)
+  - [Metaprogramming](#metaprogramming)
+    - [The Abstract Syntax Tree](#the-abstract-syntax-tree)
+    - [Macros](#macros)
   - [Debugging](#debugging)
     - [MIT Scheme](#mit-scheme)
     - [GNU Guile](#gnu-guile)
   - [SCIP](#scip)
     - [Tail Recursion (Iteration)](#tail-recursion-iteration)
     - [Higher Order Procedure](#higher-order-procedure)
+    - [Procedure as returned value](#procedure-as-returned-value)
+    - [Exercises](#exercises)
   - [Kawa Scheme - Access Java API from Scheme](#kawa-scheme---access-java-api-from-scheme)
       - [Install and Run](#install-and-run)
       - [Calling Java Methods in Kawa Scheme](#calling-java-methods-in-kawa-scheme)
@@ -40,6 +52,7 @@
   - [Resources](#resources)
     - [Books](#books)
     - [Articles](#articles)
+    - [GITHUB](#github)
     - [Misc](#misc)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -48,7 +61,9 @@
 
 [Under Construction]
 
-## Why Lisp
+## Overview
+
+### Why Lisp
 
 
 * Lisp is used as embedded script language in many products
@@ -60,7 +75,7 @@ Products that use lisp:
 * Emacs -> Emacs Lisp, A lisp dialect based on Common Lisp
 * GNU Maxima -> Cumputer Algebra System (CAS), Common Lisp
 
-## Usefulness Of Scheme
+### Usefulness Of Scheme
 
 * Learn the principles of programming languages
 * Meta programming
@@ -70,7 +85,7 @@ Products that use lisp:
 * Scheme can be used to test JVM and .NET API in the REPL.
     * Google App Engine Uses Kawa scheme which is a implementations for the JVM.
 
-## Scheme Implementations
+### Scheme Implementations
 
 | Implementation | Feature                                  |
 |----------------|------------------------------------------|
@@ -91,7 +106,23 @@ See also:
 
 ## Basic Syntax
 
+
+### Name Conventions
+
+|  Terminology   |  Description                           |  Name Convention | Example        |
+|----------------|----------------------------------------|------------------|----------------|
+|  Procedure     | functions                              |                  |                |     
+|  Predicate     | Function that returns a boolean, true (#t) or false (#f) | Ends with ? | zero? null? |
+|  Getter        | Function that returns a value from a Lisp object | Ends with -ref | list-ref |
+|  Setter        | Function that sets a value in a Lisp object |  Ends with ! | set! |
+|  Constructor   | A constructor is a function that creates a Lisp object. | |
+|  Converter     | Function that converts one type of Lisp object into another type | (from type)->(to-type) | symbol->string, number->string |
+|  Iteration (SCIP book)  | Tail Recursion          | | 
+
+
 ### Data Types
+
+#### Basic Data Types
 
 ```scheme
 
@@ -161,9 +192,9 @@ See also:
 
 ;Value 18: (hello world scheme)
 
-1 ]=> (quote (hello worl symbols))
+1 ]=> (quote (hello world symbols))
 
-;Value 31: (hello worl symbols)
+;Value 31: (hello world symbols)
 
 ;; S-expression
 ;;---------------------------------
@@ -182,6 +213,139 @@ See also:
 
 
 ```
+
+#### Type Predicates
+
+Scheme is dynamic typed language therefore there is not guarantee about the variable type or the function type signature. The types can be checked with the following predicates.
+
+| Predicate  | Returns true for                             |
+|------------|----------------------------------------------|
+| boolean?   | Boolean                                      |
+| string?    | Strings                                      |
+| number?    | Number, integer or real                     |
+| integer?   | Integer numbers                              |
+| real?      | Real numbers 2.232 1e3 100                   |
+| symbol?    | Symbols                                      |
+| list?      | Lists                                        |
+| procedure? | Procedure or function                        |
+
+```scheme
+(boolean? #f)
+
+;Value: #t
+
+1 ]=> (boolean? 100)
+
+;Value: #f
+
+
+1 ]=> (symbol? "x")
+
+;Value: #f
+
+1 ]=> (symbol? 'x)
+
+;Value: #t
+
+
+1 ]=> (integer? 100)
+
+;Value: #t
+
+1 ]=> (integer? 3.232)
+
+;Value: #f
+
+
+1 ]=> (real? 3232)
+
+;Value: #t
+
+1 ]=> (real? 3232.232)
+
+;Value: #t
+
+
+1 ]=> (string? "hello world Scheme Lisp")
+
+;Value: #t
+
+1 ]=> (string? 100232)
+
+;Value: #f
+
+
+1 ]=> (list? '(1 2 3 5 6))
+
+;Value: #t
+
+1 ]=> (list? 2323)
+
+;Value: #f
+
+
+
+1 ]=> (procedure? sin)
+
+;Value: #t
+
+1 ]=> (procedure? 2323)
+
+;Value: #f
+
+
+```
+
+#### Type Conversion
+
+```scheme 
+
+;;-------------------------------------;;
+
+1 ]=> (string->number "20e3")
+
+;Value: 20000.
+
+1 ]=> (string->number "10.23")
+
+;Value: 10.23
+
+1 ]=> 
+
+
+1 ]=> (number->string 100)
+
+;Value 11: "100"
+
+1 ]=> (number->string -100.23e3)
+
+;Value 12: "-100230."
+
+1 ]=> 
+
+;;-------------------------------------;;
+
+1 ]=> (symbol->string 'sin)
+
+;Value 13: "sin"
+
+1 ]=> (string->symbol "my-symbol")
+
+;Value: my-symbol
+
+
+1 ]=> (symbol->string 'some-symbol)
+
+;Value 14: "some-symbol"
+
+;;-------------------------------------;;
+
+
+
+
+```
+
+
 
 ### Defining Functions and Variables
 
@@ -205,6 +369,9 @@ See also:
 ;Value: 26.544
 
 ```
+
+
+
 
 #### Local Variable
 
@@ -232,7 +399,7 @@ See also:
 
 #### Functions
 
-**Defining adn applying fucntions**
+**Defining and applying functions**
 
 In Scheme functions are first class, they can be passed as arguments to other functions and be returned from another functions, in other words, functions are data.
 
@@ -341,7 +508,7 @@ Anonymous functions are useful to pass functions as arguments to other functions
 ;Value 34: (50 90 130 170 210)
 
 ;; Scheme is a Functional Programming Language,
-;;  so it can return functions from fucntions that
+;;  so it can return functions from functions that
 ;;  can be used to define curried functions
 ;;
 1 ]=> (define (addxy x y) (lambda (x) (lambda (y) (+ x y))))
@@ -848,75 +1015,7 @@ $48 = 0
 
 ```
 
-### Type Testing 
 
-
-```scheme
-(boolean? #f)
-
-;Value: #t
-
-1 ]=> (boolean? 100)
-
-;Value: #f
-
-
-1 ]=> (symbol? "x")
-
-;Value: #f
-
-1 ]=> (symbol? 'x)
-
-;Value: #t
-
-
-1 ]=> (integer? 100)
-
-;Value: #t
-
-1 ]=> (integer? 3.232)
-
-;Value: #f
-
-
-1 ]=> (real? 3232)
-
-;Value: #t
-
-1 ]=> (real? 3232.232)
-
-;Value: #t
-
-
-1 ]=> (string? "hello world Scheme Lisp")
-
-;Value: #t
-
-1 ]=> (string? 100232)
-
-;Value: #f
-
-
-1 ]=> (list? '(1 2 3 5 6))
-
-;Value: #t
-
-1 ]=> (list? 2323)
-
-;Value: #f
-
-
-
-1 ]=> (procedure? sin)
-
-;Value: #t
-
-1 ]=> (procedure? 2323)
-
-;Value: #f
-
-
-```
 
 ### String Functions
 
@@ -1269,6 +1368,125 @@ $17 = d
 
 ```
 
+## S expressions and Serialization
+
+S-expressions advantages:
+
+* Encode Arbitrary data structure and programs
+* Easy to serialize, read and write
+* There is no need to write specific configuration parsers
+* Human Readable
+* S-expression parsers can be embedded in static typed languages like Ocaml, Haskell, Java to create GUIs, read configuration files.
+* Compact and flexible like XML and lightweight like json.
+
+
+See also:
+    * [Real World OCaml - Chapter 17. Data Serialization with S-Expressions](https://realworldocaml.org/v1/en/html/data-serialization-with-s-expressions.html)
+    * http://www.seomastering.com/wiki/Comparison_of_data_serialization_formats
+
+### Association Lists
+
+* https://groups.csail.mit.edu/mac/ftpdir/scheme-7.4/doc-html/scheme_12.html
+* http://people.cs.aau.dk/~normark/prog3-03/html/notes/fu-intr-1_themes-list-section.html
+
+```scheme
+
+1 ]=> (define sexp ((x  100) (y  2.2323) (z -10.32)))
+
+1 ]=> sexp
+
+;Value 17: ((x 100) (y 2.2323) (z -10.32))
+
+;;------------------;;
+
+(assoc 'x sexp)
+
+;Value 18: (x 100)
+
+1 ]=> (assoc 'y sexp)
+
+;Value 19: (y 2.2323)
+
+1 ]=> (assoc 'z sexp)
+
+;Value 20: (z -10.32)
+
+1 ]=> 
+
+;;------------------;;
+
+1 ]=> (assq 'x sexp)
+
+;Value 18: (x 100)
+
+1 ]=> (assq 'y sexp)
+
+;Value 19: (y 2.2323)
+
+1 ]=> (assq 'z sexp)
+
+;Value 20: (z -10.32)
+
+1 ]=> 
+
+;;------------------;;
+
+
+```
+
+### Convert String to Scheme object
+
+**MIT Scheme**
+
+```scheme
+1 ]=> (read (string->input-port "(+ 10 20)"))
+
+;Value 13: (+ 10 20)
+
+
+1 ]=> (define code "(( x . 100) ( y . 2.2323) ( z .  2.23  ))")
+
+;Value: code
+
+1 ]=> (define (read-sexp code) (read (string->input-port code)))
+
+;Value: read-sexp
+
+1 ]=> (read-sexp code)
+
+;Value 13: ((x . 100) (y . 2.2323) (z . 2.23))
+
+1 ]=> (assoc 'x (read-sexp code))
+
+;Value 14: (x . 100)
+
+1 ]=> (assoc 'y (read-sexp code))
+
+;Value 15: (y . 2.2323)
+
+1 ]=> (assoc 'z (read-sexp code))
+
+;Value 16: (z . 2.23)
+
+1 ]=> 
+
+1 ]=> (cdr (assoc 'x (read-sexp code)))
+
+;Value: 100
+
+1 ]=> (cdr (assoc 'y (read-sexp code)))
+
+;Value: 2.2323
+
+1 ]=> (cdr (assoc 'z (read-sexp code)))
+
+;Value: 2.23
+
+1 ]=> 
+
+
+
+```
 
 
 ## Higher Order Functions
@@ -1334,7 +1552,7 @@ $ rlwrap -c --remember scheme
 
 ### Functions Composition
 
-**Basic Functiona Composition**
+**Basic Function Composition**
 
 
 ```scheme
@@ -1380,7 +1598,7 @@ $ rlwrap -c --remember scheme
 
 ```
 
-**Composition of a list of Functions**
+**Composition of a List of Functions**
 
 ```scheme 
 
@@ -1505,6 +1723,30 @@ $18 = (a b c a b c a b)
 1 ]=> (cycle 20 '(0 1))
 $19 = (0 1 0 1 0 1 0 1 0 1 0 1 0 1)
     
+```
+
+**Mapi**
+
+Similar to Ocaml function mapi, map a function of index and value each index and element of a list.
+
+```scheme 
+
+(define (mapi func lst)  
+  (define (mapi_acc acc lst idx)
+    (if (null? lst)
+        acc
+        (mapi_acc
+         (cons (func idx (car lst)) acc) 
+         (cdr lst)                       
+         (+ idx 1 ))))
+         
+  (reverse (mapi_acc '() lst 0)))
+  
+(define (f_i_a i a) (list i a)) 
+
+> (mapi f_i_a '(a b c d e f))
+'((0 a) (1 b) (2 c) (3 d) (4 e) (5 f))
+>   
 ```
 
 **Count Number of Elements**
@@ -2002,6 +2244,312 @@ $7 = ((1 230 1000 434) (a b sym con) ("c" "xs" "ccw" "xyzw"))
 
 ```
 
+## Metaprogramming
+
+Metaprogramming is the ability to create that code that writes code. Like any lisp scheme has great metaprogramming capabilities like:
+
+* Code is data and data is code 
+* Exposes the AST abstract syntax tree, that is an atom (symbol, string or a number) or a list 
+* The AST is a list of lists and atoms or an atom
+* The AST can be manipulated like any list
+* Lisp programs can build itself
+* The macro system allows the user to create new syntax rules and create new language constructs.
+
+
+
+### The Abstract Syntax Tree
+
+```scheme 
+
+;; A lisp AST is a list of lists and atoms or an atom 
+;;
+
+1 ]=> (quote (if (> x 5) 100 200))
+
+;Value 17: (if (> x 5) 100 200)
+
+;;;  OR
+
+1 ]=> '(if (> x 5) 100 200))
+
+;Value 18: (if (> x 5) 100 200)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+1 ]=> (define ast '(if (> x 5) 100 200))
+
+;Value: ast
+
+1 ]=> ast
+
+;Value 19: (if (> x 5) 100 200)
+
+;; The abstract synxtax tree is a list
+;;
+1 ]=> (list? ast)
+
+;Value: #t
+
+;; Decomposing the AST
+;;
+
+(define (inspect-aux obj)
+ (cond 
+   ((list? obj  )     "list")
+   ((number? obj)     "number")
+   ((symbol? obj)     "symbol")
+   ((string? obj)     "string")
+ )
+) ;; End of inspect
+
+
+(define (inspect obj)
+    (list obj (inspect-aux obj))
+)
+
+1 ]=> (map inspect ast)
+
+;Value 21: ((if "symbol") ((> x 5) "list") (100 "number") (200 "number"))
+
+;;  Extracting AST
+;;----------------------------------
+
+1 ]=> (cdr ast)
+
+;Value 22: ((> x 5) 100 200)
+
+1 ]=> (list-ref ast 0)
+
+;Value: if
+
+1 ]=> (list-ref ast 1)
+
+;Value 23: (> x 5)
+
+1 ]=> (list-ref ast 2)
+
+;Value: 100
+
+1 ]=> (list-ref ast 3)
+
+;Value: 200
+
+1 ]=> 
+
+
+1 ]=> (define (ast-ref ast i) (inspect (list-ref ast i)))
+
+;Value: ast-ref
+
+1 ]=> (ast-ref ast 0)
+
+;Value 24: (if "symbol")
+
+1 ]=> (ast-ref ast 1)
+
+;Value 25: ((> x 5) "list")
+
+1 ]=> 
+
+;; Evaluating the AST
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+1 ]=> (eval '(define z 10) (the-environment))
+
+;Value: z
+
+1 ]=> z
+
+;Value: 10
+
+
+
+
+1 ]=>  (define ast '(if (> x 5) 100 200))
+
+;Value: ast
+
+1 ]=> ast
+
+;Value 29: (if (> x 5) 100 200)
+
+1 ]=> (eval ast (the-environment))
+
+;Value: 100
+
+1 ]=> 
+
+1 ]=> (define x -100)
+
+;Value: x
+
+1 ]=> (eval ast (the-environment))
+
+;Value: 200
+
+1 ]=> 
+
+
+```
+
+### Macros
+
+Macros allows to redefine the synxtax, create new language constructs, expand the language and create DSL - Domain Specific Languages.
+
+Notice all the macros bellow were tested on GNU GUILE that was started with the command:
+
+```
+$ rlwrap --remember -c guile
+```
+
+Examples:
+
+**Increment a variable**
+
+```scheme
+
+
+(define-syntax-rule
+  (incr var)
+  (set! var (+ 1 var)))
+  
+> (define x 10)
+> x
+$1 = 10
+> 
+> (incr x)
+> x
+$2 = 11
+
+$3 = x
+> ,expand (incr x)
+$4 = (set! x (+ 1 x))
+> 
+
+```
+
+**Swap two variables**
+
+```scheme
+;; -! is idomatic for mutation
+
+(define-syntax-rule (swap! x y) 
+  (let ((tmp x))
+    (set! x y)
+    (set! y tmp)))
+
+> (define a 10)
+> (define b 90)
+> a
+$19 = 10
+> b
+$20 = 90
+
+> (swap! a b)
+> a
+$21 = 90
+> b
+$22 = 10
+> 
+
+> ,expand (swap! a b)
+> $34 = (let ((tmp a)) (set! a b) (set! b tmp))
+> 
+
+```
+
+**Delay and force a computation**
+
+Lazy evalution.
+
+```scheme 
+(define-syntax-rule
+  (thunk computation )
+  (lambda () computation))
+
+> (thunk (/ 3 0))
+$9 = #<procedure 960e670 at <current input>:37:0 ()>
+> 
+
+> (define t (thunk (/ 3 0)))
+> t
+$10 = #<procedure t ()>
+> 
+
+> (t)
+<unnamed port>:42:17: In procedure t:
+<unnamed port>:42:17: Throw to key `numerical-overflow' with args `("/" "Numerical overflow" #f #f)'.
+
+Entering a new prompt.  Type `,bt' for a backtrace or `,q' to continue.
+>
+
+(define-syntax-rule
+  (force-thunk computation )
+  (computation)       ;; computation ()
+) 
+
+> (force-thunk t)
+<unnamed port>:59:17: In procedure t:
+<unnamed port>:59:17: Throw to key `numerical-overflow' with args `("/" "Numerical overflow" #f #f)'.
+
+Entering a new prompt.  Type `,bt' for a backtrace or `,q' to continue.
+> 
+
+```
+
+**Create a common-lisp defun statement**
+
+```scheme
+(define-syntax-rule
+  (defun name params body ...)
+  (define (name . params)
+    body ...))
+
+> (defun f (x y) (+ (* 3 x) (* 4 y)))
+
+> f
+$5 = #<procedure f (x y)>
+
+> (f 2 3)
+$6 = 18
+> 
+
+> ,expand (defun f (x y) (+ (* 3 x) (* 4 y)))
+$7 = (define (f x y) (+ (* 3 x) (* 4 y)))
+> 
+ 
+```
+
+**Print Variable name and value**
+
+```scheme
+
+(define-syntax show-var
+    (syntax-rules ()
+      ((_ var)
+       (cons 'var  var))))
+
+> (define x '( it is all symbols (list of symbols)))
+> x
+$36 = (it is all symbols (litst of symbols))
+> 
+
+1 ]=> (show-var x)
+
+;Value 39: (x it is all symbols (list of symbols))
+
+1 ]=> 
+
+```
+
+
+See also:
+
+* https://www.gnu.org/software/guile/manual/html_node/Syntax-Rules.html
+* 
+
 ## Debugging
 
 ### MIT Scheme 
@@ -2010,7 +2558,7 @@ $7 = ((1 230 1000 434) (a b sym con) ("c" "xs" "ccw" "xyzw"))
 |-------------------------------|---------------------------------------|
 | ```(pp <object>)```           | Print source code of a procedure      |
 | ```(pa <procedure>)```        | Print arguments of a procedure        |
-| ```(trace <procedure>)```     | Trace procedure, fucntion calls       |
+| ```(trace <procedure>)```     | Trace procedure, function calls       |
 | ```(untrace <procedure>)```   | No longer trace procedure             |
 | ```(apropos "<string>")```    | Print matching bound names            |
 
@@ -2245,14 +2793,6 @@ $6 = (let ((tmp a)) (set! a b) (set! b tmp))
 
 Notes about SCIP
 
-Conventions used by SCIP:
-
-|  SCIP Terminology            |                          |
-|------------------------------|--------------------------|
-|  procedure                   | functions                |
-|  predicate                   | A function that returns a boolean, true or false |
-|  Iteration (recursion)       | Tail Recursion  |
-
 
 **Strategies to handle complexity**
 
@@ -2275,7 +2815,7 @@ Non tail recursive functions:
 Tail recursive functions:
 
 * A function is said to be **tail recursive** when the recursive call is the last function executed in the body of the function.
-* It uses a fixed amount stack frame, threfore there is no risk of stack overflow.
+* It uses a fixed amount stack frame, therefore there is no risk of stack overflow.
 * It can be turned into loops
 * Sometimes non tail recursive functions can be changed to tail recursive by adding a new function with extra parameters (accumulators) to store partial results (state).
 
@@ -2441,7 +2981,7 @@ $4 = 3628800
 
 ```
 
-Example2: Summation
+Example 2: Summation
 
 ```scheme
 
@@ -2839,7 +3379,7 @@ trace: 100
 
 **Exercise 1.31.**
 
-a.  The sum procedure is only the simplest of a vast number of similar abstractions that can be captured as higher-order procedures.51 Write an analogous procedure called product that returns the product of the values of a function at points over a given range. Show how to define factorial in terms of product. Also use product to compute approximations to using the formula52
+a.  The sum procedure is only the simplest of a vast number of similar abstractions that can be captured as higher-order procedures.51 Write an analogous procedure called product that returns the product of the values of a function at points over a given range. Show how to define factorial in terms of product. Also use product to compute approximations to using the formula 52.
 
 ```
 π/4 = 2/3 * 4/3 * 4/5 * 6/5 * 6/7 * 8/7 ...
@@ -3365,6 +3905,9 @@ File: [FahrenheitGUI.scm](src/FahrenheitGUI.scm)
 
 * [MIT/GNU Scheme Reference Manual](http://sicp.ai.mit.edu/Fall-2004/manuals/scheme-7.5.5/doc/scheme_toc.html)
 
+
+* [On Lisp - Paul Graham](http://unintelligible.org/onlisp/onlisp.html)
+
 ### Articles
 
 * [Beating the Average - The Secret Weapon - By Paul Graham](http://www.paulgraham.com/avg.html)
@@ -3377,6 +3920,9 @@ File: [FahrenheitGUI.scm](src/FahrenheitGUI.scm)
 * [IBM - The art of metaprogramming, Part 1: Introduction to metaprogramming
 Write programs to generate other programs](http://www.ibm.com/developerworks/library/l-metaprog1/)
 
+### GITHUB
+
+* https://github.com/mpacula/Scheme-Power-Tools
 
 ### Misc
 
@@ -3386,3 +3932,13 @@ Write programs to generate other programs](http://www.ibm.com/developerworks/lib
 * [Canonical S-expression](https://en.wikipedia.org/wiki/Canonical_S-expressions)
 * [SEXP---(S-expressions)](http://people.csail.mit.edu/rivest/sexp.html)
 * [S-Expressions](http://people.csail.mit.edu/rivest/Sexp.txt)
+* [S-Expression Isomorphism Between Lisp and Markup](http://www.kludgecode.com/index.php/s-expression-isomorphism-between-lisp-and-markup/)
+* [S-expressions for fun and profit](http://www.jonathanfischer.net/s-expressions/)
+
+
+* [Algebraic Data Types in Scheme](https://pavpanchekha.com/blog/adtscm.html)
+
+
+* [PICOBIT: A Compact Scheme System for Microcontrollers Vincent St-Amour and Marc Feeley](http://www.ccs.neu.edu/home/stamourv/papers/picobit.pdf)
+* [Functional Programming of Behavior-Based Systems Ian Douglas Horswill](http://cs.northwestern.edu/~ian/grl-paper.pdf)
+* [Composing Real-Time Systems](http://www.ijcai.org/Past%20Proceedings/IJCAI-91-VOL1/PDF/034.pdf)
