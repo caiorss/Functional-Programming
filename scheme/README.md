@@ -60,6 +60,7 @@
     - [GITHUB](#github)
     - [Misc](#misc)
     - [Documentation by Subject](#documentation-by-subject)
+      - [Syntax](#syntax)
       - [Object Orientated Programming](#object-orientated-programming-1)
       - [Macro](#macro)
 
@@ -4301,6 +4302,8 @@ File: [FahrenheitGUI.scm](src/FahrenheitGUI.scm)
 
 ### Books
 
+* [The Adventures of a Pythonista in Schemeland](http://www.phyast.pitt.edu/~micheles/scheme/index.html)
+
 * [Teach Yourself Scheme in Fixnum Days - Dorai Sitaram, 1998–2003](http://download.plt-scheme.org/doc/205/pdf/t-y-scheme.pdf)
 
 * [Structure and Interpretation of Computer Programs - SCIP / Abelson, Sussman, and Sussman.](https://mitpress.mit.edu/sicp/)
@@ -4374,6 +4377,22 @@ Write programs to generate other programs](http://www.ibm.com/developerworks/lib
 ### Documentation by Subject
 
 
+#### Syntax
+
+* [The Scheme language](http://home.adelphi.edu/sbloch/class/archive/270/scheme.shtml)
+
+* [CSE 341 -- Scheme Basics](http://courses.cs.washington.edu/courses/cse341/03wi/scheme/basics.html)
+
+* [Yet Another Scheme Tutorial](http://www.shido.info/lisp/idx_scm_e.html)
+
+* [CS 341 - Survey of Programming Languages Scheme for Java Programmers](http://cs.gettysburg.edu/~tneller/cs341/scheme-intro/index.html)
+
+* [Syntax Overview](http://www.cs.cmu.edu/Groups/AI/html/r4rs/r4rs_6.html)
+
+* [LISP/Scheme CptS 355 - Programming Language Design Washington State University](http://www.eecs.wsu.edu/~hauser/teaching/Languages-F09/lectures/scheme/index.html)
+
+* [R5RS Standard](http://schemers.org/Documents/Standards/R5RS/HTML/)
+
 #### Object Orientated Programming
 
 * [Scheming  with  Objects](http://ftp.cs.indiana.edu/pub/scheme-repository/doc/pubs/swob.txt)
@@ -4381,6 +4400,12 @@ Write programs to generate other programs](http://www.ibm.com/developerworks/lib
 * [Closures And Objects Are Equivalent](http://c2.com/cgi/wiki?ClosuresAndObjectsAreEquivalent)
 
 * [Records and Object Orientation](http://www.cs.rpi.edu/courses/fall00/ai/scheme/reference/schintro-v14/schintro_133.html)
+
+* [Object Systems](http://community.schemewiki.org/?object-systems)
+
+* [Common Lisp Object System](https://en.wikipedia.org/wiki/Common_Lisp_Object_System)
+
+* [Why Scheme Shouldn’t Have An Official Object System](https://pschombe.wordpress.com/2006/04/03/why-scheme-shouldn%E2%80%99t-have-an-official-object-system/)
 
 #### Macro 
 
