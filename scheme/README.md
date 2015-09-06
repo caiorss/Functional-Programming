@@ -36,6 +36,7 @@
     - [Applying Multiple Functions to a Single Argument](#applying-multiple-functions-to-a-single-argument)
       - [Currying](#currying)
     - [Miscellaneous](#miscellaneous)
+  - [Lazy Evaluation / Delayed Evaluation](#lazy-evaluation--delayed-evaluation)
   - [Object Orientated Programming](#object-orientated-programming)
   - [Metaprogramming](#metaprogramming)
     - [The Abstract Syntax Tree](#the-abstract-syntax-tree)
@@ -48,6 +49,9 @@
     - [Higher Order Procedure](#higher-order-procedure)
     - [Procedure as returned value](#procedure-as-returned-value)
     - [Exercises](#exercises)
+  - [Applications](#applications)
+    - [Lisp Evaluator written in Lisp](#lisp-evaluator-written-in-lisp)
+    - [Reverse Polish Notation Evaluator](#reverse-polish-notation-evaluator)
   - [Kawa Scheme - Access Java API from Scheme](#kawa-scheme---access-java-api-from-scheme)
       - [Install and Run](#install-and-run)
       - [Calling Java Methods in Kawa Scheme](#calling-java-methods-in-kawa-scheme)
@@ -62,7 +66,9 @@
     - [Documentation by Subject](#documentation-by-subject)
       - [Syntax](#syntax)
       - [Object Orientated Programming](#object-orientated-programming-1)
-      - [Macro](#macro)
+      - [Macros and Metaprogramming](#macros-and-metaprogramming)
+      - [Serialization and Data Representation](#serialization-and-data-representation)
+      - [Scheme as an Extension Language](#scheme-as-an-extension-language)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -2363,6 +2369,10 @@ $7 = ((1 230 1000 434) (a b sym con) ("c" "xs" "ccw" "xyzw"))
 
 ```
 
+## Lazy Evaluation / Delayed Evaluation
+
+
+
 ## Object Orientated Programming
 
 Objects can be implemented with closures as can be seen in:
@@ -2911,11 +2921,11 @@ $13 = 10
 
 > b
 $14 = 200
-scheme@(guile-user)> 
+ 
 
 > c
 $15 = 300
-scheme@(guile-user)> 
+
 
 > d
 $16 = "something"
@@ -2959,6 +2969,115 @@ $36 = (it is all symbols (litst of symbols))
 ;Value 39: (x it is all symbols (list of symbols))
 
 1 ]=> 
+
+```
+
+**Association List**
+
+```scheme
+(define-syntax define-assoc
+    (syntax-rules () 
+     (( define-assoc name ((sym value) ...))
+      (define name (list (cons sym value) ...)))))
+
+> (define-assoc colors (('red 1) ('blue 2) ('white 3) ('green 5)))
+
+> colors
+$94 = ((red . 1) (blue . 2) (white . 3) (green . 5))
+
+,expand (define-assoc colors (('red 1) ('blue 2) ('white 3) ('green 5)))
+$95 = (define colors
+  (list (cons 'red 1)
+        (cons 'blue 2)
+        (cons 'white 3)
+        (cons 'green 5)))
+
+(assoc 'red colors)
+$96 = (red . 1)
+
+
+(car (assoc 'red colors))
+$97 = red
+```
+
+
+**Dispatch Table**
+
+Create a symbol dispatch table macro
+
+Example: Without Macro
+
+```scheme
+(define dispatch-table
+  (list
+   (cons 'cons cons)
+   (cons  'car  car)
+   (cons  'cdr  cdr)
+   (cons 'list list)
+   (cons '+ +)
+   (cons '- -)
+   (cons '* *)
+   (cons '/ *)   
+   (cons 'expt expt)
+   (cons 'sin sin)
+   (cons 'cos cos)
+   (cons 'tan tan)
+   (cons 'exp exp)
+   (cons 'sqrt sqrt)
+   (cons 'log log)))
+   
+(define (get-key  key assoclist)
+      (cdr (assoc key assoclist)))
+
+(define (has-key? key assoclist)
+  (member key (map car assoclist)))
+  
+(get-key '+ dispatch-table)
+$78 = #<procedure + (#:optional _ _ . _)>
+
+((get-key 'exp dispatch-table) 3)
+$80 = 20.085536923187668
+
+((get-key (string->symbol "exp") dispatch-table) 3)
+$81 = 20.085536923187668
+```
+
+With Macro:
+
+```scheme
+(define-syntax define-dispatch-table
+    (syntax-rules () 
+     ((define-dispatch-table name (sym ...)) 
+      (define name (list
+                    (cons 'sym sym) ...)))))
+
+(define-dispatch-table dispatch-table 
+  (cons car cdr list + - * / expt sin cos tan exp sqrt log))
+  
+> ((get-key 'exp dispatch-table) 3)
+$84 = 20.085536923187668 
+
+> ((get-key '+ dispatch-table) 1 2 3 4 5 6)
+$85 = 21  
+
+> ,expand (define-dispatch-table dispatch-table 
+  (cons car cdr list + - * / expt sin cos tan exp sqrt log))
+$86 = (define dispatch-table
+  (list (cons 'cons cons)
+        (cons 'car car)
+        (cons 'cdr cdr)
+        (cons 'list list)
+        (cons '+ +)
+        (cons '- -)
+        (cons '* *)
+        (cons '/ /)
+        (cons 'expt expt)
+        (cons 'sin sin)
+        (cons 'cos cos)
+        (cons 'tan tan)
+        (cons 'exp exp)
+        (cons 'sqrt sqrt)
+        (cons 'log log)))
 
 ```
 
@@ -3981,6 +4100,210 @@ $24 = 85085
         
 ```
 
+## Applications
+
+
+### Lisp Evaluator written in Lisp
+
+Task: Write an s-expression evaluator (prefix notation evaluator)  in lisp without using eval function. This evaluator can be useful to execute untrusted code on a restricted environment.
+
+
+```scheme
+
+(define function-table
+  (list
+   (cons 'cons cons)
+   (cons  'car  car)
+   (cons  'cdr  cdr)
+   (cons 'list list)
+   (cons '+ +)
+   (cons '- -)
+   (cons '* *)
+   (cons '/ *)
+   (cons '** expt)
+   (cons 'expt expt)
+   (cons 'sin sin)
+   (cons 'cos cos)
+   (cons 'tan tan)
+   (cons 'exp exp)
+   (cons 'sqrt sqrt)
+   (cons 'sqr (lambda (x) (* x x)))
+   (cons 'log log)))
+
+(define (get-key  key assoclist)
+      (cdr (assoc key assoclist)))
+
+(define (has-key? key assoclist)
+  (member key (map car assoclist)))
+
+(define (func? sym) (has-key? sym function-table))
+(define (func-dispatch sym) (get-key sym function-table))
+  
+;;
+;; Evaluate s-expressions in prefix notation
+;;
+(define (eval-prefix expr)
+  (if (or (number? expr) (string? expr) (null? expr))
+      expr
+      (let  ((p (car expr)))
+        
+          (cond
+           ((list? p)  (eval-prefix p))
+           ((func? p)(apply (func-dispatch p)
+                       (map eval-prefix (cdr expr)))))                          
+          
+         );; End let
+ ));; End of prefix-eval
+
+
+
+
+> (eval-prefix '(+ 10 20 5 6))
+$62 = 41
+
+> (eval-prefix '(+ (* 3 4) (* 7 8) (/ 5 (+ 4 1))))
+$63 = 69
+
+> (eval-prefix 100)
+$64 = 100
+
+> (eval-prefix 10)
+$65 = 10
+
+> (eval-prefix '(+ (exp 2) (log 10) (cos (+ 2 3))))
+$75 = 9.975303377387922
+
+> (define sexp  '(+ (exp 2) (log 10) (cos (+ 2 3))))
+
+> sexp
+$76 = (+ (exp 2) (log 10) (cos (+ 2 3)))
+
+> (eval-prefix sexp)
+$77 = 9.975303377387922
+```
+
+### Reverse Polish Notation Evaluator
+
+```scheme
+(define (make-stack)   
+  (define stack '())
+  (define (show) stack)
+  (define (top) (car stack))
+  (define (empty?)
+    (null? stack))
+
+  (define (reset)
+    (set! stack '()))
+
+  (define (push x)
+    (set! stack (cons x stack)))
+
+  (define (pop)
+    (let
+        ((p (car stack)))
+      (begin
+        (set! stack (cdr stack))
+        p)))
+  (define (pop-all)
+    (let
+        ((p stack))
+      (begin
+        (set! stack '())
+        p)))
+  (lambda (selector . args)
+    (case selector
+      ((show)    (apply show args))
+      ((reset)   (apply reset args))
+      ((push)    (apply push args))
+      ((pop)     (apply pop args))
+      ((top)    (apply top args))
+      ((pop-all) (apply pop-all args)))))
+
+(define (operator? sym)
+  (member sym '(+ - * / ^)))
+
+(define operators
+  (list (cons '+ +) (cons '- -) (cons '* *) (cons '/ /)))
+
+(define (operator-func sym)
+  (cdr (assoc sym operators)))
+
+(define functions-list
+  (list (cons 'sin sin)
+        (cons 'cos cos)
+        (cons 'exp exp)
+        (cons 'expt expt)
+        (cons 'log log)
+        (cons 'sqrt sqrt)
+        (cons 'sqr (lambda (x) (* x x)))
+        ))
+        
+
+(define (function? sym)
+  (assoc sym functions-list))
+
+(define (find-function sym)
+  (cdr (assoc sym functions-list)))
+  
+
+
+
+(define (evaluate-postfix expr)
+
+  (define s (make-stack))
+  (define (evaluate-function expr)
+    (s 'push ((find-function expr) (s 'pop))))
+
+  (define (evaluate-operator op)
+    (let
+        ((a (s 'pop))
+         (b (s 'pop))
+         )
+      (s 'push ((operator-func op) b a))))
+
+  (define (evaluator expr)
+    (if (null? expr)
+        (s 'pop)
+        (begin 
+          (cond
+           ((number? (car expr))    (s 'push (car expr)))
+           ((operator? (car expr))  (evaluate-operator (car expr)))
+           ((function? (car expr))  (evaluate-function (car expr))))
+          
+          (evaluator (cdr expr)))))
+
+  (evaluator expr))
+
+;;; 10 + 20
+1 ]=> (evaluate-postfix '( 10 20 +))
+
+;Value: 30
+
+;;; 10 + 20 * 30
+1 ]=> (evaluate-postfix '( 10 20 30 * +))
+
+;Value: 610
+
+;;; log 10
+ ]=> (evaluate-postfix '(10 log))
+
+;Value: 2.302585092994046
+
+;;; exp (log 10)
+
+1 ]=> (evaluate-postfix '(10 log exp))
+
+;Value: 10.000000000000002
+
+;; (exp 3) + 3 * (cos 4)
+;;
+1 ]=> (evaluate-postfix '( 3 exp 3 4 cos * +))
+
+;Value: 18.124606060596836
+
+
+```
+
 
 ## Kawa Scheme - Access Java API from Scheme
 
@@ -4396,6 +4719,8 @@ Write programs to generate other programs](http://www.ibm.com/developerworks/lib
 
 * [R5RS Standard](http://schemers.org/Documents/Standards/R5RS/HTML/)
 
+* [Differences between Scheme and Common Lisp](http://dept-info.labri.u-bordeaux.fr/~strandh/Teaching/Langages-Enchasses/Common/Strandh-Tutorial/diff-scheme.html)
+
 #### Object Orientated Programming
 
 * [Scheming  with  Objects](http://ftp.cs.indiana.edu/pub/scheme-repository/doc/pubs/swob.txt)
@@ -4411,7 +4736,7 @@ Write programs to generate other programs](http://www.ibm.com/developerworks/lib
 * [Why Scheme Shouldn’t Have An Official Object System](https://pschombe.wordpress.com/2006/04/03/why-scheme-shouldn%E2%80%99t-have-an-official-object-system/)
 
 
-#### Macro 
+#### Macros and Metaprogramming 
 
 * [What is meta-programming?](http://racket-metaprogramming.com/blog/2015/08/07/what-is-meta-programming/)
 
@@ -4443,3 +4768,14 @@ Write programs to generate other programs](http://www.ibm.com/developerworks/lib
 
 * [Low- and high-level macro programming in Scheme - http://okmij.org](http://okmij.org/ftp/Scheme/macros.html)
 
+
+#### Serialization and Data Representation
+
+* [S-expression - Wikipedia](https://en.wikipedia.org/wiki/S-expression)
+* [SXML format](https://en.wikipedia.org/wiki/SXML)
+
+#### Scheme as an Extension Language
+
+* [GNU Cash - Custom Reports](http://wiki.gnucash.org/wiki/Custom_Reports)
+
+* [GEDA - Scripting a gnetlist backend in Scheme](http://wiki.geda-project.org/geda:gnetlist_scheme_tutorial)
