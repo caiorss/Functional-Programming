@@ -31,8 +31,12 @@
   - [Higher Order Functions](#higher-order-functions)
     - [Special Functions](#special-functions)
     - [Functions Composition](#functions-composition)
+    - [Partial Application and Currying](#partial-application-and-currying)
+      - [Partial Application](#partial-application)
     - [Applying Multiple Functions to a Single Argument](#applying-multiple-functions-to-a-single-argument)
+      - [Currying](#currying)
     - [Miscellaneous](#miscellaneous)
+  - [Object Orientated Programming](#object-orientated-programming)
   - [Metaprogramming](#metaprogramming)
     - [The Abstract Syntax Tree](#the-abstract-syntax-tree)
     - [Macros](#macros)
@@ -52,8 +56,12 @@
   - [Resources](#resources)
     - [Books](#books)
     - [Articles](#articles)
+    - [Blogs, Workshops, Conferences](#blogs-workshops-conferences)
     - [GITHUB](#github)
     - [Misc](#misc)
+    - [Documentation by Subject](#documentation-by-subject)
+      - [Object Orientated Programming](#object-orientated-programming-1)
+      - [Macro](#macro)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1381,8 +1389,9 @@ S-expressions advantages:
 
 
 See also:
-    * [Real World OCaml - Chapter 17. Data Serialization with S-Expressions](https://realworldocaml.org/v1/en/html/data-serialization-with-s-expressions.html)
-    * http://www.seomastering.com/wiki/Comparison_of_data_serialization_formats
+
+* [Real World OCaml - Chapter 17. Data Serialization with S-Expressions](https://realworldocaml.org/v1/en/html/data-serialization-with-s-expressions.html)
+* [Comparison of data serialization formats](http://www.seomastering.com/wiki/Comparison_of_data_serialization_formats)
 
 ### Association Lists
 
@@ -1633,6 +1642,38 @@ $ rlwrap -c --remember scheme
 
 ```
 
+### Partial Application and Currying
+
+#### Partial Application
+
+```scheme 
+
+(define (partial fun . args)
+      (lambda x (apply fun (append args x))))
+
+1 ]=> (define (f x y z) (+ (* 3 x) (* 2 y) (* -2 z)))
+
+;Value: f
+
+1 ]=> (f 2 3 4)
+
+;Value: 4
+
+1 ]=> ((partial f 1) 2 3)
+
+;Value: 1
+
+1 ]=> ((partial f 1 2) 3)
+
+;Value: 1
+
+
+1 ]=> (map (partial f 1 2) '(1 2 3 4 5 6)) ;;
+
+;Value 23: (5 3 1 -1 -3 -5)
+
+```
+
 ### Applying Multiple Functions to a Single Argument
 
 
@@ -1659,6 +1700,82 @@ Returns a functions that takes a list of functions and applies it to a single va
 (map f '(1 2 3))
 
 ;Value 23: ((1 2.718281828459045 0) (1.4142135623730951 7.38905609893065 .6931471805599453) (1.7320508075688772 20.08553692318767 1.0986122886681098))
+
+
+```
+
+#### Currying
+
+```scheme
+
+;;;;; Currying Transformations
+;; Turn a non curried function into a curried function 
+;;
+
+(define (curry2 f)
+    (lambda (x)
+        (lambda (y)
+            (f x y))))
+            
+(define (curry3  f)
+    (lambda (x)
+        (lambda (y)
+            (lambda (z)
+                (f x y z)))))
+
+             
+(define (curry4  f)
+    (lambda (x)
+        (lambda (y)
+            (lambda (z)
+                (lambda (w)
+                (f x y z w))))))
+        
+1 ]=> (define (mul x y) (* x y))
+
+;Value: mul
+
+1 ]=> (mul 3 4)
+
+;Value: 12
+
+1 ]=> (((curry2 mul) 3) 4)
+
+;Value: 12
+
+1 ]=> (define mul3 ((curry2 mul) 3))
+
+;Value: mul3
+
+
+1 ]=> (mul3 4)
+
+;Value: 12
+
+1 ]=> (map mul3 '(1 2 3 4 5 6))
+
+;Value 24: (3 6 9 12 15 18)
+
+1 ]=>  
+
+;;--------------------------
+
+(define (f x y z) (+ (* 3 x) (* 2 y) (* -2 z)))
+
+1 ]=> (define cf (curry3 f))
+
+;Value: cf
+
+
+1 ]=> (((cf 1) 2) 3)
+
+;Value: 1
+
+
+1 ]=> (map ((cf 1) 2) '( 1 2 3 4 5))
+
+;Value 27: (5 3 1 -1 -3)
+
 
 
 ```
@@ -2244,13 +2361,190 @@ $7 = ((1 230 1000 434) (a b sym con) ("c" "xs" "ccw" "xyzw"))
 
 ```
 
+## Object Orientated Programming
+
+Objects can be implemented with closures as can be seen in:
+
+* [Scheming  with  Objects](http://ftp.cs.indiana.edu/pub/scheme-repository/doc/pubs/swob.txt)
+* [FP, OO and relations. Does anyone trump the others?](http://okmij.org/ftp/Scheme/oop-in-fp.txt)
+
+**Example - 2D Points**
+
+```scheme
+(define (make-point x y)
+  (define (get-x) x)
+  (define (get-y) y)
+  (define (set-x! x_new) (set! x x_new))
+  (define (set-y! y_new) (set! y y_new))
+  (define  (pos) (list x  y))
+
+  ;; Message Passying Style
+  (lambda (message . args)
+    (case message
+        ((get-x)  (apply get-x args))
+        ((get-y)  (apply get-y args))
+        ((set-x!) (apply set-x! args))
+        ((set-y!) (apply set-y! args))
+        ((pos)    (apply pos args))
+        (else (error "POINT: Unknown message ->" message))
+        
+    )
+   );; End of self
+);; End of make-point 
+
+> (define point-1 (make-point 3 4))
+> (define point-2 (make-point 10 5))
+
+
+> point-1
+$21 = #<procedure 99e0060 at <current input>:307:2 (message . args)>
+
+
+> point-2
+$22 = #<procedure 9978e00 at <current input>:277:2 (self message . args)>
+
+
+
+> (point-1 'get-x)
+$12 = 3
+> (point-1 'get-y)
+$13 = 4
+> (point-1 'pos)
+$43 = (3 4)
+
+
+;; Apply a function of multiple arguments to a list of arguments
+;;
+(define (map-args f list-of-args)
+   (map (lambda (args) (apply f args)) list-of-args))
+
+> (define (get-attr attr) (lambda (object) (object attr)))
+
+> (define (set-attr attr)
+    (lambda (object value) (object attr value)))
+
+
+> (map (get-attr 'get-x)  (list point-1 point-2))
+$14 = (3 10)
+
+> (map (get-attr 'get-y)  (list point-1 point-2))
+$15 = (4 5)
+
+
+> (map (get-attr 'pos)  (list point-1 point-2))
+$16 = ((3 4) (10 5))
+
+
+> (point-1 'set-x! 100)
+
+> (point-1 'pos)
+$47 = (100 4)
+
+
+   
+
+(define points (map-args make-point '( (2 3) (5 4) (8 7) (9 10))))
+ 
+
+> (map (get-attr 'get-x) points)
+$49 = (2 5 8 9)
+
+> (map (get-attr 'get-y) points)
+$51 = (3 4 7 10)
+
+> (map (get-attr 'pos) points)
+$52 = ((2 3) (5 4) (8 7) (9 10))
+
+;; Function call style 
+
+
+> (define get-x (get-attr 'get-x))
+> (define get-y (get-attr 'get-y))
+
+> (map get-x points)
+$54 = (2 5 8 9)
+
+> (map get-y points)
+$55 = (3 4 7 10)
+
+> (define set-x! (set-attr 'set-x))
+
+> (get-x point-1)
+$57 = 100
+
+> (set-x! point-1 78)
+
+> (get-x point-1)
+$58 = 78
+
+```
+
+**Example: Stack**
+
+```scheme 
+
+(define (make-stack)   
+  (define stack '())
+  (define (show) stack)
+  (define (top) (car stack))
+  (define (empty?)
+    (null? stack))
+
+  (define (reset)
+    (set! stack '()))
+
+  (define (push x)
+    (set! stack (cons x stack)))
+
+  (define (pop)
+    (let
+        ((p (car stack)))
+      (begin
+        (set! stack (cdr stack))
+        p)))
+  (define (pop-all)
+    (let
+        ((p stack))
+      (begin
+        (set! stack '())
+        p)))
+  (lambda (selector . args)
+    (case selector
+      ((show)    (apply show args))
+      ((reset)   (apply reset args))
+      ((push)    (apply push args))
+      ((pop)     (apply pop args))
+      ((top)     (apply top args))
+      ((pop-all) (apply pop-all args)))))
+      
+> (define s (make-stack))
+> (s 'show)
+()
+> (s 'push 10)
+> (s 'push 20)
+> (s 'push 30)
+> (s 'show)
+(30 20 10)
+> (s 'top)
+30
+> (s 'pop)
+30
+> (s 'show)
+(20 10)
+> (s 'empty)
+> (s 'push 1000)
+> (s 'show)
+(1000 20 10)
+>       
+```
+
 ## Metaprogramming
 
 Metaprogramming is the ability to create that code that writes code. Like any lisp scheme has great metaprogramming capabilities like:
 
 * Code is data and data is code 
 * Exposes the AST abstract syntax tree, that is an atom (symbol, string or a number) or a list 
-* The AST is a list of lists and atoms or an atom
+* The AST is a list of lists and atoms or a single atom
 * The AST can be manipulated like any list
 * Lisp programs can build itself
 * The macro system allows the user to create new syntax rules and create new language constructs.
@@ -2460,6 +2754,52 @@ $22 = 10
 
 ```
 
+**Convert Infix Operator to prefix operator**
+
+```scheme 
+(define-syntax $
+  (syntax-rules ()
+    (($ a operator b)
+     (operator a b))))
+
+> ($ 2 < 10)
+$1 = #t
+
+> ($ 10 = 2)
+$2 = #f
+
+
+> (define (myoperator x y) ($ ($ 3 *  x) +  ($ 4 *  y)))
+
+> (myoperator 2 5)
+$3 = 26
+
+
+> ($ 2 myoperator 5)
+$6 = 26
+
+> ($ 2 myoperator 5)
+$6 = 26
+
+
+> ($ 10 + 3)
+$5 = 13
+
+> ,expand ($ 10 + 3)
+$4 = (+ 10 3)
+
+> (define x 100)
+
+> (if ($ x < 10) "less than 10" "greater than 10")
+$7 = "greater than 10"
+
+
+> (define x 1)
+
+> (if ($ x < 10) "less than 10" "greater than 10")
+$8 = "less than 10"
+```
+
 **Delay and force a computation**
 
 Lazy evalution.
@@ -2499,7 +2839,33 @@ Entering a new prompt.  Type `,bt' for a backtrace or `,q' to continue.
 
 ```
 
-**Create a common-lisp defun statement**
+**Define alias**
+
+Change the define statement to def.
+
+```scheme 
+(define-syntax def
+  (syntax-rules ()
+    ((def name value )
+     (define name value ))))
+
+> (def x 100)
+
+     
+> ,expand (def x 100)
+$10 = (define x 100)
+
+> (def (f x y) (+ (* 3 x) (* 4 y)))
+
+> (f 3 5)
+$11 = 29
+
+> ,expand (def (f x y) (+ (* 3 x) (* 4 y)))
+$12 = (define (f x y) (+ (* 3 x) (* 4 y)))
+
+```
+
+**Common-lisp defun statement**
 
 ```scheme
 (define-syntax-rule
@@ -2521,6 +2887,56 @@ $7 = (define (f x y) (+ (* 3 x) (* 4 y)))
 > 
  
 ```
+
+**Multi define statement**
+
+```scheme 
+(define-syntax define-multi 
+    (syntax-rules () 
+     ((define-multi (var val)  ...) 
+      (begin 
+        (define var val) ...))))
+
+(define-multi 
+   (a 10)
+   (b 200)
+   (c 300)
+   (d "something")
+   (e 'a-symbol))
+   
+> a
+$13 = 10
+
+> b
+$14 = 200
+scheme@(guile-user)> 
+
+> c
+$15 = 300
+scheme@(guile-user)> 
+
+> d
+$16 = "something"
+
+> e
+$17 = a-symbol
+
+> ,expand (define-multi 
+   (a 10)
+   (b 200)
+   (c 300)
+   (d "something")
+   (e 'a-symbol))
+$4 = (begin
+  (define a 10)
+  (define b 200)
+  (define c 300)
+  (define d "something")
+  (define e 'a-symbol))
+
+
+```
+
 
 **Print Variable name and value**
 
@@ -3885,6 +4301,8 @@ File: [FahrenheitGUI.scm](src/FahrenheitGUI.scm)
 
 ### Books
 
+* [Teach Yourself Scheme in Fixnum Days - Dorai Sitaram, 1998–2003](http://download.plt-scheme.org/doc/205/pdf/t-y-scheme.pdf)
+
 * [Structure and Interpretation of Computer Programs - SCIP / Abelson, Sussman, and Sussman.](https://mitpress.mit.edu/sicp/)
 * [Structure and Interpretation of Computer Programs - Video Lectures by Hal Abelson and Gerald Jay Sussman](http://groups.csail.mit.edu/mac/classes/6.001/abelson-sussman-lectures/)
 
@@ -3905,6 +4323,7 @@ File: [FahrenheitGUI.scm](src/FahrenheitGUI.scm)
 
 * [MIT/GNU Scheme Reference Manual](http://sicp.ai.mit.edu/Fall-2004/manuals/scheme-7.5.5/doc/scheme_toc.html)
 
+* [PLEAC GUILE Cookbook](http://pleac.sourceforge.net/pleac_guile/index.html)
 
 * [On Lisp - Paul Graham](http://unintelligible.org/onlisp/onlisp.html)
 
@@ -3919,6 +4338,14 @@ File: [FahrenheitGUI.scm](src/FahrenheitGUI.scm)
 
 * [IBM - The art of metaprogramming, Part 1: Introduction to metaprogramming
 Write programs to generate other programs](http://www.ibm.com/developerworks/library/l-metaprog1/)
+
+### Blogs, Workshops, Conferences
+
+* [Racket Metaprogramming](http://racket-metaprogramming.com/)
+
+* [Programming Musings](https://jaortega.wordpress.com/category/scheme/)
+
+* [Scheme and Functional Programming Workshop](http://www.schemeworkshop.org/)
 
 ### GITHUB
 
@@ -3942,3 +4369,48 @@ Write programs to generate other programs](http://www.ibm.com/developerworks/lib
 * [PICOBIT: A Compact Scheme System for Microcontrollers Vincent St-Amour and Marc Feeley](http://www.ccs.neu.edu/home/stamourv/papers/picobit.pdf)
 * [Functional Programming of Behavior-Based Systems Ian Douglas Horswill](http://cs.northwestern.edu/~ian/grl-paper.pdf)
 * [Composing Real-Time Systems](http://www.ijcai.org/Past%20Proceedings/IJCAI-91-VOL1/PDF/034.pdf)
+
+
+### Documentation by Subject
+
+
+#### Object Orientated Programming
+
+* [Scheming  with  Objects](http://ftp.cs.indiana.edu/pub/scheme-repository/doc/pubs/swob.txt)
+
+* [Closures And Objects Are Equivalent](http://c2.com/cgi/wiki?ClosuresAndObjectsAreEquivalent)
+
+* [Records and Object Orientation](http://www.cs.rpi.edu/courses/fall00/ai/scheme/reference/schintro-v14/schintro_133.html)
+
+#### Macro 
+
+* [What is meta-programming?](http://racket-metaprogramming.com/blog/2015/08/07/what-is-meta-programming/)
+
+* [scheme-faq-macros](http://community.schemewiki.org/?scheme-faq-macros)
+
+* [JRM's Syntax-rules Primer for the Merely Eccentric](http://hipster.home.xs4all.nl/lib/scheme/gauche/define-syntax-primer.txt)
+
+* [Racket Macros](http://docs.racket-lang.org/guide/macros.html)
+
+* [Scheme-Style Macros: Patterns and Lexical Scope](https://www.cs.utah.edu/~mflatt/past-courses/cs6510/public_html/macros.pdf)
+
+* [Metaprogramming with Macros](http://wiki.epfl.ch/edicpublic/documents/Candidacy%20exam/2012-09-10-eugeneburmako-researchproposal.pdf)
+
+* [A Scheme Syntax-Rules Primer](http://www.willdonnelly.net/blog/scheme-syntax-rules/)
+
+* [The Adventures of a Pythonista in Schemeland v0.1 documentation » Hygienic macros](http://www.phyast.pitt.edu/~micheles/scheme/scheme28.html)
+
+* [Chapter 8. Syntactic Extension](http://www.scheme.com/tspl2d/syntax.html)
+
+* [Macro systems in Scheme](http://pereckerdal.com/2010/05/17/macro-systems/)
+
+* [A Short R⁷RS Scheme Tutorial](https://csl.name/post/scheme-tutorial/)
+
+* [Scheme-Style Macros: Patterns and Lexical Scope](https://www.cs.utah.edu/~mflatt/past-courses/cs6520/public_html/s04/macro-tutorial.pdf)
+
+* [Writing Hygienic Macros in Scheme with Syntax-Case - R. Kent Dybvig - Indiana University Computer Science Department Bloomington](https://www.cs.indiana.edu/~dyb/pubs/tr356.pdf)
+
+* [Source-to-Source Compilation in Racket You Want it in Which Language?](https://ifl2014.github.io/submissions/ifl2014_submission_6.pdf)
+
+* [Low- and high-level macro programming in Scheme - http://okmij.org](http://okmij.org/ftp/Scheme/macros.html)
+
