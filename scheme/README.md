@@ -104,7 +104,8 @@ Products that use lisp:
 | [GNU Guile](http://www.gnu.org/software/guile/gnu-guile-projects.html#Applications) | Used as embedded extension language for many apps like GIMP, [GNUCash](http://wiki.gnucash.org/wiki/Custom_Reports), GEDA |
 | [Chicken](http://www.call-cc.org/)  | Compiles to Native Code, produces C code  | 
 | [Chibi Scheme](https://github.com/ashinn/chibi-scheme) | Minimal Scheme Implementation for use as an Extension Language |
-| [Racket](http://racket-lang.org/)   | IDE and Debugger. Superset of scheme, not fully compatible.  | 
+| [BiwaScheme](http://www.biwascheme.org/) | Scheme implemented in Javascript. It can run in the browser, client side. |
+| [Racket](http://racket-lang.org/)   | IDE Dr Scheme. and Debugger. Superset of scheme, not fully compatible.  | 
 
 
 See also: 
@@ -4374,6 +4375,8 @@ Write programs to generate other programs](http://www.ibm.com/developerworks/lib
 * [Composing Real-Time Systems](http://www.ijcai.org/Past%20Proceedings/IJCAI-91-VOL1/PDF/034.pdf)
 
 
+* [Design Patterns in Dynamic Programming - Peter Norvig Chief Designer, Adaptive Systems Harlequin Inc.](http://norvig.com/design-patterns/design-patterns.pdf)
+
 ### Documentation by Subject
 
 
@@ -4406,6 +4409,7 @@ Write programs to generate other programs](http://www.ibm.com/developerworks/lib
 * [Common Lisp Object System](https://en.wikipedia.org/wiki/Common_Lisp_Object_System)
 
 * [Why Scheme Shouldn’t Have An Official Object System](https://pschombe.wordpress.com/2006/04/03/why-scheme-shouldn%E2%80%99t-have-an-official-object-system/)
+
 
 #### Macro 
 
