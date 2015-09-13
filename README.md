@@ -25,9 +25,12 @@ You can access this page from:
 * http://tinyurl.com/fpbyexample
 
 
-**Haskell Summary**
+**General**
 
 * [Functional Programming Concepts](haskell/Functional_Programming_Concepts.md)
+
+**Functional Programming in Haskell**
+
 * [Haskell](haskell/Haskell.md)
 * [Basic Syntax](haskell/Basic_Syntax.md)
 * [Functions](haskell/Functions.md)

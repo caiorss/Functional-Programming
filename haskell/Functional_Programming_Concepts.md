@@ -108,6 +108,8 @@ A selection of people who influenced functional programming:
 
 * [John McCarthy](https://en.wikipedia.org/wiki/John_McCarthy_(computer_scientist)),  Computer Scientist -> Creator of [Lisp](https://en.wikipedia.org/wiki/Lisp_(programming_language)), Artificial intelligence
 
+    * [Guy Steele Interviews John McCarthy, Father of Lisp](http://www.infoq.com/interviews/Steele-Interviews-John-McCarthy)
+
 * [John Backus](https://en.wikipedia.org/wiki/John_Backus), Computer Scientist ->  Backus-Naur form (BNF), Fortran Language, 
     * [Can Programming Be Liberated from the von Neumann Style? A Functional Style and Its Algebra of Programs](https://web.stanford.edu/class/cs242/readings/backus.pdf)
 
