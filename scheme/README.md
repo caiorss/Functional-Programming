@@ -45,8 +45,8 @@
   - [Metaprogramming](#metaprogramming)
     - [The Abstract Syntax Tree](#the-abstract-syntax-tree)
     - [Macros](#macros)
-      - [Syntax - Define-syntax](#syntax---define-syntax)
-      - [Syntax - Define-macro](#syntax---define-macro)
+      - [Hygienic Macros - Define-syntax](#hygienic-macros---define-syntax)
+      - [Common Lisp Style Macros - Define-macro](#common-lisp-style-macros---define-macro)
   - [Debugging](#debugging)
     - [MIT Scheme](#mit-scheme)
     - [GNU Guile](#gnu-guile)
@@ -65,17 +65,20 @@
     - [See also](#see-also)
   - [Resources](#resources)
     - [Books](#books)
+    - [Community](#community)
     - [Articles](#articles)
     - [Blogs, Workshops, Conferences](#blogs-workshops-conferences)
     - [University Courses](#university-courses)
-    - [GITHUB](#github)
+    - [Repositories](#repositories)
     - [Misc](#misc)
     - [Documentation by Subject](#documentation-by-subject)
+      - [Manual](#manual)
+      - [Libraries](#libraries)
       - [Syntax](#syntax-1)
       - [Object Orientated Programming](#object-orientated-programming-1)
       - [Macros and Metaprogramming](#macros-and-metaprogramming)
       - [Serialization and Data Representation](#serialization-and-data-representation)
-      - [Scheme as an Extension Language](#scheme-as-an-extension-language)
+      - [Scheme as Extension Language](#scheme-as-extension-language)
       - [Algebraic Data Types - Monads, Monoids](#algebraic-data-types---monads-monoids)
       - [Continuation](#continuation)
       - [Compilation](#compilation)
@@ -128,6 +131,8 @@ Products that use lisp:
 
 
 See also: 
+
+* [What Scheme implementations are there? ](http://community.schemewiki.org/?scheme-faq-standards#implementations)
 
 * [An opinionated guide to scheme implementations](https://wingolog.org/archives/2013/01/07/an-opinionated-guide-to-scheme-implementations)
 
@@ -293,6 +298,42 @@ The begin statement is used to execute multiple s-expressions.
 
 ```
 
+* quote or (') tick.
+
+Don't evaluate a lisp expression, returns the list of symbols, numbers and atoms that forms the list, or in other words, any lisp expression is just a list.
+
+```scheme
+(quote <expression>) Or '(<epxression>)
+
+> '(exp 3.0)
+$11 = (exp 3.0)
+
+> (quote (exp 3.0)) 
+$12 = (exp 3.0)
+
+;;; GNU Guile 
+> (eval '(exp 3.0) (interaction-environment))
+$15 = 20.08553692318766
+
+;;; (eval (quote (exp 3.0)) (interaction-environment))
+$16 = 20.085536923187668
+
+> '(1 2 3 4 5)
+$13 = (1 2 3 4 5)
+
+> (quote (1 2 3 4 5))
+$14 = (1 2 3 4 5)
+
+;;; However not all list can be evaluated
+> (eval '(1 2 3 4 5) (interaction-environment))
+ERROR: In procedure 1:
+ERROR: Wrong type to apply: 1
+
+
+```
+
+**Important Functions**
+
 * load 
 
 Load a scheme source code in the REPL.
@@ -302,7 +343,69 @@ Load a scheme source code in the REPL.
 (load "tools.scm")
 ```
 
+* eval
 
+Eval evaluates a quoted lis expression, its arguments depends on the scheme implementation. It is better to use macros rather than eval. It is necessary to remember that "eval is evil" since it can allow untrusted code execute arbitrary commands so it must be used with care.
+
+Note: In some scheme implementations [] square brackets can be used instead of parenthesis to make the code more readable.
+
+```scheme
+;; (eval <s-expression> <argument>)
+
+;;;; MIT - Scheme
+;;
+;;  $ rlwrap -c --remember scheme
+
+1 ]=> (define s '((lambda (x y) (+ (* 2 x) (* 3 y))) 3 4))
+
+;Value: s
+
+1 ]=> s
+
+;Value 17: ((lambda (x y) (+ (* 2 x) (* 3 y))) 3 4
+
+1 ]=> (eval s (the-environment))
+
+;Value: 18
+
+;;;; GNU Guile
+;;
+;; $ rlwrap -c --remember guile
+
+> [define s '([lambda (x y) (+ (* 2 x) (* 3 y))] 3 4)]
+scheme@(guile-user)> 
+
+> s
+$1 = ((lambda (x y) (+ (* 2 x) (* 3 y))) 3 4)
+
+> (eval s (interaction-environment))
+$2 = 18
+
+;;;; Chicken Scheme
+;;
+;; $ rlwrap -c --remember csi
+
+> [define s '([lambda (x y) (+ (* 2 x) (* 3 y))] 3 4)]
+> s
+((lambda (x y) (+ (* 2 x) (* 3 y))) 3 4)
+> 
+
+> (eval s)
+18
+
+
+;;;; Kawa Scheme
+;;
+;;  $ rlwrap -c --remember java -jar kawa-2.0.jar 
+
+    #|kawa:6|# (define s '((lambda (x y) (+ (* 2 x) (* 3 y))) 3 4))
+    #|kawa:7|# s
+    ((lambda (x y) (+ (* 2 x) (* 3 y))) 3 4)
+    #|kawa:8|# 
+
+    #|kawa:10|# (eval s)
+    18
+```
 
 ### Data Types
 
@@ -482,11 +585,13 @@ Scheme is dynamic typed language therefore there is not guarantee about the vari
 |------------|----------------------------------------------|
 | boolean?   | Boolean                                      |
 | string?    | Strings                                      |
-| number?    | Number, integer or real                     |
+| number?    | Number, integer, real or complex numbers     |
 | integer?   | Integer numbers                              |
 | real?      | Real numbers 2.232 1e3 100                   |
+| complex?   | Complex numbers 100+45i                      |
 | symbol?    | Symbols                                      |
 | list?      | Lists                                        |
+| vector?    | Vectors                                      |
 | procedure? | Procedure or function                        |
 
 ```scheme
@@ -1104,17 +1209,17 @@ compiled 2015-08-04 on yves.more-magic.net (Linux)
 ;;
 ;;--------------------------------
 
-    #;1> (= 'symbol1 'symbol2)
+    > (= 'symbol1 'symbol2)
 
     Error: (=) bad argument type: symbol1
 
 
     (= 100 100)
     #t
-    #;2> 
+    > 
     (= 10 1)
     #f
-    #;3> 
+    > 
 
 ;;
 ;; eq?
@@ -1123,34 +1228,34 @@ compiled 2015-08-04 on yves.more-magic.net (Linux)
 ;;
 ;;--------------------------------
 
-    #;4> (eq? 'a-symbol 'a-symbol)
+    > (eq? 'a-symbol 'a-symbol)
     #t
-    #;5> (eq? 'a-symbol 'a-symb)
+    > (eq? 'a-symbol 'a-symb)
     #f
-    #;6> 
+    > 
 
-    #;11> (eq? 10 10)
+    > (eq? 10 10)
     #t
-    #;12> (eq? 10 10.0)
+    > (eq? 10 10.0)
     #f
-    
-    #;26> (eq? 10.0 10.0)
-    #f
-    #;27> 
-    
-    #;13> (eq? 10 "hello")
 
-    #;23> (eq? "hello" "hello")
+    > (eq? 10.0 10.0)
     #f
-    #;24> 
-    
-    #;6> (eq? (list 1 "string" 'symbol1) (list 1 "string" 'symbol1))
+    > 
+
+    > (eq? 10 "hello")
+
+    > (eq? "hello" "hello")
     #f
-    #;7> 
-    
-    #;31> (eq? '() '())
+    > 
+
+    > (eq? (list 1 "string" 'symbol1) (list 1 "string" 'symbol1))
+    #f
+    > 
+
+    > (eq? '() '())
     #t
-    #;32> 
+    > 
 
 ;; 
 ;; eqv?
@@ -1158,25 +1263,25 @@ compiled 2015-08-04 on yves.more-magic.net (Linux)
 ;; It is preferable to use eqv? instead of eq?
 ;;-------------------------------
 
-    #;30> (eqv? 'symbol1 'symbol1)
+    > (eqv? 'symbol1 'symbol1)
     #t
-    #;31> 
+    > 
 
-    #;27> (eqv? 10.0 10.0)
+    > (eqv? 10.0 10.0)
     #t
-    #;28> 
+    > 
 
-    #;28> (eqv? '() '())
+    > (eqv? '() '())
     #t
-    #;29> 
-    
-    #;29> (eqv? "hello" "hello")
+    > 
+
+    > (eqv? "hello" "hello")
     #f
-    #;30> 
+    > 
 
-    #;7> (eqv? (list 1 "string" 'symbol1) (list 1 "string" 'symbol1))
+    > (eqv? (list 1 "string" 'symbol1) (list 1 "string" 'symbol1))
     #f
-    #;8> 
+    > 
 
 ;; 
 ;; equal?
@@ -1190,13 +1295,13 @@ compiled 2015-08-04 on yves.more-magic.net (Linux)
 
     ;; Recursively compare every element of a list 
     ;;
-    #;9> (equal? (list 1 "string" 'symbol1) (list 1 "string" 'symbol1))
+    > (equal? (list 1 "string" 'symbol1) (list 1 "string" 'symbol1))
     #t
-    #;10> 
+    > 
 
-    #;24> (equal? "hello" "hello")
+    > (equal? "hello" "hello")
     #t
-    #;25> 
+    > 
 
 
 ```
@@ -3330,7 +3435,7 @@ Notice all the macros bellow were tested on GNU GUILE that was started with the 
 $ rlwrap --remember -c guile
 ```
 
-#### Syntax - Define-syntax
+#### Hygienic Macros - Define-syntax
 
 Examples:
 
@@ -3800,9 +3905,9 @@ $3 = (let loop ()
 
 ```
 
-#### Syntax - Define-macro 
+#### Common Lisp Style Macros - Define-macro 
 
-Examples:
+**defun and defvar**
 
 ```scheme
 (define-macro (defun name args body)
@@ -3830,6 +3935,117 @@ $121 = (define (f x y z) (+ (* 3 x) (* -4 y) (* 2 z)))
 $122 = (define x 10)  
 ```
 
+**case-pred**
+
+Task: Design a macro that expands the syntax:
+
+```scheme
+(case-pred x
+   (negative? "Negative")
+   (positive? "Positive")
+   (zero?     "Zero"))
+```
+
+To the syntax:
+
+```scheme
+(cond 
+ ((negative? x) "Neg")
+ ((positive? x) "Pos")
+ ((zero? x)    "Zero"))
+```
+
+Implementation using define-syntax:
+
+```scheme
+(define-syntax case-pred
+    (syntax-rules () 
+     ((case-pred value (predicate result) ...)
+      (cond ((predicate value) result) ...))))
+
+> (case-pred -100
+   (negative? "Negative")
+   (positive? "Positive")
+   (zero?     "Zero"))
+$6 = "Negative"
+
+
+> (case-pred 100
+   (negative? "Negative")
+   (positive? "Positive")
+   (zero?     "Zero"))
+$7 = "Positive"
+
+,expand (case-pred -100
+   (negative? "Negative")
+   (positive? "Positive")
+   (zero?     "Zero"))
+$8 = (cond ((negative? -100) "Negative")
+      ((positive? -100) "Positive")
+      ((zero? -100) "Zero"))
+```
+
+Implementation using define-macro:
+
+```scheme
+> (define body '((negative? "Negative") (positive? "Positive") (zero? "Zero")))
+
+> body
+((negative? "Negative") (positive? "Positive") (zero? "Zero"))
+
+> (map car body)
+(negative? positive? zero?)
+
+
+> (map cadr body)
+("Negative" "Positive" "Zero")
+
+> (map (lambda (row) `((,(car row) value) ,(cadr row))) body)
+(((negative? value) "Negative") ((positive? value) "Positive") ((zero? value) "Zero"))
+
+> (map (lambda (row) `((,(car row) ,value) ,(cadr row))) body)
+(((negative? 10) "Negative") ((positive? 10) "Positive") ((zero? 10) "Zero"))
+
+(define (template value body)
+  (map (lambda (row) `((,(car row) ,value) ,(cadr row))) body))
+
+> (template 20 body)
+(((negative? 20) "Negative") ((positive? 20) "Positive") ((zero? 20) "Zero"))
+
+
+> (template 'x body)
+(((negative? x) "Negative") ((positive? x) "Positive") ((zero? x) "Zero"))
+
+> `(cond ,@(template 'x body))
+(cond ((negative? x) "Negative") ((positive? x) "Positive") ((zero? x) "Zero"))
+
+(define-macro (case-pred value . body)  
+  `(cond 
+      ,@(template value body)))
+
+
+> (case-pred 10
+   (negative? "Negative")
+   (positive? "Positive")
+   (zero?     "Zero"))
+$2 = "Positive"
+
+
+> (case-pred -100
+   (negative? "Negative")
+   (positive? "Positive")
+   (zero?     "Zero"))
+$3 = "Negative
+
+> ,expand (case-pred -100
+   (negative? "Negative")
+   (positive? "Positive")
+   (zero?     "Zero"))
+$4 = (cond ((negative? -100) "Negative")
+      ((positive? -100) "Positive")
+      ((zero? -100) "Zero"))
+
+```
 
 ## Debugging
 
@@ -5354,7 +5570,7 @@ File: [FahrenheitGUI.scm](src/FahrenheitGUI.scm)
 ### See also
 
 
-* https://en.wikipedia.org/wiki/Kawa_(Scheme_implementation)
+* [Kawa Scheme Implementation - Wikipedia](https://en.wikipedia.org/wiki/Kawa_(Scheme_implementation)
 
 * [Kawa — fast scripting on the Java platform](https://lwn.net/Articles/623349/)
 
@@ -5363,8 +5579,8 @@ File: [FahrenheitGUI.scm](src/FahrenheitGUI.scm)
 * [Exploring LISP on the JVM](http://www.infoq.com/articles/lisp-for-jvm)
 * [EXPLORING LISP ON THE JVM](http://pjacobsson.com/articles/lisp-on-the-jvm.html)
 
-* [Kawa: Compiling Scheme to Java](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.24.5572&rep=rep1&type=pdf)
-* [Kawa: Compiling Scheme to Java](http://www.delorie.com/gnu/docs/kawa/kawa-tour_2.html)
+* [Kawa: Compiling Scheme to Java - citeseerx](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.24.5572&rep=rep1&type=pdf)
+* [Kawa: Compiling Scheme to Java - Delorie](http://www.delorie.com/gnu/docs/kawa/kawa-tour_2.html)
 
 
 
@@ -5392,13 +5608,22 @@ File: [FahrenheitGUI.scm](src/FahrenheitGUI.scm)
 * [How to Design Programs - by Felleisen, Findler, Flatt and Krishnamurthi](http://htdp.org/)
 
 * [Wikibok - Programming with Scheme](https://en.wikibooks.org/wiki/Scheme_Programming)
-* [The Scheme Programming Language Fourth Edition - R. Kent Dybvig - Illustrations by Jean-Pierre Hébert](http://www.scheme.com/tspl4/)
 
-* [MIT/GNU Scheme Reference Manual](http://sicp.ai.mit.edu/Fall-2004/manuals/scheme-7.5.5/doc/scheme_toc.html)
+* [The Scheme Programming Language Fourth Edition - R. Kent Dybvig - Illustrations by Jean-Pierre Hébert](http://www.scheme.com/tspl4/)
 
 * [PLEAC GUILE Cookbook](http://pleac.sourceforge.net/pleac_guile/index.html)
 
 * [On Lisp - Paul Graham](http://unintelligible.org/onlisp/onlisp.html)
+
+
+### Community
+
+* http://www.schemers.org/
+* http://www.reddit.com/r/scheme
+* http://www.reddit.com/r/racket
+* http://srfi.schemers.org
+
+* [The common lisp wiki](http://www.cliki.net)
 
 ### Articles
 
@@ -5436,16 +5661,30 @@ Write programs to generate other programs](http://www.ibm.com/developerworks/lib
 
 * [CS 491/591: Advanced Scheme Programming and Implementation *](https://www.cs.unm.edu/~williams/cs491s06.html)
 
+* [Cours IFT3065/IFT6232, Hiver 2012 - University of Montreal in French](http://www.iro.umontreal.ca/%CB%9Cfeeley/cours/ift3065-ift6232/)
 
-### GITHUB
+### Repositories
 
-* https://github.com/mpacula/Scheme-Power-Tools
+* [scheme-requests-for-implementation](https://github.com/scheme-requests-for-implementation)
+
+* [Scheme Power Tools - Github](https://github.com/mpacula/Scheme-Power-Tools)
 
 * [The ActionScript Byte Code assembler / disassembler in PLT Scheme and Gauche](https://github.com/propella/abcsx)
 
+* [Cloje - A clone of Clojure built atop Scheme/Lisp](https://gitlab.com/cloje/cloje)
+
+* [ Readable Lisp S-expressions - Readable Lisp/S-expressions with infix, functions, and indentation](http://sourceforge.net/projects/readable/)
+
+
+
 ### Misc
 
+* [Hyperpolyglot / Lisp: Common Lisp, Racket, Clojure, Emacs Lisp](http://hyperpolyglot.org/lisp)
+
+* [Lisp Scheme Differences](http://c2.com/cgi/wiki?LispSchemeDifferences)
+
 * [Scheme Requests for Implementation](http://srfi.schemers.org/)
+
 * [Functional Package Management with Guix](http://arxiv.org/pdf/1305.4584.pdf)
 
 * [Algebraic Data Types in Scheme](https://pavpanchekha.com/blog/adtscm.html)
@@ -5460,6 +5699,25 @@ Write programs to generate other programs](http://www.ibm.com/developerworks/lib
 
 ### Documentation by Subject
 
+#### Manual
+
+* [GNU Guile 2.0.11 Reference Manual](https://www.gnu.org/software/guile/manual/)
+
+* [MIT/GNU Scheme Reference Manual](http://sicp.ai.mit.edu/Fall-2004/manuals/scheme-7.5.5/doc/scheme_toc.html)
+
+* [The Incomplete Scheme 48 Reference Manual for release 1.9.2](http://www.s48.org/1.9.2/manual/manual.html)
+
+* [Chicken Scheme Wiki](http://wiki.call-cc.org/)
+
+* [Gambit Scheme](http://www.iro.umontreal.ca/~gambit/doc/gambit-c.html)
+
+#### Libraries
+
+* [Scheme Requests for implementation - Github Repository](https://github.com/scheme-requests-for-implementation)
+
+* [Scheme Systems Supporting SRFIs](http://srfi.schemers.org/srfi-implementers.html)
+
+* [The SLIB Portable Scheme Library](http://people.csail.mit.edu/jaffer/SLIB)
 
 #### Syntax
 
@@ -5547,11 +5805,17 @@ Write programs to generate other programs](http://www.ibm.com/developerworks/lib
 * [S-Expression Isomorphism Between Lisp and Markup](http://www.kludgecode.com/index.php/s-expression-isomorphism-between-lisp-and-markup/)
 * [S-expressions for fun and profit](http://www.jonathanfischer.net/s-expressions/)
 
-#### Scheme as an Extension Language
+* [Real World OCaml - Chapter 17. Data Serialization with S-Expressions](https://realworldocaml.org/v1/en/html/data-serialization-with-s-expressions.html)
+
+* [Comparison of data serialization formats](http://www.seomastering.com/wiki/Comparison_of_data_serialization_formats)
+
+#### Scheme as Extension Language
 
 * [GNU Cash - Custom Reports](http://wiki.gnucash.org/wiki/Custom_Reports)
 
 * [GEDA - Scripting a gnetlist backend in Scheme](http://wiki.geda-project.org/geda:gnetlist_scheme_tutorial)
+
+* [Festival Speech Synthesis systems](http://festvox.org/festvox-1.2/festvox_6.html)
 
 #### Algebraic Data Types - Monads, Monoids
 
@@ -5587,13 +5851,13 @@ Write programs to generate other programs](http://www.ibm.com/developerworks/lib
 
 #### Compilation 
 
-* [Cours IFT3065/IFT6232, Hiver 2012 - University of Montreal in French](http://www.iro.umontreal.ca/%CB%9Cfeeley/cours/ift3065-ift6232/)
-
 * [What is a Lisp image?](http://stackoverflow.com/questions/480083/what-is-a-lisp-image)
 
 * [Have some way to save the REPL state of Common Lisp or Scheme?](http://stackoverflow.com/questions/3960140/have-some-way-to-save-the-repl-state-of-common-lisp-or-scheme)
 
 ### Hacker News Threads
+
+* [Reproducible Development Environments with GNU Guix (dthompson.us)](https://news.ycombinator.com/item?id=8616918)
 
 * [Interviews with Lisp Hackers: Pascal Costanza (lisp-univ-etc.blogspot.com)](https://news.ycombinator.com/item?id=3847242)
 
