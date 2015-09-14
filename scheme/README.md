@@ -28,9 +28,6 @@
       - [Primitive List Operations](#primitive-list-operations)
       - [List Functions](#list-functions)
         - [Basic List Functions](#basic-list-functions)
-  - [S expressions and Serialization](#s-expressions-and-serialization)
-    - [Association Lists](#association-lists)
-    - [Convert String to Scheme object](#convert-string-to-scheme-object)
   - [Higher Order Functions](#higher-order-functions)
     - [Buit-in Functions](#buit-in-functions)
     - [Special Functions](#special-functions)
@@ -47,6 +44,9 @@
     - [Macros](#macros)
       - [Hygienic Macros - Define-syntax](#hygienic-macros---define-syntax)
       - [Common Lisp Style Macros - Define-macro](#common-lisp-style-macros---define-macro)
+  - [S expressions and Serialization](#s-expressions-and-serialization)
+    - [Association Lists](#association-lists)
+    - [Serialization and Deserialization](#serialization-and-deserialization)
   - [Debugging](#debugging)
     - [MIT Scheme](#mit-scheme)
     - [GNU Guile](#gnu-guile)
@@ -73,7 +73,7 @@
     - [Misc](#misc)
     - [Documentation by Subject](#documentation-by-subject)
       - [Manual](#manual)
-      - [Libraries](#libraries)
+      - [Libraries and Standards](#libraries-and-standards)
       - [Syntax](#syntax-1)
       - [Object Orientated Programming](#object-orientated-programming-1)
       - [Macros and Metaprogramming](#macros-and-metaprogramming)
@@ -657,6 +657,11 @@ Scheme is dynamic typed language therefore there is not guarantee about the vari
 1 ]=> (procedure? 2323)
 
 ;Value: #f
+
+
+(define atom?
+  (lambda (x)
+   (and (not (pair? x)) (not (null? x)))))
 
 
 ```
@@ -2022,127 +2027,6 @@ $17 = d
 ;Value: y
 
 1 ]=> (list-ref '(x y z w) 2)
-
-```
-
-## S expressions and Serialization
-
-S-expressions advantages:
-
-* Encode Arbitrary data structure and programs
-* Easy to serialize, read and write
-* There is no need to write specific configuration parsers
-* Human Readable
-* S-expression parsers can be embedded in static typed languages like Ocaml, Haskell, Java to create GUIs, read configuration files.
-* Compact and flexible like XML and lightweight like json.
-
-
-See also:
-
-* [Real World OCaml - Chapter 17. Data Serialization with S-Expressions](https://realworldocaml.org/v1/en/html/data-serialization-with-s-expressions.html)
-* [Comparison of data serialization formats](http://www.seomastering.com/wiki/Comparison_of_data_serialization_formats)
-
-### Association Lists
-
-* https://groups.csail.mit.edu/mac/ftpdir/scheme-7.4/doc-html/scheme_12.html
-* http://people.cs.aau.dk/~normark/prog3-03/html/notes/fu-intr-1_themes-list-section.html
-
-```scheme
-
-1 ]=> (define sexp ((x  100) (y  2.2323) (z -10.32)))
-
-1 ]=> sexp
-
-;Value 17: ((x 100) (y 2.2323) (z -10.32))
-
-;;------------------;;
-
-(assoc 'x sexp)
-
-;Value 18: (x 100)
-
-1 ]=> (assoc 'y sexp)
-
-;Value 19: (y 2.2323)
-
-1 ]=> (assoc 'z sexp)
-
-;Value 20: (z -10.32)
-
-1 ]=> 
-
-;;------------------;;
-
-1 ]=> (assq 'x sexp)
-
-;Value 18: (x 100)
-
-1 ]=> (assq 'y sexp)
-
-;Value 19: (y 2.2323)
-
-1 ]=> (assq 'z sexp)
-
-;Value 20: (z -10.32)
-
-1 ]=> 
-
-;;------------------;;
-
-
-```
-
-### Convert String to Scheme object
-
-**MIT Scheme**
-
-```scheme
-1 ]=> (read (string->input-port "(+ 10 20)"))
-
-;Value 13: (+ 10 20)
-
-
-1 ]=> (define code "(( x . 100) ( y . 2.2323) ( z .  2.23  ))")
-
-;Value: code
-
-1 ]=> (define (read-sexp code) (read (string->input-port code)))
-
-;Value: read-sexp
-
-1 ]=> (read-sexp code)
-
-;Value 13: ((x . 100) (y . 2.2323) (z . 2.23))
-
-1 ]=> (assoc 'x (read-sexp code))
-
-;Value 14: (x . 100)
-
-1 ]=> (assoc 'y (read-sexp code))
-
-;Value 15: (y . 2.2323)
-
-1 ]=> (assoc 'z (read-sexp code))
-
-;Value 16: (z . 2.23)
-
-1 ]=> 
-
-1 ]=> (cdr (assoc 'x (read-sexp code)))
-
-;Value: 100
-
-1 ]=> (cdr (assoc 'y (read-sexp code)))
-
-;Value: 2.2323
-
-1 ]=> (cdr (assoc 'z (read-sexp code)))
-
-;Value: 2.23
-
-1 ]=> 
-
-
 
 ```
 
@@ -4047,6 +3931,257 @@ $4 = (cond ((negative? -100) "Negative")
 
 ```
 
+
+## S expressions and Serialization
+
+S-expressions advantages:
+
+* Encode Arbitrary data structure and programs
+* Easy to serialize, read and write
+* There is no need to write specific parsers for configuration files.
+* Human Readable
+* S-expression parsers can be embedded in static typed languages like Ocaml, Haskell, Java to create GUIs, read configuration files.
+* Compact and flexible like XML and lightweight like json.
+
+
+See also:
+
+* [Real World OCaml - Chapter 17. Data Serialization with S-Expressions](https://realworldocaml.org/v1/en/html/data-serialization-with-s-expressions.html)
+* [Comparison of data serialization formats](http://www.seomastering.com/wiki/Comparison_of_data_serialization_formats)
+
+### Association Lists and Property Lists
+
+* https://groups.csail.mit.edu/mac/ftpdir/scheme-7.4/doc-html/scheme_12.html
+* http://people.cs.aau.dk/~normark/prog3-03/html/notes/fu-intr-1_themes-list-section.html
+
+* [Why property lists?](https://www.reddit.com/r/lisp/comments/2wancz/why_property_lists/)
+* [AlistVsPlist - Emacs Wiki](http://emacswiki.org/emacs/AlistVsPlist)
+* [List Structures / Common Lisp MiniSpec](http://lamberta.github.io/minispec/list-structure.html)
+
+
+```scheme
+
+;;;; Association Lists
+
+(define data '((name:  "Canada")  
+               (lang:  (English French)) 
+               (domain: ".ca") 
+               (ISO3166code: "CA")))          
+
+(define (get-keys assocl)
+  (map car assocl))
+
+(define (get-values assocl)
+  (map cadr assocl))
+                
+(define (get-key key assocl)
+  (cadr (assoc key assocl )))
+
+(define (get-key/c key)
+  (lambda (assocl) (cadr (assoc key assocl))))
+
+> data
+((name: "Canada") (lang: (English French)) (domain: ".ca") (ISO3166code: "CA"))  
+
+> (get-key 'name: data)
+"Canada"
+
+> (get-key 'domain: data)
+".ca"
+
+> (get-keys data)
+(name: lang: domain: ISO3166code:)
+
+> (get-values data)
+("Canada" (English French) (".ca") ("CA"))
+
+> (get-key/c 'name:)
+ #<procedure (? assocl)>
+
+> ((get-key/c 'name:) data)
+"Canada"
+
+> (define (make-record-constructor fields)
+  (lambda (values)
+    (map (lambda (f v) (list f v)) fields values)))
+
+
+> (make-record-constructor '(name: lang: domain: ISO3166code:))
+ #<procedure (? values)>
+
+> (define make-country (make-record-constructor 
+    '(name: lang: domain: ISO3166code:)))
+
+> (make-country '("Netherlands" (Dutch) ".nl" "NL"  EUR))
+((name: "Netherlands") (lang: (Dutch)) (domain: ".nl") (ISO3166code: "NL"))
+
+
+> (get-values data)
+("Canada" (English French) (".ca") ("CA"))
+
+> (make-country (get-values data))
+((name: "Canada") (lang: (English French)) (domain: ".ca") (ISO3166code: "CA"))
+
+;;;;;;;;;;;; Property Lists/ plist
+;;
+;; Lists like:  '(name: "John" surname: "Galt" age: 25 gender: male country: US)
+;;
+;; In which every symbol has a metadata. 
+;;
+;;
+> (define p1 '(name: "John" surname: "Galt" age: 25 gender: male country: US))
+
+> p1
+(name: "John" surname: "Galt" age: 25 gender: male country: US)
+
+;;; Convert plist to association list
+(define (plist->assoc plist)
+  (if (null? plist)
+      '()      
+      (cons
+       (list (car plist) (cadr plist))
+       (plist->assoc (cddr plist)))))
+
+;;; Convert association list to plist      
+(define (assoc->plist assocl)
+(if (null? assocl)
+      '()
+      (let
+          ((hd (car assocl))
+           (tl (cdr assocl)))
+        (cons (car hd)
+           (cons (cadr hd)
+                 (assoc->plist tl))))))       
+                 
+
+> (plist->assoc p1)
+((name: "John") (surname: "Galt") (age: 25) (gender: male) (country: US))
+
+
+> (assoc->plist (plist->assoc p1))
+(name: "John" surname: "Galt" age: 25 gender: male country: US)
+
+                 
+```
+
+### Serialization and Deserialization
+
+```scheme
+;;; Convert plist to association list
+(define (plist->assoc plist)
+  (if (null? plist)
+      '()      
+      (cons
+       (list (car plist) (cadr plist))
+       (plist->assoc (cddr plist)))))
+
+(define (get-key/c key)
+  (lambda (assocl) (cadr (assoc key assocl))))
+
+
+(define (sexp->string sexp)
+  (call-with-output-string
+   (lambda (out)
+     (write sexp out))))
+
+(define (string->sexp str)
+  (with-input-from-string str
+    (lambda () (read))))
+
+(define (sexp->file filename sexp)
+  (define out (open-output-file filename))
+  (begin
+    (write sexp out)
+    (close-output-port out)))
+
+(define (file->sexp filename)
+  (define in (open-input-file filename))
+  (define sexp (read in))
+  (begin
+    (close-input-port in)
+    sexp))
+
+(define (read-file file-name)
+  (let ((p (open-input-file file-name)))
+    (let loop((ls1 '()) (c (read-char p)))
+      (if (eof-object? c)
+  (begin
+    (close-input-port p)
+    (list->string (reverse ls1)))
+  (loop (cons c ls1) (read-char p))))))
+
+(define countries '(
+               (
+                name: "Netherlands"
+                lang: (Dutch)
+                capital: "Amsterdam"
+                domain: ".nl"
+                ISO3166code: "NL"
+                currency: EUR
+                )
+               (
+                name: "Australia"
+                lang: (English)
+                capital: "Camberra"
+                domain: ".au"
+                ISO3166code: "AU"
+                currency: AUD
+                )
+               (
+                name: "Canada"
+                lang: (English French)
+                domain: ".ca"
+                ISO3166code: "CA"
+                currency: CAD
+                )))
+                
+> countries
+((name: "Netherlands" lang: (Dutch) capital: "Amsterdam" domain: ".nl" ISO3166code: "NL" currency: EUR) (name: "Australia" lang: (English) capital: "Camberra" domain: ".au" ISO3166code: "AU" currency: AUD) (name: "Canada" lang: (English French) domain: ".ca" ISO3166code: "CA" currency: CAD))
+
+;; Serialize Scheme data (list)
+;;
+> (sexp->string countries)
+"((name: \"Netherlands\" lang: (Dutch) capital: \"Amsterdam\" domain: \".nl\" ISO3166code: \"NL\" currency: EUR) (name: \"Australia\" lang: (English) capital: \"Camberra\" domain: \".au\" ISO3166code: \"AU\" currency: AUD) (name: \"Canada\" lang: (English French) domain: \".ca\" ISO3166code: \"CA\" currency: CAD))"
+
+;;
+;; Deserialize
+;;
+(define raw-data (sexp->string countries))
+
+7> (string->sexp raw-data)
+((name: "Netherlands" lang: (Dutch) capital: "Amsterdam" domain: ".nl" ISO3166code: "NL" currency: EUR) (name: "Australia" lang: (English) capital: "Camberra" domain: ".au" ISO3166code: "AU" currency: AUD) (name: "Canada" lang: (English French) domain: ".ca" ISO3166code: "CA" currency: CAD))
+
+;; 
+;;  Save to a file as text (List code)
+;;
+> (sexp->file "countries.scdata" countries)
+
+> (read-file "countries.scdata")
+"((name: \"Netherlands\" lang: (Dutch) capital: \"Amsterdam\" domain: \".nl\" ISO3166code: \"NL\" currency: EUR) (name: \"Australia\" lang: (English) capital: \"Camberra\" domain: \".au\" ISO3166code: \"AU\" currency: AUD) (name: \"Canada\" lang: (English French) domain: \".ca\" ISO3166code: \"CA\" currency: CAD))"
+
+
+;;
+;; Read the s-expression from the file 
+;;
+> (file->sexp "countries.scdata")
+((name: "Netherlands" lang: (Dutch) capital: "Amsterdam" domain: ".nl" ISO3166code: "NL" currency: EUR) (name: "Australia" lang: (English) capital: "Camberra" domain: ".au" ISO3166code: "AU" currency: AUD) (name: "Canada" lang: (English French) domain: ".ca" ISO3166code: "CA" currency: CAD))
+
+
+> (map plist->assoc (file->sexp "countries.scdata"))
+(((name: "Netherlands") (lang: (Dutch)) (capital: "Amsterdam") (domain: ".nl") (ISO3166code: "NL") (currency: EUR)) ((name: "Australia") (lang: (English)) (capital: "Camberra") (domain: ".au") (ISO3166code: "AU") (currency: AUD)) ((name: "Canada") (lang: (English French)) (domain: ".ca") (ISO3166code: "CA") (currency: CAD)))
+
+> (define dataset (map plist->assoc (file->sexp "countries.scdata")))
+
+> (map (get-key/c name:) dataset)
+("Netherlands" "Australia" "Canada")
+
+> (map (get-key/c currency:) dataset)
+(EUR AUD CAD)
+
+```
+
+
+
 ## Debugging
 
 ### MIT Scheme 
@@ -5060,6 +5195,9 @@ $24 = 85085
         
 ```
 
+
+
+
 ## Applications
 
 
@@ -5588,11 +5726,15 @@ File: [FahrenheitGUI.scm](src/FahrenheitGUI.scm)
 
 ### Books
 
+**Scheme**
+
 * [The Adventures of a Pythonista in Schemeland](http://www.phyast.pitt.edu/~micheles/scheme/index.html)
 
 * [Teach Yourself Scheme in Fixnum Days - Dorai Sitaram, 1998–2003](http://download.plt-scheme.org/doc/205/pdf/t-y-scheme.pdf)
 
 * [Structure and Interpretation of Computer Programs - SCIP / Abelson, Sussman, and Sussman.](https://mitpress.mit.edu/sicp/)
+* [Structure and Interpretation of Computer Programs - SCIP / Abelson, Sussman, and Sussman / Alternative Link](http://www.bookshelf.jp/texi/sicp/sicp_toc.html#SEC_Contents)
+
 * [Structure and Interpretation of Computer Programs - Video Lectures by Hal Abelson and Gerald Jay Sussman](http://groups.csail.mit.edu/mac/classes/6.001/abelson-sussman-lectures/)
 
 * [SCIP Solutions](http://community.schemewiki.org/?SICP-Solutions)
@@ -5611,9 +5753,24 @@ File: [FahrenheitGUI.scm](src/FahrenheitGUI.scm)
 
 * [The Scheme Programming Language Fourth Edition - R. Kent Dybvig - Illustrations by Jean-Pierre Hébert](http://www.scheme.com/tspl4/)
 
+* [The Little Schemer, fourth edition](https://mitpress.mit.edu/books/little-schemer)
+
 * [PLEAC GUILE Cookbook](http://pleac.sourceforge.net/pleac_guile/index.html)
 
-* [On Lisp - Paul Graham](http://unintelligible.org/onlisp/onlisp.html)
+* [Schemers.org Textbook selection](http://www.schemers.org/Documents/#all-texts)
+
+**Common Lisp**
+
+* [Common Lisp MiniSpec](http://lamberta.github.io/minispec/list-structure.html)
+
+* [The Common Lisp Cookbook - Macros and Backquote](http://cl-cookbook.sourceforge.net/macros.html)
+
+* [Learn X in Y minutes](http://learnxinyminutes.com/docs/common-lisp/)
+
+* [Practical Common Lisp](http://www.gigamonkeys.com/book/)
+
+* [On Lisp - by Paul Graham](http://unintelligible.org/onlisp/onlisp.html)
+* [On Lisp - by Paul Graham / Alternative Link](http://www.bookshelf.jp/texi/onlisp/onlisp.html)
 
 
 ### Community
@@ -5636,6 +5793,11 @@ File: [FahrenheitGUI.scm](src/FahrenheitGUI.scm)
 
 * [IBM - The art of metaprogramming, Part 1: Introduction to metaprogramming
 Write programs to generate other programs](http://www.ibm.com/developerworks/library/l-metaprog1/)
+
+
+* [Design Patterns in Dynamic Programming - Peter Norvig Chief Designer, Adaptive Systems Harlequin Inc.](http://norvig.com/design-patterns/design-patterns.pdf)
+
+* [Why I love Common Lisp and hate Java](https://kuomarc.wordpress.com/2012/01/27/why-i-love-common-lisp-and-hate-java/)
 
 ### Blogs, Workshops, Conferences
 
@@ -5680,6 +5842,8 @@ Write programs to generate other programs](http://www.ibm.com/developerworks/lib
 ### Misc
 
 * [Hyperpolyglot / Lisp: Common Lisp, Racket, Clojure, Emacs Lisp](http://hyperpolyglot.org/lisp)
+* [Scheme/ML Comparison](http://courses.cs.washington.edu/courses/cse341/10sp/notes/transition.html)
+
 
 * [Lisp Scheme Differences](http://c2.com/cgi/wiki?LispSchemeDifferences)
 
@@ -5695,7 +5859,6 @@ Write programs to generate other programs](http://www.ibm.com/developerworks/lib
 * [Composing Real-Time Systems](http://www.ijcai.org/Past%20Proceedings/IJCAI-91-VOL1/PDF/034.pdf)
 
 
-* [Design Patterns in Dynamic Programming - Peter Norvig Chief Designer, Adaptive Systems Harlequin Inc.](http://norvig.com/design-patterns/design-patterns.pdf)
 
 ### Documentation by Subject
 
@@ -5711,7 +5874,15 @@ Write programs to generate other programs](http://www.ibm.com/developerworks/lib
 
 * [Gambit Scheme](http://www.iro.umontreal.ca/~gambit/doc/gambit-c.html)
 
-#### Libraries
+#### Libraries and Standards
+
+**Standards**
+
+* [Revised 5 Report on Scheme](http://www.schemers.org/Documents/Standards/R5RS/r5rs.pdf)
+* [Revised 6 Report on Scheme](http://www.r6rs.org/final/r6rs.pdf)
+* [Revised 7 Report on Scheme](http://trac.sacrideo.us/wg/raw-attachment/wiki/WikiStart/r7rs.pdf)
+
+**Libraries**
 
 * [Scheme Requests for implementation - Github Repository](https://github.com/scheme-requests-for-implementation)
 
