@@ -5451,7 +5451,84 @@ Apis Used:
 ```scheme 
 
     $ rlwrap java -jar kawa-2.0.jar 
+
+    #|kawa:9|# (kawa.Version:getVersion)
+    2.0
+    #|kawa:10|# 
+
+    #|kawa:27|#  (invoke java.lang.System:out 'println "\n   Hello world\n")
+
+       Hello world
+
+
+    #|kawa:66|# (java.lang.System:getProperties)
+    {java.runtime.name=OpenJDK Runtime Environment, sun.boot.library.path=/usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386, java.vm.version=24.79-b02, user.country.format=BR, java.vm.vendor=Oracle Corporation, java.vendor.url=http://java.oracle.com/, path.separator=:, java.vm.name=OpenJDK Server VM, file.encoding.pkg=sun.io, user.country=US, sun.java.launcher=SUN_STANDARD, sun.os.patch.level=unknown, java.vm.specification.name=Java Virtual Machine Specification, user.dir=/home/tux/PycharmProjects/scheme, java.runtime.version=1.7.0_79-b14, java.awt.graphicsenv=sun.awt.X11GraphicsEnvironment, java.endorsed.dirs=/usr/lib/jvm/java-7-openjdk-i386/jre/lib/endorsed, os.arch=i386, java.io.tmpdir=/tmp, line.separator=
+
+
+    #|kawa:69|# (define p (java.lang.System:getProperties))
+    #|kawa:70|# p
+
+    #|kawa:72|# (p:getProperty "java.version")
+    /dev/stdin:72:2: warning - no known slot 'getProperty' in java.lang.Object
+    1.7.0_79
     
+
+    #|kawa:84|# (p:getProperty "java.home")
+    /dev/stdin:84:2: warning - no known slot 'getProperty' in java.lang.Object
+    /usr/lib/jvm/java-7-openjdk-i386/jre
+    #|kawa:85|# 
+    #|kawa:86|# 
+    
+
+    #|kawa:87|# (p:getProperty "java.class.path")
+    /dev/stdin:87:2: warning - no known slot 'getProperty' in java.lang.Object
+    /opt/kawa.jar
+
+
+    #|kawa:88|# (p:getProperty "java.library.path")
+    /dev/stdin:88:2: warning - no known slot 'getProperty' in java.lang.Object
+    /usr/java/packages/lib/i386:/usr/lib/i386-linux-gnu/jni:/lib/i386-linux-gnu:/usr/lib/i386-linux-gnu:/usr/lib/jni:/lib:/usr/lib
+
+
+    #|kawa:91|# (p:getProperty "java.library.path")
+    /dev/stdin:91:2: warning - no known slot 'getProperty' in java.lang.Object
+    /usr/java/packages/lib/i386:/usr/lib/i386-linux-gnu/jni:/lib/i386-linux-gnu:/usr/lib/i386-linux-gnu:/usr/lib/jni:/lib:/usr/lib
+
+    ;;   // this will list the current system properties
+    ;;   Properties p = System.getProperties();
+   ;;    p.list(System.out);
+    ;;
+    #|kawa:98|# (p:list java.lang.System:out)
+    /dev/stdin:98:2: warning - no known slot 'list' in java.lang.Object
+    -- listing properties --
+    java.runtime.name=OpenJDK Runtime Environment
+    sun.boot.library.path=/usr/lib/jvm/java-7-openjdk-i386/jre/...
+    java.vm.version=24.79-b02
+    user.country.format=BR
+    java.vm.vendor=Oracle Corporation
+    java.vendor.url=http://java.oracle.com/
+    path.separator=:
+    java.vm.name=OpenJDK Server VM
+    file.encoding.pkg=sun.io
+    user.country=US
+    sun.java.launcher=SUN_STANDARD
+    sun.os.patch.level=unknown
+    java.vm.specification.name=Java Virtual Machine Specification
+    user.dir=/home/tux/PycharmProjects/scheme
+    java.runtime.version=1.7.0_79-b14
+
+    ;; Which Java is being used openjdk-java? or  Oracle-java ??
+    ;;
+    #|kawa:101|# 
+    #|kawa:102|# (p:getProperty "java.runtime.name")
+    /dev/stdin:102:2: warning - no known slot 'getProperty' in java.lang.Object
+    OpenJDK Runtime Environment
+    #|kawa:103|# (p:getProperty "java.vm.name")
+    /dev/stdin:103:2: warning - no known slot 'getProperty' in java.lang.Object
+    OpenJDK Server VM
+    #|kawa:104|# 
+
+        
     #|kawa:1|# 
     #|kawa:2|# (java.lang.Math:sqrt 9.0)
     3.0
@@ -5772,6 +5849,7 @@ File: [FahrenheitGUI.scm](src/FahrenheitGUI.scm)
 * [On Lisp - by Paul Graham](http://unintelligible.org/onlisp/onlisp.html)
 * [On Lisp - by Paul Graham / Alternative Link](http://www.bookshelf.jp/texi/onlisp/onlisp.html)
 
+* [Paradigms of Artificial Intelligence Programming: Case Studies in Common Lisp](http://norvig.com/paip.html)
 
 ### Community
 

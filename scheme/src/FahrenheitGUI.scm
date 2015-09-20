@@ -4,7 +4,8 @@
 ;; 
 ;;
 ;;
-
+(module-name <myprogram>)
+(module-compile-options main: #t)
 
 ;; import java.awt.*;
 ;; import java.awt.event.*;

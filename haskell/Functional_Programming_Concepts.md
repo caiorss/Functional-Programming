@@ -18,13 +18,13 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Functional Programming Concepts
+# Functional Programming Concepts
 
 <!--
 @TODO: Add concepts: Function composition, Pure language, Referential Transparency.
 -->
 
-### Overview
+## Overview
 
 **Functional Programming**
 
@@ -133,6 +133,174 @@ A selection of people who influenced functional programming:
    * Book: [Structure and Interpretation of Classical Mechanics](https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Classical_Mechanics)
 
    * [Lambda Papers](https://en.wikipedia.org/wiki/History_of_the_Scheme_programming_language#The_Lambda_Papers): A series of MIT AI Memos published between 1975 and 1980, developing the Scheme programming language and a number of influential concepts in programming language design and implementation.
+
+
+## Concepts
+
+### First-Class Function 
+
+Functions can be passed as arguments to another functions, returned from functions, stored in variables and data structures and built at run time. The majority of languages supports firs-class functions like Scheme, Javascript, Python, Haskell, ML, OCaml and many others some exceptions are C, Java, Matlab and Forth.
+
+Examples:
+
+* Python:
+
+The function f is passed is argument to the derivate function that returns a new function named _, that computes the derivate of f at x.
+
+```python
+def derivate (f, dx=1e-5):
+    def _(x):
+        return (f(x+dx) - f(x))/dx
+    return _
+    
+ #  Algebraic derivate:
+ #
+ #  df(x) = 2*x - 3
+ #    
+>>> def f(x): return x**2 - 3*x + 4
+... 
+
+ # Numerical derivate of f
+>>> df = derivate(f)
+>>> 
+
+  # Algebraic Derivate of f
+>>> def dfa (x): return 2*x - 3
+... 
+>>> 
+
+ ;; Functions can be stored in variables
+>>> func = f
+>>> func(5)
+14
+>>> 
+
+>>> df = derivate(f)
+>>> df(3)
+3.000009999887254
+>>> df(4)
+5.000009999633903
+>>> 
+
+>>> dfa(3)
+3
+>>> dfa(4)
+5
+>>> 
+
+
+>>> f(3)
+4
+>>> f(10)
+74
+>>> 
+```
+
+See also: 
+
+Many examples of first class functions in several languages. 
+* [First-class functions - Rosetta Code](http://rosettacode.org/wiki/First-class_functions#C)
+
+* [First-class Functions in Scientific Programming](http://slidegur.com/doc/1814324/first-class-functions-in-scientific-programming)
+
+* [Functional programming in R](http://adv-r.had.co.nz/Functional-programming.html)
+
+### Closure
+
+Closure is a function that remembers the environment at which it was created.
+
+```python
+
+>>> x = 10
+
+ # The function adder remembers the environment at which it was created
+ # it remembers the value of x
+ #
+def make_adder(x):
+    def adder(y):
+        return x + y
+    return adder
+
+>>> add5 = make_adder(5)
+>>> add10 = make_adder(10)
+>>> 
+>>> add5(4)
+9
+>>> list(map(add5, [1, 2, 3, 4, 5]))
+[6, 7, 8, 9, 10]
+
+>>> x
+10
+>>> 
+
+>>> list(map(add10, [1, 2, 3, 4, 5]))
+[11, 12, 13, 14, 15]
+
+ #
+ 
+def make_printer(msg):
+    def printer():
+        print(msg)
+    return printer
+
+>>> p1 = make_printer ("Hello world")
+>>> p2 = make_printer ("FP programming Rocks!!")
+>>> 
+>>> p1()
+Hello world
+>>> p2()
+FP p
+
+ # Mutable state with closure
+ 
+idx = 100 
+ 
+def make_counter():
+    idx = -1    
+    def _():
+        nonlocal idx
+        idx = idx + 1
+        return idx    
+    return _
+
+>>> idx = 100
+>>> counter1 = make_counter()
+>>> counter1()
+0
+>>> counter1()
+1
+>>> counter1()
+2
+>>> counter1()
+3
+
+>>> idx
+100
+>>> counter2 = make_counter ()
+>>> counter2()
+0
+>>> counter2()
+1
+>>> counter2()
+2
+
+>>> counter1()
+5
+>>> 
+
+>>> del make_counter
+>>> make_counter
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'make_counter' is not defined
+>>> 
+>>> counter1()
+6
+>>> counter1()
+7
+
+```
+
 
 ### Pure Functions
 
@@ -1248,7 +1416,7 @@ parse_csvtable_optmized =  composef(
     
 ```
 
-
+## Miscellaneous
 
 #### Selected Wikipedia Articles
 
@@ -1338,6 +1506,7 @@ Lambda Calculus and Process Calculus
 * [Short-circuit evaluation](http://en.wikipedia.org/wiki/Short-circuit_evaluation)
 
 Related to Lazy Evaluation
+
 * [Lazy Evaluation](http://en.wikipedia.org/wiki/Lazy_evaluation)
 * [Thunk](https://en.wikipedia.org/wiki/Thunk)
 
@@ -1409,4 +1578,48 @@ Related to Lazy Evaluation
 <!--
 -->
 
+#### Selected Rosettacode Pages
 
+### Concepts Examples
+
+* [Call a function](http://rosettacode.org/wiki/Call_a_function)
+
+* [Higher-order functions](http://rosettacode.org/wiki/Higher-order_functions)
+
+* [Closures/Value capture](http://rosettacode.org/wiki/Closures/Value_capture)
+
+* [Function composition](http://rosettacode.org/wiki/Function_composition)
+
+* [Partial function application](http://rosettacode.org/wiki/Partial_function_application)
+
+* [Currying](http://rosettacode.org/wiki/Currying)
+
+* [Catamorphism - Fold/Reduce](http://rosettacode.org/wiki/Catamorphism)
+
+* [Null object](http://rosettacode.org/wiki/Null_object)
+
+* [Y combinator](http://rosettacode.org/wiki/Y_combinator)
+
+Recursion:
+
+* [Anonymous recursion](http://rosettacode.org/wiki/Anonymous_recursion)
+
+* [Ackermann function](http://rosettacode.org/wiki/Ackermann_function)
+
+### Languages
+
+* [Haskell](http://rosettacode.org/wiki/Haskell)
+
+* [Ocaml](http://rosettacode.org/wiki/OCaml)
+
+* [F# - Fsharp](http://rosettacode.org/wiki/Fsharp)
+
+* [Scheme](http://rosettacode.org/wiki/scheme)
+
+* [Racket](http://rosettacode.org/wiki/Racket)
+
+* [Clojure](http://rosettacode.org/wiki/Clojure)
+
+* [Scala](http://rosettacode.org/wiki/Scala)
+
+* [JavaScript / ECMAScript](http://rosettacode.org/wiki/Category:JavaScript)
