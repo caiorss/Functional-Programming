@@ -14,20 +14,22 @@
       - [Basic Data Types](#basic-data-types)
       - [Type Predicates](#type-predicates)
       - [Type Conversion](#type-conversion)
-    - [Defining Functions and Variables](#defining-functions-and-variables)
+    - [Variables](#variables)
       - [Global Variable](#global-variable)
       - [Local Variable](#local-variable)
-      - [Functions](#functions)
-    - [Arithmetic](#arithmetic)
-    - [Comparison](#comparison)
-    - [Math Functions](#math-functions)
-    - [String Functions](#string-functions)
+        - [let](#let)
+        - [let*](#let)
+        - [letrec](#letrec)
+    - [Functions](#functions)
+      - [Arithmetic](#arithmetic)
+      - [Comparison](#comparison)
+      - [Math Functions](#math-functions)
+      - [String Functions](#string-functions)
     - [List Operations](#list-operations)
       - [Defining a List](#defining-a-list)
       - [Quasiquote](#quasiquote)
       - [Primitive List Operations](#primitive-list-operations)
-      - [List Functions](#list-functions)
-        - [Basic List Functions](#basic-list-functions)
+      - [Basic List Functions](#basic-list-functions)
   - [Higher Order Functions](#higher-order-functions)
     - [Buit-in Functions](#buit-in-functions)
     - [Special Functions](#special-functions)
@@ -44,8 +46,8 @@
     - [Macros](#macros)
       - [Hygienic Macros - Define-syntax](#hygienic-macros---define-syntax)
       - [Common Lisp Style Macros - Define-macro](#common-lisp-style-macros---define-macro)
-  - [S expressions and Serialization](#s-expressions-and-serialization)
-    - [Association Lists](#association-lists)
+  - [S-expressions and Serialization](#s-expressions-and-serialization)
+    - [Association Lists and Property Lists](#association-lists-and-property-lists)
     - [Serialization and Deserialization](#serialization-and-deserialization)
   - [Debugging](#debugging)
     - [MIT Scheme](#mit-scheme)
@@ -58,12 +60,29 @@
   - [Applications](#applications)
     - [Lisp Evaluator written in Lisp](#lisp-evaluator-written-in-lisp)
     - [Reverse Polish Notation Evaluator](#reverse-polish-notation-evaluator)
-  - [Kawa Scheme - Access Java API from Scheme](#kawa-scheme---access-java-api-from-scheme)
+  - [Scheme Implementations](#scheme-implementations-1)
+    - [Racket](#racket)
+      - [String Functions](#string-functions-1)
+      - [Input / Output Functions](#input--output-functions)
+      - [Data Structures](#data-structures)
+        - [Cons - Cell / Pair](#cons---cell--pair)
+        - [List](#list)
+        - [Association List](#association-list)
+        - [Vector](#vector)
+        - [Hash Table](#hash-table)
+      - [Struct](#struct)
+      - [Pattern Matching](#pattern-matching)
+      - [Plotting](#plotting)
+      - [Resources](#resources)
+        - [Miscellaneous](#miscellaneous-1)
+        - [Documentation](#documentation)
+      - [Videos](#videos)
+    - [Kawa Scheme - Access Java API from Scheme](#kawa-scheme---access-java-api-from-scheme)
       - [Install and Run](#install-and-run)
       - [Calling Java Methods in Kawa Scheme](#calling-java-methods-in-kawa-scheme)
-    - [Create a GUI](#create-a-gui)
-    - [See also](#see-also)
-  - [Resources](#resources)
+      - [Create a GUI](#create-a-gui)
+      - [See also](#see-also)
+  - [Resources](#resources-1)
     - [Books](#books)
     - [Community](#community)
     - [Articles](#articles)
@@ -83,6 +102,7 @@
       - [Continuation](#continuation)
       - [Compilation](#compilation)
     - [Hacker News Threads](#hacker-news-threads)
+    - [Lambda Ultimate Threads](#lambda-ultimate-threads)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -716,8 +736,7 @@ Scheme is dynamic typed language therefore there is not guarantee about the vari
 ```
 
 
-
-### Defining Functions and Variables
+### Variables
 
 #### Global Variable
 
@@ -745,7 +764,7 @@ Scheme is dynamic typed language therefore there is not guarantee about the vari
 
 #### Local Variable
 
-**let**
+##### let
 
 ```scheme 
 (let 
@@ -769,7 +788,7 @@ Scheme is dynamic typed language therefore there is not guarantee about the vari
 ;Unbound variable: f
 ```
 
-**let***
+##### let*
 
 The keyword let* is equivalent to a nested let.
 
@@ -826,7 +845,59 @@ compiled 2015-08-04 on yves.more-magic.net (Linux)
     1680
 ```
 
-#### Functions
+##### letrec
+
+Letrec allows to implement loops or loops with recursive anonymous functions.
+
+Example1: 
+
+```scheme
+(define (displayln x)
+  (begin
+    (display x)
+    (display "\n")))
+
+(letrec
+    [(loop  (lambda (i)
+              (if (< i 10)
+                  (begin
+                    (displayln i)
+                    (loop (+ i 1))))))]
+  (loop 0))
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+
+> loop
+Error: unbound variable: loop
+
+```
+
+Example2: Loop over a list and find the sum of all elements:
+
+```scheme 
+(define alist '(1 2 3 4 5 6))
+
+
+(letrec
+    [(loop (lambda (xs)
+             (if (null? xs)
+                 0
+                 (+ (car xs) (loop (cdr xs))))))]
+  (loop alist))
+21
+
+```
+
+### Functions
 
 **Defining and applying functions**
 
@@ -1111,7 +1182,7 @@ scheme@(guile-user) [3]> f2
 ```
 
 
-### Arithmetic 
+#### Arithmetic 
 
 The Scheme operators are functions of two arguments and are written in the infix notation, also known as [polish notation](https://en.wikipedia.org/wiki/Polish_notation).
 
@@ -1188,7 +1259,7 @@ Image saved on Tuesday October 22, 2013 at 12:31:09 PM
 
 ```
 
-### Comparison
+#### Comparison
 
 **Equality Operators**
 
@@ -1379,7 +1450,7 @@ compiled 2015-08-04 on yves.more-magic.net (Linux)
     
 ```
 
-### Math Functions
+#### Math Functions
 
 ```scheme
 
@@ -1569,7 +1640,7 @@ $48 = 0
 
 
 
-### String Functions
+#### String Functions
 
 **Predicates**
 
@@ -1878,23 +1949,23 @@ $76 = 15
 * **Cons** - List constructor, Construct a list cell 
 
 ```scheme 
-1 ]=> (define Nil '())
+> (define Nil '())
 
 ;Value: nil
 
-1 ]=> Nil
+> Nil
 
 ;Value: ()
 
-1 ]=> (Cons 5 Nil)
+> (Cons 5 Nil)
 
 ;Value 19: (5)
 
-1 ]=> (Cons 5 (Cons 6 Nil))
+> (Cons 5 (Cons 6 Nil))
 
 ;Value 20: (5 6)
 
-1 ]=> (Cons 4 (Cons 5 (Cons 6 Nil)))
+> (Cons 4 (Cons 5 (Cons 6 Nil)))
 
 ;Value 21: (4 5 6)
 ```
@@ -1902,15 +1973,15 @@ $76 = 15
 * **car** - It selects the first element, "head" of a list cell
 
 ```scheme
-1 ]=> (car (list 1 2 3 4))
+> (car (list 1 2 3 4))
 
 ;Value: 1
 
-1 ]=> (car '(2 3 4))
+> (car '(2 3 4))
 
 ;Value: 2
 
-1 ]=> (car '(x y z))
+> (car '(x y z))
 
 ;Value: x
 
@@ -1919,11 +1990,11 @@ $76 = 15
 * **cdr** - It selects the "tail" of a list, removes the first element
 
 ```scheme 
-1 ]=> (cdr (list 1 2 3 4))
+> (cdr (list 1 2 3 4))
 
 ;Value 17: (2 3 4)
 
-1 ]=> (cdr '(x y z w))
+> (cdr '(x y z w))
 
 ;Value 18: (y z w)
 ```
@@ -1931,30 +2002,53 @@ $76 = 15
 * **caddr** - It gets the second element of a list
 
 ```scheme
-scheme@(guile-user) [6]> (cadr '(a b c d e f))
+> (cadr '(a b c d e f))
 $14 = b
-scheme@(guile-user) [6]> 
+> 
 ```
 
 * **caddr** - It gets the third element of a list 
 
 ```scheme
-scheme@(guile-user) [6]> (caddr '(a b c d e f))
+> (caddr '(a b c d e f))
 $16 = c
 ```
 
 * **cadddr** - It gets the forth element of alist.
 
 ```scheme
-scheme@(guile-user) [6]> (cadddr '(a b c d e f))
+> (cadddr '(a b c d e f))
 $17 = d
 ```
 
-#### List Functions
+* **cddr** - Removes the first two elements of a list.
 
+```scheme
+> (cddr '(a b c d e f))
+$3 = (c d e f)
+```
 
+* **cdddr** - Removes the first three elements of a list.
 
-##### Basic List Functions
+```scheme
+> (cadddr '(a b c d e f))
+$4 = d
+```
+
+|   Function                            |  Output           |  Description         | 
+|---------------------------------------|-------------------|----------------------|
+| ```(car       '[a b c)```             |  a                | First element        |
+| ```(cadr     '[a b c d e f])```       |  b                | Second element       | 
+| ```(caddr    '[a b c d e f])```       |  c                | Third element        | 
+| ```(cadddr   '[a b c d e f]) ```      |  d                | Forth element        |             
+| ```(caddddr  '[a b c d e f]) ```      |  e                | Fifth element        | 
+|                                       |                   |                      |
+| ```(cdr     '[a b c e f)```           | ```'(b c e f)```  | Remove first, tail   |
+| ```(cddr    '[a b c e f)```           | ```'(c e f)```    | Remove first two elements |
+| ```(cdddr   '[a b c e f)```           | ```'(e f)```      | Remove first three elements |
+| ```(cddddr  '[a b c e f)```           | ```'(f)```        | Remove first four elements |
+
+#### Basic List Functions
 
 ```scheme
 
@@ -2458,6 +2552,26 @@ $18 = (a b c a b c a b)
 $19 = (0 1 0 1 0 1 0 1 0 1 0 1 0 1)
     
 ```
+
+**Intersperse**
+
+```scheme
+(define (intersperse a xs)  
+  (if (null? xs)
+      '()
+      [cons (car xs)
+            (if (null? (cdr xs))
+                (cdr xs)
+                (cons a (intersperse a (cdr xs))))]))
+
+
+> (intersperse 'x '(1 2 3 4 5))
+(1 x 2 x 3 x 4 x 5) 
+
+> (intersperse '(x y) '(1 2 3 4 5))
+(1 (x y) 2 (x y) 3 (x y) 4 (x y) 5)               
+```
+
 
 **Mapi**
 
@@ -3423,9 +3537,29 @@ $7 = "greater than 10"
 $8 = "less than 10"
 ```
 
+**Invert Predicate**
+
+```scheme
+(define-syntax-rule
+    ($n pred args ...)
+    (not (pred args ...)))
+    
+> (list? '(1 2 3 4))
+$1 = #t
+    
+> ($n list? '(1 2 3 4))
+$2 = #f
+
+> ,expand ($n list? 100)
+$4 = (not (list? 100))
+
+> ,expand ($n or (pair? x) (list? x))
+$6 = (not (or (pair? x) (list? x)))    
+```
+
 **Delay and force a computation**
 
-Lazy evalution.
+Lazy evaluation.
 
 ```scheme 
 (define-syntax-rule
@@ -3692,6 +3826,52 @@ $86 = (define dispatch-table
 
 ```
 
+**Clojure defn, def and fn statements**
+
+```scheme
+;;
+;; (def <name> <value>)
+;;
+(define-syntax-rule
+    (def name value)
+    (define name value))
+
+;;
+;; (defn <name> [<params>] (<body>))
+;;    
+(define-syntax-rule
+    (defn name params body ...)
+    (define (name . params)
+      body ...))    
+      
+
+;;
+;; (fn [vars] (<body>)))
+;;
+  (define-syntax-rule
+    (fn params body)
+    (lambda params body))
+    
+> (def x 10)
+> x
+$2 = 10
+
+
+> (def xs '(a b c d e f))
+> xs
+$3 = (a b c d e f)
+
+> (defn f [x y] (+ (* 3 x) (* 4 y)))
+
+> (f 3 4)
+$4 = 25
+
+
+> (map (fn [x] (+ x 3)) '[1 2 3 4 5 6])
+$5 = (4 5 6 7 8 9)
+
+```
+
 **Clojure Doto Macro**
 
 See also: https://clojuredocs.org/clojure.core/doto
@@ -3787,6 +3967,82 @@ $3 = (let loop ()
       (set! x (+ x 2))
       (loop))))
 
+```
+
+**Common Lisp dolist and dotimes**
+
+See also: [Macros: Standard Control Constructs](http://www.gigamonkeys.com/book/macros-standard-control-constructs.html)
+
+* Dotimes
+
+```scheme 
+
+;; dotimes macro
+;; 
+(define-syntax-rule
+(dotimes (var value)  body)
+(letrec
+    [
+     (loop (lambda (var)
+             (if (< var value)
+                 (begin body (loop (+ var 1)))
+                 (values))))]
+  
+  (loop 0)))
+  
+> (dotimes (i 5)
+       (begin (display i) (display "\n")))
+0
+1
+2
+3
+4
+
+> ,expand (dotimes (i 5) (begin (display i) (display "\n")))
+$7 = (let loop ((i 0))
+  (if (< i 5)
+    (begin
+      (begin (display i) (display "\n"))
+      (loop (+ i 1)))
+    (values)))
+  
+```
+
+* Dolist
+
+```scheme
+;; (dolist (<var> <list>) (<body>))
+;;
+(define-syntax-rule
+    (dolist (var alist) body)
+    (letrec
+        (
+         (loop (lambda (xs)
+                 (if (null? xs)
+                     (values)
+                     (let
+                         ((var (car xs)))
+                       (begin
+                         body
+                         (loop (cdr xs))))))))
+      
+      (loop alist)))
+
+> (dolist (i '(a b c d e))  (begin (display i) (display "\n")))
+a
+b
+c
+d
+e
+
+> ,expand (dolist (i '(a b c d e))  (begin (display i) (display "\n")))
+$8 = (let loop ((xs '(a b c d e)))
+  (if (null? xs)
+    (values)
+    (let ((i (car xs)))
+      (display i)
+      (display "\n")
+      (loop (cdr xs)))))
 ```
 
 #### Common Lisp Style Macros - Define-macro 
@@ -3932,7 +4188,7 @@ $4 = (cond ((negative? -100) "Negative")
 ```
 
 
-## S expressions and Serialization
+## S-expressions and Serialization
 
 S-expressions advantages:
 
@@ -5402,8 +5658,599 @@ $77 = 9.975303377387922
 
 ```
 
+## Scheme Implementations
 
-## Kawa Scheme - Access Java API from Scheme
+### Racket 
+
+Racket, former known as PLT Scheme, is an extension of Scheme language that has multi OS support, IDE: Dr. Racket, debugger, package system and repository, great documentation, large library and a powerful ffi - Foreign Function Interface. Racket has also support to many languages like pure Scheme, typed racket and others.
+
+
+
+#### String Functions
+
+**Basic String Functions**
+
+```racket
+
+> (string->list "hello world")
+'(#\h #\e #\l #\l #\o #\space #\w #\o #\r #\l #\d)
+>
+
+> (define list-of-chars (string->list "hello world"))
+> list-of-chars
+'(#\h #\e #\l #\l #\o #\space #\w #\o #\r #\l #\d)
+> 
+(list->string list-of-chars)
+"hello world"
+> 
+
+
+> (string-length "0123456789")
+10
+> 
+
+
+````
+
+**Format**
+
+```scheme 
+> (format "x = ~a" (sqrt (+ 40 10 50)))
+"x = 10"
+
+> (format "x = ~a" '(sqrt (+ 40 10 50)))
+"x = (sqrt (+ 40 10 50))"
+
+> (format "~a = ~a\nxs = ~a\n" '(sqrt (+ 90 10)) (sqrt (+ 90 10)) '(1 2 3 4 5 6))
+"(sqrt (+ 90 10)) = 10\nxs = (1 2 3 4 5 6)\n"
+
+> (display (format "~a = ~a\nxs = ~a\n" '(sqrt (+ 90 10)) (sqrt (+ 90 10)) '(1 2 3 4 5 6)))
+(sqrt (+ 90 10)) = 10
+xs = (1 2 3 4 5 6)
+```
+
+#### Input / Output Functions
+
+**Display**
+
+```scheme
+> (display 100)
+100> 
+
+> (display 20)
+20> 
+
+> (display 100)
+100> 
+
+> (display "Hello world racket")
+Hello world racket> 
+
+> (display "Hello world racket\n")
+Hello world racket
+> 
+> (display '(1 2 3 4 5))
+(1 2 3 4 5)> 
+```
+
+**Displayln**
+
+Print expression in the screen with character "\n" at the end.
+
+```racket 
+
+> (displayln 100)
+100
+
+> (displayln '(1 2 3 4 5))
+(1 2 3 4 5)
+
+> (displayln "hello world racket")
+hello world racket
+> 
+
+> (printf "x = ~a\n" '(sqrt (+ 40 10 50)))
+x = (sqrt (+ 40 10 50))
+
+> (printf "~a = ~a\nxs = ~a\n" '(sqrt (+ 90 10)) (sqrt (+ 90 10)) '(1 2 3 4 5 6))
+(sqrt (+ 90 10)) = 10
+xs = (1 2 3 4 5 6)
+
+
+> (begin
+  (displayln 10)
+  (displayln "Testing display")
+  (displayln "begin is to execute multiple s-expressions with side effects")
+  (displayln 'a-symbol))
+10
+Testing display
+begin is to execute multiple s-expressions with side effects
+a-symbol
+> 
+
+> (for-each displayln 
+    '[ 10 
+      "Testing display" 
+      "begin is to execute multiple s-expressions with side effects" 
+      'a-symbol
+    ])
+10
+Testing display
+begin is to execute multiple s-expressions with side effects
+(quote a-symbol)
+> 
+
+
+```
+
+**Printf**
+
+Formated output.
+
+```scheme 
+> (printf "x = ~a\n" (sqrt (+ 40 10 50)))
+x = 10
+
+```
+
+#### Data Structures
+
+##### Cons - Cell / Pair
+
+```scheme 
+;; (cons <first> <second>)
+;; '( <first> . <second>)
+
+
+> (cons 10 20)
+'(10 . 20)
+
+> (cons 'a 100.23)
+'(a . 100.23)
+
+> (define p1 (cons 10 20))
+> (define p2 (cons 'a 20))
+> (define p3 (cons 'x '(+ 20 50)))
+
+> p1
+'(10 . 20)
+> p2
+'(a . 20)
+> p3
+'(x + 20 50)
+> 
+
+;;; Every cons cell or a list is a pair.
+;;
+> (map pair? (list p1 p2 p3))
+'(#t #t #t)
+
+;;; Not all pairs is a list
+;;
+> (map list? (list p1 p2 p3))
+'(#f #f #t)
+
+;;
+;;  '(1 2 3 4) = (cons 1 '(2 3 4))
+;;
+> (pair? '(1 2 3 4))
+ #t
+> 
+
+```
+
+##### List
+
+```racket
+
+> '(1 2 3 4 5 6)
+'(1 2 3 4 5 6)
+
+> (quote (+ 2 3))
+'(+ 2 3)
+> 
+
+> '[a b c d e f]
+'(a b c d e f)
+
+> (define a 10)
+> (define b 20)
+> (list 'a a 'b b)
+'(a 10 b 20)
+> 
+
+```
+
+##### Association List
+
+##### Vector 
+
+[Vector Documentation](http://docs.racket-lang.org/reference/vectors.html)
+
+```racket
+
+;; Make a vector
+;-----------------------
+
+> (vector 1 2 3 4 )
+'#(1 2 3 4)
+
+> (define v  (vector 1 2 3 4 ))
+
+> (make-vector 3)
+'#(0 0 0)
+
+> (make-vector 3 'a)
+'#(a a a)
+> 
+
+
+;; Vector Length
+;;--------------------
+> (vector-length v)
+4
+> 
+
+> #(a b c d e)
+'#(a b c d e)
+> 
+> #(1 2 3 4 )
+'#(1 2 3 4)
+> 
+
+;;; Test if it is a vector.
+
+> (vector? v)
+ #t
+> 
+> (vector? '(1 2 3 ))
+ #f
+> 
+
+;;;; Pick the nth element 
+;--------------------------
+> (vector-ref v 0)
+1
+> (vector-ref v 1)
+2
+> (vector-ref v 2)
+3
+> (vector-ref v 3)
+4
+> (vector-ref v 5)
+vector-ref: index is out of range
+  index: 5
+  valid range: [0, 3]
+  vector: '#(1 2 3 4)
+> 
+
+;; List Vector / Transformations
+;-------------------------
+
+> (vector->list #(a 1 b 2 c 3))
+'(a 1 b 2 c 3)
+> 
+
+> (list->vector '(a 1 b 2 c 3))
+'#(a 1 b 2 c 3)
+
+
+;;; Map a vector
+;--------------------------
+> (define (f x) (* 3 x))
+> 
+
+> v
+'#(1 2 3 4)
+> 
+> (vector-map f v)
+'#(3 6 9 12)
+> 
+
+
+> (vector-map 
+   (lambda (x y) (+ (* 3 x) (* 2 y)))
+   #(1 2 3 4 5) #(5 4 3 2 1))
+'#(13 14 15 16 17)
+> 
+
+;; Zip
+;;-------------------------
+
+> (map vector  '(1 2 3 4) '(a b c d))
+'(#(1 a) #(2 b) #(3 c) #(4 d))
+
+
+> (map vector '(1 2 3 4 ) '(a b c d) '("x" "y" "z" "w"))
+'(#(1 a "x") #(2 b "y") #(3 c "z") #(4 d "w"))
+> 
+
+> (define-syntax-rule
+    (zipm xs ...)
+    (map vector xs ...))
+
+> (zipm '(1 2 3) '(a b c))
+'(#(1 a) #(2 b) #(3 c))
+
+> (zipm '(1 2 3) '(a b c) '("x" "y" "z"))
+'(#(1 a "x") #(2 b "y") #(3 c "z"))
+
+
+;; Set a  vector element
+;;---------------------------
+
+> (define v1 (make-vector 3))
+> v1
+'#(0 0 0)
+> 
+
+> (vector-set! v1 0 'a)
+> v1
+'#(a 0 0)
+> (vector-set! v1 1 343.34)
+> v1
+'#(a 343.34 0)
+> (vector-set! v1 2 "test")
+> v1
+'#(a 343.34 "test")
+> 
+
+;; Append Vectors
+;;--------------------------
+
+> (vector-append #(a b c) #(w x y z))
+'#(a b c w x y z)
+> 
+
+
+```
+
+##### Hash Table 
+
+
+#### Struct 
+
+```racket 
+
+(defstruct point-3d (x y z))
+defstruct: undefined;
+ cannot reference undefined identifier
+> 
+
+> (struct point-3d (x y z))
+
+> (point-3d 10 20 30)
+ #<point-3d>
+ 
+> (define p1 (point-3d 10 20 30))
+ 
+
+> (define p2 (apply point-3d '(20 30 40)))
+> p1
+ #<point-3d>
+> p2
+ #<point-3d>
+ 
+> (point-3d-x p1)
+10
+> (point-3d-y p1)
+20
+> (point-3d-z p1)
+30
+> 
+
+> (defstruct point-3d (x y z))
+defstruct: undefined;
+ cannot reference undefined identifier
+> 
+
+(struct point-3d (x y z))
+> 
+
+(point-3d 10 20 30)
+ #<point-3d>
+> 
+(define p1 (point-3d 10 20 30))
+> 
+
+(define p2 (apply point-3d '(20 30 40)))
+> p1
+ #<point-3d>
+> p2
+ #<point-3d>
+
+> (point-3d-x p1)
+10
+> (point-3d-y p1)
+20
+> (point-3d-z p1)
+30
+> 
+
+> (map point-3d-x (list p1 p2))
+'(10 20)
+
+> (point-3d? p2)
+ #t
+> (point-3d? '(1 2 4))
+ #f
+> 
+```
+
+#### Pattern Matching
+
+Documentation: 
+
+* [Pattern Matching](http://plt.eecs.northwestern.edu/snapshots/current/doc/reference/match.html)
+
+* [Extensible Pattern Matching in an Extensible Language](http://www.ccs.neu.edu/home/samth/match-ifl-full.pdf)
+
+* [Racket Guide - Pattern Matching](http://docs.racket-lang.org/guide/match.html)
+
+```racket
+(require racket/match)
+ 
+(define (perimeter picture)
+    (match picture
+        [(list 'triangle a b c)   (+ a b c)]
+        [(list 'rectangle a b)    (* 2 (+ a b))]
+        [(list 'circle r)         (* 2 pi r)]))
+        
+> (perimeter '(triangle 3 4 5))
+12
+> (perimeter '(rectangle 3 4))
+14
+> (perimeter '(circle 3))
+18.84955592153876
+> 
+
+> (perimeter '(x 3))
+match: no matching clause for '(x 3)
+> 
+
+> (map perimeter
+    '[(triangle 3 4 5)
+      (rectangle 3 4)
+      (circle 3)])
+'(12 14 18.84955592153876)
+
+
+;;; List recursive functions with pattern matching
+;;--------------------------------------------------
+
+(define (count-list alist)
+    (match alist
+        ['()            0]
+        [(cons hd tl)   (+ 1 (count-list tl))]))
+
+> (count-list '(a b c d ))
+4
+> 
+
+
+```
+
+#### Plotting
+
+Racket has a rich built-in plot library.
+
+[Documentation](http://docs.racket-lang.org/plot/intro.html#%28part._.Plotting_2.D_.Graphs%29)
+
+**Plot a function**
+
+```racket
+ #lang racket
+(require plot)
+(plot-new-window? #t)
+(plot (function exp -2 2))
+
+```
+
+![](images/chart_exp_racket.png)
+
+
+**Plot Points**
+
+```racket
+ #lang racket
+(require plot)
+(plot-new-window? #t)
+
+> (define xys '[#(-2 4) #(-1 1) #(0 0) #(1 1) #(2 4) #(3 9) #(4 16) #(5 25) ])
+> 
+> (require plot)
+> (plot (points xys))
+> 
+
+```
+
+![](images/chart_points_racket.png)
+
+
+**Plot Lines between points**
+
+```racket
+ #lang racket
+(require plot)
+(plot-new-window? #t)
+
+> (define xys '[#(-2 4) #(-1 1) #(0 0) #(1 1) #(2 4) #(3 9) #(4 16) #(5 25) ])
+> 
+> (require plot)
+> (plot (lines xys))
+> 
+
+```
+
+![](images/chart_lines_points_racket.png)
+
+**Parametric Plot**
+
+Example: Parametric Equation of an Ellipse
+
+* See also: [Parametric Equation](http://jwilson.coe.uga.edu/EMAT6680Fa09/Yun/jyun_assign10/Parametric_eq_yun.html)
+
+```
+x^2/a^2 + y^2/b^2 = 1
+
+x = a cos(t)
+y = b sin(t)
+
+Plot the equation:  x^2/9 + y^2/64 = 1
+
+```
+
+```racket
+ #lang racket
+(require plot)
+(plot-new-window? #t)
+
+ ;;; Ellipse function factory 
+ ;;; 
+ ;;; ellip-xy :: num -> num -> (num -> (vector [num num]))
+ ;;;              a      b       t
+ ;;;
+(define (ellipse a b)
+   (lambda (t) (vector (* a (cos t)) (* b (sin t)))))
+
+(plot (parametric [ellipse 3 8] 0 (* 2 pi)))
+
+```
+
+#### Resources
+
+##### Miscellaneous
+
+* [Racket programming language](https://en.wikipedia.org/wiki/Racket_(programming_language))
+* [Racket Features / Wikipedia](https://en.wikipedia.org/wiki/Racket_features)
+
+* [Introduction to Racket Advanced Functional Programming Jean-Noël Monette - November 2013](http://www.it.uu.se/edu/course/homepage/avfunpro/ht13/lectures/Racket-1-Intro.pdf)
+
+* [Tutorial: Contributing to Racket](http://jpolitz.github.io/blog/2012/11/21/racket-contributing-tutorial.html)
+
+* [Stories of a young Racketeer / Learning Resources](http://youngracketeer.blogspot.com.br/2013/01/learning-resources.html)
+
+* [Impure Functional Programming](https://cs.uwaterloo.ca/~plragde/tyr/Impure_Functional_Programming.html)
+
+* [Using Racket to Configure Apache](http://qerub.se/using-racket-to-configure-apache)
+
+##### Documentation
+
+
+* [Download](http://www.racket-lang.org/download/)
+* [Modules](http://docs.racket-lang.org/guide/modules.html)
+
+* [Pairs and Lists](http://docs.racket-lang.org/reference/pairs.html?q=list#%28def._%28%28quote._%7E23%7E25kernel%29._list%29%29)
+
+* [Hash Tables / Guide](http://docs.racket-lang.org/guide/hash-tables.html)
+* [Hash  Tables / Reference](http://docs.racket-lang.org/reference/hashtables.html)
+
+
+#### Videos
+
+* [Scribble: Closing the Book on Ad Hoc Documentation Tools](https://vimeo.com/6630691)
+
+### Kawa Scheme - Access Java API from Scheme
 
 [Kawa Scheme](http://www.gnu.org/software/kawa) is a implementation of the language in Java that can compile to Java bytecodes and has access to the Java API.
 
@@ -5623,7 +6470,7 @@ Apis Used:
 
 ```
 
-### Create a GUI
+#### Create a GUI
 
 **Create a GUI in the REPL**
 
@@ -5782,7 +6629,7 @@ File: [FahrenheitGUI.scm](src/FahrenheitGUI.scm)
 
 ```
 
-### See also
+#### See also
 
 
 * [Kawa Scheme Implementation - Wikipedia](https://en.wikipedia.org/wiki/Kawa_(Scheme_implementation)
@@ -5936,7 +6783,7 @@ Write programs to generate other programs](http://www.ibm.com/developerworks/lib
 * [Functional Programming of Behavior-Based Systems Ian Douglas Horswill](http://cs.northwestern.edu/~ian/grl-paper.pdf)
 * [Composing Real-Time Systems](http://www.ijcai.org/Past%20Proceedings/IJCAI-91-VOL1/PDF/034.pdf)
 
-
+* [Google Common Lisp Style Guide](https://google.github.io/styleguide/lispguide.xml)
 
 ### Documentation by Subject
 
@@ -5953,6 +6800,8 @@ Write programs to generate other programs](http://www.ibm.com/developerworks/lib
 * [Gambit Scheme](http://www.iro.umontreal.ca/~gambit/doc/gambit-c.html)
 
 #### Libraries and Standards
+
+
 
 **Standards**
 
@@ -6106,8 +6955,19 @@ Write programs to generate other programs](http://www.ibm.com/developerworks/lib
 
 ### Hacker News Threads
 
+* [Systems Programming with Racket (racket-lang.org)](https://news.ycombinator.com/item?id=2506485)
+
 * [Reproducible Development Environments with GNU Guix (dthompson.us)](https://news.ycombinator.com/item?id=8616918)
 
 * [Interviews with Lisp Hackers: Pascal Costanza (lisp-univ-etc.blogspot.com)](https://news.ycombinator.com/item?id=3847242)
 
 * [ Ask news.YC: For the lisp experts - tell me how you learned the language.](https://news.ycombinator.com/item?id=58558)
+
+* [Is Scheme as good as Common Lisp?](https://news.ycombinator.com/item?id=48657)
+
+* [A Haskell Programmer Tries to Learn Racket (artyom.me)](https://news.ycombinator.com/item?id=7595098)
+
+### Lambda Ultimate Threads
+
+* [Scheme Unit](http://c2.com/cgi/wiki?SchemeUnit)
+* [Lisp Me Unit](http://c2.com/cgi/wiki?LispMeUnit)
