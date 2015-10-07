@@ -58,5 +58,8 @@ The code snippets with the '>' symbol were run in the interactive Haskell Shell 
 
 **Functional Programming in Scheme**
 
-* [Scheme LISP](scheme/README.md)
+* [Scheme](scheme/README.md)
 
+**Functional Programming in Clojure**
+
+* [Clojure](clojure/README.md)
