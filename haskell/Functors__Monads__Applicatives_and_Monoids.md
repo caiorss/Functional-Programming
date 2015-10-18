@@ -2049,9 +2049,9 @@ Loading package random-1.0.1.1 ... linking ... done.
 > 
 ```
 
-**Example: Fibbonaci Sequence**
+**Example: Fibonacci Sequence**
 
-The Fibbonaci sequence is defined by the rule:  
+The Fibonacci sequence is defined by the rule:  
 
 ```
 a[n+2] = a[n+1] + a[n]
