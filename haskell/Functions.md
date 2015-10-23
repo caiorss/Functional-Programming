@@ -98,7 +98,7 @@ ft 3 = 8
 ft _ = error "Invalid Value"
 
 {- Distance between two points in a plane -}
-distance (x1, y1) (x2, y2)= sqrt ((x2 - x1)**2.0 + (y2 - y1)**2.0)
+distance (x1, y1) (x2, y2) = sqrt ((x2 - x1)^2 + (y2 - y1)^2)
 ```
 
 Loading functions.hs
@@ -240,12 +240,12 @@ subVectors   :: (Num t, Num t1, Num t2) => (t, t1, t2) -> (t, t1, t2) -> (t, t1,
 (20,2,-5)
 >
 
-> let f x y = 10*x - y**2
+> let f x y = 10*x - y^2
 > 
 > f 10 3
-91.0
+91
 > 10 `f` 3
-91.0
+91
 > 
 
 > let addJust (Just a) (Just b) = Just (a+b)
@@ -268,7 +268,7 @@ Just 40
 In Haskell the infix operators can be seen as a two-argument function.
 
 ```
-x + y is equivalent to add x y or (+ x y)
+x + y is equivalent to add x y or (+) x y
 ```
 
 
@@ -279,7 +279,8 @@ x + y is equivalent to add x y or (+ x y)
 | (+4)       |  \x -> x + 4         |                |
 | (*3)       |  \x -> x * 3         | |
 | (/2)       |  \x -> x / 2         | |
-| ((-)5)     |  \x -> 5 - x         | |
+| (5-)       |  \x -> 5 - x         | |
+| (-5)       |  negate 5            | -5 :: Num a => a  |
 | (^2)       |  \x -> x ^ 2         | |
 | (2^)       |  \x -> 2 ^ x         | |
 | (+)        |  \x y -> x + y       | (+) :: Num a => a -> a -> a        |
@@ -305,7 +306,7 @@ x + y is equivalent to add x y or (+ x y)
 |------------|----------------------|----------------|------|
 | (&&)       |  \x y -> x && y      | (&&) :: Bool -> Bool -> Bool   | And |
 | (\|\|)     |  \x y -> x \|\| y    | (\|\|) :: Bool -> Bool -> Bool | Or |
-| (not)      | not x                |  not :: Bool -> Bool           | Not |
+| not        | not x                |  not :: Bool -> Bool           | Not |
 
 **List and Tuples Operators**
 
@@ -322,7 +323,7 @@ x + y is equivalent to add x y or (+ x y)
 > (+) 10 30.33
 40.33
 
-> map ((+) 10) [1, 20, 43, 44]
+> map (10+) [1, 20, 43, 44]
 [11,30,53,54]
 > 
 
@@ -332,7 +333,7 @@ x + y is equivalent to add x y or (+ x y)
 > map ((-) 100) [10, 20, 80, -50]
 [90,80,20,150]
 > 
-> map (flip (-)100) [10, 20, 80, -50]
+> map (+(-100)) [10, 20, 80, -50]
 [-90,-80,-20,-150]
 
 
@@ -342,7 +343,7 @@ x + y is equivalent to add x y or (+ x y)
 > (*) 40 30
 1200
 
-> map (*10) [1, 2, 3, 4]
+> map (10*) [1, 2, 3, 4]
 [10,20,30,40]
 > 
 
@@ -359,20 +360,20 @@ x + y is equivalent to add x y or (+ x y)
 11.313708498984761
 >
 
-> map ((**) 0.5) [1, 2, 3, 4]
+> map (0.5**) [1, 2, 3, 4]
 [0.5,0.25,0.125,6.25e-2]
 
-> map ((flip (**)) 0.5) [1, 2, 3, 4]
+> map (**0.5) [1, 2, 3, 4]
 [1.0,1.4142135623730951,1.7320508075688772,2.0]
 > 
 
 > (,) 4 5
 (4,5)
 
-> map ((,)4) [1, 2, 3, 4]
+> map ((,) 4) [1, 2, 3, 4]
 [(4,1),(4,2),(4,3),(4,4)]
 
-> map ((flip (,)) 4) [1, 2, 3, 4]
+> map (flip (,) 4) [1, 2, 3, 4]
 [(1,4),(2,4),(3,4),(4,4)]
 
 > (,,) 4 5 7
@@ -404,7 +405,7 @@ x + y is equivalent to add x y or (+ x y)
 > (!!) alist 3
 'd'
 
-> map ((!!) alist) [0, 2, 3, 4]
+> map (alist!!) [0, 2, 3, 4]
 "acde"
 > 
 > map (!!2) [['a', 'b', 'c'], ['y', 'w', 'x', 'z'], ['1', '2', '3', '4']]
@@ -430,7 +431,7 @@ False
 True
 > 
 > 
-> filter (==10) [100, 10, 20, 10, 30]
+> filter (10==) [100, 10, 20, 10, 30]
 [10,10]
 > 
 > map (uncurry (==)) [(100, 100), (10, 23), (34, 44), (0, 0)]
@@ -488,7 +489,7 @@ False
 [[-1,1,2,3],[-1,5,6],[-1,0]]
 > 
 
-> map ((:) 89) [[1, 2, 3], [5, 6], [0]]
+> map (89:) [[1, 2, 3], [5, 6], [0]]
 [[89,1,2,3],[89,5,6],[89,0]]
 > 
 
@@ -565,7 +566,7 @@ f $ x = f x
 Example: This operator is useful to apply an argument to a list of functions.
 
 ```haskell
-> ($ 10) (*3)
+> ($ 10) (3*)
 30
 > 
 > let f x = x*8 - 4
@@ -962,7 +963,7 @@ Floor, Round, Ceil
 ```
 
 
-Convert Interger to Float Point
+Convert Integer to Floating Point
 
 ```haskell
 > let inv x = 1/x
@@ -1196,10 +1197,10 @@ foldr f z [x]
     z is is the initial value of the accumulator
     [x] Is a list of values
 
-foldr (+)  10  [1, 2, 3, 4]  =>  (+ 1 (+ 2 (+ 3 (+ 4 10)))) => 20
+foldr (+)  10  [1, 2, 3, 4]  =>  ((+) 1 ((+) 2 ((+) 3 ((+) 4 10)))) => 20
 
  
-         \ f            (f 1 (f 2 (f 3 (f 4 10)))) => (+ 1 (+ 2 (+ 3 (+ 4 10))))
+         \ f            (f 1 (f 2 (f 3 (f 4 10)))) => ((+) 1 ((+) 2 ((+) 3 ((+) 4 10))))
         / \
        1   \
            /\ f         (f 2 (f 3 (f 4 10)))
@@ -1220,8 +1221,8 @@ Foldr Definition:
 
 ```
 foldr :: (a -> b -> b) -> b -> [a] -> b
-foldr []     = v
-foldr (x:xs) = x (+) foldr xs
+foldr f []     = v
+foldr f (x:xs) = f x (foldr f xs)
 ```    
 
 **Left Fold**
@@ -1229,7 +1230,7 @@ foldr (x:xs) = x (+) foldr xs
 ```
 foldl :: (a -> b -> a) -> a -> [b] -> a
 
-foldl (+)  10  [1, 2, 3, 4]  =>  (+ 4 (+3 (+ 2 (+ 1 10)))) => 20
+foldl (+)  10  [1, 2, 3, 4]  =>  ((+) 4 ((+) 3 ((+) 2 ((+) 1 10)))) => 20
 
           \
           /\ f             (f 4 (f 3 (f 2 (f 1 10))))
@@ -1480,7 +1481,7 @@ Find the square root of a number by Fixed-point iteration
 Xi+1 = g(Xi)
 ```
 
-The magnitude of the derivative of g must be smaller than 1 to the method work.
+The magnitude of the derivative of g must be smaller than 1 for the method to work.
 
 ```
 sqrt(a) --> f(x) = x^2 - a = 0 
@@ -1612,7 +1613,7 @@ Data.List
 ```haskell
 zip4 :: [a] -> [b] -> [c] -> [d] -> [(a, b, c, d)]
 zip5 :: [a] -> [b] -> [c] -> [d] -> [e] -> [(a, b, c, d, e)]
-zip6  :: [a] -> [b] -> [c] -> [d] -> [e] -> [f] -> [(a, b, c, d, e, f)]
+zip6 :: [a] -> [b] -> [c] -> [d] -> [e] -> [f] -> [(a, b, c, d, e, f)]
 ```
 
 Unzip transforms a list of pairs into a list of first components and a list of second components. It is the inverse of zip.
