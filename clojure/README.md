@@ -2147,6 +2147,8 @@ There is a Clojure library for this: [clj-http](https://github.com/dakrone/clj-h
 
 * [Lazy Sequences in Clojure](http://theatticlight.net/posts/Lazy-Sequences-in-Clojure/)
 
+* [Recursion in Clojure/ Tail Recursion](http://programming-pages.com/2012/01/16/recursion-in-clojure/)
+
 ### Misc
 
 * [Clojure Compilation: Parenthetical Prose to Bewildering Bytecode](http://blog.ndk.io/2014/01/26/clojure-compilation.html)

@@ -14,6 +14,10 @@
       - [Currying](#currying)
       - [Partial Application](#partial-application)
     - [Lazy Evaluation](#lazy-evaluation)
+    - [Fundamental Higher Order Functions](#fundamental-higher-order-functions)
+      - [Map](#map)
+      - [Filter](#filter)
+      - [Reduce (Fold)](#reduce-fold)
     - [Function Composition](#function-composition)
       - [Function Composition In Haskell](#function-composition-in-haskell)
       - [Function Composition in Python](#function-composition-in-python)
@@ -861,6 +865,580 @@ f = lambda x: x**5
 ```
 
 
+
+### Fundamental Higher Order Functions 
+
+The functions map, filter and reduce (fold left) are ubiquitous in many programing languages and also the most used higher order functions. 
+
+They can be stricted evaluated like in Scheme and Javascript or lazy evaluated like in Python and Haskell. 
+
+#### Map
+
+```
+    map :: ( a -> b) -> [a] -> [b]                
+                |
+                |
+                |----> f :: a -> b
+                
+    
+    
+             f :: a -> b
+     a   ------------------------>>>  b
+    
+    
+           map f :: [a] -> [b]                    
+    [a] ------------------------->>> [b]
+    
+    
+``` 
+
+
+*Haskell*
+
+The function map is lazy evaluated.
+
+```haskell
+> let fun1 x = 3 * x + 1
+> fun1 2
+7
+> map fun1 [1, 2, 3]
+[4,7,10]
+> 
+
+  -- The sequence 1 to 1000000 is not evaluated at all, 
+  --
+> take 10 (map fun1 [1..1000000])
+[4,7,10,13,16,19,22,25,28,31]
+
+> take 10 (map fun1 [1..10000000000])
+[4,7,10,13,16,19,22,25,28,31]
+> 
+> 
+
+
+
+ -- 
+ -- When applied to a function without a list, it creates 
+ -- another function that operates over lists because all
+ -- Haskell functions are curried by default.
+ --
+ --         f :: (a -> b)
+ --  map    :: (a -> b) -> [a] -> [b]
+ --
+ -- It can be seen as:
+ --
+ --  When map is applied to f, it will create the function fs
+ --  that take list of type a and returns list of type b.
+ --
+ --  map    :: (a -> b) -> ([a] -> [b])
+ --                |            |
+ --                |            |------ fs :: [a] -> [b] 
+ --                |    
+ --                -------------------- f  :: a -> b 
+ --
+> :t map
+map :: (a -> b) -> [a] -> [b]
+  
+> let f x = 3 * x + 6
+> :t f
+f :: Num a => a -> a
+> 
+
+
+> map f [1, 2, 3]
+[9,12,15]
+> 
+
+ -- Note: let is only needed in the REPL
+ --
+> let fs = map f
+
+> :t fs
+fs :: [Integer] -> [Integer]
+
+> fs [1, 2, 3]
+[9,12,15]
+> 
+```
+
+
+*Python*
+
+In Python 3 map and filter are lazy evaluated, they return a generator.
+
+```python
+>>> def fun1 (x):
+    return 3*x + 6
+... 
+>>> g = map(fun1, [1, 2, 3])
+>>> g
+<map object at 0xb6b4a76c>
+>>> next (g)
+9
+>>> next (g)
+12
+>>> next (g)
+15
+>>> next (g)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+StopIteration
+>>> g
+<map object at 0xb6b4a76c>
+>>> 
+
+ # Force the evaluation: 
+ #
+ >>> list(map(fun1, [1, 2, 3]))
+ [9, 12, 15]
+ 
+
+ # Strict Version of map
+ # 
+ # s_ stands for strict map.
+
+def s_map (f, xs):
+    return list(map(f, xs))
+ 
+>>> s_map (fun1, [1, 2, 3])
+[9, 12, 15]
+>>> 
+
+ # Due to python doesn't have tail call optimization
+ # recusion must be avoided, a higher number of iterations
+ # can lead to a stack overflow.
+ 
+def strict_map (f, xs):
+    return [f (x) for x in xs]
+    
+>>> strict_map (fun1, [1, 2, 3])
+[9, 12, 15]
+>>> strict_map (fun1, range(5))
+[6, 9, 12, 15, 18]
+>>> 
+
+  # Lazy map implementation:
+  # Note: the python native map is implemented in C, so
+  # it is faster.
+  #
+  
+def lazy_map (f, xs):
+    for x in xs:
+        yield x
+        
+>>> g = lazy_map (fun1, [1, 2, 3])
+>>> next(g)
+1
+>>> next(g)
+2
+>>> next(g)
+3
+>>> next(g)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+StopIteration
+>>> list(lazy_map (fun1, [1, 2, 3]))
+[1, 2, 3]
+>>>           
+
+ #
+ # To the map function work like in Haskell and ML 
+ # it is need to be curried.   
+ #
+
+curry2 = lambda f: lambda x: lambda y: f(x, y)
+
+ # The function curry2 currify a function of two arguments
+ #
+>>> strict_map_c = curry2(strict_map) 
+
+>>> strict_map_c(fun1)
+<function <lambda>.<locals>.<lambda>.<locals>.<lambda> at 0xb6afc0bc>
+
+>>> strict_map_c(fun1)([1, 2, 3, 4])
+[9, 12, 15, 18]
+>>> 
+
+>>> fun1_xs = strict_map_c(fun1)
+>>> fun1_xs ([1, 2, 3, 4])
+[9, 12, 15, 18]
+>>>  
+```
+
+#### Filter
+
+*Python*
+
+```python
+
+ ;;; Filter returns by default a 
+>>> g = filter (lambda x: x > 10, [1, 20, 3, 40, 4, 14, 8])
+>>> g
+<filter object at 0xb6b4a58c>
+>>> [x for x in g]
+[20, 40, 14]
+>>> [x for x in g]
+[]
+>>> list(filter (lambda x: x > 10, [1, 20, 3, 40, 4, 14, 8]))
+[20, 40, 14]
+>>> 
+
+  # Stritct Version of filter function
+  #
+>>> _filter = lambda f, xs: list(filter(f, xs))
+>>> 
+>>> _filter (lambda x: x > 10,  [1, 20, 3, 40, 4, 14, 8])
+[20, 40, 14]
+>>> 
+
+  # Filter implementation without recursion:
+  #
+
+def strict_filter (f, xs):
+    result = []
+    for x in xs:
+        if f(x):
+            result.append(x)
+    return result
+
+def lazy_filter (f, xs):
+    for x in xs:
+        if f(x):
+            yield x
+
+>>> strict_filter (lambda x: x > 10, [1, 20, 3, 40, 4, 14, 8])
+[20, 40, 14]
+
+>>> lazy_filter (lambda x: x > 10, [1, 20, 3, 40, 4, 14, 8])
+<generator object lazy_filter at 0xb6b0f1bc>
+
+>>> g = lazy_filter (lambda x: x > 10, [1, 20, 3, 40, 4, 14, 8])
+>>> g
+<generator object lazy_filter at 0xb6b0f194>
+>>> next(g)
+20
+>>> next(g)
+40
+>>> next(g)
+14
+>>> next(g)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+StopIteration
+>>> 
+
+>>> list(lazy_filter (lambda x: x > 10, [1, 20, 3, 40, 4, 14, 8]))
+[20, 40, 14]
+>>> 
+  
+```
+
+#### Reduce (Fold)
+
+See also: 
+  - [Fold (higher-order function) - Wikipedia, the free encyclopedia](https://en.wikipedia.org/wiki/Fold_(higher-order_function)
+  - [A tutorial on the universality and expressiveness of fold. GRAHAM HUTTON](http://www.cs.nott.ac.uk/~pszgmh/fold.pdf)
+
+*Haskell*
+
+Fold Left:
+
+```
+ foldl :: (acc -> x -> acc) -> acc -> [x] -> acc
+ 
+                  |             |      |       | 
+                  |             |      |       |---> Returns the accumulated 
+                  |             |      |             value
+                  |             |      |----- xs 
+                  |             |                  
+                  |             |     Inital Value of accumulator
+                  |             |---  acc0
+                  |
+                  |-----------------  f :: acc -> x -> acc
+                                                  |
+                                                  |--- Element of list 
+
+ foldl :: (b -> a -> b) -> b -> [a] -> b
+ foldl f z []     = z
+ foldl f z (x:xs) = foldl f (f z x) xs
+```
+
+
+```haskell
+
+> :t foldl
+foldl :: (a -> b -> a) -> a -> [b] -> a
+> 
+> foldl (\acc x -> 10 * acc + x) 0 [1, 2, 3, 4, 5] 
+12345
+> 
+
+```
+
+It is equivalent to:
+
+```haskell
+> let f acc x = 10 * acc + x
+> 
+> (f 0 1)
+1
+> (f (f 0 1) 2)
+12
+> (f (f (f 0 1) 2) 3)
+123
+> 
+> (f (f (f (f 0 1) 2) 3) 4)
+1234
+> (f (f (f (f (f 0 1) 2) 3) 4) 5)
+12345
+> 
+```
+
+Fold right:
+
+```
+ foldr :: (x -> acc -> acc) -> acc -> [x] -> acc
+
+ foldr :: (a -> b -> b) -> b -> [a] -> b
+ foldr f z []     = z
+ foldr f z (x:xs) = f x (foldr f z xs)
+```
+
+```haskell
+> foldr (\x acc -> 10 * acc + x) 0 [1, 2, 3, 4, 5] 
+54321
+
+> (f 0 5)
+5
+> (f (f 0 5) 4)
+54
+> (f (f (f 0 5) 4) 3)
+543
+> (f (f (f (f 0 5) 4) 3) 2)
+5432
+> (f (f (f (f (f 0 5) 4) 3) 2) 1)
+54321
+> 
+
+ --
+ -- Derive fold_right from foldl (fold left)
+ -- 
+
+> let fold_right f acc xs = foldl (\x acc -> f acc x) acc (reverse xs)
+> 
+> :t fold_right
+fold_right :: (b -> a -> a) -> a -> [b] -> a
+> 
+> 
+> fold_right (\x acc -> 10 * acc + x) 0 [1, 2, 3, 4, 5]
+54321
+> 
+
+
+```
+
+
+*Python*
+
+In Python 3 the function reduce is not default anymore, however it can be found in the native library functools, that has a lot of builtin functions for functional programing. The function reduce is equivalent to Haskell function foldl (fold left) which is tail recursive. 
+
+```
+reduce(function, sequence[, initial]) -> value
+
+reduce :: (acc -> x -> acc) -> [x] ?acc0  -> acc
+```
+
+```python
+>>> from functools import reduce
+>>> 
+
+>>> reduce (lambda acc, x: 10 *  acc + x , [1, 2, 3, 4, 5], 0)
+12345
+>>> 
+
+>>> f = lambda acc, x: 10 *  acc + x
+>>> 
+>>> f(0, 1)
+1
+>>> f( f(0, 1), 2)
+12
+>>> f( f( f(0, 1), 2), 3)
+123
+>>> f( f( f( f(0, 1), 2), 3), 4)
+1234
+>>> f( f( f( f( f(0, 1), 2), 3), 4), 5)
+12345
+>>> 
+
+def my_reduce (f, xs, acc0=None):
+    "Non recursive implementation of reduce (fold_left)
+     with optional initial accumulator value.
+    "
+
+    if acc0 is None:
+        acc = xs[0]   
+        xss = xs[1:]
+    else:
+        acc = acc0
+        xss = xs
+        
+    for x in xss:
+        acc = f (acc, x)
+        
+    return acc
+
+
+>>> 
+>>> my_reduce(lambda acc, x: 10 * acc + x, [1, 2, 3, 4, 5], 0)
+12345
+>>> my_reduce(lambda acc, x: 10 * acc + x, [1, 2, 3, 4, 5])
+12345
+>>> my_reduce(lambda acc, x:  acc + x, [1, 2, 3, 4, 5], 0)
+15
+>>> my_reduce(lambda acc, x:  acc * x, [1, 2, 3, 4, 5], 1)
+120
+>>> 
+ 
+ #
+ # Implementation without recursion.
+ #
+
+def fold_left (f_acc_x_to_acc, acc0, xs):
+    "Haskell-like fold left function
+    
+    fold_left :: (acc -> x -> acc) -> acc -> [x]
+    "
+    acc = acc0
+    
+    for x in xs:
+        acc = f_acc_x_to_acc (acc, x)
+        
+    return acc
+      
+>>> fold_left (lambda acc, x: 10 * acc + x, 0, [1, 2, 3, 4, 5])
+12345
+>>>       
+
+
+def fold_right (f, acc0, xs):
+    return fold_left ((lambda acc, x: f(x, acc)), acc0, reversed(xs))
+
+>>> fold_right (lambda x, acc: 10 * acc + x, 0, [1, 2, 3, 4, 5])
+54321
+>>>
+
+def fold_right2 (f, acc0, xs):
+    acc = acc0
+    
+    for x in reversed(xs):
+        acc = f(x, acc)
+        
+    return acc
+
+>>> fold_right2 (lambda x, acc: 10 * acc + x, 0, [1, 2, 3, 4, 5])
+54321
+>>>     
+
+```
+
+*Usefulness of Fold*
+
+Many functions and recursive algorithms can be implemented using the fold function, including map, filter, sum, product and others.
+
+It is based in the paper:   - [A tutorial on the universality and expressiveness of fold. GRAHAM HUTTON](http://www.cs.nott.ac.uk/~pszgmh/fold.pdf)
+
+In the paper was usef fold right, here was used fold left. 
+
+```python 
+
+def fold_left (f_acc_x_to_acc, acc0, xs):
+    "Haskell-like fold left function
+    
+    fold_left :: (acc -> x -> acc) -> acc -> [x]
+    "
+    acc = acc0
+    
+    for x in xs:
+        acc = f_acc_x_to_acc (acc, x)
+        
+    return acc
+    
+    
+    ;;; Function fold in curried form 
+    
+curry3 = lambda f: lambda x: lambda y: lambda z: f(x, y, z)
+
+>>> summation = fold(lambda acc, x: acc + x)(0)
+>>> 
+>>> summation([1, 2, 3, 4, 5, 6])
+21
+>>> 
+
+>>> product = fold(lambda acc, x: acc * x)(1)
+>>> product([1, 2, 3, 4, 5])
+120
+>>> 
+
+>>> f_or = fold(lambda acc, x: acc or x)(False)
+>>> f_or([False, False, False])
+False
+>>> 
+>>> f_or([False, False, True])
+True
+>>> 
+
+>>> f_and = fold(lambda acc, x: acc and x)(True)
+>>> 
+>>> f_and([False, True, True])
+False
+>>> f_and([True, True, True])
+True
+>>> 
+
+>>> length = fold(lambda acc, x: acc + 1)(0)
+>>> length ([1, 2, 3, 4, 5])
+5
+
+>>> _map = lambda f, xs: fold(lambda acc, x: acc + [f(x)] )([])(xs)
+>>> _map (lambda x: x * 3, [1, 2, 3, 4])
+[3, 6, 9, 12]
+>>> 
+
+>>> _filter = lambda p, xs: fold(lambda acc, x: (acc + [x]) if p(x) else  acc )([])(xs)
+>>> 
+>>> _filter(lambda x: x > 10, [10, 3, 8, 2, 20, 30])
+[20, 30]
+>>> 
+
+
+ #
+ # Function composition
+ # 
+ #  (f3 (f2 (f1 (f0 x))))
+ #
+ #  (f3 . f2 . f1 . f0) x
+ #
+ #  or using, forward composition:
+ # 
+ #  (f0 >> f2 >> f1 >> f0) x
+ #
+ 
+>>> f1 = lambda x: 3 * x
+>>> f2 = lambda x: 5 + x
+>>> f3 = lambda x: 2 ** x
+
+
+>>> _fcomp = lambda functions: lambda x: fold(lambda acc, f: f(acc)) (x) (functions)
+
+>>> _fcomp([f1, f2, f3])(3)
+16384
+
+>>> (f3 (f2 (f1 (3))))
+16384
+>>>  
+```
+
+
 ### Function Composition 
 
 Function composition promotes shorter code, code reuse and higher modularity by creating new functions from previous defined ones. They also allow optimization of functional code when there is many maps. Only pure functions can be composed, function composition works like math functions, the output of one function is the input of another function.  Haskell, ML, Ocaml and F# has features that makes easier to use function composition, like a lightweight syntax, currying, partially applied functions, static typing and composition operators that are built in to the language.  In Haskell the operator (.) dot is used for composing functions. 
@@ -1422,6 +2000,8 @@ parse_csvtable_optmized =  composef(
 
     
 ```
+
+
 
 ## Miscellaneous
 
