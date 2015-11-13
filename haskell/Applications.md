@@ -4,7 +4,7 @@
 
 - [Applications](#applications)
   - [Mathematics](#mathematics)
-  - [Picewise Functions](#picewise-functions)
+  - [Piecewise Functions](#piecewise-functions)
   - [Numerical Methods](#numerical-methods)
     - [Polynomial](#polynomial)
     - [Numerical Derivate](#numerical-derivate)
@@ -56,7 +56,7 @@ Example:
 ```
 
 
-### Picewise Functions
+### Piecewise Functions
 
 
 Implement the following functions in Haskell
@@ -90,7 +90,7 @@ infm = (-1.0e30)  -- Minus Infinite
 
 inInterval x (p1, p2) = (fst p1) < x && x <= (fst p2) 
 
-piceWiseFactory intervalTable x = f x
+piecewiseFactory intervalTable x = f x
     where
     f =  filter (inInterval x) (pairs intervalTable) 
         |> head 
@@ -122,8 +122,8 @@ f2_table = [
     (infp,  \x -> 3.0 )
     ]
 
-f1 = piceWiseFactory f1_table
-f2 = piceWiseFactory f2_table
+f1 = piecewiseFactory f1_table
+f2 = piecewiseFactory f2_table
 
 ```
 
@@ -476,7 +476,7 @@ Lagged Difference of a time serie
 lagdiff lst = zipWith (-) (tail lst) lst
 ```
 
-Growth of a Time Serie
+Growth of a Time Series
 * growth [xi] = [(x_i+1 - x_i)/xi]
 ```haskell
 growth lst = zipWith (/) (lagdiff lst) lst
@@ -564,9 +564,9 @@ relativeFreq elem alist =
     fromIntegral (frequency elem alist) / fromIntegral (length alist)
 
 simulateCoinToss ntimes =  do
-    serie <- (flipCoinNtimes  ntimes)
-    let counts = map (flip frequency serie)   [0, 1]
-    let freqs = map (flip relativeFreq serie) [0, 1]
+    series <- (flipCoinNtimes  ntimes)
+    let counts = map (flip frequency series)   [0, 1]
+    let freqs = map (flip relativeFreq series) [0, 1]
     return (freqs, counts)
 
 showSimulation ntimes = do

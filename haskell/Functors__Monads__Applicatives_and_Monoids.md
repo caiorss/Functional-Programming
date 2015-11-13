@@ -32,8 +32,6 @@
     - [IO Examples](#io-examples)
     - [Sources](#sources-1)
   - [State Monad](#state-monad)
-- [--   runState :: (\s -> (a, s)) -> s -> (a, s)](#-----runstate--%5Cs---a-s---s---a-s)
-- [--  => ((), 5) ](#------5)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -2049,9 +2047,9 @@ Loading package random-1.0.1.1 ... linking ... done.
 > 
 ```
 
-**Example: Fibbonaci Sequence**
+**Example: Fibonacci Sequence**
 
-The Fibbonaci sequence is defined by the rule:  
+The Fibonacci sequence is defined by the rule:  
 
 ```
 a[n+2] = a[n+1] + a[n]
