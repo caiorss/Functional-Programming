@@ -1136,8 +1136,9 @@ StopIteration
 #### Reduce (Fold)
 
 See also: 
-  - [Fold (higher-order function) - Wikipedia, the free encyclopedia](https://en.wikipedia.org/wiki/Fold_(higher-order_function)
-  - [A tutorial on the universality and expressiveness of fold. GRAHAM HUTTON](http://www.cs.nott.ac.uk/~pszgmh/fold.pdf)
+  * [Fold (higher-order function) - Wikipedia, the free encyclopedia](https://en.wikipedia.org/wiki/Fold_(higher-order_function))
+  * [A tutorial on the universality and expressiveness of fold. GRAHAM HUTTON](http://www.cs.nott.ac.uk/~pszgmh/fold.pdf)
+  * [Haskell unit 6: The higher-order fold functions | Antoni Diller](http://www.cantab.net/users/antoni.diller/haskell/units/unit06.html)
 
 *Haskell*
 
@@ -1345,7 +1346,8 @@ def fold_right2 (f, acc0, xs):
 
 Many functions and recursive algorithms can be implemented using the fold function, including map, filter, sum, product and others.
 
-It is based in the paper:   - [A tutorial on the universality and expressiveness of fold. GRAHAM HUTTON](http://www.cs.nott.ac.uk/~pszgmh/fold.pdf)
+It is based in the paper:  
+   - [A tutorial on the universality and expressiveness of fold. GRAHAM HUTTON](http://www.cs.nott.ac.uk/~pszgmh/fold.pdf)
 
 In the paper was usef fold right, here was used fold left. 
 
@@ -1367,6 +1369,8 @@ def fold_left (f_acc_x_to_acc, acc0, xs):
     ;;; Function fold in curried form 
     
 curry3 = lambda f: lambda x: lambda y: lambda z: f(x, y, z)
+
+fold = curry3(fold_left)
 
 >>> summation = fold(lambda acc, x: acc + x)(0)
 >>> 
