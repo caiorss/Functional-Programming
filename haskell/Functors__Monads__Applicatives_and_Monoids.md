@@ -1284,7 +1284,7 @@ The function sequence_ is defined as:
 sequence_        :: [IO ()] -> IO ()
 sequence_ []     =  return ()
 sequence_ (a:as) =  do a
-                       sequence as                                            
+                       sequence_ as                                            
 ```
 
 Or defined as:
