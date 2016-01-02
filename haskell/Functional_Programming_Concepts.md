@@ -150,13 +150,13 @@ A selection of people who influenced functional programming:
 
 ### First-Class Function 
 
-Functions can be passed as arguments to another functions, returned from functions, stored in variables and data structures and built at run time. The majority of languages supports firs-class functions like Scheme, Javascript, Python, Haskell, ML, OCaml and many others some exceptions are C, Java, Matlab and Forth.
+Functions can be passed as arguments to another functions, returned from functions, stored in variables and data structures and built at run time. The majority of languages supports first-class functions like Scheme, Javascript, Python, Haskell, ML, OCaml and many others some exceptions are C, Java, Matlab and Forth.
 
 Examples:
 
 * Python:
 
-The function f is passed is argument to the derivate function that returns a new function named _, that computes the derivate of f at x.
+The function f is passed as argument to the derivate function that returns a new function named _, that computes the derivate of f at x.
 
 ```python
 def derivate (f, dx=1e-5):
@@ -175,7 +175,7 @@ def derivate (f, dx=1e-5):
 >>> df = derivate(f)
 >>> 
 
-  # Algebraic Derivate of f
+  # Algebraic derivate of f
 >>> def dfa (x): return 2*x - 3
 ... 
 >>> 
@@ -868,7 +868,7 @@ f = lambda x: x**5
 
 ### Fundamental Higher Order Functions 
 
-The functions map, filter and reduce (fold left) are ubiquitous in many programing languages and also the most used higher order functions. 
+The functions map, filter and reduce (fold left) are ubiquitous in many programming languages and also the most used higher order functions.
 
 They can be stricted evaluated like in Scheme and Javascript or lazy evaluated like in Python and Haskell. 
 
