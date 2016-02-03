@@ -1,12 +1,6 @@
+* Documentation and Learning Materials
 
-
-*Table of Contents*  *generated with [[https://github.com/thlorenz/doctoc][DocToc]]*
-
-
-
-** Documentation and Learning Materials
-
-*** Code Search Engine
+** Code Search Engine
 
 Haskell API search engine, which allows you to search many 
 standard Haskell libraries by either function name, or by approximate type signature. 
@@ -21,9 +15,8 @@ Dohaskell is a tagged Haskell learning resources index. U
 
  - http://www.dohaskell.com/
 
-*** Libraries Documentation
-
-**** Prelude
+** Libraries Documentation
+*** Prelude
 
 *Standard Library Prelude.hs*
 
@@ -42,7 +35,7 @@ Nice and precise description of Haskell Libraries:
 
  - http://hackage.haskell.org/packages/archive/pkg-list.html
 
-**** Type Classe
+*** Type Classe
 
  - http://www.haskell.org/haskellwiki/Typeclassopedia
 
@@ -52,21 +45,19 @@ Nice and precise description of Haskell Libraries:
  - http://www.haskell.org/haskellwiki/IO_inside
  - http://en.wikibooks.org/wiki/Haskell/Understanding_monads
 
-
-**** Online Books
+*** Online Books
 
  - [[http://book.realworldhaskell.org][Real-World Haskell by Bryan O'Sullivan et al.]]
  - [[http://learnyouahaskell.com/chapters][Learn You a Haskell for Great Good!]]
  - [[http://en.wikibooks.org/wiki/Haskell][Haskell Wikibook]]
  - [[https://www.haskell.org/tutorial/][Gentle Introduction To Haskell, version 98]]
 
-**** Books
+*** Books
 
  - [[http://haskelldata.com/][Haskell Data Analysis Cookbook]]
  - [[http://chimera.labs.oreilly.com/books/1230000000929][Parallel and Concurrent Programming in Haskell, By Simon Marlow]]
 
-
-**** Papers and Articles
+*** Papers and Articles
 
 Papers
 
@@ -94,8 +85,7 @@ Articles:
  - http://paulkoerbitz.de/posts/Why-I-love-Haskell.html
 
 
-
-**** Community
+*** Community
 
  - http://reddit.com/r/haskell
  - http://www.reddit.com/r/haskellquestions
@@ -110,8 +100,7 @@ Haskell Wiki
  - http://www.haskell.org/haskellwiki/Category:Communitys
 
 
-
-**** References by Subject
+*** References by Subject
 
 
  - http://www.cis.upenn.edu/~matuszek/Concise%20Guides/Concise%20Haskell98.html
@@ -166,8 +155,7 @@ Control:
  - <http://hackage.haskell.org/package/base-4.7.0.2/docs/Control-Monad.html#v:forM>
  - <http://en.wikibooks.org/wiki/Haskell/Control_structures>
 
-
-**** Video Lectures
+*** Video Lectures
 
 *Dr. Erik Meijer Series: Functional Programming Fundamentals*
 
@@ -222,8 +210,7 @@ Good video lectures about Category theory and Haskell programing language.
 
  - http://school.looprecur.com/
 
-
-*** Hacker News Threads
+** Hacker News Threads
 
 
 *Discussions*

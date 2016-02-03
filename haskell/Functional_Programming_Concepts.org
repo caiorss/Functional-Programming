@@ -1,13 +1,9 @@
-
-
-*Table of Contents*  *generated with [[https://github.com/thlorenz/doctoc][DocToc]]*
-
-
+#+TITLE:  Functional Programming Concepts
+#+AUTHOR: Caio Rodrigues Soares Silva
+#+EMAIL: <caiorss.rodrigues@gmail.com>
+#+URL:   
 
 * Functional Programming Concepts
-
-
-
 ** Overview
 
 *Functional Programming*
@@ -45,42 +41,56 @@ Non Essential Features:
  - Pattern Matching
  - Monads
 
-*** Functional Programming Languages
+** Functional Programming Languages
 
 
 Some Functional programing languages:
 
-|  Language     | Purity  |Evaluation | Typing   | Type Discipline | Type Inference | OO  | AGDT | Platform | Family |  Curry |  Feature                |
-|---------------|---------|-----------|----------|-----------------|----------------|-----|-----|----------|--------|------|---------------------------|  
-| Haskell       | Pure    | Lazy    |   Static   |  Strong         | Yes            | No  | Yes | NAT      | ML/SML |  Yes |  Concurrency/Parallelism  |
-| Ocaml         | Impure  | Strict  |   Static   |  Strong         | Yes            | Yes | Yes | NAT/BC   | ML/SML |  Yes |                            |
-| F# (F sharp)  | Impure  | Strict  |   Static   |  Strong         | Yes            | Yes | Yes | .NET     | ML/SML |  Yes |  .NET Platform Integration |
-| Scheme        | Impure  | Strict  |   Dynamic  |  Strong         | No             | No  | No  | -        | Lisp   |  No  |   Minimalistic Educational |
-| Clojure       | Impure  | Strict  |   Dynamic  |  Strong         | No             | No  | No  | JVM      | Lisp   |  No  |   Java integration    | 
-| Scala         | Impure  | Strict  |   Static   |  Strong         | Yes            | Yes | Yes | JVM      |        |      |   Java integration    |
-| Erlang        | Impure  | Strict  |   Dynamic  |  Strong         | ?              | ?   |  ?  |          |  ?     |  ?   |   Telecommunications/ Servers |
-| R             | Impure  | Strict  |   Dynamic  |  Strong         | No             | Yes |  -  | BC       | No     |  No  |   DSL - Statics  |
-| Mathematica   | Impure  | Strict  |   Dynamic  |  ??             | Yes            | ?   |  ?  | ?        | No     |  No  |   DSL - Computer Algebraic System |
+| Language     | Evaluation    | Typing  | Type Inference | GIL | TCO | OO  | AGDT | Platform | Family | Curry | Feature                                  |
+|--------------+---------------+---------+----------------+-----+-----+-----+------+----------+--------+-------+------------------------------------------|
+| Haskell      | Lazy          | Static  | Yes            | No  | Yes | No  | Yes  | NAT      | ML/SML | Yes   | Concurrency/Parallelism                  |
+| Ocaml        | Strict        | Static  | Yes            | Yes | Yes | Yes | Yes  | NAT/BC   | ML/SML | Yes   |                                          |
+| F# (F sharp) | Strict        | Static  | Yes            | No  | Yes | Yes | Yes  | .NET     | ML/SML | Yes   | .NET Platform Integration                |
+| Scheme       | Strict        | Dynamic | No             | *   | Yes | No  | No   | -        | Lisp   | No    | Minimalistic Educational                 |
+| Clojure      | Strict + Lazy | Dynamic | No             | No  | No  | No  | No   | JVM      | Lisp   | No    | Java integration + Macro                 |
+| Scala        | Strict        | Static  | Yes            | No  | Yes | Yes | Yes  | JVM      |        |       | Java integration                         |
+| Erlang       | Strict        | Dynamic | ?              | ?   | No  | ?   | ?    | VM       |        | ?     | Telecommunications, Servers, Concurrency |
+|              |               |         |                |     |     |     |      |          |        |       |                                          |
+| R            | Strict        | Dynamic | No             | ?   | No  | Yes | -    | VM       |        | No    | DSL - Statics                            |
+| Mathematica  | Strict        | Dynamic | Yes            | ?   | ??  | ?   | ?    | ?        |        | No    | DSL - Computer Algebraic System          |
 
 
-#+BEGIN_SRC
 Notes:
+
  - AGDT   - Algebraic Data Types
+
+ - GIL    - Global Interpreter Locking. Languages with GIL cannot
+   support multi-core processors.
+
+ - TCO - Tail Call Optimization. Languages without TCO cannot perform
+   recursion safely. It can lead to a stack overflow. The JVM doesn't
+   support TCO.
+
  - JVM    - Java Virtual Machine / Java Platform
+
  - .NET   - Dot Net Platform
+
  - NAT    - Native Code
- - BC     - Bytecode compilation
+
+ - VM     - Virtual Machine 
+
  - OO     - Object Orientated
+
  - Curry  - Curried functions like in Haskell
+
  - DSL    - Domain Specific Language
-#+END_SRC
+
 
 More Information: [[http://en.wikipedia.org/wiki/Comparison_of_functional_programming_languages][Comparison of Functional Programming Languages]]
 
 See also: [[http://hyperpolyglot.org/ml][ML Dialects and Haskell: SML, OCaml, F#, Haskell]]
 
-
-*** Notable People
+** Notable People
 
 A selection of people who influenced functional programming:
 
@@ -94,42 +104,57 @@ A selection of people who influenced functional programming:
 
     * [[http://www.infoq.com/interviews/Steele-Interviews-John-McCarthy][Guy Steele Interviews John McCarthy, Father of Lisp]]
 
- - [[https://en.wikipedia.org/wiki/John_Backus][John Backus]], Computer Scientist ->  Backus-Naur form (BNF), Fortran Language, 
+ - [[https://en.wikipedia.org/wiki/John_Backus][John Backus]], Computer Scientist ->  Backus-Naur form (BNF), Fortran
+   Language, 
+
     * [[https://web.stanford.edu/class/cs242/readings/backus.pdf][Can Programming Be Liberated from the von Neumann Style? A Functional Style and Its Algebra of Programs]]
 
- - [[https://en.wikipedia.org/wiki/Philip_Wadler][Philip Wadler]],  Theory behind functional programming and the use of monads in functional programming, the design of the purely functional language Haskell.
+ - [[https://en.wikipedia.org/wiki/Philip_Wadler][Philip Wadler]], Theory behind functional programming and the use of
+   monads in functional programming, the design of the purely
+   functional language Haskell.
 
     * [[http://www.eliza.ch/doc/wadler92essence_of_FP.pdf][The essence of functional programing]]
     * [[http://www.infoq.com/interviews/wadler-functional-programming][Philip Wadler on Functional Programming - Interview]]
 
- - [[https://en.wikipedia.org/wiki/Eugenio_Moggi][Eugenio Moggi]], Professor of computer science at the University of Genoa, Italy. - He first described the general use of monads to structure programs.
+ - [[https://en.wikipedia.org/wiki/Eugenio_Moggi][Eugenio Moggi]], Professor of computer science at the University of
+   Genoa, Italy. - He first described the general use of monads to
+   structure programs.
 
     * [[http://www.disi.unige.it/person/MoggiE/ftp/ic91.pdf][Notions of computation and monads - Eugenio Moggi]]
 
- - [[https://en.wikipedia.org/wiki/Simon_Peyton_Jones][Simon Peyton Jones]], Computer Scientist -> Major contributor to the design of the Haskell programming language.
+ - [[https://en.wikipedia.org/wiki/Simon_Peyton_Jones][Simon Peyton Jones]], Computer Scientist -> Major contributor to the
+   design of the Haskell programming language.
 
- - [[https://en.wikipedia.org/wiki/John_Hughes_(computer_scientist][John Hughes]]), Computer Scientist -> One of the most influentials papers in FP field: Why functional programing matters.
+ - [[https://en.wikipedia.org/wiki/John_Hughes_(computer_scientist][John Hughes]]), Computer Scientist -> One of the most influentials
+   papers in FP field: Why functional programing matters.
 
 
  - [[https://en.wikipedia.org/wiki/Gerald_Jay_Sussman][Gerald Jay Sussman]], Mathematician and Computer Scientist
+
    * [[https://en.wikipedia.org/wiki/Scheme_(programming_language][Scheme Lisp]]) Language
    * Book: [[https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Computer_Programs][Structure and Interpretation of Computer Programs]]
    * Book: [[https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Classical_Mechanics][Structure and Interpretation of Classical Mechanics]]
 
-   * [[https://en.wikipedia.org/wiki/History_of_the_Scheme_programming_language#The_Lambda_Papers][Lambda Papers]]: A series of MIT AI Memos published between 1975 and 1980, developing the Scheme programming language and a number of influential concepts in programming language design and implementation.
-
+   * [[https://en.wikipedia.org/wiki/History_of_the_Scheme_programming_language#The_Lambda_Papers][Lambda Papers]]: A series of MIT AI Memos published between 1975
+     and 1980, developing the Scheme programming language and a number
+     of influential concepts in programming language design and
+     implementation.
 
 ** Concepts
-
 *** First-Class Function 
 
-Functions can be passed as arguments to another functions, returned from functions, stored in variables and data structures and built at run time. The majority of languages supports first-class functions like Scheme, Javascript, Python, Haskell, ML, OCaml and many others some exceptions are C, Java, Matlab and Forth.
+Functions can be passed as arguments to another functions, returned
+from functions, stored in variables and data structures and built at
+run time. The majority of languages supports first-class functions
+like Scheme, Javascript, Python, Haskell, ML, OCaml and many others
+some exceptions are C, Java, Matlab and Forth.
 
 Examples:
 
  - Python:
 
-The function f is passed as argument to the derivate function that returns a new function named _, that computes the derivate of f at x.
+The function f is passed as argument to the derivate function that
+returns a new function named _, that computes the derivate of f at x.
 
 #+BEGIN_SRC python
 def derivate (f, dx=1e-5):
@@ -183,6 +208,7 @@ def derivate (f, dx=1e-5):
 See also: 
 
 Many examples of first class functions in several languages. 
+
  - [[http://rosettacode.org/wiki/First-class_functions#C][First-class functions - Rosetta Code]]
 
  - [[http://slidegur.com/doc/1814324/first-class-functions-in-scientific-programming][First-class Functions in Scientific Programming]]
@@ -284,7 +310,6 @@ NameError: name 'make_counter' is not defined
 7
 
 #+END_SRC
-
 
 *** Pure Functions
 
@@ -391,14 +416,17 @@ Reverse list function purified:
 
 #+END_SRC
 
-
 *** Currying and Partial Application
 
 **** Currying
 
-Currying is the decomposition of a function of multiples arguments in a chained sequence of functions of a single argument. The name currying comes from the mathematician [[https://en.wikipedia.org/wiki/Haskell_Curry][Haskell Curry]] who developed the concept of curried functions.
+Currying is the decomposition of a function of multiples arguments in
+a chained sequence of functions of a single argument. The name
+currying comes from the mathematician [[https://en.wikipedia.org/wiki/Haskell_Curry][Haskell Curry]] who developed the
+concept of curried functions.
 
-In Haskell, Standard ML, OCaml and F# all functions are curryfied by default:
+In Haskell, Standard ML, OCaml and F# all functions are curryfied by
+default:
 
 #+BEGIN_SRC
     f (x, y) = 10*x - 3*y   
@@ -690,11 +718,12 @@ h_of_z :: Integer -> Integer
 
 
 
-
-
 **** Partial Application
 
-A function of multiple arguments is converted into a new function that takes fewer arguments, some arguments are supplied and returns function with signature consisting of remaining arguments. *Partially applied** functions must not be confused with **currying*.
+A function of multiple arguments is converted into a new function that
+takes fewer arguments, some arguments are supplied and returns
+function with signature consisting of remaining arguments. *Partially
+applied** functions must not be confused with **currying*.
 
 Example in Python:
 
@@ -722,7 +751,8 @@ Example in Python:
     [37, 41, 49]
 #+END_SRC
 
-In languages like Haskell, Standard ML, OCaml and F# currying is similar to partial application.
+In languages like Haskell, Standard ML, OCaml and F# currying is
+similar to partial application.
 
 Example in OCaml:
 
@@ -749,7 +779,6 @@ Example in OCaml:
     
 #+END_SRC
 
-
 See also:
 
  - [[http://www.ibm.com/developerworks/library/j-jn9/][Java.next: Currying and partial application]]
@@ -758,7 +787,10 @@ See also:
 
 *** Lazy Evaluation
 
-"Lazy evaluation" means that data structures are computed incrementally, as they are needed (so the trees never exist in memory all at once) parts that are never needed are never computed. Haskell uses lazy evaluation by default.
+"Lazy evaluation" means that data structures are computed
+incrementally, as they are needed (so the trees never exist in memory
+all at once) parts that are never needed are never computed. Haskell
+uses lazy evaluation by default.
 
 Example in Haskell: 
 
@@ -828,13 +860,14 @@ f = lambda x: x**5
 
 #+END_SRC
 
-
-
 *** Fundamental Higher Order Functions 
 
-The functions map, filter and reduce (fold left) are ubiquitous in many programming languages and also the most used higher order functions.
+The functions map, filter and reduce (fold left) are ubiquitous in
+many programming languages and also the most used higher order
+functions.
 
-They can be stricted evaluated like in Scheme and Javascript or lazy evaluated like in Python and Haskell. 
+They can be stricted evaluated like in Scheme and Javascript or lazy
+evaluated like in Python and Haskell.
 
 **** Map
 
@@ -1406,10 +1439,18 @@ True
 >>>  
 #+END_SRC
 
-
 *** Function Composition 
 
-Function composition promotes shorter code, code reuse and higher modularity by creating new functions from previous defined ones. They also allow optimization of functional code when there is many maps. Only pure functions can be composed, function composition works like math functions, the output of one function is the input of another function.  Haskell, ML, Ocaml and F# has features that makes easier to use function composition, like a lightweight syntax, currying, partially applied functions, static typing and composition operators that are built in to the language.  In Haskell the operator (.) dot is used for composing functions. 
+Function composition promotes shorter code, code reuse and higher
+modularity by creating new functions from previous defined ones. They
+also allow optimization of functional code when there is many
+maps. Only pure functions can be composed, function composition works
+like math functions, the output of one function is the input of
+another function.  Haskell, ML, Ocaml and F# has features that makes
+easier to use function composition, like a lightweight syntax,
+currying, partially applied functions, static typing and composition
+operators that are built in to the language.  In Haskell the operator
+(.) dot is used for composing functions.
 
 See also: [[http://en.wikipedia.org/wiki/Function_composition_%28computer_science%29][Function composition (computer science)]]
 
@@ -1969,10 +2010,7 @@ parse_csvtable_optmized =  composef(
     
 #+END_SRC
 
-
-
 ** Miscellaneous
-
 **** Selected Wikipedia Articles
 
 Selected Wikipedia Pages:
@@ -2131,9 +2169,7 @@ Related to Lazy Evaluation
 
 
 
-
 **** Selected Rosettacode Pages
-
 *** Concepts Examples
 
  - [[http://rosettacode.org/wiki/Call_a_function][Call a function]]

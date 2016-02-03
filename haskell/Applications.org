@@ -1,5 +1,5 @@
-** Applications
-*** Mathematics
+* Applications
+** Mathematics
 
 
 *Trigonometric Degree Functions*
@@ -31,7 +31,7 @@ Example:
 > 
 #+END_SRC
 
-*** Piecewise Functions
+** Piecewise Functions
 
 
 Implement the following functions in Haskell
@@ -115,8 +115,8 @@ f2 = piecewiseFactory f2_table
 
 ![[images/chartF2table.png][f2 chart]]
 
-*** Numerical Methods 
-**** Polynomial
+** Numerical Methods 
+*** Polynomial
 
 Polynomial evaluation by the horner method.
 
@@ -164,9 +164,7 @@ let df = polyval $  polyderv coeffs
 95
 #+END_SRC
 
-
-
-**** Numerical Derivate
+*** Numerical Derivate
 
 #+BEGIN_SRC haskell
 
@@ -190,7 +188,7 @@ df = derv 1e-5 f
 [6,10,14,18]
 #+END_SRC
 
-**** Nonlinear Equation - Root-finding
+*** Nonlinear Equation - Root-finding
 
 See also: 
 
@@ -339,7 +337,7 @@ secantSolver eps itmax f x1 x2 = (root, error, iterations)
 
 #+END_SRC
 
-**** Differential Equations
+*** Differential Equations
 
 *Euler Method*
 
@@ -421,8 +419,8 @@ rk4 f x0 xf y0 h = xypairs
 > 
 #+END_SRC
 
-*** Statistics and Time Series
-**** Some Statistical Functions
+** Statistics and Time Series
+*** Some Statistical Functions
 
 Arithmetic Mean of a Sequence
 
@@ -504,7 +502,7 @@ Solution:
 
 #+END_SRC
 
-**** Monte Carlo Simulation Coin Toss
+*** Monte Carlo Simulation Coin Toss
 
 The simplest such situation must be the tossing of a coin. Any individual event will result in the coin falling with one side or the other uppermost (heads or tails). However, common sense tells us that, if we tossed it a very large number of times, the total number of heads and tails should become increasingly similar. For a greater number of tosses the percentage of heads or tails will be next to 50% in a non-biased coin. Credits: [[http://staff.argyll.epsb.ca/jreed/math7/strand4/4203.htm][Monte Carlo Simulation - Tossing a Coin]]
 
@@ -624,7 +622,7 @@ The %erro is : 2.4399999999996647e-2
 -------------------------------------
 #+END_SRC
 
-*** Vectors
+** Vectors
 
 *Dot Product of Two Vectors / Escalar Product*
 
@@ -684,7 +682,7 @@ range start stop step =  [start + i*step | i <- [0..n] ]
 
 #+END_SRC
 
-*** Tax Brackets
+** Tax Brackets
 
 Progressive Income Tax Calculation
 
@@ -868,7 +866,7 @@ Sources:
     * http://ayende.com/blog/108545/the-tax-calculation-challenge
     * http://gghez.com/c-net-implementation-of-a-progressive-tax-system/
 
-*** Small DSL Domain Specific Language
+** Small DSL Domain Specific Language
 
   
 Simple DSL for describing cups of Starbucks coffee and computing prices (in dollars). 

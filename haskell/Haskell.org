@@ -1,14 +1,13 @@
+#+TITLE: Functional Programming by Example
+#+AUTHOR: Caio Rodrigues Soares Silva
+#+EMAIL: <caiorss.rodrigues@gmail.com>
 
 
-*Table of Contents*  *generated with [[https://github.com/thlorenz/doctoc][DocToc]]*
+* Haskell
 
+# <a href="https://www.haskell.org"><img src="images/haskellLogo.png"/></a> 
 
-
-** Haskell
-
-<a href="https://www.haskell.org"><img src="images/haskellLogo.png"/></a> 
-
-*Overview*
+** Overview
 
  - Pure Functional programming language
  - Strong Static Typed Language 
@@ -23,8 +22,7 @@
  - Tail Recursions
  - Compiles to native code.
 
-
-*** Suffixes of file names for Haskell
+** Suffixes of file names for Haskell
 
 #+BEGIN_SRC
 .hs    Haskell source code; preprocess, compile
@@ -40,8 +38,7 @@
 .x_hi  way x interface files
 #+END_SRC
 
-
-*** Toolset
+** Toolset
 
 |                                    |                                                      |
 |------------------------------------|------------------------------------------------------|
@@ -51,8 +48,7 @@
 | haddock                            | Documentation tool for annotated Haskell source code |
 | cabal                              | GHC Haskell Cabal package manager                    |
 
-
-*** Install Haskell Platform
+** Install Haskell Platform
 
 Binaries and Installation files: 
     * https://www.haskell.org/platform/
@@ -66,28 +62,27 @@ cabal update
 cabal install <some package>
 #+END_SRC
 
-
-
-*** GHCI Reference
+** GHCI Reference
 
 GHCI Interactive Shell
 
-| Command                     |  Description                                |
-|-----------------------------|---------------------------------------------|
-| :help                       |  Show help                                  |
-| :load [haskell-source.hs] or :l src.hs |    Load Haskell Source Code   |
-| :reload or :r                    |  Reload Code after it was edited      |
-| :type [symbol]   or :t [symbol]          |  Show the Type of a Symbol   |
-| :browse                    |  Gives the type signature of all functions  |
-| :set +s                     |  Print timing/memory stats after each evaluation |
-| :{ [code here ] :}        |    Multiline Code                            |
-| :set prompt ">"             |  Change the prompt to ">"                   |
-| :cd [directory]       | change the current working directory to [directory] |
-| :! [shell command>]   | execute the shell command; :! pwd  print the current directory |
-| :quit                 | Quit the interpreter |
+| Command                                | Description                                                    |
+|----------------------------------------+----------------------------------------------------------------|
+| :help                                  | Show help                                                      |
+| :load [haskell-source.hs] or :l src.hs | Load Haskell Source Code                                       |
+| :reload or :r                          | Reload Code after it was edited                                |
+| :type [symbol]   or :t [symbol]        | Show the Type of a Symbol                                      |
+| :browse                                | Gives the type signature of all functions                      |
+| :set +s                                | Print timing/memory stats after each evaluation                |
+| :{ [code here ] :}                     | Multiline Code                                                 |
+| :set prompt ">"                        | Change the prompt to ">"                                       |
+| :cd [directory]                        | change the current working directory to [directory]            |
+| :! [shell command>]                    | execute the shell command; :! pwd  print the current directory |
+| :quit                                  | Quit the interpreter                                           |
 
 
 See also:
+
  - [[#ghci-configuration-file][GHCI configuration file]]
  - [[https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/ghci-debugger.html][GHCI Debugger]]
  - [[http://manpages.ubuntu.com/manpages/trusty/man1/ghci.1.html][GHC and GHCI Man Page]]

@@ -1,4 +1,4 @@
-** Pattern Matching
+* Pattern Matching
 
 Tuple Constructor
 

@@ -1,23 +1,13 @@
-
-
-*Table of Contents*  *generated with [[https://github.com/thlorenz/doctoc][DocToc]]*
-
-
-
-** Miscellaneous
-
-*** Haskell IDEs and Text Editors
-
-
-
-
-*** GHCI configuration file
+* Miscellaneous
+** Haskell IDEs and Text Editors
+** GHCI configuration file
 
 The ghci configuration file allows the user to create custom commands and 
 customize the ghci shell. The file is in the directory ~/.ghci in Unix systems 
 like Linux and OSX.
 
 Example: ~/.ghci
+
 #+BEGIN_SRC
 import System.Directory ( getCurrentDirectory)
 import System.Process (readProcess)
@@ -41,8 +31,8 @@ let pwd = getCurrentDirectory >>= putStrLn
 
 #+END_SRC
 
-It requires hoogle to be installed on Linux: (sudo apt-get install hoogle)
-on Ubuntu.
+It requires hoogle to be installed on Linux: (sudo apt-get install
+hoogle) on Ubuntu.
 
 Examples:
 
@@ -89,10 +79,8 @@ Day: 26
 
 #+END_SRC
 
-
-*** Troubleshooting
-
-**** Importing Ambigous Modules in GHCi
+** Troubleshooting
+*** Importing Ambigous Modules in GHCi
 
 #+BEGIN_SRC haskell
 > import Control.Monad.State

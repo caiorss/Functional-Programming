@@ -1,12 +1,10 @@
+#+TITLE:  Functions 
+#+AUTHOR: Caio Rodrigues Soares Silva
+#+EMAIL:  <caiorss.rodrigues@gmail.com>
 
+* Functions
 
-*Table of Contents*  *generated with [[https://github.com/thlorenz/doctoc][DocToc]]*
-
-
-
-** Functions
-
-*** Creating functions
+** Creating functions
 
 In the GHCI Shell
 
@@ -112,9 +110,9 @@ distance :: Floating a => (a, a) -> (a, a) -> a
 > map ft [0, 1, 2, 3]
 [10,30,50,8]
 > ft 10
-*** Exception: Invalid Value
+** Exception: Invalid Value
 > ft 9
-*** Exception: Invalid Value
+** Exception: Invalid Value
 > 
 
 #+END_SRC
@@ -123,7 +121,7 @@ Sources:
 
  - [[http://www.mathopenref.com/heronsformula.html][Heron Formula]]
  
-*** Anonymous Functions or Lambda Functions
+** Anonymous Functions or Lambda Functions
 
 
 
@@ -156,7 +154,7 @@ Sources:
 
 #+END_SRC
 
-*** Infix Functions
+** Infix Functions
 
 Any function of two arguments can be used as an infix function or custom operator.
 
@@ -224,8 +222,7 @@ Just 40
 > 
 #+END_SRC
 
-
-*** Infix Operators as Functions
+** Infix Operators as Functions
 
 
 
@@ -491,7 +488,7 @@ False
 
 #+END_SRC
 
-*** Currying
+** Currying
 
 
 
@@ -515,8 +512,7 @@ Example 1:
 > 
 #+END_SRC
 
-
-*** The $ apply operator.
+** The Dolar sign apply operator.
 
 #+BEGIN_SRC haskell
 f $ x = f x
@@ -580,8 +576,7 @@ fs :: Double -> [Double]
 > 
 #+END_SRC
 
-
-*** Recursion
+** Recursion
 
 Reverse A list
 
@@ -630,8 +625,7 @@ fib n | n>= 2
     = fib(n-1) + fib(n-2)
 #+END_SRC
 
-
-*** Integer Arithmetic Functions
+** Integer Arithmetic Functions
 
 | Function | Description |
 |----------|-------------|
@@ -794,8 +788,7 @@ Reference:
 
  - http://en.wikibooks.org/wiki/Haskell/A_Miscellany_of_Types
 
-
-*** Mathematical Functions
+** Mathematical Functions
 
 Negate, Sqrt, Log, Exp and Power 
 
@@ -964,7 +957,7 @@ v :: [Integer]
 
 #+END_SRC
 
-*** Standard Functions
+** Standard Functions
 
 *id Identity Function*
 
@@ -997,8 +990,7 @@ const :: a -> b -> a
 
 #+END_SRC
 
-
-*** Higher Order Functions
+** Higher Order Functions
 
 
 
@@ -1013,6 +1005,7 @@ Why Higher Order Function?
  - Algebraic properties of higher-order functions can be used to reason about programs. (Hutton)
 
 Reference:
+
  - [[http://www.cs.nott.ac.uk/~gmh/functional.ppt][Graham Hutton Lecture]]
  - [[http://www.cs.nott.ac.uk/~gmh/][Graham Hutton - University of Nottingham]]
 
@@ -1879,8 +1872,8 @@ replicate :: Int -> a -> [a]
 takeWhile :: (a -> Bool) -> [a] -> [a]
 #+END_SRC
 
+** Functions to Manipulate Characters and Strings
 
-*** Functions to Manipulate Characters and Strings
 
 **** Strings Features
 

@@ -1,60 +1,63 @@
+#+TITLE: Functional Programming by Example
+#+AUTHOR: Caio Rodrigues Soares Silva
+#+EMAIL: <caiorss.rodrigues@gmail.com>
+
 * Functional Programming in Haskell, OCaml and Python by Examples
 
+# <a href="https://www.haskell.org"><img src="haskell/images/haskellLogo.png"/></a>  <a href="https://ocaml.org"><img src="ocaml/images/ocamlogo.png" width="30%" /></a>
 
 
-<a href="https://www.haskell.org"><img src="haskell/images/haskellLogo.png"/></a>  <a href="https://ocaml.org"><img src="ocaml/images/ocamlogo.png" width="30%" /></a>
+The purpose of this tutorial is to illustrate functional programming
+concepts in many functional languages by providing reusable and
+useful snippets of code, examples, case studies, and 
+applications. 
 
 
-
-The purpose of this tutorial is to illustrate functional programming concepts in the Haskell programming language by providing reusable and useful snippets of code, examples, case studies, and applications. Despite most of examples examples be in Haskell, it can be applied to any language which the functions are first class citizens, can be passed as arguments, returned from functions like Python, Javascript.
-
-This repository is dedicated to public domain which means that you can use it at will. 
+Author:   [[https://www.linkedin.com/in/caiorodrigues][Caio Rodrigues]] / <caiorss.rodrigue@gmail.com> 
 
 Note: This still a work in progress.
-
- - Author:   [[https://www.linkedin.com/in/caiorodrigues][Caio Rodrigues]] / caiorss.rodrigue@gmail.com 
 
 You can access this page from:
 
  - https://github.com/caiorss/Functional-Programming
+
  - http://tinyurl.com/fpbyexample
 
 
-*General*
+This repository is dedicated to public domain.
 
- - [[haskell/Functional_Programming_Concepts.md][Functional Programming Concepts]]
+*Concepts*
+
+ - [[file:haskell/Functional_Programming_Concepts.org][Functional Programming Concepts]]
 
 *Functional Programming in Haskell*
 
- - [[haskell/Haskell.md][Haskell]]
- - [[haskell/Basic_Syntax.md][Basic Syntax]]
- - [[haskell/Functions.md][Functions]]
- - [[haskell/Pattern_Matching.md][Pattern Matching]]
- - [[haskell/List_Comprehension.md][List Comprehension]]
- - [[haskell/Algebraic_Data_Types.md][Algebraic Data Type]]
- - [[haskell/Functors__Monads__Applicatives_and_Monoids.md][Functors, Monads, Applicatives and Monoids]]
- - [[haskell/Libraries.md][Haskell Libraries]]
+ - [[file:haskell/Haskell.org][Haskell]]
+ - [[file:haskell/Basic_Syntax.org][Basic Syntax]]
+ - [[file:haskell/Functions.org][Functions]]
+ - [[file:haskell/Pattern_Matching.org][Pattern Matching]]
+ - [[file:haskell/List_Comprehension.org][List Comprehension]]
+ - [[file:haskell/Algebraic_Data_Types.org][Algebraic Data Type]]
+ - [[file:haskell/Functors__Monads__Applicatives_and_Monoids.org][Functors, Monads, Applicatives and Monoids]]
+ - [[file:haskell/Libraries.org][Haskell Libraries]]
+ - [[file:haskell/Useful_Custom_Functions__Iterators_and_Operators.org][Useful Custom Functions/ Iterators and Operators]]
+ - [[file:haskell/Applications.org][Applications]]
+ - [[file:haskell/Miscellaneous.org][Miscellaneous]]
+ - [[file:haskell/Documentation_and_Learning_Materials.org][Documentation and Learning Materials]]
 
- - [[haskell/Useful_Custom_Functions__Iterators_and_Operators.md][Useful Custom Functions/ Iterators and Operators]]
- - [[haskell/Applications.md][Applications]]
-
- - [[haskell/Miscellaneous.md][Miscellaneous]]
-
- - [[haskell/Documentation_and_Learning_Materials.md][Documentation and Learning Materials]]
-
- - [[papers/README.md][Papers in this Repository]]
-
-
-The code snippets with the '>' symbol were run in the interactive Haskell Shell (GHCi) and the lines below without the '>' symbol are the output.
 
 *Functional Programming in OCaml*
 
- - [[ocaml/README.md][OCaml]]
+ - [[file:ocaml/README.org][OCaml]]
 
 *Functional Programming in Scheme*
 
- - [[scheme/README.md][Scheme]]
+ - [[file:scheme/README.org][Scheme]]
 
 *Functional Programming in Clojure*
 
- - [[clojure/README.md][Clojure]]
+ - [[file:clojure/README.org][Clojure]]  
+
+*Papers* 
+
+ - [[papers/README.md][Papers in this Repository]]

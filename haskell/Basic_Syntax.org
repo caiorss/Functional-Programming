@@ -1,15 +1,10 @@
+#+TITLE: Haskell Basic Syntax 
+#+AUTHOR: Caio Rodrigues Soares Silva
+#+EMAIL: <caiorss.rodrigues@gmail.com>
 
-
-*Table of Contents*  *generated with [[https://github.com/thlorenz/doctoc][DocToc]]*
-
-
-
-** Basic Syntax
-
-*** Operators
-
-
-**** Logic Operators
+* Basic Syntax
+** Operators
+*** Logic Operators
 
 #+BEGIN_SRC
   True || False ⇒ True  
@@ -18,15 +13,14 @@
   True /= False ⇒ True  (/=) is the operator for different 
 #+END_SRC
 
-**** Powers
+*** Powers
 
 #+BEGIN_SRC
 x^n     for n an integral (understand Int or Integer)
 x**y    for y any kind of number (Float for example)
 #+END_SRC
 
-
-**** Application Operator - $
+*** Application Operator - $
 
 The application operator '$' makes code more readable and cleaner since substitutes parenthesis.
 It is also useful in higher-order situations, such as map ($ 0) xs, or zipWith ($) fs xs. 
@@ -35,7 +29,7 @@ It is also useful in higher-order situations, such as map ($ 0) xs, or zipWith (
 > f $ g $ h x = f (g (h x))
 #+END_SRC
 
-**** Misc. Operators
+*** Misc. Operators
 
 #+BEGIN_SRC haskell
 >>=     bind
@@ -62,11 +56,7 @@ $                         (none, just as " " [whitespace])
 _       Whatever          Used in Pattern Matching
 #+END_SRC
 
-
-
-
-
-*** Defining Values and Types
+** Defining Values and Types
 
 #+BEGIN_SRC haskell
 
@@ -103,7 +93,7 @@ z :: [Float]
 k :: [Double]
 #+END_SRC
 
-*** Type System
+** Type System
 
  - A type is a collection of related values.
 
@@ -119,11 +109,12 @@ k :: [Double]
 
 
 Reference:
+
  - [[http://www.cs.nott.ac.uk/~gmh/functional.ppt][Graham Hutton Lecture]]
  - [[http://www.cs.nott.ac.uk/~gmh/][Graham Hutton - University of Nottingham]]
 
 
-**** Basic Types
+*** Basic Types
 
 |            |                   |              |
 |------------|-------------------|--------------|
@@ -178,7 +169,7 @@ References:
 
 file:images/classes.gif
 
-**** Basic Type Classes
+*** Basic Type Classes
 
 |        |                  |
 |--------|------------------|
@@ -216,7 +207,7 @@ Standard Typeclasses:
  - Ord:  Used for thing with total order
 
 
-**** Standard Haskell Types
+*** Standard Haskell Types
 
 Credit: [[http://www2.informatik.uni-freiburg.de/~thiemann/haskell/haskell98-report-html/basic.html][The Haskell 98 Report - Predefined Types and Classes]]
 
@@ -254,7 +245,7 @@ data  Ordering    =  LT | EQ | GT deriving
                                   (Eq, Ord, Bounded, Enum, Read, Show)
 #+END_SRC
 
-**** Standard Haskell Classes
+*** Standard Haskell Classes
 
 Credit: [[http://www2.informatik.uni-freiburg.de/~thiemann/haskell/haskell98-report-html/basic.html][The Haskell 98 Report - Predefined Types and Classes]]
 
@@ -329,7 +320,7 @@ class  Enum a  where
     -- Default declarations given in Prelude
 #+END_SRC
 
-**** Numeric Types Conversion
+*** Numeric Types Conversion
 
 #+BEGIN_SRC
 fromInteger             :: (Num a) => Integer -> a
@@ -345,7 +336,7 @@ fromRealFrac            =  fromRational . toRational
 
 https://www.haskell.org/tutorial/numbers.html
 
-**** Haskell-Style Syntax for types:
+*** Haskell-Style Syntax for types:
 
 Function g from type a to type b: 
 
@@ -384,8 +375,8 @@ f :: a -> b -> c    ⇔ f is a function from a to (b→c)
 f :: (a -> b) -> c  ⇔ f is a function from (a→b) to c
 #+END_SRC
 
-
-*** Lists
+** Lists
+*** Overview 
 
 Haskell lists are built from nils ([]) empty list, and cons (:).
 
@@ -393,7 +384,7 @@ Haskell lists are built from nils ([]) empty list, and cons (:).
 [x0, x1, x2, x3, ..., xn-1, xn] = x0:x1:x2:x3:...:xn-1:xn:[]
 #+END_SRC
 
-**** Creating Lists
+*** Creating Lists
 
 #+BEGIN_SRC haskell
 
@@ -413,7 +404,7 @@ Haskell lists are built from nils ([]) empty list, and cons (:).
 
 #+END_SRC
 
-**** List Operations
+*** List Operations
 
 Picking the nth element of a list.
 
@@ -597,8 +588,7 @@ concat :: [[a]] -> [a]
 
 #+END_SRC
 
-
-**** Chekings Lists
+*** Chekings Lists
 
 Check if a list is empty. 
  - null xs

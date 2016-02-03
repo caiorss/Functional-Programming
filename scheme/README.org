@@ -1,15 +1,8 @@
-
-
-*Table of Contents*  *generated with [[https://github.com/thlorenz/doctoc][DocToc]]*
-
-
-
-* Functional Programming in Scheme
-
-[Under Construction]
+#+TITLE:  Functional Programming in Scheme
+#+AUTHOR: Caio Rodrigues Soares Silva
+#+EMAIL:  <caiorss.rodrigues@gmail.com>
 
 ** Overview
-
 *** Why Lisp
 
 
@@ -57,8 +50,6 @@ See also:
  - [[http://www.phyast.pitt.edu/~micheles/scheme/scheme2.html][About Scheme implementations -  The Adventures of a Pythonista in Schemeland]]
 
 ** Basic Syntax
-
-
 *** Name Conventions
 
 |  Terminology   |  Description                           |  Name Convention | Example        |
@@ -70,7 +61,6 @@ See also:
 |  Constructor   | A constructor is a function that creates a Lisp object. | |
 |  Converter     | Function that converts one type of Lisp object into another type | (from type)->(to-type) | symbol->string, number->string |
 |  Iteration (SCIP book)  | Tail Recursion          | | 
-
 
 *** Syntax
 
@@ -633,7 +623,6 @@ Scheme is dynamic typed language therefore there is not guarantee about the vari
 
 #+END_SRC
 
-
 *** Variables
 
 **** Global Variable
@@ -797,9 +786,11 @@ Example2: Loop over a list and find the sum of all elements:
 
 *** Functions
 
-*Defining and applying functions*
+**** Defining and applying functions
 
-In Scheme functions are first class, they can be passed as arguments to other functions and be returned from another functions, in other words, functions are data.
+In Scheme functions are first class, they can be passed as arguments
+to other functions and be returned from another functions, in other
+words, functions are data.
 
 #+BEGIN_SRC scheme
 ]=> (define (f x) (* x 10))
@@ -876,9 +867,10 @@ In Scheme functions are first class, they can be passed as arguments to other fu
 ;Value 30: (38 33 59 19)
 #+END_SRC
 
-*Anonymous Functions/ Lambda Functions*
+**** Anonymous Functions/ Lambda Functions
 
-Anonymous functions are useful to pass functions as arguments to other functions, callbacks and connect one function to another.
+Anonymous functions are useful to pass functions as arguments to other
+functions, callbacks and connect one function to another.
 
 #+BEGIN_SRC scheme
 1 ]=> (lambda (x) (+ (* x 4) 10))
@@ -934,7 +926,7 @@ Anonymous functions are useful to pass functions as arguments to other functions
 
 #+END_SRC
 
-*Functions With Control Structure*
+**** Functions with Control Structure
 
 #+BEGIN_SRC scheme
 
@@ -980,7 +972,7 @@ $57 = (10 9 0 1 2 3)
 
 #+END_SRC
 
-*Variadic Function*
+**** Variadic Function
 
 Function of many arguments
 
@@ -1001,7 +993,7 @@ $55 = (10 20 30 40 50 100)
 $56 = 5940
 #+END_SRC
 
-*Recursive Functions*
+**** Recursive Functions
 
 #+BEGIN_SRC scheme
 
@@ -1045,7 +1037,7 @@ $10 = 1066340417491710595814572169
 
 #+END_SRC
 
-*Internal Definition*
+**** Internal Definition
 
 #+BEGIN_SRC scheme
 
@@ -1161,15 +1153,18 @@ Image saved on Tuesday October 22, 2013 at 12:31:09 PM
 
 *Equality Operators*
 
-| Operator      | Description                    |  Use             |  
-|---------------|--------------------------------|------------------|
-| ==#+BEGIN_SRC        | Numerical Equality             | ```(= 10 10)=  |
-#+END_SRC
-| =eq?=     | Check if the two objects represents the same location in memory | The return value depends on implementation. |  
-| =equal?#+BEGIN_SRC   | Structural Equality            | ```(= (list 'a 'b 10) (list 'a 'b 10))=  |  
 
 
-#+END_SRC
+| Operator | Description                                                     | Use                                         |
+|----------+-----------------------------------------------------------------+---------------------------------------------|
+| =        | Numerical Equality                                              | (= 10 10)                                   |
+| eqv?     | Test if non numeric values are equal                            | (= 'sym1 'sym1)                             |
+| eq?      | Check if the two objects represents the same location in memory | The return value depends on implementation. |
+| equal?   | Structural Equality                                             | (= (list 'a 'b 10) (list 'a 'b 10))         |
+
+
+
+#+BEGIN_SRC scheme 
 $ rlwrap -c --remember csi
 
 CHICKEN
@@ -1277,12 +1272,12 @@ compiled 2015-08-04 on yves.more-magic.net (Linux)
     #t
     > 
 
+#+END_SRC
 
-#+BEGIN_SRC
 
 *Comparison Operators*
 
-#+END_SRC
+#+BEGIN_SRC scheme
 
 ;;; Comparison Operators
 
@@ -1313,11 +1308,12 @@ compiled 2015-08-04 on yves.more-magic.net (Linux)
 ;Value: #t
 
 ]=> 
-#+BEGIN_SRC
+#+END_SRC
 
 *Logical Operators*
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 1 ]=> (not #t)
 
 ;Value: #f
@@ -1344,13 +1340,12 @@ compiled 2015-08-04 on yves.more-magic.net (Linux)
 
 ;Value: #t
 
-
-    
-#+BEGIN_SRC
+   
+#+END_SRC
 
 **** Math Functions
 
-#+END_SRC
+#+BEGIN_SRC scheme
 
 1 ]=> (sqrt 10)
 
@@ -1534,15 +1529,13 @@ $47 = 100
 $48 = 0
  
 
-#+BEGIN_SRC
-
-
+#+END_SRC
 
 **** String Functions
 
 *Predicates*
 
-#+END_SRC
+#+BEGIN_SRC scheme
 
 ;;;; Test if is String
 
@@ -1586,11 +1579,11 @@ $48 = 0
 ;Value: #f
 
 
-#+BEGIN_SRC
+#+END_SRC
 
 *Misc*
 
-#+END_SRC
+#+BEGIN_SRC scheme
 
 ;;;; String Construction
 
@@ -1648,11 +1641,11 @@ $48 = 0
  
 
 
-#+BEGIN_SRC
+#+END_SRC
 
 *To String*
 
-#+END_SRC
+#+BEGIN_SRC scheme
 1 ]=> (number->string 12.323)
 
 ;Value 11: "12.323"
@@ -1666,11 +1659,12 @@ $48 = 0
 1 ]=> (list->string '(#\h #\e #\l #\l #\o #\space #\w #\o #\r #\l #\d))
 
 ;Value 16: "hello world"
-#+BEGIN_SRC
+#+END_SRC
 
 *From String*
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 1 ]=> (string->number "222.23")
 
 ;Value: 222.23
@@ -1694,13 +1688,12 @@ $48 = 0
 
 ;Value 28: (108 105 115 112)
 
-#+BEGIN_SRC
+#+END_SRC
 
 *** List Operations
-
 **** Defining a List
 
-#+END_SRC
+#+BEGIN_SRC scheme
 ;;; A scheme list can hold arbitrary values
 
 > '(1 2.23 1e3 hello world lisp (2 5 "a string"))
@@ -1727,11 +1720,13 @@ $62 = (x 1 y 2 z theta w a-symbol)
 
 > (list (cons 'x x) (cons 'y y) (cons 'z z))
 $66 = ((x . 1) (y . 2) (z . theta))
-#+BEGIN_SRC
+
+#+END_SRC
 
 **** Quasiquote
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Lists with Quasiquotes
 
@@ -1838,7 +1833,7 @@ $75 = (+ 1 2 3 4 5)
 $76 = 15
 
 
-#+BEGIN_SRC
+#+END_SRC
 
 **** Primitive List Operations
 
@@ -1846,7 +1841,8 @@ $76 = 15
 
  - *Cons* - List constructor, Construct a list cell 
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 > (define Nil '())
 
 ;Value: nil
@@ -1866,11 +1862,13 @@ $76 = 15
 > (Cons 4 (Cons 5 (Cons 6 Nil)))
 
 ;Value 21: (4 5 6)
-#+BEGIN_SRC
+
+#+END_SRC
 
  - *car* - It selects the first element, "head" of a list cell
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 > (car (list 1 2 3 4))
 
 ;Value: 1
@@ -1883,11 +1881,12 @@ $76 = 15
 
 ;Value: x
 
-#+BEGIN_SRC
+#+END_SRC
 
  - *cdr* - It selects the "tail" of a list, removes the first element
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 > (cdr (list 1 2 3 4))
 
 ;Value 17: (2 3 4)
@@ -1895,60 +1894,64 @@ $76 = 15
 > (cdr '(x y z w))
 
 ;Value 18: (y z w)
-#+BEGIN_SRC
+
+#+END_SRC
 
  - *caddr* - It gets the second element of a list
 
-#+END_SRC
+#+BEGIN_SRC scheme
 > (cadr '(a b c d e f))
 $14 = b
 > 
-#+BEGIN_SRC
+#+END_SRC
 
  - *caddr* - It gets the third element of a list 
 
-#+END_SRC
+#+BEGIN_SRC scheme
 > (caddr '(a b c d e f))
 $16 = c
-#+BEGIN_SRC
+#+END_SRC
 
  - *cadddr* - It gets the forth element of alist.
 
-#+END_SRC
+#+BEGIN_SRC scheme
 > (cadddr '(a b c d e f))
 $17 = d
-#+BEGIN_SRC
+#+END_SRC
 
  - *cddr* - Removes the first two elements of a list.
 
-#+END_SRC
+#+BEGIN_SRC scheme
 > (cddr '(a b c d e f))
 $3 = (c d e f)
-#+BEGIN_SRC
+#+END_SRC
 
  - *cdddr* - Removes the first three elements of a list.
 
-#+END_SRC
+#+BEGIN_SRC scheme 
 > (cadddr '(a b c d e f))
 $4 = d
-#+BEGIN_SRC
+#+END_SRC
 
-|   Function                            |  Output           |  Description         | 
-|---------------------------------------|-------------------|----------------------|
-| =(car       '[a b c)=             |  a                | First element        |
-| =(cadr     '[a b c d e f])=       |  b                | Second element       | 
-| =(caddr    '[a b c d e f])=       |  c                | Third element        | 
-| =(cadddr   '[a b c d e f]) =      |  d                | Forth element        |             
-| =(caddddr  '[a b c d e f]) =      |  e                | Fifth element        | 
-|                                       |                   |                      |
-#+END_SRC
-| =(cddr    '[a b c e f)#+BEGIN_SRC            | ```'(c e f)=    | Remove first two elements |
-#+END_SRC
-| =(cddddr  '[a b c e f)#+BEGIN_SRC            | ```'(f)=        | Remove first four elements |
+
+# @TODO: Fix the table 
+
+| Function                    | Output       | Description                 |
+|-----------------------------+--------------+-----------------------------|
+| =(car       '[a b c)=       | a            | First element               |
+| =(cadr     '[a b c d e f])= | b            | Second element              |
+| =(caddr    '[a b c d e f])= | c            | Third element               |
+| =(cadddr   '[a b c d e f])= | d            | Forth element               |
+| =(caddddr  '[a b c d e f])= | e            | Fifth element               |
+|                             |              |                             |
+| =(cdr     '[a b c e f)=     | ='(b c e f)= | Remove first, tail          |
+| =(cddr    '[a b c e f)=     | ='(c e f)=   | Remove first two elements   |
+| =(cdddr   '[a b c e f)=     | ='(e f)=     | Remove first three elements |
+| =(cddddr  '[a b c e f)=     | ='(f)=       | Remove first four elements  |
 
 **** Basic List Functions
 
-#+END_SRC
+#+BEGIN_SRC scheme
 
 1 ]=> (length '(1 2 3 4 5 6))
 
@@ -2020,20 +2023,22 @@ $4 = d
 
 1 ]=> (list-ref '(x y z w) 2)
 
-#+BEGIN_SRC
-
+#+END_SRC
 
 ** Higher Order Functions
 
-All the functions defined are in the file: [[src/hof_functions.scm][hof_functions.scm]] that can be loaded in scheme by typing:
+All the functions defined are in the file:
+[[src/hof_functions.scm][hof_functions.scm]] that can be loaded in
+scheme by typing:
 
-#+END_SRC
+#+BEGIN_SRC
+
 $ curl -O https://raw.githubusercontent.com/caiorss/Functional-Programming/master/scheme/src/hof_functions.scm
 
 $ rlwrap -c --remember scheme
 
 1 ]=>   (load "hof_functions.scm")
-#+BEGIN_SRC
+#+END_SRC
 
 *** Buit-in Functions
 
@@ -2041,7 +2046,7 @@ Fundamental higher order functions defined in Scheme.
 
  - *map*
 
-#+END_SRC
+#+BEGIN_SRC
 > (map [lambda (x) (+ x 4)] '(1 2 3 4 5 6))
 (5 6 7 8 9 10)
 
@@ -2062,13 +2067,13 @@ Fundamental higher order functions defined in Scheme.
 (2.23606797749979 6.70820393249937 8.94427190999916)
 
 
-#+BEGIN_SRC
+#+END_SRC
 
  - *for-each*
 
 Similar to map, however it used for functions with side effects.
 
-#+END_SRC
+#+BEGIN_SRC scheme
 
 ;;; Using map
 
@@ -2092,15 +2097,14 @@ b2
 c3
 d4
 
-
-
-#+BEGIN_SRC
+#+END_SRC
 
  - *apply*
 
 Apply a function to a list of arguments.
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 (define (hypot3d a b c) [sqrt (+ (* a a) (* b b) (* c c) )])
 
 > (hypot3d 3 4 5)
@@ -2116,12 +2120,12 @@ Apply a function to a list of arguments.
 (3.74165738677394 7.07106781186548 12.2065556157337)
 
 
-#+BEGIN_SRC
-
+#+END_SRC
 
 *** Special Functions
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 ;;; Constant function - Will return a,
 ;;  regardless the value of x
 ;;
@@ -2166,14 +2170,15 @@ Apply a function to a list of arguments.
 
 ;Value 13: (5 5 5 5 5 5)
 
-#+BEGIN_SRC
+#+END_SRC
 
 *** Functions Composition
 
 *Basic Function Composition*
 
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 1 ]=> (define (compose f g) (lambda (x) (f (g x))))
 
 ;Value: compose
@@ -2214,11 +2219,11 @@ Apply a function to a list of arguments.
 
 ;Value 15: (0 .7071067811865475 .8660254037844386 1. 1.2246467991473532e-16 -1.)
 
-#+BEGIN_SRC
+#+END_SRC
 
 *Composition of a List of Functions*
 
-#+END_SRC
+#+BEGIN_SRC scheme 
 
 (define (__compose-funcs list-of-functions x)
   (if (null? list-of-functions)
@@ -2249,13 +2254,13 @@ Apply a function to a list of arguments.
 ;Value: 1.
 
 
-#+BEGIN_SRC
+#+END_SRC
 
 *** Partial Application and Currying
 
 **** Partial Application
 
-#+END_SRC
+#+BEGIN_SRC scheme
 
 (define (partial fun . args)
       (lambda x (apply fun (append args x))))
@@ -2281,14 +2286,15 @@ Apply a function to a list of arguments.
 
 ;Value 23: (5 3 1 -1 -3 -5)
 
-#+BEGIN_SRC
+#+END_SRC
 
 *** Applying Multiple Functions to a Single Argument
 
 
 Returns a functions that takes a list of functions and applies it to a single value.
 
-#+END_SRC
+#+BEGIN_SRC scheme 
+
 (define (juxt . fxs)
   (lambda (x)
     (map (lambda (f) (f x)) fxs)))
@@ -2311,11 +2317,11 @@ Returns a functions that takes a list of functions and applies it to a single va
 ;Value 23: ((1 2.718281828459045 0) (1.4142135623730951 7.38905609893065 .6931471805599453) (1.7320508075688772 20.08553692318767 1.0986122886681098))
 
 
-#+BEGIN_SRC
+#+END_SRC
 
 **** Currying
 
-#+END_SRC
+#+BEGIN_SRC scheme
 
 ;;;;; Currying Transformations
 ;; Turn a non curried function into a curried function 
@@ -2387,13 +2393,13 @@ Returns a functions that takes a list of functions and applies it to a single va
 
 
 
-#+BEGIN_SRC
+#+END_SRC
 
 *** Miscellaneous
 
 *Replicate N times a value*
 
-#+END_SRC
+#+BEGIN_SRC scheme
 
 (define (replicate n x)
     (if (zero? n)
@@ -2414,11 +2420,11 @@ $13 = ("abc" "abc" "abc" "abc" "abc" "abc" "abc" "abc")
 1 ]=> (replicate 3 'symbol)
 $15 = (symbol symbol symbol)
 
-#+BEGIN_SRC
+#+END_SRC
 
 *Cycle*
 
-#+END_SRC
+#+BEGIN_SRC scheme
 
 (define (cycle_aux n xs acc)
     (if  (zero? n)     ;;(or (zero? n) (null? xs))
@@ -2449,11 +2455,12 @@ $18 = (a b c a b c a b)
 1 ]=> (cycle 20 '(0 1))
 $19 = (0 1 0 1 0 1 0 1 0 1 0 1 0 1)
     
-#+BEGIN_SRC
+#+END_SRC
 
 *Intersperse*
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 (define (intersperse a xs)  
   (if (null? xs)
       '()
@@ -2468,14 +2475,15 @@ $19 = (0 1 0 1 0 1 0 1 0 1 0 1 0 1)
 
 > (intersperse '(x y) '(1 2 3 4 5))
 (1 (x y) 2 (x y) 3 (x y) 4 (x y) 5)               
-#+BEGIN_SRC
+
+#+END_SRC
 
 
 *Mapi*
 
 Similar to Ocaml function mapi, map a function of index and value each index and element of a list.
 
-#+END_SRC
+#+BEGIN_SRC scheme
 
 (define (mapi func lst)  
   (define (mapi_acc acc lst idx)
@@ -2493,11 +2501,12 @@ Similar to Ocaml function mapi, map a function of index and value each index and
 > (mapi f_i_a '(a b c d e f))
 '((0 a) (1 b) (2 c) (3 d) (4 e) (5 f))
 >   
-#+BEGIN_SRC
+
+#+END_SRC
 
 *Count Number of Elements*
 
-#+END_SRC
+#+BEGIN_SRC scheme
 
 (define (count-list alist)
     (if (null? alist)
@@ -2518,11 +2527,12 @@ Similar to Ocaml function mapi, map a function of index and value each index and
 
 ;Value: 7
 
-#+BEGIN_SRC
+#+END_SRC
 
 *Sum of list elements*
 
-#+END_SRC
+#+BEGIN_SRC scheme 
+
 (define (sum-list alist)
     (if (null? alist)
         0
@@ -2532,11 +2542,12 @@ Similar to Ocaml function mapi, map a function of index and value each index and
 
 ;Value: 21
 
-#+BEGIN_SRC
+#+END_SRC
 
 *Find Element in a List*
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 (define (find predicate alist)
     (if (null? alist)
         (error "Error: Predicate not found")
@@ -2561,11 +2572,11 @@ Similar to Ocaml function mapi, map a function of index and value each index and
 
 2 error> 
 
-#+BEGIN_SRC
+#+END_SRC
 
 *Drop / Take n elements*
 
-#+END_SRC
+#+BEGIN_SRC scheme
 
 (define (take n alist)
     (if (or (null? alist) (= n 0))
@@ -2612,11 +2623,13 @@ Similar to Ocaml function mapi, map a function of index and value each index and
 ;Value: ()
 
 1 ]=> 
-#+BEGIN_SRC
+
+#+END_SRC
 
 *Take while and Drop While*
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 (define (take_while predicate alist)
     (if (or (null? alist) (not (predicate (car alist))))
         '()
@@ -2649,11 +2662,12 @@ Similar to Ocaml function mapi, map a function of index and value each index and
 
 ;Value: ()
 
-#+BEGIN_SRC
+#+END_SRC
 
 *Select (Filter) / Reject list elements*
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 (define (select predicate alist)
     (if (null? alist)
     '()
@@ -2701,14 +2715,12 @@ Similar to Ocaml function mapi, map a function of index and value each index and
 
 ;Value 13: (2 4 6 8)
 
-#+BEGIN_SRC
-
-
+#+END_SRC
 
 
 *Folds: Fold Right/ Fold Left*
 
-#+END_SRC
+#+BEGIN_SRC scheme
 
 ;; Fold Right - https://en.wikipedia.org/wiki/Fold_(higher-order_function)
 ;;
@@ -2749,11 +2761,11 @@ Similar to Ocaml function mapi, map a function of index and value each index and
 
 ;Value: 123456
 
-#+BEGIN_SRC
+#+END_SRC
 
 *Zip Lists*
 
-#+END_SRC
+#+BEGIN_SRC scheme
 
 (define (zip2 list1 list2)
     
@@ -2839,13 +2851,12 @@ $7 = ((1 a "hello") (2 b "schme") (3 c "lisp") (4 d "fp"))
 1 ]=> (zip '( 1 2 3 4 5) '(a b c d e f g h) '("hello" "schme" "lisp" "fp"))
 $7 = ((1 a "hello") (2 b "schme") (3 c "lisp") (4 d "fp"))
 
+#+END_SRC
 
-
-#+BEGIN_SRC
 
 *Unzip Lists*
 
-#+END_SRC
+#+BEGIN_SRC scheme
 
 (define (unzip2 list-of-pairs)
     (if (null? list-of-pairs)
@@ -2957,11 +2968,11 @@ $6 = ((1 11 30) (2 10 40) (3 20 50))
 1 ]=> (unzip-v '(1 a "c") '(230 b "xs") '(1000 sym "ccw") '(434 con "xyzw"))
 $7 = ((1 230 1000 434) (a b sym con) ("c" "xs" "ccw" "xyzw"))
 
-#+BEGIN_SRC
+#+END_SRC
 
 *Zip With*
 
-#+END_SRC
+#+BEGIN_SRC scheme
 
 (define (zip_aux list-of-lists)
     (if (any null? list-of-lists)
@@ -2988,12 +2999,9 @@ $7 = ((1 230 1000 434) (a b sym con) ("c" "xs" "ccw" "xyzw"))
 1 ]=> (zip_with f '((1 2 3) (5 6 7) (9 7 3)))
 ;Value 15: (-22 -5 22)
 
-#+BEGIN_SRC
+#+END_SRC
 
 ** Lazy Evaluation / Delayed Evaluation
-
-
-
 ** Object Orientated Programming
 
 Objects can be implemented with closures as can be seen in:
@@ -3003,7 +3011,8 @@ Objects can be implemented with closures as can be seen in:
 
 *Example - 2D Points*
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 (define (make-point x y)
   (define (get-x) x)
   (define (get-y) y)
@@ -3110,11 +3119,11 @@ $57 = 100
 > (get-x point-1)
 $58 = 78
 
-#+BEGIN_SRC
+#+END_SRC
 
 *Example: Stack*
 
-#+END_SRC
+#+BEGIN_SRC scheme
 
 (define (make-stack)   
   (define stack '())
@@ -3169,11 +3178,13 @@ $58 = 78
 > (s 'show)
 (1000 20 10)
 >       
-#+BEGIN_SRC
+#+END_SRC
 
 ** Metaprogramming
 
-Metaprogramming is the ability to create that code that writes code. Like any lisp scheme has great metaprogramming capabilities like:
+Metaprogramming is the ability to create that code that writes
+code. Like any lisp scheme has great metaprogramming capabilities
+like:
 
  - Code is data and data is code 
  - Exposes the AST abstract syntax tree, that is an atom (symbol, string or a number) or a list 
@@ -3186,7 +3197,7 @@ Metaprogramming is the ability to create that code that writes code. Like any li
 
 *** The Abstract Syntax Tree
 
-#+END_SRC
+#+BEGIN_SRC scheme
 
 ;; A lisp AST is a list of lists and atoms or an atom 
 ;;
@@ -3319,17 +3330,18 @@ Metaprogramming is the ability to create that code that writes code. Like any li
 1 ]=> 
 
 
-#+BEGIN_SRC
+#+END_SRC
 
 *** Macros
 
-Macros allows to redefine the synxtax, create new language constructs, expand the language and create DSL - Domain Specific Languages.
+Macros allows to redefine the synxtax, create new language constructs,
+expand the language and create DSL - Domain Specific Languages.
 
-Notice all the macros bellow were tested on GNU GUILE that was started with the command:
+Note: all the macros bellow were tested on GNU GUILE that was started with the command:
 
-#+END_SRC
+#+BEGIN_SRC scheme
 $ rlwrap --remember -c guile
-#+BEGIN_SRC
+#+END_SRC
 
 **** Hygienic Macros - Define-syntax
 
@@ -3337,7 +3349,7 @@ Examples:
 
 *Increment a variable*
 
-#+END_SRC
+#+BEGIN_SRC scheme
 
 
 (define-syntax-rule
@@ -3357,11 +3369,12 @@ $3 = x
 $4 = (set! x (+ 1 x))
 > 
 
-#+BEGIN_SRC
+#+END_SRC
 
 *Swap two variables*
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 ;; -! is idomatic for mutation
 
 (define-syntax-rule (swap! x y) 
@@ -3387,11 +3400,12 @@ $22 = 10
 > $34 = (let ((tmp a)) (set! a b) (set! b tmp))
 > 
 
-#+BEGIN_SRC
+#+END_SRC
 
 *Convert Infix Operator to prefix operator*
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 (define-syntax $
   (syntax-rules ()
     (($ a operator b)
@@ -3433,11 +3447,13 @@ $7 = "greater than 10"
 
 > (if ($ x < 10) "less than 10" "greater than 10")
 $8 = "less than 10"
-#+BEGIN_SRC
+
+#+END_SRC
 
 *Invert Predicate*
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 (define-syntax-rule
     ($n pred args ...)
     (not (pred args ...)))
@@ -3453,13 +3469,15 @@ $4 = (not (list? 100))
 
 > ,expand ($n or (pair? x) (list? x))
 $6 = (not (or (pair? x) (list? x)))    
-#+BEGIN_SRC
+
+#+END_SRC
 
 *Delay and force a computation*
 
 Lazy evaluation.
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 (define-syntax-rule
   (thunk computation )
   (lambda () computation))
@@ -3492,13 +3510,14 @@ Entering a new prompt.  Type `,bt' for a backtrace or `,q' to continue.
 Entering a new prompt.  Type `,bt' for a backtrace or `,q' to continue.
 > 
 
-#+BEGIN_SRC
+#+END_SRC
 
 *Define alias*
 
 Change the define statement to def.
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 (define-syntax def
   (syntax-rules ()
     ((def name value )
@@ -3518,11 +3537,12 @@ $11 = 29
 > ,expand (def (f x y) (+ (* 3 x) (* 4 y)))
 $12 = (define (f x y) (+ (* 3 x) (* 4 y)))
 
-#+BEGIN_SRC
+#+END_SRC
 
 *Common-lisp defun statement*
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 (define-syntax-rule
   (defun name params body ...)
   (define (name . params)
@@ -3541,11 +3561,12 @@ $6 = 18
 $7 = (define (f x y) (+ (* 3 x) (* 4 y)))
 > 
  
-#+BEGIN_SRC
+#+END_SRC
 
 *Multi define statement*
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 (define-syntax define-multi 
     (syntax-rules () 
      ((define-multi (var val)  ...) 
@@ -3590,12 +3611,12 @@ $4 = (begin
   (define e 'a-symbol))
 
 
-#+BEGIN_SRC
+#+END_SRC
 
 
 *Print Variable name and value*
 
-#+END_SRC
+#+BEGIN_SRC scheme
 
 (define-syntax show-var
     (syntax-rules ()
@@ -3613,11 +3634,12 @@ $36 = (it is all symbols (litst of symbols))
 
 1 ]=> 
 
-#+BEGIN_SRC
+#+END_SRC
 
 *Association List*
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 (define-syntax define-assoc
     (syntax-rules () 
      (( define-assoc name ((sym value) ...))
@@ -3641,7 +3663,8 @@ $96 = (red . 1)
 
 (car (assoc 'red colors))
 $97 = red
-#+BEGIN_SRC
+
+#+END_SRC
 
 
 *Dispatch Table*
@@ -3650,7 +3673,8 @@ Create a symbol dispatch table macro
 
 Example: Without Macro
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 (define dispatch-table
   (list
    (cons 'cons cons)
@@ -3683,11 +3707,13 @@ $80 = 20.085536923187668
 
 ((get-key (string->symbol "exp") dispatch-table) 3)
 $81 = 20.085536923187668
-#+BEGIN_SRC
+
+#+END_SRC
 
 With Macro:
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 (define-syntax define-dispatch-table
     (syntax-rules () 
      ((define-dispatch-table name (sym ...)) 
@@ -3722,11 +3748,11 @@ $86 = (define dispatch-table
         (cons 'sqrt sqrt)
         (cons 'log log)))
 
-#+BEGIN_SRC
+#+END_SRC
 
 *Clojure defn, def and fn statements*
 
-#+END_SRC
+#+BEGIN_SRC scheme
 ;;
 ;; (def <name> <value>)
 ;;
@@ -3768,7 +3794,7 @@ $4 = 25
 > (map (fn [x] (+ x 3)) '[1 2 3 4 5 6])
 $5 = (4 5 6 7 8 9)
 
-#+BEGIN_SRC
+#+END_SRC
 
 *Clojure Doto Macro*
 
@@ -3778,15 +3804,17 @@ Applies a sequence of methods to a object and returns the object modified by the
 
 Usage:
 
-#+END_SRC
+#+BEGIN_SRC
 (doto {<object>|<object definition>} 
     (<method1> <args1>)
     (<method2> <args2>)
     ...
     )    
-#+BEGIN_SRC
-
 #+END_SRC
+
+
+#+BEGIN_SRC scheme
+
 (define-syntax doto 
 (syntax-rules () 
  ((doto object (method  args ...)  ...)
@@ -3823,13 +3851,12 @@ $2 = (let ((obj (make-vector 2)))
   (vector-set! obj 1 'bar)
   obj)
 
+#+END_SRC
 
-
-#+BEGIN_SRC
 
 *While Loop*
 
-#+END_SRC
+#+BEGIN_SRC scheme
 
 (define-syntax while
     (syntax-rules ()
@@ -3865,7 +3892,7 @@ $3 = (let loop ()
       (set! x (+ x 2))
       (loop))))
 
-#+BEGIN_SRC
+#+END_SRC
 
 *Common Lisp dolist and dotimes*
 
@@ -3873,7 +3900,7 @@ See also: [[http://www.gigamonkeys.com/book/macros-standard-control-constructs.h
 
  - Dotimes
 
-#+END_SRC
+#+BEGIN_SRC scheme
 
 ;; dotimes macro
 ;; 
@@ -3904,11 +3931,12 @@ $7 = (let loop ((i 0))
       (loop (+ i 1)))
     (values)))
   
-#+BEGIN_SRC
+#+END_SRC
 
  - Dolist
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 ;; (dolist (<var> <list>) (<body>))
 ;;
 (define-syntax-rule
@@ -3941,13 +3969,15 @@ $8 = (let loop ((xs '(a b c d e)))
       (display i)
       (display "\n")
       (loop (cdr xs)))))
-#+BEGIN_SRC
+
+#+END_SRC
 
 **** Common Lisp Style Macros - Define-macro 
 
 *defun and defvar*
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 (define-macro (defun name args body)
   `(define (,name ,@args) ,body))
 
@@ -3971,31 +4001,34 @@ $121 = (define (f x y z) (+ (* 3 x) (* -4 y) (* 2 z)))
 
 > ,expand (defvar x 10)
 $122 = (define x 10)  
-#+BEGIN_SRC
+
+#+END_SRC
 
 *case-pred*
 
 Task: Design a macro that expands the syntax:
 
-#+END_SRC
+#+BEGIN_SRC
+
 (case-pred x
    (negative? "Negative")
    (positive? "Positive")
    (zero?     "Zero"))
-#+BEGIN_SRC
+
+#+END_SRC
 
 To the syntax:
 
-#+END_SRC
+#+BEGIN_SRC scheme
 (cond 
  ((negative? x) "Neg")
  ((positive? x) "Pos")
  ((zero? x)    "Zero"))
-#+BEGIN_SRC
+#+END_SRC
 
 Implementation using define-syntax:
 
-#+END_SRC
+#+BEGIN_SRC scheme
 (define-syntax case-pred
     (syntax-rules () 
      ((case-pred value (predicate result) ...)
@@ -4021,11 +4054,13 @@ $7 = "Positive"
 $8 = (cond ((negative? -100) "Negative")
       ((positive? -100) "Positive")
       ((zero? -100) "Zero"))
-#+BEGIN_SRC
+
+#+END_SRC
 
 Implementation using define-macro:
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 > (define body '((negative? "Negative") (positive? "Positive") (zero? "Zero")))
 
 > body
@@ -4083,8 +4118,7 @@ $4 = (cond ((negative? -100) "Negative")
       ((positive? -100) "Positive")
       ((zero? -100) "Zero"))
 
-#+BEGIN_SRC
-
+#+END_SRC
 
 ** S-expressions and Serialization
 
@@ -4113,7 +4147,7 @@ See also:
  - [[http://lamberta.github.io/minispec/list-structure.html][List Structures / Common Lisp MiniSpec]]
 
 
-#+END_SRC
+#+BEGIN_SRC scheme
 
 ;;;; Association Lists
 
@@ -4216,11 +4250,12 @@ See also:
 (name: "John" surname: "Galt" age: 25 gender: male country: US)
 
                  
-#+BEGIN_SRC
+#+END_SRC
 
 *** Serialization and Deserialization
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 ;;; Convert plist to association list
 (define (plist->assoc plist)
   (if (null? plist)
@@ -4332,8 +4367,7 @@ See also:
 > (map (get-key/c currency:) dataset)
 (EUR AUD CAD)
 
-#+BEGIN_SRC
-
+#+END_SRC
 
 
 ** Debugging
@@ -4350,7 +4384,8 @@ See also:
 
 *Examples*
 
-#+END_SRC
+#+BEGIN_SRC scheme
+
 $ rlwrap -c -S "> " --remember scheme
 MIT/GNU Scheme running under GNU/Linux
 Type `^C' (control-C) followed by `H' to obtain information about interrupts.
@@ -4466,7 +4501,7 @@ string->file-time
 ...
 
 
-#+BEGIN_SRC
+#+END_SRC
 
 
 See also:
@@ -4477,15 +4512,16 @@ See also:
 *** GNU Guile
 
 
-| Command                               |  Description                           |
-|---------------------------------------|----------------------------------------|
-| =(version)=                       | Return version string                  |
-| =,bt=                             | Backtrace, display call stack          |
-| =,trace (<procedure> <args>)=     | Trace procedure, fucntion calls        |
-| =,time <exp>=                     | Measure execution time.                |
-#+END_SRC
-| =,apropos "<string>"=            | Print matching bound names             | 
-| =(exit 0)=                        | Quit GNU Guile                         |
+| Command                       | Description                      |
+|-------------------------------+----------------------------------|
+| =(version)=                   | Return version string            |
+| =,bt=                         | Backtrace, display call stack    |
+| =,trace (<procedure> <args>)= | Trace procedure, fucntion calls  |
+| =,time <exp>=                 | Measure execution time.          |
+| =,expand <form>=              | Show macro expansion of =<form>= |
+| =,apropos "<string>"=         | Print matching bound names       |
+| =(exit 0)=                    | Quit GNU Guile                   |
+
 
 *Examples*
 
@@ -4574,7 +4610,6 @@ $6 = (let ((tmp a)) (set! a b) (set! b tmp))
 
 #+END_SRC
 
-
 ** SCIP 
 
 Notes about SCIP
@@ -4608,6 +4643,7 @@ Tail recursive functions:
 Example1: Factorial
 
 #+BEGIN_SRC scheme
+
 (define (factorial n)
     (if (or (= n 0) (= n 1))
         1
@@ -5016,10 +5052,10 @@ Aborted (core dumped)
 
 *** Procedure as returned value
 
-
 *Fixed Point*
 
 #+BEGIN_SRC scheme
+
 (define tolerance 0.0001)
 
 ;;
@@ -5099,7 +5135,10 @@ f(x) = x  - g(x)/Dg(x)
 
 *Exercise 1.3* 
 
-The sum procedure above generates a linear recursion. The procedure can be rewritten so that the sum is performed iteratively. Show how to do this by filling in the missing expressions in the following definition:
+The sum procedure above generates a linear recursion. The procedure
+can be rewritten so that the sum is performed iteratively. Show how to
+do this by filling in the missing expressions in the following
+definition:
 
 #+BEGIN_SRC scheme
 (define (sum term a next b)
@@ -5350,11 +5389,7 @@ $24 = 85085
 #+END_SRC
 
 
-
-
 ** Applications
-
-
 *** Lisp Evaluator written in Lisp
 
 Task: Write an s-expression evaluator (prefix notation evaluator)  in lisp without using eval function. This evaluator can be useful to execute untrusted code on a restricted environment.
@@ -5560,15 +5595,18 @@ $77 = 9.975303377387922
 
 *** Racket 
 
-Racket, former known as PLT Scheme, is an extension of Scheme language that has multi OS support, IDE: Dr. Racket, debugger, package system and repository, great documentation, large library and a powerful ffi - Foreign Function Interface. Racket has also support to many languages like pure Scheme, typed racket and others.
-
+Racket, former known as PLT Scheme, is an extension of Scheme language
+that has multi OS support, IDE: Dr. Racket, debugger, package system
+and repository, great documentation, large library and a powerful
+ffi - Foreign Function Interface. Racket has also support to many
+languages like pure Scheme, typed racket and others.
 
 
 **** String Functions
 
 *Basic String Functions*
 
-#+BEGIN_SRC racket
+#+BEGIN_SRC scheme
 
 > (string->list "hello world")
 '(#\h #\e #\l #\l #\o #\space #\w #\o #\r #\l #\d)
@@ -5739,7 +5777,7 @@ x = 10
 
 ***** List
 
-#+BEGIN_SRC racket
+#+BEGIN_SRC scheme
 
 > '(1 2 3 4 5 6)
 '(1 2 3 4 5 6)
@@ -5760,7 +5798,6 @@ x = 10
 #+END_SRC
 
 ***** Association List
-
 ***** Vector 
 
 [[http://docs.racket-lang.org/reference/vectors.html][Vector Documentation]]
@@ -5904,11 +5941,9 @@ vector-ref: index is out of range
 #+END_SRC
 
 ***** Hash Table 
-
-
 **** Struct 
 
-#+BEGIN_SRC racket 
+#+BEGIN_SRC scheme
 
 (defstruct point-3d (x y z))
 defstruct: undefined;
@@ -5985,7 +6020,7 @@ Documentation:
 
  - [[http://docs.racket-lang.org/guide/match.html][Racket Guide - Pattern Matching]]
 
-#+BEGIN_SRC racket
+#+BEGIN_SRC scheme
 (require racket/match)
  
 (define (perimeter picture)
@@ -6116,7 +6151,6 @@ Plot the equation:  x^2/9 + y^2/64 = 1
 #+END_SRC
 
 **** Resources
-
 ***** Miscellaneous
 
  - [[https://en.wikipedia.org/wiki/Racket_(programming_language][Racket programming language]])
@@ -6142,7 +6176,6 @@ Plot the equation:  x^2/9 + y^2/64 = 1
 
  - [[http://docs.racket-lang.org/guide/hash-tables.html][Hash Tables / Guide]]
  - [[http://docs.racket-lang.org/reference/hashtables.html][Hash  Tables / Reference]]
-
 
 **** Videos
 
@@ -6542,8 +6575,6 @@ File: [[src/FahrenheitGUI.scm][FahrenheitGUI.scm]]
  - [[http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.24.5572&rep=rep1&type=pdf][Kawa: Compiling Scheme to Java - citeseerx]]
  - [[http://www.delorie.com/gnu/docs/kawa/kawa-tour_2.html][Kawa: Compiling Scheme to Java - Delorie]]
 
-
-
 ** Resources
 
 *** Books
@@ -6641,7 +6672,6 @@ Write programs to generate other programs](http://www.ibm.com/developerworks/lib
 
  - http://www.blogbyben.com/2008/04/tackling-desktop-gui-project-consider.html
 
-
 *** University Courses
 
  - [[https://www.cs.unm.edu/~williams/cs491s06.html][CS 491/591: Advanced Scheme Programming and Implementation *]]
@@ -6659,7 +6689,6 @@ Write programs to generate other programs](http://www.ibm.com/developerworks/lib
  - [[https://gitlab.com/cloje/cloje][Cloje - A clone of Clojure built atop Scheme/Lisp]]
 
  - [[http://sourceforge.net/projects/readable/][ Readable Lisp S-expressions - Readable Lisp/S-expressions with infix, functions, and indentation]]
-
 
 
 *** Misc

@@ -1,10 +1,9 @@
-
-
-*Table of Contents*  *generated with [[https://github.com/thlorenz/doctoc][DocToc]]*
-
-
+#+TITLE: Clojure 
+#+AUTHOR: Caio Rodrigues Soares Silva
+#+EMAIL: <caiorss.rodrigues@gmail.com>
 
 * Clojure
+** Overview
 
 Clojure is a functional programming lisp dialect that leverages the access to all Java platform libraries. It is based on Scheme, Common Lisp, ML and Haskell.
 
@@ -1442,7 +1441,6 @@ See also:
  - [[http://media.pragprog.com/titles/cjclojure/macro.pdf][Mastering Clojure Macros - Write Cleaner, Faster, Smarter Code]]
 
 
-
 ** Java Interoperability
 
 One of greatest advantages of Clojure to other Lisp's dialects is the Java interoperabilty that allows the user to use the full power of Java ecosystem.
@@ -2052,7 +2050,6 @@ There is a Clojure library for this: [[https://github.com/dakrone/clj-http][clj-
 
 
 #+END_SRC
-
 
 
 

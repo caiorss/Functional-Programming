@@ -1,15 +1,9 @@
+* Useful Custom Functions/ Iterators and Operators
+
+This is a collection of useful short code snippets. 
 
 
-*Table of Contents*  *generated with [[https://github.com/thlorenz/doctoc][DocToc]]*
-
-
-
-** Useful Custom Functions/ Iterators and Operators
-
-This a collection of useful short code snippets. 
-
-
-*** Pipelining Operators
+** Pipelining Operators
 
 Haskell doesn't have a native Pipe operator like F# (F-Sharp) does, however
 it can be defined by the user.
@@ -46,8 +40,7 @@ it can be defined by the user.
 #+END_SRC
 
 *** Iterators
-
-**** Pair Iterator
+*** Pair Iterator
 
 Definition:
 
@@ -189,7 +182,7 @@ Example: Distance between points on the plane.
 
 #+END_SRC
 
-**** Triples Iterator
+*** Triples Iterator
 
 Definition:
 #+BEGIN_SRC haskell
@@ -208,7 +201,7 @@ triples :: [c] -> [(c, c, c)]
 > 
 #+END_SRC
 
-**** Sliding Window Iterator
+*** Sliding Window Iterator
 
 This iterator is used in Scala and it is a generalized pairs iterator.
 
@@ -244,7 +237,7 @@ scala> (1 to 5).iterator.sliding(3).toList
 res2: List[Seq[Int]] = List(List(1, 2, 3), List(2, 3, 4), List(3, 4, 5))
 #+END_SRC
 
-**** Enumerate Iterator
+*** Enumerate Iterator
 
 Equivalent to python enumerate.
 
@@ -295,10 +288,8 @@ Example:
 
 #+END_SRC
 
-*** Applying Multiples Functions
-
-
-**** Applying a list of functions to the same argument.
+** Applying Multiples Functions
+*** Applying a list of functions to the same argument.
 
 *juxt* is a function that allows apply a list of functions of same type signature to a single argument. This is useful for numerical analysis, statistics and engineering. This function was taken from the Clojure library.
 
@@ -328,7 +319,7 @@ fs :: Double -> [Double]
 > 
 #+END_SRC
 
-**** Applying a tuple of functions to a same argument.
+*** Applying a tuple of functions to a same argument.
 
 The family of functions juxt2, juxt3, juxt4 allow apply tuples of functions to a single argument. This is necessary when the functions don't have the same type signature. 
 
@@ -429,7 +420,7 @@ f :: Char -> (Char, Char, Int)
 
 #+END_SRC
 
-**** Control Flow Functions
+*** Control Flow Functions
 
 *between*
 

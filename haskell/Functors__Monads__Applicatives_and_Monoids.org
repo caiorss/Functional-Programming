@@ -1,14 +1,8 @@
-
-
-*Table of Contents*  *generated with [[https://github.com/thlorenz/doctoc][DocToc]]*
-
-
-
-** Functors, Monads, Applicatives and Monoids
+* Functors, Monads, Applicatives and Monoids
 
 The concepts of functors, monads and applicative comes from [[http://en.wikipedia.org/wiki/Category_theory][category theory]].
 
-*** Functors
+** Functors
 
 Functors is a prelude class for types which the function fmap is defined. The function fmap is a generalization of map function.
 
@@ -198,11 +192,8 @@ References:
  - http://en.wikibooks.org/wiki/Haskell/Applicative_Functors
  - http://comonad.com/reader/2008/deriving-strength-from-laziness/
 
-*** Monads
-
-
-
-**** Overview
+** Monads
+*** Overview
 
 Monads in Haskell are used to perform IO, State, Parallelism, Exception Handling, parallelism, continuations and coroutines.
 
@@ -250,12 +241,11 @@ class Monad m where
  - Reader Monad
  - State Monad
  
+*** Bind Operator
 
+In a imperative language the bind operator could be described as
+below:
 
-
-**** Bind Operator
-
-In a imperative language the bind operator could be described as below:
 #+BEGIN_SRC
 -- Operator (>>=)
 
@@ -272,11 +262,13 @@ func: Is a monadic function ->
         (m a).bind( func) == m b
 #+END_SRC
 
-**** Monad Laws
+*** Monad Laws
 
 All monads must satisfy the monadic laws:
 
-In Haskell, all instances of the Monad type class (and thus all implementations of (>>=) and return) must obey the following three laws below:
+In Haskell, all instances of the Monad type class (and thus all
+implementations of (>>=) and return) must obey the following three
+laws below:
 
 Left identity:
 #+BEGIN_SRC
@@ -324,7 +316,7 @@ Nice Version.
 
 Credits: http://mvanier.livejournal.com/4586.html
 
-**** Selected Monad Implementations
+*** Selected Monad Implementations
 
 *List Monad*
 
@@ -358,8 +350,7 @@ return :: a -> Maybe a
 return :: a -> IO b
 #+END_SRC
 
-
-**** Return - Type constructor
+*** Return - Type constructor
 
 Return is polymorphic type constructor. This name return is misleading, it has nothing to do with the return from a function in a imperative language.
 
@@ -391,7 +382,7 @@ Right "el toro"
 > 
 #+END_SRC
 
-**** Haskell Monads
+*** Haskell Monads
 
 file:images/monadTable.png
 
@@ -413,7 +404,7 @@ Under this interpretation, the functions behave as follows:
     
 #+END_SRC
 
-**** Monad function composition
+*** Monad function composition
 
 #+BEGIN_SRC
 (>=>) :: Monad m => (a -> m b) -> (b -> m c) -> a -> m c
@@ -446,7 +437,7 @@ data  Ordering    =  LT | EQ | GT deriving
 
 #+END_SRC
 
-**** Sources
+*** Sources
 
  - <http://mvanier.livejournal.com/4586.html>
  - <https://jonaswesterlund.se/monads.html>    
@@ -462,9 +453,7 @@ data  Ordering    =  LT | EQ | GT deriving
  - <http://comonad.com/reader/2008/deriving-strength-from-laziness/>
  - <https://www.haskell.org/tutorial/monads.html>
 
-
-
-*** Maybe Monad
+** Maybe Monad
 
 Using the Maybe type is possible to indicate that a function might or not return value. It is also useful to avoid many boilerplate null checkings.
 
@@ -531,19 +520,19 @@ Examples without Maybe:
 >  head [1, 2, 3, 4]
 1
 > head []
-*** Exception: Prelude.head: empty list
+ *** Exception: Prelude.head: empty list
  
 
 > tail [1, 2, 3, 4]
 [2,3,4]
 > 
 > tail []
-*** Exception: Prelude.tail: empty list
+ *** Exception: Prelude.tail: empty list
 
 > div 10 2
 5
 > div 10 0
-*** Exception: divide by zero
+ *** Exception: divide by zero
 > 
 #+END_SRC
 
@@ -651,8 +640,7 @@ Reference:
  - http://en.wikibooks.org/wiki/Haskell/Understanding_monads
  - https://www21.in.tum.de/teaching/perlen/WS1415/unterlagen/Monads_in_Haskell.pdf
 
-
-*** List Monad
+** List Monad
 
 #+BEGIN_SRC haskell
 instance Monad [] where
@@ -682,6 +670,7 @@ Do Notation for lists
 The list comprehension is a syntax sugar for do-notation to list monad.
 
 File: listMonad.hs 
+
 #+BEGIN_SRC haskell
 listOfTuples :: [(Int,Char)]  
 listOfTuples = do  
@@ -729,6 +718,7 @@ Operator: (,)
 
 > map ((,)2) [1, 2, 3, 4]
 [(2,1),(2,2),(2,3),(2,4)]
+
 #+END_SRC
 
 *fmap, map and liftM*
@@ -736,6 +726,7 @@ Operator: (,)
 For a list, fmap is equivalent to map
 
 #+BEGIN_SRC haskell
+
 > fmap ((,)3) [1, 2, 3, 4]
 [(3,1),(3,2),(3,3),(3,4)]
 > 
@@ -750,6 +741,7 @@ For a list, fmap is equivalent to map
 > liftM (+3) [1, 2, 3, 4]
 [4,5,6,7]
 > 
+
 #+END_SRC
 
 *liftM and Cartesian Product*
@@ -781,7 +773,7 @@ For a list, fmap is equivalent to map
 
 http://learnyouahaskell.com/a-fistful-of-monads
 
-*** IO and IO Monad
+** IO and IO Monad
 
 Haskell separates pure functions from computations where side effects must be considered by encoding those side effects as values of a particular type. Specifically, a value of type (IO a) is an action, which if executed would produce a value of type a.  [[https://wiki.haskell.org/Introduction_to_IO][[1]]]
 
@@ -826,7 +818,7 @@ appendFile    ::  FilePath -> String            -> IO ()
 readFile      ::  FilePath                      -> IO String
 #+END_SRC
 
-**** Main action
+*** Main action
 
 The only IO action which can really be said to run in a compiled Haskell program is main. 
 
@@ -856,7 +848,7 @@ $ runhaskell HelloWorld.hs
 Hello, World!
 #+END_SRC
 
-**** Read and Show
+*** Read and Show
 
 #+BEGIN_SRC
 show   :: (Show a) => a -> String
@@ -889,7 +881,7 @@ x :: Double
 
 #+END_SRC
 
-**** Operator >> (then)
+*** Operator >> (then)
 
 The “then” combinator (>>) does sequencing when there is no value to pass:
 
@@ -920,8 +912,7 @@ echoDup = do
     putChar c
 #+END_SRC
 
-
-**** Basic I/O Operations
+*** Basic I/O Operations
 
 Every IO action returns a value. The returned value is tagged with IO type.
 
@@ -978,9 +969,7 @@ x
 
 #+END_SRC
 
-
-
-**** Do Notation
+*** Do Notation
 
 The statements in the do-notation are executed in a sequential order. It is syntactic sugar for the bind (>>=) operator. The values of local statements are defined using let and result of an action uses the (<-) operator. The “do” notation adds syntactic sugar to make monadic code easier to read.
 
@@ -1025,7 +1014,7 @@ getTwoCharsDo = do
 #+END_SRC
 
 
-***** Basic Do Notation
+**** Basic Do Notation
 
 File: do_notation1.hs
 #+BEGIN_SRC haskell
@@ -1056,7 +1045,7 @@ pxp
 > 
 #+END_SRC
 
-***** Do Notation and Let keyword
+**** Do Notation and Let keyword
 
 File: do_notation2.hs
 
@@ -1117,7 +1106,7 @@ b
 The character is : b
 #+END_SRC
 
-***** Do Notation returning a value
+**** Do Notation returning a value
 
 
 File: do_return.hs
@@ -1161,7 +1150,7 @@ True
 #+END_SRC
 
 
-***** Combining functions and I/O actions
+**** Combining functions and I/O actions
 
 #+BEGIN_SRC haskell
 > import Data.Char (toUpper)
@@ -1212,7 +1201,7 @@ air lift
 > 
 #+END_SRC
 
-***** Executing a list of actions
+**** Executing a list of actions
 
 The list myTodoList doesn't execute any action, it holds them. To join those actions the function sequence_ must be used.
 
@@ -1266,7 +1255,7 @@ putStr                  :: String -> IO ()
 putStr s                =  sequence_ (map putChar s)
 #+END_SRC
 
-***** Control Structures 
+**** Control Structures 
 
 ###### For Loops
 
@@ -1304,7 +1293,7 @@ Example:
 10
 #+END_SRC
 
-***** mapM and mapM_
+**** mapM and mapM_
 
 Map a monadic function, a function that returns a monad, to a list. It is similar to forM and formM_.
 
@@ -1338,7 +1327,7 @@ Example:
 10
 #+END_SRC
 
-**** IO Examples
+*** IO Examples
 
 *Example 1*
 
@@ -1482,7 +1471,6 @@ liftM (map $ uncurry (+)) readSquareFile :: IO [Int]
  - http://learnyouahaskell.com/functors-applicative-functors-and-monoids
  - http://squing.blogspot.com.br/2008/01/unmonad-tutorial-io-in-haskell-for-non.html
 
-
 *** State Monad
 
 A stateless function or pure function is a function that only relies on its input. State monad allows to simulate aspects of imperative language in pure a functional language. 
@@ -1491,6 +1479,7 @@ Many Haskell tutorials and examples about State Monad won't run or compile becau
 
 
 Some StackOverflow threads describing the problem:
+
  - [[http://stackoverflow.com/questions/9697980/the-state-monad-and-learnyouahaskell-com][The state monad and learnyouahaskell.com]] 
  - [[http://stackoverflow.com/questions/24103108/where-is-the-data-constructor-for-state][Where is the data constructor for 'State'?]]
  - [[http://stackoverflow.com/questions/14157090/has-the-control-monad-state-api-changed-recently][Has the Control.Monad.State API changed recently?]]
@@ -1500,6 +1489,7 @@ Reproducing the bug:
 The example from [[http://learnyouahaskell.com/for-a-few-monads-more][Learn You a Haskell's guide on the state monad]] will fail when trying to run or compile it.
 
 File: stack.hs
+
 #+BEGIN_SRC haskell
 import Control.Monad.State  
 
@@ -1513,6 +1503,7 @@ push a = State $ \xs -> ((),a:xs)
 #+END_SRC
 
 Running:
+
 #+BEGIN_SRC
 tux@tux  /tmp
 $ ghci
@@ -1535,6 +1526,7 @@ Failed, modules loaded: none.
 Solutions: Use the old Control.Monad.State implementation. That it is available in the file: [[src/OldState.hs][OldState.hs]]
 
 File: [[src/stack.hs][stack.hs]]
+
 #+BEGIN_SRC haskell
 --import Control.Monad.State  
 import OldState
@@ -1566,6 +1558,7 @@ moreStack = do
 #+END_SRC
 
 Running:
+
 #+BEGIN_SRC
 tux@tux  /tmp
 $ ghci
@@ -1591,7 +1584,8 @@ The type (State s a) wraps function that takes an state a and returns a tuple co
 newtype State s a = State { runState :: s -> (a, s) }
 #+END_SRC
 
-The function runState applies a state function / state processor to a state and returns a value and a new state.
+The function runState applies a state function / state processor to a
+state and returns a value and a new state.
 
 #+BEGIN_SRC haskell
 > :l OldState.hs 
