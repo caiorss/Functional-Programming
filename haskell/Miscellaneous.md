@@ -1,31 +1,21 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
 - [Miscellaneous](#miscellaneous)
   - [Haskell IDEs and Text Editors](#haskell-ides-and-text-editors)
   - [GHCI configuration file](#ghci-configuration-file)
   - [Troubleshooting](#troubleshooting)
     - [Importing Ambigous Modules in GHCi](#importing-ambigous-modules-in-ghci)
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+# Miscellaneous<a id="sec-1" name="sec-1"></a>
 
-## Miscellaneous
+## Haskell IDEs and Text Editors<a id="sec-1-1" name="sec-1-1"></a>
 
-### Haskell IDEs and Text Editors
-
-
-<!--
-@TODO: Show Haskell IDEs text editors and features
--->
-
-### GHCI configuration file
+## GHCI configuration file<a id="sec-1-2" name="sec-1-2"></a>
 
 The ghci configuration file allows the user to create custom commands and 
 customize the ghci shell. The file is in the directory ~/.ghci in Unix systems 
 like Linux and OSX.
 
 Example: ~/.ghci
+
 ```
 import System.Directory ( getCurrentDirectory)
 import System.Process (readProcess)
@@ -46,11 +36,10 @@ let pwd = getCurrentDirectory >>= putStrLn
 
 :def paste (\_ -> __savePasted >> return ":load /tmp/haskTemp.hs" )
 :def pwd (\_ -> pwd >> return "")
-
 ```
 
-It requires hoogle to be installed on Linux: (sudo apt-get install hoogle)
-on Ubuntu.
+It requires hoogle to be installed on Linux: (sudo apt-get install
+hoogle) on Ubuntu.
 
 Examples:
 
@@ -60,7 +49,6 @@ Examples:
 ```
 
 ```haskell
-
 > :pwd
 /home/tux/PycharmProjects/Haskell
 > 
@@ -92,15 +80,12 @@ Ok, modules loaded: Main.
 Year: 2015
 Month: 4
 Day: 26
-> 
-
-
+>
 ```
 
+## Troubleshooting<a id="sec-1-3" name="sec-1-3"></a>
 
-### Troubleshooting
-
-#### Importing Ambigous Modules in GHCi
+### Importing Ambigous Modules in GHCi<a id="sec-1-3-1" name="sec-1-3-1"></a>
 
 ```haskell
 > import Control.Monad.State
@@ -112,7 +97,7 @@ Day: 26
 
 > :set -hide-package mtl
 > import Control.Monad.State
-> 
+>
 ```
 
 Solution: Add the line to ~/.ghci
@@ -120,5 +105,3 @@ Solution: Add the line to ~/.ghci
 ```
 :set -hide-package mtl
 ```
-
-

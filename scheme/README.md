@@ -1,8 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
-- [Functional Programming in Scheme](#functional-programming-in-scheme)
   - [Overview](#overview)
     - [Why Lisp](#why-lisp)
     - [Scheme Features](#scheme-features)
@@ -17,10 +12,13 @@
     - [Variables](#variables)
       - [Global Variable](#global-variable)
       - [Local Variable](#local-variable)
-        - [let](#let)
-        - [let*](#let)
-        - [letrec](#letrec)
     - [Functions](#functions)
+      - [Defining and applying functions](#defining-and-applying-functions)
+      - [Anonymous Functions/ Lambda Functions](#anonymous-functions/-lambda-functions)
+      - [Functions with Control Structure](#functions-with-control-structure)
+      - [Variadic Function](#variadic-function)
+      - [Recursive Functions](#recursive-functions)
+      - [Internal Definition](#internal-definition)
       - [Arithmetic](#arithmetic)
       - [Comparison](#comparison)
       - [Math Functions](#math-functions)
@@ -39,7 +37,7 @@
     - [Applying Multiple Functions to a Single Argument](#applying-multiple-functions-to-a-single-argument)
       - [Currying](#currying)
     - [Miscellaneous](#miscellaneous)
-  - [Lazy Evaluation / Delayed Evaluation](#lazy-evaluation--delayed-evaluation)
+  - [Lazy Evaluation / Delayed Evaluation](#lazy-evaluation-/-delayed-evaluation)
   - [Object Orientated Programming](#object-orientated-programming)
   - [Metaprogramming](#metaprogramming)
     - [The Abstract Syntax Tree](#the-abstract-syntax-tree)
@@ -53,132 +51,248 @@
     - [MIT Scheme](#mit-scheme)
     - [GNU Guile](#gnu-guile)
   - [SCIP](#scip)
-    - [Tail Recursion (Iteration)](#tail-recursion-iteration)
+    - [Tail Recursion (Iteration)](#tail-recursion-(iteration))
     - [Higher Order Procedure](#higher-order-procedure)
     - [Procedure as returned value](#procedure-as-returned-value)
     - [Exercises](#exercises)
   - [Applications](#applications)
     - [Lisp Evaluator written in Lisp](#lisp-evaluator-written-in-lisp)
     - [Reverse Polish Notation Evaluator](#reverse-polish-notation-evaluator)
-  - [Scheme Implementations](#scheme-implementations-1)
+  - [Scheme Implementations](#scheme-implementations)
     - [Racket](#racket)
-      - [String Functions](#string-functions-1)
-      - [Input / Output Functions](#input--output-functions)
+      - [String Functions](#string-functions)
+      - [Input / Output Functions](#input-/-output-functions)
       - [Data Structures](#data-structures)
-        - [Cons - Cell / Pair](#cons---cell--pair)
-        - [List](#list)
-        - [Association List](#association-list)
-        - [Vector](#vector)
-        - [Hash Table](#hash-table)
       - [Struct](#struct)
       - [Pattern Matching](#pattern-matching)
       - [Plotting](#plotting)
       - [Resources](#resources)
-        - [Miscellaneous](#miscellaneous-1)
-        - [Documentation](#documentation)
       - [Videos](#videos)
     - [Kawa Scheme - Access Java API from Scheme](#kawa-scheme---access-java-api-from-scheme)
       - [Install and Run](#install-and-run)
       - [Calling Java Methods in Kawa Scheme](#calling-java-methods-in-kawa-scheme)
       - [Create a GUI](#create-a-gui)
       - [See also](#see-also)
-  - [Resources](#resources-1)
+  - [Resources](#resources)
     - [Books](#books)
     - [Community](#community)
     - [Articles](#articles)
-    - [Blogs, Workshops, Conferences](#blogs-workshops-conferences)
+    - [Blogs, Workshops, Conferences](#blogs,-workshops,-conferences)
     - [University Courses](#university-courses)
     - [Repositories](#repositories)
     - [Misc](#misc)
     - [Documentation by Subject](#documentation-by-subject)
       - [Manual](#manual)
       - [Libraries and Standards](#libraries-and-standards)
-      - [Syntax](#syntax-1)
-      - [Object Orientated Programming](#object-orientated-programming-1)
+      - [Syntax](#syntax)
+      - [Object Orientated Programming](#object-orientated-programming)
       - [Macros and Metaprogramming](#macros-and-metaprogramming)
       - [Serialization and Data Representation](#serialization-and-data-representation)
       - [Scheme as Extension Language](#scheme-as-extension-language)
-      - [Algebraic Data Types - Monads, Monoids](#algebraic-data-types---monads-monoids)
+      - [Algebraic Data Types - Monads, Monoids](#algebraic-data-types---monads,-monoids)
       - [Continuation](#continuation)
       - [Compilation](#compilation)
     - [Hacker News Threads](#hacker-news-threads)
     - [Lambda Ultimate Threads](#lambda-ultimate-threads)
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# Functional Programming in Scheme
+# Overview<a id="sec-1" name="sec-1"></a>
 
-[Under Construction]
+## Why Lisp<a id="sec-1-1" name="sec-1-1"></a>
 
-## Overview
-
-### Why Lisp
-
-
-* Lisp is used as embedded script language in many products
-    * Autocad -> Autolisp
-    * GNUCash -> GNU Guile Scheme 
-    * GIMP Editor -> GNU Guile Scheme 
+-   Lisp is used as embedded script language in many products
+    -   Autocad -> Autolisp
+    -   GNUCash -> GNU Guile Scheme
+    -   GIMP Editor -> GNU Guile Scheme
 
 Products that use lisp:
-* Emacs -> Emacs Lisp, A lisp dialect based on Common Lisp
-* GNU Maxima -> Cumputer Algebra System (CAS), Common Lisp
+-   Emacs -> Emacs Lisp, A lisp dialect based on Common Lisp
+-   GNU Maxima -> Cumputer Algebra System (CAS), Common Lisp
 
-### Scheme Features
+## Scheme Features<a id="sec-1-2" name="sec-1-2"></a>
 
-* Learn the principles of programming languages
-* Meta programming
-* Lisp dialect that endorses Functional Programming
-* Lightweight extension language or embedded language
-* Scheme is used as extension language of softwares like GIMP and GnuCash
-* Scheme can be used to test JVM and .NET API in the REPL.
-    * Google App Engine Uses Kawa scheme which is a implementations for the JVM.
+-   Learn the principles of programming languages
+-   Meta programming
+-   Lisp dialect that endorses Functional Programming
+-   Lightweight extension language or embedded language
+-   Scheme is used as extension language of softwares like GIMP and GnuCash
+-   Scheme can be used to test JVM and .NET API in the REPL.
+    -   Google App Engine Uses Kawa scheme which is a implementations for the JVM.
 
-### Scheme Implementations
+## Scheme Implementations<a id="sec-1-3" name="sec-1-3"></a>
 
-| Implementation | Feature                                  |
-|----------------|------------------------------------------|
-| [MIT - Scheme](http://www.gnu.org/software/mit-scheme/)   | Classical Scheme Implementation  used by [SCIP](https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Computer_Programs)  |
-| [Kawa](http://www.gnu.org/software/kawa/)           | Scheme for the JVM - Java API access. Compiles to the JVM |
-| [Iron Scheme](https://ironscheme.codeplex.com/)    | Scheme for .NET platform - .NET API Acess       |
-| [GNU Guile](http://www.gnu.org/software/guile/gnu-guile-projects.html#Applications) | Used as embedded extension language for many apps like GIMP, [GNUCash](http://wiki.gnucash.org/wiki/Custom_Reports), GEDA |
-| [Chicken](http://www.call-cc.org/)  | Compiles to Native Code, produces portable C code, package manager  | 
-| [Lambda Native](http://www.lambdanative.org/) | Compiles to IOS, Android, Linux, Windows ... |
-| [Chibi Scheme](https://github.com/ashinn/chibi-scheme) | Minimal Scheme Implementation for use as an Extension Language |
-| [BiwaScheme](http://www.biwascheme.org/) | Scheme implemented in Javascript. It can run in the browser, client side. |
-| [Racket](http://racket-lang.org/)   | IDE Dr Scheme. and Debugger. Superset of scheme, not fully compatible.  | 
-| [Scsh](http://scsh.net/) |  Scsh is an open-source Unix shell embedded within Scheme, running on all major Unix platforms including AIX, Cygwin, Linux, FreeBSD, GNU Hurd, HP-UX, Irix, Mac OS X, Solaris, and some others |
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Implementation</th>
+<th scope="col" class="left">Feature</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">[MIT - Scheme](http://www.gnu.org/software/mit-scheme)</td>
+<td class="left">Classical Scheme Implementation  used by [SCIP](https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Computer_Programs)</td>
+</tr>
+
+
+<tr>
+<td class="left">[Kawa](http://www.gnu.org/software/kawa/)</td>
+<td class="left">Scheme for the JVM - Java API access. Compiles to the JVM</td>
+</tr>
+
+
+<tr>
+<td class="left">[Iron Scheme](https://ironscheme.codeplex.com/)</td>
+<td class="left">Scheme for .NET platform - .NET API Acess</td>
+</tr>
+
+
+<tr>
+<td class="left">[GNU Guile](http://www.gnu.org/software/guile/gnu-guile-projects.html#Applications)</td>
+<td class="left">Used as embedded extension language for many apps like GIMP, [GNUCash](http://wiki.gnucash.org/wiki/Custom_Reports), GEDA</td>
+</tr>
+
+
+<tr>
+<td class="left">[Chicken](http://www.call-cc.org/)</td>
+<td class="left">Compiles to Native Code, produces portable C code, package manager</td>
+</tr>
+
+
+<tr>
+<td class="left">[Gambit-C + Lambda Native](http://www.lambdanative.org/)</td>
+<td class="left">Compiles to IOS, Android, Linux, Windows &#x2026;</td>
+</tr>
+
+
+<tr>
+<td class="left">[Chibi Scheme](https://github.com/ashinn/chibi-scheme)</td>
+<td class="left">Minimal Scheme Implementation for use as an Extension Language</td>
+</tr>
+
+
+<tr>
+<td class="left">[BiwaScheme](http://www.biwascheme.org/)</td>
+<td class="left">Scheme implemented in Javascript. It can run in the browser, client side.</td>
+</tr>
+
+
+<tr>
+<td class="left">[Racket](http://racket-lang.org/)</td>
+<td class="left">IDE Dr Scheme. and Debugger. Superset of scheme, not fully compatible.</td>
+</tr>
+
+
+<tr>
+<td class="left">[Scsh](http://scsh.net/)</td>
+<td class="left">Scsh is an open-source Unix shell embedded within Scheme, running on all major Unix platforms including AIX, Cygwin, Linux, FreeBSD, GNU Hurd, HP-UX, Irix, Mac OS X, Solaris, and some others</td>
+</tr>
+</tbody>
+</table>
 
 See also: 
 
-* [What Scheme implementations are there? ](http://community.schemewiki.org/?scheme-faq-standards#implementations)
+-   [What Scheme implementations are there? ](http://community.schemewiki.org/?scheme-faq-standards#implementations)
 
-* [An opinionated guide to scheme implementations](https://wingolog.org/archives/2013/01/07/an-opinionated-guide-to-scheme-implementations)
+-   [An opinionated guide to scheme implementations](https://wingolog.org/archives/2013/01/07/an-opinionated-guide-to-scheme-implementations)
 
-* [About Scheme implementations -  The Adventures of a Pythonista in Schemeland](http://www.phyast.pitt.edu/~micheles/scheme/scheme2.html)
+-   [About Scheme implementations -  The Adventures of a Pythonista in Schemeland](http://www.phyast.pitt.edu/~micheles/scheme/scheme2.html)
 
-## Basic Syntax
+# Basic Syntax<a id="sec-2" name="sec-2"></a>
 
+## Name Conventions<a id="sec-2-1" name="sec-2-1"></a>
 
-### Name Conventions
-
-|  Terminology   |  Description                           |  Name Convention | Example        |
-|----------------|----------------------------------------|------------------|----------------|
-|  Procedure     | functions                              |                  |                |     
-|  Predicate     | Function that returns a boolean, true (#t) or false (#f) | Ends with ? | zero? null? |
-|  Getter        | Function that returns a value from a Lisp object | Ends with -ref | list-ref |
-|  Setter        | Function that sets a value in a Lisp object |  Ends with ! | set! |
-|  Constructor   | A constructor is a function that creates a Lisp object. | |
-|  Converter     | Function that converts one type of Lisp object into another type | (from type)->(to-type) | symbol->string, number->string |
-|  Iteration (SCIP book)  | Tail Recursion          | | 
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
-### Syntax
+<colgroup>
+<col  class="left" />
 
-Scheme uses prefix notation, or polish notation. Every operator like +,-,* is a function.
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Terminology</th>
+<th scope="col" class="left">Description</th>
+<th scope="col" class="left">Name Convention</th>
+<th scope="col" class="left">Example</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">Procedure</td>
+<td class="left">functions</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+
+<tr>
+<td class="left">Predicate</td>
+<td class="left">Function that returns a boolean, true (#t) or false (#f)</td>
+<td class="left">Ends with ?</td>
+<td class="left">zero? null?</td>
+</tr>
+
+
+<tr>
+<td class="left">Getter</td>
+<td class="left">Function that returns a value from a Lisp object</td>
+<td class="left">Ends with -ref</td>
+<td class="left">list-ref</td>
+</tr>
+
+
+<tr>
+<td class="left">Setter</td>
+<td class="left">Function that sets a value in a Lisp object</td>
+<td class="left">Ends with !</td>
+<td class="left">set!</td>
+</tr>
+
+
+<tr>
+<td class="left">Constructor</td>
+<td class="left">A constructor is a function that creates a Lisp object.</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+
+<tr>
+<td class="left">Converter</td>
+<td class="left">Function that converts one type of Lisp object into another type</td>
+<td class="left">(from type)->(to-type)</td>
+<td class="left">symbol->string, number->string</td>
+</tr>
+
+
+<tr>
+<td class="left">Iteration (SCIP book)</td>
+<td class="left">Tail Recursion</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+## Syntax<a id="sec-2-2" name="sec-2-2"></a>
+
+Scheme uses prefix notation, or polish notation. Every operator like +,-,\* is a function.
 
 **Function Application**
+
 ```
 (<function> <arg1> <arg2> <arg3> ...)
 
@@ -195,18 +309,17 @@ $3 = 1/120
 
 > (sqrt 100)
 $8 = 10
-
 ```
 
 **Special Forms**
 
-Special forms are statements that are not functions like if, then, else, begin, define ...
+Special forms are statements that are not functions like if, then, else, begin, define &#x2026;
 
 ```
 (<special form> <arg1> <arg2> <arg3> ...)
 ```
 
-* define 
+-   define
 
 Bind a name to a value or function (procedure).
 
@@ -237,10 +350,9 @@ $11 = 7
 
 > (f 3 4)
 $54 = 7
-
 ```
 
-* lambda
+-   lambda
 
 ```scheme
 (lambda (arg1 arg2 ...) (<body>))
@@ -252,7 +364,7 @@ $52 = #<procedure 9077370 at <current input>:463:0 (x y)>
 $53 = 7
 ```
 
-* if then else
+-   if then else
 
 ```
 (if <condition> <then statement>)
@@ -267,7 +379,7 @@ $5 = "not zero"
 $7 = "zero"
 ```
 
-* cond 
+-   cond
 
 ```
 (cond 
@@ -299,10 +411,10 @@ $16 = "Greater or equal 9"
   ((< x 3) "Less than 3")
   ((< x 5) "Less than 5")
   ((< x 9) "Less than 9")) 
->  
+>
 ```
 
-* begin
+-   begin
 
 The begin statement is used to execute multiple s-expressions.
 
@@ -315,10 +427,9 @@ The begin statement is used to execute multiple s-expressions.
   (display "dummy")
   (newline))
 10dummy
-
 ```
 
-* quote or (') tick.
+-   quote or (') tick.
 
 Don't evaluate a lisp expression, returns the list of symbols, numbers and atoms that forms the list, or in other words, any lisp expression is just a list.
 
@@ -348,13 +459,11 @@ $14 = (1 2 3 4 5)
 > (eval '(1 2 3 4 5) (interaction-environment))
 ERROR: In procedure 1:
 ERROR: Wrong type to apply: 1
-
-
 ```
 
 **Important Functions**
 
-* load 
+-   load
 
 Load a scheme source code in the REPL.
 
@@ -363,7 +472,7 @@ Load a scheme source code in the REPL.
 (load "tools.scm")
 ```
 
-* eval
+-   eval
 
 Eval evaluates a quoted lis expression, its arguments depends on the scheme implementation. It is better to use macros rather than eval. It is necessary to remember that "eval is evil" since it can allow untrusted code execute arbitrary commands so it must be used with care.
 
@@ -427,14 +536,13 @@ $2 = 18
     18
 ```
 
-### Data Types
+## Data Types<a id="sec-2-3" name="sec-2-3"></a>
 
-#### Basic Data Types
+### Basic Data Types<a id="sec-2-3-1" name="sec-2-3-1"></a>
 
 **Booleans**
 
 ```scheme
-
 ;;; Boolean
 ;;
 ;;---------------------------------
@@ -445,13 +553,11 @@ $2 = 18
 1 ]=> #t
 
 ;Value: #t
-
-```   
+```
 
 **Number**
 
-```scheme        
-
+```scheme
 1 ]=> 12323
 
 ;Value: 12323
@@ -477,7 +583,6 @@ $2 = 18
 1 ]=> (sqrt 10+4i)
 
 ;Value: 3.2226021794715067+.6206164734636876i
-
 ```
 
 **String**
@@ -486,7 +591,6 @@ $2 = 18
 1 ]=> "hello world scheme"
 
 ;Value 15: "hello world scheme"
-
 ```
 
 **Characters**
@@ -517,7 +621,7 @@ scheme@(guile-user) [20]>
 
 > #\return
 $99 = #\return
-scheme@(guile-user) [20]> 
+scheme@(guile-user) [20]>
 ```
 
 **Symbol**
@@ -574,7 +678,6 @@ Scheme lists are linked lists with sequential access to any element.
 1 ]=> (quote (1 2 3 4 5 6))
 
 ;Value 33: (1 2 3 4 5 6)
-
 ```
 
 **Vector**
@@ -593,26 +696,88 @@ Vectors are equivalent to C-arrays, are linear data structures of fixed size wit
 1 ]=> (vector-ref #(a b c d e) 4)
 
 ;Value: e
-
-
 ```
 
-#### Type Predicates
+### Type Predicates<a id="sec-2-3-2" name="sec-2-3-2"></a>
 
 Scheme is dynamic typed language therefore there is not guarantee about the variable type or the function type signature. The types can be checked with the following predicates.
 
-| Predicate  | Returns true for                             |
-|------------|----------------------------------------------|
-| boolean?   | Boolean                                      |
-| string?    | Strings                                      |
-| number?    | Number, integer, real or complex numbers     |
-| integer?   | Integer numbers                              |
-| real?      | Real numbers 2.232 1e3 100                   |
-| complex?   | Complex numbers 100+45i                      |
-| symbol?    | Symbols                                      |
-| list?      | Lists                                        |
-| vector?    | Vectors                                      |
-| procedure? | Procedure or function                        |
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Predicate</th>
+<th scope="col" class="left">Returns true for</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">boolean?</td>
+<td class="left">Boolean</td>
+</tr>
+
+
+<tr>
+<td class="left">string?</td>
+<td class="left">Strings</td>
+</tr>
+
+
+<tr>
+<td class="left">number?</td>
+<td class="left">Number, integer, real or complex numbers</td>
+</tr>
+
+
+<tr>
+<td class="left">integer?</td>
+<td class="left">Integer numbers</td>
+</tr>
+
+
+<tr>
+<td class="left">real?</td>
+<td class="left">Real numbers 2.232 1e3 100</td>
+</tr>
+
+
+<tr>
+<td class="left">complex?</td>
+<td class="left">Complex numbers 100+45i</td>
+</tr>
+
+
+<tr>
+<td class="left">symbol?</td>
+<td class="left">Symbols</td>
+</tr>
+
+
+<tr>
+<td class="left">list?</td>
+<td class="left">Lists</td>
+</tr>
+
+
+<tr>
+<td class="left">vector?</td>
+<td class="left">Vectors</td>
+</tr>
+
+
+<tr>
+<td class="left">procedure?</td>
+<td class="left">Procedure or function</td>
+</tr>
+</tbody>
+</table>
 
 ```scheme
 (boolean? #f)
@@ -682,14 +847,11 @@ Scheme is dynamic typed language therefore there is not guarantee about the vari
 (define atom?
   (lambda (x)
    (and (not (pair? x)) (not (null? x)))))
-
-
 ```
 
-#### Type Conversion
+### Type Conversion<a id="sec-2-3-3" name="sec-2-3-3"></a>
 
-```scheme 
-
+```scheme
 ;;-------------------------------------;;
 
 1 ]=> (string->number "20e3")
@@ -729,16 +891,11 @@ Scheme is dynamic typed language therefore there is not guarantee about the vari
 ;Value 14: "some-symbol"
 
 ;;-------------------------------------;;
-
-
-
-
 ```
 
+## Variables<a id="sec-2-4" name="sec-2-4"></a>
 
-### Variables
-
-#### Global Variable
+### Global Variable<a id="sec-2-4-1" name="sec-2-4-1"></a>
 
 ```scheme
 1 ]=> (define g 9.81)
@@ -756,152 +913,148 @@ Scheme is dynamic typed language therefore there is not guarantee about the vari
 1 ]=> (speed 3 2.4)
 
 ;Value: 26.544
-
 ```
 
+### Local Variable<a id="sec-2-4-2" name="sec-2-4-2"></a>
 
+1.  let
 
-
-#### Local Variable
-
-##### let
-
-```scheme 
-(let 
-    (
-     (x 10)
-     (y 20)
-     (f (lambda (a) (* a 10)))
-    )
-    (f (+ x y))
-)
-
-;Value: 300
-
-1 ]=> x
-;Unbound variable: x
-
-1 ]=> y
-;Unbound variable: y
-
-1 ]=> f
-;Unbound variable: f
-```
-
-##### let*
-
-The keyword let* is equivalent to a nested let.
-
-```scheme
-$ rlwrap -c --remember csi
-
-CHICKEN
-(c) 2008-2015, The CHICKEN Team
-(c) 2000-2007, Felix L. Winkelmann
-Version 4.10.0 (rev b259631)
-linux-unix-gnu-x86 [ manyargs dload ptables ]
-compiled 2015-08-04 on yves.more-magic.net (Linux)
-
-;;;; This code won't work.
-
-    > 
+    ```scheme
     (let 
         (
          (x 10)
-         (y (+ x 40))
-         (z (* y x))
-         (f (lambda (a) (* a 3)))
+         (y 20)
+         (f (lambda (a) (* a 10)))
         )
-        (f (+ x y z))
-    )
-
-    Error: unbound variable: x
-
-;;; This code will, however there is a lot of boilerplate nesteds let
-
-    > (let ((x 10))
-            (let ((y (+ x 40)))
-                 (let (
-                       (z (* y x))
-                       (f (lambda (a) (* a 3))))
-                       
-                       (f (+ x y z)))))
-    1680
-    > 
-
-;;;;  let*
-
-
-    > (let* 
-        (
-         (x 10)
-         (y (+ x 40))
-         (z (* y x))
-         (f (lambda (a) (* a 3)))
-        )
-        (f (+ x y z))
+        (f (+ x y))
     )
     
-    1680
-```
+    ;Value: 300
+    
+    1 ]=> x
+    ;Unbound variable: x
+    
+    1 ]=> y
+    ;Unbound variable: y
+    
+    1 ]=> f
+    ;Unbound variable: f
+    ```
 
-##### letrec
+2.  let\*
 
-Letrec allows to implement loops or loops with recursive anonymous functions.
+    The keyword let\* is equivalent to a nested let.
+    
+    ```scheme
+    $ rlwrap -c --remember csi
+    
+    CHICKEN
+    (c) 2008-2015, The CHICKEN Team
+    (c) 2000-2007, Felix L. Winkelmann
+    Version 4.10.0 (rev b259631)
+    linux-unix-gnu-x86 [ manyargs dload ptables ]
+    compiled 2015-08-04 on yves.more-magic.net (Linux)
+    
+    ;;;; This code won't work.
+    
+        > 
+        (let 
+            (
+             (x 10)
+             (y (+ x 40))
+             (z (* y x))
+             (f (lambda (a) (* a 3)))
+            )
+            (f (+ x y z))
+        )
+    
+        Error: unbound variable: x
+    
+    ;;; This code will, however there is a lot of boilerplate nesteds let
+    
+        > (let ((x 10))
+                (let ((y (+ x 40)))
+                     (let (
+                           (z (* y x))
+                           (f (lambda (a) (* a 3))))
+                           
+                           (f (+ x y z)))))
+        1680
+        > 
+    
+    ;;;;  let*
+    
+    
+        > (let* 
+            (
+             (x 10)
+             (y (+ x 40))
+             (z (* y x))
+             (f (lambda (a) (* a 3)))
+            )
+            (f (+ x y z))
+        )
+        
+        1680
+    ```
 
-Example1: 
+3.  letrec
 
-```scheme
-(define (displayln x)
-  (begin
-    (display x)
-    (display "\n")))
+    Letrec allows to implement loops or loops with recursive anonymous functions.
+    
+    Example1: 
+    
+    ```scheme
+    (define (displayln x)
+      (begin
+        (display x)
+        (display "\n")))
+    
+    (letrec
+        [(loop  (lambda (i)
+                  (if (< i 10)
+                      (begin
+                        (displayln i)
+                        (loop (+ i 1))))))]
+      (loop 0))
+    0
+    1
+    2
+    3
+    4
+    5
+    6
+    7
+    8
+    9
+    
+    
+    > loop
+    Error: unbound variable: loop
+    ```
+    
+    Example2: Loop over a list and find the sum of all elements:
+    
+    ```scheme
+    (define alist '(1 2 3 4 5 6))
+    
+    
+    (letrec
+        [(loop (lambda (xs)
+                 (if (null? xs)
+                     0
+                     (+ (car xs) (loop (cdr xs))))))]
+      (loop alist))
+    21
+    ```
 
-(letrec
-    [(loop  (lambda (i)
-              (if (< i 10)
-                  (begin
-                    (displayln i)
-                    (loop (+ i 1))))))]
-  (loop 0))
-0
-1
-2
-3
-4
-5
-6
-7
-8
-9
+## Functions<a id="sec-2-5" name="sec-2-5"></a>
 
+### Defining and applying functions<a id="sec-2-5-1" name="sec-2-5-1"></a>
 
-> loop
-Error: unbound variable: loop
-
-```
-
-Example2: Loop over a list and find the sum of all elements:
-
-```scheme 
-(define alist '(1 2 3 4 5 6))
-
-
-(letrec
-    [(loop (lambda (xs)
-             (if (null? xs)
-                 0
-                 (+ (car xs) (loop (cdr xs))))))]
-  (loop alist))
-21
-
-```
-
-### Functions
-
-**Defining and applying functions**
-
-In Scheme functions are first class, they can be passed as arguments to other functions and be returned from another functions, in other words, functions are data.
+In Scheme functions are first class, they can be passed as arguments
+to other functions and be returned from another functions, in other
+words, functions are data.
 
 ```scheme
 ]=> (define (f x) (* x 10))
@@ -978,9 +1131,10 @@ In Scheme functions are first class, they can be passed as arguments to other fu
 ;Value 30: (38 33 59 19)
 ```
 
-**Anonymous Functions/ Lambda Functions**
+### Anonymous Functions/ Lambda Functions<a id="sec-2-5-2" name="sec-2-5-2"></a>
 
-Anonymous functions are useful to pass functions as arguments to other functions, callbacks and connect one function to another.
+Anonymous functions are useful to pass functions as arguments to other
+functions, callbacks and connect one function to another.
 
 ```scheme
 1 ]=> (lambda (x) (+ (* x 4) 10))
@@ -1033,13 +1187,11 @@ Anonymous functions are useful to pass functions as arguments to other functions
 1 ]=> (map (addxy 10) '(10 20 30 40 50 60))
 
 ;Value 37: (20 30 40 50 60 70)
-
 ```
 
-**Functions With Control Structure**
+### Functions with Control Structure<a id="sec-2-5-3" name="sec-2-5-3"></a>
 
 ```scheme
-
 (define (sign x)
     (cond 
         ((> x 0)  1)
@@ -1078,11 +1230,9 @@ $54 = 0
 
 1 ]=> (map absolute2 '(-10 -9 0 1 2 3))
 $57 = (10 9 0 1 2 3)
-
-
 ```
 
-**Variadic Function**
+### Variadic Function<a id="sec-2-5-4" name="sec-2-5-4"></a>
 
 Function of many arguments
 
@@ -1103,10 +1253,9 @@ $55 = (10 20 30 40 50 100)
 $56 = 5940
 ```
 
-**Recursive Functions**
+### Recursive Functions<a id="sec-2-5-5" name="sec-2-5-5"></a>
 
 ```scheme
-
 (define (fib n)
     (cond 
         ((= n 0) 1)
@@ -1143,14 +1292,12 @@ $6 = 573147844013817084101
 $9 = 1346269
 > (fib-fast 130)
 $10 = 1066340417491710595814572169
-> 
-
+>
 ```
 
-**Internal Definition**
+### Internal Definition<a id="sec-2-5-6" name="sec-2-5-6"></a>
 
 ```scheme
-
 (define (f x y)
     (define a 10)
     (define (f1 x) (+ (* x 2) 4))
@@ -1178,11 +1325,9 @@ scheme@(guile-user) [2]> a
 
 scheme@(guile-user) [3]> f2
 ;;; <unknown-location>: warning: possibly unbound variable `f2'
-
 ```
 
-
-#### Arithmetic 
+### Arithmetic<a id="sec-2-5-7" name="sec-2-5-7"></a>
 
 The Scheme operators are functions of two arguments and are written in the infix notation, also known as [polish notation](https://en.wikipedia.org/wiki/Polish_notation).
 
@@ -1254,22 +1399,59 @@ Image saved on Tuesday October 22, 2013 at 12:31:09 PM
 1 ]=> (+ (* 3 4) (/ 8 4) (* -3 5))
 
 ;Value: -1
-
-
-
 ```
 
-#### Comparison
+### Comparison<a id="sec-2-5-8" name="sec-2-5-8"></a>
 
 **Equality Operators**
 
-| Operator      | Description                    |  Use             |  
-|---------------|--------------------------------|------------------|
-| ```=```       | Numerical Equality             | ```(= 10 10)```  |
-| ```eqv?```    | Test if non numeric values are equal | ``` (= 'sym1 'sym1) |
-| ```eq?```     | Check if the two objects represents the same location in memory | The return value depends on implementation. |  
-| ```equal?```  | Structural Equality            | ```(= (list 'a 'b 10) (list 'a 'b 10))```  |  
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Operator</th>
+<th scope="col" class="left">Description</th>
+<th scope="col" class="left">Use</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">=</td>
+<td class="left">Numerical Equality</td>
+<td class="left">(= 10 10)</td>
+</tr>
+
+
+<tr>
+<td class="left">eqv?</td>
+<td class="left">Test if non numeric values are equal</td>
+<td class="left">(= 'sym1 'sym1)</td>
+</tr>
+
+
+<tr>
+<td class="left">eq?</td>
+<td class="left">Check if the two objects represents the same location in memory</td>
+<td class="left">The return value depends on implementation.</td>
+</tr>
+
+
+<tr>
+<td class="left">equal?</td>
+<td class="left">Structural Equality</td>
+<td class="left">(= (list 'a 'b 10) (list 'a 'b 10))</td>
+</tr>
+</tbody>
+</table>
 
 ```scheme
 $ rlwrap -c --remember csi
@@ -1377,15 +1559,12 @@ compiled 2015-08-04 on yves.more-magic.net (Linux)
 
     > (equal? "hello" "hello")
     #t
-    > 
-
-
+    >
 ```
 
 **Comparison Operators**
 
 ```scheme
-
 ;;; Comparison Operators
 
 ]=> (> 10 200)
@@ -1414,7 +1593,7 @@ compiled 2015-08-04 on yves.more-magic.net (Linux)
 
 ;Value: #t
 
-]=> 
+]=>
 ```
 
 **Logical Operators**
@@ -1445,15 +1624,11 @@ compiled 2015-08-04 on yves.more-magic.net (Linux)
 1 ]=> (or #t #f)
 
 ;Value: #t
-
-
-    
 ```
 
-#### Math Functions
+### Math Functions<a id="sec-2-5-9" name="sec-2-5-9"></a>
 
 ```scheme
-
 1 ]=> (sqrt 10)
 
 ;Value: 3.1622776601683795
@@ -1634,18 +1809,13 @@ $46 = 10
 $47 = 100
 1 ]=>  (abs 0)
 $48 = 0
- 
-
 ```
 
-
-
-#### String Functions
+### String Functions<a id="sec-2-5-10" name="sec-2-5-10"></a>
 
 **Predicates**
 
 ```scheme
-
 ;;;; Test if is String
 
 1 ]=> (string? "scheme")
@@ -1686,14 +1856,11 @@ $48 = 0
 1 ]=> (string-suffix? "class" "machine.dex")
 
 ;Value: #f
-
-
 ```
 
 **Misc**
 
 ```scheme
-
 ;;;; String Construction
 
 1 ]=> (make-string 10 #\x)
@@ -1747,9 +1914,6 @@ $48 = 0
 
 > (string-split "hello:world"  ":")
 ("hello" "world")
- 
-
-
 ```
 
 **To String**
@@ -1795,12 +1959,11 @@ $48 = 0
 1 ]=> (map char->integer (string->list "lisp"))
 
 ;Value 28: (108 105 115 112)
-
 ```
 
-### List Operations
+## List Operations<a id="sec-2-6" name="sec-2-6"></a>
 
-#### Defining a List
+### Defining a List<a id="sec-2-6-1" name="sec-2-6-1"></a>
 
 ```scheme
 ;;; A scheme list can hold arbitrary values
@@ -1831,7 +1994,7 @@ $62 = (x 1 y 2 z theta w a-symbol)
 $66 = ((x . 1) (y . 2) (z . theta))
 ```
 
-#### Quasiquote
+### Quasiquote<a id="sec-2-6-2" name="sec-2-6-2"></a>
 
 ```scheme
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1938,17 +2101,15 @@ $75 = (+ 1 2 3 4 5)
 ;;
 > (eval '(+ 1 2 3 4 5) (interaction-environment))
 $76 = 15
-
-
 ```
 
-#### Primitive List Operations
+### Primitive List Operations<a id="sec-2-6-3" name="sec-2-6-3"></a>
 
-* **Nil** - Empty List '()
+-   **Nil** - Empty List '()
 
-* **Cons** - List constructor, Construct a list cell 
+-   **Cons** - List constructor, Construct a list cell
 
-```scheme 
+```scheme
 > (define Nil '())
 
 ;Value: nil
@@ -1970,7 +2131,7 @@ $76 = 15
 ;Value 21: (4 5 6)
 ```
 
-* **car** - It selects the first element, "head" of a list cell
+-   **car** - It selects the first element, "head" of a list cell
 
 ```scheme
 > (car (list 1 2 3 4))
@@ -1984,12 +2145,11 @@ $76 = 15
 > (car '(x y z))
 
 ;Value: x
-
 ```
 
-* **cdr** - It selects the "tail" of a list, removes the first element
+-   **cdr** - It selects the "tail" of a list, removes the first element
 
-```scheme 
+```scheme
 > (cdr (list 1 2 3 4))
 
 ;Value 17: (2 3 4)
@@ -1999,59 +2159,136 @@ $76 = 15
 ;Value 18: (y z w)
 ```
 
-* **caddr** - It gets the second element of a list
+-   **caddr** - It gets the second element of a list
 
 ```scheme
 > (cadr '(a b c d e f))
 $14 = b
-> 
+>
 ```
 
-* **caddr** - It gets the third element of a list 
+-   **caddr** - It gets the third element of a list
 
 ```scheme
 > (caddr '(a b c d e f))
 $16 = c
 ```
 
-* **cadddr** - It gets the forth element of alist.
+-   **cadddr** - It gets the forth element of alist.
 
 ```scheme
 > (cadddr '(a b c d e f))
 $17 = d
 ```
 
-* **cddr** - Removes the first two elements of a list.
+-   **cddr** - Removes the first two elements of a list.
 
 ```scheme
 > (cddr '(a b c d e f))
 $3 = (c d e f)
 ```
 
-* **cdddr** - Removes the first three elements of a list.
+-   **cdddr** - Removes the first three elements of a list.
 
 ```scheme
 > (cadddr '(a b c d e f))
 $4 = d
 ```
 
-|   Function                            |  Output           |  Description         | 
-|---------------------------------------|-------------------|----------------------|
-| ```(car       '[a b c)```             |  a                | First element        |
-| ```(cadr     '[a b c d e f])```       |  b                | Second element       | 
-| ```(caddr    '[a b c d e f])```       |  c                | Third element        | 
-| ```(cadddr   '[a b c d e f]) ```      |  d                | Forth element        |             
-| ```(caddddr  '[a b c d e f]) ```      |  e                | Fifth element        | 
-|                                       |                   |                      |
-| ```(cdr     '[a b c e f)```           | ```'(b c e f)```  | Remove first, tail   |
-| ```(cddr    '[a b c e f)```           | ```'(c e f)```    | Remove first two elements |
-| ```(cdddr   '[a b c e f)```           | ```'(e f)```      | Remove first three elements |
-| ```(cddddr  '[a b c e f)```           | ```'(f)```        | Remove first four elements |
 
-#### Basic List Functions
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Function</th>
+<th scope="col" class="left">Output</th>
+<th scope="col" class="left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">`(car       '[a b c)`</td>
+<td class="left">a</td>
+<td class="left">First element</td>
+</tr>
+
+
+<tr>
+<td class="left">`(cadr     '[a b c d e f])`</td>
+<td class="left">b</td>
+<td class="left">Second element</td>
+</tr>
+
+
+<tr>
+<td class="left">`(caddr    '[a b c d e f])`</td>
+<td class="left">c</td>
+<td class="left">Third element</td>
+</tr>
+
+
+<tr>
+<td class="left">`(cadddr   '[a b c d e f])`</td>
+<td class="left">d</td>
+<td class="left">Forth element</td>
+</tr>
+
+
+<tr>
+<td class="left">`(caddddr  '[a b c d e f])`</td>
+<td class="left">e</td>
+<td class="left">Fifth element</td>
+</tr>
+
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+
+<tr>
+<td class="left">`(cdr     '[a b c e f)`</td>
+<td class="left">='(b c e f)=</td>
+<td class="left">Remove first, tail</td>
+</tr>
+
+
+<tr>
+<td class="left">`(cddr    '[a b c e f)`</td>
+<td class="left">='(c e f)=</td>
+<td class="left">Remove first two elements</td>
+</tr>
+
+
+<tr>
+<td class="left">`(cdddr   '[a b c e f)`</td>
+<td class="left">='(e f)=</td>
+<td class="left">Remove first three elements</td>
+</tr>
+
+
+<tr>
+<td class="left">`(cddddr  '[a b c e f)`</td>
+<td class="left">='(f)=</td>
+<td class="left">Remove first four elements</td>
+</tr>
+</tbody>
+</table>
+
+### Basic List Functions<a id="sec-2-6-4" name="sec-2-6-4"></a>
 
 ```scheme
-
 1 ]=> (length '(1 2 3 4 5 6))
 
 ;Value: 6
@@ -2121,15 +2358,15 @@ $4 = d
 ;Value: y
 
 1 ]=> (list-ref '(x y z w) 2)
-
 ```
 
+# Higher Order Functions<a id="sec-3" name="sec-3"></a>
 
-## Higher Order Functions
+All the functions defined are in the file:
+hof<sub>functions</sub>.scm that can be loaded in
+scheme by typing:
 
-All the functions defined are in the file: [hof_functions.scm](src/hof_functions.scm) that can be loaded in scheme by typing:
-
-```scheme
+```
 $ curl -O https://raw.githubusercontent.com/caiorss/Functional-Programming/master/scheme/src/hof_functions.scm
 
 $ rlwrap -c --remember scheme
@@ -2137,13 +2374,13 @@ $ rlwrap -c --remember scheme
 1 ]=>   (load "hof_functions.scm")
 ```
 
-### Buit-in Functions
+## Buit-in Functions<a id="sec-3-1" name="sec-3-1"></a>
 
 Fundamental higher order functions defined in Scheme.
 
-* **map**
+-   **map**
 
-```scheme
+```
 > (map [lambda (x) (+ x 4)] '(1 2 3 4 5 6))
 (5 6 7 8 9 10)
 
@@ -2162,16 +2399,13 @@ Fundamental higher order functions defined in Scheme.
 
 > (map hypot '(1 3 4) '(2 6 8))
 (2.23606797749979 6.70820393249937 8.94427190999916)
-
-
 ```
 
-* **for-each**
+-   **for-each**
 
 Similar to map, however it used for functions with side effects.
 
 ```scheme
-
 ;;; Using map
 
 (map [lambda (x) (display x) (newline)]  '(1 2 3 4))
@@ -2193,12 +2427,9 @@ a1
 b2
 c3
 d4
-
-
-
 ```
 
-* **apply**
+-   **apply**
 
 Apply a function to a list of arguments.
 
@@ -2216,12 +2447,9 @@ Apply a function to a list of arguments.
 
 > (map-apply hypot3d '( (1 2 3) (3 4 5) (6 7 8)))
 (3.74165738677394 7.07106781186548 12.2065556157337)
-
-
 ```
 
-
-### Special Functions
+## Special Functions<a id="sec-3-2" name="sec-3-2"></a>
 
 ```scheme
 ;;; Constant function - Will return a,
@@ -2267,13 +2495,11 @@ Apply a function to a list of arguments.
 1 ]=> (map (constant 5) '(1 2 3 4 5 6))
 
 ;Value 13: (5 5 5 5 5 5)
-
 ```
 
-### Functions Composition
+## Functions Composition<a id="sec-3-3" name="sec-3-3"></a>
 
 **Basic Function Composition**
-
 
 ```scheme
 1 ]=> (define (compose f g) (lambda (x) (f (g x))))
@@ -2315,13 +2541,11 @@ Apply a function to a list of arguments.
 1 ]=> (map sind '(0 45 60 90 180 270))
 
 ;Value 15: (0 .7071067811865475 .8660254037844386 1. 1.2246467991473532e-16 -1.)
-
 ```
 
 **Composition of a List of Functions**
 
-```scheme 
-
+```scheme
 (define (__compose-funcs list-of-functions x)
   (if (null? list-of-functions)
       x
@@ -2349,16 +2573,13 @@ Apply a function to a list of arguments.
 1 ]=> (sind 90)
 
 ;Value: 1.
-
-
 ```
 
-### Partial Application and Currying
+## Partial Application and Currying<a id="sec-3-4" name="sec-3-4"></a>
 
-#### Partial Application
+### Partial Application<a id="sec-3-4-1" name="sec-3-4-1"></a>
 
-```scheme 
-
+```scheme
 (define (partial fun . args)
       (lambda x (apply fun (append args x))))
 
@@ -2382,11 +2603,9 @@ Apply a function to a list of arguments.
 1 ]=> (map (partial f 1 2) '(1 2 3 4 5 6)) ;;
 
 ;Value 23: (5 3 1 -1 -3 -5)
-
 ```
 
-### Applying Multiple Functions to a Single Argument
-
+## Applying Multiple Functions to a Single Argument<a id="sec-3-5" name="sec-3-5"></a>
 
 Returns a functions that takes a list of functions and applies it to a single value.
 
@@ -2411,14 +2630,11 @@ Returns a functions that takes a list of functions and applies it to a single va
 (map f '(1 2 3))
 
 ;Value 23: ((1 2.718281828459045 0) (1.4142135623730951 7.38905609893065 .6931471805599453) (1.7320508075688772 20.08553692318767 1.0986122886681098))
-
-
 ```
 
-#### Currying
+### Currying<a id="sec-3-5-1" name="sec-3-5-1"></a>
 
 ```scheme
-
 ;;;;; Currying Transformations
 ;; Turn a non curried function into a curried function 
 ;;
@@ -2486,17 +2702,13 @@ Returns a functions that takes a list of functions and applies it to a single va
 1 ]=> (map ((cf 1) 2) '( 1 2 3 4 5))
 
 ;Value 27: (5 3 1 -1 -3)
-
-
-
 ```
 
-### Miscellaneous
+## Miscellaneous<a id="sec-3-6" name="sec-3-6"></a>
 
 **Replicate N times a value**
 
 ```scheme
-
 (define (replicate n x)
     (if (zero? n)
         ;; Then
@@ -2515,13 +2727,11 @@ $13 = ("abc" "abc" "abc" "abc" "abc" "abc" "abc" "abc")
 
 1 ]=> (replicate 3 'symbol)
 $15 = (symbol symbol symbol)
-
 ```
 
 **Cycle**
 
 ```scheme
-
 (define (cycle_aux n xs acc)
     (if  (zero? n)     ;;(or (zero? n) (null? xs))
         ;; Then
@@ -2550,7 +2760,6 @@ $18 = (a b c a b c a b)
 
 1 ]=> (cycle 20 '(0 1))
 $19 = (0 1 0 1 0 1 0 1 0 1 0 1 0 1)
-    
 ```
 
 **Intersperse**
@@ -2569,16 +2778,14 @@ $19 = (0 1 0 1 0 1 0 1 0 1 0 1 0 1)
 (1 x 2 x 3 x 4 x 5) 
 
 > (intersperse '(x y) '(1 2 3 4 5))
-(1 (x y) 2 (x y) 3 (x y) 4 (x y) 5)               
+(1 (x y) 2 (x y) 3 (x y) 4 (x y) 5)
 ```
-
 
 **Mapi**
 
 Similar to Ocaml function mapi, map a function of index and value each index and element of a list.
 
-```scheme 
-
+```scheme
 (define (mapi func lst)  
   (define (mapi_acc acc lst idx)
     (if (null? lst)
@@ -2594,13 +2801,12 @@ Similar to Ocaml function mapi, map a function of index and value each index and
 
 > (mapi f_i_a '(a b c d e f))
 '((0 a) (1 b) (2 c) (3 d) (4 e) (5 f))
->   
+>
 ```
 
 **Count Number of Elements**
 
 ```scheme
-
 (define (count-list alist)
     (if (null? alist)
         0
@@ -2619,7 +2825,6 @@ Similar to Ocaml function mapi, map a function of index and value each index and
 1 ]=> (count-list '(20 2932 1923 129 12 535 22))
 
 ;Value: 7
-
 ```
 
 **Sum of list elements**
@@ -2633,7 +2838,6 @@ Similar to Ocaml function mapi, map a function of index and value each index and
 1 ]=> (sum-list '(1 2 3 4 5 6 ))
 
 ;Value: 21
-
 ```
 
 **Find Element in a List**
@@ -2661,14 +2865,12 @@ Similar to Ocaml function mapi, map a function of index and value each index and
 ;To continue, call RESTART with an option number:
 ; (RESTART 1) => Return to read-eval-print level 1.
 
-2 error> 
-
+2 error>
 ```
 
 **Drop / Take n elements**
 
 ```scheme
-
 (define (take n alist)
     (if (or (null? alist) (= n 0))
         '()
@@ -2713,7 +2915,7 @@ Similar to Ocaml function mapi, map a function of index and value each index and
 
 ;Value: ()
 
-1 ]=> 
+1 ]=>
 ```
 
 **Take while and Drop While**
@@ -2750,7 +2952,6 @@ Similar to Ocaml function mapi, map a function of index and value each index and
 1 ]=> (drop_while (lambda (x) (< x 100)) '())
 
 ;Value: ()
-
 ```
 
 **Select (Filter) / Reject list elements**
@@ -2802,16 +3003,11 @@ Similar to Ocaml function mapi, map a function of index and value each index and
 1 ]=>  (reject (neg is_even) '( 1 2 3 4 5 6 7 8 9 1))
 
 ;Value 13: (2 4 6 8)
-
 ```
-
-
-
 
 **Folds: Fold Right/ Fold Left**
 
 ```scheme
-
 ;; Fold Right - https://en.wikipedia.org/wiki/Fold_(higher-order_function)
 ;;
 ;; foldr :: (a -> b -> b) -> b -> [a] -> b
@@ -2850,13 +3046,11 @@ Similar to Ocaml function mapi, map a function of index and value each index and
 1 ]=> (foldl (lambda (el acc) (+ (* 10 el)  acc)) 0 '(1 2 3 4 5 6))
 
 ;Value: 123456
-
 ```
 
 **Zip Lists**
 
 ```scheme
-
 (define (zip2 list1 list2)
     
     (if (or (null? list1) (null? list2))
@@ -2940,15 +3134,11 @@ $7 = ((1 a "hello") (2 b "schme") (3 c "lisp") (4 d "fp"))
 
 1 ]=> (zip '( 1 2 3 4 5) '(a b c d e f g h) '("hello" "schme" "lisp" "fp"))
 $7 = ((1 a "hello") (2 b "schme") (3 c "lisp") (4 d "fp"))
-
-
-
 ```
 
 **Unzip Lists**
 
 ```scheme
-
 (define (unzip2 list-of-pairs)
     (if (null? list-of-pairs)
         ;; Then
@@ -3058,13 +3248,11 @@ $6 = ((1 11 30) (2 10 40) (3 20 50))
 
 1 ]=> (unzip-v '(1 a "c") '(230 b "xs") '(1000 sym "ccw") '(434 con "xyzw"))
 $7 = ((1 230 1000 434) (a b sym con) ("c" "xs" "ccw" "xyzw"))
-
 ```
 
 **Zip With**
 
 ```scheme
-
 (define (zip_aux list-of-lists)
     (if (any null? list-of-lists)
         ;; Then
@@ -3089,19 +3277,16 @@ $7 = ((1 230 1000 434) (a b sym con) ("c" "xs" "ccw" "xyzw"))
 ;;
 1 ]=> (zip_with f '((1 2 3) (5 6 7) (9 7 3)))
 ;Value 15: (-22 -5 22)
-
 ```
 
-## Lazy Evaluation / Delayed Evaluation
+# Lazy Evaluation / Delayed Evaluation<a id="sec-4" name="sec-4"></a>
 
-
-
-## Object Orientated Programming
+# Object Orientated Programming<a id="sec-5" name="sec-5"></a>
 
 Objects can be implemented with closures as can be seen in:
 
-* [Scheming  with  Objects](http://ftp.cs.indiana.edu/pub/scheme-repository/doc/pubs/swob.txt)
-* [FP, OO and relations. Does anyone trump the others?](http://okmij.org/ftp/Scheme/oop-in-fp.txt)
+-   [Scheming  with  Objects](http://ftp.cs.indiana.edu/pub/scheme-repository/doc/pubs/swob.txt)
+-   [FP, OO and relations. Does anyone trump the others?](http://okmij.org/ftp/Scheme/oop-in-fp.txt)
 
 **Example - 2D Points**
 
@@ -3211,13 +3396,11 @@ $57 = 100
 
 > (get-x point-1)
 $58 = 78
-
 ```
 
 **Example: Stack**
 
-```scheme 
-
+```scheme
 (define (make-stack)   
   (define stack '())
   (define (show) stack)
@@ -3270,26 +3453,25 @@ $58 = 78
 > (s 'push 1000)
 > (s 'show)
 (1000 20 10)
->       
+>
 ```
 
-## Metaprogramming
+# Metaprogramming<a id="sec-6" name="sec-6"></a>
 
-Metaprogramming is the ability to create that code that writes code. Like any lisp scheme has great metaprogramming capabilities like:
+Metaprogramming is the ability to create that code that writes
+code. Like any lisp scheme has great metaprogramming capabilities
+like:
 
-* Code is data and data is code 
-* Exposes the AST abstract syntax tree, that is an atom (symbol, string or a number) or a list 
-* The AST is a list of lists and atoms or a single atom
-* The AST can be manipulated like any list
-* Lisp programs can build itself
-* The macro system allows the user to create new syntax rules and create new language constructs.
+-   Code is data and data is code
+-   Exposes the AST abstract syntax tree, that is an atom (symbol, string or a number) or a list
+-   The AST is a list of lists and atoms or a single atom
+-   The AST can be manipulated like any list
+-   Lisp programs can build itself
+-   The macro system allows the user to create new syntax rules and create new language constructs.
 
+## The Abstract Syntax Tree<a id="sec-6-1" name="sec-6-1"></a>
 
-
-### The Abstract Syntax Tree
-
-```scheme 
-
+```scheme
 ;; A lisp AST is a list of lists and atoms or an atom 
 ;;
 
@@ -3418,30 +3600,27 @@ Metaprogramming is the ability to create that code that writes code. Like any li
 
 ;Value: 200
 
-1 ]=> 
-
-
+1 ]=>
 ```
 
-### Macros
+## Macros<a id="sec-6-2" name="sec-6-2"></a>
 
-Macros allows to redefine the synxtax, create new language constructs, expand the language and create DSL - Domain Specific Languages.
+Macros allows to redefine the synxtax, create new language constructs,
+expand the language and create DSL - Domain Specific Languages.
 
-Notice all the macros bellow were tested on GNU GUILE that was started with the command:
+Note: all the macros bellow were tested on GNU GUILE that was started with the command:
 
-```
+```scheme
 $ rlwrap --remember -c guile
 ```
 
-#### Hygienic Macros - Define-syntax
+### Hygienic Macros - Define-syntax<a id="sec-6-2-1" name="sec-6-2-1"></a>
 
 Examples:
 
 **Increment a variable**
 
 ```scheme
-
-
 (define-syntax-rule
   (incr var)
   (set! var (+ 1 var)))
@@ -3457,8 +3636,7 @@ $2 = 11
 $3 = x
 > ,expand (incr x)
 $4 = (set! x (+ 1 x))
-> 
-
+>
 ```
 
 **Swap two variables**
@@ -3487,13 +3665,12 @@ $22 = 10
 
 > ,expand (swap! a b)
 > $34 = (let ((tmp a)) (set! a b) (set! b tmp))
-> 
-
+>
 ```
 
 **Convert Infix Operator to prefix operator**
 
-```scheme 
+```scheme
 (define-syntax $
   (syntax-rules ()
     (($ a operator b)
@@ -3554,14 +3731,14 @@ $2 = #f
 $4 = (not (list? 100))
 
 > ,expand ($n or (pair? x) (list? x))
-$6 = (not (or (pair? x) (list? x)))    
+$6 = (not (or (pair? x) (list? x)))
 ```
 
 **Delay and force a computation**
 
 Lazy evaluation.
 
-```scheme 
+```scheme
 (define-syntax-rule
   (thunk computation )
   (lambda () computation))
@@ -3592,15 +3769,14 @@ Entering a new prompt.  Type `,bt' for a backtrace or `,q' to continue.
 <unnamed port>:59:17: Throw to key `numerical-overflow' with args `("/" "Numerical overflow" #f #f)'.
 
 Entering a new prompt.  Type `,bt' for a backtrace or `,q' to continue.
-> 
-
+>
 ```
 
 **Define alias**
 
 Change the define statement to def.
 
-```scheme 
+```scheme
 (define-syntax def
   (syntax-rules ()
     ((def name value )
@@ -3619,7 +3795,6 @@ $11 = 29
 
 > ,expand (def (f x y) (+ (* 3 x) (* 4 y)))
 $12 = (define (f x y) (+ (* 3 x) (* 4 y)))
-
 ```
 
 **Common-lisp defun statement**
@@ -3641,13 +3816,12 @@ $6 = 18
 
 > ,expand (defun f (x y) (+ (* 3 x) (* 4 y)))
 $7 = (define (f x y) (+ (* 3 x) (* 4 y)))
-> 
- 
+>
 ```
 
 **Multi define statement**
 
-```scheme 
+```scheme
 (define-syntax define-multi 
     (syntax-rules () 
      ((define-multi (var val)  ...) 
@@ -3690,15 +3864,11 @@ $4 = (begin
   (define c 300)
   (define d "something")
   (define e 'a-symbol))
-
-
 ```
-
 
 **Print Variable name and value**
 
 ```scheme
-
 (define-syntax show-var
     (syntax-rules ()
       ((_ var)
@@ -3713,8 +3883,7 @@ $36 = (it is all symbols (litst of symbols))
 
 ;Value 39: (x it is all symbols (list of symbols))
 
-1 ]=> 
-
+1 ]=>
 ```
 
 **Association List**
@@ -3744,7 +3913,6 @@ $96 = (red . 1)
 (car (assoc 'red colors))
 $97 = red
 ```
-
 
 **Dispatch Table**
 
@@ -3823,7 +3991,6 @@ $86 = (define dispatch-table
         (cons 'exp exp)
         (cons 'sqrt sqrt)
         (cons 'log log)))
-
 ```
 
 **Clojure defn, def and fn statements**
@@ -3869,12 +4036,11 @@ $4 = 25
 
 > (map (fn [x] (+ x 3)) '[1 2 3 4 5 6])
 $5 = (4 5 6 7 8 9)
-
 ```
 
 **Clojure Doto Macro**
 
-See also: https://clojuredocs.org/clojure.core/doto
+See also: <https://clojuredocs.org/clojure.core/doto>
 
 Applies a sequence of methods to a object and returns the object modified by the methods.
 
@@ -3885,7 +4051,7 @@ Usage:
     (<method1> <args1>)
     (<method2> <args2>)
     ...
-    )    
+    )
 ```
 
 ```scheme
@@ -3924,15 +4090,11 @@ $2 = (let ((obj (make-vector 2)))
   (vector-set! obj 0 'foo)
   (vector-set! obj 1 'bar)
   obj)
-
-
-
 ```
 
 **While Loop**
 
 ```scheme
-
 (define-syntax while
     (syntax-rules ()
     ((_ condition expr ...)
@@ -3966,17 +4128,15 @@ $3 = (let loop ()
       (newline)
       (set! x (+ x 2))
       (loop))))
-
 ```
 
 **Common Lisp dolist and dotimes**
 
 See also: [Macros: Standard Control Constructs](http://www.gigamonkeys.com/book/macros-standard-control-constructs.html)
 
-* Dotimes
+-   Dotimes
 
-```scheme 
-
+```scheme
 ;; dotimes macro
 ;; 
 (define-syntax-rule
@@ -4005,10 +4165,9 @@ $7 = (let loop ((i 0))
       (begin (display i) (display "\n"))
       (loop (+ i 1)))
     (values)))
-  
 ```
 
-* Dolist
+-   Dolist
 
 ```scheme
 ;; (dolist (<var> <list>) (<body>))
@@ -4045,7 +4204,7 @@ $8 = (let loop ((xs '(a b c d e)))
       (loop (cdr xs)))))
 ```
 
-#### Common Lisp Style Macros - Define-macro 
+### Common Lisp Style Macros - Define-macro<a id="sec-6-2-2" name="sec-6-2-2"></a>
 
 **defun and defvar**
 
@@ -4072,14 +4231,14 @@ scheme@(guile-user) [31]>
 $121 = (define (f x y z) (+ (* 3 x) (* -4 y) (* 2 z)))
 
 > ,expand (defvar x 10)
-$122 = (define x 10)  
+$122 = (define x 10)
 ```
 
 **case-pred**
 
 Task: Design a macro that expands the syntax:
 
-```scheme
+```
 (case-pred x
    (negative? "Negative")
    (positive? "Positive")
@@ -4184,39 +4343,34 @@ $3 = "Negative
 $4 = (cond ((negative? -100) "Negative")
       ((positive? -100) "Positive")
       ((zero? -100) "Zero"))
-
 ```
 
-
-## S-expressions and Serialization
+# S-expressions and Serialization<a id="sec-7" name="sec-7"></a>
 
 S-expressions advantages:
 
-* Encode Arbitrary data structure and programs
-* Easy to serialize, read and write
-* There is no need to write specific parsers for configuration files.
-* Human Readable
-* S-expression parsers can be embedded in static typed languages like Ocaml, Haskell, Java to create GUIs, read configuration files.
-* Compact and flexible like XML and lightweight like json.
-
+-   Encode Arbitrary data structure and programs
+-   Easy to serialize, read and write
+-   There is no need to write specific parsers for configuration files.
+-   Human Readable
+-   S-expression parsers can be embedded in static typed languages like Ocaml, Haskell, Java to create GUIs, read configuration files.
+-   Compact and flexible like XML and lightweight like json.
 
 See also:
 
-* [Real World OCaml - Chapter 17. Data Serialization with S-Expressions](https://realworldocaml.org/v1/en/html/data-serialization-with-s-expressions.html)
-* [Comparison of data serialization formats](http://www.seomastering.com/wiki/Comparison_of_data_serialization_formats)
+-   [Real World OCaml - Chapter 17. Data Serialization with S-Expressions](https://realworldocaml.org/v1/en/html/data-serialization-with-s-expressions.html)
+-   [Comparison of data serialization formats](http://www.seomastering.com/wiki/Comparison_of_data_serialization_formats)
 
-### Association Lists and Property Lists
+## Association Lists and Property Lists<a id="sec-7-1" name="sec-7-1"></a>
 
-* https://groups.csail.mit.edu/mac/ftpdir/scheme-7.4/doc-html/scheme_12.html
-* http://people.cs.aau.dk/~normark/prog3-03/html/notes/fu-intr-1_themes-list-section.html
+-   <https://groups.csail.mit.edu/mac/ftpdir/scheme-7.4/doc-html/scheme_12.html>
+-   <http://people.cs.aau.dk/~normark/prog3-03/html/notes/fu-intr-1_themes-list-section.html>
 
-* [Why property lists?](https://www.reddit.com/r/lisp/comments/2wancz/why_property_lists/)
-* [AlistVsPlist - Emacs Wiki](http://emacswiki.org/emacs/AlistVsPlist)
-* [List Structures / Common Lisp MiniSpec](http://lamberta.github.io/minispec/list-structure.html)
-
+-   [Why property lists?](https://www.reddit.com/r/lisp/comments/2wancz/why_property_lists/)
+-   [AlistVsPlist - Emacs Wiki](http://emacswiki.org/emacs/AlistVsPlist)
+-   [List Structures / Common Lisp MiniSpec](http://lamberta.github.io/minispec/list-structure.html)
 
 ```scheme
-
 ;;;; Association Lists
 
 (define data '((name:  "Canada")  
@@ -4316,11 +4470,9 @@ See also:
 
 > (assoc->plist (plist->assoc p1))
 (name: "John" surname: "Galt" age: 25 gender: male country: US)
-
-                 
 ```
 
-### Serialization and Deserialization
+## Serialization and Deserialization<a id="sec-7-2" name="sec-7-2"></a>
 
 ```scheme
 ;;; Convert plist to association list
@@ -4433,22 +4585,58 @@ See also:
 
 > (map (get-key/c currency:) dataset)
 (EUR AUD CAD)
-
 ```
 
+# Debugging<a id="sec-8" name="sec-8"></a>
+
+## MIT Scheme<a id="sec-8-1" name="sec-8-1"></a>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
-## Debugging
+<colgroup>
+<col  class="left" />
 
-### MIT Scheme 
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Command</th>
+<th scope="col" class="left">Description</th>
+</tr>
+</thead>
 
-| Command                       |  Description                          |
-|-------------------------------|---------------------------------------|
-| ```(pp <object>)```           | Print source code of a procedure      |
-| ```(pa <procedure>)```        | Print arguments of a procedure        |
-| ```(trace <procedure>)```     | Trace procedure, function calls       |
-| ```(untrace <procedure>)```   | No longer trace procedure             |
-| ```(apropos "<string>")```    | Print matching bound names            |
+<tbody>
+<tr>
+<td class="left">`(pp <object>)`</td>
+<td class="left">Print source code of a procedure</td>
+</tr>
+
+
+<tr>
+<td class="left">`(pa <procedure>)`</td>
+<td class="left">Print arguments of a procedure</td>
+</tr>
+
+
+<tr>
+<td class="left">`(trace <procedure>)`</td>
+<td class="left">Trace procedure, function calls</td>
+</tr>
+
+
+<tr>
+<td class="left">`(untrace <procedure>)`</td>
+<td class="left">No longer trace procedure</td>
+</tr>
+
+
+<tr>
+<td class="left">`(apropos "<string>")`</td>
+<td class="left">Print matching bound names</td>
+</tr>
+</tbody>
+</table>
 
 **Examples**
 
@@ -4566,28 +4754,72 @@ string->day-of-week
 string->decoded-time
 string->file-time
 ...
-
-
 ```
-
 
 See also:
 
-* [MIT Scheme debugging](http://cs.wellesley.edu/~cs251/spring02/mit-scheme.pdf)
+-   [MIT Scheme debugging](http://cs.wellesley.edu/~cs251/spring02/mit-scheme.pdf)
+
+## GNU Guile<a id="sec-8-2" name="sec-8-2"></a>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
-### GNU Guile
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Command</th>
+<th scope="col" class="left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">`(version)`</td>
+<td class="left">Return version string</td>
+</tr>
 
 
-| Command                               |  Description                           |
-|---------------------------------------|----------------------------------------|
-| ```(version)```                       | Return version string                  |
-| ```,bt```                             | Backtrace, display call stack          |
-| ```,trace (<procedure> <args>)```     | Trace procedure, fucntion calls        |
-| ```,time <exp>```                     | Measure execution time.                |
-| ```,expand <form>```                  | Show macro expansion of ```<form>```   |
-| ```,apropos "<string>"```            | Print matching bound names             | 
-| ```(exit 0)```                        | Quit GNU Guile                         |
+<tr>
+<td class="left">=,bt=</td>
+<td class="left">Backtrace, display call stack</td>
+</tr>
+
+
+<tr>
+<td class="left">=,trace (<procedure> <args>)=</td>
+<td class="left">Trace procedure, fucntion calls</td>
+</tr>
+
+
+<tr>
+<td class="left">=,time <exp>=</td>
+<td class="left">Measure execution time.</td>
+</tr>
+
+
+<tr>
+<td class="left">=,expand <form>=</td>
+<td class="left">Show macro expansion of `<form>`</td>
+</tr>
+
+
+<tr>
+<td class="left">=,apropos "<string>"=</td>
+<td class="left">Print matching bound names</td>
+</tr>
+
+
+<tr>
+<td class="left">`(exit 0)`</td>
+<td class="left">Quit GNU Guile</td>
+</tr>
+</tbody>
+</table>
 
 **Examples**
 
@@ -4671,41 +4903,34 @@ $6 = (let ((tmp a)) (set! a b) (set! b tmp))
 (guile): char-set:hex-digit
 (guile): char-set:letter+digit
 (guile): char-set:digit
-> 
-
-
+>
 ```
 
-
-## SCIP 
+# SCIP<a id="sec-9" name="sec-9"></a>
 
 Notes about SCIP
 
-
 **Strategies to handle complexity**
 
-* Build Abstractions
-* Hide Details
-* Separate specification from implementation
-* Stablishing conventional interfaces
-* Standard Modules
+-   Build Abstractions
+-   Hide Details
+-   Separate specification from implementation
+-   Stablishing conventional interfaces
+-   Standard Modules
 
-
-### Tail Recursion (Iteration)
+## Tail Recursion (Iteration)<a id="sec-9-1" name="sec-9-1"></a>
 
 The examples bellow are in GNU Guile.
 
-    
 Non tail recursive functions:
-* Uses a growing amount of stack frames, for a big number of iterations it can cause a stack overflow.
-    
+-   Uses a growing amount of stack frames, for a big number of iterations it can cause a stack overflow.
 
 Tail recursive functions:
 
-* A function is said to be **tail recursive** when the recursive call is the last function executed in the body of the function.
-* It uses a fixed amount stack frame, therefore there is no risk of stack overflow.
-* It can be turned into loops
-* Sometimes non tail recursive functions can be changed to tail recursive by adding a new function with extra parameters (accumulators) to store partial results (state).
+-   A function is said to be **tail recursive** when the recursive call is the last function executed in the body of the function.
+-   It uses a fixed amount stack frame, therefore there is no risk of stack overflow.
+-   It can be turned into loops
+-   Sometimes non tail recursive functions can be changed to tail recursive by adding a new function with extra parameters (accumulators) to store partial results (state).
 
 Example1: Factorial
 
@@ -4863,16 +5088,12 @@ $2 = 24
 $3 = 120
 > (factorial3 10)
 $4 = 3628800
-> 
-
-
-
+>
 ```
 
 Example 2: Summation
 
 ```scheme
-
 (define (sum-ints a b)
     (if (> a b)
         0
@@ -4979,30 +5200,28 @@ $8 = 50005000
 
 > (sum-ints-safe 1 100000)
 > $9 = 5000050000
-> 
-
+>
 ```
 
 See also:
 
-* [Tail call - Wikipedia](https://en.wikipedia.org/wiki/Tail_call)
+-   [Tail call - Wikipedia](https://en.wikipedia.org/wiki/Tail_call)
 
-* [Berkeley lecture - Tail calls](https://inst.eecs.berkeley.edu/~cs61a/fa14/assets/slides/28-Tail_Calls_8pp.pdf)
+-   [Berkeley lecture - Tail calls](https://inst.eecs.berkeley.edu/~cs61a/fa14/assets/slides/28-Tail_Calls_8pp.pdf)
 
-* [Repetition through recursion. Tail-recursive function definitions](http://web.info.uvt.ro/~mmarin/lectures/FP/lecture-05.pdf)
+-   [Repetition through recursion. Tail-recursive function definitions](http://web.info.uvt.ro/~mmarin/lectures/FP/lecture-05.pdf)
 
-* [Tail recursion and loops](http://www.owlnet.rice.edu/~comp210/96spring/Labs/lab09.html)
+-   [Tail recursion and loops](http://www.owlnet.rice.edu/~comp210/96spring/Labs/lab09.html)
 
-* [CPS 343/543 Lecture notes: Tail calls and continuation-passing style](http://academic.udayton.edu/SaverioPerugini/courses/cps343/lecture_notes/CPS.html)
+-   [CPS 343/543 Lecture notes: Tail calls and continuation-passing style](http://academic.udayton.edu/SaverioPerugini/courses/cps343/lecture_notes/CPS.html)
 
-### Higher Order Procedure
+## Higher Order Procedure<a id="sec-9-2" name="sec-9-2"></a>
 
 Higher order functions or procedures are a powerful abstraction mechanism.
 
 Page 63. Summation
 
 ```
-
 Summation:
 
  b=0
@@ -5013,13 +5232,10 @@ ___
  
 Pi Sum 
  
- π/8 = 1/1*3 + 1/5*7 + 1/9*11 + 1/13*15 + ... 
- 
+ π/8 = 1/1*3 + 1/5*7 + 1/9*11 + 1/13*15 + ...
 ```
 
 ```scheme
-
-
 (define (summation term next)
 
     (define (summation_ term next a b)
@@ -5060,7 +5276,6 @@ $2 = 55
     
 scheme@(guile-user) [1]> (* 8 (pi-sum 1 1000))
 $4 = 3.139592655589783
-         
 ```
 
 Integral of f from a to b
@@ -5072,7 +5287,6 @@ Integral of f from a to b
 ```
 
 ```scheme
-
 (define (integral f dx)
     (lambda (a b)
         (* dx 
@@ -5116,8 +5330,7 @@ warnings can be silenced by the --no-warnings (-n) option
 Aborted (core dumped)
 ```
 
-### Procedure as returned value
-
+## Procedure as returned value<a id="sec-9-3" name="sec-9-3"></a>
 
 **Fixed Point**
 
@@ -5145,10 +5358,8 @@ Aborted (core dumped)
 
 ;Value: .7390547907469174
 
-> 
-
+>
 ```
-
 
 **Derivate Higher Order Function**
 
@@ -5171,7 +5382,7 @@ $26 = 75.00014999664018
 > 
 > (dcube 5)
 $27 = 75.00014999664018
-> 
+>
 ```
 
 Newton Method 
@@ -5181,8 +5392,6 @@ f(x) = x  - g(x)/Dg(x)
 ```
 
 ```scheme
-
-
 (define (newton-transform g)
     (lambda (x)
         (- 
@@ -5196,12 +5405,14 @@ f(x) = x  - g(x)/Dg(x)
     (newton-method (lambda (y) (- (square x) x)) 1.0))
 ```
 
-### Exercises
-
+## Exercises<a id="sec-9-4" name="sec-9-4"></a>
 
 **Exercise 1.3** 
 
-The sum procedure above generates a linear recursion. The procedure can be rewritten so that the sum is performed iteratively. Show how to do this by filling in the missing expressions in the following definition:
+The sum procedure above generates a linear recursion. The procedure
+can be rewritten so that the sum is performed iteratively. Show how to
+do this by filling in the missing expressions in the following
+definition:
 
 ```scheme
 (define (sum term a next b)
@@ -5210,13 +5421,11 @@ The sum procedure above generates a linear recursion. The procedure can be rewri
         <??>
         (iter <??> <??>)))
   (iter <??> <??>))
-```  
-
+```
 
 Solution: The assignment is asking to turn the function sum into a tail recursive function.
 
 ```scheme
-
 (define (sum term a next b)
   (define (iter a result)
     (if (> a b)
@@ -5260,9 +5469,7 @@ trace: |  5
 trace: |  (cube 4)
 trace: |  64
 trace: 100
-> 
-
-
+>
 ```
 
 **Exercise 1.31.**
@@ -5274,7 +5481,6 @@ a.  The sum procedure is only the simplest of a vast number of similar abstracti
 ```
 
 b.  If your product procedure generates a recursive process, write one that generates an iterative process. If it generates an iterative process, write one that generates a recursive process. 
-
 
 Solution:
 
@@ -5303,10 +5509,8 @@ $24 = 120
 $25 = 120
 > (factorial 6)
 $26 = 720
-> 
-
+>
 ```
-
 
 **Exercise 1.32.**  
 
@@ -5354,8 +5558,7 @@ $2 = 120
 
 > (factorial 6)
 $3 = 720
-> 
-
+>
 ```
 
 **Exercise 1.33.**  
@@ -5446,24 +5649,16 @@ $23 = 85085
 
 > (product-primes 18)
 $24 = 85085
-> 
-
-        
+>
 ```
 
+# Applications<a id="sec-10" name="sec-10"></a>
 
-
-
-## Applications
-
-
-### Lisp Evaluator written in Lisp
+## Lisp Evaluator written in Lisp<a id="sec-10-1" name="sec-10-1"></a>
 
 Task: Write an s-expression evaluator (prefix notation evaluator)  in lisp without using eval function. This evaluator can be useful to execute untrusted code on a restricted environment.
 
-
 ```scheme
-
 (define function-table
   (list
    (cons 'cons cons)
@@ -5536,7 +5731,7 @@ $76 = (+ (exp 2) (log 10) (cos (+ 2 3)))
 $77 = 9.975303377387922
 ```
 
-### Reverse Polish Notation Evaluator
+## Reverse Polish Notation Evaluator<a id="sec-10-2" name="sec-10-2"></a>
 
 ```scheme
 (define (make-stack)   
@@ -5654,24 +5849,23 @@ $77 = 9.975303377387922
 1 ]=> (evaluate-postfix '( 3 exp 3 4 cos * +))
 
 ;Value: 18.124606060596836
-
-
 ```
 
-## Scheme Implementations
+# Scheme Implementations<a id="sec-11" name="sec-11"></a>
 
-### Racket 
+## Racket<a id="sec-11-1" name="sec-11-1"></a>
 
-Racket, former known as PLT Scheme, is an extension of Scheme language that has multi OS support, IDE: Dr. Racket, debugger, package system and repository, great documentation, large library and a powerful ffi - Foreign Function Interface. Racket has also support to many languages like pure Scheme, typed racket and others.
+Racket, former known as PLT Scheme, is an extension of Scheme language
+that has multi OS support, IDE: Dr. Racket, debugger, package system
+and repository, great documentation, large library and a powerful
+ffi - Foreign Function Interface. Racket has also support to many
+languages like pure Scheme, typed racket and others.
 
-
-
-#### String Functions
+### String Functions<a id="sec-11-1-1" name="sec-11-1-1"></a>
 
 **Basic String Functions**
 
-```racket
-
+```scheme
 > (string->list "hello world")
 '(#\h #\e #\l #\l #\o #\space #\w #\o #\r #\l #\d)
 >
@@ -5687,14 +5881,12 @@ Racket, former known as PLT Scheme, is an extension of Scheme language that has 
 
 > (string-length "0123456789")
 10
-> 
-
-
-````
+>
+```
 
 **Format**
 
-```scheme 
+```scheme
 > (format "x = ~a" (sqrt (+ 40 10 50)))
 "x = 10"
 
@@ -5709,7 +5901,7 @@ Racket, former known as PLT Scheme, is an extension of Scheme language that has 
 xs = (1 2 3 4 5 6)
 ```
 
-#### Input / Output Functions
+### Input / Output Functions<a id="sec-11-1-2" name="sec-11-1-2"></a>
 
 **Display**
 
@@ -5730,15 +5922,14 @@ Hello world racket>
 Hello world racket
 > 
 > (display '(1 2 3 4 5))
-(1 2 3 4 5)> 
+(1 2 3 4 5)>
 ```
 
 **Displayln**
 
 Print expression in the screen with character "\n" at the end.
 
-```racket 
-
+```racket
 > (displayln 100)
 100
 
@@ -5778,240 +5969,229 @@ a-symbol
 Testing display
 begin is to execute multiple s-expressions with side effects
 (quote a-symbol)
-> 
-
-
+>
 ```
 
 **Printf**
 
 Formated output.
 
-```scheme 
+```scheme
 > (printf "x = ~a\n" (sqrt (+ 40 10 50)))
 x = 10
-
 ```
 
-#### Data Structures
+### Data Structures<a id="sec-11-1-3" name="sec-11-1-3"></a>
 
-##### Cons - Cell / Pair
+1.  Cons - Cell / Pair
 
-```scheme 
-;; (cons <first> <second>)
-;; '( <first> . <second>)
+    ```scheme
+    ;; (cons <first> <second>)
+    ;; '( <first> . <second>)
+    
+    
+    > (cons 10 20)
+    '(10 . 20)
+    
+    > (cons 'a 100.23)
+    '(a . 100.23)
+    
+    > (define p1 (cons 10 20))
+    > (define p2 (cons 'a 20))
+    > (define p3 (cons 'x '(+ 20 50)))
+    
+    > p1
+    '(10 . 20)
+    > p2
+    '(a . 20)
+    > p3
+    '(x + 20 50)
+    > 
+    
+    ;;; Every cons cell or a list is a pair.
+    ;;
+    > (map pair? (list p1 p2 p3))
+    '(#t #t #t)
+    
+    ;;; Not all pairs is a list
+    ;;
+    > (map list? (list p1 p2 p3))
+    '(#f #f #t)
+    
+    ;;
+    ;;  '(1 2 3 4) = (cons 1 '(2 3 4))
+    ;;
+    > (pair? '(1 2 3 4))
+     #t
+    >
+    ```
 
+2.  List
 
-> (cons 10 20)
-'(10 . 20)
+    ```scheme
+    > '(1 2 3 4 5 6)
+    '(1 2 3 4 5 6)
+    
+    > (quote (+ 2 3))
+    '(+ 2 3)
+    > 
+    
+    > '[a b c d e f]
+    '(a b c d e f)
+    
+    > (define a 10)
+    > (define b 20)
+    > (list 'a a 'b b)
+    '(a 10 b 20)
+    >
+    ```
 
-> (cons 'a 100.23)
-'(a . 100.23)
+3.  Association List
 
-> (define p1 (cons 10 20))
-> (define p2 (cons 'a 20))
-> (define p3 (cons 'x '(+ 20 50)))
+4.  Vector
 
-> p1
-'(10 . 20)
-> p2
-'(a . 20)
-> p3
-'(x + 20 50)
-> 
+    [Vector Documentation](http://docs.racket-lang.org/reference/vectors.html)
+    
+    ```racket
+    ;; Make a vector
+    ;-----------------------
+    
+    > (vector 1 2 3 4 )
+    '#(1 2 3 4)
+    
+    > (define v  (vector 1 2 3 4 ))
+    
+    > (make-vector 3)
+    '#(0 0 0)
+    
+    > (make-vector 3 'a)
+    '#(a a a)
+    > 
+    
+    
+    ;; Vector Length
+    ;;--------------------
+    > (vector-length v)
+    4
+    > 
+    
+    > #(a b c d e)
+    '#(a b c d e)
+    > 
+    > #(1 2 3 4 )
+    '#(1 2 3 4)
+    > 
+    
+    ;;; Test if it is a vector.
+    
+    > (vector? v)
+     #t
+    > 
+    > (vector? '(1 2 3 ))
+     #f
+    > 
+    
+    ;;;; Pick the nth element 
+    ;--------------------------
+    > (vector-ref v 0)
+    1
+    > (vector-ref v 1)
+    2
+    > (vector-ref v 2)
+    3
+    > (vector-ref v 3)
+    4
+    > (vector-ref v 5)
+    vector-ref: index is out of range
+      index: 5
+      valid range: [0, 3]
+      vector: '#(1 2 3 4)
+    > 
+    
+    ;; List Vector / Transformations
+    ;-------------------------
+    
+    > (vector->list #(a 1 b 2 c 3))
+    '(a 1 b 2 c 3)
+    > 
+    
+    > (list->vector '(a 1 b 2 c 3))
+    '#(a 1 b 2 c 3)
+    
+    
+    ;;; Map a vector
+    ;--------------------------
+    > (define (f x) (* 3 x))
+    > 
+    
+    > v
+    '#(1 2 3 4)
+    > 
+    > (vector-map f v)
+    '#(3 6 9 12)
+    > 
+    
+    
+    > (vector-map 
+       (lambda (x y) (+ (* 3 x) (* 2 y)))
+       #(1 2 3 4 5) #(5 4 3 2 1))
+    '#(13 14 15 16 17)
+    > 
+    
+    ;; Zip
+    ;;-------------------------
+    
+    > (map vector  '(1 2 3 4) '(a b c d))
+    '(#(1 a) #(2 b) #(3 c) #(4 d))
+    
+    
+    > (map vector '(1 2 3 4 ) '(a b c d) '("x" "y" "z" "w"))
+    '(#(1 a "x") #(2 b "y") #(3 c "z") #(4 d "w"))
+    > 
+    
+    > (define-syntax-rule
+        (zipm xs ...)
+        (map vector xs ...))
+    
+    > (zipm '(1 2 3) '(a b c))
+    '(#(1 a) #(2 b) #(3 c))
+    
+    > (zipm '(1 2 3) '(a b c) '("x" "y" "z"))
+    '(#(1 a "x") #(2 b "y") #(3 c "z"))
+    
+    
+    ;; Set a  vector element
+    ;;---------------------------
+    
+    > (define v1 (make-vector 3))
+    > v1
+    '#(0 0 0)
+    > 
+    
+    > (vector-set! v1 0 'a)
+    > v1
+    '#(a 0 0)
+    > (vector-set! v1 1 343.34)
+    > v1
+    '#(a 343.34 0)
+    > (vector-set! v1 2 "test")
+    > v1
+    '#(a 343.34 "test")
+    > 
+    
+    ;; Append Vectors
+    ;;--------------------------
+    
+    > (vector-append #(a b c) #(w x y z))
+    '#(a b c w x y z)
+    >
+    ```
 
-;;; Every cons cell or a list is a pair.
-;;
-> (map pair? (list p1 p2 p3))
-'(#t #t #t)
+5.  Hash Table
 
-;;; Not all pairs is a list
-;;
-> (map list? (list p1 p2 p3))
-'(#f #f #t)
+### Struct<a id="sec-11-1-4" name="sec-11-1-4"></a>
 
-;;
-;;  '(1 2 3 4) = (cons 1 '(2 3 4))
-;;
-> (pair? '(1 2 3 4))
- #t
-> 
-
-```
-
-##### List
-
-```racket
-
-> '(1 2 3 4 5 6)
-'(1 2 3 4 5 6)
-
-> (quote (+ 2 3))
-'(+ 2 3)
-> 
-
-> '[a b c d e f]
-'(a b c d e f)
-
-> (define a 10)
-> (define b 20)
-> (list 'a a 'b b)
-'(a 10 b 20)
-> 
-
-```
-
-##### Association List
-
-##### Vector 
-
-[Vector Documentation](http://docs.racket-lang.org/reference/vectors.html)
-
-```racket
-
-;; Make a vector
-;-----------------------
-
-> (vector 1 2 3 4 )
-'#(1 2 3 4)
-
-> (define v  (vector 1 2 3 4 ))
-
-> (make-vector 3)
-'#(0 0 0)
-
-> (make-vector 3 'a)
-'#(a a a)
-> 
-
-
-;; Vector Length
-;;--------------------
-> (vector-length v)
-4
-> 
-
-> #(a b c d e)
-'#(a b c d e)
-> 
-> #(1 2 3 4 )
-'#(1 2 3 4)
-> 
-
-;;; Test if it is a vector.
-
-> (vector? v)
- #t
-> 
-> (vector? '(1 2 3 ))
- #f
-> 
-
-;;;; Pick the nth element 
-;--------------------------
-> (vector-ref v 0)
-1
-> (vector-ref v 1)
-2
-> (vector-ref v 2)
-3
-> (vector-ref v 3)
-4
-> (vector-ref v 5)
-vector-ref: index is out of range
-  index: 5
-  valid range: [0, 3]
-  vector: '#(1 2 3 4)
-> 
-
-;; List Vector / Transformations
-;-------------------------
-
-> (vector->list #(a 1 b 2 c 3))
-'(a 1 b 2 c 3)
-> 
-
-> (list->vector '(a 1 b 2 c 3))
-'#(a 1 b 2 c 3)
-
-
-;;; Map a vector
-;--------------------------
-> (define (f x) (* 3 x))
-> 
-
-> v
-'#(1 2 3 4)
-> 
-> (vector-map f v)
-'#(3 6 9 12)
-> 
-
-
-> (vector-map 
-   (lambda (x y) (+ (* 3 x) (* 2 y)))
-   #(1 2 3 4 5) #(5 4 3 2 1))
-'#(13 14 15 16 17)
-> 
-
-;; Zip
-;;-------------------------
-
-> (map vector  '(1 2 3 4) '(a b c d))
-'(#(1 a) #(2 b) #(3 c) #(4 d))
-
-
-> (map vector '(1 2 3 4 ) '(a b c d) '("x" "y" "z" "w"))
-'(#(1 a "x") #(2 b "y") #(3 c "z") #(4 d "w"))
-> 
-
-> (define-syntax-rule
-    (zipm xs ...)
-    (map vector xs ...))
-
-> (zipm '(1 2 3) '(a b c))
-'(#(1 a) #(2 b) #(3 c))
-
-> (zipm '(1 2 3) '(a b c) '("x" "y" "z"))
-'(#(1 a "x") #(2 b "y") #(3 c "z"))
-
-
-;; Set a  vector element
-;;---------------------------
-
-> (define v1 (make-vector 3))
-> v1
-'#(0 0 0)
-> 
-
-> (vector-set! v1 0 'a)
-> v1
-'#(a 0 0)
-> (vector-set! v1 1 343.34)
-> v1
-'#(a 343.34 0)
-> (vector-set! v1 2 "test")
-> v1
-'#(a 343.34 "test")
-> 
-
-;; Append Vectors
-;;--------------------------
-
-> (vector-append #(a b c) #(w x y z))
-'#(a b c w x y z)
-> 
-
-
-```
-
-##### Hash Table 
-
-
-#### Struct 
-
-```racket 
-
+```scheme
 (defstruct point-3d (x y z))
 defstruct: undefined;
  cannot reference undefined identifier
@@ -6074,20 +6254,20 @@ defstruct: undefined;
  #t
 > (point-3d? '(1 2 4))
  #f
-> 
+>
 ```
 
-#### Pattern Matching
+### Pattern Matching<a id="sec-11-1-5" name="sec-11-1-5"></a>
 
 Documentation: 
 
-* [Pattern Matching](http://plt.eecs.northwestern.edu/snapshots/current/doc/reference/match.html)
+-   [Pattern Matching](http://plt.eecs.northwestern.edu/snapshots/current/doc/reference/match.html)
 
-* [Extensible Pattern Matching in an Extensible Language](http://www.ccs.neu.edu/home/samth/match-ifl-full.pdf)
+-   [Extensible Pattern Matching in an Extensible Language](http://www.ccs.neu.edu/home/samth/match-ifl-full.pdf)
 
-* [Racket Guide - Pattern Matching](http://docs.racket-lang.org/guide/match.html)
+-   [Racket Guide - Pattern Matching](http://docs.racket-lang.org/guide/match.html)
 
-```racket
+```scheme
 (require racket/match)
  
 (define (perimeter picture)
@@ -6125,12 +6305,10 @@ match: no matching clause for '(x 3)
 
 > (count-list '(a b c d ))
 4
-> 
-
-
+>
 ```
 
-#### Plotting
+### Plotting<a id="sec-11-1-6" name="sec-11-1-6"></a>
 
 Racket has a rich built-in plot library.
 
@@ -6143,11 +6321,9 @@ Racket has a rich built-in plot library.
 (require plot)
 (plot-new-window? #t)
 (plot (function exp -2 2))
-
 ```
 
-![](images/chart_exp_racket.png)
-
+![img](images/chart_exp_racket.png)
 
 **Plot Points**
 
@@ -6160,12 +6336,10 @@ Racket has a rich built-in plot library.
 > 
 > (require plot)
 > (plot (points xys))
-> 
-
+>
 ```
 
-![](images/chart_points_racket.png)
-
+![img](images/chart_points_racket.png)
 
 **Plot Lines between points**
 
@@ -6178,17 +6352,16 @@ Racket has a rich built-in plot library.
 > 
 > (require plot)
 > (plot (lines xys))
-> 
-
+>
 ```
 
-![](images/chart_lines_points_racket.png)
+![img](images/chart_lines_points_racket.png)
 
 **Parametric Plot**
 
 Example: Parametric Equation of an Ellipse
 
-* See also: [Parametric Equation](http://jwilson.coe.uga.edu/EMAT6680Fa09/Yun/jyun_assign10/Parametric_eq_yun.html)
+-   See also: [Parametric Equation](http://jwilson.coe.uga.edu/EMAT6680Fa09/Yun/jyun_assign10/Parametric_eq_yun.html)
 
 ```
 x^2/a^2 + y^2/b^2 = 1
@@ -6197,7 +6370,6 @@ x = a cos(t)
 y = b sin(t)
 
 Plot the equation:  x^2/9 + y^2/64 = 1
-
 ```
 
 ```racket
@@ -6214,55 +6386,52 @@ Plot the equation:  x^2/9 + y^2/64 = 1
    (lambda (t) (vector (* a (cos t)) (* b (sin t)))))
 
 (plot (parametric [ellipse 3 8] 0 (* 2 pi)))
-
 ```
 
-#### Resources
+### Resources<a id="sec-11-1-7" name="sec-11-1-7"></a>
 
-##### Miscellaneous
+1.  Miscellaneous
 
-* [Racket programming language](https://en.wikipedia.org/wiki/Racket_(programming_language))
-* [Racket Features / Wikipedia](https://en.wikipedia.org/wiki/Racket_features)
+    -   [Racket programming language](https://en.wikipedia.org/wiki/Racket_(programming_language))
+    -   [Racket Features / Wikipedia](https://en.wikipedia.org/wiki/Racket_features)
+    
+    -   [Introduction to Racket Advanced Functional Programming Jean-Noël Monette - November 2013](http://www.it.uu.se/edu/course/homepage/avfunpro/ht13/lectures/Racket-1-Intro.pdf)
+    
+    -   [Tutorial: Contributing to Racket](http://jpolitz.github.io/blog/2012/11/21/racket-contributing-tutorial.html)
+    
+    -   [Stories of a young Racketeer / Learning Resources](http://youngracketeer.blogspot.com.br/2013/01/learning-resources.html)
+    
+    -   [Impure Functional Programming](https://cs.uwaterloo.ca/~plragde/tyr/Impure_Functional_Programming.html)
+    
+    -   [Using Racket to Configure Apache](http://qerub.se/using-racket-to-configure-apache)
 
-* [Introduction to Racket Advanced Functional Programming Jean-Noël Monette - November 2013](http://www.it.uu.se/edu/course/homepage/avfunpro/ht13/lectures/Racket-1-Intro.pdf)
+2.  Documentation
 
-* [Tutorial: Contributing to Racket](http://jpolitz.github.io/blog/2012/11/21/racket-contributing-tutorial.html)
+    -   [Download](http://www.racket-lang.org/download/)
+    -   [Modules](http://docs.racket-lang.org/guide/modules.html)
+    
+    -   [Pairs and Lists](http://docs.racket-lang.org/reference/pairs.html?q=list#%28def._%28%28quote._%7E23%7E25kernel%29._list%29%29)
+    
+    -   [Hash Tables / Guide](http://docs.racket-lang.org/guide/hash-tables.html)
+    -   [Hash  Tables / Reference](http://docs.racket-lang.org/reference/hashtables.html)
 
-* [Stories of a young Racketeer / Learning Resources](http://youngracketeer.blogspot.com.br/2013/01/learning-resources.html)
+### Videos<a id="sec-11-1-8" name="sec-11-1-8"></a>
 
-* [Impure Functional Programming](https://cs.uwaterloo.ca/~plragde/tyr/Impure_Functional_Programming.html)
+-   [Scribble: Closing the Book on Ad Hoc Documentation Tools](https://vimeo.com/6630691)
 
-* [Using Racket to Configure Apache](http://qerub.se/using-racket-to-configure-apache)
-
-##### Documentation
-
-
-* [Download](http://www.racket-lang.org/download/)
-* [Modules](http://docs.racket-lang.org/guide/modules.html)
-
-* [Pairs and Lists](http://docs.racket-lang.org/reference/pairs.html?q=list#%28def._%28%28quote._%7E23%7E25kernel%29._list%29%29)
-
-* [Hash Tables / Guide](http://docs.racket-lang.org/guide/hash-tables.html)
-* [Hash  Tables / Reference](http://docs.racket-lang.org/reference/hashtables.html)
-
-
-#### Videos
-
-* [Scribble: Closing the Book on Ad Hoc Documentation Tools](https://vimeo.com/6630691)
-
-### Kawa Scheme - Access Java API from Scheme
+## Kawa Scheme - Access Java API from Scheme<a id="sec-11-2" name="sec-11-2"></a>
 
 [Kawa Scheme](http://www.gnu.org/software/kawa) is a implementation of the language in Java that can compile to Java bytecodes and has access to the Java API.
 
 Features:
 
-* Compiles to JVM
-* Can be embedded as  scripting language for Java applications.
-* Can call Java API in the REPL, provides interactive Java development.
-* With some tricks can compile to Android "Java", Dalvik VM.
-* Product built with Kawa Scheme: [App Inventor for Android](https://en.wikipedia.org/wiki/App_Inventor_for_Android)
+-   Compiles to JVM
+-   Can be embedded as  scripting language for Java applications.
+-   Can call Java API in the REPL, provides interactive Java development.
+-   With some tricks can compile to Android "Java", Dalvik VM.
+-   Product built with Kawa Scheme: [App Inventor for Android](https://en.wikipedia.org/wiki/App_Inventor_for_Android)
 
-#### Install and Run
+### Install and Run<a id="sec-11-2-1" name="sec-11-2-1"></a>
 
 ```
     $ curl -O ftp://ftp.gnu.org/pub/gnu/kawa/kawa-2.0.jar
@@ -6283,20 +6452,17 @@ Features:
             (foldl f_el_acc (f_el_acc acc (car alist)) (cdr alist))))
     #|kawa:7|# (foldl (lambda (el acc) (+ (* 10 el)  acc)) 0 '(1 2 3 4 5 6))
     123456
-    #|kawa:8|# 
-
+    #|kawa:8|#
 ```
 
-
-#### Calling Java Methods in Kawa Scheme
+### Calling Java Methods in Kawa Scheme<a id="sec-11-2-2" name="sec-11-2-2"></a>
 
 Apis Used:
 
-* [java.lang.Math](https://docs.oracle.com/javase/8/docs/api/java/lang/Math.html)
-* [java.util.Date](https://docs.oracle.com/javase/8/docs/api/java/util/Date.html)
+-   [java.lang.Math](https://docs.oracle.com/javase/8/docs/api/java/lang/Math.html)
+-   [java.util.Date](https://docs.oracle.com/javase/8/docs/api/java/util/Date.html)
 
-```scheme 
-
+```scheme
     $ rlwrap java -jar kawa-2.0.jar 
 
     #|kawa:9|# (kawa.Version:getVersion)
@@ -6466,15 +6632,14 @@ Apis Used:
     #|kawa:18|# (cal:getTimeZone)
     /dev/stdin:18:2: warning - no known slot 'getTimeZone' in java.lang.Object
     sun.util.calendar.ZoneInfo[id="America/Recife",offset=-10800000,dstSavings=0,useDaylight=false,transitions=41,lastRule=null]
-    #|kawa:19|#     
-
+    #|kawa:19|#
 ```
 
-#### Create a GUI
+### Create a GUI<a id="sec-11-2-3" name="sec-11-2-3"></a>
 
 **Create a GUI in the REPL**
 
-![](images/java_swing_window1.png)
+![img](images/java_swing_window1.png)
 
 Original Java Code: [Java Swing Tutorial](http://www.wideskills.com/java-tutorial/java-swing-tutorial)
 
@@ -6512,10 +6677,11 @@ Int the REPL:
     #|kawa:23|# (HelloWorldFrame:setVisible #t)
     /dev/stdin:23:2: warning - no known slot 'setVisible' in java.lang.Object
     #!null
-    #|kawa:24|# 
+    #|kawa:24|#
 ```
 
-In the file: [java_swing_gui1.scm](src/java_swing_gui1.scm)
+In the file: java<sub>swing</sub><sub>gui1</sub>.scm
+
 ```scheme
 ;; Creates Java GUI
 ;;
@@ -6541,9 +6707,10 @@ $ java -jar kawa-2.0.jar java_swing_gui1.scm
 
 **Temperature Conversion GUI**
 
-![](images/temperature_conversion_gui.png)
+![img](images/temperature_conversion_gui.png)
 
-File: [FahrenheitGUI.scm](src/FahrenheitGUI.scm)
+File: FahrenheitGUI.scm
+
 ```scheme
 ;; Must be used with Kawa
 ;; 
@@ -6626,348 +6793,331 @@ File: [FahrenheitGUI.scm](src/FahrenheitGUI.scm)
 (fahrenheit:addActionListener action-listener)
 
 (show_frame)
-
 ```
 
-#### See also
+### See also<a id="sec-11-2-4" name="sec-11-2-4"></a>
 
+-   [Kawa Scheme Implementation - Wikipedia](https://en.wikipedia.org/wiki/Kawa_(Scheme_implementation)
 
-* [Kawa Scheme Implementation - Wikipedia](https://en.wikipedia.org/wiki/Kawa_(Scheme_implementation)
+-   [Kawa — fast scripting on the Java platform](https://lwn.net/Articles/623349/)
 
-* [Kawa — fast scripting on the Java platform](https://lwn.net/Articles/623349/)
+-   [Kawa scheme and event handlers](http://www.redmountainsw.com/wordpress/1395/kawa-scheme-and-event-handlers/)
 
-* [Kawa scheme and event handlers](http://www.redmountainsw.com/wordpress/1395/kawa-scheme-and-event-handlers/)
+-   [Exploring LISP on the JVM](http://www.infoq.com/articles/lisp-for-jvm)
+-   [EXPLORING LISP ON THE JVM](http://pjacobsson.com/articles/lisp-on-the-jvm.html)
 
-* [Exploring LISP on the JVM](http://www.infoq.com/articles/lisp-for-jvm)
-* [EXPLORING LISP ON THE JVM](http://pjacobsson.com/articles/lisp-on-the-jvm.html)
+-   [Kawa: Compiling Scheme to Java - citeseerx](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.24.5572&rep=rep1&type=pdf)
+-   [Kawa: Compiling Scheme to Java - Delorie](http://www.delorie.com/gnu/docs/kawa/kawa-tour_2.html)
 
-* [Kawa: Compiling Scheme to Java - citeseerx](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.24.5572&rep=rep1&type=pdf)
-* [Kawa: Compiling Scheme to Java - Delorie](http://www.delorie.com/gnu/docs/kawa/kawa-tour_2.html)
+# Resources<a id="sec-12" name="sec-12"></a>
 
-
-
-## Resources
-
-### Books
+## Books<a id="sec-12-1" name="sec-12-1"></a>
 
 **Scheme**
 
-* [The Adventures of a Pythonista in Schemeland](http://www.phyast.pitt.edu/~micheles/scheme/index.html)
+-   [The Adventures of a Pythonista in Schemeland](http://www.phyast.pitt.edu/~micheles/scheme/index.html)
 
-* [Teach Yourself Scheme in Fixnum Days - Dorai Sitaram, 1998–2003](http://download.plt-scheme.org/doc/205/pdf/t-y-scheme.pdf)
+-   [Teach Yourself Scheme in Fixnum Days - Dorai Sitaram, 1998–2003](http://download.plt-scheme.org/doc/205/pdf/t-y-scheme.pdf)
 
-* [Structure and Interpretation of Computer Programs - SCIP / Abelson, Sussman, and Sussman.](https://mitpress.mit.edu/sicp/)
-* [Structure and Interpretation of Computer Programs - SCIP / Abelson, Sussman, and Sussman / Alternative Link](http://www.bookshelf.jp/texi/sicp/sicp_toc.html#SEC_Contents)
+-   [Structure and Interpretation of Computer Programs - SCIP / Abelson, Sussman, and Sussman.](https://mitpress.mit.edu/sicp/)
+-   [Structure and Interpretation of Computer Programs - SCIP / Abelson, Sussman, and Sussman / Alternative Link](http://www.bookshelf.jp/texi/sicp/sicp_toc.html#SEC_Contents)
 
-* [Structure and Interpretation of Computer Programs - Video Lectures by Hal Abelson and Gerald Jay Sussman](http://groups.csail.mit.edu/mac/classes/6.001/abelson-sussman-lectures/)
+-   [Structure and Interpretation of Computer Programs - Video Lectures by Hal Abelson and Gerald Jay Sussman](http://groups.csail.mit.edu/mac/classes/6.001/abelson-sussman-lectures/)
 
-* [SCIP Solutions](http://community.schemewiki.org/?SICP-Solutions)
+-   [SCIP Solutions](http://community.schemewiki.org/?SICP-Solutions)
 
+-   [Structure and Interpretation of Classical Mechanics - Geral Jay Sussman and Jack Wisdom](https://mitpress.mit.edu/books/structure-and-interpretation-classical-mechanics)
 
-* [Structure and Interpretation of Classical Mechanics - Geral Jay Sussman and Jack Wisdom](https://mitpress.mit.edu/books/structure-and-interpretation-classical-mechanics)
+-   [The Scheme Programming Language, Second Edition - R. Kent Dybvig](http://www.scheme.com/tspl2d/)
 
+-   [Teach Yourself Scheme in Fixnum Day](http://download.plt-scheme.org/doc/360/html/t-y-scheme/t-y-scheme-Z-H-1.html)
 
-* [The Scheme Programming Language, Second Edition - R. Kent Dybvig](http://www.scheme.com/tspl2d/)
+-   [How to Design Programs - by Felleisen, Findler, Flatt and Krishnamurthi](http://htdp.org/)
 
-* [Teach Yourself Scheme in Fixnum Day](http://download.plt-scheme.org/doc/360/html/t-y-scheme/t-y-scheme-Z-H-1.html)
+-   [Wikibok - Programming with Scheme](https://en.wikibooks.org/wiki/Scheme_Programming)
 
-* [How to Design Programs - by Felleisen, Findler, Flatt and Krishnamurthi](http://htdp.org/)
+-   [The Scheme Programming Language Fourth Edition - R. Kent Dybvig - Illustrations by Jean-Pierre Hébert](http://www.scheme.com/tspl4/)
 
-* [Wikibok - Programming with Scheme](https://en.wikibooks.org/wiki/Scheme_Programming)
+-   [The Little Schemer, fourth edition](https://mitpress.mit.edu/books/little-schemer)
 
-* [The Scheme Programming Language Fourth Edition - R. Kent Dybvig - Illustrations by Jean-Pierre Hébert](http://www.scheme.com/tspl4/)
+-   [PLEAC GUILE Cookbook](http://pleac.sourceforge.net/pleac_guile/index.html)
 
-* [The Little Schemer, fourth edition](https://mitpress.mit.edu/books/little-schemer)
-
-* [PLEAC GUILE Cookbook](http://pleac.sourceforge.net/pleac_guile/index.html)
-
-* [Schemers.org Textbook selection](http://www.schemers.org/Documents/#all-texts)
+-   [Schemers.org Textbook selection](http://www.schemers.org/Documents/#all-texts)
 
 **Common Lisp**
 
-* [Common Lisp MiniSpec](http://lamberta.github.io/minispec/list-structure.html)
+-   [Common Lisp MiniSpec](http://lamberta.github.io/minispec/list-structure.html)
 
-* [The Common Lisp Cookbook - Macros and Backquote](http://cl-cookbook.sourceforge.net/macros.html)
+-   [The Common Lisp Cookbook - Macros and Backquote](http://cl-cookbook.sourceforge.net/macros.html)
 
-* [Learn X in Y minutes](http://learnxinyminutes.com/docs/common-lisp/)
+-   [Learn X in Y minutes](http://learnxinyminutes.com/docs/common-lisp/)
 
-* [Practical Common Lisp](http://www.gigamonkeys.com/book/)
+-   [Practical Common Lisp](http://www.gigamonkeys.com/book/)
 
-* [On Lisp - by Paul Graham](http://unintelligible.org/onlisp/onlisp.html)
-* [On Lisp - by Paul Graham / Alternative Link](http://www.bookshelf.jp/texi/onlisp/onlisp.html)
+-   [On Lisp - by Paul Graham](http://unintelligible.org/onlisp/onlisp.html)
+-   [On Lisp - by Paul Graham / Alternative Link](http://www.bookshelf.jp/texi/onlisp/onlisp.html)
 
-* [Paradigms of Artificial Intelligence Programming: Case Studies in Common Lisp](http://norvig.com/paip.html)
+-   [Paradigms of Artificial Intelligence Programming: Case Studies in Common Lisp](http://norvig.com/paip.html)
 
-### Community
+## Community<a id="sec-12-2" name="sec-12-2"></a>
 
-* http://www.schemers.org/
-* http://www.reddit.com/r/scheme
-* http://www.reddit.com/r/racket
-* http://srfi.schemers.org
+-   <http://www.schemers.org/>
+-   <http://www.reddit.com/r/scheme>
+-   <http://www.reddit.com/r/racket>
+-   <http://srfi.schemers.org>
 
-* [The common lisp wiki](http://www.cliki.net)
+-   [The common lisp wiki](http://www.cliki.net)
 
-### Articles
+## Articles<a id="sec-12-3" name="sec-12-3"></a>
 
-* [Beating the Average - The Secret Weapon - By Paul Graham](http://www.paulgraham.com/avg.html)
+-   [Beating the Average - The Secret Weapon - By Paul Graham](http://www.paulgraham.com/avg.html)
 
-* [Why Structure and Interpretation of Computer Programs matters](https://www.cs.berkeley.edu/~bh/sicp.html)
+-   [Why Structure and Interpretation of Computer Programs matters](https://www.cs.berkeley.edu/~bh/sicp.html)
 
-* [7 lines of code, 3 minutes: Implement a programming language from scratch](http://matt.might.net/articles/implementing-a-programming-language/)
+-   [7 lines of code, 3 minutes: Implement a programming language from scratch](http://matt.might.net/articles/implementing-a-programming-language/)
 
+-   [IBM - The art of metaprogramming, Part 1: Introduction to metaprogramming
 
-* [IBM - The art of metaprogramming, Part 1: Introduction to metaprogramming
-Write programs to generate other programs](http://www.ibm.com/developerworks/library/l-metaprog1/)
-
-
-* [Design Patterns in Dynamic Programming - Peter Norvig Chief Designer, Adaptive Systems Harlequin Inc.](http://norvig.com/design-patterns/design-patterns.pdf)
-
-* [Why I love Common Lisp and hate Java](https://kuomarc.wordpress.com/2012/01/27/why-i-love-common-lisp-and-hate-java/)
-
-### Blogs, Workshops, Conferences
-
-* [Racket Metaprogramming](http://racket-metaprogramming.com/)
-
-* [Programming Musings](https://jaortega.wordpress.com/category/scheme/)
-
-* [Scheme and Functional Programming Workshop](http://www.schemeworkshop.org/)
-
-* [Advanced Scheme: Some Naughty Bits](http://people.csail.mit.edu/jhbrown/scheme/)
-
-* [Why should programmers care about currying in practice in Scheme?](http://www.wisdomandwonder.com/link/1910/why-should-programmers-care-about-currying-in-practice-in-scheme)
-
-* [The Little Calculist - DAVE HERMAN'S RESEARCH BLOG](http://calculist.blogspot.com.br/2008/10/clojure-metadata.html)
+Write programs to generate other programs](<http://www.ibm.com/developerworks/library/l-metaprog1/>)
 
 
-* http://www.blogbyben.com/2009/08/plt-scheme-gui-accessor-pattern.html
+-   [Design Patterns in Dynamic Programming - Peter Norvig Chief Designer, Adaptive Systems Harlequin Inc.](http://norvig.com/design-patterns/design-patterns.pdf)
 
-* http://www.blogbyben.com/2008/04/tackling-desktop-gui-project-consider.html
+-   [Why I love Common Lisp and hate Java](https://kuomarc.wordpress.com/2012/01/27/why-i-love-common-lisp-and-hate-java/)
 
+## Blogs, Workshops, Conferences<a id="sec-12-4" name="sec-12-4"></a>
 
-### University Courses
+-   [Racket Metaprogramming](http://racket-metaprogramming.com/)
 
-* [CS 491/591: Advanced Scheme Programming and Implementation *](https://www.cs.unm.edu/~williams/cs491s06.html)
+-   [Programming Musings](https://jaortega.wordpress.com/category/scheme/)
 
-* [Cours IFT3065/IFT6232, Hiver 2012 - University of Montreal in French](http://www.iro.umontreal.ca/%CB%9Cfeeley/cours/ift3065-ift6232/)
+-   [Scheme and Functional Programming Workshop](http://www.schemeworkshop.org/)
 
-### Repositories
+-   [Advanced Scheme: Some Naughty Bits](http://people.csail.mit.edu/jhbrown/scheme/)
 
-* [scheme-requests-for-implementation](https://github.com/scheme-requests-for-implementation)
+-   [Why should programmers care about currying in practice in Scheme?](http://www.wisdomandwonder.com/link/1910/why-should-programmers-care-about-currying-in-practice-in-scheme)
 
-* [Scheme Power Tools - Github](https://github.com/mpacula/Scheme-Power-Tools)
+-   [The Little Calculist - DAVE HERMAN'S RESEARCH BLOG](http://calculist.blogspot.com.br/2008/10/clojure-metadata.html)
 
-* [The ActionScript Byte Code assembler / disassembler in PLT Scheme and Gauche](https://github.com/propella/abcsx)
+-   <http://www.blogbyben.com/2009/08/plt-scheme-gui-accessor-pattern.html>
 
-* [Cloje - A clone of Clojure built atop Scheme/Lisp](https://gitlab.com/cloje/cloje)
+-   <http://www.blogbyben.com/2008/04/tackling-desktop-gui-project-consider.html>
 
-* [ Readable Lisp S-expressions - Readable Lisp/S-expressions with infix, functions, and indentation](http://sourceforge.net/projects/readable/)
+## University Courses<a id="sec-12-5" name="sec-12-5"></a>
 
+-   [CS 491/591: Advanced Scheme Programming and Implementation \*](https://www.cs.unm.edu/~williams/cs491s06.html)
 
+-   [Cours IFT3065/IFT6232, Hiver 2012 - University of Montreal in French](http://www.iro.umontreal.ca/%CB%9Cfeeley/cours/ift3065-ift6232/)
 
-### Misc
+## Repositories<a id="sec-12-6" name="sec-12-6"></a>
 
-* [Hyperpolyglot / Lisp: Common Lisp, Racket, Clojure, Emacs Lisp](http://hyperpolyglot.org/lisp)
-* [Scheme/ML Comparison](http://courses.cs.washington.edu/courses/cse341/10sp/notes/transition.html)
+-   [scheme-requests-for-implementation](https://github.com/scheme-requests-for-implementation)
 
+-   [Scheme Power Tools - Github](https://github.com/mpacula/Scheme-Power-Tools)
 
-* [Lisp Scheme Differences](http://c2.com/cgi/wiki?LispSchemeDifferences)
+-   [The ActionScript Byte Code assembler / disassembler in PLT Scheme and Gauche](https://github.com/propella/abcsx)
 
-* [Scheme Requests for Implementation](http://srfi.schemers.org/)
+-   [Cloje - A clone of Clojure built atop Scheme/Lisp](https://gitlab.com/cloje/cloje)
 
-* [Functional Package Management with Guix](http://arxiv.org/pdf/1305.4584.pdf)
+-   [ Readable Lisp S-expressions - Readable Lisp/S-expressions with infix, functions, and indentation](http://sourceforge.net/projects/readable/)
 
-* [Algebraic Data Types in Scheme](https://pavpanchekha.com/blog/adtscm.html)
+## Misc<a id="sec-12-7" name="sec-12-7"></a>
 
+-   [Hyperpolyglot / Lisp: Common Lisp, Racket, Clojure, Emacs Lisp](http://hyperpolyglot.org/lisp)
+-   [Scheme/ML Comparison](http://courses.cs.washington.edu/courses/cse341/10sp/notes/transition.html)
 
-* [PICOBIT: A Compact Scheme System for Microcontrollers Vincent St-Amour and Marc Feeley](http://www.ccs.neu.edu/home/stamourv/papers/picobit.pdf)
-* [Functional Programming of Behavior-Based Systems Ian Douglas Horswill](http://cs.northwestern.edu/~ian/grl-paper.pdf)
-* [Composing Real-Time Systems](http://www.ijcai.org/Past%20Proceedings/IJCAI-91-VOL1/PDF/034.pdf)
+-   [Lisp Scheme Differences](http://c2.com/cgi/wiki?LispSchemeDifferences)
 
-* [Google Common Lisp Style Guide](https://google.github.io/styleguide/lispguide.xml)
+-   [Scheme Requests for Implementation](http://srfi.schemers.org/)
 
-### Documentation by Subject
+-   [Functional Package Management with Guix](http://arxiv.org/pdf/1305.4584.pdf)
 
-#### Manual
+-   [Algebraic Data Types in Scheme](https://pavpanchekha.com/blog/adtscm.html)
 
-* [GNU Guile 2.0.11 Reference Manual](https://www.gnu.org/software/guile/manual/)
+-   [PICOBIT: A Compact Scheme System for Microcontrollers Vincent St-Amour and Marc Feeley](http://www.ccs.neu.edu/home/stamourv/papers/picobit.pdf)
+-   [Functional Programming of Behavior-Based Systems Ian Douglas Horswill](http://cs.northwestern.edu/~ian/grl-paper.pdf)
+-   [Composing Real-Time Systems](http://www.ijcai.org/Past%20Proceedings/IJCAI-91-VOL1/PDF/034.pdf)
 
-* [MIT/GNU Scheme Reference Manual](http://sicp.ai.mit.edu/Fall-2004/manuals/scheme-7.5.5/doc/scheme_toc.html)
+-   [Google Common Lisp Style Guide](https://google.github.io/styleguide/lispguide.xml)
 
-* [The Incomplete Scheme 48 Reference Manual for release 1.9.2](http://www.s48.org/1.9.2/manual/manual.html)
+## Documentation by Subject<a id="sec-12-8" name="sec-12-8"></a>
 
-* [Chicken Scheme Wiki](http://wiki.call-cc.org/)
+### Manual<a id="sec-12-8-1" name="sec-12-8-1"></a>
 
-* [Gambit Scheme](http://www.iro.umontreal.ca/~gambit/doc/gambit-c.html)
+-   [GNU Guile 2.0.11 Reference Manual](https://www.gnu.org/software/guile/manual/)
 
-#### Libraries and Standards
+-   [MIT/GNU Scheme Reference Manual](http://sicp.ai.mit.edu/Fall-2004/manuals/scheme-7.5.5/doc/scheme_toc.html)
 
+-   [The Incomplete Scheme 48 Reference Manual for release 1.9.2](http://www.s48.org/1.9.2/manual/manual.html)
 
+-   [Chicken Scheme Wiki](http://wiki.call-cc.org/)
+
+-   [Gambit Scheme](http://www.iro.umontreal.ca/~gambit/doc/gambit-c.html)
+
+### Libraries and Standards<a id="sec-12-8-2" name="sec-12-8-2"></a>
 
 **Standards**
 
-* [Revised 5 Report on Scheme](http://www.schemers.org/Documents/Standards/R5RS/r5rs.pdf)
-* [Revised 6 Report on Scheme](http://www.r6rs.org/final/r6rs.pdf)
-* [Revised 7 Report on Scheme](http://trac.sacrideo.us/wg/raw-attachment/wiki/WikiStart/r7rs.pdf)
+-   [Revised 5 Report on Scheme](http://www.schemers.org/Documents/Standards/R5RS/r5rs.pdf)
+-   [Revised 6 Report on Scheme](http://www.r6rs.org/final/r6rs.pdf)
+-   [Revised 7 Report on Scheme](http://trac.sacrideo.us/wg/raw-attachment/wiki/WikiStart/r7rs.pdf)
 
 **Libraries**
 
-* [Scheme Requests for implementation - Github Repository](https://github.com/scheme-requests-for-implementation)
+-   [Scheme Requests for implementation - Github Repository](https://github.com/scheme-requests-for-implementation)
 
-* [Scheme Systems Supporting SRFIs](http://srfi.schemers.org/srfi-implementers.html)
+-   [Scheme Systems Supporting SRFIs](http://srfi.schemers.org/srfi-implementers.html)
 
-* [The SLIB Portable Scheme Library](http://people.csail.mit.edu/jaffer/SLIB)
+-   [The SLIB Portable Scheme Library](http://people.csail.mit.edu/jaffer/SLIB)
 
-#### Syntax
+### Syntax<a id="sec-12-8-3" name="sec-12-8-3"></a>
 
-* [The Scheme language](http://home.adelphi.edu/sbloch/class/archive/270/scheme.shtml)
+-   [The Scheme language](http://home.adelphi.edu/sbloch/class/archive/270/scheme.shtml)
 
-* [CSE 341 -- Scheme Basics](http://courses.cs.washington.edu/courses/cse341/03wi/scheme/basics.html)
+-   [CSE 341 &#x2013; Scheme Basics](http://courses.cs.washington.edu/courses/cse341/03wi/scheme/basics.html)
 
-* [Yet Another Scheme Tutorial](http://www.shido.info/lisp/idx_scm_e.html)
+-   [Yet Another Scheme Tutorial](http://www.shido.info/lisp/idx_scm_e.html)
 
-* [CS 341 - Survey of Programming Languages Scheme for Java Programmers](http://cs.gettysburg.edu/~tneller/cs341/scheme-intro/index.html)
+-   [CS 341 - Survey of Programming Languages Scheme for Java Programmers](http://cs.gettysburg.edu/~tneller/cs341/scheme-intro/index.html)
 
-* [Syntax Overview](http://www.cs.cmu.edu/Groups/AI/html/r4rs/r4rs_6.html)
+-   [Syntax Overview](http://www.cs.cmu.edu/Groups/AI/html/r4rs/r4rs_6.html)
 
-* [LISP/Scheme CptS 355 - Programming Language Design Washington State University](http://www.eecs.wsu.edu/~hauser/teaching/Languages-F09/lectures/scheme/index.html)
+-   [LISP/Scheme CptS 355 - Programming Language Design Washington State University](http://www.eecs.wsu.edu/~hauser/teaching/Languages-F09/lectures/scheme/index.html)
 
-* [R5RS Standard](http://schemers.org/Documents/Standards/R5RS/HTML/)
+-   [R5RS Standard](http://schemers.org/Documents/Standards/R5RS/HTML/)
 
-* [Differences between Scheme and Common Lisp](http://dept-info.labri.u-bordeaux.fr/~strandh/Teaching/Langages-Enchasses/Common/Strandh-Tutorial/diff-scheme.html)
+-   [Differences between Scheme and Common Lisp](http://dept-info.labri.u-bordeaux.fr/~strandh/Teaching/Langages-Enchasses/Common/Strandh-Tutorial/diff-scheme.html)
 
-#### Object Orientated Programming
+### Object Orientated Programming<a id="sec-12-8-4" name="sec-12-8-4"></a>
 
-* [Scheming  with  Objects](http://ftp.cs.indiana.edu/pub/scheme-repository/doc/pubs/swob.txt)
+-   [Scheming  with  Objects](http://ftp.cs.indiana.edu/pub/scheme-repository/doc/pubs/swob.txt)
 
-* [Closures And Objects Are Equivalent](http://c2.com/cgi/wiki?ClosuresAndObjectsAreEquivalent)
+-   [Closures And Objects Are Equivalent](http://c2.com/cgi/wiki?ClosuresAndObjectsAreEquivalent)
 
-* [Records and Object Orientation](http://www.cs.rpi.edu/courses/fall00/ai/scheme/reference/schintro-v14/schintro_133.html)
+-   [Records and Object Orientation](http://www.cs.rpi.edu/courses/fall00/ai/scheme/reference/schintro-v14/schintro_133.html)
 
-* [Object Systems](http://community.schemewiki.org/?object-systems)
+-   [Object Systems](http://community.schemewiki.org/?object-systems)
 
-* [Common Lisp Object System](https://en.wikipedia.org/wiki/Common_Lisp_Object_System)
+-   [Common Lisp Object System](https://en.wikipedia.org/wiki/Common_Lisp_Object_System)
 
-* [Why Scheme Shouldn’t Have An Official Object System](https://pschombe.wordpress.com/2006/04/03/why-scheme-shouldn%E2%80%99t-have-an-official-object-system/)
+-   [Why Scheme Shouldn’t Have An Official Object System](https://pschombe.wordpress.com/2006/04/03/why-scheme-shouldn%E2%80%99t-have-an-official-object-system/)
 
-
-#### Macros and Metaprogramming 
+### Macros and Metaprogramming<a id="sec-12-8-5" name="sec-12-8-5"></a>
 
 **Metaprogramming**
 
-* [What is meta-programming?](http://racket-metaprogramming.com/blog/2015/08/07/what-is-meta-programming/)
+-   [What is meta-programming?](http://racket-metaprogramming.com/blog/2015/08/07/what-is-meta-programming/)
 
-* [Metaprogramming - Programs as data](http://web.archive.org/web/20080221002034/http://www.math.grin.edu/~stone/courses/scheme/readings/metaprogramming.xhtml)
+-   [Metaprogramming - Programs as data](http://web.archive.org/web/20080221002034/http://www.math.grin.edu/~stone/courses/scheme/readings/metaprogramming.xhtml)
 
-* [Racket Metaprogramming](http://racket-metaprogramming.com/)
+-   [Racket Metaprogramming](http://racket-metaprogramming.com/)
 
 **Macros**
 
-* [scheme-faq-macros](http://community.schemewiki.org/?scheme-faq-macros)
+-   [scheme-faq-macros](http://community.schemewiki.org/?scheme-faq-macros)
 
-* [JRM's Syntax-rules Primer for the Merely Eccentric](http://hipster.home.xs4all.nl/lib/scheme/gauche/define-syntax-primer.txt)
+-   [JRM's Syntax-rules Primer for the Merely Eccentric](http://hipster.home.xs4all.nl/lib/scheme/gauche/define-syntax-primer.txt)
 
-* [Racket Macros](http://docs.racket-lang.org/guide/macros.html)
+-   [Racket Macros](http://docs.racket-lang.org/guide/macros.html)
 
-* [Scheme-Style Macros: Patterns and Lexical Scope](https://www.cs.utah.edu/~mflatt/past-courses/cs6510/public_html/macros.pdf)
+-   [Scheme-Style Macros: Patterns and Lexical Scope](https://www.cs.utah.edu/~mflatt/past-courses/cs6510/public_html/macros.pdf)
 
-* [Metaprogramming with Macros](http://wiki.epfl.ch/edicpublic/documents/Candidacy%20exam/2012-09-10-eugeneburmako-researchproposal.pdf)
+-   [Metaprogramming with Macros](http://wiki.epfl.ch/edicpublic/documents/Candidacy%20exam/2012-09-10-eugeneburmako-researchproposal.pdf)
 
-* [A Scheme Syntax-Rules Primer](http://www.willdonnelly.net/blog/scheme-syntax-rules/)
+-   [A Scheme Syntax-Rules Primer](http://www.willdonnelly.net/blog/scheme-syntax-rules/)
 
-* [The Adventures of a Pythonista in Schemeland v0.1 documentation » Hygienic macros](http://www.phyast.pitt.edu/~micheles/scheme/scheme28.html)
+-   [The Adventures of a Pythonista in Schemeland v0.1 documentation » Hygienic macros](http://www.phyast.pitt.edu/~micheles/scheme/scheme28.html)
 
-* [Chapter 8. Syntactic Extension](http://www.scheme.com/tspl2d/syntax.html)
+-   [Chapter 8. Syntactic Extension](http://www.scheme.com/tspl2d/syntax.html)
 
-* [Macro systems in Scheme](http://pereckerdal.com/2010/05/17/macro-systems/)
+-   [Macro systems in Scheme](http://pereckerdal.com/2010/05/17/macro-systems/)
 
-* [A Short R⁷RS Scheme Tutorial](https://csl.name/post/scheme-tutorial/)
+-   [A Short R⁷RS Scheme Tutorial](https://csl.name/post/scheme-tutorial/)
 
-* [Scheme-Style Macros: Patterns and Lexical Scope](https://www.cs.utah.edu/~mflatt/past-courses/cs6520/public_html/s04/macro-tutorial.pdf)
+-   [Scheme-Style Macros: Patterns and Lexical Scope](https://www.cs.utah.edu/~mflatt/past-courses/cs6520/public_html/s04/macro-tutorial.pdf)
 
-* [Writing Hygienic Macros in Scheme with Syntax-Case - R. Kent Dybvig - Indiana University Computer Science Department Bloomington](https://www.cs.indiana.edu/~dyb/pubs/tr356.pdf)
+-   [Writing Hygienic Macros in Scheme with Syntax-Case - R. Kent Dybvig - Indiana University Computer Science Department Bloomington](https://www.cs.indiana.edu/~dyb/pubs/tr356.pdf)
 
-* [Source-to-Source Compilation in Racket You Want it in Which Language?](https://ifl2014.github.io/submissions/ifl2014_submission_6.pdf)
+-   [Source-to-Source Compilation in Racket You Want it in Which Language?](https://ifl2014.github.io/submissions/ifl2014_submission_6.pdf)
 
-* [Low- and high-level macro programming in Scheme - http://okmij.org](http://okmij.org/ftp/Scheme/macros.html)
+-   [Low- and high-level macro programming in Scheme - <http://okmij.org>](http://okmij.org/ftp/Scheme/macros.html)
 
+### Serialization and Data Representation<a id="sec-12-8-6" name="sec-12-8-6"></a>
 
-#### Serialization and Data Representation
+-   [S-expression - Wikipedia](https://en.wikipedia.org/wiki/S-expression)
+-   [SXML format](https://en.wikipedia.org/wiki/SXML)
+-   [Oleg Kiselyov's SXML tools](http://okmij.org/ftp/Scheme/SXML.html)
 
-* [S-expression - Wikipedia](https://en.wikipedia.org/wiki/S-expression)
-* [SXML format](https://en.wikipedia.org/wiki/SXML)
-* [Oleg Kiselyov's SXML tools](http://okmij.org/ftp/Scheme/SXML.html)
+-   [Canonical S-expression](https://en.wikipedia.org/wiki/Canonical_S-expressions)
+-   [SEXP&#x2014;(S-expressions)](http://people.csail.mit.edu/rivest/sexp.html)
+-   [S-Expressions](http://people.csail.mit.edu/rivest/Sexp.txt)
+-   [S-Expression Isomorphism Between Lisp and Markup](http://www.kludgecode.com/index.php/s-expression-isomorphism-between-lisp-and-markup/)
+-   [S-expressions for fun and profit](http://www.jonathanfischer.net/s-expressions/)
 
-* [Canonical S-expression](https://en.wikipedia.org/wiki/Canonical_S-expressions)
-* [SEXP---(S-expressions)](http://people.csail.mit.edu/rivest/sexp.html)
-* [S-Expressions](http://people.csail.mit.edu/rivest/Sexp.txt)
-* [S-Expression Isomorphism Between Lisp and Markup](http://www.kludgecode.com/index.php/s-expression-isomorphism-between-lisp-and-markup/)
-* [S-expressions for fun and profit](http://www.jonathanfischer.net/s-expressions/)
+-   [Real World OCaml - Chapter 17. Data Serialization with S-Expressions](https://realworldocaml.org/v1/en/html/data-serialization-with-s-expressions.html)
 
-* [Real World OCaml - Chapter 17. Data Serialization with S-Expressions](https://realworldocaml.org/v1/en/html/data-serialization-with-s-expressions.html)
+-   [Comparison of data serialization formats](http://www.seomastering.com/wiki/Comparison_of_data_serialization_formats)
 
-* [Comparison of data serialization formats](http://www.seomastering.com/wiki/Comparison_of_data_serialization_formats)
+### Scheme as Extension Language<a id="sec-12-8-7" name="sec-12-8-7"></a>
 
-#### Scheme as Extension Language
+-   [GNU Cash - Custom Reports](http://wiki.gnucash.org/wiki/Custom_Reports)
 
-* [GNU Cash - Custom Reports](http://wiki.gnucash.org/wiki/Custom_Reports)
+-   [GEDA - Scripting a gnetlist backend in Scheme](http://wiki.geda-project.org/geda:gnetlist_scheme_tutorial)
 
-* [GEDA - Scripting a gnetlist backend in Scheme](http://wiki.geda-project.org/geda:gnetlist_scheme_tutorial)
+-   [Festival Speech Synthesis systems](http://festvox.org/festvox-1.2/festvox_6.html)
 
-* [Festival Speech Synthesis systems](http://festvox.org/festvox-1.2/festvox_6.html)
+### Algebraic Data Types - Monads, Monoids<a id="sec-12-8-8" name="sec-12-8-8"></a>
 
-#### Algebraic Data Types - Monads, Monoids
+-   [Understanding the Haskell IO Monad. By Building a Toy Model in Scheme](http://dorophone.blogspot.com/2011/11/understanding-haskell-io-monad.html)
 
-* [Understanding the Haskell IO Monad. By Building a Toy Model in Scheme](http://dorophone.blogspot.com/2011/11/understanding-haskell-io-monad.html)
+-   [Monoids in Scheme](http://tobilehman.com/blog/2013/09/07/monoids-in-scheme/)
 
-* [Monoids in Scheme](http://tobilehman.com/blog/2013/09/07/monoids-in-scheme/)
+-   [Racket / Better Monads](http://planet.racket-lang.org/package-source/toups/functional.plt/1/0/better-monads-guide.html)
 
-* [Racket / Better Monads](http://planet.racket-lang.org/package-source/toups/functional.plt/1/0/better-monads-guide.html)
+-   [Monadic Programming in Scheme](http://okmij.org/ftp/Scheme/monad-in-Scheme.html)
 
-* [Monadic Programming in Scheme](http://okmij.org/ftp/Scheme/monad-in-Scheme.html)
+-   [Monadic parser combinator library in PLT Scheme. (Racket)](http://d.hatena.ne.jp/reinyannyan/20080812/p1)
 
-* [Monadic parser combinator library in PLT Scheme. (Racket)](http://d.hatena.ne.jp/reinyannyan/20080812/p1)
+### Continuation<a id="sec-12-8-9" name="sec-12-8-9"></a>
 
-#### Continuation
+-   [Delimited continuation - Wikipedia](https://en.wikipedia.org/wiki/Delimited_continuation)
+-   [Call-with-current-continuation - Wikipedia](https://en.wikipedia.org/wiki/Call-with-current-continuation)
 
-* [Delimited continuation - Wikipedia](https://en.wikipedia.org/wiki/Delimited_continuation)
-* [Call-with-current-continuation - Wikipedia](https://en.wikipedia.org/wiki/Call-with-current-continuation)
+-   [Applications of Continuations - Daniel P. Friedman - Indiana University](https://karczmarczuk.users.greyc.fr/TEACH/Doc/appcont.pdf)
 
+-   [Continuation Passing Style Interpreters](http://blog.theincredibleholk.org/blog/2013/11/27/continuation-passing-style-interpreters/)
 
-* [Applications of Continuations - Daniel P. Friedman - Indiana University](https://karczmarczuk.users.greyc.fr/TEACH/Doc/appcont.pdf)
+-   [guile and delimited continuations](http://wingolog.org/archives/2010/02/26/guile-and-delimited-continuations)
 
-* [Continuation Passing Style Interpreters](http://blog.theincredibleholk.org/blog/2013/11/27/continuation-passing-style-interpreters/)
+-   [shido.info - 16. Continuation](https://www.shido.info/lisp/scheme_cc_e.html)
 
-* [guile and delimited continuations](http://wingolog.org/archives/2010/02/26/guile-and-delimited-continuations)
+-   [CPS 343/543 Lecture notes: Continuations and call/cc](http://academic.udayton.edu/saverioperugini/courses/cps343/lecture_notes/continuations.html)
 
-* [shido.info - 16. Continuation](https://www.shido.info/lisp/scheme_cc_e.html)
+-   [Continuations by example: Exceptions, time-traveling search, generators, threads, and coroutines](http://matt.might.net/articles/programming-with-continuations--exceptions-backtracking-search-threads-generators-coroutines/)
 
-* [CPS 343/543 Lecture notes: Continuations and call/cc](http://academic.udayton.edu/saverioperugini/courses/cps343/lecture_notes/continuations.html)
+-   [Scheme WHY STUDY FUNCTIONAL LANGUAGES](http://www.cs.rochester.edu/~brown/173/lectures/functional/scheme/Scheme.html)
 
-* [Continuations by example: Exceptions, time-traveling search, generators, threads, and coroutines](http://matt.might.net/articles/programming-with-continuations--exceptions-backtracking-search-threads-generators-coroutines/)
+### Compilation<a id="sec-12-8-10" name="sec-12-8-10"></a>
 
-* [Scheme WHY STUDY FUNCTIONAL LANGUAGES](http://www.cs.rochester.edu/~brown/173/lectures/functional/scheme/Scheme.html)
+-   [What is a Lisp image?](http://stackoverflow.com/questions/480083/what-is-a-lisp-image)
 
-#### Compilation 
+-   [Have some way to save the REPL state of Common Lisp or Scheme?](http://stackoverflow.com/questions/3960140/have-some-way-to-save-the-repl-state-of-common-lisp-or-scheme)
 
-* [What is a Lisp image?](http://stackoverflow.com/questions/480083/what-is-a-lisp-image)
+## Hacker News Threads<a id="sec-12-9" name="sec-12-9"></a>
 
-* [Have some way to save the REPL state of Common Lisp or Scheme?](http://stackoverflow.com/questions/3960140/have-some-way-to-save-the-repl-state-of-common-lisp-or-scheme)
+-   [Systems Programming with Racket (racket-lang.org)](https://news.ycombinator.com/item?id=2506485)
 
-### Hacker News Threads
+-   [Reproducible Development Environments with GNU Guix (dthompson.us)](https://news.ycombinator.com/item?id=8616918)
 
-* [Systems Programming with Racket (racket-lang.org)](https://news.ycombinator.com/item?id=2506485)
+-   [Interviews with Lisp Hackers: Pascal Costanza (lisp-univ-etc.blogspot.com)](https://news.ycombinator.com/item?id=3847242)
 
-* [Reproducible Development Environments with GNU Guix (dthompson.us)](https://news.ycombinator.com/item?id=8616918)
+-   [ Ask news.YC: For the lisp experts - tell me how you learned the language.](https://news.ycombinator.com/item?id=58558)
 
-* [Interviews with Lisp Hackers: Pascal Costanza (lisp-univ-etc.blogspot.com)](https://news.ycombinator.com/item?id=3847242)
+-   [Is Scheme as good as Common Lisp?](https://news.ycombinator.com/item?id=48657)
 
-* [ Ask news.YC: For the lisp experts - tell me how you learned the language.](https://news.ycombinator.com/item?id=58558)
+-   [A Haskell Programmer Tries to Learn Racket (artyom.me)](https://news.ycombinator.com/item?id=7595098)
 
-* [Is Scheme as good as Common Lisp?](https://news.ycombinator.com/item?id=48657)
+## Lambda Ultimate Threads<a id="sec-12-10" name="sec-12-10"></a>
 
-* [A Haskell Programmer Tries to Learn Racket (artyom.me)](https://news.ycombinator.com/item?id=7595098)
-
-### Lambda Ultimate Threads
-
-* [Scheme Unit](http://c2.com/cgi/wiki?SchemeUnit)
-* [Lisp Me Unit](http://c2.com/cgi/wiki?LispMeUnit)
+-   [Scheme Unit](http://c2.com/cgi/wiki?SchemeUnit)
+-   [Lisp Me Unit](http://c2.com/cgi/wiki?LispMeUnit)

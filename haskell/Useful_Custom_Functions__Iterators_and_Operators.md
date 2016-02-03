@@ -1,33 +1,25 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
-- [Useful Custom Functions/ Iterators and Operators](#useful-custom-functions-iterators-and-operators)
+- [Useful Custom Functions/ Iterators and Operators](#useful-custom-functions/-iterators-and-operators)
   - [Pipelining Operators](#pipelining-operators)
-  - [Iterators](#iterators)
+    - [Iterators](#iterators)
     - [Pair Iterator](#pair-iterator)
     - [Triples Iterator](#triples-iterator)
     - [Sliding Window Iterator](#sliding-window-iterator)
     - [Enumerate Iterator](#enumerate-iterator)
   - [Applying Multiples Functions](#applying-multiples-functions)
-    - [Applying a list of functions to the same argument.](#applying-a-list-of-functions-to-the-same-argument)
-    - [Applying a tuple of functions to a same argument.](#applying-a-tuple-of-functions-to-a-same-argument)
+    - [Applying a list of functions to the same argument.](#applying-a-list-of-functions-to-the-same-argument.)
+    - [Applying a tuple of functions to a same argument.](#applying-a-tuple-of-functions-to-a-same-argument.)
     - [Control Flow Functions](#control-flow-functions)
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+# Useful Custom Functions/ Iterators and Operators<a id="sec-1" name="sec-1"></a>
 
-## Useful Custom Functions/ Iterators and Operators
+This is a collection of useful short code snippets. 
 
-This a collection of useful short code snippets. 
-
-
-### Pipelining Operators
+## Pipelining Operators<a id="sec-1-1" name="sec-1-1"></a>
 
 Haskell doesn't have a native Pipe operator like F# (F-Sharp) does, however
 it can be defined by the user.
 
 ```haskell
-
 > let (|>) x f = f x
 > 
 > let (|>>) x f = map f x
@@ -53,13 +45,12 @@ it can be defined by the user.
 > [1..10] ?>> even |>> (+1)
 [3,5,7,9,11]
 > 
-> 
-
+>
 ```
 
-### Iterators
+### Iterators<a id="sec-1-1-1" name="sec-1-1-1"></a>
 
-#### Pair Iterator
+### Pair Iterator<a id="sec-1-1-2" name="sec-1-1-2"></a>
 
 Definition:
 
@@ -70,11 +61,13 @@ pairs alist = zip alist (tail alist)
 The pairs iterator converts a list of elements to a new list of consecutive elements tuple. 
 
 Pseudo code:
+
 ```
 pairs [e0, e1, e2, e3, e4 ...] ==> [(e0, e1), (e1, e2), (e3, e4) ...]
 ```
 
 Let f be a function of two arguments:
+
 ```
 f :: a -> a -> b
 ```
@@ -82,14 +75,14 @@ f :: a -> a -> b
 The function f can be applied to to the pairs sequence using the higher order function uncurry.
 
 Pseudo code:
-```   
+
+```
 > g = uncurry(f) :: (a, a) -> b
 > g (x, y) = f x y
 
 > map uncurry(f) $ pairs [e0, e1, e2, e3, e4 ...]
 >   [g (e0, e1), g (e1, e2), g (e2, e3), g (e3, e4) ...]
 ```
-
 
 It can be useful to calculate the distance between two points, lagged difference, growth of a time series, draw a line between each two consecutive points or apply any function to two consecutive elements.
 
@@ -105,14 +98,14 @@ Example: Grouping Consecutive numbers
 Example: Lagged Difference
 
 Pseudo code:
+
 ```
 lagdiff [e0, e1, e2, e3, e4 ...] ==> [(e1 - e0), (e2 - e1), (e3 - e2) ... ]
-``` 
+```
 
 Development:
 
 ```haskell
-
 > let pairs alist = zip alist (tail alist)
 
 > :t pairs
@@ -160,14 +153,12 @@ lagdiff :: Num b => [b] -> [b]
 
 > lagdiff [10, 30, 5, 8, 100]
 [20,-25,3,92]
-> 
-
+>
 ```
 
 Example: Distance between points on the plane.
 
 ```haskell
-
 > let pairs alist = zip alist (tail alist)
 
 {- [(X, Y)]  coordinates of points in a plane -}
@@ -197,18 +188,19 @@ Example: Distance between points on the plane.
 > 
 > totalLength points 
 14.022600562229327
-> 
-
+>
 ```
 
-#### Triples Iterator
+### Triples Iterator<a id="sec-1-1-3" name="sec-1-1-3"></a>
 
 Definition:
+
 ```haskell
 triples alist = zip3 alist (tail alist) (tail $ tail alist)
 ```
 
 Example:
+
 ```haskell
 > triples [1..10]
 [(1,2,3),(2,3,4),(3,4,5),(4,5,6),(5,6,7),(6,7,8),(7,8,9),(8,9,10)]
@@ -217,10 +209,10 @@ Example:
 > :t triples 
 triples :: [c] -> [(c, c, c)]
 > 
-> 
+>
 ```
 
-#### Sliding Window Iterator
+### Sliding Window Iterator<a id="sec-1-1-4" name="sec-1-1-4"></a>
 
 This iterator is used in Scala and it is a generalized pairs iterator.
 
@@ -247,20 +239,22 @@ Example:
 
 > sliding 9 [1..10]
 [[1,2,3,4,5,6,7,8,9],[2,3,4,5,6,7,8,9,10]]
-> 
+>
 ```
 
 Scala Equivalent
+
 ```
 scala> (1 to 5).iterator.sliding(3).toList
 res2: List[Seq[Int]] = List(List(1, 2, 3), List(2, 3, 4), List(3, 4, 5))
 ```
 
-#### Enumerate Iterator
+### Enumerate Iterator<a id="sec-1-1-5" name="sec-1-1-5"></a>
 
 Equivalent to python enumerate.
 
 Definition:
+
 ```haskell
 enumerate :: [b] -> [(Int, b)]
 enumerate alist = zip [0..(length(alist)-1)] alist
@@ -274,7 +268,7 @@ Example:
 
 > take 8  (enumerate ['a'..'z'])
 [(0,'a'),(1,'b'),(2,'c'),(3,'d'),(4,'e'),(5,'f'),(6,'g'),(7,'h')]
-> 
+>
 ```
 
 **Group by length**
@@ -303,14 +297,12 @@ Example:
 > 
 > groupByLen 3 ['a'..'z']
 ["abc","def","ghi","jkl","mno","pqr","stu","vwx"]
-> 
-
+>
 ```
 
-### Applying Multiples Functions
+## Applying Multiples Functions<a id="sec-1-2" name="sec-1-2"></a>
 
-
-#### Applying a list of functions to the same argument.
+### Applying a list of functions to the same argument.<a id="sec-1-2-1" name="sec-1-2-1"></a>
 
 **juxt** is a function that allows apply a list of functions of same type signature to a single argument. This is useful for numerical analysis, statistics and engineering. This function was taken from the Clojure library.
 
@@ -319,6 +311,7 @@ juxt fs x = map ($ x) fs
 ```
 
 Example:
+
 ```
 > let juxt fs x = map ($ x) fs
 
@@ -337,10 +330,10 @@ fs :: Double -> [Double]
 > 
 > map fs [10, 20, 30]
 [[30.0,14.0,1.0],[60.0,24.0,2.0],[90.0,34.0,3.0]]
-> 
+>
 ```
 
-#### Applying a tuple of functions to a same argument.
+### Applying a tuple of functions to a same argument.<a id="sec-1-2-2" name="sec-1-2-2"></a>
 
 The family of functions juxt2, juxt3, juxt4 allow apply tuples of functions to a single argument. This is necessary when the functions don't have the same type signature. 
 
@@ -352,8 +345,8 @@ juxt5 (f1, f2, f3, f4, f5) x = (f1 x, f2 x, f3 x, f4 x, f5 x)
 ```
 
 Example:
-```haskell
 
+```haskell
 {- 
 
 This function fails in static typed language when 
@@ -438,10 +431,9 @@ f :: Char -> (Char, Char, Int)
 ("ibtlfmm!jt!gvo","g`rjdkk\UShr\USetm",[104,97,115,107,101,108,108,32,105,115,32,102,117,110])
 > 
 >
-
 ```
 
-#### Control Flow Functions
+### Control Flow Functions<a id="sec-1-2-3" name="sec-1-2-3"></a>
 
 **between**
 
@@ -470,7 +462,7 @@ f(x) = if pred(x) == True then: fa(x) else fb(x)
 ifelseDo pred fa fb  x  =  if pred x then fa x else fb x
 ```
 
-Example: Apply the list the function (if x >10 then 10*x else x+5)
+Example: Apply the list the function (if x >10 then 10\*x else x+5)
 
 ```haskell
 > let  ifelseDo pred fa fb  x  =  if pred x then fa x else fb x
@@ -495,11 +487,9 @@ Example: Apply the list the function (if x >10 then 10*x else x+5)
 
 λ> map f [-1, 2, 7, 8, 9, 10, 20, 30, 50]
 [4,7,12,13,14,15,80,120,200]
-
 ```
 
-**ifelse***
-
+**ifelse\***
 
 Pseudo Code:
 
@@ -529,7 +519,7 @@ If x<0 set x to -1 else set to 1
 
 > map f [-1, -2, 3, 4, -5, -6, 0, 2]
 [-1,-1,1,1,-1,-1,1,1]
-> 
+>
 ```
 
 **ifelseEq**
@@ -545,15 +535,13 @@ ifelseEq pred a      x  =  if pred x then a   else x
 ```
 
 Example: if(x) > 10 then 30 else x
-```haskell
 
+```haskell
 > let ifelseEq pred a x  =  if pred x then a   else x
 
 > let f = ifelseEq (>10) 30
 
 > map f [1, 2, 20, 10, 9, 8, 100]
 [1,2,30,10,9,8,30]
-> 
-
+>
 ```
-

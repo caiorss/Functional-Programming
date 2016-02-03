@@ -1,80 +1,115 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
 - [Algebraic Data Types](#algebraic-data-types)
-    - [Enumerated Data Type](#enumerated-data-type)
-    - [Typeclass without Record Syntax](#typeclass-without-record-syntax)
-    - [Record Syntax](#record-syntax)
-    - [Recursive Data Types](#recursive-data-types)
+  - [Overview](#overview)
+  - [Enumerated Data Type](#enumerated-data-type)
+  - [Typeclass without Record Syntax](#typeclass-without-record-syntax)
+  - [Record Syntax](#record-syntax)
+  - [Recursive Data Types](#recursive-data-types)
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-## Algebraic Data Types
+# Algebraic Data Types<a id="sec-1" name="sec-1"></a>
 
 [Under Construction]
 
-[Algebraic data type](http://en.wikipedia.org/wiki/Algebraic_data_type) is a type formed by combining types. It can be used to implement Records, Enumerated Sets, option type and Recursive types. Note: Algebraic data types must not be confused with [Abstract data types](http://en.wikipedia.org/wiki/Abstract_data_type). 
+## Overview<a id="sec-1-1" name="sec-1-1"></a>
 
-* Applications of Algebraic Data Types
-    * Build Embedded Domain specific languages - EDSL
-    * Build Interpreters
-    * Self Documenting code
-    * Avoid Null checking error/ Null reference bug
+[Algebraic data type](http://en.wikipedia.org/wiki/Algebraic_data_type) is a type formed by combining types. It can be
+used to implement Records, Enumerated Sets, option type and Recursive
+types. Note: Algebraic data types must not be confused with [Abstract
+data types](http://en.wikipedia.org/wiki/Abstract_data_type).
+
+-   Applications of Algebraic Data Types
+    -   Build Embedded Domain specific languages - EDSL
+    -   Build Interpreters
+    -   Self Documenting code
+    -   Avoid Null checking error/ Null reference bug
+
+-   Product Types
+    -   Tuples of types   - (Int, Float)
+    -   Records
+
+-   Sum Types
+    -   Tagged or disjoint unions or variant types
+
+-   Enumerated types
+
+-   [Option Type](http://en.wikipedia.org/wiki/Option_type)
+
+Option type is useful in functional programming to avoid boilerplate
+null checking bug on non-deterministics computations.
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
-* Product Types
-    * Tuples of types   - (Int, Float)
-    * Records
-    
-* Sum Types
-    *  Tagged or disjoint unions or variant types
+<colgroup>
+<col  class="left" />
 
-* Enumerated types
+<col  class="left" />
 
-* [Option Type](http://en.wikipedia.org/wiki/Option_type)
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Language</th>
+<th scope="col" class="left">Syntax</th>
+<th scope="col" class="left">&#xa0;</th>
+</tr>
+</thead>
 
-Option type is useful in functional programming to avoid boilerplate null checking bug on non-deterministics computations.
+<tbody>
+<tr>
+<td class="left">Haskell</td>
+<td class="left">data Maybe a = Nothing</td>
+<td class="left">Just a</td>
+</tr>
 
-|  Language       |     Syntax                             |
-|-----------------|----------------------------------------|
-|   Haskell       | data Maybe a = Nothing | Just a        |
-|   OCaml and F#  | type 'a option = None | Some of 'a     |
-|   Standard ML   | datatype 'a option = NONE | SOME of 'a |
-|   Java 8        | , the option type is defined as parameterized final class Optional<T> |
 
+<tr>
+<td class="left">OCaml and F#</td>
+<td class="left">type 'a option = None</td>
+<td class="left">Some of 'a</td>
+</tr>
+
+
+<tr>
+<td class="left">Standard ML</td>
+<td class="left">datatype 'a option = NONE</td>
+<td class="left">SOME of 'a</td>
+</tr>
+
+
+<tr>
+<td class="left">Java 8</td>
+<td class="left">the option type is defined as parameterized final class Optional<T></td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
 
 See also: 
 
-* [The "Designing with types" series - F# for fun and for profiting](http://fsharpforfunandprofit.com/series/designing-with-types.html)
-* [F# : Option Types](http://en.wikibooks.org/wiki/F_Sharp_Programming/Option_Types)
-* [Domain Driven Design](http://fsharpforfunandprofit.com/ddd/)
+-   [The "Designing with types" series - F# for fun and for profiting](http://fsharpforfunandprofit.com/series/designing-with-types.html)
+-   [F# : Option Types](http://en.wikibooks.org/wiki/F_Sharp_Programming/Option_Types)
+-   [Domain Driven Design](http://fsharpforfunandprofit.com/ddd/)
 
 **Selected Wikipedia Pages**
 
-* [Algebraic data type](http://en.wikipedia.org/wiki/Algebraic_data_type)
-* [Dijoint Union](http://en.wikipedia.org/wiki/Disjoint_union)
-* [Product Type](http://en.wikipedia.org/wiki/Product_type)
-* [Type Theory](http://en.wikipedia.org/wiki/Type_theory)
-* [Recursive data type](http://en.wikipedia.org/wiki/Recursive_data_type)
-* [Record (computer science)](http://en.wikipedia.org/wiki/Record_(computer_science))
-* [Enumerated type](http://en.wikipedia.org/wiki/Enumerated_type)
-* [Option Type](http://en.wikipedia.org/wiki/Option_type)
+-   [Algebraic data type](http://en.wikipedia.org/wiki/Algebraic_data_type)
+-   [Dijoint Union](http://en.wikipedia.org/wiki/Disjoint_union)
+-   [Product Type](http://en.wikipedia.org/wiki/Product_type)
+-   [Type Theory](http://en.wikipedia.org/wiki/Type_theory)
+-   [Recursive data type](http://en.wikipedia.org/wiki/Recursive_data_type)
+-   [Record (computer science)](http://en.wikipedia.org/wiki/Record_(computer_science))
+-   [Enumerated type](http://en.wikipedia.org/wiki/Enumerated_type)
+-   [Option Type](http://en.wikipedia.org/wiki/Option_type)
 
-* [Abstract data type](http://en.wikipedia.org/wiki/Abstract_data_type)
+-   [Abstract data type](http://en.wikipedia.org/wiki/Abstract_data_type)
 
-
-
-
-#### Enumerated Data Type
+## Enumerated Data Type<a id="sec-1-2" name="sec-1-2"></a>
 
 **Example: Days of Week**
 
 Enumerated sets is type which can only have a limited number of values. 
 
-
 ```haskell
-
 data Weekday = Monday
              | Tuesday
              | Wednesday
@@ -119,15 +154,12 @@ Monday
 > toDay 6
 Sunday
 > 
-> 
-
-
+>
 ```
 
 **Example: Colors**
 
 ```haskell
-
 data Color
     = Red
     | Orange
@@ -165,15 +197,12 @@ True
 
 > map colorToRGB [ Blue, White, Yellow ]
 [(0,0,255),(255,255,255),(255,255,0)]
-> 
-
-
+>
 ```
 
 **Example: Shapes**
 
 ```haskell
-
 data Shape = Circle  Float 
             | Rect   Float Float 
             deriving Show
@@ -245,16 +274,14 @@ Rectangle of 20.0 x 30.0
 Rectangle of 10.0 x 30.0
 Circle of radius : 3.0
 Circle of radius : 4.0
-> 
-
+>
 ```
 
-#### Typeclass without Record Syntax
+## Typeclass without Record Syntax<a id="sec-1-3" name="sec-1-3"></a>
 
 **Example: Students GPA**
 
 ```haskell
-
 data Student = USU String Float 
              deriving (Show)
 
@@ -285,12 +312,11 @@ class_gpa myclass = (sum c) / fromIntegral  (length c)
 3.0
 ```
 
-#### Record Syntax
+## Record Syntax<a id="sec-1-4" name="sec-1-4"></a>
 
 **Example: Typeclass with record Syntax**
 
 ```haskell
-
 data Person = Person { firstName :: String, 
                        lastName :: String, 
                        age :: Int 
@@ -357,17 +383,171 @@ Person {firstName = "Nikola", lastName = "Tesla", age = 30}
 
 > showPerson tesla
 "Name: \"Nikola\" - Last Name: \"Tesla\" - Age 30"
-> 
-
+>
 ```
 
-#### Recursive Data Types
+## Recursive Data Types<a id="sec-1-5" name="sec-1-5"></a>
 
 **Exmple: Custom List Implementation**
 
+File: list<sub>cons</sub>.hs
+
+```haskell
+data List a = Nil | Cons a (List a) deriving (Show)
+
+is_empty :: List t -> Bool
+is_empty Nil =  True
+is_empty _   =  False
+
+is_empty2  lst = case lst of 
+                    Nil -> True
+                    _   -> False
+
+count :: List t -> Int
+count lst = 
+    case lst of 
+        Nil             -> 0
+        Cons a next_lst -> 1 + count next_lst
+
+suml lst = 
+    case lst of
+        Nil             -> 0
+        Cons a next_lst -> a + suml next_lst
+        
+headl (Cons a _) = a
+headl Nil        = error "Empty List"
+
+safe_headl (Cons a _) = Just a
+safe_headl Nil        = Nothing
+
+lastl Nil           = error "Failed: Empty List"
+lastl (Cons a Nil)  = a
+lastl (Cons _ t)    = lastl t
+
+{- Converts to Haskell List -}
+to_list Nil         = []
+to_list (Cons x xs) = x:(to_list xs)
+
+
+takel n lst =
+    case (n, lst) of
+    (_, Nil      )  -> Nil
+    (0, _        )  -> Nil
+    (k, Cons h  t)  -> Cons h (takel (n-1) t)
+
+
+nth lst n = 
+    case (n, lst) of
+    (_, Nil)       -> error "Index too large"
+    (0, Cons a _)  -> a
+    (k, Cons h t)  -> nth t (n-1) 
+
+
+mapl f Nil          = Nil
+mapl f (Cons h t)   = Cons (f h) (mapl f t)
+
+filterl  f  Nil        = Nil
+filterl  f (Cons h t)  = 
+    if f h 
+        then  Cons h (filterl f t)
+        else  filterl f t
+
+{- Empty List [] -}
+list0 = Nil
+
+{- Sigle element list -}
+list1 = Cons 10 Nil
+list2 = Cons "Haskell" Nil
+
+list3 = Cons 10 (Cons 20 (Cons 30 Nil))
+list4 = Cons 1.25 (Cons 0.65 (Cons 8.123 ( Cons 9.434 Nil)))
+```
+
+Running in ghci
+
+```haskell
+> :l list_cons.hs 
+[1 of 1] Compiling Main             ( list_cons.hs, interpreted )
+Ok, modules loaded: Main.
+
+> :t is_empty
+is_empty :: List t -> Bool
+> :t count 
+count :: List t -> Int
+
+
+> list0
+Nil
+> list1
+Cons 10 Nil
+> list2
+Cons "Haskell" Nil
+> list3
+Cons 10 (Cons 20 (Cons 30 Nil))
+> list4
+Cons 1.25 (Cons 0.65 (Cons 8.123 (Cons 9.434 Nil)))
+
+> :t list0
+list0 :: List a
+> :t list1
+list1 :: List Integer
+> :t list2
+list2 :: List [Char]
+> :t list3
+list3 :: List Integer
+> :t list4
+list4 :: List Double
+
+> Cons 10.23 list0
+Cons 10.23 Nil
+> 
+> Cons 30 list1
+Cons 30 (Cons 10 Nil)
+>
+> Cons 40 list3
+Cons 40 (Cons 10 (Cons 20 (Cons 30 Nil)))
+> 
+> Cons 50 (Cons 40 list3)
+Cons 50 (Cons 40 (Cons 10 (Cons 20 (Cons 30 Nil))))
+
+
+> is_empty list0
+True
+> is_empty list1
+False
+> is_empty list2
+False
+> is_empty list3
+False
+> 
+
+> is_empty2 list0
+True
+> is_empty2 list1
+False
+> is_empty2 list3
+False
+> 
+
+
+> count list0
+0
+> count list1
+1
+> count list2
+1
+> count list3
+3
+
+{- Getting the first element -}
+> headl list0
+
+*Example: Custom List Implementation*
 
 File: list_cons.hs
-```haskell
+
+#+BEGIN_SRC haskell
+
 data List a = Nil | Cons a (List a) deriving (Show)
 
 is_empty :: List t -> Bool
@@ -516,7 +696,8 @@ False
 
 {- Getting the first element -}
 > headl list0
-*** Exception: Empty List
+ *** Exception: Empty List
+
 > headl list1
 10
 > headl list2
@@ -545,7 +726,9 @@ safe_headl :: List a -> Maybe a
 
 {- Getting the last element -}
 > lastl list0
-*** Exception: Failed: Empty List
+
+ *** Exception: Failed: Empty List
+
 > lastl list1
 10
 > lastl list2
@@ -560,7 +743,7 @@ safe_headl :: List a -> Maybe a
 > to_list list0
 []
 > to_list list1
-[10]
+ [ 10 ]
 > to_list list2
 ["Haskell"]
 > to_list list3
@@ -671,6 +854,5 @@ filterl :: (a -> Bool) -> List a -> List a
 ```
 
 Reference: 
-    * http://learnyouahaskell.com/making-our-own-types-and-typeclasses
 
-
+-   <http://learnyouahaskell.com/making-our-own-types-and-typeclasses>

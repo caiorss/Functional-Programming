@@ -1,18 +1,7 @@
-![](images/ocamlogo.png)
-
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
 - [OCaml](#ocaml)
+  - [Overview](#overview)
   - [Setup](#setup)
   - [Toolset](#toolset)
-      - [OCAML Interactive Shell](#ocaml-interactive-shell)
-      - [UTOP Interactive Shell](#utop-interactive-shell)
-      - [OCaml Browser](#ocaml-browser)
-      - [Troubleshooting](#troubleshooting)
-      - [Opam Package Manager](#opam-package-manager)
-      - [Misc](#misc)
   - [Basic Syntax](#basic-syntax)
     - [Primitive Types](#primitive-types)
     - [Operators](#operators)
@@ -20,40 +9,28 @@
     - [Local Binding](#local-binding)
     - [Polymorphic Functions](#polymorphic-functions)
     - [Number Formats](#number-formats)
-    - [Math / Float Functions](#math--float-functions)
+    - [Math / Float Functions](#math-/-float-functions)
     - [Function Declaration](#function-declaration)
     - [Function Composition](#function-composition)
-    - [Lambda Functions/ Anonymous Functions](#lambda-functions-anonymous-functions)
+    - [Lambda Functions/ Anonymous Functions](#lambda-functions/-anonymous-functions)
     - [Recursive Functions](#recursive-functions)
     - [Mutable References](#mutable-references)
     - [Control Structures](#control-structures)
-  - [Standard (Native) Library Modules](#standard-native-library-modules)
+  - [Standard (Native) Library Modules](#standard-(native)-library-modules)
     - [List](#list)
     - [Array](#array)
     - [String](#string)
     - [Sys](#sys)
     - [Filename](#filename)
     - [Unix](#unix)
-    - [IO - Input / Output](#io---input--output)
+    - [IO - Input / Output](#io---input-/-output)
     - [Type Casting](#type-casting)
   - [Algebraic Data Types and Pattern Matching](#algebraic-data-types-and-pattern-matching)
     - [Algebraic Data Types](#algebraic-data-types)
-      - [Record Types](#record-types)
-      - [Disjoint Union](#disjoint-union)
-      - [Agreggated Data types](#agreggated-data-types)
-      - [Pattern Matching](#pattern-matching)
-        - [Basic Pattern Matching](#basic-pattern-matching)
-        - [Tuple Pattern Matching](#tuple-pattern-matching)
-      - [Recursive Data Structures](#recursive-data-structures)
-        - [Alternative List Implementation](#alternative-list-implementation)
-        - [File Tree Recursive Directory Walk](#file-tree-recursive-directory-walk)
   - [Lazy Evaluation](#lazy-evaluation)
-        - [Infinite Lazy Lists](#infinite-lazy-lists)
   - [Foreign Function Interface FFI](#foreign-function-interface-ffi)
     - [Calling C Standard Library and Unix System Calls](#calling-c-standard-library-and-unix-system-calls)
     - [Calling Shared Libraries](#calling-shared-libraries)
-      - [Calling GNU Scientific Library](#calling-gnu-scientific-library)
-      - [Calling Python](#calling-python)
     - [Finding Shared Libraries](#finding-shared-libraries)
     - [References](#references)
   - [Module System](#module-system)
@@ -66,18 +43,11 @@
     - [Compiling a single file](#compiling-a-single-file)
     - [Compiling a single File and a single Module](#compiling-a-single-file-and-a-single-module)
     - [See also](#see-also)
-  - [Creating Libraries, Modules and Compiling to Bytecode or Machine Code](#creating-libraries-modules-and-compiling-to-bytecode-or-machine-code)
+  - [Creating Libraries, Modules and Compiling to Bytecode or Machine Code](#creating-libraries,-modules-and-compiling-to-bytecode-or-machine-code)
     - [Loading Files in Interactive Shell](#loading-files-in-interactive-shell)
     - [Compile Module to Bytecode](#compile-module-to-bytecode)
   - [Batteries Standard Library](#batteries-standard-library)
     - [Batteries Modules](#batteries-modules)
-      - [Batteries List](#batteries-list)
-      - [Lazy List](#lazy-list)
-      - [Bat Enum](#bat-enum)
-      - [String](#string-1)
-      - [BatOption](#batoption)
-      - [BatRef](#batref)
-      - [BatFiles](#batfiles)
   - [Miscellaneous](#miscellaneous)
     - [Changing Toploop Prompt](#changing-toploop-prompt)
     - [Adding Directives to Toploop Shell](#adding-directives-to-toploop-shell)
@@ -88,99 +58,68 @@
     - [Articles](#articles)
     - [Links](#links)
     - [Books](#books)
-      - [Online Books](#online-books)
     - [Community](#community)
-      - [Online Resources](#online-resources)
-      - [Blogs](#blogs)
-      - [Hacker News Threads](#hacker-news-threads)
-      - [Slides and Presentations](#slides-and-presentations)
-      - [Stack Overflow Highlighted Questions](#stack-overflow-highlighted-questions)
-      - [See Also](#see-also)
-      - [Quick Reference Sheets](#quick-reference-sheets)
     - [References By Subject](#references-by-subject)
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+# OCaml<a id="sec-1" name="sec-1"></a>
 
-<!--
-The recursion for foldr f x ys where ys = [y1,y2,...,yk] looks like
+## Overview<a id="sec-1-1" name="sec-1-1"></a>
 
-f y1 (f y2 (... (f yk x) ...))
+![img](images/ocamlogo.png)
 
-whereas the recursion for foldl f x ys looks like
-
-f (... (f (f x y1) y2) ...) yk
-
-foldl is:
-
-    Left associative: f ( ... (f (f (f (f z x1) x2) x3) x4) ...) xn
-    Tail recursive: It iterates through the list, producing the value afterwards
-    Lazy: Nothing is evaluated until the result is needed
-    Backwards: foldl (flip (:)) [] reverses a list.
-
-foldr is:
-
-    Right associative: f x1 (f x2 (f x3 (f x4 ... (f xn z) ... )))
-    Recursive into an argument: Each iteration applies f to the next value and the result of folding the rest of the list.
-    Lazy: Nothing is evaluated until the result is needed
-    Forwards: foldr (:) [] returns a list unchanged.
-
-http://stackoverflow.com/questions/3082324/foldl-versus-foldr-behavior-with-infinite-lists
--->
-
-# OCaml
-
-OCaml (Objective Categorical Abstract Machine Language) (formerly known as Objective Caml) is the main implementation of the Caml programming language, created by Xavier Leroy, Jérôme Vouillon, Damien Doligez, Didier Rémy and others in 1996. OCaml is an open source project managed and principally maintained by the French institute INRIA. The Caml's toolset includes an interactive toplevel interpreter, a bytecode compiler, and an optimizing native code compiler.
+OCaml (Objective Categorical Abstract Machine Language) (formerly
+known as Objective Caml) is the main implementation of the Caml
+programming language, created by Xavier Leroy, Jérôme Vouillon, Damien
+Doligez, Didier Rémy and others in 1996. OCaml is an open source
+project managed and principally maintained by the French institute
+INRIA. The Caml's toolset includes an interactive toplevel
+interpreter, a bytecode compiler, and an optimizing native code
+compiler.
 
 **Features**
 
-* Strong Static Type  - Type Safety
-* Type Inference      - The compiler infers the types for you, you don't need to write all the types;
-* Curried Functions   - Allows to create and functions on the fly.
-* Strict Evaluation by default
-* Optional Lazy Evaluation
-* Multi Paradigm      - Functional, Imperative and Object Orientated
-* Compiled and Interpreted - It allows iteractive development and debugging.
-    * Compiles to natve code and bytecode
-* Algebraic Data Types
-* Pattern Matching
+-   Strong Static Type  - Type Safety
+-   Type Inference      - The compiler infers the types for you, you don't need to write all the types;
+-   Curried Functions   - Allows to create and functions on the fly.
+-   Strict Evaluation by default
+-   Optional Lazy Evaluation
+-   Multi Paradigm      - Functional, Imperative and Object Orientated
+-   Compiled and Interpreted - It allows iteractive development and debugging.
+    -   Compiles to natve code and bytecode
+-   Algebraic Data Types
+-   Pattern Matching
 
 **History**
 
-* ML: Meta Language
-    * 1973, University of Edinburg
-    * Used to program search tactics in LCF theorem prover
+-   ML: Meta Language
+    -   1973, University of Edinburg
+    -   Used to program search tactics in LCF theorem prover
 
-* SML: Standard ML
-    * 1990, Princeton University
+-   SML: Standard ML
+    -   1990, Princeton University
 
-* OCaml
-    * 1996, INRIA
+-   OCaml
+    -   1996, INRIA
 
 **Ocaml Shell Online**
 
 You Can try OCaml online in:
 
-* [OCsigen - JS of Ocaml Toploop](http://ocsigen.org/js_of_ocaml/dev/files/toplevel/index.html)
+-   [OCsigen - JS of Ocaml Toploop](http://ocsigen.org/js_of_ocaml/dev/files/toplevel/index.html)
 
-<!--
-@TODO: Optional data Type description and examples / Maybe Monads
-@TODO: Show how to create libraries, project structure, compile
-@TODO: Add more examples about Lazy Evaluation
-@TODO: Add more examples about Read Input and Output
--->
-
-## Setup
+## Setup<a id="sec-1-2" name="sec-1-2"></a>
 
 Ocaml installer, packages and releases:
-* http://caml.inria.fr/ocaml/release.en.html
+-   <http://caml.inria.fr/ocaml/release.en.html>
 
-* [OCamlPro's version of OCaml on Windows](https://github.com/OCamlPro/ocpwin-distrib)
+-   [OCamlPro's version of OCaml on Windows](https://github.com/OCamlPro/ocpwin-distrib)
 
 **Linux**
 
 Ubuntu:
 
 Show all OCaml packages available.
+
 ```bash
 $ apt-cache search ocaml
 ```
@@ -191,16 +130,19 @@ sudo apt-get install ocaml opam ocaml-native-compilers m4
 ```
 
 Arch Linux:
+
 ```
 $ yaourt -s ocaml
 ```
 
 Gentoo:
+
 ```
 $ emerge ocaml
 ```
 
 Fedora
+
 ```
 $ su - -c "yum install ocaml"
 ```
@@ -212,24 +154,92 @@ opam update
 opam install utop core batteries
 ```
 
-## Toolset
+## Toolset<a id="sec-1-3" name="sec-1-3"></a>
 
-See also: https://github.com/OCamlPro/ocaml-cheat-sheets
+See also: <https://github.com/OCamlPro/ocaml-cheat-sheets>
 
-| Program      | Description                                |
-|--------------|--------------------------------------------|
-| ocaml        | toplevel loop  / Interactive Shell         |
-| ocamlrun     | bytecode interpreter                       |
-| ocamlc       | bytecode batch compiler                    |
-| ocamlopt     | native code batch compiler                 |
-| ocamlc.opt   | optimized bytecode batch compiler          |
-| ocamlopt.opt | optimized native code batch compiler       |
-| ocamlmktop   | new toplevel constructor                   |
-| ocamldoc     | Generate documentation for source files in HTML/ LaTex / man pages |
-| ocamlfind    | Find OCaml packages installed              |
-| opam         | Package manager for OCaml                  |
-| utop[optional] | Improved interactive shell              |
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Program</th>
+<th scope="col" class="left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">ocaml</td>
+<td class="left">toplevel loop  / Interactive Shell</td>
+</tr>
+
+
+<tr>
+<td class="left">ocamlrun</td>
+<td class="left">bytecode interpreter</td>
+</tr>
+
+
+<tr>
+<td class="left">ocamlc</td>
+<td class="left">bytecode batch compiler</td>
+</tr>
+
+
+<tr>
+<td class="left">ocamlopt</td>
+<td class="left">native code batch compiler</td>
+</tr>
+
+
+<tr>
+<td class="left">ocamlc.opt</td>
+<td class="left">optimized bytecode batch compiler</td>
+</tr>
+
+
+<tr>
+<td class="left">ocamlopt.opt</td>
+<td class="left">optimized native code batch compiler</td>
+</tr>
+
+
+<tr>
+<td class="left">ocamlmktop</td>
+<td class="left">new toplevel constructor</td>
+</tr>
+
+
+<tr>
+<td class="left">ocamldoc</td>
+<td class="left">Generate documentation for source files in HTML/ LaTex / man pages</td>
+</tr>
+
+
+<tr>
+<td class="left">ocamlfind</td>
+<td class="left">Find OCaml packages installed</td>
+</tr>
+
+
+<tr>
+<td class="left">opam</td>
+<td class="left">Package manager for OCaml</td>
+</tr>
+
+
+<tr>
+<td class="left">utop[optional]</td>
+<td class="left">Improved interactive shell</td>
+</tr>
+</tbody>
+</table>
 
 ```
 Purpose             C       Bytecode    Native code
@@ -242,15 +252,17 @@ Binary programs     prog    prog        prog.opt4
 
 Standard Libraries:
 
-* [Native Library](http://caml.inria.fr/pub/docs/manual-ocaml/libref/)
+-   [Native Library](http://caml.inria.fr/pub/docs/manual-ocaml/libref/)
 
-* [Core](https://ocaml.janestreet.com/ocaml-core/111.17.00/doc/core/) - Jane Street Capital's Standard
-* https://github.com/janestreet/core_kernel
+-   [Core](https://ocaml.janestreet.com/ocaml-core/111.17.00/doc/core/) - Jane Street Capital's Standard
+-   <https://github.com/janestreet/core_kernel>
 
 Library
-* [Batteries](http://batteries.forge.ocamlcore.org/) - Maintained by community
+
+-   [Batteries](http://batteries.forge.ocamlcore.org/) - Maintained by community
 
 Linux:
+
 ```
 $ apropos ocaml
 Callback (3o)        - Registering OCaml values with the C runtime.
@@ -282,450 +294,502 @@ Parsing (3o)         - The run-time library for parsers generated by ocamlyacc.
 $ whereis ocaml
 ocaml: /usr/bin/ocaml /usr/lib/ocaml /usr/bin/X11/ocaml
 /usr/local/lib/ocaml /usr/share/man/man1/ocaml.1.gz
-
 ```
 
 Extension Files:
 
-| Extension  |  Meaning                         |
-|------------|----------------------------------|
-| .ml        | source file                      |
-| .mli       | interface file                   |
-| .cmo       | object file (bytecode)           |
-| .cma       | library object file (bytecode)   |
-| .cmi       | compiled interface file          |
-| .cmx       | object file (native)             |
-| .cmxa      | library object file (native)     |
-| .c         | C source file                    |
-| .o         | C object file (native)           |
-| .a         | C library object file (native)   |
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Extension</th>
+<th scope="col" class="left">Meaning</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">.ml</td>
+<td class="left">source file</td>
+</tr>
 
 
-#### OCAML Interactive Shell
-
-```
-$ rlwrap -m -c -r -H ../history.ml -f ../completion.txt ocaml
-```
-
-OCAML Directives
-
-Read, compile and execute source phrases from the given file. This is textual inclusion: phrases are processed just as if they were typed on standard input. The reading of the file stops at the first error encountered.
-
-```
-    #use "whatever.ml";;
-```
-
-Load in memory a bytecode object file (.cmo file) or library file (.cma file) produced by the batch compiler ocamlc.
-
-```
-    #load "file-name";;
-```
-
-Add the given directory to the list of directories searched for source and compiled files.
-
-```
-    #directory "dir-name";;
-```
-
-Change the current working directory.
-
-```
-    #cd "dir-name";;
-```
-
-Exit the toplevel loop and terminate the ocaml command.
-
-```
-    #quit;;
-```
-
-Source:
-
-[OCaml Manual](http://caml.inria.fr/pub/docs/manual-ocaml-4.00/manual023.html#toc91)
+<tr>
+<td class="left">.mli</td>
+<td class="left">interface file</td>
+</tr>
 
 
-#### UTOP Interactive Shell
+<tr>
+<td class="left">.cmo</td>
+<td class="left">object file (bytecode)</td>
+</tr>
 
-Install Utop:
 
-```
- # opam install utop
-```
+<tr>
+<td class="left">.cma</td>
+<td class="left">library object file (bytecode)</td>
+</tr>
 
-![](images/utopshell.png)
 
-**Show UTOP help**
+<tr>
+<td class="left">.cmi</td>
+<td class="left">compiled interface file</td>
+</tr>
 
-```ocaml
-    utop # #utop_help;;
-    If you can't see the prompt properly try: #utop_prompt_simple                                                                                                                               utop defines the following directives:
 
-    #utop_bindings   : list all the current key bindings
-    #utop_macro      : display the currently recorded macro
-    #topfind_log     : display messages recorded from findlib since the beginning of the session
-    #topfind_verbose : enable/disable topfind verbosity
-    For a complete description of utop, look at the utop(1) manual page.
-```
+<tr>
+<td class="left">.cmx</td>
+<td class="left">object file (native)</td>
+</tr>
 
-Note: Those commands below also works in the native ocaml interpreter (ocaml).
 
-**Load a library**
+<tr>
+<td class="left">.cmxa</td>
+<td class="left">library object file (native)</td>
+</tr>
 
-```ocaml
-    utop # #use "topfind";;
-    - : unit = ()                                                                                 Findlib has been successfully loaded. Additional directives:                                    #require "package";;      to load a package
-      #list;;                   to list the available packages
-      #camlp4o;;                to load camlp4 (standard syntax)
-      #camlp4r;;                to load camlp4 (revised syntax)
-      #predicates "p,q,...";;   to set these predicates
-      Topfind.reset();;         to force that packages will be reloaded
-      #thread;;                 to enable threads
 
-    - : unit = ()
-```
+<tr>
+<td class="left">.c</td>
+<td class="left">C source file</td>
+</tr>
 
-**List Installed Packages**
 
-```ocaml
-    utop # #list ;;
-    archimedes          (version: 0.4.17) archimedes.graphics (version: 0.4.17)                                  archimedes.internals (version: 0.4.17)
+<tr>
+<td class="left">.o</td>
+<td class="left">C object file (native)</td>
+</tr>
+
+
+<tr>
+<td class="left">.a</td>
+<td class="left">C library object file (native)</td>
+</tr>
+</tbody>
+</table>
+
+1.  OCAML Interactive Shell
+
+    ```
+    $ rlwrap -m -c -r -H ../history.ml -f ../completion.txt ocaml
+    ```
+    
+    OCAML Directives
+    
+    Read, compile and execute source phrases from the given file. This is textual inclusion: phrases are processed just as if they were typed on standard input. The reading of the file stops at the first error encountered.
+    
+    ```
+        #use "whatever.ml";;
+    ```
+    
+    Load in memory a bytecode object file (.cmo file) or library file (.cma file) produced by the batch compiler ocamlc.
+    
+    ```
+        #load "file-name";;
+    ```
+    
+    Add the given directory to the list of directories searched for source and compiled files.
+    
+    ```
+        #directory "dir-name";;
+    ```
+    
+    Change the current working directory.
+    
+    ```
+        #cd "dir-name";;
+    ```
+    
+    Exit the toplevel loop and terminate the ocaml command.
+    
+    ```
+        #quit;;
+    ```
+    
+    Source:
+    
+    [OCaml Manual](http://caml.inria.fr/pub/docs/manual-ocaml-4.00/manual023.html#toc91)
+
+2.  UTOP Interactive Shell
+
+    Install Utop:
+    
+    ```
+     # opam install utop
+    ```
+    
+    ![img](images/utopshell.png)
+    
+    **Show UTOP help**
+    
+    ```ocaml
+        utop # #utop_help;;
+        If you can't see the prompt properly try: #utop_prompt_simple                                                                                                                               utop defines the following directives:
+    
+        #utop_bindings   : list all the current key bindings
+        #utop_macro      : display the currently recorded macro
+        #topfind_log     : display messages recorded from findlib since the beginning of the session
+        #topfind_verbose : enable/disable topfind verbosity
+        For a complete description of utop, look at the utop(1) manual page.
+    ```
+    
+    Note: Those commands below also works in the native ocaml interpreter (ocaml).
+    
+    **Load a library**
+    
+    ```ocaml
+        utop # #use "topfind";;
+        - : unit = ()                                                                                 Findlib has been successfully loaded. Additional directives:                                    #require "package";;      to load a package
+          #list;;                   to list the available packages
+          #camlp4o;;                to load camlp4 (standard syntax)
+          #camlp4r;;                to load camlp4 (revised syntax)
+          #predicates "p,q,...";;   to set these predicates
+          Topfind.reset();;         to force that packages will be reloaded
+          #thread;;                 to enable threads
+    
+        - : unit = ()
+    ```
+    
+    **List Installed Packages**
+    
+    ```ocaml
+        utop # #list ;;
+        archimedes          (version: 0.4.17) archimedes.graphics (version: 0.4.17)                                  archimedes.internals (version: 0.4.17)
+        archimedes.top      (version: 0.4.17)
+        batteries           (version: 2.3)
+        bigarray            (version: [distributed with Ocaml])
+        bin_prot            (version: 111.03.00)
+        ...
+    ```
+    
+    **Load Installed OCaml Packages**
+    
+    ```
+        utop # #require "batteries";;
+        utop # #require "gnuplot";;
+    ```
+    
+    **Show UTOP Key Bindings**
+    
+    ```ocaml
+    utop # #utop_bindings;;
+    enter       : accept                        -> accept the current input.                                  escape      : cancel-search                 -> cancel search mode.                                        tab         : complete                      -> complete current input.
+    up          : history-prev                  -> go to the previous entry of the history.
+    down        : history-next                  -> go to the next entry of the history.
+    ...
+    ```
+    
+    **Load ML file, source code**
+    
+    ```ocaml
+        # #use "text.ml" ;;
+        val split_lines : string -> string list = <fun>
+        val split_space : string -> string list = <fun>
+        val split_delim : string -> string -> string list = <fun>
+        val add_prefix : string -> string -> string = <fun>
+        val add_suffix : string -> string -> string = <fun>
+        # 
+        
+        #  split_space "Hello world ocaml" ;; 
+        - : string list = ["Hello"; "world"; "ocaml"]
+        #
+    ```
+    
+    **Load ML file as module**
+    
+    ```ocaml
+      # #mod_use "text.ml" ;;
+        module Text :
+          sig
+            val split_lines : string -> string list
+            val split_space : string -> string list
+            val split_delim : string -> string -> string list
+            val add_prefix : string -> string -> string
+            val add_suffix : string -> string -> string
+          end
+        # 
+    
+        #  Text.split_space "Hello world ocaml" ;;
+        - : string list = ["Hello"; "world"; "ocaml"]
+        #
+    ```
+    
+    **Show a Module Sinature**
+    
+    (Ocaml version >= 4.2)
+    
+    ```ocaml
+        # #show Filename ;;
+        module Filename :
+          sig
+            val current_dir_name : string
+            val parent_dir_name : string
+            val dir_sep : string
+            val concat : string -> string -> string
+            val is_relative : string -> bool
+            val is_implicit : string -> bool
+            val check_suffix : string -> string -> bool
+            val chop_suffix : string -> string -> string
+            val chop_extension : string -> string
+            val basename : string -> string
+            val dirname : string -> string
+            val temp_file : ?temp_dir:string -> string -> string -> string
+            val open_temp_file :
+              ?mode:open_flag list ->
+              ?temp_dir:string -> string -> string -> string * out_channel
+            val get_temp_dir_name : unit -> string
+            val set_temp_dir_name : string -> unit
+            val temp_dir_name : string
+            val quote : string -> string
+          end
+        #
+    ```
+
+3.  OCaml Browser
+
+    Browser OCaml Type Signatures.
+    
+    ```
+    $ ocamlfind browser -all
+    $ ocamlfind ocamlbrowser -package core
+    $ ocamlfind browser -package batterie
+    ```
+    
+    ![img](images/ocamlbrowser.png)
+    
+    -   <http://caml.inria.fr/pub/docs/manual-ocaml/browser.html>
+
+4.  Troubleshooting
+
+    Finding the version of Ocaml and Opam
+    
+    ```bash
+    $ ocaml -version
+    The OCaml toplevel, version 4.01.0
+    
+    $ opam --version
+    1.2.2
+    
+    $ ocamlc -v
+    The OCaml compiler, version 4.01.0
+    Standard library directory: /usr/lib/ocaml
+    
+    $ ocamlopt -v
+    The OCaml native-code compiler, version 4.01.0
+    Standard library directory: /usr/lib/ocaml
+    
+    $ utop -version
+    The universal toplevel for OCaml, version 1.17, compiled for OCaml version 4.01.0
+    ```
+    
+    Get information about compiled files:
+    
+    ```
+    $ ocamlobjinfo seq.cmo
+    File seq.cmo
+    Unit name: Seq
+    Interfaces imported:
+        54ba2685e6ed154753718e9c8becb28b    String
+        6e0efdddf4b33e30be4cc8ff056b56ff    Seq
+        4836c254f0eacad92fbf67abc525fdda    Pervasives
+    Uses unsafe features: no
+    Force link: no
+    
+    
+    $ ocamlobjinfo seq.cma
+    File seq.cma
+    Force custom: no
+    Extra C object files:
+    Extra C options:
+    Extra dynamically-loaded libraries:
+    Unit name: Seq
+    Interfaces imported:
+        54ba2685e6ed154753718e9c8becb28b    String
+        4387952f7aad2695faf187cd3feeb5e5    Seq
+        4836c254f0eacad92fbf67abc525fdda    Pervasives
+    Uses unsafe features: no
+    Force link: no
+    
+    
+    $ ocamlobjinfo seq.cmi
+    File seq.cmi
+    Unit name: Seq
+    Interfaces imported:
+        4387952f7aad2695faf187cd3feeb5e5    Seq
+        4836c254f0eacad92fbf67abc525fdda    Pervasives
+    ```
+
+5.  Opam Package Manager
+
+    Opam Version
+    
+    ```
+    $ opam --version
+    1.2.2
+    ```
+    
+    List Installed Versions of OCaml compilers:
+    
+    ```
+    $ opam switch list
+    --     -- 3.11.2             Official 3.11.2 release
+    --     -- 3.12.1             Official 3.12.1 release
+    --     -- 4.00.0             Official 4.00.0 release
+    --     -- 4.00.1             Official 4.00.1 release
+    4.01.0  C 4.01.0             Official 4.01.0 release
+    --     -- 4.02.0             Official 4.02.0 release
+    4.02.1  I 4.02.1             Official 4.02.1 release
+    --     -- ocamljava-preview
+    doc     I system             System compiler (4.00.1)
+     # 111 more patched or experimental compilers, use '--all' to show
+    ```
+    
+    Switch to a ocaml version 4.02.1:
+    
+    ```
+    $ opam switch 4.02.1
+     # To setup the new switch in the current shell, you need to run:
+    eval `opam config env`
+    ```
+    
+    Search Packages
+    
+    ```
+    $ opam search core
+     * Existing packages for 4.01.0:
+    async               --  Monadic concurrency library
+    async_core          --  Monadic concurrency library
+    async_extended      --  Additional utilities for async
+    ...
+    ```
+    
+    Install Packages
+    
+    ```
+    opam install lablgtk ocamlfind
+    ```
+    
+    Upgrade Packages
+    
+    ```
+    $ opam upgrade
+    ```
+    
+    Show all Installed Packages
+    
+    ```
+    $  ocamlfind list
+    archimedes          (version: 0.4.17)
+    archimedes.graphics (version: 0.4.17)
+    archimedes.internals (version: 0.4.17)
     archimedes.top      (version: 0.4.17)
     batteries           (version: 2.3)
     bigarray            (version: [distributed with Ocaml])
     bin_prot            (version: 111.03.00)
-    ...
-```
-
-
-**Load Installed OCaml Packages**
-
-```
-    utop # #require "batteries";;
-    utop # #require "gnuplot";;
-```
-
-**Show UTOP Key Bindings**
-```ocaml
-utop # #utop_bindings;;
-enter       : accept                        -> accept the current input.                                  escape      : cancel-search                 -> cancel search mode.                                        tab         : complete                      -> complete current input.
-up          : history-prev                  -> go to the previous entry of the history.
-down        : history-next                  -> go to the next entry of the history.
-...
-```
-
-**Load ML file, source code**
-
-```ocaml
-    # #use "text.ml" ;;
-    val split_lines : string -> string list = <fun>
-    val split_space : string -> string list = <fun>
-    val split_delim : string -> string -> string list = <fun>
-    val add_prefix : string -> string -> string = <fun>
-    val add_suffix : string -> string -> string = <fun>
-    # 
+    bin_prot.syntax     (version: 111.03.00)
+    bytes               (version: [OCaml strictly before 4.02])
+    camlp4              (version: [distributed with Ocaml])
+    camlp4.exceptiontracer (version: [distributed with Ocaml])
+    camlp4.extend       (version: [distributed with Ocaml])
+    camlp4.foldgenerator (version: [distributed with Ocaml])
+    ..
+    ```
     
-    #  split_space "Hello world ocaml" ;; 
-    - : string list = ["Hello"; "world"; "ocaml"]
-    #        
-```
+    Finding Opam Settings
+    
+    ```bash
+    $ opam config list
+     # Global OPAM configuration variables
+    
+    user                 tux
+    group                tux
+    make                 make
+    os                   linux
+    root                 /home/tux/.opam
+    prefix               /home/tux/.opam/system
+    lib                  /home/tux/.opam/system/lib
+    bin                  /home/tux/.opam/system/bin
+    sbin                 /home/tux/.opam/system/sbin
+    doc                  /home/tux/.opam/system/doc
+    stublibs             /home/tux/.opam/system/lib/stublibs
+    toplevel             /home/tux/.opam/system/lib/toplevel
+    man                  /home/tux/.opam/system/man
+    share                /home/tux/.opam/system/share
+    etc                  /home/tux/.opam/system/etc
+    
+     # Global variables from the environment
+    
+    ocaml-version        4.01.0     # The version of the currently used OCaml compiler
+    opam-version         1.2.2      # The currently running OPAM version
+    compiler             system     # The name of the current OCaml compiler (may be more specific than the version, eg: "4.01.0+fp", or "system")
+    preinstalled         true       # Whether the compiler was preinstalled on the system, or installed by OPAM
+    switch               system     # The local name (alias) of the current switch
+    jobs                 1          # The number of parallel jobs set up in OPAM configuration
+    ocaml-native         true       # Whether the OCaml native compilers are available
+    ocaml-native-tools   false      # Whether the native ".opt" version of the OCaml toolchain is available
+    ocaml-native-dynlink true       # Whether native dynlink is available on this installation
+    arch                 i686       # The current arch, as returned by "uname -m"
+    
+     # Package variables ('opam config list PKG' to show)
+    
+    PKG:name         # Name of the package
+    PKG:version      # Version of the package
+    PKG:depends      # Resolved direct dependencies of the package
+    PKG:installed    # Whether the package is installed
+    PKG:enable       # Takes the value "enable" or "disable" depending on whether the package is installed
+    PKG:pinned       # Whether the package is pinned
+    PKG:bin          # Binary directory for this package
+    PKG:sbin         # System binary directory for this package
+    PKG:lib          # Library directory for this package
+    PKG:man          # Man directory for this package
+    PKG:doc          # Doc directory for this package
+    PKG:share        # Share directory for this package
+    PKG:etc          # Etc directory for this package
+    PKG:build        # Directory where the package was built
+    PKG:hash         # Hash of the package archive
+    ```
+    
+    Filter Installed Packages
+    
+    ```
+    $ ocamlfind list | grep -i core
+    cohttp.lwt-core     (version: 0.17.1)
+    core                (version: 111.28.01)
+    core.syntax         (version: 109.32.00)
+    core.top            (version: 111.28.01)
+    core_kernel         (version: 111.28.00)
+    core_kernel.check_caml_modify (version: 111.28.00)
+    core_kernel.raise_without_backtrace (version: 111.28.00)
+    netmulticore        (version: 4.0.2)
+    num.core            (version: [internal])
+    
+    $ ocamlfind list | grep -i batteries
+    batteries           (version: 2.3
+    ```
 
-**Load ML file as module**
+6.  Misc
 
-```ocaml
-  # #mod_use "text.ml" ;;
-    module Text :
-      sig
-        val split_lines : string -> string list
-        val split_space : string -> string list
-        val split_delim : string -> string -> string list
-        val add_prefix : string -> string -> string
-        val add_suffix : string -> string -> string
-      end
-    # 
+    Create .mli file from .ml files. The command bellow creates context.mli from context.ml
+    
+    ```
+    $ ocamlc -i -c context.ml > context.mli
+    ```
+    
+    Custom Top Level Interpreter with preload libraries:
+    
+    ```
+    $ ocamlmktop -custom -o mytoplevel graphics.cma -cclib -lX11
+    ./mytoplevel
+    ```
 
-    #  Text.split_space "Hello world ocaml" ;;
-    - : string list = ["Hello"; "world"; "ocaml"]
-    # 
-
-```
-
-**Show a Module Sinature**
-
-(Ocaml version >= 4.2)
-
-```ocaml
-    # #show Filename ;;
-    module Filename :
-      sig
-        val current_dir_name : string
-        val parent_dir_name : string
-        val dir_sep : string
-        val concat : string -> string -> string
-        val is_relative : string -> bool
-        val is_implicit : string -> bool
-        val check_suffix : string -> string -> bool
-        val chop_suffix : string -> string -> string
-        val chop_extension : string -> string
-        val basename : string -> string
-        val dirname : string -> string
-        val temp_file : ?temp_dir:string -> string -> string -> string
-        val open_temp_file :
-          ?mode:open_flag list ->
-          ?temp_dir:string -> string -> string -> string * out_channel
-        val get_temp_dir_name : unit -> string
-        val set_temp_dir_name : string -> unit
-        val temp_dir_name : string
-        val quote : string -> string
-      end
-    # 
-```
-
-#### OCaml Browser
-
-Browser OCaml Type Signatures.
-
-```
-$ ocamlfind browser -all
-$ ocamlfind ocamlbrowser -package core
-$ ocamlfind browser -package batterie
-```
-
-![](images/ocamlbrowser.png)
-
-* http://caml.inria.fr/pub/docs/manual-ocaml/browser.html
-
-#### Troubleshooting
-
-Finding the version of Ocaml and Opam
-
-```bash
-$ ocaml -version
-The OCaml toplevel, version 4.01.0
-
-$ opam --version
-1.2.2
-
-$ ocamlc -v
-The OCaml compiler, version 4.01.0
-Standard library directory: /usr/lib/ocaml
-
-$ ocamlopt -v
-The OCaml native-code compiler, version 4.01.0
-Standard library directory: /usr/lib/ocaml
-
-$ utop -version
-The universal toplevel for OCaml, version 1.17, compiled for OCaml version 4.01.0
-```
-
-Get information about compiled files:
-
-```
-$ ocamlobjinfo seq.cmo
-File seq.cmo
-Unit name: Seq
-Interfaces imported:
-    54ba2685e6ed154753718e9c8becb28b    String
-    6e0efdddf4b33e30be4cc8ff056b56ff    Seq
-    4836c254f0eacad92fbf67abc525fdda    Pervasives
-Uses unsafe features: no
-Force link: no
-
-
-$ ocamlobjinfo seq.cma
-File seq.cma
-Force custom: no
-Extra C object files:
-Extra C options:
-Extra dynamically-loaded libraries:
-Unit name: Seq
-Interfaces imported:
-    54ba2685e6ed154753718e9c8becb28b    String
-    4387952f7aad2695faf187cd3feeb5e5    Seq
-    4836c254f0eacad92fbf67abc525fdda    Pervasives
-Uses unsafe features: no
-Force link: no
-
-
-$ ocamlobjinfo seq.cmi
-File seq.cmi
-Unit name: Seq
-Interfaces imported:
-    4387952f7aad2695faf187cd3feeb5e5    Seq
-    4836c254f0eacad92fbf67abc525fdda    Pervasives
-
-```
-
-#### Opam Package Manager
-
-Opam Version
-
-```
-$ opam --version
-1.2.2
-```
-
-List Installed Versions of OCaml compilers:
-
-```
-$ opam switch list
---     -- 3.11.2             Official 3.11.2 release
---     -- 3.12.1             Official 3.12.1 release
---     -- 4.00.0             Official 4.00.0 release
---     -- 4.00.1             Official 4.00.1 release
-4.01.0  C 4.01.0             Official 4.01.0 release
---     -- 4.02.0             Official 4.02.0 release
-4.02.1  I 4.02.1             Official 4.02.1 release
---     -- ocamljava-preview
-doc     I system             System compiler (4.00.1)
- # 111 more patched or experimental compilers, use '--all' to show
-```
-
-Switch to a ocaml version 4.02.1:
-
-```
-$ opam switch 4.02.1
- # To setup the new switch in the current shell, you need to run:
-eval `opam config env`
-
-```
-
-Search Packages
-
-```
-$ opam search core
-# Existing packages for 4.01.0:
-async               --  Monadic concurrency library
-async_core          --  Monadic concurrency library
-async_extended      --  Additional utilities for async
-...
-```
-
-Install Packages
-
-```
-opam install lablgtk ocamlfind
-```
-
-Upgrade Packages
-
-```
-$ opam upgrade
-```
-
-Show all Installed Packages
-
-```
-$  ocamlfind list
-archimedes          (version: 0.4.17)
-archimedes.graphics (version: 0.4.17)
-archimedes.internals (version: 0.4.17)
-archimedes.top      (version: 0.4.17)
-batteries           (version: 2.3)
-bigarray            (version: [distributed with Ocaml])
-bin_prot            (version: 111.03.00)
-bin_prot.syntax     (version: 111.03.00)
-bytes               (version: [OCaml strictly before 4.02])
-camlp4              (version: [distributed with Ocaml])
-camlp4.exceptiontracer (version: [distributed with Ocaml])
-camlp4.extend       (version: [distributed with Ocaml])
-camlp4.foldgenerator (version: [distributed with Ocaml])
-..
-```
-
-Finding Opam Settings
-
-```bash
-$ opam config list
- # Global OPAM configuration variables
-
-user                 tux
-group                tux
-make                 make
-os                   linux
-root                 /home/tux/.opam
-prefix               /home/tux/.opam/system
-lib                  /home/tux/.opam/system/lib
-bin                  /home/tux/.opam/system/bin
-sbin                 /home/tux/.opam/system/sbin
-doc                  /home/tux/.opam/system/doc
-stublibs             /home/tux/.opam/system/lib/stublibs
-toplevel             /home/tux/.opam/system/lib/toplevel
-man                  /home/tux/.opam/system/man
-share                /home/tux/.opam/system/share
-etc                  /home/tux/.opam/system/etc
-
- # Global variables from the environment
-
-ocaml-version        4.01.0     # The version of the currently used OCaml compiler
-opam-version         1.2.2      # The currently running OPAM version
-compiler             system     # The name of the current OCaml compiler (may be more specific than the version, eg: "4.01.0+fp", or "system")
-preinstalled         true       # Whether the compiler was preinstalled on the system, or installed by OPAM
-switch               system     # The local name (alias) of the current switch
-jobs                 1          # The number of parallel jobs set up in OPAM configuration
-ocaml-native         true       # Whether the OCaml native compilers are available
-ocaml-native-tools   false      # Whether the native ".opt" version of the OCaml toolchain is available
-ocaml-native-dynlink true       # Whether native dynlink is available on this installation
-arch                 i686       # The current arch, as returned by "uname -m"
-
- # Package variables ('opam config list PKG' to show)
-
-PKG:name         # Name of the package
-PKG:version      # Version of the package
-PKG:depends      # Resolved direct dependencies of the package
-PKG:installed    # Whether the package is installed
-PKG:enable       # Takes the value "enable" or "disable" depending on whether the package is installed
-PKG:pinned       # Whether the package is pinned
-PKG:bin          # Binary directory for this package
-PKG:sbin         # System binary directory for this package
-PKG:lib          # Library directory for this package
-PKG:man          # Man directory for this package
-PKG:doc          # Doc directory for this package
-PKG:share        # Share directory for this package
-PKG:etc          # Etc directory for this package
-PKG:build        # Directory where the package was built
-PKG:hash         # Hash of the package archive
-
-```
-
-Filter Installed Packages
-
-```
-$ ocamlfind list | grep -i core
-cohttp.lwt-core     (version: 0.17.1)
-core                (version: 111.28.01)
-core.syntax         (version: 109.32.00)
-core.top            (version: 111.28.01)
-core_kernel         (version: 111.28.00)
-core_kernel.check_caml_modify (version: 111.28.00)
-core_kernel.raise_without_backtrace (version: 111.28.00)
-netmulticore        (version: 4.0.2)
-num.core            (version: [internal])
-
-$ ocamlfind list | grep -i batteries
-batteries           (version: 2.3
-```
-
-#### Misc
-
-Create .mli file from .ml files. The command bellow creates context.mli from context.ml
-```
-$ ocamlc -i -c context.ml > context.mli
-```
-
-Custom Top Level Interpreter with preload libraries:
-
-```
-$ ocamlmktop -custom -o mytoplevel graphics.cma -cclib -lX11
-./mytoplevel
-```
-
-<!--
-    ---------------------------------------------------------------
--->
-
-## Basic Syntax
+## Basic Syntax<a id="sec-1-4" name="sec-1-4"></a>
 
 This section describes the OCaml native library and [Pervasives module](http://caml.inria.fr/pub/docs/manual-ocaml/libref/Pervasives.html).
 
@@ -766,8 +830,7 @@ Sequence  ASCII     Name
     - : char = '!'
 ```
 
-
-### Primitive Types
+### Primitive Types<a id="sec-1-4-1" name="sec-1-4-1"></a>
 
 ```ocaml
 $ ocaml
@@ -905,18 +968,14 @@ $ ocaml
     #
 ```
 
+### Operators<a id="sec-1-4-2" name="sec-1-4-2"></a>
 
-
-### Operators
-
-
-Float Functions must use +. /. -. *. operators since Ocaml doesn't support
+Float Functions must use +. /. -. \*. operators since Ocaml doesn't support
 operator overload.
 
 Boolean Operators
 
 ```ocaml
-
     (* NOT                  *)
     (*----------------------*)
 
@@ -966,8 +1025,8 @@ Boolean Operators
 ```
 
 Comparison
-```ocaml
 
+```ocaml
     (* Equality *)
     # (=) ;;
     - : 'a -> 'a -> bool = <fun>
@@ -1019,9 +1078,7 @@ Comparison
     # min 2.323 100.33 ;;
     - : float = 2.323
     #
-
 ```
-
 
 ```ocaml
      # (+) ;;
@@ -1089,7 +1146,7 @@ Comparison
     #
 ```
 
-### Variable Declaration
+### Variable Declaration<a id="sec-1-4-3" name="sec-1-4-3"></a>
 
 ```ocaml
 > let x = 2 ;;
@@ -1121,7 +1178,7 @@ val a : float = 2.323
 
 
 
-(******* Tuples ************)
+(****** Tuples ***********)
 
 >  (90, 100 ) ;;
 - : int * int = (90, 100)
@@ -1133,13 +1190,11 @@ val a : float = 2.323
 
 >  ("hello", 23.23 ) ;;
 - : string * float = ("hello", 23.23)
-
 ```
 
-### Local Binding 
+### Local Binding<a id="sec-1-4-4" name="sec-1-4-4"></a>
 
-```ocaml 
-
+```ocaml
     # let  x = 10 in 
       let  y = 3  in
       let  z = 4  in 
@@ -1155,7 +1210,7 @@ val a : float = 2.323
     Error: Unbound value z
     # 
 
-    (************************)
+    (**********************)
 
     # let z = 
         let x = 10 in
@@ -1171,7 +1226,7 @@ val a : float = 2.323
     Error: Unbound value y
     # 
 
-    (************************)
+    (**********************)
     
     # let a = 
         let f1 x = 10 *x in
@@ -1190,7 +1245,7 @@ val a : float = 2.323
     Error: Unbound value fxy
 
 
-    (************************)
+    (**********************)
     
     # let a, b, c = 
          let f1 x  = 3 * x in 
@@ -1209,11 +1264,10 @@ val a : float = 2.323
     Error: Unbound value f1
     # f2 ;;
     Error: Unbound value f2
-    # 
-
+    #
 ```
 
-### Polymorphic Functions
+### Polymorphic Functions<a id="sec-1-4-5" name="sec-1-4-5"></a>
 
 ```ocaml
 > let id = fun x -> x ;;
@@ -1226,23 +1280,20 @@ val id : 'a -> 'a = <fun>
 >  id "Hello world" ;;
 - : string = "Hello world"
 >
-
 ```
 
-### Number Formats
+### Number Formats<a id="sec-1-4-6" name="sec-1-4-6"></a>
 
+-   Int   -  Default Interger format 31 bits signed int on 32 bits machine and 63 bits on a 64 bits machine
+-   [Int32](http://caml.inria.fr/pub/docs/manual-ocaml/libref/Int32.html) - 32 bits signed int
+-   [Int64](http://caml.inria.fr/pub/docs/manual-ocaml/libref/Int64.html) - 63 bits signed int
 
-* Int   -  Default Interger format 31 bits signed int on 32 bits machine and 63 bits on a 64 bits machine
-* [Int32](http://caml.inria.fr/pub/docs/manual-ocaml/libref/Int32.html) - 32 bits signed int
-* [Int64](http://caml.inria.fr/pub/docs/manual-ocaml/libref/Int64.html) - 63 bits signed int
+-   Float -  IEEE.754 - 64 bits double precision float point numbers.
 
-* Float -  IEEE.754 - 64 bits double precision float point numbers.
-
-* [Num](http://caml.inria.fr/pub/docs/manual-ocaml/libref/Num.html) - Arbitrary Precision Integer
-* [Big_Int](http://caml.inria.fr/pub/docs/manual-ocaml/libref/Big_int.html) - Arbitrary Precision Integer
+-   [Num](http://caml.inria.fr/pub/docs/manual-ocaml/libref/Num.html) - Arbitrary Precision Integer
+-   [Big<sub>Int</sub>](http://caml.inria.fr/pub/docs/manual-ocaml/libref/Big_int.html) - Arbitrary Precision Integer
 
 ```ocaml
-
 (* 31 bits signed int, since this machine has 32 bits word lenght*)
 
     # Pervasives.min_int ;;
@@ -1311,7 +1362,6 @@ Numeric Literals
 Number Conversion / Type Casting
 
 ```ocaml
-
     # Int32.of_int 10002373 ;;
     - : int32 = 10002373l
     # Int32.of_float 232322.323 ;;
@@ -1345,10 +1395,9 @@ Number Conversion / Type Casting
     - : float = 1000.
 ```
 
-Math Operations. In Ocaml the same operator cannot be used for more than one type, so to add ints (+) must be used, to add floats (+.), to add Int32, (Int32.add) and to add Int64, (Int64.add).
+Math Operations. In Ocaml the same operator cannot be used for more than one type, so to add ints (.), to add Int32, (Int32.add) and to add Int64, (Int64.add).
 
 ```ocaml
-
     # (+) ;;
     - : int -> int -> int = <fun>
 
@@ -1515,20 +1564,17 @@ Math Operations. In Ocaml the same operator cannot be used for more than one typ
 
     # fun1_float_ 100. 20. ;;
     - : float = 920.
-
 ```
 
-
-### Math / Float Functions
+### Math / Float Functions<a id="sec-1-4-7" name="sec-1-4-7"></a>
 
 Documentation:
 
 OCaml's floating-point complies with the [IEEE 754 standard](http://en.wikipedia.org/wiki/IEEE_floating_point),  double precision (64 bits) numbers.
 
-* http://caml.inria.fr/pub/docs/manual-ocaml/libref/Pervasives.html
+-   <http://caml.inria.fr/pub/docs/manual-ocaml/libref/Pervasives.html>
 
 ```ocaml
-
 (* Operators *)
 
     # (+.) ;;
@@ -1650,10 +1696,9 @@ OCaml's floating-point complies with the [IEEE 754 standard](http://en.wikipedia
     #
 ```
 
-### Function Declaration
+### Function Declaration<a id="sec-1-4-8" name="sec-1-4-8"></a>
 
 ```ocaml
-
 > let x = 34 ;;
 val x : int = 34
 
@@ -1781,7 +1826,6 @@ val double_list : float list -> float list = <fun>
 
 > double_list [1. ; 2. ; 3. ; 4. ; 5. ] ;;
 - : float list = [2.; 4.; 6.; 8.; 10.]
-
 ```
 
 Declaring function type with anonymous functions.
@@ -1948,7 +1992,6 @@ x = 20y = 20z = 20w = 20- : unit = ()
 Functions with Optional Parameters:
 
 ```ocaml
-
 (*
     If the parameter x is not given, x will be set to 100
 *)
@@ -2026,10 +2069,9 @@ but an expression was expected of type 'a -> 'b
 > List.map (fun h -> rectangle_area ~height:h ~width:30 )
 [10; 20; 30; 40; 50] ;;
 - : int list = [300; 600; 900; 1200; 1500]
-
 ```
 
-### Function Composition
+### Function Composition<a id="sec-1-4-9" name="sec-1-4-9"></a>
 
 Operators:
 
@@ -2044,7 +2086,6 @@ let (>>) f g x = g( f x) ;;
 let (|>) x f  = f x ;;
 
 let (<|) f x = f x ;;
-
 ```
 
 Example: Composition Operator
@@ -2075,7 +2116,6 @@ val f : int -> int = <fun>
 >  f 20 ;;
 - : int = 34
 >
-
 ```
 
 Example: Pipe Operators
@@ -2111,7 +2151,7 @@ val f : int -> int = <fun>
 - : int = 14
 ```
 
-### Lambda Functions/ Anonymous Functions
+### Lambda Functions/ Anonymous Functions<a id="sec-1-4-10" name="sec-1-4-10"></a>
 
 Anonymous functions, also known as lambda functions, are useful to pass already existing functions to another functions as arguments and create closures.  They are specially useful when used with map filter and another higher order functions. They can be seen as bolts that connect one part to another.
 
@@ -2128,7 +2168,6 @@ fun x y z -> (x,y,z)               : 'a -> 'b -> 'c -> ('a*'b*'c)
 In the shell:
 
 ```ocaml
-
 > fun x -> x+1  ;;
 - : int -> int = <fun>
 
@@ -2162,7 +2201,7 @@ val f : int -> int = <fun>
 > (fun x y z ->  10 * x + 4 * z - 3 * x * y) 1 2 3 ;; 
 - : int = 16 
 
-(** Partial Evaluation **)
+(* Partial Evaluation *)
 (*----------------------*)
 
 > let f = fun x y z ->  10 * x + 4 * z - 3 * x * y ;;
@@ -2217,14 +2256,11 @@ val f : int -> int -> int -> int = <fun>
 |> List.map (fun (x, y) -> 4 * x + 3 * y) 
 ;;
 - : int list = [50; 60]
-
 ```
 
-
-### Recursive Functions
+### Recursive Functions<a id="sec-1-4-11" name="sec-1-4-11"></a>
 
 ```ocaml
-
     # let rec factorial1 n =
         match n with
         | 0 -> 1
@@ -2401,14 +2437,11 @@ val f : int -> int -> int -> int = <fun>
     # range (-100) 100 10 ;;
     - : int list = [-100; -90; -80; -70; -60; -50; -40; -30; -20;
     -10; 0; 10; 20; 30; 40; 50; 60; 70; 80; 90; 100]
-
 ```
 
-
-### Mutable References
+### Mutable References<a id="sec-1-4-12" name="sec-1-4-12"></a>
 
 ```ocaml
-
 (** Declare a reference *)
 
     #  let x = ref 0 ;;
@@ -2513,7 +2546,7 @@ val f : int -> int -> int -> int = <fun>
     # 
 
 
-    (*********************)
+    (*******************)
     
     # let y = ref 10 ;;
     val y : int ref = {contents = 10}
@@ -2537,7 +2570,7 @@ val f : int -> int -> int -> int = <fun>
     - : int ref = {contents = 30}
     # 
 
-    (***********************************)
+    (*********************************)
     
     #  let swap_ref a b = 
           let c = !a in
@@ -2625,10 +2658,10 @@ val f : int -> int -> int -> int = <fun>
     - : unit = ()
     # lst ;;
     - : float list ref = {contents = [2.; 4.; 6.; 3.23; 832.23; 90.23]}
-    #     
+    #
 ```
 
-### Control Structures
+### Control Structures<a id="sec-1-4-13" name="sec-1-4-13"></a>
 
 Conditional Expressions
 
@@ -2661,7 +2694,7 @@ val sign : int -> int = <fun>
 > List.map sign [1; -1; 0; 2; 3] ;;
 - : int list = [1; -1; 0; 1; 1]
 
-> 
+>
 ```
 
 For Loop:
@@ -2696,7 +2729,6 @@ x = 3
 x = 2
 x = 1
 - : unit = ()
-
 ```
 
 Infinite While Loop
@@ -2733,31 +2765,28 @@ hello world / hit return to continue
 hello world / hit return to continue
 ```
 
-
-<!--
-    ---------------------------------------------------------------
--->
-
-## Standard (Native) Library Modules
+## Standard (Native) Library Modules<a id="sec-1-5" name="sec-1-5"></a>
 
 Then native library is small and lacks many things someone would like and most functions are [not tail recursive](https://blogs.janestreet.com/optimizing-list-map/), it means that it will overflow stack for a very big number of iterations. For a better standard library see: Batteries and Core.
 
 
-* [Documentation](http://caml.inria.fr/pub/docs/manual-ocaml/libref)
+-   [Documentation](http://caml.inria.fr/pub/docs/manual-ocaml/libref)
 
-### List
+### List<a id="sec-1-5-1" name="sec-1-5-1"></a>
 
 The module List has almost all functions to process lists which are immutable data structures.
 
-* http://caml.inria.fr/pub/docs/manual-ocaml/libref/List.html
+-   <http://caml.inria.fr/pub/docs/manual-ocaml/libref/List.html>
 
 Cons and Nil
+
 ```ocaml
 [] : 'a list                    (*     Nil *)
 :: : 'a -> 'a list -> 'a list   (* :: Cons *)
 ```
 
 Example:
+
 ```ocaml
 >   23::[] ;;
 - : int list = [23]
@@ -2779,7 +2808,6 @@ Example:
 List Functions
 
 ```ocaml
-
 (* Concatenate Lists *)
 > (@) ;;
 - : 'a list -> 'a list -> 'a list = <fun>
@@ -3089,15 +3117,13 @@ y = 2
 z = 3
 - : unit = ()
 >
-
-
 ```
 
-### Array
+### Array<a id="sec-1-5-2" name="sec-1-5-2"></a>
 
 Arrays as oppose to lists are mmutable data structures.
 
-* http://caml.inria.fr/pub/docs/manual-ocaml/libref/Array.html
+-   <http://caml.inria.fr/pub/docs/manual-ocaml/libref/Array.html>
 
 ```ocaml
 > [| 10; 2 ; 10; 25 ; 100; 0 ; 1 |]  ;;
@@ -3236,21 +3262,19 @@ x[6] = 1
 - : int -> int -> 'a -> 'a array array = <fun>
 > Array.make_matrix 2 3 1 ;;
 - : int array array = [|[|1; 1; 1|]; [|1; 1; 1|]|]
-
 ```
 
-### String
+### String<a id="sec-1-5-3" name="sec-1-5-3"></a>
 
 There are more useful string functions on the core library.
 
-* http://caml.inria.fr/pub/docs/manual-ocaml/libref/String.html
-* http://caml.inria.fr/pub/docs/manual-ocaml/libref/Char.html
-* http://caml.inria.fr/pub/docs/manual-ocaml/libref/Str.html
+-   <http://caml.inria.fr/pub/docs/manual-ocaml/libref/String.html>
+-   <http://caml.inria.fr/pub/docs/manual-ocaml/libref/Char.html>
+-   <http://caml.inria.fr/pub/docs/manual-ocaml/libref/Str.html>
 
 **Char Module**
 
 ```ocaml
-
 (* Acii code to Char *)
 
     # Char.chr ;;
@@ -3279,8 +3303,6 @@ There are more useful string functions on the core library.
 **String Module**
 
 ```ocaml
-
-
 (* Length of String *)
 
     # String.length "Hello world" ;;
@@ -3365,14 +3387,11 @@ There are more useful string functions on the core library.
     - : string = "Hello world"
 ```
 
-
-
 **Str Module**
 
-* http://caml.inria.fr/pub/docs/manual-ocaml/libref/Str.html
+-   <http://caml.inria.fr/pub/docs/manual-ocaml/libref/Str.html>
 
 ```ocaml
-
 (* When in the toploop interactive shell *)
     #load "str.cma"
 
@@ -3414,12 +3433,11 @@ There are more useful string functions on the core library.
 
 **Buffer Module**
 
-* http://caml.inria.fr/pub/docs/manual-ocaml/libref/Str.html
+-   <http://caml.inria.fr/pub/docs/manual-ocaml/libref/Str.html>
 
 It provides accumulative concatenation of strings in quasi-linear time (instead of quadratic time when strings are concatenated pairwise).
 
 ```ocaml
-
 > Buffer.create ;;
 - : int -> Buffer.t = <fun>
 
@@ -3564,7 +3582,6 @@ val c : Buffer.t = <abstr>
 Splitting a string into characters.
 
 ```ocaml
-
 > let s = "p2p peer to peer connection" ;;
 val s : bytes = "p2p peer to peer connection"
 
@@ -3673,7 +3690,6 @@ val str2digits : bytes -> int list = <fun>
 
 > str2digits "1234" ;;
 - : int list = [1; 2; 3; 4]
-
 ```
 
 Join Chars
@@ -3704,13 +3720,11 @@ val chars2str : char list -> bytes = <fun>
 
 > chars2str ['o' ; 'c'; 'a'; 'm'; 'l' ] ;;
 - : bytes = "ocaml"
-
 ```
 
 Strip Left Chars
 
 ```ocaml
-
 > let trim chars s =
     let n = String.length s in
     let b = Buffer.create 0 in
@@ -3726,22 +3740,13 @@ Strip Left Chars
 
 > trim ['-'; '.']  "-.--.--.....-trim chars---...----.-.-" ;;
 - : bytes = "trim chars"
-
 ```
 
+### Sys<a id="sec-1-5-4" name="sec-1-5-4"></a>
 
-
-
-<!--
-    ---------------------------------------------------------------
--->
-
-### Sys
-
-http://caml.inria.fr/pub/docs/manual-ocaml/libref/Sys.html
+<http://caml.inria.fr/pub/docs/manual-ocaml/libref/Sys.html>
 
 ```ocaml
-
 (* Command Line Arguments *)
 
     > Sys.argv ;;
@@ -3854,7 +3859,6 @@ http://caml.inria.fr/pub/docs/manual-ocaml/libref/Sys.html
 Extra Example:
 
 ```ocaml
-
     # let (|> x f = f x ;;
 
     # let (<|) f x = f x ;;
@@ -3890,15 +3894,13 @@ Extra Example:
      "System.map-3.13.0-36-generic"; "initrd.img-3.13.0-36-generic";
      "xen-4.4-amd64.gz"; "config-3.13.0-36-generic"; "vmlinuz-3.13.0-36-generic"]
     #
-
 ```
 
-### Filename
+### Filename<a id="sec-1-5-5" name="sec-1-5-5"></a>
 
 It provides file name combinators.
 
 ```ocaml
-
     # #show Filename ;;
     module Filename :
       sig
@@ -4023,12 +4025,10 @@ It provides file name combinators.
     |> print_endline ;;
     'separated file name is not good.txt'
     - : unit = ()
-    # 
-    
-
+    #
 ```
 
-### Unix
+### Unix<a id="sec-1-5-6" name="sec-1-5-6"></a>
 
 [Documention](http://caml.inria.fr/pub/docs/manual-ocaml/libref/Unix.html)
 
@@ -4044,8 +4044,6 @@ $ ocamlfind ocamlopt -package more,unix program.ml -linkpkg -o progra
 **System**
 
 ```ocaml
-
-
     (* It is only needed on the toploop shell *)
     > #load "unix.cma" ;;
 
@@ -4173,14 +4171,12 @@ $ ocamlfind ocamlopt -package more,unix program.ml -linkpkg -o progra
 
     > popen_in "uname -r" ;;
     - : string = "3.19.0-21-generic\n"
-    > 
-        
+    >
 ```
 
 **Date and Time**
 
 ```ocaml
-    
     # #load "unix.cma" ;;
   
     (*  Return the current time since 00:00:00 GMT, Jan. 1, 1970, in seconds
@@ -4412,15 +4408,14 @@ $ ocamlfind ocamlopt -package more,unix program.ml -linkpkg -o progra
     
     # day_count (make_date (2003, 5, 12)) (make_date (2008, 9, 10)) ;;
     - : int = 1949
-    # 
+    #
 ```
 
-### IO - Input / Output
+### IO - Input / Output<a id="sec-1-5-7" name="sec-1-5-7"></a>
 
 Standard Print Functions
 
 ```ocaml
-
 > print_string "Hello world!\n";;
 Hello world!
 - : unit = ()
@@ -4511,10 +4506,9 @@ utop # input_char filein ;;
 utop #
 ```
 
-### Type Casting
+### Type Casting<a id="sec-1-5-8" name="sec-1-5-8"></a>
 
 ```ocaml
-
 utop # float_of_int 2323 ;;
 - : float = 2323.
 
@@ -4549,654 +4543,629 @@ utop # string_of_float 23.2323 ;;
 - : string = "23.2323"
 ```
 
-
-<!--
-    ---------------------------------------------------------------
--->
-
-
-<!--
-    ---------------------------------------------------------------
--->
-
-## Algebraic Data Types and Pattern Matching
-
-* Product Types: Corresponds to cartesian product. Examples: Tupĺes, Records, Constructs.
-* Sum Types: Disjoin Unions of types. Used to express possibilities.
-
-
-### Algebraic Data Types
-
-#### Record Types
-
-```ocaml
-> type country = {
-     name : string ;
-     domain : string ;
-     language : string ;
-     id : int ;
-  }
-  ;;
-
-
-> let brazil = {name = "Brazil" ; domain = ".br" ; language = "Portuguese" ; id = 100 } ;;
-val brazil : country =
-  {name = "Brazil"; domain = ".br"; language = "Portuguese"; id = 100}
-
->  brazil.name ;;
-- : string = "Brazil"
-
-> brazil.domain ;;
-- : string = ".br"
-
-> brazil.language ;;
-- : string = "Portuguese"
-
-> brazil.id ;;
-- : int = 100
-
-
-> let countries = [
-    {name = "Brazil" ; domain = ".br" ; language = "Portuguese" ; id = 100 } ;
-    {name = "United Kingdom" ; domain = ".co.uk" ; language = "English" ; id = 10 } ;
-    {name = "South Africa" ; domain = ".co.za" ; language = "English" ; id = 40 } ;
-    {name = "France" ; domain = ".fr" ; language = "French" ; id = 20 } ;
-    {name = "Taiwan ROC" ; domain = ".tw" ; language = "Chinese" ; id = 54 } ;
-    {name = "Australia" ; domain = ".au" ; language = "English" ; id = 354 } ;
-      ]
-  ;;
-val countries : country list =
-  [{name = "Brazil"; domain = ".br"; language = "Portuguese"; id = 100};
-   {name = "United Kingdom"; domain = ".co.uk"; language = "English";
-    id = 10};
-   {name = "South Africa"; domain = ".co.za"; language = "English"; id = 40};
-   {name = "France"; domain = ".fr"; language = "French"; id = 20};
-   {name = "Taiwan ROC"; domain = ".tw"; language = "Chinese"; id = 54};
-   {name = "Australia"; domain = ".au"; language = "English"; id = 354}]
-
-
-> List.map (fun c -> c.name ) countries ;;
-- : string list =
-["Brazil"; "United Kingdom"; "South Africa"; "France"; "Taiwan ROC";
- "Australia"]
-
-
-> List.map (fun c -> c.domain ) countries ;;
-- : string list = [".br"; ".co.uk"; ".co.za"; ".fr"; ".tw"; ".au"]
-
-> List.filter (fun c -> c.name = "France") countries ;;
-- : country list =
-[{name = "France"; domain = ".fr"; language = "French"; id = 20}]
-
-> List.filter (fun c -> c.language = "English") countries ;;
-- : country list =
-[{name = "United Kingdom"; domain = ".co.uk"; language = "English"; id = 10};
- {name = "South Africa"; domain = ".co.za"; language = "English"; id = 40};
- {name = "Australia"; domain = ".au"; language = "English"; id = 354}]
-
-> countries 
-  |> List.filter (fun c -> c.language = "English") 
-  |> List.map (fun c -> c.name)
-  ;;
-- : string list = ["United Kingdom"; "South Africa"; "Australia"]
- 
-> let english_speaking_countries = 
-  countries 
-  |> List.filter (fun c -> c.language = "English") 
-  |> List.map (fun c -> c.name)
-  ;;
-val english_speaking_countries : string list =
-  ["United Kingdom"; "South Africa"; "Australia"]
-
-
-> english_speaking_countries ;;
-- : string list = ["United Kingdom"; "South Africa"; "Australia"] 
-
-> countries 
-  |> List.filter (fun c -> c.language = "English")
-  |> List.map (fun c -> c.name, c.domain)
-  ;;
-- : (string * string) list =
-[("United Kingdom", ".co.uk"); ("South Africa", ".co.za");
- ("Australia", ".au")]
-
-
-> List.find (fun x -> x.id = 100) countries ;;
-- : country =
-{name = "Brazil"; domain = ".br"; language = "Portuguese"; id = 100}
-
-> List.find (fun x -> x.id = 354) countries ;;
-- : country =
-{name = "Australia"; domain = ".au"; language = "English"; id = 354}
- 
->  List.find (fun x -> x.id = 1354) countries ;;
-Exception: Not_found.
-
-> countries 
-  |> List.find (fun x -> x.id = 100)
-  |> fun x -> x.name
-  ;;
-- : string = "Brazil"
-
-```
-
-#### Disjoint Union
-
-```ocaml
-type literal =
-    | Integer   of int
-    | Float     of float
-    | String    of string
-
-type operator =
-    | Add
-    | Div
-    | Mul
-    | Sub
-
-```
-
-#### Agreggated Data types
-
-
-
-```ocaml
-> type agg = Agg of int * string
-
->  let a = Agg (1, "hi") ;;
-val a : agg = Agg (1, "hi")
-
->  a ;;
-- : agg = Agg (1, "hi")
->
-```
-
-```ocaml
-type shape =
-      Rect    of float * float          (*width * lenght *)
-    | Circle  of float                  (* radius *)
-    | Triang  of float * float * float  (* a * b *  c *)
-
-let pictures = [Rect (3.0, 4.0) ; Circle 5.0 ; Triang (5.0, 5.0, 5.0)]
-
-let perimiter s =
-    match s with
-         Rect    (a, b)      ->  2.0 *. (a +. b)
-       | Circle   r          ->  2.0 *. 3.1415 *. r
-       | Triang  (a, b, c)   ->  a +. b +. c
-
-
->  perimiter (Rect (3.0, 4.0)) ;;
-- : float = 14.
-
->  perimiter (Circle 3.0 ) ;;
-- : float = 18.849
-
-
->  perimiter (Triang (2.0, 3.0, 4.0)) ;;
-- : float = 9.
->
-
-> List.map perimiter pictures ;;
-- : float list = [14.; 31.4150000000000027; 15.]
-
-```
-
-#### Pattern Matching
-
-##### Basic Pattern Matching
-
-```ocaml
-> match 4 with x -> x;;                        (* ⇒ 4 *)
-- : int = 4
-
-> match 4 with xyz -> xyz;;                    (* ⇒ 4 *)
-- : int = 4
-
-> match [3;4;5] with [a;b;c] -> b;;            (* ⇒ 4 *)
-- : int = 4
-
-> match (3, 7, 4) with ( a, b, c ) -> c;;      (* ⇒ 4 *)
-- : int = 4
-
->  match (3, 4, (8,9)) with (a, b, c ) -> c;;   (* ⇒ (8, 9) *)
-- : int * int = (8, 9)
->
-
-
-> let sign x = match x with
-    x when x < 0 -> -1
-    | 0           -> 0
-    | x           -> 1
-
-;;
-val sign : int -> int = <fun>
-
-
->  sign 10 ;;
-- : int = 1
->  sign 0 ;;
-- : int = 0
->  sign 100 ;;
-- : int = 1
->  sign (-1) ;;
-- : int = -1
->  sign (-100) ;;
-- : int = -1
->
-
-let getPassword passw = match passw with
-    "hello"   -> "OK. Safe Opened."
-    | _       -> "Wrong Password Pal."
-  ;;
-
-val getPassword : string -> string = <fun>
->
-  getPassword "hellow" ;;
-- : string = "Wrong Password Pal."
->  getPassword "Pass" ;;
-- : string = "Wrong Password Pal."
->  getPassword "hello" ;;
-- : string = "OK. Safe Opened."
->
-```
-
-##### Tuple Pattern Matching
-
-Extracting elements of a tuple
-
-```
-> let fst (a, _) = a ;;
-val fst : 'a * 'b -> 'a = <fun>
-> let snd (_, b) = b ;;
-val snd : 'a * 'b -> 'b = <fun>
-
-> fst (2, 3) ;;
-- : int = 2
-
-> fst ("a", 23) ;;
-- : string = "a"
-
-> snd (2, 3) ;;
-- : int = 3
-
-> snd (2, "a") ;;
-- : string = "a"
-
-> List.map fst [("a", 12); ("b", 23) ; ("c", 23) ; ("d", 67)] ;;
-- : string list = ["a"; "b"; "c"; "d"]
-
-> List.map snd [("a", 12); ("b", 23) ; ("c", 23) ; ("d", 67)] ;;
-- : int list = [12; 23; 23; 67]
-
-
->
-let tpl3_1 (a, _, _) = a
-let tpl3_2 (_, a, _) = a
-let tpl3_3 (_, _, a) = a;;
-
-> tpl3_1 (2, "ocaml", 2.323) ;;
-- : int = 2
-> tpl3_2 (2, "ocaml", 2.323) ;;
-- : string = "ocaml"
-> tpl3_3 (2, "ocaml", 2.323) ;;
-- : float = 2.323
-```
-
-Returning Multiple Values
-
-```ocaml
-
->  let divmod a b = a/b, a mod b ;;
-val divmod : int -> int -> int * int = <fun>
-
-  divmod 10 3 ;;
-- : int * int = (3, 1)
-
-
-
-> let swap (x, y) = (y, x) ;;
-val swap : 'a * 'b -> 'b * 'a = <fun>
-
-  swap (2, 3) ;;
-- : int * int = (3, 2)
-
-> List.map swap [("a", 12); ("b", 23) ; ("c", 23) ; ("d", 67)] ;;
-- : (int * string) list = [(12, "a"); (23, "b"); (23, "c"); (67, "d")]
-```
-
-Source:
-
-* http://xahlee.info/ocaml/pattern_matching.html
-
-
-
-
-#### Recursive Data Structures
-
-##### Alternative List Implementation
-
-List of Intergers
-
-```ocaml
-type intlist = Nil | Cons of (int * intlist)
-
-let rec length (alist : intlist) : int =
-    match alist with
-    | Nil           -> 0
-    | Cons(h, t)    -> 1 + (length t)
-
-
-let is_empty (alist: intlist) : bool =
-    match alist with
-    | Nil           -> true
-    | Cons(_, _)   ->  false
-
-let rec sum (alist : intlist) : int =
-    match alist with
-    | Nil               -> failwith "Error empty list"
-    | Cons (a, Nil)     -> a
-    | Cons (h, remain)  -> h + sum remain
-
-let rec product (alist : intlist) : int =
-    match alist with
-    | Nil               -> failwith "Error empty list"
-    | Cons (a, Nil)     -> a
-    | Cons (h, remain)  -> h * product remain
-
-let head (alist: intlist) : int =
-    match alist with
-    | Nil           -> failwith "Error empty list"
-    | Cons (a, _)   -> a
-
-let rec last (alist : intlist) : int =
-    match alist with
-    | Nil               -> failwith "Error empty list"
-    | Cons (a, Nil)     -> a
-    | Cons (h, remain)  -> last remain
-
-
-let rec map f alist =
-    match alist with
-    | Nil               -> Nil
-    | Cons (e, remain)  -> Cons(f e, map f remain)
-
-let rec iter (f : int -> unit) (alist : intlist) : unit =
-    match alist with
-    | Nil           -> failwith "Error empty list"
-    | Cons(a,  Nil) -> f a
-    | Cons(hd, tl)  -> f hd ; iter f tl
-
-
-let rec filter f alist =
-    match alist with
-    | Nil               -> Nil
-    | Cons (e, remain)  ->
-                if (f e)
-                    then Cons(e, filter f remain)
-                    else filter f remain
-
-let rec foldl1 func alist  =  match alist with
-    | Nil                -> failwith "Error empty list"
-    | Cons (a, Nil)      -> a
-    | Cons (hd, tl)      -> func hd (foldl func tl)
-
-
-let rec foldl func acc alist =
-    match alist with
-    | Nil               -> acc
-    | Cons (hd, tl)     -> func hd (foldl func acc tl)
-
-
-let rec nth alist n =
-    match (alist, n) with
-    | (Nil,     _       )   -> failwith  "Empty list"
-    | (Cons(h, _  ),   1)   -> h
-    | (Cons(hd, tl),   k)   -> nth tl  (k-1)
-
-let rec take n alist =
-    match (n, alist) with
-    | (_, Nil)           -> Nil
-    | (0, _  )           -> Nil
-    | (k, Cons(hd, tl))  -> Cons(hd, take (k-1) tl)
-
-
-let rec append ((list1:intlist), (list2:intlist)) : intlist =
-    match list1 with
-    | Nil               -> list2
-    | Cons(hd, tl)      -> Cons(hd, append( (tl, list2)))
-
-let rec reverse(list:intlist):intlist =
-    match list with
-      Nil -> Nil
-    | Cons(hd,tl) -> append(reverse(tl), Cons(hd,Nil))
-```
-
-```ocaml
-let l1 = Nil
-let l2 = Cons(1, Nil)  (* [1] *)
-let l3 = Cons(2, l2)   (* [2; 1] *)
-let l4 = Cons(3, l3)   (* [3; 2; 1] *)
-let l5 = Cons(1, Cons(2, Cons(3, Cons(4, Cons(5, Nil)))))
-
-> List.map length [l1 ; l2 ; l4 ; l5 ] ;;
-- : int list = [0; 1; 3; 5]
-
-> List.map is_empty [l1 ; l2 ; l4 ; l5 ] ;;
-- : bool list = [true; false; false; false]
-
->  sum l1 ;;
-Exception: Failure "Error empty list".
->  sum l2 ;;
-- : int = 1
->  sum l3 ;;
-- : int = 3
->  sum l4 ;;
-- : int = 6
->  sum l5 ;;
-- : int = 15
->
-
-
->  product l1 ;;
-Exception: Failure "Error empty list".
->  product l2 ;;
-- : int = 1
->  product l3 ;;
-- : int = 2
->  product l4 ;;
-- : int = 6
->  product l5 ;;
-- : int = 120
->
-
-
-> List.map head [l2 ; l3 ; l4 ; l5 ] ;;
-- : int list = [1; 2; 3; 1]
-
-
->  last l1 ;;
-Exception: Failure "Error empty list".
->  last l2 ;;
-- : int = 1
->  last l3 ;;
-- : int = 1
->  last l4 ;;
-- : int = 1
->  last l5 ;;
-- : int = 5
-
-
-> map ((+) 1) Nil ;;
-- : intlist = Nil
-> map ((+) 1) (Cons(1, Nil))  ;;
-- : intlist = Cons (2, Nil)
-> map ((+) 1) (Cons(1, Cons(3, Cons(4, Cons(5, Nil)))))  ;;
-- : intlist = Cons (2, Cons (4, Cons (5, Cons (6, Nil))))
-
-
->  append(l4, l5) ;;
-- : intlist = Cons  (3, Cons (2, Cons (1, Cons (1, Cons (2, Cons (3, Cons (4, Cons (5, Nil))))))))
-
-> reverse l5 ;;
-- : intlist = Cons (5, Cons (4, Cons (3, Cons (2, Cons (1, Nil)))))
-
->   let even x = x mod 2 == 0 ;;
->   filter even l5 ;;
-- : intlist = Cons (2, Cons (4, Nil)
-
-> l5 ;;
-- : intlist = Cons (1, Cons (2, Cons (3, Cons (4, Cons (5, Nil)))))
-
->  nth l5 2 ;;
-- : int = 2
->  nth l5 1 ;;
-- : int = 1
->  nth l5 3 ;;
-- : int = 3
->  nth l5 4 ;;
-- : int = 4
->  nth l5 5 ;;
-- : int = 5
-
-> foldl1 (+) l5 ;;
-- : int = 15
-
-> foldl1 (fun x y -> x * y) l5 ;;
-- : int = 120
-
-> foldl1 (fun x y -> x + 10*y) l5 ;;
-- : int = 54321
-
-
-> foldl (+) 0 l5 ;;
-- : int = 15
-
-> foldl (fun x y -> x * y) 2 l5 ;;
-- : int = 240
-
-
->
-  take 0 l5 ;;
-- : intlist = Nil
->  take 1 l5 ;;
-- : intlist = Cons (1, Nil)
->  take 3 l5 ;;
-- : intlist = Cons (1, Cons (2, Cons (3, Nil)))
->  take 4 l5 ;;
-- : intlist = Cons (1, Cons (2, Cons (3, Cons (4, Nil))))
->  take 10 l5 ;;
-- : intlist = Cons (1, Cons (2, Cons (3, Cons (4, Cons (5, Nil)))))
-
-
-> iter (Printf.printf "= %d\n") l5 ;;
-= 1
-= 2
-= 3
-= 4
-= 5
-- : unit = ()
-```
-
-##### File Tree Recursive Directory Walk
-
-```ocaml
-> type fileTree =
-  | File of string
-  | Folder of string * fileTree list
-
-let neg f x = not (f x) ;;
-type fileTree = File of string | Folder of string * fileTree list
-val neg : ('a -> bool) -> 'a -> bool = <fun>
-
-let relpath p str = p ^ "/" ^ str
-
-let scand_dir path =
-    Sys.readdir path
-    |> Array.to_list
-
-let is_dir_relpath path rel =
-    Sys.is_directory (relpath path rel)
-
-let rec walkdir path =
-
-    let files = path
-    |> scand_dir
-    |> List.filter @@ neg  (is_dir_relpath path)
-    |> List.map (fun x -> File x) in
-
-    let dirs = path
-    |> scand_dir
-    |> List.filter (is_dir_relpath path)
-    |> List.map (fun x -> Folder (x, walkdir (relpath path x ))) in
-
-      dirs @ files
-  ;;
-val relpath : string -> string -> string = <fun>
-val scand_dir : string -> string list = <fun>
-val is_dir_relpath : string -> string -> bool = <fun>
-val walkdir : string -> fileTree list = <fun>
->
-
-> Folder ("Documents", [File "file1.txt"; File "filte2.txt" ;
-Folder("Pictures", []) ; Folder("bin",[File "cmd.dat" ; File "thumbs.db" ])
-])
-;;
-- : fileTree =
-Folder ("Documents",
- [File "file1.txt"; File "filte2.txt"; Folder ("Pictures", []);
-  Folder ("bin", [File "cmd.dat"; File "thumbs.db"])])
-
-
-> walkdir "/boot" ;;
-- : fileTree list =
-[Folder ("grub",
-  [Folder ("i386-pc",
-    [File "cpio_be.mod"; File "reiserfs.mod"; File "disk.mod";
-     File "dm_nv.mod"; File "xfs.mod"; File "zfscrypt.mod";
-     File "setjmp.mod"; File "boot.img"; File "uhci.mod"; File "hwmatch.mod";
-     File "ohci.mod"; File "xzio.mod"; File "btrfs.mod"; File "echo.mod";
-     File "efiemu.mod"; File "ufs1_be.mod"; File "romfs.mod";
-     File "minix2_be.mod"; File "fs.lst"; File "gdb.mod"; File "search.mod";
-     File "part_gpt.mod"; File "halt.mod"; File "setjmp_test.mod";
-    ...
-
->  walkdir "/home/tux/PycharmProjects/Haskell/haskell" ;;
-- : fileTree list =
-[Folder ("src",
-  [File "stack.hs"; File "a.out"; File "OldState.hs";
-   File "bisection_state.hs"; File "FPUtils.hs"; File "randomst.hs"]);
- Folder ("images",
-  [File "haskellLogo.png"; File "number-system-in-haskell-9-638.jpg";
-   File "euler_newton_cooling.png"; File "monadTable.png";
-   File "coinflip.gid"; File "coinflip.gif"; File "chartF2table.png";
-   File "chartF1table.png"; File "classes.gif"; File "qrcode_url.png"]);
- File "Functions.md"; File "List_Comprehension.md"; File "Haskell.md";
- File "Useful_Custom_Functions__Iterators_and_Operators.md";
- File "Miscellaneous.md"; File "Pattern_Matching.md"; File "Basic_Syntax.md";
- File "Functors__Monads__Applicatives_and_Monoids.md";
- File "Algebraic_Data_Types.md"; File "Libraries.md";
- File "Documentation_and_Learning_Materials.md"; File "Applications.md";
- File "Functional_Programming_Concepts.md"]
-```
-
-
-
-Sources:
-
-* http://www.cs.cornell.edu/courses/cs3110/2008fa/lectures/lec04.html
-
-<!--
-    ---------------------------------------------------------------
--->
-
-## Lazy Evaluation
+## Algebraic Data Types and Pattern Matching<a id="sec-1-6" name="sec-1-6"></a>
+
+-   Product Types: Corresponds to cartesian product. Examples: Tupĺes, Records, Constructs.
+-   Sum Types: Disjoin Unions of types. Used to express possibilities.
+
+### Algebraic Data Types<a id="sec-1-6-1" name="sec-1-6-1"></a>
+
+1.  Record Types
+
+    ```ocaml
+    > type country = {
+         name : string ;
+         domain : string ;
+         language : string ;
+         id : int ;
+      }
+      ;;
+    
+    
+    > let brazil = {name = "Brazil" ; domain = ".br" ; language = "Portuguese" ; id = 100 } ;;
+    val brazil : country =
+      {name = "Brazil"; domain = ".br"; language = "Portuguese"; id = 100}
+    
+    >  brazil.name ;;
+    - : string = "Brazil"
+    
+    > brazil.domain ;;
+    - : string = ".br"
+    
+    > brazil.language ;;
+    - : string = "Portuguese"
+    
+    > brazil.id ;;
+    - : int = 100
+    
+    
+    > let countries = [
+        {name = "Brazil" ; domain = ".br" ; language = "Portuguese" ; id = 100 } ;
+        {name = "United Kingdom" ; domain = ".co.uk" ; language = "English" ; id = 10 } ;
+        {name = "South Africa" ; domain = ".co.za" ; language = "English" ; id = 40 } ;
+        {name = "France" ; domain = ".fr" ; language = "French" ; id = 20 } ;
+        {name = "Taiwan ROC" ; domain = ".tw" ; language = "Chinese" ; id = 54 } ;
+        {name = "Australia" ; domain = ".au" ; language = "English" ; id = 354 } ;
+          ]
+      ;;
+    val countries : country list =
+      [{name = "Brazil"; domain = ".br"; language = "Portuguese"; id = 100};
+       {name = "United Kingdom"; domain = ".co.uk"; language = "English";
+        id = 10};
+       {name = "South Africa"; domain = ".co.za"; language = "English"; id = 40};
+       {name = "France"; domain = ".fr"; language = "French"; id = 20};
+       {name = "Taiwan ROC"; domain = ".tw"; language = "Chinese"; id = 54};
+       {name = "Australia"; domain = ".au"; language = "English"; id = 354}]
+    
+    
+    > List.map (fun c -> c.name ) countries ;;
+    - : string list =
+    ["Brazil"; "United Kingdom"; "South Africa"; "France"; "Taiwan ROC";
+     "Australia"]
+    
+    
+    > List.map (fun c -> c.domain ) countries ;;
+    - : string list = [".br"; ".co.uk"; ".co.za"; ".fr"; ".tw"; ".au"]
+    
+    > List.filter (fun c -> c.name = "France") countries ;;
+    - : country list =
+    [{name = "France"; domain = ".fr"; language = "French"; id = 20}]
+    
+    > List.filter (fun c -> c.language = "English") countries ;;
+    - : country list =
+    [{name = "United Kingdom"; domain = ".co.uk"; language = "English"; id = 10};
+     {name = "South Africa"; domain = ".co.za"; language = "English"; id = 40};
+     {name = "Australia"; domain = ".au"; language = "English"; id = 354}]
+    
+    > countries 
+      |> List.filter (fun c -> c.language = "English") 
+      |> List.map (fun c -> c.name)
+      ;;
+    - : string list = ["United Kingdom"; "South Africa"; "Australia"]
+     
+    > let english_speaking_countries = 
+      countries 
+      |> List.filter (fun c -> c.language = "English") 
+      |> List.map (fun c -> c.name)
+      ;;
+    val english_speaking_countries : string list =
+      ["United Kingdom"; "South Africa"; "Australia"]
+    
+    
+    > english_speaking_countries ;;
+    - : string list = ["United Kingdom"; "South Africa"; "Australia"] 
+    
+    > countries 
+      |> List.filter (fun c -> c.language = "English")
+      |> List.map (fun c -> c.name, c.domain)
+      ;;
+    - : (string * string) list =
+    [("United Kingdom", ".co.uk"); ("South Africa", ".co.za");
+     ("Australia", ".au")]
+    
+    
+    > List.find (fun x -> x.id = 100) countries ;;
+    - : country =
+    {name = "Brazil"; domain = ".br"; language = "Portuguese"; id = 100}
+    
+    > List.find (fun x -> x.id = 354) countries ;;
+    - : country =
+    {name = "Australia"; domain = ".au"; language = "English"; id = 354}
+     
+    >  List.find (fun x -> x.id = 1354) countries ;;
+    Exception: Not_found.
+    
+    > countries 
+      |> List.find (fun x -> x.id = 100)
+      |> fun x -> x.name
+      ;;
+    - : string = "Brazil"
+    ```
+
+2.  Disjoint Union
+
+    ```ocaml
+    type literal =
+        | Integer   of int
+        | Float     of float
+        | String    of string
+    
+    type operator =
+        | Add
+        | Div
+        | Mul
+        | Sub
+    ```
+
+3.  Agreggated Data types
+
+    ```ocaml
+    > type agg = Agg of int * string
+    
+    >  let a = Agg (1, "hi") ;;
+    val a : agg = Agg (1, "hi")
+    
+    >  a ;;
+    - : agg = Agg (1, "hi")
+    >
+    ```
+    
+    ```ocaml
+    type shape =
+          Rect    of float * float          (*width * lenght *)
+        | Circle  of float                  (* radius *)
+        | Triang  of float * float * float  (* a * b *  c *)
+    
+    let pictures = [Rect (3.0, 4.0) ; Circle 5.0 ; Triang (5.0, 5.0, 5.0)]
+    
+    let perimiter s =
+        match s with
+             Rect    (a, b)      ->  2.0 *. (a +. b)
+           | Circle   r          ->  2.0 *. 3.1415 *. r
+           | Triang  (a, b, c)   ->  a +. b +. c
+    
+    
+    >  perimiter (Rect (3.0, 4.0)) ;;
+    - : float = 14.
+    
+    >  perimiter (Circle 3.0 ) ;;
+    - : float = 18.849
+    
+    
+    >  perimiter (Triang (2.0, 3.0, 4.0)) ;;
+    - : float = 9.
+    >
+    
+    > List.map perimiter pictures ;;
+    - : float list = [14.; 31.4150000000000027; 15.]
+    ```
+
+4.  Pattern Matching
+
+    1.  Basic Pattern Matching
+    
+        ```ocaml
+        > match 4 with x -> x;;                        (* ⇒ 4 *)
+        - : int = 4
+        
+        > match 4 with xyz -> xyz;;                    (* ⇒ 4 *)
+        - : int = 4
+        
+        > match [3;4;5] with [a;b;c] -> b;;            (* ⇒ 4 *)
+        - : int = 4
+        
+        > match (3, 7, 4) with ( a, b, c ) -> c;;      (* ⇒ 4 *)
+        - : int = 4
+        
+        >  match (3, 4, (8,9)) with (a, b, c ) -> c;;   (* ⇒ (8, 9) *)
+        - : int * int = (8, 9)
+        >
+        
+        
+        > let sign x = match x with
+            x when x < 0 -> -1
+            | 0           -> 0
+            | x           -> 1
+        
+        ;;
+        val sign : int -> int = <fun>
+        
+        
+        >  sign 10 ;;
+        - : int = 1
+        >  sign 0 ;;
+        - : int = 0
+        >  sign 100 ;;
+        - : int = 1
+        >  sign (-1) ;;
+        - : int = -1
+        >  sign (-100) ;;
+        - : int = -1
+        >
+        
+        let getPassword passw = match passw with
+            "hello"   -> "OK. Safe Opened."
+            | _       -> "Wrong Password Pal."
+          ;;
+        
+        val getPassword : string -> string = <fun>
+        >
+          getPassword "hellow" ;;
+        - : string = "Wrong Password Pal."
+        >  getPassword "Pass" ;;
+        - : string = "Wrong Password Pal."
+        >  getPassword "hello" ;;
+        - : string = "OK. Safe Opened."
+        >
+        ```
+    
+    2.  Tuple Pattern Matching
+    
+        Extracting elements of a tuple
+        
+        ```
+        > let fst (a, _) = a ;;
+        val fst : 'a * 'b -> 'a = <fun>
+        > let snd (_, b) = b ;;
+        val snd : 'a * 'b -> 'b = <fun>
+        
+        > fst (2, 3) ;;
+        - : int = 2
+        
+        > fst ("a", 23) ;;
+        - : string = "a"
+        
+        > snd (2, 3) ;;
+        - : int = 3
+        
+        > snd (2, "a") ;;
+        - : string = "a"
+        
+        > List.map fst [("a", 12); ("b", 23) ; ("c", 23) ; ("d", 67)] ;;
+        - : string list = ["a"; "b"; "c"; "d"]
+        
+        > List.map snd [("a", 12); ("b", 23) ; ("c", 23) ; ("d", 67)] ;;
+        - : int list = [12; 23; 23; 67]
+        
+        
+        >
+        let tpl3_1 (a, _, _) = a
+        let tpl3_2 (_, a, _) = a
+        let tpl3_3 (_, _, a) = a;;
+        
+        > tpl3_1 (2, "ocaml", 2.323) ;;
+        - : int = 2
+        > tpl3_2 (2, "ocaml", 2.323) ;;
+        - : string = "ocaml"
+        > tpl3_3 (2, "ocaml", 2.323) ;;
+        - : float = 2.323
+        ```
+        
+        Returning Multiple Values
+        
+        ```ocaml
+        >  let divmod a b = a/b, a mod b ;;
+        val divmod : int -> int -> int * int = <fun>
+        
+          divmod 10 3 ;;
+        - : int * int = (3, 1)
+        
+        
+        
+        > let swap (x, y) = (y, x) ;;
+        val swap : 'a * 'b -> 'b * 'a = <fun>
+        
+          swap (2, 3) ;;
+        - : int * int = (3, 2)
+        
+        > List.map swap [("a", 12); ("b", 23) ; ("c", 23) ; ("d", 67)] ;;
+        - : (int * string) list = [(12, "a"); (23, "b"); (23, "c"); (67, "d")]
+        ```
+        
+        Source:
+        
+        -   <http://xahlee.info/ocaml/pattern_matching.html>
+
+5.  Recursive Data Structures
+
+    1.  Alternative List Implementation
+    
+        List of Intergers
+        
+        ```ocaml
+        type intlist = Nil | Cons of (int * intlist)
+        
+        let rec length (alist : intlist) : int =
+            match alist with
+            | Nil           -> 0
+            | Cons(h, t)    -> 1 + (length t)
+        
+        
+        let is_empty (alist: intlist) : bool =
+            match alist with
+            | Nil           -> true
+            | Cons(_, _)   ->  false
+        
+        let rec sum (alist : intlist) : int =
+            match alist with
+            | Nil               -> failwith "Error empty list"
+            | Cons (a, Nil)     -> a
+            | Cons (h, remain)  -> h + sum remain
+        
+        let rec product (alist : intlist) : int =
+            match alist with
+            | Nil               -> failwith "Error empty list"
+            | Cons (a, Nil)     -> a
+            | Cons (h, remain)  -> h * product remain
+        
+        let head (alist: intlist) : int =
+            match alist with
+            | Nil           -> failwith "Error empty list"
+            | Cons (a, _)   -> a
+        
+        let rec last (alist : intlist) : int =
+            match alist with
+            | Nil               -> failwith "Error empty list"
+            | Cons (a, Nil)     -> a
+            | Cons (h, remain)  -> last remain
+        
+        
+        let rec map f alist =
+            match alist with
+            | Nil               -> Nil
+            | Cons (e, remain)  -> Cons(f e, map f remain)
+        
+        let rec iter (f : int -> unit) (alist : intlist) : unit =
+            match alist with
+            | Nil           -> failwith "Error empty list"
+            | Cons(a,  Nil) -> f a
+            | Cons(hd, tl)  -> f hd ; iter f tl
+        
+        
+        let rec filter f alist =
+            match alist with
+            | Nil               -> Nil
+            | Cons (e, remain)  ->
+                        if (f e)
+                            then Cons(e, filter f remain)
+                            else filter f remain
+        
+        let rec foldl1 func alist  =  match alist with
+            | Nil                -> failwith "Error empty list"
+            | Cons (a, Nil)      -> a
+            | Cons (hd, tl)      -> func hd (foldl func tl)
+        
+        
+        let rec foldl func acc alist =
+            match alist with
+            | Nil               -> acc
+            | Cons (hd, tl)     -> func hd (foldl func acc tl)
+        
+        
+        let rec nth alist n =
+            match (alist, n) with
+            | (Nil,     _       )   -> failwith  "Empty list"
+            | (Cons(h, _  ),   1)   -> h
+            | (Cons(hd, tl),   k)   -> nth tl  (k-1)
+        
+        let rec take n alist =
+            match (n, alist) with
+            | (_, Nil)           -> Nil
+            | (0, _  )           -> Nil
+            | (k, Cons(hd, tl))  -> Cons(hd, take (k-1) tl)
+        
+        
+        let rec append ((list1:intlist), (list2:intlist)) : intlist =
+            match list1 with
+            | Nil               -> list2
+            | Cons(hd, tl)      -> Cons(hd, append( (tl, list2)))
+        
+        let rec reverse(list:intlist):intlist =
+            match list with
+              Nil -> Nil
+            | Cons(hd,tl) -> append(reverse(tl), Cons(hd,Nil))
+        ```
+        
+        ```ocaml
+        let l1 = Nil
+        let l2 = Cons(1, Nil)  (* [1] *)
+        let l3 = Cons(2, l2)   (* [2; 1] *)
+        let l4 = Cons(3, l3)   (* [3; 2; 1] *)
+        let l5 = Cons(1, Cons(2, Cons(3, Cons(4, Cons(5, Nil)))))
+        
+        > List.map length [l1 ; l2 ; l4 ; l5 ] ;;
+        - : int list = [0; 1; 3; 5]
+        
+        > List.map is_empty [l1 ; l2 ; l4 ; l5 ] ;;
+        - : bool list = [true; false; false; false]
+        
+        >  sum l1 ;;
+        Exception: Failure "Error empty list".
+        >  sum l2 ;;
+        - : int = 1
+        >  sum l3 ;;
+        - : int = 3
+        >  sum l4 ;;
+        - : int = 6
+        >  sum l5 ;;
+        - : int = 15
+        >
+        
+        
+        >  product l1 ;;
+        Exception: Failure "Error empty list".
+        >  product l2 ;;
+        - : int = 1
+        >  product l3 ;;
+        - : int = 2
+        >  product l4 ;;
+        - : int = 6
+        >  product l5 ;;
+        - : int = 120
+        >
+        
+        
+        > List.map head [l2 ; l3 ; l4 ; l5 ] ;;
+        - : int list = [1; 2; 3; 1]
+        
+        
+        >  last l1 ;;
+        Exception: Failure "Error empty list".
+        >  last l2 ;;
+        - : int = 1
+        >  last l3 ;;
+        - : int = 1
+        >  last l4 ;;
+        - : int = 1
+        >  last l5 ;;
+        - : int = 5
+        
+        
+        > map ((+) 1) Nil ;;
+        - : intlist = Nil
+        > map ((+) 1) (Cons(1, Nil))  ;;
+        - : intlist = Cons (2, Nil)
+        > map ((+) 1) (Cons(1, Cons(3, Cons(4, Cons(5, Nil)))))  ;;
+        - : intlist = Cons (2, Cons (4, Cons (5, Cons (6, Nil))))
+        
+        
+        >  append(l4, l5) ;;
+        - : intlist = Cons  (3, Cons (2, Cons (1, Cons (1, Cons (2, Cons (3, Cons (4, Cons (5, Nil))))))))
+        
+        > reverse l5 ;;
+        - : intlist = Cons (5, Cons (4, Cons (3, Cons (2, Cons (1, Nil)))))
+        
+        >   let even x = x mod 2 == 0 ;;
+        >   filter even l5 ;;
+        - : intlist = Cons (2, Cons (4, Nil)
+        
+        > l5 ;;
+        - : intlist = Cons (1, Cons (2, Cons (3, Cons (4, Cons (5, Nil)))))
+        
+        >  nth l5 2 ;;
+        - : int = 2
+        >  nth l5 1 ;;
+        - : int = 1
+        >  nth l5 3 ;;
+        - : int = 3
+        >  nth l5 4 ;;
+        - : int = 4
+        >  nth l5 5 ;;
+        - : int = 5
+        
+        > foldl1 (+) l5 ;;
+        - : int = 15
+        
+        > foldl1 (fun x y -> x * y) l5 ;;
+        - : int = 120
+        
+        > foldl1 (fun x y -> x + 10*y) l5 ;;
+        - : int = 54321
+        
+        
+        > foldl (+) 0 l5 ;;
+        - : int = 15
+        
+        > foldl (fun x y -> x * y) 2 l5 ;;
+        - : int = 240
+        
+        
+        >
+          take 0 l5 ;;
+        - : intlist = Nil
+        >  take 1 l5 ;;
+        - : intlist = Cons (1, Nil)
+        >  take 3 l5 ;;
+        - : intlist = Cons (1, Cons (2, Cons (3, Nil)))
+        >  take 4 l5 ;;
+        - : intlist = Cons (1, Cons (2, Cons (3, Cons (4, Nil))))
+        >  take 10 l5 ;;
+        - : intlist = Cons (1, Cons (2, Cons (3, Cons (4, Cons (5, Nil)))))
+        
+        
+        > iter (Printf.printf "= %d\n") l5 ;;
+        = 1
+        = 2
+        = 3
+        = 4
+        = 5
+        - : unit = ()
+        ```
+    
+    2.  File Tree Recursive Directory Walk
+    
+        ```ocaml
+        > type fileTree =
+          | File of string
+          | Folder of string * fileTree list
+        
+        let neg f x = not (f x) ;;
+        type fileTree = File of string | Folder of string * fileTree list
+        val neg : ('a -> bool) -> 'a -> bool = <fun>
+        
+        let relpath p str = p ^ "/" ^ str
+        
+        let scand_dir path =
+            Sys.readdir path
+            |> Array.to_list
+        
+        let is_dir_relpath path rel =
+            Sys.is_directory (relpath path rel)
+        
+        let rec walkdir path =
+        
+            let files = path
+            |> scand_dir
+            |> List.filter @@ neg  (is_dir_relpath path)
+            |> List.map (fun x -> File x) in
+        
+            let dirs = path
+            |> scand_dir
+            |> List.filter (is_dir_relpath path)
+            |> List.map (fun x -> Folder (x, walkdir (relpath path x ))) in
+        
+              dirs @ files
+          ;;
+        val relpath : string -> string -> string = <fun>
+        val scand_dir : string -> string list = <fun>
+        val is_dir_relpath : string -> string -> bool = <fun>
+        val walkdir : string -> fileTree list = <fun>
+        >
+        
+        > Folder ("Documents", [File "file1.txt"; File "filte2.txt" ;
+        Folder("Pictures", []) ; Folder("bin",[File "cmd.dat" ; File "thumbs.db" ])
+        ])
+        ;;
+        - : fileTree =
+        Folder ("Documents",
+         [File "file1.txt"; File "filte2.txt"; Folder ("Pictures", []);
+          Folder ("bin", [File "cmd.dat"; File "thumbs.db"])])
+        
+        
+        > walkdir "/boot" ;;
+        - : fileTree list =
+        [Folder ("grub",
+          [Folder ("i386-pc",
+            [File "cpio_be.mod"; File "reiserfs.mod"; File "disk.mod";
+             File "dm_nv.mod"; File "xfs.mod"; File "zfscrypt.mod";
+             File "setjmp.mod"; File "boot.img"; File "uhci.mod"; File "hwmatch.mod";
+             File "ohci.mod"; File "xzio.mod"; File "btrfs.mod"; File "echo.mod";
+             File "efiemu.mod"; File "ufs1_be.mod"; File "romfs.mod";
+             File "minix2_be.mod"; File "fs.lst"; File "gdb.mod"; File "search.mod";
+             File "part_gpt.mod"; File "halt.mod"; File "setjmp_test.mod";
+            ...
+        
+        >  walkdir "/home/tux/PycharmProjects/Haskell/haskell" ;;
+        - : fileTree list =
+        [Folder ("src",
+          [File "stack.hs"; File "a.out"; File "OldState.hs";
+           File "bisection_state.hs"; File "FPUtils.hs"; File "randomst.hs"]);
+         Folder ("images",
+          [File "haskellLogo.png"; File "number-system-in-haskell-9-638.jpg";
+           File "euler_newton_cooling.png"; File "monadTable.png";
+           File "coinflip.gid"; File "coinflip.gif"; File "chartF2table.png";
+           File "chartF1table.png"; File "classes.gif"; File "qrcode_url.png"]);
+         File "Functions.md"; File "List_Comprehension.md"; File "Haskell.md";
+         File "Useful_Custom_Functions__Iterators_and_Operators.md";
+         File "Miscellaneous.md"; File "Pattern_Matching.md"; File "Basic_Syntax.md";
+         File "Functors__Monads__Applicatives_and_Monoids.md";
+         File "Algebraic_Data_Types.md"; File "Libraries.md";
+         File "Documentation_and_Learning_Materials.md"; File "Applications.md";
+         File "Functional_Programming_Concepts.md"]
+        ```
+        
+        Sources:
+        
+        -   <http://www.cs.cornell.edu/courses/cs3110/2008fa/lectures/lec04.html>
+
+## Lazy Evaluation<a id="sec-1-7" name="sec-1-7"></a>
 
 OCaml, which is a ML derived language, uses strict evaluation by default as oppose to Haskell that uses lazy evaluation by default. However lazy evaluation (aka delayed evaluation) is optional in Ocaml. Lazy evaluation delays the computation until the result is needed. In this evaluation approach results that are not needed are never computed. It allows infinite lists.
 
 In a strict language the arguments are always evaluated first.
 
 OCaml / Strict Evaluation / Call by Value
+
 ```ocaml
 > let give_me_a_three _ = 3
 val give_me_a_three : 'a -> int = <fun>
@@ -5211,6 +5180,7 @@ Exception: Division_by_zero.
 In a lazy language the arguments are only used if the function needs them.
 
 Haskell / Lazy Evaluation / Call be Need
+
 ```haskell
 > let give_me_a_three _ = 3
 > give_me_a_three (1/0)
@@ -5247,79 +5217,74 @@ val expr : int lazy_t = <lazy>
 Exception: Division_by_zero.
 ```
 
-##### Infinite Lazy Lists
+1.  Infinite Lazy Lists
 
-It is possible to define an infinite list, which is pair of head and value and a promise to the rest of the list.
+    It is possible to define an infinite list, which is pair of head and value and a promise to the rest of the list.
+    
+    ```ocaml
+     type 'a inf_list = Cons of 'a * 'a inf_list Lazy.t
+    ```
+    
+    ```ocaml
+    type 'a t = Cons of 'a * ('a t lazy_t)
+    
+    (* n, n+1, n+2, ... *)
+    let rec from n = Cons (n, lazy (from (n+1)))
+    
+    let repeat x = Cons (x, lazy (repeat (x)))
+    
+    let head (Cons (x, _)) = x
+    let tail (Cons (_, xs)) = Lazy.force xs
+    
+    let take n s =
+    let rec take' m (Cons (x, xs)) l =
+     if m = 0 then List.rev l
+     else take' (m-1) (Lazy.force xs) (x :: l)
+    in
+     take' n s []
+    
+    let rec nth n (Cons (x, xs)) =
+        if n = 1 then x
+        else nth (n-1) (Lazy.force xs)
+    
+    
+    
+    let rec map f (Cons (x, xs)) =
+        Cons (f x, lazy (map f (Lazy.force xs)))
+    
+    
+    let rec filter f (Cons (x, xs)) =
+        Cons (f x, lazy (filter f (Lazy.force xs)))
+    ```
+    
+    Example:
+    
+    ```ocaml
+    > take 6 (from 5) ;;
+    - : int list = [5; 6; 7; 8; 9; 10]
+    
+    > from 5 |> take 6 ;;
+    - : int list = [5; 6; 7; 8; 9; 10]
+    
+    
+    > from 5  |> head ;;
+    - : int = 5
+    ```
+    
+    From:
+    -   <http://d.hatena.ne.jp/blanketsky/20070221/1172002969>
+    
+    Sources:
+    
+    -   <https://ocaml.org/learn/tutorials/functional_programming.html>
+    -   <http://ocaml.jp/Lazy%20Pattern>
+    -   <http://c2.com/cgi/wiki?ExplicitLazyProgramming>
+    
+    Documentation of Lazy Module:
+    
+    -   <http://caml.inria.fr/pub/docs/manual-ocaml/libref/Lazy.html>
 
-```ocaml
- type 'a inf_list = Cons of 'a * 'a inf_list Lazy.t
-```
-
-```ocaml
-type 'a t = Cons of 'a * ('a t lazy_t)
-
-(* n, n+1, n+2, ... *)
-let rec from n = Cons (n, lazy (from (n+1)))
-
-let repeat x = Cons (x, lazy (repeat (x)))
-
-let head (Cons (x, _)) = x
-let tail (Cons (_, xs)) = Lazy.force xs
-
-let take n s =
-let rec take' m (Cons (x, xs)) l =
- if m = 0 then List.rev l
- else take' (m-1) (Lazy.force xs) (x :: l)
-in
- take' n s []
-
-let rec nth n (Cons (x, xs)) =
-    if n = 1 then x
-    else nth (n-1) (Lazy.force xs)
-
-
-
-let rec map f (Cons (x, xs)) =
-    Cons (f x, lazy (map f (Lazy.force xs)))
-
-
-let rec filter f (Cons (x, xs)) =
-    Cons (f x, lazy (filter f (Lazy.force xs)))
-```
-
-Example:
-```ocaml
-> take 6 (from 5) ;;
-- : int list = [5; 6; 7; 8; 9; 10]
-
-> from 5 |> take 6 ;;
-- : int list = [5; 6; 7; 8; 9; 10]
-
-
-> from 5  |> head ;;
-- : int = 5
-
-
-```
-
-From:
-* http://d.hatena.ne.jp/blanketsky/20070221/1172002969
-
-Sources:
-
-* https://ocaml.org/learn/tutorials/functional_programming.html
-* http://ocaml.jp/Lazy%20Pattern
-* http://c2.com/cgi/wiki?ExplicitLazyProgramming
-
-Documentation of Lazy Module:
-
-* http://caml.inria.fr/pub/docs/manual-ocaml/libref/Lazy.html
-
-<!--
-    ---------------------------------------------------------------
--->
-
-## Foreign Function Interface FFI
+## Foreign Function Interface FFI<a id="sec-1-8" name="sec-1-8"></a>
 
 The OCaml library C Types allows easy and fast access to C libraries, Operating System services, shared libraries and to call functions and libraries written in another languages.
 
@@ -5329,14 +5294,11 @@ The OCaml library C Types allows easy and fast access to C libraries, Operating 
 $ opam install ctypes ctypes-foreign
 ```
 
-
-
-### Calling C Standard Library and Unix System Calls
+### Calling C Standard Library and Unix System Calls<a id="sec-1-8-1" name="sec-1-8-1"></a>
 
 **Examples**
 
 ```ocaml
-
 > #require "ctypes" ;;
 > #require "ctypes.foreign" ;;
 > open Foreign ;;
@@ -5373,7 +5335,6 @@ int chdir  (const char *path);
 
 // Changes  the current working directory of the calling
 // process to the directory specified  in path.
-
 ```
 
 OCaml
@@ -5635,197 +5596,193 @@ Test.html
 >
 ```
 
-### Calling Shared Libraries
+### Calling Shared Libraries<a id="sec-1-8-2" name="sec-1-8-2"></a>
 
-#### Calling GNU Scientific Library
+1.  Calling GNU Scientific Library
 
-* Calling GSL - GNU Scientific Library
-
-* [GSL Manual](https://www.gnu.org/software/gsl/manual/html_node)
-
-```ocaml
-
-> #require "ctypes" ;;
-> #require "ctypes" ;;
-> #require "ctypes.foreign" ;;
-> open Foreign ;;
-> open PosixTypes ;;
-> open Ctypes ;;
-
-> let gsl_lib = Dl.dlopen ~filename:"libgsl.so" ~flags:[Dl.RTLD_LAZY; Dl.RTLD_GLOBAL];;
-val gsl_lib : Dl.library = <abstr>
->
-
-
-(*
- *   double gsl_sf_bessel_J0 (double x)
- *
- *  gsl_sf_bessel_J0(5) = -1.775967713143382920e-01
- *
- *------------------------------------------------------------------
- *)
-
-> let gsl_sf_bessel_J0 = foreign ~from:gsl_lib "gsl_sf_bessel_J0" (double @-> returning double ) ;;
-val gsl_sf_bessel_J0 : float -> float = <fun>
-
-> gsl_sf_bessel_J0 5.0 ;;
-- : float = -0.177596771314338292
-
-> List.map gsl_sf_bessel_J0 [1.0; 10.0; 100.0; 1000.0 ] ;;
-- : float list =
-[0.765197686557966494; -0.245935764451348265; 0.0199858503042231184;
- 0.024786686152420169]
-
-(*
- *   Polynomial Evaluation
- *
- *  double gsl_poly_eval (const double c[], const int len, const double x)
- *
- *   The functions described here evaluate the polynomial
- *   P(x) = c[0] + c[1] x + c[2] x^2 + ... + c[len-1] x^{len-1}
- *
- *   using Horner’s method for stability. Inline versions of these
- *   functions are used when HAVE_INLINE is defined.
- *
- *   This function evaluates a polynomial with real coefficients for
- *   the real variable x.
- *
- * ------------------------------------------------------------------
- *)
-
+    -   Calling GSL - GNU Scientific Library
+    
+    -   [GSL Manual](https://www.gnu.org/software/gsl/manual/html_node)
+    
+    ```ocaml
+    > #require "ctypes" ;;
+    > #require "ctypes" ;;
+    > #require "ctypes.foreign" ;;
+    > open Foreign ;;
+    > open PosixTypes ;;
+    > open Ctypes ;;
+    
+    > let gsl_lib = Dl.dlopen ~filename:"libgsl.so" ~flags:[Dl.RTLD_LAZY; Dl.RTLD_GLOBAL];;
+    val gsl_lib : Dl.library = <abstr>
+    >
+    
+    
     (*
-     *  Let's evaluate  3 * x^2 + 2 * x + 1
+     *   double gsl_sf_bessel_J0 (double x)
      *
-     *  so it becomes:  [1. ; 2. ; 3. ]
+     *  gsl_sf_bessel_J0(5) = -1.775967713143382920e-01
      *
-     *
-     *  (3 * x^2 + 2 * x + 1) 5 = 86
-     *  (3 * x^2 + 2 * x + 1) 7 = 162
-     *  (3 * x^2 + 2 * x + 1) 9 = 262
+     *------------------------------------------------------------------
      *)
+    
+    > let gsl_sf_bessel_J0 = foreign ~from:gsl_lib "gsl_sf_bessel_J0" (double @-> returning double ) ;;
+    val gsl_sf_bessel_J0 : float -> float = <fun>
+    
+    > gsl_sf_bessel_J0 5.0 ;;
+    - : float = -0.177596771314338292
+    
+    > List.map gsl_sf_bessel_J0 [1.0; 10.0; 100.0; 1000.0 ] ;;
+    - : float list =
+    [0.765197686557966494; -0.245935764451348265; 0.0199858503042231184;
+     0.024786686152420169]
+    
+    (*
+     *   Polynomial Evaluation
+     *
+     *  double gsl_poly_eval (const double c[], const int len, const double x)
+     *
+     *   The functions described here evaluate the polynomial
+     *   P(x) = c[0] + c[1] x + c[2] x^2 + ... + c[len-1] x^{len-1}
+     *
+     *   using Horner’s method for stability. Inline versions of these
+     *   functions are used when HAVE_INLINE is defined.
+     *
+     *   This function evaluates a polynomial with real coefficients for
+     *   the real variable x.
+     *
+     * ------------------------------------------------------------------
+     *)
+    
+        (*
+         *  Let's evaluate  3 * x^2 + 2 * x + 1
+         *
+         *  so it becomes:  [1. ; 2. ; 3. ]
+         *
+         *
+         *  (3 * x^2 + 2 * x + 1) 5 = 86
+         *  (3 * x^2 + 2 * x + 1) 7 = 162
+         *  (3 * x^2 + 2 * x + 1) 9 = 262
+         *)
+    
+    > let gsl_poly_eval_ = foreign ~from:gsl_lib "gsl_poly_eval"
+    (ptr double @-> int @-> double @-> returning double);;
+    val gsl_poly_eval_ : float Ctypes_static.ptr -> int -> float -> float = <fun>
+    
+    > let poly =  CArray.of_list double  [1. ; 2. ; 3. ] ;;
+    val poly : float Ctypes.CArray.t =
+      {Ctypes_static.astart = Ctypes_static.CPointer <abstr>; alength = 3}
+    
+    > CArray.start poly ;;
+    - : float Ctypes.ptr = Ctypes_static.CPointer <abstr>
+    
+    > gsl_poly_eval_ (CArray.start poly)  3 5.0 ;;
+    - : float = 86.
+    > gsl_poly_eval_ (CArray.start poly)  3 7.0 ;;
+    - : float = 162.
+    > gsl_poly_eval_ (CArray.start poly)  3 9.0 ;;
+    - : float = 262.
+    
+    
+        (* Assemblying all pieces of code *)
+    
+    > let gsl_poly_eval_ = foreign ~from:gsl_lib "gsl_poly_eval"
+      (ptr double @-> int @-> double @-> returning double);;
+    val gsl_poly_eval_ : float Ctypes_static.ptr -> int -> float -> float = <fun>
+    
+    > let gsl_poly_val poly x =
+           let p = CArray.of_list double poly in
+           gsl_poly_eval_ (CArray.start p) (List.length poly) x
+      ;;
+    val gsl_poly_val : float list -> float -> float = <fun>
+    
+    
+    >  List.map (gsl_poly_val [1. ; 2. ; 3. ] ) [5.0 ; 7.0 ; 9.0] ;;
+    - : float list = [86.; 162.; 262.]
+    
+    > let mypoly = gsl_poly_val [1. ; 2. ; 3. ]  ;;
+    val mypoly : float -> float = <fun>
+    
+    > List.map mypoly [5.0 ; 7.0 ; 9.0] ;;
+    - : float list = [86.; 162.; 262.]
+    >
+    ```
 
-> let gsl_poly_eval_ = foreign ~from:gsl_lib "gsl_poly_eval"
-(ptr double @-> int @-> double @-> returning double);;
-val gsl_poly_eval_ : float Ctypes_static.ptr -> int -> float -> float = <fun>
+2.  Calling Python
 
-> let poly =  CArray.of_list double  [1. ; 2. ; 3. ] ;;
-val poly : float Ctypes.CArray.t =
-  {Ctypes_static.astart = Ctypes_static.CPointer <abstr>; alength = 3}
+    -   [Embedding Python in Another Application](https://docs.python.org/2/extending/embedding.html)
+    
+    -   [Initializing and finalizing the interpreter - Python/C API Reference Manual](https://docs.python.org/2/c-api/init.html)
+    
+    -   [The Very High Level Layer - Python/C API Reference Manual](https://docs.python.org/2/c-api/veryhigh.html)
+    
+    ```ocaml
+    >
+      open Foreign ;;
+    >  open PosixTypes ;;
+    > open Ctypes ;;
+    >
+    
+    >  let pylib = Dl.dlopen ~filename:"libpython2.7.so" ~flags:[Dl.RTLD_LAZY; Dl.RTLD_GLOBAL];;
+    val pylib : Dl.library = <abstr>
+    > let py_init = foreign "Py_Initialize" ~from:pylib (void @-> returning void) ;;
+    val py_init : unit -> unit = <fun>
+    > py_init () ;;
+    - : unit = ()
+    
+    > let py_getPath = foreign "Py_GetPath" ~from:pylib (void @-> returning string) ;;
+    val py_getPath : unit -> string = <fun>
+    > py_getPath () ;;
+    - : string =
+    "/home/tux/lib:/usr/lib/python2.7/:/usr/lib/python2.7/plat-i386-linux-gnu:/usr/lib/python2.7/lib-tk:/usr/lib/python2.7/lib-old:/usr/lib/python2.7/lib-dynload"
+    >
+    
+    > let py_getVersion = foreign "Py_GetVersion" ~from:pylib (void @-> returning string) ;;
+    val py_getVersion : unit -> string = <fun>
+    >
+    > py_getVersion() ;;
+    - : string = "2.7.9 (default, Apr  2 2015, 15:39:13) \n[GCC 4.9.2]"
+    >
+    
+      let py_GetPlatform = foreign "Py_GetPlatform" ~from:pylib (void @-> returning string) ;;
+    val py_GetPlatform : unit -> string = <fun>
+    > py_GetPlatform () ;;
+    - : string = "linux2"
+    >
+    
+    > let pyRunSimpleString = foreign "PyRun_SimpleString" ~from:pylib (string @-> returning int) ;;
+    val pyRunSimpleString : string -> int = <fun>
+    >
+      pyRunSimpleString "print 'hello world'" ;;
+    hello world
+    - : int = 0
+    
+    > pyRunSimpleString "f = lambda x: 10.5 * x - 4" ;;
+    - : int = 0
+    > pyRunSimpleString "print (map(f, [1, 2, 3, 4, 5, 6, 7])" ;;
+      File "<string>", line 1
+        print (map(f, [1, 2, 3, 4, 5, 6, 7])
+                                           ^
+    SyntaxError: unexpected EOF while parsing
+    - : int = -1
+    
+    > pyRunSimpleString "print (map(f, [1, 2, 3, 4, 5, 6, 7]))" ;;
+    [6.5, 17.0, 27.5, 38.0, 48.5, 59.0, 69.5]
+    - : int = 0
+    
+    > pyRunSimpleString "import sys ; print sys.executable" ;;
+    /usr/bin/python
+    - : int = 0
+    >
+    
+    > let py_finalize = foreign "Py_Finalize" ~from:pylib (void @-> returning void)
+      ;;
+    val py_finalize : unit -> unit = <fun>
+    > py_finalize () ;;
+    - : unit = ()
+    >
+    ```
 
-> CArray.start poly ;;
-- : float Ctypes.ptr = Ctypes_static.CPointer <abstr>
-
-> gsl_poly_eval_ (CArray.start poly)  3 5.0 ;;
-- : float = 86.
-> gsl_poly_eval_ (CArray.start poly)  3 7.0 ;;
-- : float = 162.
-> gsl_poly_eval_ (CArray.start poly)  3 9.0 ;;
-- : float = 262.
-
-
-    (* Assemblying all pieces of code *)
-
-> let gsl_poly_eval_ = foreign ~from:gsl_lib "gsl_poly_eval"
-  (ptr double @-> int @-> double @-> returning double);;
-val gsl_poly_eval_ : float Ctypes_static.ptr -> int -> float -> float = <fun>
-
-> let gsl_poly_val poly x =
-       let p = CArray.of_list double poly in
-       gsl_poly_eval_ (CArray.start p) (List.length poly) x
-  ;;
-val gsl_poly_val : float list -> float -> float = <fun>
-
-
->  List.map (gsl_poly_val [1. ; 2. ; 3. ] ) [5.0 ; 7.0 ; 9.0] ;;
-- : float list = [86.; 162.; 262.]
-
-> let mypoly = gsl_poly_val [1. ; 2. ; 3. ]  ;;
-val mypoly : float -> float = <fun>
-
-> List.map mypoly [5.0 ; 7.0 ; 9.0] ;;
-- : float list = [86.; 162.; 262.]
->
-
-```
-
-#### Calling Python
-
-* [Embedding Python in Another Application](https://docs.python.org/2/extending/embedding.html)
-
-* [Initializing and finalizing the interpreter - Python/C API Reference Manual](https://docs.python.org/2/c-api/init.html)
-
-* [The Very High Level Layer - Python/C API Reference Manual](https://docs.python.org/2/c-api/veryhigh.html)
-
-```ocaml
->
-  open Foreign ;;
->  open PosixTypes ;;
-> open Ctypes ;;
->
-
->  let pylib = Dl.dlopen ~filename:"libpython2.7.so" ~flags:[Dl.RTLD_LAZY; Dl.RTLD_GLOBAL];;
-val pylib : Dl.library = <abstr>
-> let py_init = foreign "Py_Initialize" ~from:pylib (void @-> returning void) ;;
-val py_init : unit -> unit = <fun>
-> py_init () ;;
-- : unit = ()
-
-> let py_getPath = foreign "Py_GetPath" ~from:pylib (void @-> returning string) ;;
-val py_getPath : unit -> string = <fun>
-> py_getPath () ;;
-- : string =
-"/home/tux/lib:/usr/lib/python2.7/:/usr/lib/python2.7/plat-i386-linux-gnu:/usr/lib/python2.7/lib-tk:/usr/lib/python2.7/lib-old:/usr/lib/python2.7/lib-dynload"
->
-
-> let py_getVersion = foreign "Py_GetVersion" ~from:pylib (void @-> returning string) ;;
-val py_getVersion : unit -> string = <fun>
->
-> py_getVersion() ;;
-- : string = "2.7.9 (default, Apr  2 2015, 15:39:13) \n[GCC 4.9.2]"
->
-
-  let py_GetPlatform = foreign "Py_GetPlatform" ~from:pylib (void @-> returning string) ;;
-val py_GetPlatform : unit -> string = <fun>
-> py_GetPlatform () ;;
-- : string = "linux2"
->
-
-> let pyRunSimpleString = foreign "PyRun_SimpleString" ~from:pylib (string @-> returning int) ;;
-val pyRunSimpleString : string -> int = <fun>
->
-  pyRunSimpleString "print 'hello world'" ;;
-hello world
-- : int = 0
-
-> pyRunSimpleString "f = lambda x: 10.5 * x - 4" ;;
-- : int = 0
-> pyRunSimpleString "print (map(f, [1, 2, 3, 4, 5, 6, 7])" ;;
-  File "<string>", line 1
-    print (map(f, [1, 2, 3, 4, 5, 6, 7])
-                                       ^
-SyntaxError: unexpected EOF while parsing
-- : int = -1
-
-> pyRunSimpleString "print (map(f, [1, 2, 3, 4, 5, 6, 7]))" ;;
-[6.5, 17.0, 27.5, 38.0, 48.5, 59.0, 69.5]
-- : int = 0
-
-> pyRunSimpleString "import sys ; print sys.executable" ;;
-/usr/bin/python
-- : int = 0
->
-
-> let py_finalize = foreign "Py_Finalize" ~from:pylib (void @-> returning void)
-  ;;
-val py_finalize : unit -> unit = <fun>
-> py_finalize () ;;
-- : unit = ()
->
-
-```
-
-### Finding Shared Libraries
-
+### Finding Shared Libraries<a id="sec-1-8-3" name="sec-1-8-3"></a>
 
 Unix Standard system calls on Linux.  You can see the Linux lib-C functions documentation by using the commands:
 
@@ -5903,41 +5860,38 @@ libpython-dev - header files and a static library for Python (default)
 libpython2.7-dev - Header files and a static library for Python (v2.7)
 ```
 
-### References
+### References<a id="sec-1-8-4" name="sec-1-8-4"></a>
 
 **OCAML Ctypes**
 
 
-* [Book - Real World OCAML - Chapter 19. Foreign Function Interface](https://realworldocaml.org/v1/en/html/foreign-function-interface.html)
+-   [Book - Real World OCAML - Chapter 19. Foreign Function Interface](https://realworldocaml.org/v1/en/html/foreign-function-interface.html)
 
-* [OCAML Ctypes Documentation](http://ocamllabs.github.io/ocaml-ctypes)
-* [Ctypes FAQ - OCAML Labs](https://github.com/ocamllabs/ocaml-ctypes/wiki/FAQ)
-* [Ctypes tutorial - OCAML Labs](https://github.com/ocamllabs/ocaml-ctypes/wiki/ctypes-tutorial)
-* [Github - OCAML Labs - Ctypes](https://github.com/ocamllabs/ocaml-ctypes)
-* [Mail List: ocaml-ctypes, a library for calling C functions directly from OCaml](https://sympa.inria.fr/sympa/arc/caml-list/2013-06/msg00046.html)
-* [Repository Examples - OCAML Labs](https://github.com/ocamllabs/ocaml-ctypes/tree/master/examples)
+-   [OCAML Ctypes Documentation](http://ocamllabs.github.io/ocaml-ctypes)
+-   [Ctypes FAQ - OCAML Labs](https://github.com/ocamllabs/ocaml-ctypes/wiki/FAQ)
+-   [Ctypes tutorial - OCAML Labs](https://github.com/ocamllabs/ocaml-ctypes/wiki/ctypes-tutorial)
+-   [Github - OCAML Labs - Ctypes](https://github.com/ocamllabs/ocaml-ctypes)
+-   [Mail List: ocaml-ctypes, a library for calling C functions directly from OCaml](https://sympa.inria.fr/sympa/arc/caml-list/2013-06/msg00046.html)
+-   [Repository Examples - OCAML Labs](https://github.com/ocamllabs/ocaml-ctypes/tree/master/examples)
 
 **C Libraries Used in this section**
 
-* [ Linux kernel and C library interfaces - Kernel.Org](https://www.kernel.org/doc/man-pages/)
-* [Wikipedia - System call](http://en.wikipedia.org/wiki/System_call)
-* [Linux System Call Table](http://docs.cs.up.ac.za/programming/asm/derick_tut/syscalls.html)
-* [Linux Programmer's Manual SYSCALLS(2)](http://man7.org/linux/man-pages/man2/syscalls.2.html)
-* [Linux System Calls Quick Reference](http://libflow.com/d/fz1qu63i/LINUX_System_Call_Quick_Reference)
+-   [ Linux kernel and C library interfaces - Kernel.Org](https://www.kernel.org/doc/man-pages/)
+-   [Wikipedia - System call](http://en.wikipedia.org/wiki/System_call)
+-   [Linux System Call Table](http://docs.cs.up.ac.za/programming/asm/derick_tut/syscalls.html)
+-   [Linux Programmer's Manual SYSCALLS(2)](http://man7.org/linux/man-pages/man2/syscalls.2.html)
+-   [Linux System Calls Quick Reference](http://libflow.com/d/fz1qu63i/LINUX_System_Call_Quick_Reference)
 
+-   [GSL - GNU Scientific Library](https://www.gnu.org/software/gsl/)
 
-* [GSL - GNU Scientific Library](https://www.gnu.org/software/gsl/)
+## Module System<a id="sec-1-9" name="sec-1-9"></a>
 
+The Ocaml module system helps to organize the code, avoid names
+collision, provides local namespacing and hide implementation details.
 
-## Module System 
-
-The Ocaml module system helps to organize the code, avoid names collision, provides local namespacing and hide implementation details.
-
-
-### Opening Modules
+### Opening Modules<a id="sec-1-9-1" name="sec-1-9-1"></a>
 
 ```ocaml
-
     (** Show Module Contents *)
     
     # #show Filename ;;
@@ -6076,13 +6030,11 @@ The Ocaml module system helps to organize the code, avoid names collision, provi
 
     # map ((+) 1)  [1; 2; 3; 4; 5] |> find (fun x -> x > 2) ;;
     - : int = 3
-
 ```
 
-### Defining a module in the Toplevel
+### Defining a module in the Toplevel<a id="sec-1-9-2" name="sec-1-9-2"></a>
 
 ```ocaml
-
     # module MyModule = 
              struct 
           
@@ -6251,10 +6203,10 @@ The Ocaml module system helps to organize the code, avoid names collision, provi
     
     # 1 + 2 ;;
     - : int = 16
-    #     
+    #
 ```
 
-### Loading file as module in the toplevel
+### Loading file as module in the toplevel<a id="sec-1-9-3" name="sec-1-9-3"></a>
 
 Let the file myModule.ml have the content:
 
@@ -6265,7 +6217,7 @@ let f x y = 4 * x + y
 let const1 = 100.232
 let msg1  = "hello world"
 
-let () = Printf.printf "Hello Ocaml FP" 
+let () = Printf.printf "Hello Ocaml FP"
 ```
 
 Load file 
@@ -6288,7 +6240,7 @@ Load file
           
     # List.map (f 3) [4; 5; 6; 7; 8 ] ;;
     - : int list = [16; 17; 18; 19; 20]
-    # 
+    #
 ```
 
 Load file as module
@@ -6324,15 +6276,14 @@ Load file as module
 
     # List.map (f 3) [4; 5; 6; 7; 8 ] ;;
     - : int list = [16; 17; 18; 19; 20]
-    # 
+    #
 ```
 
-### Loading Libraries Modules
+### Loading Libraries Modules<a id="sec-1-9-4" name="sec-1-9-4"></a>
 
 It will load the library pcre, that can be installed with $ opam install pcre
 
 ```ocaml
-
     # #use "topfind" ;;
 
     # #require "pcre" ;;
@@ -6386,10 +6337,9 @@ It will load the library pcre, that can be installed with $ opam install pcre
     |>  fun c ->  int_of_string c.(1), int_of_string c.(2)
     ;;
     - : int * int = (23213, 132345)
- 
 ```
 
-### Including Modules
+### Including Modules<a id="sec-1-9-5" name="sec-1-9-5"></a>
 
 All functions of the native library module List will be included in the new module List that
 defines the functions take, drop and range.
@@ -6494,23 +6444,21 @@ defines the functions take, drop and range.
     |> List.filter (fun x -> x mod 5 = 0  && x mod 3 =  0) ;;
     - : int list =
     [120; 150; 180; 210; 240; 270; 300; 330; 360; 390; 420; 450; 480]
-    # 
-    
-       
+    #
 ```
 
-## Compiling
+## Compiling<a id="sec-1-10" name="sec-1-10"></a>
 
 [Under Construction]
 
 See also:
 
-* [Compiling OCaml projects](https://ocaml.org/learn/tutorials/compiling_ocaml_projects.html)
-* [OCaml for the Skeptical](http://www2.lib.uchicago.edu/keith/ocaml-class/compiling.html)
-* [The ocamlbuild users manua](https://nicolaspouillard.fr/ocamlbuild/ocamlbuild-user-guide.html)
-* [OCaml Pro - OCaml Standard Tools Cheat Sheet](http://www.ocamlpro.com/files/ocaml-tools.pdf)
+-   [Compiling OCaml projects](https://ocaml.org/learn/tutorials/compiling_ocaml_projects.html)
+-   [OCaml for the Skeptical](http://www2.lib.uchicago.edu/keith/ocaml-class/compiling.html)
+-   [The ocamlbuild users manua](https://nicolaspouillard.fr/ocamlbuild/ocamlbuild-user-guide.html)
+-   [OCaml Pro - OCaml Standard Tools Cheat Sheet](http://www.ocamlpro.com/files/ocaml-tools.pdf)
 
-### Compiling a single file
+### Compiling a single file<a id="sec-1-10-1" name="sec-1-10-1"></a>
 
 It requires the packages lwt and cohttp that can be installed with
 
@@ -6520,7 +6468,7 @@ $ opam instal lwt cohttp
 [NOTE] Package cohttp is already installed (current version is 0.18.1).
 ```
 
-Let the file [curl.ml](src/curl/curl.ml) have the content 
+Let the file curl.ml have the content 
 
 ```ocaml
 #use "topfind" ;;
@@ -6559,7 +6507,7 @@ Running as script
 $ ocaml curl.ml http://httpbin.org/xml
 <?xml version='1.0' encoding='us-ascii'?>
 
-<!--  A SAMPLE set of slides  -->
+
 
 <slideshow 
     title="Sample Slide Show"
@@ -6567,12 +6515,12 @@ $ ocaml curl.ml http://httpbin.org/xml
     author="Yours Truly"
     >
 
-    <!-- TITLE SLIDE -->
+    
     <slide type="all">
       <title>Wake up to WonderWidgets!</title>
     </slide>
 
-    <!-- OVERVIEW -->
+    
     <slide type="all">
         <title>Overview</title>
         <item>Why <em>WonderWidgets</em> are great</item>
@@ -6581,12 +6529,11 @@ $ ocaml curl.ml http://httpbin.org/xml
     </slide>
 
 </slideshow>
-
 ```
 
 **Compiling to bytecode**
 
-To compile the file the toplevel directives #use, #mod_use, #load must be removed
+To compile the file the toplevel directives #use, #mod<sub>use</sub>, #load must be removed
 
 ```
 $ ocamlfind ocamlc -o curl.byte curl.ml -package lwt,cohttp -linkpkg 
@@ -6613,7 +6560,6 @@ $ ./curl.byte http://httpbin.org/status/418
       |       ;/
       \_     _/
         `"""`
-
 ```
 
 **Compiling to Native Code**
@@ -6639,8 +6585,8 @@ $ ./curl.bin http://httpbin.org/status/418
 
 **Simple Makefile**
 
+File: Makefile
 
-File: [Makefile](src/curl/Makefile)
 ```Makefile
 all: curl.byte curl.bin
 
@@ -6726,15 +6672,14 @@ Testing curl.bin
         `"
 
 $ make clean 
-rm -rf *.cmo *.cmi *.o *.cmx *.bin *.byte        
+rm -rf *.cmo *.cmi *.o *.cmx *.bin *.byte
 ```
 
-
-### Compiling a single File and a single Module
+### Compiling a single File and a single Module<a id="sec-1-10-2" name="sec-1-10-2"></a>
 
 Let the file tools.ml have the content:
 
-file: [tools.ml](src/tools/tools.ml)
+file: tools.ml
 
 ```ocaml
 (** 
@@ -6773,12 +6718,11 @@ let execute_in_dir dir command =
     let out = popen_in command in
     Unix.chdir this ;
     out
-    
 ```
 
 Let the file main.ml be
 
-file: [main.ml](src/tools/main.ml)
+file: main.ml
 
 ```ocaml
 (*
@@ -6796,7 +6740,7 @@ let () = main ()
 Loading in the Toplevel
 
 ```
-$ rlwrap ocaml -noinit 
+$ rlwrap ocaml -noinit
 ```
 
 ```ocaml
@@ -6840,8 +6784,7 @@ $ rlwrap ocaml -noinit
         val popen_in : string -> string
         val execute_in_dir : string -> string -> string
       end
-    # 
-
+    #
 ```
 
 Compiling to bytecode 
@@ -6915,8 +6858,7 @@ $ rlwrap ocaml -noinit
     
     # Sys.getcwd () ;;
     - : string = "/home/tux/PycharmProjects/Haskell/ocaml/src"
-    # 
-
+    #
 ```
 
 Compiling main.ml to bytecode executable and linking it to unix.cma and tools module
@@ -6942,7 +6884,6 @@ config-3.19.0-20-generic
 config-3.19.0-21-generic
 grub
 ...
-
 ```
 
 Compiling main.ml to main.bin, elf executable (Unix executable)
@@ -6978,7 +6919,8 @@ initr
 
 Simple Makefile
 
-[Makefile](src/tools/Makefile)
+Makefile
+
 ```Makefile
 main.byte:
     ocamlfind ocamlc -o main.byte tools.ml main.ml  -package unix -linkpkg -verbose
@@ -6990,23 +6932,22 @@ clean:
     rm -rf *.cmo *.cmi *.o *.cmx *.bin *.byte
 ```
 
-### See also
+### See also<a id="sec-1-10-3" name="sec-1-10-3"></a>
 
-* [OCaml User Manual - Chapter 4  The module language](http://caml.inria.fr/pub/docs/u3-ocaml/ocaml-modules.html)
-* [Unreliable Guide to OCaml Modules](http://lambdafoo.com/blog/2015/05/15/unreliable-guide-to-ocaml-modules/)
-* [Real World OCaml - Chapter 4. Files, Modules, and Programs](https://realworldocaml.org/v1/en/html/files-modules-and-programs.html)
-* [Haifeng's Random Walk - OCaml: Modules](https://haifengl.wordpress.com/2014/07/15/ocaml-modules/)
-* [First-class modules: hidden power and tantalizing promises](http://okmij.org/ftp/ML/first-class-modules/)
-* [The OCaml Module System - Faculty of Engineering Pontificia Universidad Javeriana](http://cic.puj.edu.co/wiki/lib/exe/fetch.php?id=materias%3Aleng2&cache=cache&media=materias:leng2:resources:lecture10-ocaml-adv.pdf)
-* [OCaml Pro - Packing and Functors](http://www.ocamlpro.com/blog/2011/08/10/ocaml-pack-functors.html)
-* [Caml for the Skeptical](http://www2.lib.uchicago.edu/keith/ocaml-class/modules.html)
-* [Lecture 9: Functors — Parameterized Modules](http://www.cs.cornell.edu/courses/cs3110/2011sp/lectures/lec09-functors/functors.htm)
-* [How to use modules with ocaml](http://cseweb.ucsd.edu/classes/sp00/cse231/tutorialeng/node3.html)
+-   [OCaml User Manual - Chapter 4  The module language](http://caml.inria.fr/pub/docs/u3-ocaml/ocaml-modules.html)
+-   [Unreliable Guide to OCaml Modules](http://lambdafoo.com/blog/2015/05/15/unreliable-guide-to-ocaml-modules/)
+-   [Real World OCaml - Chapter 4. Files, Modules, and Programs](https://realworldocaml.org/v1/en/html/files-modules-and-programs.html)
+-   [Haifeng's Random Walk - OCaml: Modules](https://haifengl.wordpress.com/2014/07/15/ocaml-modules/)
+-   [First-class modules: hidden power and tantalizing promises](http://okmij.org/ftp/ML/first-class-modules/)
+-   [The OCaml Module System - Faculty of Engineering Pontificia Universidad Javeriana](http://cic.puj.edu.co/wiki/lib/exe/fetch.php?id=materias%3Aleng2&cache=cache&media=materias:leng2:resources:lecture10-ocaml-adv.pdf)
+-   [OCaml Pro - Packing and Functors](http://www.ocamlpro.com/blog/2011/08/10/ocaml-pack-functors.html)
+-   [Caml for the Skeptical](http://www2.lib.uchicago.edu/keith/ocaml-class/modules.html)
+-   [Lecture 9: Functors — Parameterized Modules](http://www.cs.cornell.edu/courses/cs3110/2011sp/lectures/lec09-functors/functors.htm)
+-   [How to use modules with ocaml](http://cseweb.ucsd.edu/classes/sp00/cse231/tutorialeng/node3.html)
 
+## Creating Libraries, Modules and Compiling to Bytecode or Machine Code<a id="sec-1-11" name="sec-1-11"></a>
 
-## Creating Libraries, Modules and Compiling to Bytecode or Machine Code
-
-### Loading Files in Interactive Shell
+### Loading Files in Interactive Shell<a id="sec-1-11-1" name="sec-1-11-1"></a>
 
 File: example.ml
 
@@ -7135,11 +7076,9 @@ Loading File From interpreter/ toplevel.
     # gravity ;;
     - : float = 6.67384e-11
     #
-
 ```
 
-
-### Compile Module to Bytecode
+### Compile Module to Bytecode<a id="sec-1-11-2" name="sec-1-11-2"></a>
 
 After the compiling example.ml files: example.cmi and example.cmo will be created. The module "Example" can be loaded without the source code after compiled into the toplevel shell.
 
@@ -7219,8 +7158,6 @@ utop # PhysicalConstants.g ;;
 
 utop # PhysicalConstants.gravity ;;
 - : float = 6.67384e-11
-
-
 ```
 
 Compile to Library
@@ -7231,7 +7168,6 @@ $ ocamlc -a example.cmo -o example.cma
 
 $ file example.cma
 example.cma: OCaml library file (.cma) (Version 008)
-
 ```
 
 Loading example.cma
@@ -7248,14 +7184,13 @@ $ file example.cmx
 example.cmx: OCaml native object file (.cmx) (Version 011)
 ```
 
-## Batteries Standard Library
+## Batteries Standard Library<a id="sec-1-12" name="sec-1-12"></a>
 
 [Batteries Documentation Reference](http://ocaml-batteries-team.github.io/batteries-included/hdoc2/)
 
-
 See also: 
 
-* [Introduction to batEnum](https://github.com/ocaml-batteries-team/batteries-included/wiki/Introduction-to-batEnum)
+-   [Introduction to batEnum](https://github.com/ocaml-batteries-team/batteries-included/wiki/Introduction-to-batEnum)
 
 Install
 
@@ -7268,1525 +7203,1499 @@ $ utop
 >
 ```
 
-### Batteries Modules
+### Batteries Modules<a id="sec-1-12-1" name="sec-1-12-1"></a>
 
-#### Batteries List
+1.  Batteries List
 
-[Documentation](http://ocaml-batteries-team.github.io/batteries-included/hdoc2/BatList.html)
-
-```ocaml
-  # #require "batteries" ;;
-  
-  #  open Batteries ;;
-
-  # #show List ;;
-  module List = BatList
-
-  (** Function Signatures *)
-  #show BatList ;;
-    module BatList :
-      sig
-        type 'a t = 'a list
-        type 'a enumerable = 'a t
-        type 'a mappable = 'a t
-        val is_empty : 'a list -> bool
-        val cons : 'a -> 'a list -> 'a list
-        val first : 'a list -> 'a
-        val hd : 'a list -> 'a
-        val tl : 'a list -> 'a list
-        val last : 'a list -> 'a
-        val length : 'a list -> int
-        val at : 'a list -> int -> 'a
-        val rev : 'a list -> 'a list
-        val append : 'a list -> 'a list -> 'a list
-        val rev_append : 'a list -> 'a list -> 'a list
-        val concat : 'a list list -> 'a list
-        val flatten : 'a list list -> 'a list
-        val singleton : 'a -> 'a list
-        val make : int -> 'a -> 'a list
-        val range : int -> [< `Downto | `To ] -> int -> int list
-        val init : int -> (int -> 'a) -> 'a list
-        val unfold : 'b -> ('b -> ('a * 'b) option) -> 'a list
-        val unfold_exc : (unit -> 'a) -> 'a list * exn
-        val iter : ('a -> unit) -> 'a list -> unit
-        val iteri : (int -> 'a -> unit) -> 'a list -> unit
-        val map : ('a -> 'b) -> 'a list -> 'b list
-        val rev_map : ('a -> 'b) -> 'a list -> 'b list
-        val mapi : (int -> 'a -> 'b) -> 'a list -> 'b list
-        val fold_left : ('a -> 'b -> 'a) -> 'a -> 'b list -> 'a
-        val fold_lefti : ('a -> int -> 'b -> 'a) -> 'a -> 'b list -> 'a
-        val fold_right : ('a -> 'b -> 'b) -> 'a list -> 'b -> 'b
-        val fold_righti : (int -> 'b -> 'a -> 'a) -> 'b list -> 'a -> 'a
-        val reduce : ('a -> 'a -> 'a) -> 'a list -> 'a
-        val max : 'a list -> 'a
-        val min : 'a list -> 'a
-        val sum : int list -> int
-        val fsum : float list -> float
-        val kahan_sum : float list -> float
-        val min_max : ?cmp:('a -> 'a -> int) -> 'a list -> 'a * 'a
-        val iter2 : ('a -> 'b -> unit) -> 'a list -> 'b list -> unit
-        val map2 : ('a -> 'b -> 'c) -> 'a list -> 'b list -> 'c list
-        val rev_map2 : ('a -> 'b -> 'c) -> 'a list -> 'b list -> 'c list
-        val fold_left2 : ('a -> 'b -> 'c -> 'a) -> 'a -> 'b list -> 'c list -> 'a
-        val fold_right2 :
-          ('a -> 'b -> 'c -> 'c) -> 'a list -> 'b list -> 'c -> 'c
-        val mem : 'a -> 'a list -> bool
-        val mem_cmp : ('a -> 'a -> int) -> 'a -> 'a list -> bool
-        val memq : 'a -> 'a list -> bool
-        val for_all : ('a -> bool) -> 'a list -> bool
-        val exists : ('a -> bool) -> 'a list -> bool
-        val for_all2 : ('a -> 'b -> bool) -> 'a list -> 'b list -> bool
-        val exists2 : ('a -> 'b -> bool) -> 'a list -> 'b list -> bool
-        val subset : ('a -> 'b -> int) -> 'a list -> 'b list -> bool
-        val find : ('a -> bool) -> 'a list -> 'a
-        val find_exn : ('a -> bool) -> exn -> 'a list -> 'a
-        val findi : (int -> 'a -> bool) -> 'a list -> int * 'a
-        val find_map : ('a -> 'b option) -> 'a list -> 'b
-        val rfind : ('a -> bool) -> 'a list -> 'a
-        val filter : ('a -> bool) -> 'a list -> 'a list
-        val filteri : (int -> 'a -> bool) -> 'a list -> 'a list
-        val filter_map : ('a -> 'b option) -> 'a list -> 'b list
-        val filteri_map : (int -> 'a -> 'b option) -> 'a list -> 'b list
-        val find_all : ('a -> bool) -> 'a list -> 'a list
-        val partition : ('a -> bool) -> 'a list -> 'a list * 'a list
-        val index_of : 'a -> 'a list -> int option
-        val index_ofq : 'a -> 'a list -> int option
-        val rindex_of : 'a -> 'a list -> int option
-        val rindex_ofq : 'a -> 'a list -> int option
-        val unique : ?eq:('a -> 'a -> bool) -> 'a list -> 'a list
-        val unique_cmp : ?cmp:('a -> 'a -> int) -> 'a list -> 'a list
-        val unique_hash :
-          ?hash:('a -> int) -> ?eq:('a -> 'a -> bool) -> 'a list -> 'a list
-        val assoc : 'a -> ('a * 'b) list -> 'b
-        val assoc_inv : 'b -> ('a * 'b) list -> 'a
-        val remove_assoc : 'a -> ('a * 'b) list -> ('a * 'b) list
-        val mem_assoc : 'a -> ('a * 'b) list -> bool
-        val assq : 'a -> ('a * 'b) list -> 'b
-        val assq_inv : 'b -> ('a * 'b) list -> 'a
-        val remove_assq : 'a -> ('a * 'b) list -> ('a * 'b) list
-        val mem_assq : 'a -> ('a * 'b) list -> bool
-        val modify : 'a -> ('b -> 'b) -> ('a * 'b) list -> ('a * 'b) list
-        val modify_def :
-          'b -> 'a -> ('b -> 'b) -> ('a * 'b) list -> ('a * 'b) list
-        val modify_opt :
-          'a -> ('b option -> 'b option) -> ('a * 'b) list -> ('a * 'b) list
-        val modify_at : int -> ('a -> 'a) -> 'a list -> 'a list
-        val modify_opt_at : int -> ('a -> 'a option) -> 'a list -> 'a list
-        val split_at : int -> 'a list -> 'a list * 'a list
-        val split_nth : int -> 'a list -> 'a list * 'a list
-        val remove : 'a list -> 'a -> 'a list
-        val remove_if : ('a -> bool) -> 'a list -> 'a list
-        val remove_at : int -> 'a list -> 'a list
-        val remove_all : 'a list -> 'a -> 'a list
-        val take : int -> 'a list -> 'a list
-        val ntake : int -> 'a list -> 'a list list
-        val drop : int -> 'a list -> 'a list
-        val takedrop : int -> 'a list -> 'a list * 'a list
-        val take_while : ('a -> bool) -> 'a list -> 'a list
-        val drop_while : ('a -> bool) -> 'a list -> 'a list
-        val span : ('a -> bool) -> 'a list -> 'a list * 'a list
-        val nsplit : ('a -> bool) -> 'a list -> 'a list list
-        val group_consecutive : ('a -> 'a -> bool) -> 'a list -> 'a list list
-        val interleave : ?first:'a -> ?last:'a -> 'a -> 'a list -> 'a list
-        val enum : 'a list -> 'a BatEnum.t
-        val of_enum : 'a BatEnum.t -> 'a list
-        val backwards : 'a list -> 'a BatEnum.t
-        val of_backwards : 'a BatEnum.t -> 'a list
-        val split : ('a * 'b) list -> 'a list * 'b list
-        val combine : 'a list -> 'b list -> ('a * 'b) list
-        val sort : ('a -> 'a -> int) -> 'a list -> 'a list
-        val stable_sort : ('a -> 'a -> int) -> 'a list -> 'a list
-        val fast_sort : ('a -> 'a -> int) -> 'a list -> 'a list
-        val merge : ('a -> 'a -> int) -> 'a list -> 'a list -> 'a list
-        val sort_uniq : ('a -> 'a -> int) -> 'a list -> 'a list
-        val sort_unique : ('a -> 'a -> int) -> 'a list -> 'a list
-        val group : ('a -> 'a -> int) -> 'a list -> 'a list list
-        val cartesian_product : 'a list -> 'b list -> ('a * 'b) list
-        val n_cartesian_product : 'a list list -> 'a list list
-        val transpose : 'a list list -> 'a list list
-        val print :
-          ?first:string ->
-          ?last:string ->
-          ?sep:string ->
-          ('a BatInnerIO.output -> 'b -> unit) ->
-          'a BatInnerIO.output -> 'b list -> unit
-        val eq : 'a BatOrd.eq -> 'a list BatOrd.eq
-        val ord : 'a BatOrd.ord -> 'a list BatOrd.ord
-        val compare : 'a BatOrd.comp -> 'a list BatOrd.comp
-        module Eq : functor (T : BatOrd.Eq) -> sig  end
-        module Ord : functor (T : BatOrd.Ord) -> sig  end
-        module Comp : functor (T : BatOrd.Comp) -> sig  end
-        val nth : 'a list -> int -> 'a
-        val takewhile : ('a -> bool) -> 'a list -> 'a list
-        val dropwhile : ('a -> bool) -> 'a list -> 'a list
-        module Exceptionless : sig  end
-        module Infix : sig  end
-        module Labels : sig  end
-        val ( @ ) : 'a list -> 'a list -> 'a list
-      end
-    # 
-
-
-    (** Head, Tail and Last **)
-    
-    # List.hd [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
-    - : int = 1
-    # List.tl [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
-    - : int list = [2; 3; 4; 5; 6; 7; 8; 9; 10]
-    # 
-
-    # List.first [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
-    - : int = 1
-    # List.last [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
-    - : int = 10
-    # 
-
-    (** Nth Element **)
-    
-    # List.at [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] 0;;
-    - : int = 1
-    # List.at [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] 1;;
-    - : int = 2
-    # List.map (List.at [1; 2; 3; 4; 5; 6; 7; 8; 9; 10]) [0; 5; 2] ;;
-    - : int list = [1; 6; 3]
-    # 
-    
-    (** Min and Max **)
-    # List.max  [1; 2; 3; 4; 5 ;6] ;;
-    - : int = 6
-    # List.min  [1; 2; 3; 4; 5 ;6] ;;
-    - : int = 1
-    # 
-
-    (** Remove an element **)
-    
-    #  List.remove  ['x'; 'd'; 'a'; 'i'; 'o'; 'a'] 'a' ;;
-    - : char list = ['x'; 'd'; 'i'; 'o'; 'a']
-    # 
-    
-    #  List.remove_all  ['x'; 'd'; 'a'; 'i'; 'o'; 'a'] 'a' ;;
-    - : char list = ['x'; 'd'; 'i'; 'o']
-    # 
-    
-    #  List.remove_at  0 ['x'; 'd'; 'a'; 'i'; 'o'; 'a']  ;;
-    - : char list = ['d'; 'a'; 'i'; 'o'; 'a']
-    # List.remove_at  2 ['x'; 'd'; 'a'; 'i'; 'o'; 'a']  ;;
-    - : char list = ['x'; 'd'; 'i'; 'o'; 'a']
-
-       (* Removes the first element that satisfies the predicate *)
-    #  List.remove_if (fun x -> x mod 2 = 0) [1; 2; 4; 5; 10; 11] ;;
-    - : int list = [1; 4; 5; 10; 11]
-    # 
-
-
-    (** Sum **)
-    
-    # List.sum ;;
-    - : int list -> int = <fun>
-    # 
-
-    # List.sum  [1; 2; 3; 4; 5 ;6] ;;
-    - : int = 21
-    # 
-    
-    (** Sum of floats **)
-    
-    # List.fsum ;;
-    - : float list -> float = <fun>
-    # 
-    
-    # List.fsum [1. ; 2.3323; 3.1415; 10.] ;;
-    - : float = 16.4738
-    # 
-        
-
-    (** Map / Iter **)
-    #  List.map ;;
-    - : ('a -> 'b) -> 'a list -> 'b list = <fun>
-    
-
-    #  List.map (fun x -> 10 * x + 3) [1; 2; 3; 4; 5] ;;
-    - : int list = [13; 23; 33; 43; 53]
-    #    
-
-    #  List.iter ;;
-    - : ('a -> unit) -> 'a list -> unit = <fun>
-    # 
-
-    #  List.iter (Printf.printf "= %d\n") [1; 2; 3; 4] ;;
-    = 1
-    = 2
-    = 3
-    = 4
-    - : unit = ()
-    # 
-
-    
-    (** Take and Drop **)
-    
-    # List.take 3 [1; 3; 4; 5; 6; 7] ;;
-    - : int list = [1; 3; 4]
-    # List.take 13 [1; 3; 4; 5; 6; 7] ;;
-    - : int list = [1; 3; 4; 5; 6; 7]
-    # 
-        
-    # List.drop 4 [1; 3; 4; 5; 6; 7] ;;
-    - : int list = [6; 7]
-    # List.drop 14 [1; 3; 4; 5; 6; 7] ;;
-    - : int list = []
-    # 
-            
-
-    (** Take While **)
-    
-    #  List.takewhile (fun x -> x < 5) [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
-    - : int list = [1; 2; 3; 4]
-    # 
-
-    (** Drop While *)
-    
-    # List.dropwhile (fun x -> x < 5) [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
-    - : int list = [5; 6; 7; 8; 9; 10]
-    # 
-
-    (** Partition **)
-    
-    #  List.partition (fun x -> x < 5) [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
-    - : int list * int list = ([1; 2; 3; 4], [5; 6; 7; 8; 9; 10])
-    # 
-
-    #  List.split_nth 3 [0; 1; 2; 3; 4; 5; 6] ;;
-    - : int list * int list = ([0; 1; 2], [3; 4; 5; 6])
-    # List.split_nth 4 [0; 1; 2; 3; 4; 5; 6] ;;
-    - : int list * int list = ([0; 1; 2; 3], [4; 5; 6])
-
-    (** Combine/ Split Lists **)
-    
-    #  List.combine [1; 2; 3] ['a'; 'b'; 'c'] ;;
-    - : (int * char) list = [(1, 'a'); (2, 'b'); (3, 'c')]
-    # 
-      List.combine [1; 2; 3] ['a'; 'b'; 'c'; 'd'] ;;
-    Exception: Invalid_argument "combine: Different_list_size".
-    # 
-
-
-    #  List.split [(1, 'a'); (2, 'b'); (3, 'c')] ;;
-    - : int list * char list = ([1; 2; 3], ['a'; 'b'; 'c'])
-    # 
-
-
-    (** Range **)
-
-    #  List.range ;;
-    - : int -> [< `Downto | `To ] -> int -> int list = <fun>
-    # 
-
-    #  List.range 1 `To 10 ;;
-    - : int list = [1; 2; 3; 4; 5; 6; 7; 8; 9; 10]
-    # 
-
-    #  List.range 100 `Downto 90 ;;
-    - : int list = [100; 99; 98; 97; 96; 95; 94; 93; 92; 91; 90]
-    # 
-
-
-    (** Reverse a List **)
-    #  List.rev [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
-    - : int list = [10; 9; 8; 7; 6; 5; 4; 3; 2; 1]
-    # 
-
-    (** Lenght **)
-    # List.length [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
-    - : int = 10
-    # 
-
-    (** Wrap a Value to a list *)
-    # List.singleton 10 ;;
-    - : int list = [10]
-    # 
-    
-    (** Append Two Lists **)
-    # List.append [1; 2; 3; 4; 5 ;6] [100; 32] ;;
-    - : int list = [1; 2; 3; 4; 5; 6; 100; 32]
-    # 
-
-    (** Concat Lists **)
-    
-    # List.concat [[1]; [2; 3; 4; 5]; [13]; []] ;;
-    - : int list = [1; 2; 3; 4; 5; 13]
-    # 
-
-    # List.flatten [[1]; [2; 3; 4; 5]; [13]; []] ;;
-    - : int list = [1; 2; 3; 4; 5; 13]
-    # 
-
-
-    (** Index of ELement **)
-    
-    # List.index_of ;;
-    - : 'a -> 'a list -> int option = <fun>
-    # 
-
-    #  List.index_of "a" ["i"; "o"; "b"; "a"; "d" ] ;;
-    - : int option = Some 3
-    # List.index_of "x" ["i"; "o"; "b"; "a"; "d" ] ;;
-    - : int option = None
-    # 
-
-    (** Cartesian Product **)
-    
-    #  List.cartesian_product [10; 20; 30] ['a'; 'b'; 'c'; 'd'] ;;
-    - : (int * char) list =
-    [(10, 'a'); (10, 'b'); (10, 'c'); (10, 'd'); (20, 'a'); (20, 'b'); (20, 'c');
-     (20, 'd'); (30, 'a'); (30, 'b'); (30, 'c'); (30, 'd')]
-    # 
-
-    (** Transpose, similar to transpose a matrix *)
-    #  List.transpose [[1; 2; 3; 4]; [10; 20; 30; 100]];;
-    - : int list list = [[1; 10]; [2; 20]; [3; 30]; [4; 100]]
-    # 
-    
-    #  List.group_consecutive ;;
-    - : ('a -> 'a -> bool) -> 'a list -> 'a list list = <fun>
-    # 
-    
-    
-```
-
-#### Lazy List 
-
-[Documentation](http://ocaml-batteries-team.github.io/batteries-included/hdoc2/BatLazyList.html)
-
-Lazy lists are similar to Haskell Lists that uses lazy evaluation.
-
-```ocaml
-
-    #require "batteries" ;;
-
-    # module Lz = BatLazyList ;;
-    module Lz = BatLazyList
-    # 
-
-    (** List to Lazy List*)
-    
-    #  Lz.of_list ;;
-    - : 'a list -> 'a Lz.t = <fun>
-    # 
-    #  Lz.of_list [1; 2; 3; 4; 5] ;;
-    - : int Lz.t = <lazy>
-    # 
-
-    # let s = Lz.of_list [1; 2; 3; 4; 5] ;;
-    val s : int Lz.t = <lazy>
-    # 
-    
-    
-    (** Lazy list to List *)
-        
-    # Lz.to_list s ;;
-    - : int list = [1; 2; 3; 4; 5]
-    # 
-
-
-    (** Range  **)
-    
-    # let st = Lz.range 2 15 ;;
-    val st : int Lz.t = <lazy>
-    # 
-    
-    # Lz.to_list st ;;
-    - : int list = [2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14; 15]
-    # 
+    [Documentation](http://ocaml-batteries-team.github.io/batteries-included/hdoc2/BatList.html)
     
-(** Lazy Operations **)
-
-    (** Take **)
-    # Lz.range 2 15000 |> Lz.take 5 ;;
-    - : int Lz.t = lazy <cycle>
-    #   
-    
-    # Lz.range 2 15000 |> Lz.take 5 |> Lz.to_list ;;
-    - : int list = [2; 3; 4; 5; 6]
-
-
-
-    (** Hd - Head, Tl tail and last *)
-    
-    # Lz.range 2 15000 |> Lz.hd ;;
-    - : int = 2
-    # 
-
-    # Lz.range 2 15000 |> Lz.tl ;;
-    - : int Lz.t = <lazy>
-    # 
-
-    # Lz.range 2 15000 |> Lz.tl |> Lz.take 4 |> Lz.to_list ;;
-    - : int list = [3; 4; 5; 6]
-    #     
-    
-    #  Lz.range 2 15000 |> Lz.tl |> Lz.take 4 |> Lz.last ;;
-    - : int = 6
-    # 
-    
-
-    (** Take While **)
-
-    # Lz.take_while ;;
-    - : ('a -> bool) -> 'a Lz.t -> 'a Lz.t = <fun>
-    # 
-    
-    # Lz.range 2 15000 |> Lz.take_while (fun x -> x < 10) ;;
-    - : int Lz.t = lazy <cycle>
-    # 
-      Lz.range 2 15000 |> Lz.take_while (fun x -> x < 10) |> Lz.to_list ;;
-    - : int list = [2; 3; 4; 5; 6; 7; 8; 9]
-    # 
-
-
-    (** Drop While *)
-    
-    Lz.of_list [2 ; 5; 9; 8; 10; 230; 100] 
-    |> Lz.drop_while (fun x -> x < 10) 
-    |> Lz.to_list ;;
-    - : int list = [10; 230; 100]
-    #     
-    
-    # [2 ; 5; 9; 8; 10; 230; 100] 
-      |> Lz.of_list
-      |> Lz.drop_while (fun x -> x < 10)
-      |> Lz.to_list ;;
-    - : int list = [10; 230; 100]
-    # 
-    
-
-    (** Map **)
-    
-    # Lz.range 2 15000 |> Lz.map (fun x -> 3 * x - 5) |> Lz.take 10 |> Lz.to_list ;;
-    - : int list = [1; 4; 7; 10; 13; 16; 19; 22; 25; 28]
-    # 
-    
-    (** Iter **)
-    
-    #  let z = Lz.range 2 15000 |> Lz.map (fun x -> 3 * x - 5) |> Lz.take 10 ;;
-    val z : int Lz.t = lazy <cycle>
-    # 
-      Lz.iter (fun x -> Printf.printf "x = %d\n" x) z ;;
-    x = 1
-    x = 4
-    x = 7
-    x = 10
-    x = 13
-    x = 16
-    x = 19
-    x = 22
-    x = 25
-    x = 28
-    - : unit = ()
-    # 
-    
-    (** Filter **)
-    
-    #  Lz.range 2 15000 |> Lz.filter (fun x -> x < 15) |> Lz.to_list ;;
-    - : int list = [2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14]
-    # 
-    
-    #  Lz.range 2 15000 
-      |> Lz.filter (fun x -> x mod 2 = 0 ) 
-      |> Lz.take 10 
-      |> Lz.to_list ;;
-    - : int list = [2; 4; 6; 8; 10; 12; 14; 16; 18; 20]
-    #     
-    
-    (** checks if at least one element of the list satisfies the predicate p.  *)
-    # Lz.range 2 15000 |> Lz.exists (fun x -> x = 10) ;;
-    - : bool = true
-    # 
-    
-    (** for_all p [^ a0; a1; ... ^] checks if all elements of the 
-        list satisfy the predicate p. 
-        That is, it returns (p a0) && (p a1) && ... .
-    *)
-
-    #  Lz.range 2 15000 
-      |> Lz.take 10 
-      |> Lz.for_all (fun x -> x mod 2  = 0) ;;
-    - : bool = false
-    
-    # let xs = Lz.range 2 15000 |> Lz.take 10 |> Lz.filter (fun x -> x mod 2 = 0) ;;
-    val xs : int Lz.t = <lazy>
-   
-    # Lz.to_list xs ;;
-    - : int list = [2; 4; 6; 8; 10]
-    # 
-
-      xs |> Lz.for_all (fun x -> x mod 2  = 0) ;;
-    - : bool = true
-    # 
-
-
-    (** Filter Map 
-    
-    Lazily eliminate some elements and transform others.
-    filter_map f [^ a0; a1; ... ^] applies lazily f to each a0, a1... 
-    If f ai evaluates to None, the element is not included in the result. 
-    Otherwise, if f ai evaluates to Some x, element x is included 
-    in the result.
-    
-    **)
-    
-    # let f x = 
-        if x > 10 then None else Some x 
-      ;;
-    val f : int -> int option = <fun>
-    #   
-    
-    #  Lz.filter_map f (Lz.of_list [-20; -10; 0; 2; 10; 20; 30; 60; 3]) ;;
-    - : int Lz.t = <lazy>
-    
-    # Lz.filter_map f (Lz.of_list [-20; -10; 0; 2; 10; 20; 30; 60; 3]) 
-    |> Lz.to_list ;;
-    - : int list = [-20; -10; 0; 2; 10; 3]
-    # 
-    
-    (** Combine/ Zip **)
-    
-    #  Lz.combine (Lz.of_list [1; 2; 3]) (Lz.of_list ['a'; 'b'; 'c']) |> Lz.to_list;;
-    - : (int * char) list = [(1, 'a'); (2, 'b'); (3, 'c')]
-    # 
-
-    # Lz.of_list [(1, 'a'); (2, 'b'); (3, 'c')] |> Lz.uncombine ;;
-    - : int Lz.t * char Lz.t = (<lazy>, <lazy>)
-    # 
-
-    # Lz.of_list [(1, 'a'); (2, 'b'); (3, 'c')] |> Lz.uncombine 
-      |> fun (a, b) -> (Lz.to_list a, Lz.to_list b) ;;
-    - : int list * char list = ([1; 2; 3], ['a'; 'b'; 'c'])
-    # 
-    
-    
-(** Cons and Nils / Creating Lazy Lists *)
-
-    #  let empty_lazy_list = let open Lz in Lazy.from_val Nil ;;
-    val empty_lazy_list : 'a Lz.node_t Lazy.t = lazy Lz.Nil
-    # 
-
-    # Lz.to_list empty_lazy_list ;;
-    - : 'a list = []
-    # 
-    
-    # let open Lz in  lazy (Cons (2, lazy Nil)) ;;
-    - : int Lz.node_t lazy_t = <lazy>
-    # 
-    
-    
-    #  let open Lz in  lazy (Cons (2, lazy Nil)) |> to_list ;;
-    - : int list = [2]
-    # 
-
-
-    # Lz.to_list xs ;;
-    - : int list = [2]
-    # 
-
-    #  let xs2 = let open Lz in Lazy.from_val 
-        (Cons (2, Lazy.from_val (Cons (3, Lazy.from_val (Cons (5, Lazy.from_val Nil))))))  ;;
-    val xs2 : int Lz.node_t Lazy.t = lazy <cycle>
-    # 
-
-    #  Lz.to_list xs2 ;;
-    - : int list = [2; 3; 5]
-    #
-
-
-    (** Generating Infinite Lists *)
-    
-    #  let rec ones () =
-          let open Lz in 
-          lazy (Cons (1,  ones ()))
-      ;;
-    val ones : unit -> int Lz.t = <fun>
-    # 
-
-    #  ones () ;;
-    - : int Lz.t = <lazy>
-    #     
-
-    #  ones () |> Lz.take 5 |> Lz.to_list ;;
-    - : int list = [1; 1; 1; 1; 1]
-
-    # ones () |> Lz.take 10 |> Lz.to_list ;;
-    - : int list = [1; 1; 1; 1; 1; 1; 1; 1; 1; 1]
-    # 
-
-
-    #  let rec naturals n () =
-          let open Lz in 
-          lazy (Cons (n, (naturals  (n+1) ()) ))
-      ;;    
-    
-    #  naturals 0 () |> Lz.take 10 |> Lz.to_list ;;
-    - : int list = [0; 1; 2; 3; 4; 5; 6; 7; 8; 9]
-    
-    #  naturals 0 () |> Lz.take 6 |> Lz.to_list ;;
-    - : int list = [0; 1; 2; 3; 4; 5]
-    # 
-    
-            
-```
-
-
-
-#### Bat Enum
-
-[Documentation](http://ocaml-batteries-team.github.io/batteries-included/hdoc2/BatEnum.html)
-
-
-Enumeration over abstract collection of elements. Enumerations are a representation of finite or infinite sequences of elements. In Batteries Included, enumerations are used pervasively, both as a uniform manner of reading and manipulating the contents of a data structure, or as a simple manner of reading or writing sequences of characters, numbers, strings, etc. from/to files, network connections or other inputs/outputs.
-
-Note Enumerations are not thread-safe. You should not attempt to access one enumeration from different threads.
-Author(s): Nicolas Cannasse, David Rajchenbach-Teller
-
-
-```ocaml
-
-    #require "batteries" ;;
-    module Enum = BatEnum ;;
-    # 
-
-    (** List to Enum *)
-    
-    # List.enum [1; 2; 30; 40; 50; 60] ;;
-    - : int BatEnum.t = <abstr>
-     
-    #  let en = List.enum [1; 2; 30; 40; 50; 60] ;;
-    val en : int BatEnum.t = <abstr>
-    # 
-
-    (** Enum to List *)
-    
-    #  List.of_enum en ;;
-    - : int list = [1; 2; 30; 40; 50; 60]
-    # 
-
-
-    (** 
-        init n f creates a new enumeration over elements 
-        f 0, f 1, ..., f (n-1)
-    *)
-      Enum.init 10 (fun x -> 5 * x - 4 );;
-    - : int Enum.t = <abstr>
-
-    # Enum.init 10 (fun x -> 5 * x - 4 ) |> List.of_enum ;;
-    - : int list = [-4; 1; 6; 11; 16; 21; 26; 31; 36; 41]
-    # 
+    ```ocaml
+      # #require "batteries" ;;
       
-    (** repeat ~times:n x 
-        creates a enum sequence filled with n times 
-        of x. It return infinite enum when ~times is absent. 
-        It returns empty enum when times <= 0
-    *)
-
-    #  Enum.repeat ;;
-    - : ?times:int -> 'a -> 'a Enum.t = <fun>
-    # 
-
-    #  Enum.repeat 10 |> Enum.take 10 ;;
-    - : int Enum.t = <abstr>
-    # 
+      #  open Batteries ;;
     
-    # Enum.repeat 10 |> Enum.take 10 |> List.of_enum ;;
-    - : int list = [10; 10; 10; 10; 10; 10; 10; 10; 10; 10]
-    # 
+      # #show List ;;
+      module List = BatList
     
-    (** Count the number of elements in the enum *)
-
-    #  Enum.repeat 10 |> Enum.take 10 |> Enum.count ;;
-    - : int = 10
-    # 
-
-
-    (** val seq : 'a -> ('a -> 'a) -> ('a -> bool) -> 'a t
-        seq init step cond 
+      (** Function Signatures *)
+      #show BatList ;;
+        module BatList :
+          sig
+            type 'a t = 'a list
+            type 'a enumerable = 'a t
+            type 'a mappable = 'a t
+            val is_empty : 'a list -> bool
+            val cons : 'a -> 'a list -> 'a list
+            val first : 'a list -> 'a
+            val hd : 'a list -> 'a
+            val tl : 'a list -> 'a list
+            val last : 'a list -> 'a
+            val length : 'a list -> int
+            val at : 'a list -> int -> 'a
+            val rev : 'a list -> 'a list
+            val append : 'a list -> 'a list -> 'a list
+            val rev_append : 'a list -> 'a list -> 'a list
+            val concat : 'a list list -> 'a list
+            val flatten : 'a list list -> 'a list
+            val singleton : 'a -> 'a list
+            val make : int -> 'a -> 'a list
+            val range : int -> [< `Downto | `To ] -> int -> int list
+            val init : int -> (int -> 'a) -> 'a list
+            val unfold : 'b -> ('b -> ('a * 'b) option) -> 'a list
+            val unfold_exc : (unit -> 'a) -> 'a list * exn
+            val iter : ('a -> unit) -> 'a list -> unit
+            val iteri : (int -> 'a -> unit) -> 'a list -> unit
+            val map : ('a -> 'b) -> 'a list -> 'b list
+            val rev_map : ('a -> 'b) -> 'a list -> 'b list
+            val mapi : (int -> 'a -> 'b) -> 'a list -> 'b list
+            val fold_left : ('a -> 'b -> 'a) -> 'a -> 'b list -> 'a
+            val fold_lefti : ('a -> int -> 'b -> 'a) -> 'a -> 'b list -> 'a
+            val fold_right : ('a -> 'b -> 'b) -> 'a list -> 'b -> 'b
+            val fold_righti : (int -> 'b -> 'a -> 'a) -> 'b list -> 'a -> 'a
+            val reduce : ('a -> 'a -> 'a) -> 'a list -> 'a
+            val max : 'a list -> 'a
+            val min : 'a list -> 'a
+            val sum : int list -> int
+            val fsum : float list -> float
+            val kahan_sum : float list -> float
+            val min_max : ?cmp:('a -> 'a -> int) -> 'a list -> 'a * 'a
+            val iter2 : ('a -> 'b -> unit) -> 'a list -> 'b list -> unit
+            val map2 : ('a -> 'b -> 'c) -> 'a list -> 'b list -> 'c list
+            val rev_map2 : ('a -> 'b -> 'c) -> 'a list -> 'b list -> 'c list
+            val fold_left2 : ('a -> 'b -> 'c -> 'a) -> 'a -> 'b list -> 'c list -> 'a
+            val fold_right2 :
+              ('a -> 'b -> 'c -> 'c) -> 'a list -> 'b list -> 'c -> 'c
+            val mem : 'a -> 'a list -> bool
+            val mem_cmp : ('a -> 'a -> int) -> 'a -> 'a list -> bool
+            val memq : 'a -> 'a list -> bool
+            val for_all : ('a -> bool) -> 'a list -> bool
+            val exists : ('a -> bool) -> 'a list -> bool
+            val for_all2 : ('a -> 'b -> bool) -> 'a list -> 'b list -> bool
+            val exists2 : ('a -> 'b -> bool) -> 'a list -> 'b list -> bool
+            val subset : ('a -> 'b -> int) -> 'a list -> 'b list -> bool
+            val find : ('a -> bool) -> 'a list -> 'a
+            val find_exn : ('a -> bool) -> exn -> 'a list -> 'a
+            val findi : (int -> 'a -> bool) -> 'a list -> int * 'a
+            val find_map : ('a -> 'b option) -> 'a list -> 'b
+            val rfind : ('a -> bool) -> 'a list -> 'a
+            val filter : ('a -> bool) -> 'a list -> 'a list
+            val filteri : (int -> 'a -> bool) -> 'a list -> 'a list
+            val filter_map : ('a -> 'b option) -> 'a list -> 'b list
+            val filteri_map : (int -> 'a -> 'b option) -> 'a list -> 'b list
+            val find_all : ('a -> bool) -> 'a list -> 'a list
+            val partition : ('a -> bool) -> 'a list -> 'a list * 'a list
+            val index_of : 'a -> 'a list -> int option
+            val index_ofq : 'a -> 'a list -> int option
+            val rindex_of : 'a -> 'a list -> int option
+            val rindex_ofq : 'a -> 'a list -> int option
+            val unique : ?eq:('a -> 'a -> bool) -> 'a list -> 'a list
+            val unique_cmp : ?cmp:('a -> 'a -> int) -> 'a list -> 'a list
+            val unique_hash :
+              ?hash:('a -> int) -> ?eq:('a -> 'a -> bool) -> 'a list -> 'a list
+            val assoc : 'a -> ('a * 'b) list -> 'b
+            val assoc_inv : 'b -> ('a * 'b) list -> 'a
+            val remove_assoc : 'a -> ('a * 'b) list -> ('a * 'b) list
+            val mem_assoc : 'a -> ('a * 'b) list -> bool
+            val assq : 'a -> ('a * 'b) list -> 'b
+            val assq_inv : 'b -> ('a * 'b) list -> 'a
+            val remove_assq : 'a -> ('a * 'b) list -> ('a * 'b) list
+            val mem_assq : 'a -> ('a * 'b) list -> bool
+            val modify : 'a -> ('b -> 'b) -> ('a * 'b) list -> ('a * 'b) list
+            val modify_def :
+              'b -> 'a -> ('b -> 'b) -> ('a * 'b) list -> ('a * 'b) list
+            val modify_opt :
+              'a -> ('b option -> 'b option) -> ('a * 'b) list -> ('a * 'b) list
+            val modify_at : int -> ('a -> 'a) -> 'a list -> 'a list
+            val modify_opt_at : int -> ('a -> 'a option) -> 'a list -> 'a list
+            val split_at : int -> 'a list -> 'a list * 'a list
+            val split_nth : int -> 'a list -> 'a list * 'a list
+            val remove : 'a list -> 'a -> 'a list
+            val remove_if : ('a -> bool) -> 'a list -> 'a list
+            val remove_at : int -> 'a list -> 'a list
+            val remove_all : 'a list -> 'a -> 'a list
+            val take : int -> 'a list -> 'a list
+            val ntake : int -> 'a list -> 'a list list
+            val drop : int -> 'a list -> 'a list
+            val takedrop : int -> 'a list -> 'a list * 'a list
+            val take_while : ('a -> bool) -> 'a list -> 'a list
+            val drop_while : ('a -> bool) -> 'a list -> 'a list
+            val span : ('a -> bool) -> 'a list -> 'a list * 'a list
+            val nsplit : ('a -> bool) -> 'a list -> 'a list list
+            val group_consecutive : ('a -> 'a -> bool) -> 'a list -> 'a list list
+            val interleave : ?first:'a -> ?last:'a -> 'a -> 'a list -> 'a list
+            val enum : 'a list -> 'a BatEnum.t
+            val of_enum : 'a BatEnum.t -> 'a list
+            val backwards : 'a list -> 'a BatEnum.t
+            val of_backwards : 'a BatEnum.t -> 'a list
+            val split : ('a * 'b) list -> 'a list * 'b list
+            val combine : 'a list -> 'b list -> ('a * 'b) list
+            val sort : ('a -> 'a -> int) -> 'a list -> 'a list
+            val stable_sort : ('a -> 'a -> int) -> 'a list -> 'a list
+            val fast_sort : ('a -> 'a -> int) -> 'a list -> 'a list
+            val merge : ('a -> 'a -> int) -> 'a list -> 'a list -> 'a list
+            val sort_uniq : ('a -> 'a -> int) -> 'a list -> 'a list
+            val sort_unique : ('a -> 'a -> int) -> 'a list -> 'a list
+            val group : ('a -> 'a -> int) -> 'a list -> 'a list list
+            val cartesian_product : 'a list -> 'b list -> ('a * 'b) list
+            val n_cartesian_product : 'a list list -> 'a list list
+            val transpose : 'a list list -> 'a list list
+            val print :
+              ?first:string ->
+              ?last:string ->
+              ?sep:string ->
+              ('a BatInnerIO.output -> 'b -> unit) ->
+              'a BatInnerIO.output -> 'b list -> unit
+            val eq : 'a BatOrd.eq -> 'a list BatOrd.eq
+            val ord : 'a BatOrd.ord -> 'a list BatOrd.ord
+            val compare : 'a BatOrd.comp -> 'a list BatOrd.comp
+            module Eq : functor (T : BatOrd.Eq) -> sig  end
+            module Ord : functor (T : BatOrd.Ord) -> sig  end
+            module Comp : functor (T : BatOrd.Comp) -> sig  end
+            val nth : 'a list -> int -> 'a
+            val takewhile : ('a -> bool) -> 'a list -> 'a list
+            val dropwhile : ('a -> bool) -> 'a list -> 'a list
+            module Exceptionless : sig  end
+            module Infix : sig  end
+            module Labels : sig  end
+            val ( @ ) : 'a list -> 'a list -> 'a list
+          end
+        # 
+    
+    
+        (* Head, Tail and Last *)
         
-        creates a sequence of data, which starts 
-        from init, extends by step, until the condition cond fails. 
-        E.g. seq 1 ((+) 1) ((>) 100) returns 1, 2, ... 99. 
-        If cond init is false, the result is empty.
-    *)
+        # List.hd [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
+        - : int = 1
+        # List.tl [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
+        - : int list = [2; 3; 4; 5; 6; 7; 8; 9; 10]
+        # 
     
-    # Enum.seq ;;
-    - : 'a -> ('a -> 'a) -> ('a -> bool) -> 'a Enum.t = <fun>
-    # 
+        # List.first [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
+        - : int = 1
+        # List.last [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
+        - : int = 10
+        # 
     
-    #  let en = Enum.seq 2.3 (fun x -> 10.0 *. x ) (fun x -> x < 100.) ;;
-    val en : float Enum.t = <abstr>
-    
-    #  List.of_enum en ;;
-    - : float list = [2.3; 23.]
-    
-    # let en = Enum.seq 2.3 (fun x -> 10.0 *. x ) (fun x -> true) 
-    |> Enum.take 10 
-    |> List.of_enum ;;
-    val en : float list =
-      [2.3; 23.; 230.; 2300.; 23000.; 230000.; 2300000.; 
-      23000000.; 230000000.; 2300000000.]
-
-    
-    (** Cycle **)
-    
-    #  Enum.cycle (List.enum ['a'; 'b'; 'c']) |> Enum.take 3 |>  List.of_enum ;;
-    - : char list = ['a'; 'b'; 'c']
-    # Enum.cycle (List.enum ['a'; 'b'; 'c']) |> Enum.take 5 |>  List.of_enum ;;
-    - : char list = ['a'; 'b'; 'c'; 'a'; 'b']
-    # Enum.cycle (List.enum ['a'; 'b'; 'c']) |> Enum.take 7 |>  List.of_enum ;;
-    - : char list = ['a'; 'b'; 'c'; 'a'; 'b'; 'c'; 'a']
-    # 
-
-    (** Combine **)
-    
-    #  Enum.combine ;;
-    - : 'a Enum.t * 'b Enum.t -> ('a * 'b) Enum.t = <fun>
-    # 
+        (* Nth Element *)
         
-    #  Enum.combine ((List.enum ['a'; 'b'; 'c']), (List.enum [10; 20; 30; 40; 50])) 
-    |> List.of_enum ;;
-    - : (char * int) list = [('a', 10); ('b', 20); ('c', 30)]
-    # 
+        # List.at [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] 0;;
+        - : int = 1
+        # List.at [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] 1;;
+        - : int = 2
+        # List.map (List.at [1; 2; 3; 4; 5; 6; 7; 8; 9; 10]) [0; 5; 2] ;;
+        - : int list = [1; 6; 3]
+        # 
         
-    #  Enum.uncombine ;;
-    - : ('a * 'b) Enum.t -> 'a Enum.t * 'b Enum.t = <fun>
-    # 
-
-    # List.enum [('a', 10); ('b', 20); ('c', 30)] 
-    |> Enum.uncombine ;;
-    - : char Enum.t * int Enum.t = (<abstr>, <abstr>)
-    # 
-
-
-    # List.enum [('a', 10); ('b', 20); ('c', 30)] |> Enum.uncombine 
-      |> fun (a, b) -> (List.of_enum a, List.of_enum b) ;;
-    - : char list * int list = (['a'; 'b'; 'c'], [10; 20; 30])
-    # 
+        (* Min and Max *)
+        # List.max  [1; 2; 3; 4; 5 ;6] ;;
+        - : int = 6
+        # List.min  [1; 2; 3; 4; 5 ;6] ;;
+        - : int = 1
+        # 
+    
+        (* Remove an element *)
+        
+        #  List.remove  ['x'; 'd'; 'a'; 'i'; 'o'; 'a'] 'a' ;;
+        - : char list = ['x'; 'd'; 'i'; 'o'; 'a']
+        # 
+        
+        #  List.remove_all  ['x'; 'd'; 'a'; 'i'; 'o'; 'a'] 'a' ;;
+        - : char list = ['x'; 'd'; 'i'; 'o']
+        # 
+        
+        #  List.remove_at  0 ['x'; 'd'; 'a'; 'i'; 'o'; 'a']  ;;
+        - : char list = ['d'; 'a'; 'i'; 'o'; 'a']
+        # List.remove_at  2 ['x'; 'd'; 'a'; 'i'; 'o'; 'a']  ;;
+        - : char list = ['x'; 'd'; 'i'; 'o'; 'a']
+    
+           (* Removes the first element that satisfies the predicate *)
+        #  List.remove_if (fun x -> x mod 2 = 0) [1; 2; 4; 5; 10; 11] ;;
+        - : int list = [1; 4; 5; 10; 11]
+        # 
+    
+    
+        (* Sum *)
+        
+        # List.sum ;;
+        - : int list -> int = <fun>
+        # 
+    
+        # List.sum  [1; 2; 3; 4; 5 ;6] ;;
+        - : int = 21
+        # 
+        
+        (* Sum of floats *)
+        
+        # List.fsum ;;
+        - : float list -> float = <fun>
+        # 
+        
+        # List.fsum [1. ; 2.3323; 3.1415; 10.] ;;
+        - : float = 16.4738
+        # 
+            
+    
+        (* Map / Iter *)
+        #  List.map ;;
+        - : ('a -> 'b) -> 'a list -> 'b list = <fun>
         
     
-    (** From While 
+        #  List.map (fun x -> 10 * x + 3) [1; 2; 3; 4; 5] ;;
+        - : int list = [13; 23; 33; 43; 53]
+        #    
     
-        val from_while : (unit -> 'a option) -> 'a t
+        #  List.iter ;;
+        - : ('a -> unit) -> 'a list -> unit = <fun>
+        # 
+    
+        #  List.iter (Printf.printf "= %d\n") [1; 2; 3; 4] ;;
+        = 1
+        = 2
+        = 3
+        = 4
+        - : unit = ()
+        # 
+    
         
-        from_while next creates an enumeration from the next function. 
-        next shall return Some x where x is the next element of the 
-        enumeration or None when no more elements can be enumerated. 
-        Since the enumeration definition is incomplete, a call to clone 
-        or count will result in a call to force that will enumerate all 
-        elements in order to return a correct value.        
-    **)
-
-    #  Enum.from_while ;;
-    - : (unit -> 'a option) -> 'a Enum.t = <fun>
-    # 
-
-    let generator start step stop =
-      let x = ref start in
-      fun () ->
-        x := !x + step ;
-        if !x < stop
-        then  Some (!x)
-        else  None
-      ;;        
-    val generator : int -> int -> int -> unit -> int option = <fun>
-    #       
-    
-    # let g = generator 2 3 20  ;;
-    val g : unit -> int option = <fun>
-    # 
-      g () ;;
-    - : int option = Some 5
-    # g () ;;
-    - : int option = Some 8
-    # g () ;;
-    - : int option = Some 11
-    # g () ;;
-    - : int option = Some 14
-    # g () ;;
-    - : int option = Some 17
-    # g () ;;
-    - : int option = None
-    # g () ;;
-    - : int option = None
-    # 
-
-    # Enum.from_while (generator 2 3 20) |> List.of_enum ;;
-    - : int list = [5; 8; 11; 14; 17]
-    # 
-
-    # let read_line_gen chin () = 
-          try Some ( input_line chin)
-              with End_of_file -> None ;;
-    val read_line_gen : in_channel -> unit -> string option = <fun>
-    # 
-    
-    #  let g = read_line_gen (open_in "/etc/fstab") ;;
-    val g : unit -> string option = <fun>
-    # 
-    
-    # let g = read_line_gen (open_in "/tmp/data.txt") ;;
-    val g : unit -> string option = <fun>
-    # 
-    
-    # Enum.from_while g |> List.of_enum  ;;
-    - : string list =
-    ["character \\n as a line break, instead of recognizing 
-    all line break characters from the Unicode standard. Whether they 
-    match or don't match (at) line breaks depends on (?s) and (?m).";
-     "(?b) makes Tcl interpret the regex as a POSIX BRE.";
-     "(?e) makes Tcl interpret the regex as a POSIX ERE."]
-    # 
-    
-    (** 
-    val unfold : 'b -> ('b -> ('a * 'b) option) -> 'a t
-    
-    unfold : state -> (state -> (output, state) option) -> output enum 
-               |       ------------------------         |
-               |                |                       |
-               |                |--- State Function     Output 
-               |                                        of every state
-               |
-               |----> Start state
-    
-    
-    As from_loop, except uses option type to signal the end of 
-    the enumeration. The enumeration ends whenever the function 
-    returns None
-
-    State Function:          
-          state -> (output, state) option
-    
-        > (output, new_sate) option = state_function current_state
-    
-    ---------------------------------------------------------------
-    *)
-    
-    
-    #  let state_iterator a = Some (2 * a, a + 1) ;;
-    val state_iterator : int -> (int * int) option = <fun>
-    
-    (*
-        state_iterator a = Some (2 * a, a + 1)
-        state_iterator 3 = (Some (2 * a, a + 1)) 3 = Some (6, 4)
-                                                              |
-                                                           Next State
-                                                           
-        state_iterator 4 = (Some (2 * a, a + 1)) 4 = Some (8, 5)
+        (* Take and Drop *)
         
-        state_iterator 5 = (Some (2 * a, a + 1)) 5 = Some (10, 6)
+        # List.take 3 [1; 3; 4; 5; 6; 7] ;;
+        - : int list = [1; 3; 4]
+        # List.take 13 [1; 3; 4; 5; 6; 7] ;;
+        - : int list = [1; 3; 4; 5; 6; 7]
+        # 
+            
+        # List.drop 4 [1; 3; 4; 5; 6; 7] ;;
+        - : int list = [6; 7]
+        # List.drop 14 [1; 3; 4; 5; 6; 7] ;;
+        - : int list = []
+        # 
+                
+    
+        (* Take While *)
         
-        state_iterator 5 = (Some (2 * a, a + 1)) 5 = Some (14, 7)
+        #  List.takewhile (fun x -> x < 5) [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
+        - : int list = [1; 2; 3; 4]
+        # 
+    
+        (** Drop While *)
         
-        output:  [6; 8; 10; 14; ...]
-    *)
-    # Enum.unfold 3 state_iterator |> Enum.take 10 |> List.of_enum ;;
-    - : int list = [6; 8; 10; 12; 14; 16; 18; 20; 22; 24]
-    # 
+        # List.dropwhile (fun x -> x < 5) [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
+        - : int list = [5; 6; 7; 8; 9; 10]
+        # 
     
-    #  let state_iter x = 
-          if x < 30 then Some (x * 3, x + 3) else None ;;
-    val state_iter : int -> (int * int) option = <fun>
-    #     
+        (* Partition *)
+        
+        #  List.partition (fun x -> x < 5) [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
+        - : int list * int list = ([1; 2; 3; 4], [5; 6; 7; 8; 9; 10])
+        # 
     
-    # Enum.unfold 3 state_iter |> List.of_enum ;;
-    - : int list = [9; 18; 27; 36; 45; 54; 63; 72; 81]
-    # 
-
-    #  Enum.while_do;;
-    - : ('a -> bool) -> ('a Enum.t -> 'a Enum.t) -> 'a Enum.t -> 'a Enum.t = <fun>
-    # 
-
-  # Enum.while_do 
-    (fun x -> x < 10) 
-    (Enum.map (fun x -> 3 * x + 2)) 
-    (List.enum [1; 2; 4; 7; 9; 10; 20; 30]) 
-    |> List.of_enum;;
-    - : int list = [5; 8; 14; 23; 29; 10; 20; 30]
+        #  List.split_nth 3 [0; 1; 2; 3; 4; 5; 6] ;;
+        - : int list * int list = ([0; 1; 2], [3; 4; 5; 6])
+        # List.split_nth 4 [0; 1; 2; 3; 4; 5; 6] ;;
+        - : int list * int list = ([0; 1; 2; 3], [4; 5; 6])
     
-    # 
-      Enum.while_do (fun x -> x < 20) 
-      (Enum.map (fun x -> 3 * x + 2)) 
-      (List.enum [1; 2; 4; 7; 9; 10; 20; 30]) 
-      |> List.of_enum;;
-    - : int list = [5; 8; 14; 23; 29; 32; 20; 30]
-    # 
+        (* Combine/ Split Lists *)
+        
+        #  List.combine [1; 2; 3] ['a'; 'b'; 'c'] ;;
+        - : (int * char) list = [(1, 'a'); (2, 'b'); (3, 'c')]
+        # 
+          List.combine [1; 2; 3] ['a'; 'b'; 'c'; 'd'] ;;
+        Exception: Invalid_argument "combine: Different_list_size".
+        # 
     
     
-(** Infix Operators *)
-
-      #show Enum.Infix ;;
-    module Infix :
-      sig
-        val ( -- ) : int -> int -> int Enum.t
-        val ( --^ ) : int -> int -> int Enum.t
-        val ( --. ) : float * float -> float -> float Enum.t
-        val ( --- ) : int -> int -> int Enum.t
-        val ( --~ ) : char -> char -> char Enum.t
-        val ( // ) : 'a Enum.t -> ('a -> bool) -> 'a Enum.t
-        val ( /@ ) : 'a Enum.t -> ('a -> 'b) -> 'b Enum.t
-        val ( @/ ) : ('a -> 'b) -> 'a Enum.t -> 'b Enum.t
-        val ( //@ ) : 'a Enum.t -> ('a -> 'b option) -> 'b Enum.t
-        val ( @// ) : ('a -> 'b option) -> 'a Enum.t -> 'b Enum.t
-      end
-    # 
-
-    (** Range Operator *)
-    #  4 -- 10 ;;
-    - : int Enum.t = <abstr>
-    # 
-    #  4 -- 10 |> List.of_enum ;;
-    - : int list = [4; 5; 6; 7; 8; 9; 10]
-    # 
-    
-    (** Range Operator without the end *)
-    #  4 --^ 10  ;;
-    - : int Enum.t = <abstr>
-    # 
-
-    #  4 --^ 10 |> List.of_enum ;;
-    - : int list = [4; 5; 6; 7; 8; 9]
-    # 
-
-```
-
-#### String 
-
-[Documentation](http://ocaml-batteries-team.github.io/batteries-included/hdoc2/BatString.html)
-
-```ocaml
-
-    # #require "batteries" ;;
+        #  List.split [(1, 'a'); (2, 'b'); (3, 'c')] ;;
+        - : int list * char list = ([1; 2; 3], ['a'; 'b'; 'c'])
+        # 
     
     
-    #  module String = BatString ;;
-    module String = BatString
-    # 
-  
-  
-        #show BatString ;;
-    module BatString :
-      sig
-        val init : int -> (int -> char) -> string
-        val is_empty : string -> bool
-        external length : string -> int = "%string_length"
-        external get : string -> int -> char = "%string_safe_get"
-        external set : string -> int -> char -> unit = "%string_safe_set"
-        external create : int -> string = "caml_create_string"
-        val make : int -> char -> string
-        val copy : string -> string
-        val sub : string -> int -> int -> string
-        val fill : string -> int -> int -> char -> unit
-        val blit : string -> int -> string -> int -> int -> unit
-        val concat : string -> string list -> string
-        val iter : (char -> unit) -> string -> unit
-        val mapi : (int -> char -> char) -> string -> string
-        val escaped : string -> string
-        val index : string -> char -> int
-        val rindex : string -> char -> int
-        val index_from : string -> int -> char -> int
-        val rindex_from : string -> int -> char -> int
-        val contains : string -> char -> bool
-        val contains_from : string -> int -> char -> bool
-        val rcontains_from : string -> int -> char -> bool
-        val uppercase : string -> string
-        val lowercase : string -> string
-        val capitalize : string -> string
-        val uncapitalize : string -> string
-        type t = string
-        val enum : string -> char BatEnum.t
-        val of_enum : char BatEnum.t -> string
-        val backwards : string -> char BatEnum.t
-        val of_backwards : char BatEnum.t -> string
-        val of_list : char list -> string
-        val to_list : string -> char list
-        val of_int : int -> string
-        val of_float : float -> string
-        val of_char : char -> string
-        val to_int : string -> int
-        val to_float : string -> float
-        val map : (char -> char) -> string -> string
-        val fold_left : ('a -> char -> 'a) -> 'a -> string -> 'a
-        val fold_lefti : ('a -> int -> char -> 'a) -> 'a -> string -> 'a
-        val fold_right : (char -> 'a -> 'a) -> string -> 'a -> 'a
-        val fold_righti : (int -> char -> 'a -> 'a) -> string -> 'a -> 'a
-        val filter : (char -> bool) -> string -> string
-        val filter_map : (char -> char option) -> string -> string
-        val iteri : (int -> char -> unit) -> string -> unit
-        val find : string -> string -> int
-        val find_from : string -> int -> string -> int
-        val rfind : string -> string -> int
-        val rfind_from : string -> int -> string -> int
-        val find_all : string -> string -> int BatEnum.t
-        val ends_with : string -> string -> bool
-        val starts_with : string -> string -> bool
-        val exists : string -> string -> bool
-        val lchop : ?n:int -> string -> string
-        val rchop : ?n:int -> string -> string
-        val trim : string -> string
-        val quote : string -> string
-        val left : string -> int -> string
-        val right : string -> int -> string
-        val head : string -> int -> string
-        val tail : string -> int -> string
-        val strip : ?chars:string -> string -> string
-        val replace_chars : (char -> string) -> string -> string
-        val replace : str:string -> sub:string -> by:string -> bool * string
-        val nreplace : str:string -> sub:string -> by:string -> string
-        val repeat : string -> int -> string
-        val rev : string -> string
-        val rev_in_place : string -> unit
-        val in_place_mirror : string -> unit
-        val split : string -> by:string -> string * string
-        val rsplit : string -> by:string -> string * string
-        val nsplit : string -> by:string -> string list
-        val join : string -> string list -> string
-        val slice : ?first:int -> ?last:int -> string -> string
-        val splice : string -> int -> int -> string -> string
-        val explode : string -> char list
-        val implode : char list -> string
-        val equal : t -> t -> bool
-        val ord : t -> t -> BatOrd.order
-        val compare : t -> t -> int
-        val icompare : t -> t -> int
-        module IString : sig  end
-        val numeric_compare : t -> t -> int
-        module NumString : sig  end
-        val edit_distance : t -> t -> int
-        val print : 'a BatInnerIO.output -> string -> unit
-        val println : 'a BatInnerIO.output -> string -> unit
-        val print_quoted : 'a BatInnerIO.output -> string -> unit
-        module Exceptionless : sig  end
-        module Cap : sig  end
-        external unsafe_get : string -> int -> char = "%string_unsafe_get"
-        external unsafe_set : string -> int -> char -> unit
-          = "%string_unsafe_set"
-        external unsafe_blit : string -> int -> string -> int -> int -> unit
-          = "caml_blit_string" "noalloc"
-        external unsafe_fill : string -> int -> int -> char -> unit
-          = "caml_fill_string" "noalloc"
-      end
-    # 
+        (* Range *)
+    
+        #  List.range ;;
+        - : int -> [< `Downto | `To ] -> int -> int list = <fun>
+        # 
+    
+        #  List.range 1 `To 10 ;;
+        - : int list = [1; 2; 3; 4; 5; 6; 7; 8; 9; 10]
+        # 
+    
+        #  List.range 100 `Downto 90 ;;
+        - : int list = [100; 99; 98; 97; 96; 95; 94; 93; 92; 91; 90]
+        # 
+    
+    
+        (* Reverse a List *)
+        #  List.rev [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
+        - : int list = [10; 9; 8; 7; 6; 5; 4; 3; 2; 1]
+        # 
+    
+        (* Lenght *)
+        # List.length [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ;;
+        - : int = 10
+        # 
+    
+        (** Wrap a Value to a list *)
+        # List.singleton 10 ;;
+        - : int list = [10]
+        # 
+        
+        (* Append Two Lists *)
+        # List.append [1; 2; 3; 4; 5 ;6] [100; 32] ;;
+        - : int list = [1; 2; 3; 4; 5; 6; 100; 32]
+        # 
+    
+        (* Concat Lists *)
+        
+        # List.concat [[1]; [2; 3; 4; 5]; [13]; []] ;;
+        - : int list = [1; 2; 3; 4; 5; 13]
+        # 
+    
+        # List.flatten [[1]; [2; 3; 4; 5]; [13]; []] ;;
+        - : int list = [1; 2; 3; 4; 5; 13]
+        # 
+    
+    
+        (* Index of ELement *)
+        
+        # List.index_of ;;
+        - : 'a -> 'a list -> int option = <fun>
+        # 
+    
+        #  List.index_of "a" ["i"; "o"; "b"; "a"; "d" ] ;;
+        - : int option = Some 3
+        # List.index_of "x" ["i"; "o"; "b"; "a"; "d" ] ;;
+        - : int option = None
+        # 
+    
+        (* Cartesian Product *)
+        
+        #  List.cartesian_product [10; 20; 30] ['a'; 'b'; 'c'; 'd'] ;;
+        - : (int * char) list =
+        [(10, 'a'); (10, 'b'); (10, 'c'); (10, 'd'); (20, 'a'); (20, 'b'); (20, 'c');
+         (20, 'd'); (30, 'a'); (30, 'b'); (30, 'c'); (30, 'd')]
+        # 
+    
+        (** Transpose, similar to transpose a matrix *)
+        #  List.transpose [[1; 2; 3; 4]; [10; 20; 30; 100]];;
+        - : int list list = [[1; 10]; [2; 20]; [3; 30]; [4; 100]]
+        # 
+        
+        #  List.group_consecutive ;;
+        - : ('a -> 'a -> bool) -> 'a list -> 'a list list = <fun>
+        #
+    ```
 
-    (** Strip and Chop *)
+2.  Lazy List
+
+    [Documentation](http://ocaml-batteries-team.github.io/batteries-included/hdoc2/BatLazyList.html)
     
-    #  String.rchop ~n:3 "hello world ocaml ml F#" ;;
-    - : string = "hello world ocaml ml"
-    #
-    # String.rchop ~n:13 "hello world ocaml ml F#" ;;
-    - : string = "hello worl"
-    #
+    Lazy lists are similar to Haskell Lists that uses lazy evaluation.
     
-    # String.lchop ~n:3 "hello world ocaml ml F#" ;;
-    - : string = "lo world ocaml ml F#"
-    # 
-    # String.lchop ~n:13 "hello world ocaml ml F#" ;;
-    - : string = "caml ml F#"    
+    ```ocaml
+        #require "batteries" ;;
     
-   
-    # String.right "hello world ocaml ml F#" 0 ;;
-    - : string = ""
-    # String.right "hello world ocaml ml F#" 1 ;;
-    - : string = "#"
-    # String.right "hello world ocaml ml F#" 5 ;;
-    - : string = "ml F#"
-    # String.right "hello world ocaml ml F#" 10 ;;
-    - : string = "caml ml F#"
-    #       
+        # module Lz = BatLazyList ;;
+        module Lz = BatLazyList
+        # 
+    
+        (** List to Lazy List*)
+        
+        #  Lz.of_list ;;
+        - : 'a list -> 'a Lz.t = <fun>
+        # 
+        #  Lz.of_list [1; 2; 3; 4; 5] ;;
+        - : int Lz.t = <lazy>
+        # 
+    
+        # let s = Lz.of_list [1; 2; 3; 4; 5] ;;
+        val s : int Lz.t = <lazy>
+        # 
+        
+        
+        (** Lazy list to List *)
+            
+        # Lz.to_list s ;;
+        - : int list = [1; 2; 3; 4; 5]
+        # 
+    
+    
+        (* Range  *)
+        
+        # let st = Lz.range 2 15 ;;
+        val st : int Lz.t = <lazy>
+        # 
+        
+        # Lz.to_list st ;;
+        - : int list = [2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14; 15]
+        # 
+        
+    (* Lazy Operations *)
+    
+        (* Take *)
+        # Lz.range 2 15000 |> Lz.take 5 ;;
+        - : int Lz.t = lazy <cycle>
+        #   
+        
+        # Lz.range 2 15000 |> Lz.take 5 |> Lz.to_list ;;
+        - : int list = [2; 3; 4; 5; 6]
+    
+    
+    
+        (** Hd - Head, Tl tail and last *)
+        
+        # Lz.range 2 15000 |> Lz.hd ;;
+        - : int = 2
+        # 
+    
+        # Lz.range 2 15000 |> Lz.tl ;;
+        - : int Lz.t = <lazy>
+        # 
+    
+        # Lz.range 2 15000 |> Lz.tl |> Lz.take 4 |> Lz.to_list ;;
+        - : int list = [3; 4; 5; 6]
+        #     
+        
+        #  Lz.range 2 15000 |> Lz.tl |> Lz.take 4 |> Lz.last ;;
+        - : int = 6
+        # 
+        
+    
+        (* Take While *)
+    
+        # Lz.take_while ;;
+        - : ('a -> bool) -> 'a Lz.t -> 'a Lz.t = <fun>
+        # 
+        
+        # Lz.range 2 15000 |> Lz.take_while (fun x -> x < 10) ;;
+        - : int Lz.t = lazy <cycle>
+        # 
+          Lz.range 2 15000 |> Lz.take_while (fun x -> x < 10) |> Lz.to_list ;;
+        - : int list = [2; 3; 4; 5; 6; 7; 8; 9]
+        # 
+    
+    
+        (** Drop While *)
+        
+        Lz.of_list [2 ; 5; 9; 8; 10; 230; 100] 
+        |> Lz.drop_while (fun x -> x < 10) 
+        |> Lz.to_list ;;
+        - : int list = [10; 230; 100]
+        #     
+        
+        # [2 ; 5; 9; 8; 10; 230; 100] 
+          |> Lz.of_list
+          |> Lz.drop_while (fun x -> x < 10)
+          |> Lz.to_list ;;
+        - : int list = [10; 230; 100]
+        # 
+        
+    
+        (* Map *)
+        
+        # Lz.range 2 15000 |> Lz.map (fun x -> 3 * x - 5) |> Lz.take 10 |> Lz.to_list ;;
+        - : int list = [1; 4; 7; 10; 13; 16; 19; 22; 25; 28]
+        # 
+        
+        (* Iter *)
+        
+        #  let z = Lz.range 2 15000 |> Lz.map (fun x -> 3 * x - 5) |> Lz.take 10 ;;
+        val z : int Lz.t = lazy <cycle>
+        # 
+          Lz.iter (fun x -> Printf.printf "x = %d\n" x) z ;;
+        x = 1
+        x = 4
+        x = 7
+        x = 10
+        x = 13
+        x = 16
+        x = 19
+        x = 22
+        x = 25
+        x = 28
+        - : unit = ()
+        # 
+        
+        (* Filter *)
+        
+        #  Lz.range 2 15000 |> Lz.filter (fun x -> x < 15) |> Lz.to_list ;;
+        - : int list = [2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14]
+        # 
+        
+        #  Lz.range 2 15000 
+          |> Lz.filter (fun x -> x mod 2 = 0 ) 
+          |> Lz.take 10 
+          |> Lz.to_list ;;
+        - : int list = [2; 4; 6; 8; 10; 12; 14; 16; 18; 20]
+        #     
+        
+        (** checks if at least one element of the list satisfies the predicate p.  *)
+        # Lz.range 2 15000 |> Lz.exists (fun x -> x = 10) ;;
+        - : bool = true
+        # 
+        
+        (** for_all p [^ a0; a1; ... ^] checks if all elements of the 
+            list satisfy the predicate p. 
+            That is, it returns (p a0) && (p a1) && ... .
+        *)
+    
+        #  Lz.range 2 15000 
+          |> Lz.take 10 
+          |> Lz.for_all (fun x -> x mod 2  = 0) ;;
+        - : bool = false
+        
+        # let xs = Lz.range 2 15000 |> Lz.take 10 |> Lz.filter (fun x -> x mod 2 = 0) ;;
+        val xs : int Lz.t = <lazy>
        
-    # String.left "hello world ocaml ml F#" 0 ;;
-    - : string = ""
-    # String.left "hello world ocaml ml F#" 1 ;;
-    - : string = "h"
-    # String.left "hello world ocaml ml F#" 10 ;;
-    - : string = "hello worl"
-    #       
-   
-    #  String.trim "    helllo world     " ;;
-    - : string = "helllo world"
-    # 
-
-    # String.strip ~chars:".-?; "  " .-....helllo world   ...;;;???  " ;;
-    - : string = "helllo world"
-    # 
-      
-      
-    (** Join, Concat, Repeat *)
-    (********************************)          
-      
-    #  String.join ", " ["Mexico" ; "Honduras"; "Guatemala"; "Colombia"] ;;
-    - : string = "Mexico, Honduras, Guatemala, Colombia"
-    # 
-
-    #  String.concat ", " ["Mexico" ; "Honduras"; "Guatemala"; "Colombia"] ;;
-    - : string = "Mexico, Honduras, Guatemala, Colombia"
-    # 
-
-    # String.repeat "foobar" 4 ;;
-    - : string = "foobarfoobarfoobarfoobar"
-    # 
-
-    # String.repeat "foobar" 4 |> String.rev ;;
-    - : string = "raboofraboofraboofraboof"
-    # 
-
-
-    #  String.split  "hello????world???ocaml" ~by:"?" ;;
-    - : string * string = ("hello", "???world???ocaml")
-
-    #  String.nsplit  "hello????world???ocaml" ~by:"?" ;;
-    - : string list = ["hello"; ""; ""; ""; "world"; ""; ""; "ocaml"]
-
-    # 
+        # Lz.to_list xs ;;
+        - : int list = [2; 4; 6; 8; 10]
+        # 
     
-    (** String X Characters         *)
-    (********************************)    
-
-    # String.explode "foobar" ;;
-    - : char list = ['f'; 'o'; 'o'; 'b'; 'a'; 'r']
-    # 
-      String.implode ['P'; 'o'; 'r'; 't'; 'u'; 'g'; 'a'; 'l' ] ;;
-    - : string = "Portugal"
-    #     
-
-
-    (** Lowercase / Uppercase  conversion *)
-    (**************************************)        
-    
-    # String.uppercase "mexico" ;;
-    - : string = "MEXICO"
-    # 
-
-    # String.lowercase "MEXICO" ;;
-    - : string = "mexico"
-    # 
-
-    #  String.capitalize "mexico" ;;
-    - : string = "Mexico"
-    # String.capitalize "MEXICO" ;;
-    - : string = "MEXICO"
-    # 
-
-    # String.uncapitalize "MEXICO" ;;
-    - : string = "mEXICO"
-    # 
-      String.uncapitalize "Mexico" ;;
-    - : string = "mexico"
-    # 
-
-    (** Replace string              *)
-    (********************************)   
-    
-    # String.nreplace ~str:"On the long highway to Mexico" ~sub:"Mexico" ~by:"Guatemala" ;; 
-    - : string = "On the long highway to Guatemala"
-    # 
+          xs |> Lz.for_all (fun x -> x mod 2  = 0) ;;
+        - : bool = true
+        # 
     
     
-    (** Predicates                  *)
-    (********************************)
-    
-    
-    #  String.starts_with  "prefix something else" "prefix" ;;
-    - : bool = true
-    # 
-      String.starts_with "prefix" "prefix something else" ;;
-    - : bool = false
-
-
-    #  String.ends_with  "something else suffix" "suffix" ;;
-    - : bool = true
-    # 
-
-    # String.ends_with  "something else suff" "suffix" ;;
-    - : bool = false
-    #   
-    
-    (** Type Casting *)
-    (********************************)
+        (** Filter Map 
         
-    #  String.of_char 'x' ;;
-    - : string = "x"
-    #     
-    # String.of_int 10023 ;;
-    - : string = "10023"
-    # 
-      String.of_float 203.23 ;;
-    - : string = "203.23"
-    # 
-
-    #  String.of_list ['T'; 'e'; 'x'; 'a'; 's'] ;;
-    - : string = "Texas"
-
-
-
-```
-
-#### BatOption 
-
-```ocaml
-> #require "batteries";;
-> module Option = BatOption ;;
-module Option = BatOption                                                         > 
-Option.some 100 ;;
-- : int option = Some 100                                                         > 
-
-> Option.map ;;
-- : ('a -> 'b) -> 'a option -> 'b option = <fun>                                  > 
-
-> Option.map (fun x -> 2 * x) (Some 20) ;;
-- : int option = Some 40                                                          > 
-
-> Option.map (fun x -> 2 * x) None ;;
-- : int option = None                                                             > 
-
-(** Similar to Maybe from Haskell Maybe monad *)
-
-> Option.bind ;;
-- : 'a option -> ('a -> 'b option) -> 'b option = <fun>  
-
-> List.find (fun x -> x > 10) [1; 2; 3; 4] ;;
-Exception: Not_found.                                                             > 
-
-> List.find (fun x -> x > 3) [1; 2; 3; 4] ;;
-- : int = 4                                                                       >                         
-
-> let safe_find p xs  = 
-    try Some (List.find p xs)
-    with Not_found -> None
-;;
-val safe_find : ('a -> bool) -> 'a list -> 'a option = <fun> 
-
-
-> safe_find (fun x -> x > 3) [1; 2; 3; 4] ;;
-- : int option = Some 4                                                           > 
-
-> safe_find (fun x -> x > 30) [1; 2; 3; 4] ;;
-- : int option = None                                                             > 
-
-
-
-```
-
-#### BatRef 
-
-It provide combinators to manipulate mutable references.
-
-```ocaml
-    # #require "batteries" ;;
-    # open Batteries ;;
-    
-    # #show BatRef ;;
-    module BatRef :
-      sig
-        type 'a t = 'a ref
-        external ref : 'a -> 'a ref = "%makemutable"
-        external ( ! ) : 'a ref -> 'a = "%field0"
-        external ( := ) : 'a ref -> 'a -> unit = "%setfield0"
-        external set : 'a ref -> 'a -> unit = "%setfield0"
-        external get : 'a ref -> 'a = "%field0"
-        val copy : 'a ref -> 'a ref
-        val pre : 'a ref -> ('a -> 'a) -> 'a
-        val post : 'a ref -> ('a -> 'a) -> 'a
-        val swap : 'a ref -> 'a ref -> unit
-        val post_incr : int ref -> int
-        val post_decr : int ref -> int
-        val pre_incr : int ref -> int
-        val pre_decr : int ref -> int
-        val protect : 'a ref -> 'a -> (unit -> 'b) -> 'b
-        val toggle : bool ref -> unit
-        val oset : 'a option ref -> 'a -> unit
-        val oget_exn : 'a option ref -> 'a
-        val print :
-          ('b BatInnerIO.output -> 'a -> unit) ->
-          'b BatInnerIO.output -> 'a t -> unit
-        val compare : 'a BatOrd.comp -> 'a ref BatOrd.comp
-        val ord : 'a BatOrd.ord -> 'a ref BatOrd.ord
-        val eq : 'a BatOrd.eq -> 'a ref BatOrd.eq
-      end
-    # 
-
-    #  let x = ref 10.223 ;;
-    val x : float Batteries.ref = {contents = 10.223}
-    # 
-
-    #  Ref.set x 100.23 ;;
-    - : unit = ()
-
-    # x ;;
-    - : float Batteries.ref = {contents = 100.23}
-    # 
-
-    # Ref.get x ;;
-    - : float = 100.23
-    # 
-
-    (****************************************)
-    
-    # let a = ref 1000 ;;
-    val a : int Batteries.ref = {contents = 1000}
-    # let b = ref 200 ;;
-    val b : int Batteries.ref = {contents = 200}
-    # 
-      Ref.swap a b ;;
-    - : unit = ()
-    # a ;;
-    - : int Batteries.ref = {contents = 200}
-    # b ;;
-    - : int Batteries.ref = {contents = 1000}
-    # 
-
-   (****************************************)    
-    
-    # let myflag = ref false ;;
-    val myflag : bool Batteries.ref = {contents = false}
-    # 
-      Ref.toggle myflag ;;
-    - : unit = ()
-
-    # myflag ;;
-    - : bool Batteries.ref = {contents = true}
-    # 
-    
-    # Ref.toggle myflag ;;
-    - : unit = ()
-    # myflag ;;
-    - : bool Batteries.ref = {contents = false}
-    # 
-    
-    
-    (*****************************************)
-    
-    # let x = ref  100 ;;
-    val x : int Batteries.ref = {contents = 100}
-    # 
-    
-    # Ref.pre ;;
-    - : 'a ref -> ('a -> 'a) -> 'a = <fun>
-    # 
-
-    #  Ref.pre x (fun x -> x + 30)  ;;
-    - : int = 130
-
-    # x ;;
-    - : int Batteries.ref = {contents = 130}
-    # 
-    
-
-    (*****************************************)
-
-    #  let x = ref 100 ;;
-    val x : int Batteries.ref = {contents = 100}
-    # 
-      Ref.post x (fun x -> x + 30) ;;
-    - : int = 100
-    # x ;;
-    - : int Batteries.ref = {contents = 130}
-    # 
-
-    (*****************************************)
-    
-    # let idx = ref 0 ;;
-    val idx : int Batteries.ref = {contents = 0}
-    # 
-    
-    #  Ref.post_incr idx ;;
-    - : int = 0
-    
-    # idx ;;
-    - : int Batteries.ref = {contents = 1}
-    # 
-
-    (*****************************************)
-    
-    # let idx = ref 0 ;;
-    val idx : int Batteries.ref = {contents = 0}
-    # 
+        Lazily eliminate some elements and transform others.
+        filter_map f [^ a0; a1; ... ^] applies lazily f to each a0, a1... 
+        If f ai evaluates to None, the element is not included in the result. 
+        Otherwise, if f ai evaluates to Some x, element x is included 
+        in the result.
         
-    #  Ref.pre_incr idx ;;
-    - : int = 1
-    # !idx ;;
-    - : int = 1
-    # Ref.pre_incr idx ;;
-    - : int = 2
-    # !idx ;;
-    - : int = 2
-    # Ref.pre_incr idx ;;
-    - : int = 3
-    # !idx ;;
-    - : int = 3
-    # 
-
-
+        **)
+        
+        # let f x = 
+            if x > 10 then None else Some x 
+          ;;
+        val f : int -> int option = <fun>
+        #   
+        
+        #  Lz.filter_map f (Lz.of_list [-20; -10; 0; 2; 10; 20; 30; 60; 3]) ;;
+        - : int Lz.t = <lazy>
+        
+        # Lz.filter_map f (Lz.of_list [-20; -10; 0; 2; 10; 20; 30; 60; 3]) 
+        |> Lz.to_list ;;
+        - : int list = [-20; -10; 0; 2; 10; 3]
+        # 
+        
+        (* Combine/ Zip *)
+        
+        #  Lz.combine (Lz.of_list [1; 2; 3]) (Lz.of_list ['a'; 'b'; 'c']) |> Lz.to_list;;
+        - : (int * char) list = [(1, 'a'); (2, 'b'); (3, 'c')]
+        # 
     
-```
-
-#### BatFiles 
-
-The module BatFile defines combinators for file manipulation.
-
-```ocaml
-
-    (** Documentation: line_of name reads the contents of file name as 
-    an enumeration of lines. The file is automatically closed once the 
-    last line has been reached or the enumeration is garbage-collected.
-    *)
-    #  BatFile.lines_of ;;
-    - : string -> string BatEnum.t = <fun>
-    # 
+        # Lz.of_list [(1, 'a'); (2, 'b'); (3, 'c')] |> Lz.uncombine ;;
+        - : int Lz.t * char Lz.t = (<lazy>, <lazy>)
+        # 
     
-    # BatFile.lines_of "/etc/protocols" ;;
-    - : string BatEnum.t = <abstr>
-    # 
+        # Lz.of_list [(1, 'a'); (2, 'b'); (3, 'c')] |> Lz.uncombine 
+          |> fun (a, b) -> (Lz.to_list a, Lz.to_list b) ;;
+        - : int list * char list = ([1; 2; 3], ['a'; 'b'; 'c'])
+        # 
+        
+        
+    (** Cons and Nils / Creating Lazy Lists *)
     
-    #  let lines_enum = BatFile.lines_of "/etc/protocols" ;;
-    val lines_enum : string BatEnum.t = <abstr>
-    # 
+        #  let empty_lazy_list = let open Lz in Lazy.from_val Nil ;;
+        val empty_lazy_list : 'a Lz.node_t Lazy.t = lazy Lz.Nil
+        # 
     
-
-    # lines_enum |> BatEnum.take 5 
-      |> BatList.of_enum 
-      ;;
-    - : string list =
-    ["# Internet (IP) protocols"; "#";
-     "# Updated from http://www.iana.org/assignments/protocol-numbers and other";
-     "# sources.";
-     "# New protocols will be added on request if they have been officially"]
-    # 
-
-    # lines_enum |> BatEnum.take 5 |> BatList.of_enum ;;
-    - : string list =
-    ["icmp\t1\tICMP\t\t# internet control message protocol";
-     "igmp\t2\tIGMP\t\t# Internet Group Management";
-     "ggp\t3\tGGP\t\t# gateway-gateway protocol";
-     "ipencap\t4\tIP-ENCAP\t# IP encapsulated in IP (officially ``IP'')";
-     "st\t5\tST\t\t# ST datagram mode"]
-    # 
-
-    # lines_enum |> BatEnum.take 4 |> BatEnum.iter print_endline ;;
-    tcp 6   TCP     # transmission control protocol
-    egp 8   EGP     # exterior gateway protocol
-    igp 9   IGP     # any private interior gateway (Cisco)
-    pup 12  PUP     # PARC universal packet protocol
-    - : unit = ()
-    # 
-
-
-    (** size_of name returns the size of file name in bytes. *)
-    #  BatFile.size_of "/etc/magic" ;;
-    - : int = 111
+        # Lz.to_list empty_lazy_list ;;
+        - : 'a list = []
+        # 
+        
+        # let open Lz in  lazy (Cons (2, lazy Nil)) ;;
+        - : int Lz.node_t lazy_t = <lazy>
+        # 
+        
+        
+        #  let open Lz in  lazy (Cons (2, lazy Nil)) |> to_list ;;
+        - : int list = [2]
+        # 
     
-
-  
     
-```
+        # Lz.to_list xs ;;
+        - : int list = [2]
+        # 
+    
+        #  let xs2 = let open Lz in Lazy.from_val 
+            (Cons (2, Lazy.from_val (Cons (3, Lazy.from_val (Cons (5, Lazy.from_val Nil))))))  ;;
+        val xs2 : int Lz.node_t Lazy.t = lazy <cycle>
+        # 
+    
+        #  Lz.to_list xs2 ;;
+        - : int list = [2; 3; 5]
+        #
+    
+    
+        (** Generating Infinite Lists *)
+        
+        #  let rec ones () =
+              let open Lz in 
+              lazy (Cons (1,  ones ()))
+          ;;
+        val ones : unit -> int Lz.t = <fun>
+        # 
+    
+        #  ones () ;;
+        - : int Lz.t = <lazy>
+        #     
+    
+        #  ones () |> Lz.take 5 |> Lz.to_list ;;
+        - : int list = [1; 1; 1; 1; 1]
+    
+        # ones () |> Lz.take 10 |> Lz.to_list ;;
+        - : int list = [1; 1; 1; 1; 1; 1; 1; 1; 1; 1]
+        # 
+    
+    
+        #  let rec naturals n () =
+              let open Lz in 
+              lazy (Cons (n, (naturals  (n+1) ()) ))
+          ;;    
+        
+        #  naturals 0 () |> Lz.take 10 |> Lz.to_list ;;
+        - : int list = [0; 1; 2; 3; 4; 5; 6; 7; 8; 9]
+        
+        #  naturals 0 () |> Lz.take 6 |> Lz.to_list ;;
+        - : int list = [0; 1; 2; 3; 4; 5]
+        #
+    ```
 
-## Miscellaneous
+3.  Bat Enum
 
-### Changing Toploop Prompt
+    [Documentation](http://ocaml-batteries-team.github.io/batteries-included/hdoc2/BatEnum.html)
+    
+    Enumeration over abstract collection of elements. Enumerations are a representation of finite or infinite sequences of elements. In Batteries Included, enumerations are used pervasively, both as a uniform manner of reading and manipulating the contents of a data structure, or as a simple manner of reading or writing sequences of characters, numbers, strings, etc. from/to files, network connections or other inputs/outputs.
+    
+    Note Enumerations are not thread-safe. You should not attempt to access one enumeration from different threads.
+    Author(s): Nicolas Cannasse, David Rajchenbach-Teller
+    
+    ```ocaml
+        #require "batteries" ;;
+        module Enum = BatEnum ;;
+        # 
+    
+        (** List to Enum *)
+        
+        # List.enum [1; 2; 30; 40; 50; 60] ;;
+        - : int BatEnum.t = <abstr>
+         
+        #  let en = List.enum [1; 2; 30; 40; 50; 60] ;;
+        val en : int BatEnum.t = <abstr>
+        # 
+    
+        (** Enum to List *)
+        
+        #  List.of_enum en ;;
+        - : int list = [1; 2; 30; 40; 50; 60]
+        # 
+    
+    
+        (** 
+            init n f creates a new enumeration over elements 
+            f 0, f 1, ..., f (n-1)
+        *)
+          Enum.init 10 (fun x -> 5 * x - 4 );;
+        - : int Enum.t = <abstr>
+    
+        # Enum.init 10 (fun x -> 5 * x - 4 ) |> List.of_enum ;;
+        - : int list = [-4; 1; 6; 11; 16; 21; 26; 31; 36; 41]
+        # 
+          
+        (** repeat ~times:n x 
+            creates a enum sequence filled with n times 
+            of x. It return infinite enum when ~times is absent. 
+            It returns empty enum when times <= 0
+        *)
+    
+        #  Enum.repeat ;;
+        - : ?times:int -> 'a -> 'a Enum.t = <fun>
+        # 
+    
+        #  Enum.repeat 10 |> Enum.take 10 ;;
+        - : int Enum.t = <abstr>
+        # 
+        
+        # Enum.repeat 10 |> Enum.take 10 |> List.of_enum ;;
+        - : int list = [10; 10; 10; 10; 10; 10; 10; 10; 10; 10]
+        # 
+        
+        (** Count the number of elements in the enum *)
+    
+        #  Enum.repeat 10 |> Enum.take 10 |> Enum.count ;;
+        - : int = 10
+        # 
+    
+    
+        (** val seq : 'a -> ('a -> 'a) -> ('a -> bool) -> 'a t
+            seq init step cond 
+            
+            creates a sequence of data, which starts 
+            from init, extends by step, until the condition cond fails. 
+            E.g. seq 1 ((+) 1) ((>) 100) returns 1, 2, ... 99. 
+            If cond init is false, the result is empty.
+        *)
+        
+        # Enum.seq ;;
+        - : 'a -> ('a -> 'a) -> ('a -> bool) -> 'a Enum.t = <fun>
+        # 
+        
+        #  let en = Enum.seq 2.3 (fun x -> 10.0 *. x ) (fun x -> x < 100.) ;;
+        val en : float Enum.t = <abstr>
+        
+        #  List.of_enum en ;;
+        - : float list = [2.3; 23.]
+        
+        # let en = Enum.seq 2.3 (fun x -> 10.0 *. x ) (fun x -> true) 
+        |> Enum.take 10 
+        |> List.of_enum ;;
+        val en : float list =
+          [2.3; 23.; 230.; 2300.; 23000.; 230000.; 2300000.; 
+          23000000.; 230000000.; 2300000000.]
+    
+        
+        (* Cycle *)
+        
+        #  Enum.cycle (List.enum ['a'; 'b'; 'c']) |> Enum.take 3 |>  List.of_enum ;;
+        - : char list = ['a'; 'b'; 'c']
+        # Enum.cycle (List.enum ['a'; 'b'; 'c']) |> Enum.take 5 |>  List.of_enum ;;
+        - : char list = ['a'; 'b'; 'c'; 'a'; 'b']
+        # Enum.cycle (List.enum ['a'; 'b'; 'c']) |> Enum.take 7 |>  List.of_enum ;;
+        - : char list = ['a'; 'b'; 'c'; 'a'; 'b'; 'c'; 'a']
+        # 
+    
+        (* Combine *)
+        
+        #  Enum.combine ;;
+        - : 'a Enum.t * 'b Enum.t -> ('a * 'b) Enum.t = <fun>
+        # 
+            
+        #  Enum.combine ((List.enum ['a'; 'b'; 'c']), (List.enum [10; 20; 30; 40; 50])) 
+        |> List.of_enum ;;
+        - : (char * int) list = [('a', 10); ('b', 20); ('c', 30)]
+        # 
+            
+        #  Enum.uncombine ;;
+        - : ('a * 'b) Enum.t -> 'a Enum.t * 'b Enum.t = <fun>
+        # 
+    
+        # List.enum [('a', 10); ('b', 20); ('c', 30)] 
+        |> Enum.uncombine ;;
+        - : char Enum.t * int Enum.t = (<abstr>, <abstr>)
+        # 
+    
+    
+        # List.enum [('a', 10); ('b', 20); ('c', 30)] |> Enum.uncombine 
+          |> fun (a, b) -> (List.of_enum a, List.of_enum b) ;;
+        - : char list * int list = (['a'; 'b'; 'c'], [10; 20; 30])
+        # 
+            
+        
+        (** From While 
+        
+            val from_while : (unit -> 'a option) -> 'a t
+            
+            from_while next creates an enumeration from the next function. 
+            next shall return Some x where x is the next element of the 
+            enumeration or None when no more elements can be enumerated. 
+            Since the enumeration definition is incomplete, a call to clone 
+            or count will result in a call to force that will enumerate all 
+            elements in order to return a correct value.        
+        **)
+    
+        #  Enum.from_while ;;
+        - : (unit -> 'a option) -> 'a Enum.t = <fun>
+        # 
+    
+        let generator start step stop =
+          let x = ref start in
+          fun () ->
+            x := !x + step ;
+            if !x < stop
+            then  Some (!x)
+            else  None
+          ;;        
+        val generator : int -> int -> int -> unit -> int option = <fun>
+        #       
+        
+        # let g = generator 2 3 20  ;;
+        val g : unit -> int option = <fun>
+        # 
+          g () ;;
+        - : int option = Some 5
+        # g () ;;
+        - : int option = Some 8
+        # g () ;;
+        - : int option = Some 11
+        # g () ;;
+        - : int option = Some 14
+        # g () ;;
+        - : int option = Some 17
+        # g () ;;
+        - : int option = None
+        # g () ;;
+        - : int option = None
+        # 
+    
+        # Enum.from_while (generator 2 3 20) |> List.of_enum ;;
+        - : int list = [5; 8; 11; 14; 17]
+        # 
+    
+        # let read_line_gen chin () = 
+              try Some ( input_line chin)
+                  with End_of_file -> None ;;
+        val read_line_gen : in_channel -> unit -> string option = <fun>
+        # 
+        
+        #  let g = read_line_gen (open_in "/etc/fstab") ;;
+        val g : unit -> string option = <fun>
+        # 
+        
+        # let g = read_line_gen (open_in "/tmp/data.txt") ;;
+        val g : unit -> string option = <fun>
+        # 
+        
+        # Enum.from_while g |> List.of_enum  ;;
+        - : string list =
+        ["character \\n as a line break, instead of recognizing 
+        all line break characters from the Unicode standard. Whether they 
+        match or don't match (at) line breaks depends on (?s) and (?m).";
+         "(?b) makes Tcl interpret the regex as a POSIX BRE.";
+         "(?e) makes Tcl interpret the regex as a POSIX ERE."]
+        # 
+        
+        (** 
+        val unfold : 'b -> ('b -> ('a * 'b) option) -> 'a t
+        
+        unfold : state -> (state -> (output, state) option) -> output enum 
+                   |       ------------------------         |
+                   |                |                       |
+                   |                |--- State Function     Output 
+                   |                                        of every state
+                   |
+                   |----> Start state
+        
+        
+        As from_loop, except uses option type to signal the end of 
+        the enumeration. The enumeration ends whenever the function 
+        returns None
+    
+        State Function:          
+              state -> (output, state) option
+        
+            > (output, new_sate) option = state_function current_state
+        
+        ---------------------------------------------------------------
+        *)
+        
+        
+        #  let state_iterator a = Some (2 * a, a + 1) ;;
+        val state_iterator : int -> (int * int) option = <fun>
+        
+        (*
+            state_iterator a = Some (2 * a, a + 1)
+            state_iterator 3 = (Some (2 * a, a + 1)) 3 = Some (6, 4)
+                                                                  |
+                                                               Next State
+                                                               
+            state_iterator 4 = (Some (2 * a, a + 1)) 4 = Some (8, 5)
+            
+            state_iterator 5 = (Some (2 * a, a + 1)) 5 = Some (10, 6)
+            
+            state_iterator 5 = (Some (2 * a, a + 1)) 5 = Some (14, 7)
+            
+            output:  [6; 8; 10; 14; ...]
+        *)
+        # Enum.unfold 3 state_iterator |> Enum.take 10 |> List.of_enum ;;
+        - : int list = [6; 8; 10; 12; 14; 16; 18; 20; 22; 24]
+        # 
+        
+        #  let state_iter x = 
+              if x < 30 then Some (x * 3, x + 3) else None ;;
+        val state_iter : int -> (int * int) option = <fun>
+        #     
+        
+        # Enum.unfold 3 state_iter |> List.of_enum ;;
+        - : int list = [9; 18; 27; 36; 45; 54; 63; 72; 81]
+        # 
+    
+        #  Enum.while_do;;
+        - : ('a -> bool) -> ('a Enum.t -> 'a Enum.t) -> 'a Enum.t -> 'a Enum.t = <fun>
+        # 
+    
+      # Enum.while_do 
+        (fun x -> x < 10) 
+        (Enum.map (fun x -> 3 * x + 2)) 
+        (List.enum [1; 2; 4; 7; 9; 10; 20; 30]) 
+        |> List.of_enum;;
+        - : int list = [5; 8; 14; 23; 29; 10; 20; 30]
+        
+        # 
+          Enum.while_do (fun x -> x < 20) 
+          (Enum.map (fun x -> 3 * x + 2)) 
+          (List.enum [1; 2; 4; 7; 9; 10; 20; 30]) 
+          |> List.of_enum;;
+        - : int list = [5; 8; 14; 23; 29; 32; 20; 30]
+        # 
+        
+        
+    (** Infix Operators *)
+    
+          #show Enum.Infix ;;
+        module Infix :
+          sig
+            val ( -- ) : int -> int -> int Enum.t
+            val ( --^ ) : int -> int -> int Enum.t
+            val ( --. ) : float * float -> float -> float Enum.t
+            val ( --- ) : int -> int -> int Enum.t
+            val ( --~ ) : char -> char -> char Enum.t
+            val ( // ) : 'a Enum.t -> ('a -> bool) -> 'a Enum.t
+            val ( /@ ) : 'a Enum.t -> ('a -> 'b) -> 'b Enum.t
+            val ( @/ ) : ('a -> 'b) -> 'a Enum.t -> 'b Enum.t
+            val ( //@ ) : 'a Enum.t -> ('a -> 'b option) -> 'b Enum.t
+            val ( @// ) : ('a -> 'b option) -> 'a Enum.t -> 'b Enum.t
+          end
+        # 
+    
+        (** Range Operator *)
+        #  4 -- 10 ;;
+        - : int Enum.t = <abstr>
+        # 
+        #  4 -- 10 |> List.of_enum ;;
+        - : int list = [4; 5; 6; 7; 8; 9; 10]
+        # 
+        
+        (** Range Operator without the end *)
+        #  4 --^ 10  ;;
+        - : int Enum.t = <abstr>
+        # 
+    
+        #  4 --^ 10 |> List.of_enum ;;
+        - : int list = [4; 5; 6; 7; 8; 9]
+        #
+    ```
+
+4.  String
+
+    [Documentation](http://ocaml-batteries-team.github.io/batteries-included/hdoc2/BatString.html)
+    
+    ```ocaml
+        # #require "batteries" ;;
+        
+        
+        #  module String = BatString ;;
+        module String = BatString
+        # 
+      
+      
+            #show BatString ;;
+        module BatString :
+          sig
+            val init : int -> (int -> char) -> string
+            val is_empty : string -> bool
+            external length : string -> int = "%string_length"
+            external get : string -> int -> char = "%string_safe_get"
+            external set : string -> int -> char -> unit = "%string_safe_set"
+            external create : int -> string = "caml_create_string"
+            val make : int -> char -> string
+            val copy : string -> string
+            val sub : string -> int -> int -> string
+            val fill : string -> int -> int -> char -> unit
+            val blit : string -> int -> string -> int -> int -> unit
+            val concat : string -> string list -> string
+            val iter : (char -> unit) -> string -> unit
+            val mapi : (int -> char -> char) -> string -> string
+            val escaped : string -> string
+            val index : string -> char -> int
+            val rindex : string -> char -> int
+            val index_from : string -> int -> char -> int
+            val rindex_from : string -> int -> char -> int
+            val contains : string -> char -> bool
+            val contains_from : string -> int -> char -> bool
+            val rcontains_from : string -> int -> char -> bool
+            val uppercase : string -> string
+            val lowercase : string -> string
+            val capitalize : string -> string
+            val uncapitalize : string -> string
+            type t = string
+            val enum : string -> char BatEnum.t
+            val of_enum : char BatEnum.t -> string
+            val backwards : string -> char BatEnum.t
+            val of_backwards : char BatEnum.t -> string
+            val of_list : char list -> string
+            val to_list : string -> char list
+            val of_int : int -> string
+            val of_float : float -> string
+            val of_char : char -> string
+            val to_int : string -> int
+            val to_float : string -> float
+            val map : (char -> char) -> string -> string
+            val fold_left : ('a -> char -> 'a) -> 'a -> string -> 'a
+            val fold_lefti : ('a -> int -> char -> 'a) -> 'a -> string -> 'a
+            val fold_right : (char -> 'a -> 'a) -> string -> 'a -> 'a
+            val fold_righti : (int -> char -> 'a -> 'a) -> string -> 'a -> 'a
+            val filter : (char -> bool) -> string -> string
+            val filter_map : (char -> char option) -> string -> string
+            val iteri : (int -> char -> unit) -> string -> unit
+            val find : string -> string -> int
+            val find_from : string -> int -> string -> int
+            val rfind : string -> string -> int
+            val rfind_from : string -> int -> string -> int
+            val find_all : string -> string -> int BatEnum.t
+            val ends_with : string -> string -> bool
+            val starts_with : string -> string -> bool
+            val exists : string -> string -> bool
+            val lchop : ?n:int -> string -> string
+            val rchop : ?n:int -> string -> string
+            val trim : string -> string
+            val quote : string -> string
+            val left : string -> int -> string
+            val right : string -> int -> string
+            val head : string -> int -> string
+            val tail : string -> int -> string
+            val strip : ?chars:string -> string -> string
+            val replace_chars : (char -> string) -> string -> string
+            val replace : str:string -> sub:string -> by:string -> bool * string
+            val nreplace : str:string -> sub:string -> by:string -> string
+            val repeat : string -> int -> string
+            val rev : string -> string
+            val rev_in_place : string -> unit
+            val in_place_mirror : string -> unit
+            val split : string -> by:string -> string * string
+            val rsplit : string -> by:string -> string * string
+            val nsplit : string -> by:string -> string list
+            val join : string -> string list -> string
+            val slice : ?first:int -> ?last:int -> string -> string
+            val splice : string -> int -> int -> string -> string
+            val explode : string -> char list
+            val implode : char list -> string
+            val equal : t -> t -> bool
+            val ord : t -> t -> BatOrd.order
+            val compare : t -> t -> int
+            val icompare : t -> t -> int
+            module IString : sig  end
+            val numeric_compare : t -> t -> int
+            module NumString : sig  end
+            val edit_distance : t -> t -> int
+            val print : 'a BatInnerIO.output -> string -> unit
+            val println : 'a BatInnerIO.output -> string -> unit
+            val print_quoted : 'a BatInnerIO.output -> string -> unit
+            module Exceptionless : sig  end
+            module Cap : sig  end
+            external unsafe_get : string -> int -> char = "%string_unsafe_get"
+            external unsafe_set : string -> int -> char -> unit
+              = "%string_unsafe_set"
+            external unsafe_blit : string -> int -> string -> int -> int -> unit
+              = "caml_blit_string" "noalloc"
+            external unsafe_fill : string -> int -> int -> char -> unit
+              = "caml_fill_string" "noalloc"
+          end
+        # 
+    
+        (** Strip and Chop *)
+        
+        #  String.rchop ~n:3 "hello world ocaml ml F#" ;;
+        - : string = "hello world ocaml ml"
+        #
+        # String.rchop ~n:13 "hello world ocaml ml F#" ;;
+        - : string = "hello worl"
+        #
+        
+        # String.lchop ~n:3 "hello world ocaml ml F#" ;;
+        - : string = "lo world ocaml ml F#"
+        # 
+        # String.lchop ~n:13 "hello world ocaml ml F#" ;;
+        - : string = "caml ml F#"    
+        
+       
+        # String.right "hello world ocaml ml F#" 0 ;;
+        - : string = ""
+        # String.right "hello world ocaml ml F#" 1 ;;
+        - : string = "#"
+        # String.right "hello world ocaml ml F#" 5 ;;
+        - : string = "ml F#"
+        # String.right "hello world ocaml ml F#" 10 ;;
+        - : string = "caml ml F#"
+        #       
+           
+        # String.left "hello world ocaml ml F#" 0 ;;
+        - : string = ""
+        # String.left "hello world ocaml ml F#" 1 ;;
+        - : string = "h"
+        # String.left "hello world ocaml ml F#" 10 ;;
+        - : string = "hello worl"
+        #       
+       
+        #  String.trim "    helllo world     " ;;
+        - : string = "helllo world"
+        # 
+    
+        # String.strip ~chars:".-?; "  " .-....helllo world   ...;;;???  " ;;
+        - : string = "helllo world"
+        # 
+          
+          
+        (** Join, Concat, Repeat *)
+        (******************************)          
+          
+        #  String.join ", " ["Mexico" ; "Honduras"; "Guatemala"; "Colombia"] ;;
+        - : string = "Mexico, Honduras, Guatemala, Colombia"
+        # 
+    
+        #  String.concat ", " ["Mexico" ; "Honduras"; "Guatemala"; "Colombia"] ;;
+        - : string = "Mexico, Honduras, Guatemala, Colombia"
+        # 
+    
+        # String.repeat "foobar" 4 ;;
+        - : string = "foobarfoobarfoobarfoobar"
+        # 
+    
+        # String.repeat "foobar" 4 |> String.rev ;;
+        - : string = "raboofraboofraboofraboof"
+        # 
+    
+    
+        #  String.split  "hello????world???ocaml" ~by:"?" ;;
+        - : string * string = ("hello", "???world???ocaml")
+    
+        #  String.nsplit  "hello????world???ocaml" ~by:"?" ;;
+        - : string list = ["hello"; ""; ""; ""; "world"; ""; ""; "ocaml"]
+    
+        # 
+        
+        (** String X Characters         *)
+        (******************************)    
+    
+        # String.explode "foobar" ;;
+        - : char list = ['f'; 'o'; 'o'; 'b'; 'a'; 'r']
+        # 
+          String.implode ['P'; 'o'; 'r'; 't'; 'u'; 'g'; 'a'; 'l' ] ;;
+        - : string = "Portugal"
+        #     
+    
+    
+        (** Lowercase / Uppercase  conversion *)
+        (************************************)        
+        
+        # String.uppercase "mexico" ;;
+        - : string = "MEXICO"
+        # 
+    
+        # String.lowercase "MEXICO" ;;
+        - : string = "mexico"
+        # 
+    
+        #  String.capitalize "mexico" ;;
+        - : string = "Mexico"
+        # String.capitalize "MEXICO" ;;
+        - : string = "MEXICO"
+        # 
+    
+        # String.uncapitalize "MEXICO" ;;
+        - : string = "mEXICO"
+        # 
+          String.uncapitalize "Mexico" ;;
+        - : string = "mexico"
+        # 
+    
+        (** Replace string              *)
+        (******************************)   
+        
+        # String.nreplace ~str:"On the long highway to Mexico" ~sub:"Mexico" ~by:"Guatemala" ;; 
+        - : string = "On the long highway to Guatemala"
+        # 
+        
+        
+        (** Predicates                  *)
+        (******************************)
+        
+        
+        #  String.starts_with  "prefix something else" "prefix" ;;
+        - : bool = true
+        # 
+          String.starts_with "prefix" "prefix something else" ;;
+        - : bool = false
+    
+    
+        #  String.ends_with  "something else suffix" "suffix" ;;
+        - : bool = true
+        # 
+    
+        # String.ends_with  "something else suff" "suffix" ;;
+        - : bool = false
+        #   
+        
+        (** Type Casting *)
+        (******************************)
+            
+        #  String.of_char 'x' ;;
+        - : string = "x"
+        #     
+        # String.of_int 10023 ;;
+        - : string = "10023"
+        # 
+          String.of_float 203.23 ;;
+        - : string = "203.23"
+        # 
+    
+        #  String.of_list ['T'; 'e'; 'x'; 'a'; 's'] ;;
+        - : string = "Texas"
+    ```
+
+5.  BatOption
+
+    ```ocaml
+    > #require "batteries";;
+    > module Option = BatOption ;;
+    module Option = BatOption                                                         > 
+    Option.some 100 ;;
+    - : int option = Some 100                                                         > 
+    
+    > Option.map ;;
+    - : ('a -> 'b) -> 'a option -> 'b option = <fun>                                  > 
+    
+    > Option.map (fun x -> 2 * x) (Some 20) ;;
+    - : int option = Some 40                                                          > 
+    
+    > Option.map (fun x -> 2 * x) None ;;
+    - : int option = None                                                             > 
+    
+    (** Similar to Maybe from Haskell Maybe monad *)
+    
+    > Option.bind ;;
+    - : 'a option -> ('a -> 'b option) -> 'b option = <fun>  
+    
+    > List.find (fun x -> x > 10) [1; 2; 3; 4] ;;
+    Exception: Not_found.                                                             > 
+    
+    > List.find (fun x -> x > 3) [1; 2; 3; 4] ;;
+    - : int = 4                                                                       >                         
+    
+    > let safe_find p xs  = 
+        try Some (List.find p xs)
+        with Not_found -> None
+    ;;
+    val safe_find : ('a -> bool) -> 'a list -> 'a option = <fun> 
+    
+    
+    > safe_find (fun x -> x > 3) [1; 2; 3; 4] ;;
+    - : int option = Some 4                                                           > 
+    
+    > safe_find (fun x -> x > 30) [1; 2; 3; 4] ;;
+    - : int option = None                                                             >
+    ```
+
+6.  BatRef
+
+    It provide combinators to manipulate mutable references.
+    
+    ```ocaml
+        # #require "batteries" ;;
+        # open Batteries ;;
+        
+        # #show BatRef ;;
+        module BatRef :
+          sig
+            type 'a t = 'a ref
+            external ref : 'a -> 'a ref = "%makemutable"
+            external ( ! ) : 'a ref -> 'a = "%field0"
+            external ( := ) : 'a ref -> 'a -> unit = "%setfield0"
+            external set : 'a ref -> 'a -> unit = "%setfield0"
+            external get : 'a ref -> 'a = "%field0"
+            val copy : 'a ref -> 'a ref
+            val pre : 'a ref -> ('a -> 'a) -> 'a
+            val post : 'a ref -> ('a -> 'a) -> 'a
+            val swap : 'a ref -> 'a ref -> unit
+            val post_incr : int ref -> int
+            val post_decr : int ref -> int
+            val pre_incr : int ref -> int
+            val pre_decr : int ref -> int
+            val protect : 'a ref -> 'a -> (unit -> 'b) -> 'b
+            val toggle : bool ref -> unit
+            val oset : 'a option ref -> 'a -> unit
+            val oget_exn : 'a option ref -> 'a
+            val print :
+              ('b BatInnerIO.output -> 'a -> unit) ->
+              'b BatInnerIO.output -> 'a t -> unit
+            val compare : 'a BatOrd.comp -> 'a ref BatOrd.comp
+            val ord : 'a BatOrd.ord -> 'a ref BatOrd.ord
+            val eq : 'a BatOrd.eq -> 'a ref BatOrd.eq
+          end
+        # 
+    
+        #  let x = ref 10.223 ;;
+        val x : float Batteries.ref = {contents = 10.223}
+        # 
+    
+        #  Ref.set x 100.23 ;;
+        - : unit = ()
+    
+        # x ;;
+        - : float Batteries.ref = {contents = 100.23}
+        # 
+    
+        # Ref.get x ;;
+        - : float = 100.23
+        # 
+    
+        (**************************************)
+        
+        # let a = ref 1000 ;;
+        val a : int Batteries.ref = {contents = 1000}
+        # let b = ref 200 ;;
+        val b : int Batteries.ref = {contents = 200}
+        # 
+          Ref.swap a b ;;
+        - : unit = ()
+        # a ;;
+        - : int Batteries.ref = {contents = 200}
+        # b ;;
+        - : int Batteries.ref = {contents = 1000}
+        # 
+    
+       (**************************************)    
+        
+        # let myflag = ref false ;;
+        val myflag : bool Batteries.ref = {contents = false}
+        # 
+          Ref.toggle myflag ;;
+        - : unit = ()
+    
+        # myflag ;;
+        - : bool Batteries.ref = {contents = true}
+        # 
+        
+        # Ref.toggle myflag ;;
+        - : unit = ()
+        # myflag ;;
+        - : bool Batteries.ref = {contents = false}
+        # 
+        
+        
+        (***************************************)
+        
+        # let x = ref  100 ;;
+        val x : int Batteries.ref = {contents = 100}
+        # 
+        
+        # Ref.pre ;;
+        - : 'a ref -> ('a -> 'a) -> 'a = <fun>
+        # 
+    
+        #  Ref.pre x (fun x -> x + 30)  ;;
+        - : int = 130
+    
+        # x ;;
+        - : int Batteries.ref = {contents = 130}
+        # 
+        
+    
+        (***************************************)
+    
+        #  let x = ref 100 ;;
+        val x : int Batteries.ref = {contents = 100}
+        # 
+          Ref.post x (fun x -> x + 30) ;;
+        - : int = 100
+        # x ;;
+        - : int Batteries.ref = {contents = 130}
+        # 
+    
+        (***************************************)
+        
+        # let idx = ref 0 ;;
+        val idx : int Batteries.ref = {contents = 0}
+        # 
+        
+        #  Ref.post_incr idx ;;
+        - : int = 0
+        
+        # idx ;;
+        - : int Batteries.ref = {contents = 1}
+        # 
+    
+        (***************************************)
+        
+        # let idx = ref 0 ;;
+        val idx : int Batteries.ref = {contents = 0}
+        # 
+            
+        #  Ref.pre_incr idx ;;
+        - : int = 1
+        # !idx ;;
+        - : int = 1
+        # Ref.pre_incr idx ;;
+        - : int = 2
+        # !idx ;;
+        - : int = 2
+        # Ref.pre_incr idx ;;
+        - : int = 3
+        # !idx ;;
+        - : int = 3
+        #
+    ```
+
+7.  BatFiles
+
+    The module BatFile defines combinators for file manipulation.
+    
+    ```ocaml
+        (** Documentation: line_of name reads the contents of file name as 
+        an enumeration of lines. The file is automatically closed once the 
+        last line has been reached or the enumeration is garbage-collected.
+        *)
+        #  BatFile.lines_of ;;
+        - : string -> string BatEnum.t = <fun>
+        # 
+        
+        # BatFile.lines_of "/etc/protocols" ;;
+        - : string BatEnum.t = <abstr>
+        # 
+        
+        #  let lines_enum = BatFile.lines_of "/etc/protocols" ;;
+        val lines_enum : string BatEnum.t = <abstr>
+        # 
+        
+    
+        # lines_enum |> BatEnum.take 5 
+          |> BatList.of_enum 
+          ;;
+        - : string list =
+        ["# Internet (IP) protocols"; "#";
+         "# Updated from http://www.iana.org/assignments/protocol-numbers and other";
+         "# sources.";
+         "# New protocols will be added on request if they have been officially"]
+        # 
+    
+        # lines_enum |> BatEnum.take 5 |> BatList.of_enum ;;
+        - : string list =
+        ["icmp\t1\tICMP\t\t# internet control message protocol";
+         "igmp\t2\tIGMP\t\t# Internet Group Management";
+         "ggp\t3\tGGP\t\t# gateway-gateway protocol";
+         "ipencap\t4\tIP-ENCAP\t# IP encapsulated in IP (officially ``IP'')";
+         "st\t5\tST\t\t# ST datagram mode"]
+        # 
+    
+        # lines_enum |> BatEnum.take 4 |> BatEnum.iter print_endline ;;
+        tcp 6   TCP     # transmission control protocol
+        egp 8   EGP     # exterior gateway protocol
+        igp 9   IGP     # any private interior gateway (Cisco)
+        pup 12  PUP     # PARC universal packet protocol
+        - : unit = ()
+        # 
+    
+    
+        (** size_of name returns the size of file name in bytes. *)
+        #  BatFile.size_of "/etc/magic" ;;
+        - : int = 111
+    ```
+
+## Miscellaneous<a id="sec-1-13" name="sec-1-13"></a>
+
+### Changing Toploop Prompt<a id="sec-1-13-1" name="sec-1-13-1"></a>
 
 It is possible to change the Toploop default prompt # to > for example:
 
@@ -8802,16 +8711,14 @@ From: [Setting the prompt in an OCaml custom toplevel](http://stackoverflow.com/
     > 
     > let f x = 10.23 *. x ;;
     val f : float -> float = <fun>
-    > 
-
+    >
 ```
 
-### Adding Directives to Toploop Shell
+### Adding Directives to Toploop Shell<a id="sec-1-13-2" name="sec-1-13-2"></a>
 
 The toploop, interpreter directives can be defined by the user to create customized commands. The code below can be put in thhe Ocaml startup file: ~/.ocamlinit.
 
 ```ocaml
-
     (** [use_file mlfile]
     
         Equivalent to the directive:  
@@ -8899,7 +8806,7 @@ The toploop, interpreter directives can be defined by the user to create customi
     # 
 
 
-    (*********************************************************)
+    (*******************************************************)
 
     (** Execute System Commands  *)
     # let run_cmd cmd =
@@ -9032,17 +8939,15 @@ The toploop, interpreter directives can be defined by the user to create customi
     # add_directive_none "local"
       (fun () -> use_file "_local.ml" );;
     - : unit = ()
-
-    
 ```
 
-### Shell Script in Ocaml
+### Shell Script in Ocaml<a id="sec-1-13-3" name="sec-1-13-3"></a>
 
 Ocaml can be a great script language with a high level composability, modularity and composability thanks to first class functions, currying (partial application of a function), higher order functions and the module system. Ocaml scripts can be executed in batch mode, be compiled to bytecode or machine code and also cross compiled.   
 
 Script Template:
 
-File: [script.ml](src/script.ml)
+File: script.ml
 
 ```ocaml
  #!/usr/bin/env ocaml 
@@ -9073,7 +8978,6 @@ let () =
 Running the script:
 
 ```bash
-
 $ ocaml script.ml 
 No arguments given
 
@@ -9114,28 +9018,26 @@ Loading the Script in the Toplevel for debugging, testing and interactively deve
 
     #  Sys.argv ;;
     - : string array = [|"/home/tux/.opam/4.02.1/bin/ocaml"|]
-    # 
-        
+    #
 ```
 
 See also:
 
-* [OCaml as a scripting language - by Yaron Minsky](https://blogs.janestreet.com/ocaml-as-a-scripting-language/)
+-   [OCaml as a scripting language - by Yaron Minsky](https://blogs.janestreet.com/ocaml-as-a-scripting-language/)
 
-* [Command-line utilities for Real World OCaml](https://github.com/realworldocaml/scripts)
+-   [Command-line utilities for Real World OCaml](https://github.com/realworldocaml/scripts)
 
-* [Ocaml the scripting language - blog Enfranchised Mind](http://blog.enfranchisedmind.com/2006/05/ocaml-the-scripting-language/)
+-   [Ocaml the scripting language - blog Enfranchised Mind](http://blog.enfranchisedmind.com/2006/05/ocaml-the-scripting-language/)
 
-* [Video  - OCAML Tutorial 32/33: OCAML Scripting (OCAML Shell Scripts) by Dr Noureddin Sadawi](https://www.youtube.com/watch?v=hXiz2_VlwMU)
+-   [Video  - OCAML Tutorial 32/33: OCAML Scripting (OCAML Shell Scripts) by Dr Noureddin Sadawi](https://www.youtube.com/watch?v=hXiz2_VlwMU)
 
-
-### Debugging
+### Debugging<a id="sec-1-13-4" name="sec-1-13-4"></a>
 
 Ocaml has many features that makes debugging easier like:
 
-* Toplevel debugging: Just type the functions in the toplevel and see what they return.
-* Print inside functions
-* Trace function calls
+-   Toplevel debugging: Just type the functions in the toplevel and see what they return.
+-   Print inside functions
+-   Trace function calls
 
 **Print Inside Function**
 
@@ -9193,15 +9095,12 @@ n = 2 ; fib(n - 1) = 1 ; fib (n - 2) = 1 ; fib n = 2
 n = 3 ; fib(n - 1) = 2 ; fib (n - 2) = 1 ; fib n = 3 
 n = 5 ; fib(n - 1) = 5 ; fib (n - 2) = 3 ; fib n = 8 
 - : int = 8
-> 
-
-
+>
 ```
 
 **Tracing function calls**
 
 ```ocaml
-
 (* Generates the nth term of fibonnaci sequence *)
 > let rec fibonacci = 
       function
@@ -9251,17 +9150,14 @@ fibonacci is no longer traced.
 - : int = 3
 > fibonacci 13 ;;
 - : int = 377
-> 
-
+>
 ```
 
-
-### Generating OCaml html API Doc
+### Generating OCaml html API Doc<a id="sec-1-13-5" name="sec-1-13-5"></a>
 
 It is very handy to have the documentation of installed packages locally available. The script provided here, that is written in Ocaml has only one dependency the PCRE library. It is a wrapper to ocamldoc that builds the html documentation of almost any package installed.
 
-File:[docgen.ml](src/docgen.ml)
-
+<[[src/docgen.ml][docgen.ml>]]
 
 List Installed Packages
 
@@ -9296,7 +9192,6 @@ atdgen              (version: 1.6.1)
 base64              (version: 2.0.0)
 batteries           (version: 2.3)
 ...
-
 ```
 
 Installation and Usage:
@@ -9333,8 +9228,6 @@ Ocaml docgen wrapper to ocamlfind
 
         Generate package documentation and open index.html in the browser.
         $ ./docgen.ml -browser <name of package>
-
-
 ```
 
 Generating html documentation of Batteries package:
@@ -9378,498 +9271,457 @@ $ chromium-browser batteries/index.html
  #  Docgen uses chromium-browser hardcoded, but you can 
  #  change to whatever browser you wish
  $ ./docgen.ml -browser batteries
-
 ```
 
 **Generated Documentation Screenshots**
 
 Documentation Directory
 
-![](images/apidoc_directory.png)
+![img](images/apidoc_directory.png)
 
 Batteries modules:
 
-![](images/apidoc1.png)
+![img](images/apidoc1.png)
 
 Batteries BattList module:
 
-![](images/apidoc2.png)
+![img](images/apidoc2.png)
 
 Batteries BattList Functions Signatures and Descriptions:
 
-![](images/apidoc3.png)
+![img](images/apidoc3.png)
 
 Generated Files
 
-![](images/apidoc_generated_files.png)
+![img](images/apidoc_generated_files.png)
 
+## Resources<a id="sec-1-14" name="sec-1-14"></a>
 
-## Resources
+### Articles<a id="sec-1-14-1" name="sec-1-14-1"></a>
 
-### Articles
+-   [Ocaml for the masses - by Yaron Minks, Jane Stree Capital](http://cacm.acm.org/magazines/2011/11/138203-ocaml-for-the-masses/fulltext)
 
+-   [ocamlscript: natively-compiled OCaml scripts]
 
-* [Ocaml for the masses - by Yaron Minks, Jane Stree Capital](http://cacm.acm.org/magazines/2011/11/138203-ocaml-for-the-masses/fulltext)
+### Links<a id="sec-1-14-2" name="sec-1-14-2"></a>
 
-* [ocamlscript: natively-compiled OCaml scripts]
+-   [OCaml Best Practices for Developers / Xen](http://wiki.xen.org/wiki/OCaml_Best_Practices_for_Developers#OCaml_Best_Practices_Guide)
 
+-   <http://pleac.sourceforge.net/pleac_ocaml/packagesetc.html>
 
-<!--
-    ---------------------------------------------------------------
--->
+-   <http://projects.camlcity.org/projects/dl/findlib-1.2.6/doc/guide-html/quickstart.html>
 
-### Links
+-   <http://caml.inria.fr/pub/docs/manual-ocaml/extn.html>
 
-* [OCaml Best Practices for Developers / Xen](http://wiki.xen.org/wiki/OCaml_Best_Practices_for_Developers#OCaml_Best_Practices_Guide)
+-   <http://www.loria.fr/~shornus/ocaml/slides-ocaml-3.pdf>
 
-* http://pleac.sourceforge.net/pleac_ocaml/packagesetc.html
+-   <http://blog.enfranchisedmind.com/2007/01/ocaml-lazy-lists-an-introduction/>
 
-* http://projects.camlcity.org/projects/dl/findlib-1.2.6/doc/guide-html/quickstart.html
+### Books<a id="sec-1-14-3" name="sec-1-14-3"></a>
 
-* http://caml.inria.fr/pub/docs/manual-ocaml/extn.html
+1.  Online Books
 
-* http://www.loria.fr/~shornus/ocaml/slides-ocaml-3.pdf
-
-* http://blog.enfranchisedmind.com/2007/01/ocaml-lazy-lists-an-introduction/
-
-
-
-<!--
-    ---------------------------------------------------------------
--->
-
-
-### Books
-
-#### Online Books
-
-**Real World OCaml: Functional Programming for the Masses**
-* [Link](https://realworldocaml.org/v1/en/html/index.html)
-    * Authors: Jason Hickey, Anil Madhavapeddy and Yaron Minsky
-    * Publisher: O'Reilly
+    **Real World OCaml: Functional Programming for the Masses**
+    -   [Link](https://realworldocaml.org/v1/en/html/index.html)
+        -   Authors: Jason Hickey, Anil Madhavapeddy and Yaron Minsky
+        -   Publisher: O'Reilly
     
-**Developing Applications With Objective OCaml**
-* [Link](http://caml.inria.fr/pub/docs/oreilly-book/)
-    * Authors: Emmanuel Chailloux, Pascal Manoury and Bruno Pagano
-    * Publisher: O'Reilly France.
-    * http://caml.inria.fr/pub/docs/oreilly-book/html/index.html
-
-**Introduction to Objective Caml**
-* [Link](http://files.metaprl.org/doc/ocaml-book.pdf)
-    * Authors: Jason Hickey
-    * Url2: [Introduction to the Objective Caml Programming Language](http://main.metaprl.org/jyh/classes/cs134/cs134b/2007/public_html/assets/hickey.pdf)
-
-**Unix system programming in OCaml**
-* [Link](http://ocaml.github.io/ocamlunix/)
-    * Authors: Xavier Leroy and Didier Rémy
-
-**Using, Understanding, and Unraveling - The OCaml Language From Practice to Theory and vice versa**
-* [Link](http://caml.inria.fr/pub/docs/u3-ocaml/index.html), Didier Rémy
-
-
-**Think Ocaml - How to Think Like a (Functional) Programmer**
-* [Link](http://www.greenteapress.com/thinkocaml/index.html)
-    * Authors: Allen Downey, Nicholas Monje 
-    * Pùblisher: Green Tea Press
+    **Developing Applications With Objective OCaml**
+    -   [Link](http://caml.inria.fr/pub/docs/oreilly-book/)
+        -   Authors: Emmanuel Chailloux, Pascal Manoury and Bruno Pagano
+        -   Publisher: O'Reilly France.
+        -   <http://caml.inria.fr/pub/docs/oreilly-book/html/index.html>
     
-**OCaml Inria Manual v4.02**
-* [Link](http://caml.inria.fr/pub/docs/manual-ocaml-4.02-1/)
-
-### Community
-
-#### Online Resources
-
-* Reddit:           http://reddit.com/r/ocaml
-* Usenet:           comp.lang.ocaml
-* StackOverflow
-    * http://stackoverflow.com/tags/ocaml/info
-    * http://stackoverflow.com/questions/tagged/ocaml
-* Email List (lists.ocaml.org): http://lists.ocaml.org/listinfo
-
-* https://ocaml.org/learn/
-
-* [Resources for Caml users - Inria](http://caml.inria.fr/resources/index.en.html)
-
-* [Lang Ref / Ocaml](http://langref.org/ocaml)
-
-* [Rosetta Wiki Code Ocaml](http://rosettacode.org/wiki/Category:OCaml)
-
-* [PLEAC-Objective CAML](http://pleac.sourceforge.net/pleac_ocaml/)
-
-* [Cornell University - CS3110 Spring 11 :: Data Structures and Functional Programming](http://www.cs.cornell.edu/Courses/cs3110/2011sp/lecturenotes.asp)
-
-
-* [Universytet Wroclawiski | Lukaz Stafiniak / Functional Lectures] (http://www.ii.uni.wroc.pl/~lukstafi/pmwiki/index.php?n=Functional.Functional)
-
-* [University of Southampton | Tutorial: OCaml for scientific computation - Dr. Thomas Fischbacher, Hans Fangohr](http://www.southampton.ac.uk/~fangohr/software/ocamltutorial/)
-
-* [String Pattern Matching Examples](https://github.com/jimenezrick/ocaml-backpack/blob/master/src/backpackString.ml)
-
-
-* [OCAML exceptions, a small tutorial](http://www.martani.net/2009/04/ocaml-exceptions-small-tutorial.html)
-
-* [First Thoughts on OCaml](http://www.crmarsh.com/intro_to_ocaml/)
-
-* [OCaml for the Skeptical - Compiling and Running Programs](http://www2.lib.uchicago.edu/keith/ocaml-class/compiling.html)
-
-#### Blogs
-
-* [Jane Street Capital - Blog](https://blogs.janestreet.com)
-
-* [Ocamlpro Blog](http://www.ocamlpro.com/blog)
-
-* [The MirageOS Blog on building functional operating systems](openmirage.org/blog/)
-
-* [OCaml at LexiFi | LexiFi](https://www.lexifi.com/blogs/ocaml)
-
-* [Rosciuds Blog](http://roscidus.com/blog/)
-
-* [Alaska Ataca a Kamtchatka](alaska-kamtchatka.blogspot.com)
-
-* [Oleg Kiselyov](http://okmij.org/ftp/ML/)
-
-* [Ambassador to the Computers Mostly OCaml.](http://ambassadortothecomputers.blogspot.com/2009/05/lwt-and-concurrent-ml.html)
-
-* [Functional Orbitz](http://functional-orbitz.blogspot.com)
-
-* [An Overview of Ocaml - Simon Grondin - An Adventure in Software Industry](http://simongrondin.name/?p=330#more-330)
-
-* [Mega Nerd blog / Ocaml](http://www.mega-nerd.com/erikd/Blog/CodeHacking/Ocaml/index.html)
-
-* [Matt Mcdonnel - Ocaml](http://www.matt-mcdonnell.com/blog/blog_ocaml/blog_ocaml.html)
-
-* http://aubedesheros.blogspot.com/search/label/ocaml  (In French)
-
-* [Ruby,Lisp,Emacs,Clojure.OCaml,Haskell,Raspberry Piのメモ](http://takeisamemo.blogspot.com.br/search/label/OCaml) (In Japanese)
-
-#### Hacker News Threads
-
-* [OCaml for the Masses (2011)](https://news.ycombinator.com/item?id=8002188)
-
-* [Python to OCaml: Retrospective (roscidus.com)](https://news.ycombinator.com/item?id=7858276)
-
-* [Why OCaml, Why Now? (spyder.wordpress.com)](https://news.ycombinator.com/item?id=7416203)
-
-* [Ask Hackers: Opinions on OCaml?](https://news.ycombinator.com/item?id=112129)
-
-* [OCaml 4.03 will, “if all goes well”, support multicore (inria.fr)](https://news.ycombinator.com/item?id=9582980)
-
-* [Code iOS Apps in OCaml](https://news.ycombinator.com/item?id=3740173)
-
-* [OCaml Briefly (mads379.github.io)](https://news.ycombinator.com/item?id=8653207)
-
-* [The fundamental problem of programming language package management](https://news.ycombinator.com/item?id=8226139)
-
-* [Four MLs (and a Python) (thebreakfastpost.com)](https://news.ycombinator.com/item?id=9463254)
-
-* [Jane Street releases open source alternative to OCaml's stdlib](https://news.ycombinator.com/item?id=3438084)
-
-* [Why did Microsoft invest so much in F#?](https://news.ycombinator.com/item?id=1883679)
-
-
-#### Slides and Presentations
-
-* [An Introduction to Objective Caml - Stephen A. Edwards - Columbia University](http://www.cs.columbia.edu/~sedwards/classes/2012/w4115-spring/ocaml.pdf)
-
-* [Slideshare - Introduction to functional programming using Ocaml](http://www.slideshare.net/pramode_ce/fp-29715231?next_slideshow=1)
-
-* [Camomile : A Unicode library for OCaml](http://www.slideshare.net/yoriyuki/camomile-a-unicode-library-for-ocaml?related=4)
-
-* [OCaml Labs introduction at OCaml Consortium 2012](http://www.slideshare.net/AnilMadhavapeddy/ocaml-labs-introduction-at-ocaml-consortium-2012?related=1)
-
-
-* [Abstractions and Types for Concurrent Programming - Yaron Minsky
-Jane Street](http://www.cs.princeton.edu/~dpw/courses/cos326-12/lec/asynch-and-rpc.pdf)
-
-* [Ocaml - Objective Caml](http://www.slideshare.net/cyber_jso/ocaml-13036522?related=3)
-
-* [Succeeding with Functional-first Programming in Enterprise - by Dr. Don Syme - Microsoft Research](http://www.slideshare.net/dsyme/fp-successv4redist?related=5s)
-
-* [LibreS3: design, challenges, and steps toward reusable libraries](https://ocaml.org/meetings/ocaml/2014/ocaml2014_13.pdf)
-
-* [NYC OCaml Meetup: Js_of_ocaml](http://files.meetup.com/1887771/2013-07-11%20Js_of_ocaml%20The%20OCaml%20to%20Javascript%20Compiler.pdf)
-
-* [Managing and Analyzing Big-Data in Genomics](http://ashishagarwal.org/wp-content/uploads/2012/06/IBM_PL_Day_2012.pdf)
-
-* [Programmation fonctionnelle avec OCaml](http://www.loria.fr/~shornus/ocaml/slides-ocaml-3.pdf)
-
-
-#### Stack Overflow Highlighted Questions
-
-
-**Syntax / Implementation**
-
-* [What does “let () = ” mean in Ocaml?](http://stackoverflow.com/questions/7524487/what-does-let-mean-in-ocaml)
-
-* [What is the different between `fun` and `function` keywords?](http://stackoverflow.com/questions/1604270/what-is-the-different-between-fun-and-function-keywords)
-
-* [Why is OCaml's (+) not polymorphic?](http://stackoverflow.com/questions/8017172/why-is-ocamls-not-polymorphic)
-
-* [What are “`” in OCaml?](http://stackoverflow.com/questions/19498928/what-are-in-ocaml)
-
-* [Explaining pattern matching vs switch](http://stackoverflow.com/questions/199918/explaining-pattern-matching-vs-switch)
-
-* [Ocaml Variant Types](http://stackoverflow.com/questions/4777744/ocaml-variant-types)
-
-* [Why is an int in OCaml only 31 bits?](http://stackoverflow.com/questions/3773985/why-is-an-int-in-ocaml-only-31-bits)
-
-* [OCaml insert an element in list](http://stackoverflow.com/questions/9498746/ocaml-insert-an-element-in-list)
-
-* [Ocaml - Accessing components in an array of records](http://stackoverflow.com/questions/14001569/ocaml-accessing-components-in-an-array-of-records)
-
-* [What's the difference between “equal (=)” and “identical (==)” in ocaml?](http://stackoverflow.com/questions/13590307/whats-the-difference-between-equal-and-identical-in-ocaml/13590433#13590433)
-
-
-* [Why is “1.0 == 1.0” false in Ocaml?](http://stackoverflow.com/questions/25878382/why-is-1-0-1-0-false-in-ocaml)
-
-* [How to curry a function w.r.t. its optional arguments in OCaml](http://stackoverflow.com/questions/9647307/how-to-curry-a-function-w-r-t-its-optional-arguments-in-ocaml)
-
-* [What's the difference between “let ()=” and “let _=” ;](http://stackoverflow.com/questions/11515240/whats-the-difference-between-let-and-let)
-
-* [In OCaml, what type definition is this: 'a. unit -> 'a](http://stackoverflow.com/questions/23323032/in-ocaml-what-type-definition-is-this-a-unit-a?rq=1)
-
-* [Hashtables in ocaml - Is it possible to store different types in the same hashtable (Hashtbl) in Ocaml? Are hashtables really restricted to just one type?](http://stackoverflow.com/questions/8962895/hashtables-in-ocaml/8963057#8963057)
-
-* [How do you append a char to a string in OCaml?](http://stackoverflow.com/questions/8326926/how-do-you-append-a-char-to-a-string-in-ocaml/8329852#8329852)
-
-* [Ocaml int to binary string conversion](http://stackoverflow.com/questions/9776245/ocaml-int-to-binary-string-conversion)
-
-* [OCaml regex: specify a number of occurrences](http://stackoverflow.com/questions/14425762/ocaml-regex-specify-a-number-of-occurrences)
-
-* [Side-effects and top-level expressions in OCaml](http://stackoverflow.com/questions/10459363/side-effects-and-top-level-expressions-in-ocaml)
-
-* [OCaml passing labeled function as parameter / labeled function type equivalence](http://stackoverflow.com/questions/20931144/ocaml-passing-labeled-function-as-parameter-labeled-function-type-equivalence)
-
-* [ocaml bitstring within a script](http://stackoverflow.com/questions/21225701/ocaml-bitstring-within-a-script)
-
-* [What's the most-used data structure in OCaml to represent a Graph?](http://stackoverflow.com/questions/22067339/whats-the-most-used-data-structure-in-ocaml-to-represent-a-graph)
-
-
-**Functional Programming**
-
-* [State monad in OCaml](http://stackoverflow.com/questions/5843773/state-monad-in-ocaml)
-
-* [The reverse state monad in OCaml](http://stackoverflow.com/questions/24943140/the-reverse-state-monad-in-ocaml)
-
-* [What is the use of monads in OCaml?](http://stackoverflow.com/questions/29851449/what-is-the-use-of-monads-in-ocaml)
-
-* [Monadic buffers in OCaml](http://stackoverflow.com/questions/25790177/monadic-buffers-in-ocaml)
-
-* [Does OCaml have fusion laws](http://stackoverflow.com/questions/21031920/does-ocaml-have-fusion-laws)
-
-* [Composite functions in ocaml](http://stackoverflow.com/questions/4997661/composite-functions-in-ocaml)
-
-* [OCaml |> operator](http://stackoverflow.com/questions/30493644/ocaml-operator)
-
-* [Is it possible to use pipes in OCaml?](http://stackoverflow.com/questions/8986010/is-it-possible-to-use-pipes-in-ocaml)
-
-* [Is there an infix function composition operator in OCaml?](http://stackoverflow.com/questions/16637015/is-there-an-infix-function-composition-operator-in-ocaml/16637073#16637073)
-
-* [List of Functional code snippets for Procedural Programmers?](http://stackoverflow.com/questions/832569/list-of-functional-code-snippets-for-procedural-programmers)
-
-* [Application of Tail-Recursion in OCaml](http://stackoverflow.com/questions/19771283/application-of-tail-recursion-in-ocaml)
-
-* [In Functional Programming, what is a functor?](http://stackoverflow.com/questions/2030863/in-functional-programming-what-is-a-functor)
-
-
-* [In pure functional languages, is there an algorithm to get the inverse function?](http://stackoverflow.com/questions/13404208/in-pure-functional-languages-is-there-an-algorithm-to-get-the-inverse-function)
-
-* [What is the benefit of purely functional data structure?](http://stackoverflow.com/questions/4399837/what-is-the-benefit-of-purely-functional-data-structure)
-
-
-* [What's the closest thing to Haskell's typeclasses in OCaml?](http://stackoverflow.com/questions/14934242/whats-the-closest-thing-to-haskells-typeclasses-in-ocaml)
-
-
-* [Defining functions pointfree-style in functional programming. What are the cons/pros?](http://stackoverflow.com/questions/7367655/defining-functions-pointfree-style-in-functional-programming-what-are-the-cons)
-
-
-* [ What is **lenses** in OCaml's world ](http://stackoverflow.com/questions/28177263/what-is-lenses-in-ocamls-world)
-
-* [Linked List Ocaml](http://stackoverflow.com/questions/1738758/linked-list-ocaml)
-
-* [Functional programming languages introspection](http://stackoverflow.com/questions/3660957/functional-programming-languages-introspection)
-
-* [When should objects be used in OCaml?](http://stackoverflow.com/questions/10779283/when-should-objects-be-used-in-ocaml)
-
-
-* [Open and closed union types in Ocaml](http://stackoverflow.com/questions/5131954/open-and-closed-union-types-in-ocaml)
-
-* [Choosing between continuation passing style and memoization](http://stackoverflow.com/questions/14781875/choosing-between-continuation-passing-style-and-memoization)
-
-
-* [An concrete simple example to demonstrate GADT in OCaml?](http://stackoverflow.com/questions/27864200/an-concrete-simple-example-to-demonstrate-gadt-in-ocaml)
-
-* [Generating primes without blowing the stack](http://stackoverflow.com/questions/18213973/generating-primes-without-blowing-the-stack)
-
-* [Executing a list of functions](http://stackoverflow.com/questions/9054613/executing-a-list-of-functions)
-
-* [Best way to represent a file/folder structure](http://stackoverflow.com/questions/30241118/best-way-to-represent-a-file-folder-structure)
-
-* [How would you implement a Grid in a functional language?](http://stackoverflow.com/questions/27285170/how-would-you-implement-a-grid-in-a-functional-language)
-
-* [OCaml recursive function to apply a function n times](http://stackoverflow.com/questions/15285386/ocaml-recursive-function-to-apply-a-function-n-times)
-
-* [OCaml - Read csv file into array](http://stackoverflow.com/questions/28732351/ocaml-read-csv-file-into-array)
-
-
-**Lazy Evaluation/ Delayed Evaluation/ Generators / Yield**
-
-* [Are streams in ocaml really used?](http://stackoverflow.com/questions/30197961/are-streams-in-ocaml-really-used)
-
-* [Ocaml: Lazy Lists - How can I make a lazy list representing a sequence of doubling numbers?](http://stackoverflow.com/questions/1631968/ocaml-lazy-lists)
-
-* [Ocaml - Lazy.force](http://stackoverflow.com/questions/18401178/ocaml-lazy-force)
-
-* [Simple Generators](http://stackoverflow.com/questions/13146128/simple-generators)
-
-* [What does `[< >]` mean in OCaml?](http://stackoverflow.com/questions/16150173/what-does-mean-in-ocaml)
-
-* [What is the purpose of OCaml's Lazy.lazy_from_val?](http://stackoverflow.com/questions/9760580/what-is-the-purpose-of-ocamls-lazy-lazy-from-val)
-
-* [converting ocaml function to stream](http://stackoverflow.com/questions/16027627/converting-ocaml-function-to-stream)
-
-* [Lazy “n choose k” in OCaml](http://stackoverflow.com/questions/3969321/lazy-n-choose-k-in-ocaml)
-
-* [Thread safe lazy in OCaml](http://stackoverflow.com/questions/24123294/thread-safe-lazy-in-ocaml)
-
-**SML Dialects**
-
-* [What are the differences between SML and Ocaml?](http://stackoverflow.com/questions/699689/what-are-the-differences-between-sml-and-ocaml)
-
-* [F# changes to OCaml](http://stackoverflow.com/questions/179492/f-changes-to-ocaml)
-
-
-* [Converting F# seq expressions to OCaml](http://stackoverflow.com/questions/14428420/converting-f-seq-expressions-to-ocaml)
-
-
-* [IEnumerable<T> in OCaml](http://stackoverflow.com/questions/6589959/ienumerablet-in-ocaml)
-
-* [code compatibility between OCaml and F#](http://stackoverflow.com/questions/4239121/code-compatibility-between-ocaml-and-f)
-
-* [If SML.NET had functors why can't F#?](http://stackoverflow.com/questions/14777522/if-sml-net-had-functors-why-cant-f)
-
-
-* [Streams (aka “lazy lists”) and tail recursion](http://stackoverflow.com/questions/27045225/streams-aka-lazy-lists-and-tail-recursion)
-
-**Standard Library**
-
-* [How stable and widespread is “OCaml Batteries Included” and is it recommended?](http://stackoverflow.com/questions/3307936/how-stable-and-widespread-is-ocaml-batteries-included-and-is-it-recommended)
-
-* [Cygwin & OCaml: OPAM + Batteries](http://stackoverflow.com/questions/15751851/cygwin-ocaml-opam-batteries)
-
-* [using OCaml Batteries Included as a vanilla cma](http://stackoverflow.com/questions/10667329/using-ocaml-batteries-included-as-a-vanilla-cma?rq=1)
-
-* [What are the pros and cons of Batteries and Core?](http://stackoverflow.com/questions/3889117/what-are-the-pros-and-cons-of-batteries-and-core?rq=1)
-
-
-**Build / Compile**
-
-* [Building library with ocamlbuild, installing it with ocamlfind - what's the best practice?](http://stackoverflow.com/questions/27771452/building-library-with-ocamlbuild-installing-it-with-ocamlfind-whats-the-best)
-
-* [What is the preferred way to structure and build OCaml projects?](http://stackoverflow.com/questions/5956317/what-is-the-preferred-way-to-structure-and-build-ocaml-projects?rq=1)
-
-* [How to make OCaml bytecode that works on Windows and Linux](http://stackoverflow.com/questions/17315402/how-to-make-ocaml-bytecode-that-works-on-windows-and-linux)
-
-**Tool Chain**
-
-* [IDE for OCaml language](http://stackoverflow.com/questions/14747939/ide-for-ocaml-language)
-
-* [Saving my running toplevel for later](http://stackoverflow.com/questions/3966925/saving-my-running-toplevel-for-later)
-
-* [Is there an enhanced interpreter toploop for OCaml?](http://stackoverflow.com/questions/1849245/is-there-an-enhanced-interpreter-toploop-for-ocaml)
-
-* [Is it possible to use arrow keys in OCaml interpreter?](http://stackoverflow.com/questions/13225070/is-it-possible-to-use-arrow-keys-in-ocaml-interpreter/13225113#13225113)
-
-* [Is it possible to make an opam “sandbox”?](http://stackoverflow.com/questions/27640897/is-it-possible-to-make-an-opam-sandbox)
-
-* [For OCaml, is there a tool to quickly access function or library documentation from the command line?](http://stackoverflow.com/questions/24824849/for-ocaml-is-there-a-tool-to-quickly-access-function-or-library-documentation-f)
-
-* [Annotations in OCaml](http://stackoverflow.com/questions/4063039/annotations-in-ocaml)
-
-* [About the “topfind”?](http://stackoverflow.com/questions/8059657/about-the-topfind)
-
-* [Get ocamlmerlin autocomplete in vim](http://stackoverflow.com/questions/21132371/get-ocamlmerlin-autocomplete-in-vim)
-
-* [Is there a reason to retain .cmo or only .cma?](http://stackoverflow.com/questions/8630599/is-there-a-reason-to-retain-cmo-or-only-cma)
-
-
-* [Ocaml utop library paths, Core module](http://stackoverflow.com/questions/20927592/ocaml-utop-library-paths-core-module?rq=1)
-
-* [How to trace a program for debugging in OCaml ?](http://stackoverflow.com/questions/9426560/how-to-trace-a-program-for-debugging-in-ocaml)
-
-
-* [Which is the current setup to use OCaml in Vim?](http://stackoverflow.com/questions/15514908/which-is-the-current-setup-to-use-ocaml-in-vim)
-
-
-* [How can I use ocamlbrowser with opam packages?](http://stackoverflow.com/questions/26032055/how-can-i-use-ocamlbrowser-with-opam-packages)
-
-**Misc**
-
-* [How do I inteface OCaml with iPhone API?](http://stackoverflow.com/questions/1094866/how-do-i-inteface-ocaml-with-iphone-api)
-
-* [Accessing libraries written in OCaml and C++ from Ruby code](http://stackoverflow.com/questions/13535149/accessing-libraries-written-in-ocaml-and-c-from-ruby-code)
-
-
-* [Code generation for mathematical
-problems](http://stackoverflow.com/questions/13203089/code-generation-for-mathematical-problems)
-
-* [Ocaml for ARM cortex M4?](http://stackoverflow.com/questions/27061506/ocaml-for-arm-cortex-m4)
-
-* [Cross-compiling ocaml apps for ARM](http://stackoverflow.com/questions/9472371/cross-compiling-ocaml-apps-for-arm)
-
-* [How to represent a simple finite state machine in Ocaml?](http://stackoverflow.com/questions/9434050/how-to-represent-a-simple-finite-state-machine-in-ocaml)
-
-* [How to convert numbers among hex, oct, decimal and binary in OCaml?](http://stackoverflow.com/questions/15524450/how-to-convert-numbers-among-hex-oct-decimal-and-binary-in-ocaml)
-
-#### See Also
-
-* [Haskell for OCaml programmers](http://science.raphael.poss.name/haskell-for-ocaml-programmers.html)
-* [OCaml for Haskellers](http://blog.ezyang.com/2010/10/ocaml-for-haskellers/)
-* [ML Dialects and Haskell: SML, OCaml, F#, Haskell](http://hyperpolyglot.org/ml)
-* [A Concise Introduction to Objective Caml](http://www.csc.villanova.edu/~dmatusze/resources/ocaml/ocaml.html)
-* [Namespacing Variants in ML](http://keleshev.com/namespacing-variants-in-ml)
-
-* [Haifeng's Random Walk - OCaml: Algebraic Data Types](https://haifengl.wordpress.com/2014/07/07/ocaml-algebraic-data-types/)
-
-* [Appendix B  Variant types and labeled arguments](http://caml.inria.fr/pub/docs/u3-ocaml/ocaml051.html)
-
-* [Thomas Leonard's blog - OCaml Tips](http://roscidus.com/blog/blog/2013/10/13/ocaml-tips/)
-* [Thomas Leonard's blog - Experiences With OCaml Objects](http://roscidus.com/blog/blog/2013/09/28/ocaml-objects/)
-
-* [Unreliable Guide to OCaml Modules](http://lambdafoo.com/blog/2015/05/15/unreliable-guide-to-ocaml-modules/)
-
-
-* [A draft of library to handle physical units in OCaml](http://blog.bentobako.org/index.php?post/2011/12/02/A-draft-of-library-to-handle-physical-units-in-OCaml)
-
-* [Detecting and removing computer virus with OCaml](http://javiermunhoz.com/blog/2014/04/19/detecting-and-removing-computer-virus-with-ocaml.html)
-
-#### Quick Reference Sheets
-
-* https://github.com/OCamlPro/ocaml-cheat-sheets
-
-* [OCaml Cheat Sheets](http://www.ocamlpro.com/blog/2011/06/03/cheatsheets.html)
-
-* https://www.lri.fr/~conchon/IPF/fiches/ocaml-lang.pdf
-
-* http://cl-informatik.uibk.ac.at/teaching/ss06/ocaml/content/w1-2x2.pdf
-
-* https://www.lri.fr/~conchon/IPF/fiches/tuareg-mode.pdf
-
-* [The OCaml Build Process by Example](http://blog.eatonphil.com/2015/03/28/the-ocaml-build-process/)
-
-### References By Subject
+    **Introduction to Objective Caml**
+    -   [Link](http://files.metaprl.org/doc/ocaml-book.pdf)
+        -   Authors: Jason Hickey
+        -   Url2: [Introduction to the Objective Caml Programming Language](http://main.metaprl.org/jyh/classes/cs134/cs134b/2007/public_html/assets/hickey.pdf)
+    
+    **Unix system programming in OCaml**
+    -   [Link](http://ocaml.github.io/ocamlunix/)
+        -   Authors: Xavier Leroy and Didier Rémy
+    
+    **Using, Understanding, and Unraveling - The OCaml Language From Practice to Theory and vice versa**
+    -   [Link](http://caml.inria.fr/pub/docs/u3-ocaml/index.html), Didier Rémy
+    
+    **Think Ocaml - How to Think Like a (Functional) Programmer**
+    -   [Link](http://www.greenteapress.com/thinkocaml/index.html)
+        -   Authors: Allen Downey, Nicholas Monje
+        -   Pùblisher: Green Tea Press
+    
+    **OCaml Inria Manual v4.02**
+    -   [Link](http://caml.inria.fr/pub/docs/manual-ocaml-4.02-1/)
+
+### Community<a id="sec-1-14-4" name="sec-1-14-4"></a>
+
+1.  Online Resources
+
+    -   Reddit:           <http://reddit.com/r/ocaml>
+    -   Usenet:           comp.lang.ocaml
+    -   StackOverflow
+        -   <http://stackoverflow.com/tags/ocaml/info>
+        -   <http://stackoverflow.com/questions/tagged/ocaml>
+    -   Email List (lists.ocaml.org): <http://lists.ocaml.org/listinfo>
+    
+    -   <https://ocaml.org/learn/>
+    
+    -   [Resources for Caml users - Inria](http://caml.inria.fr/resources/index.en.html)
+    
+    -   [Lang Ref / Ocaml](http://langref.org/ocaml)
+    
+    -   [Rosetta Wiki Code Ocaml](http://rosettacode.org/wiki/Category:OCaml)
+    
+    -   [PLEAC-Objective CAML](http://pleac.sourceforge.net/pleac_ocaml/)
+    
+    -   **[[<http://www.cs.cornell.edu/Courses/cs3110/2011sp/lecturenotes.asp][Cornell> University - CS3110 Spring 11:** Data Structures and Functional Programming]]
+    
+    -   [Universytet Wroclawiski | Lukaz Stafiniak / Functional Lectures] (<http://www.ii.uni.wroc.pl/~lukstafi/pmwiki/index.php?n=Functional.Functional>)
+    
+    -   [University of Southampton | Tutorial: OCaml for scientific computation - Dr. Thomas Fischbacher, Hans Fangohr](http://www.southampton.ac.uk/~fangohr/software/ocamltutorial/)
+    
+    -   [String Pattern Matching Examples](https://github.com/jimenezrick/ocaml-backpack/blob/master/src/backpackString.ml)
+    
+    -   [OCAML exceptions, a small tutorial](http://www.martani.net/2009/04/ocaml-exceptions-small-tutorial.html)
+    
+    -   [First Thoughts on OCaml](http://www.crmarsh.com/intro_to_ocaml/)
+    
+    -   [OCaml for the Skeptical - Compiling and Running Programs](http://www2.lib.uchicago.edu/keith/ocaml-class/compiling.html)
+
+2.  Blogs
+
+    -   [Jane Street Capital - Blog](https://blogs.janestreet.com)
+    
+    -   [Ocamlpro Blog](http://www.ocamlpro.com/blog)
+    
+    -   The MirageOS Blog on building functional operating systems
+    
+    -   [OCaml at LexiFi | LexiFi](https://www.lexifi.com/blogs/ocaml)
+    
+    -   [Rosciuds Blog](http://roscidus.com/blog/)
+    
+    -   Alaska Ataca a Kamtchatka
+    
+    -   [Oleg Kiselyov](http://okmij.org/ftp/ML/)
+    
+    -   [Ambassador to the Computers Mostly OCaml.](http://ambassadortothecomputers.blogspot.com/2009/05/lwt-and-concurrent-ml.html)
+    
+    -   [Functional Orbitz](http://functional-orbitz.blogspot.com)
+    
+    -   [An Overview of Ocaml - Simon Grondin - An Adventure in Software Industry](http://simongrondin.name/?p=330#more-330)
+    
+    -   [Mega Nerd blog / Ocaml](http://www.mega-nerd.com/erikd/Blog/CodeHacking/Ocaml/index.html)
+    
+    -   [Matt Mcdonnel - Ocaml](http://www.matt-mcdonnell.com/blog/blog_ocaml/blog_ocaml.html)
+    
+    -   <http://aubedesheros.blogspot.com/search/label/ocaml>  (In French)
+    
+    -   [Ruby,Lisp,Emacs,Clojure.OCaml,Haskell,Raspberry Piのメモ](http://takeisamemo.blogspot.com.br/search/label/OCaml) (In Japanese)
+
+3.  Hacker News Threads
+
+    -   [OCaml for the Masses (2011)](https://news.ycombinator.com/item?id=8002188)
+    
+    -   [Python to OCaml: Retrospective (roscidus.com)](https://news.ycombinator.com/item?id=7858276)
+    
+    -   [Why OCaml, Why Now? (spyder.wordpress.com)](https://news.ycombinator.com/item?id=7416203)
+    
+    -   [Ask Hackers: Opinions on OCaml?](https://news.ycombinator.com/item?id=112129)
+    
+    -   [OCaml 4.03 will, “if all goes well”, support multicore (inria.fr)](https://news.ycombinator.com/item?id=9582980)
+    
+    -   [Code iOS Apps in OCaml](https://news.ycombinator.com/item?id=3740173)
+    
+    -   [OCaml Briefly (mads379.github.io)](https://news.ycombinator.com/item?id=8653207)
+    
+    -   [The fundamental problem of programming language package management](https://news.ycombinator.com/item?id=8226139)
+    
+    -   [Four MLs (and a Python) (thebreakfastpost.com)](https://news.ycombinator.com/item?id=9463254)
+    
+    -   [Jane Street releases open source alternative to OCaml's stdlib](https://news.ycombinator.com/item?id=3438084)
+    
+    -   [Why did Microsoft invest so much in F#?](https://news.ycombinator.com/item?id=1883679)
+
+4.  Slides and Presentations
+
+    -   [An Introduction to Objective Caml - Stephen A. Edwards - Columbia University](http://www.cs.columbia.edu/~sedwards/classes/2012/w4115-spring/ocaml.pdf)
+    
+    -   [Slideshare - Introduction to functional programming using Ocaml](http://www.slideshare.net/pramode_ce/fp-29715231?next_slideshow=1)
+    
+    -   [Camomile : A Unicode library for OCaml](http://www.slideshare.net/yoriyuki/camomile-a-unicode-library-for-ocaml?related=4)
+    
+    -   [OCaml Labs introduction at OCaml Consortium 2012](http://www.slideshare.net/AnilMadhavapeddy/ocaml-labs-introduction-at-ocaml-consortium-2012?related=1)
+    
+    -   [Abstractions and Types for Concurrent Programming - Yaron Minsky
+    
+    Jane Street](<http://www.cs.princeton.edu/~dpw/courses/cos326-12/lec/asynch-and-rpc.pdf>)
+    
+    -   [Ocaml - Objective Caml](http://www.slideshare.net/cyber_jso/ocaml-13036522?related=3)
+    
+    -   [Succeeding with Functional-first Programming in Enterprise - by Dr. Don Syme - Microsoft Research](http://www.slideshare.net/dsyme/fp-successv4redist?related=5s)
+    
+    -   [LibreS3: design, challenges, and steps toward reusable libraries](https://ocaml.org/meetings/ocaml/2014/ocaml2014_13.pdf)
+    
+    -   [NYC OCaml Meetup: Js<sub>of</sub><sub>ocaml</sub>](http://files.meetup.com/1887771/2013-07-11%20Js_of_ocaml%20The%20OCaml%20to%20Javascript%20Compiler.pdf)
+    
+    -   [Managing and Analyzing Big-Data in Genomics](http://ashishagarwal.org/wp-content/uploads/2012/06/IBM_PL_Day_2012.pdf)
+    
+    -   [Programmation fonctionnelle avec OCaml](http://www.loria.fr/~shornus/ocaml/slides-ocaml-3.pdf)
+
+5.  Stack Overflow Highlighted Questions
+
+    **Syntax / Implementation**
+    
+    -   [What does “let () = ” mean in Ocaml?](http://stackoverflow.com/questions/7524487/what-does-let-mean-in-ocaml)
+    
+    -   [What is the different between \`fun\` and \`function\` keywords?](http://stackoverflow.com/questions/1604270/what-is-the-different-between-fun-and-function-keywords)
+    
+    -   [Why is OCaml's (+) not polymorphic?](http://stackoverflow.com/questions/8017172/why-is-ocamls-not-polymorphic)
+    
+    -   [What are “\`” in OCaml?](http://stackoverflow.com/questions/19498928/what-are-in-ocaml)
+    
+    -   [Explaining pattern matching vs switch](http://stackoverflow.com/questions/199918/explaining-pattern-matching-vs-switch)
+    
+    -   [Ocaml Variant Types](http://stackoverflow.com/questions/4777744/ocaml-variant-types)
+    
+    -   [Why is an int in OCaml only 31 bits?](http://stackoverflow.com/questions/3773985/why-is-an-int-in-ocaml-only-31-bits)
+    
+    -   [OCaml insert an element in list](http://stackoverflow.com/questions/9498746/ocaml-insert-an-element-in-list)
+    
+    -   [Ocaml - Accessing components in an array of records](http://stackoverflow.com/questions/14001569/ocaml-accessing-components-in-an-array-of-records)
+    
+    -   [What's the difference between “equal (`)” and “identical (=`)” in ocaml?](http://stackoverflow.com/questions/13590307/whats-the-difference-between-equal-and-identical-in-ocaml/13590433#13590433)
+    
+    -   [Why is “1.0 == 1.0” false in Ocaml?](http://stackoverflow.com/questions/25878382/why-is-1-0-1-0-false-in-ocaml)
+    
+    -   [How to curry a function w.r.t. its optional arguments in OCaml](http://stackoverflow.com/questions/9647307/how-to-curry-a-function-w-r-t-its-optional-arguments-in-ocaml)
+    
+    -   [What's the difference between “let ()=” and “let \_=” ;](http://stackoverflow.com/questions/11515240/whats-the-difference-between-let-and-let)
+    
+    -   [In OCaml, what type definition is this: 'a. unit -> 'a](http://stackoverflow.com/questions/23323032/in-ocaml-what-type-definition-is-this-a-unit-a?rq=1)
+    
+    -   [Hashtables in ocaml - Is it possible to store different types in the same hashtable (Hashtbl) in Ocaml? Are hashtables really restricted to just one type?](http://stackoverflow.com/questions/8962895/hashtables-in-ocaml/8963057#8963057)
+    
+    -   [How do you append a char to a string in OCaml?](http://stackoverflow.com/questions/8326926/how-do-you-append-a-char-to-a-string-in-ocaml/8329852#8329852)
+    
+    -   [Ocaml int to binary string conversion](http://stackoverflow.com/questions/9776245/ocaml-int-to-binary-string-conversion)
+    
+    -   [OCaml regex: specify a number of occurrences](http://stackoverflow.com/questions/14425762/ocaml-regex-specify-a-number-of-occurrences)
+    
+    -   [Side-effects and top-level expressions in OCaml](http://stackoverflow.com/questions/10459363/side-effects-and-top-level-expressions-in-ocaml)
+    
+    -   [OCaml passing labeled function as parameter / labeled function type equivalence](http://stackoverflow.com/questions/20931144/ocaml-passing-labeled-function-as-parameter-labeled-function-type-equivalence)
+    
+    -   [ocaml bitstring within a script](http://stackoverflow.com/questions/21225701/ocaml-bitstring-within-a-script)
+    
+    -   [What's the most-used data structure in OCaml to represent a Graph?](http://stackoverflow.com/questions/22067339/whats-the-most-used-data-structure-in-ocaml-to-represent-a-graph)
+    
+    **Functional Programming**
+    
+    -   [State monad in OCaml](http://stackoverflow.com/questions/5843773/state-monad-in-ocaml)
+    
+    -   [The reverse state monad in OCaml](http://stackoverflow.com/questions/24943140/the-reverse-state-monad-in-ocaml)
+    
+    -   [What is the use of monads in OCaml?](http://stackoverflow.com/questions/29851449/what-is-the-use-of-monads-in-ocaml)
+    
+    -   [Monadic buffers in OCaml](http://stackoverflow.com/questions/25790177/monadic-buffers-in-ocaml)
+    
+    -   [Does OCaml have fusion laws](http://stackoverflow.com/questions/21031920/does-ocaml-have-fusion-laws)
+    
+    -   [Composite functions in ocaml](http://stackoverflow.com/questions/4997661/composite-functions-in-ocaml)
+    
+    -   [OCaml |> operator](http://stackoverflow.com/questions/30493644/ocaml-operator)
+    
+    -   [Is it possible to use pipes in OCaml?](http://stackoverflow.com/questions/8986010/is-it-possible-to-use-pipes-in-ocaml)
+    
+    -   [Is there an infix function composition operator in OCaml?](http://stackoverflow.com/questions/16637015/is-there-an-infix-function-composition-operator-in-ocaml/16637073#16637073)
+    
+    -   [List of Functional code snippets for Procedural Programmers?](http://stackoverflow.com/questions/832569/list-of-functional-code-snippets-for-procedural-programmers)
+    
+    -   [Application of Tail-Recursion in OCaml](http://stackoverflow.com/questions/19771283/application-of-tail-recursion-in-ocaml)
+    
+    -   [In Functional Programming, what is a functor?](http://stackoverflow.com/questions/2030863/in-functional-programming-what-is-a-functor)
+    
+    -   [In pure functional languages, is there an algorithm to get the inverse function?](http://stackoverflow.com/questions/13404208/in-pure-functional-languages-is-there-an-algorithm-to-get-the-inverse-function)
+    
+    -   [What is the benefit of purely functional data structure?](http://stackoverflow.com/questions/4399837/what-is-the-benefit-of-purely-functional-data-structure)
+    
+    -   [What's the closest thing to Haskell's typeclasses in OCaml?](http://stackoverflow.com/questions/14934242/whats-the-closest-thing-to-haskells-typeclasses-in-ocaml)
+    
+    -   [Defining functions pointfree-style in functional programming. What are the cons/pros?](http://stackoverflow.com/questions/7367655/defining-functions-pointfree-style-in-functional-programming-what-are-the-cons)
+    
+    -   [ What is **lenses** in OCaml's world ](http://stackoverflow.com/questions/28177263/what-is-lenses-in-ocamls-world)
+    
+    -   [Linked List Ocaml](http://stackoverflow.com/questions/1738758/linked-list-ocaml)
+    
+    -   [Functional programming languages introspection](http://stackoverflow.com/questions/3660957/functional-programming-languages-introspection)
+    
+    -   [When should objects be used in OCaml?](http://stackoverflow.com/questions/10779283/when-should-objects-be-used-in-ocaml)
+    
+    -   [Open and closed union types in Ocaml](http://stackoverflow.com/questions/5131954/open-and-closed-union-types-in-ocaml)
+    
+    -   [Choosing between continuation passing style and memoization](http://stackoverflow.com/questions/14781875/choosing-between-continuation-passing-style-and-memoization)
+    
+    -   [An concrete simple example to demonstrate GADT in OCaml?](http://stackoverflow.com/questions/27864200/an-concrete-simple-example-to-demonstrate-gadt-in-ocaml)
+    
+    -   [Generating primes without blowing the stack](http://stackoverflow.com/questions/18213973/generating-primes-without-blowing-the-stack)
+    
+    -   [Executing a list of functions](http://stackoverflow.com/questions/9054613/executing-a-list-of-functions)
+    
+    -   [Best way to represent a file/folder structure](http://stackoverflow.com/questions/30241118/best-way-to-represent-a-file-folder-structure)
+    
+    -   [How would you implement a Grid in a functional language?](http://stackoverflow.com/questions/27285170/how-would-you-implement-a-grid-in-a-functional-language)
+    
+    -   [OCaml recursive function to apply a function n times](http://stackoverflow.com/questions/15285386/ocaml-recursive-function-to-apply-a-function-n-times)
+    
+    -   [OCaml - Read csv file into array](http://stackoverflow.com/questions/28732351/ocaml-read-csv-file-into-array)
+    
+    **Lazy Evaluation/ Delayed Evaluation/ Generators / Yield**
+    
+    -   [Are streams in ocaml really used?](http://stackoverflow.com/questions/30197961/are-streams-in-ocaml-really-used)
+    
+    -   [Ocaml: Lazy Lists - How can I make a lazy list representing a sequence of doubling numbers?](http://stackoverflow.com/questions/1631968/ocaml-lazy-lists)
+    
+    -   [Ocaml - Lazy.force](http://stackoverflow.com/questions/18401178/ocaml-lazy-force)
+    
+    -   [Simple Generators](http://stackoverflow.com/questions/13146128/simple-generators)
+    
+    -   [[<http://stackoverflow.com/questions/16150173/what-does-mean-in-ocaml][What> does \`[< >]\` mean in OCaml?]]
+    
+    -   [What is the purpose of OCaml's Lazy.lazy<sub>from</sub><sub>val</sub>?](http://stackoverflow.com/questions/9760580/what-is-the-purpose-of-ocamls-lazy-lazy-from-val)
+    
+    -   [converting ocaml function to stream](http://stackoverflow.com/questions/16027627/converting-ocaml-function-to-stream)
+    
+    -   [Lazy “n choose k” in OCaml](http://stackoverflow.com/questions/3969321/lazy-n-choose-k-in-ocaml)
+    
+    -   [Thread safe lazy in OCaml](http://stackoverflow.com/questions/24123294/thread-safe-lazy-in-ocaml)
+    
+    **SML Dialects**
+    
+    -   [What are the differences between SML and Ocaml?](http://stackoverflow.com/questions/699689/what-are-the-differences-between-sml-and-ocaml)
+    
+    -   [F# changes to OCaml](http://stackoverflow.com/questions/179492/f-changes-to-ocaml)
+    
+    -   [Converting F# seq expressions to OCaml](http://stackoverflow.com/questions/14428420/converting-f-seq-expressions-to-ocaml)
+    
+    -   [IEnumerable<T> in OCaml](http://stackoverflow.com/questions/6589959/ienumerablet-in-ocaml)
+    
+    -   [code compatibility between OCaml and F#](http://stackoverflow.com/questions/4239121/code-compatibility-between-ocaml-and-f)
+    
+    -   [If SML.NET had functors why can't F#?](http://stackoverflow.com/questions/14777522/if-sml-net-had-functors-why-cant-f)
+    
+    -   [Streams (aka “lazy lists”) and tail recursion](http://stackoverflow.com/questions/27045225/streams-aka-lazy-lists-and-tail-recursion)
+    
+    **Standard Library**
+    
+    -   [How stable and widespread is “OCaml Batteries Included” and is it recommended?](http://stackoverflow.com/questions/3307936/how-stable-and-widespread-is-ocaml-batteries-included-and-is-it-recommended)
+    
+    -   [Cygwin & OCaml: OPAM + Batteries](http://stackoverflow.com/questions/15751851/cygwin-ocaml-opam-batteries)
+    
+    -   [using OCaml Batteries Included as a vanilla cma](http://stackoverflow.com/questions/10667329/using-ocaml-batteries-included-as-a-vanilla-cma?rq=1)
+    
+    -   [What are the pros and cons of Batteries and Core?](http://stackoverflow.com/questions/3889117/what-are-the-pros-and-cons-of-batteries-and-core?rq=1)
+    
+    **Build / Compile**
+    
+    -   [Building library with ocamlbuild, installing it with ocamlfind - what's the best practice?](http://stackoverflow.com/questions/27771452/building-library-with-ocamlbuild-installing-it-with-ocamlfind-whats-the-best)
+    
+    -   [What is the preferred way to structure and build OCaml projects?](http://stackoverflow.com/questions/5956317/what-is-the-preferred-way-to-structure-and-build-ocaml-projects?rq=1)
+    
+    -   [How to make OCaml bytecode that works on Windows and Linux](http://stackoverflow.com/questions/17315402/how-to-make-ocaml-bytecode-that-works-on-windows-and-linux)
+    
+    **Tool Chain**
+    
+    -   [IDE for OCaml language](http://stackoverflow.com/questions/14747939/ide-for-ocaml-language)
+    
+    -   [Saving my running toplevel for later](http://stackoverflow.com/questions/3966925/saving-my-running-toplevel-for-later)
+    
+    -   [Is there an enhanced interpreter toploop for OCaml?](http://stackoverflow.com/questions/1849245/is-there-an-enhanced-interpreter-toploop-for-ocaml)
+    
+    -   [Is it possible to use arrow keys in OCaml interpreter?](http://stackoverflow.com/questions/13225070/is-it-possible-to-use-arrow-keys-in-ocaml-interpreter/13225113#13225113)
+    
+    -   [Is it possible to make an opam “sandbox”?](http://stackoverflow.com/questions/27640897/is-it-possible-to-make-an-opam-sandbox)
+    
+    -   [For OCaml, is there a tool to quickly access function or library documentation from the command line?](http://stackoverflow.com/questions/24824849/for-ocaml-is-there-a-tool-to-quickly-access-function-or-library-documentation-f)
+    
+    -   [Annotations in OCaml](http://stackoverflow.com/questions/4063039/annotations-in-ocaml)
+    
+    -   [About the “topfind”?](http://stackoverflow.com/questions/8059657/about-the-topfind)
+    
+    -   [Get ocamlmerlin autocomplete in vim](http://stackoverflow.com/questions/21132371/get-ocamlmerlin-autocomplete-in-vim)
+    
+    -   [Is there a reason to retain .cmo or only .cma?](http://stackoverflow.com/questions/8630599/is-there-a-reason-to-retain-cmo-or-only-cma)
+    
+    -   [Ocaml utop library paths, Core module](http://stackoverflow.com/questions/20927592/ocaml-utop-library-paths-core-module?rq=1)
+    
+    -   [How to trace a program for debugging in OCaml ?](http://stackoverflow.com/questions/9426560/how-to-trace-a-program-for-debugging-in-ocaml)
+    
+    -   [Which is the current setup to use OCaml in Vim?](http://stackoverflow.com/questions/15514908/which-is-the-current-setup-to-use-ocaml-in-vim)
+    
+    -   [How can I use ocamlbrowser with opam packages?](http://stackoverflow.com/questions/26032055/how-can-i-use-ocamlbrowser-with-opam-packages)
+    
+    **Misc**
+    
+    -   [How do I inteface OCaml with iPhone API?](http://stackoverflow.com/questions/1094866/how-do-i-inteface-ocaml-with-iphone-api)
+    
+    -   [Accessing libraries written in OCaml and C++ from Ruby code](http://stackoverflow.com/questions/13535149/accessing-libraries-written-in-ocaml-and-c-from-ruby-code)
+    
+    -   [Code generation for mathematical
+    
+    problems](<http://stackoverflow.com/questions/13203089/code-generation-for-mathematical-problems>)
+    
+    -   [Ocaml for ARM cortex M4?](http://stackoverflow.com/questions/27061506/ocaml-for-arm-cortex-m4)
+    
+    -   [Cross-compiling ocaml apps for ARM](http://stackoverflow.com/questions/9472371/cross-compiling-ocaml-apps-for-arm)
+    
+    -   [How to represent a simple finite state machine in Ocaml?](http://stackoverflow.com/questions/9434050/how-to-represent-a-simple-finite-state-machine-in-ocaml)
+    
+    -   [How to convert numbers among hex, oct, decimal and binary in OCaml?](http://stackoverflow.com/questions/15524450/how-to-convert-numbers-among-hex-oct-decimal-and-binary-in-ocaml)
+
+6.  See Also
+
+    -   [Haskell for OCaml programmers](http://science.raphael.poss.name/haskell-for-ocaml-programmers.html)
+    -   [OCaml for Haskellers](http://blog.ezyang.com/2010/10/ocaml-for-haskellers/)
+    -   [ML Dialects and Haskell: SML, OCaml, F#, Haskell](http://hyperpolyglot.org/ml)
+    -   [A Concise Introduction to Objective Caml](http://www.csc.villanova.edu/~dmatusze/resources/ocaml/ocaml.html)
+    -   [Namespacing Variants in ML](http://keleshev.com/namespacing-variants-in-ml)
+    
+    -   [Haifeng's Random Walk - OCaml: Algebraic Data Types](https://haifengl.wordpress.com/2014/07/07/ocaml-algebraic-data-types/)
+    
+    -   [Appendix B  Variant types and labeled arguments](http://caml.inria.fr/pub/docs/u3-ocaml/ocaml051.html)
+    
+    -   [Thomas Leonard's blog - OCaml Tips](http://roscidus.com/blog/blog/2013/10/13/ocaml-tips/)
+    -   [Thomas Leonard's blog - Experiences With OCaml Objects](http://roscidus.com/blog/blog/2013/09/28/ocaml-objects/)
+    
+    -   [Unreliable Guide to OCaml Modules](http://lambdafoo.com/blog/2015/05/15/unreliable-guide-to-ocaml-modules/)
+    
+    -   [A draft of library to handle physical units in OCaml](http://blog.bentobako.org/index.php?post/2011/12/02/A-draft-of-library-to-handle-physical-units-in-OCaml)
+    
+    -   [Detecting and removing computer virus with OCaml](http://javiermunhoz.com/blog/2014/04/19/detecting-and-removing-computer-virus-with-ocaml.html)
+
+7.  Quick Reference Sheets
+
+    -   <https://github.com/OCamlPro/ocaml-cheat-sheets>
+    
+    -   [OCaml Cheat Sheets](http://www.ocamlpro.com/blog/2011/06/03/cheatsheets.html)
+    
+    -   <https://www.lri.fr/~conchon/IPF/fiches/ocaml-lang.pdf>
+    
+    -   <http://cl-informatik.uibk.ac.at/teaching/ss06/ocaml/content/w1-2x2.pdf>
+    
+    -   <https://www.lri.fr/~conchon/IPF/fiches/tuareg-mode.pdf>
+    
+    -   [The OCaml Build Process by Example](http://blog.eatonphil.com/2015/03/28/the-ocaml-build-process/)
+
+### References By Subject<a id="sec-1-14-5" name="sec-1-14-5"></a>
 
 **Lazy Evaluation**
 
-* http://cl-informatik.uibk.ac.at/teaching/ws09/fp/ohp/week12-1x2.pdf
-* http://typeocaml.com/2014/11/13/magic-of-thunk-lazy/
-* http://www.ii.uni.wroc.pl/~lukstafi/pmwiki/uploads/Functional/functional-lecture07.pdf
+-   <http://cl-informatik.uibk.ac.at/teaching/ws09/fp/ohp/week12-1x2.pdf>
+-   <http://typeocaml.com/2014/11/13/magic-of-thunk-lazy/>
+-   <http://www.ii.uni.wroc.pl/~lukstafi/pmwiki/uploads/Functional/functional-lecture07.pdf>
 
-* [Lazy Evaluation and Stream Processing](http://www.ii.uni.wroc.pl/~lukstafi/pmwiki/uploads/Functional/functional-lecture07.pdf)
-    * http://www.ii.uni.wroc.pl/~lukstafi/pmwiki/index.php?n=Functional.Functional
+-   [Lazy Evaluation and Stream Processing](http://www.ii.uni.wroc.pl/~lukstafi/pmwiki/uploads/Functional/functional-lecture07.pdf)
+    -   <http://www.ii.uni.wroc.pl/~lukstafi/pmwiki/index.php?n=Functional.Functional>
 
-* Lazy Expression Evaluation with Demand Paging / In Virtual Memory Managementhttp://www.ijeat.org/attachments/File/v2i1/A0690092112.pdf
-
-<!--
-    ---------------------------------------------------------------
--->
+-   Lazy Expression Evaluation with Demand Paging / In Virtual Memory
+    Managementhttp://www.ijeat.org/attachments/File/v2i1/A0690092112.pdf

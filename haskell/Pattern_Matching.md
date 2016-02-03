@@ -1,18 +1,10 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
 - [Pattern Matching](#pattern-matching)
-- [](#)
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-## Pattern Matching
+# Pattern Matching<a id="sec-1" name="sec-1"></a>
 
 Tuple Constructor
 
 ```haskell
-
 > let norm3D (x, y, z) = sqrt(x^2 + y^2 + z^2)
 > 
 > norm3D (33, 11, 3)
@@ -20,11 +12,10 @@ Tuple Constructor
 > 
 > norm3D (33, 1, 3)
 33.15116890850155
-> 
+>
 ```
 
 ```haskell
-
 addVectors :: (Num a) => (a, a) -> (a, a) -> (a, a)
 addVectors a b = (fst a + fst b, snd a + snd b)
 
@@ -40,7 +31,6 @@ addVectors a b = (fst a + fst b, snd a + snd b)
 ```
 
 ```haskell
-
 add3Dvectors (x1, y1, z1) (x2, y2, z2) = (x1+x2, y1+y2, z1+z
 first  (x, _, _) = x
 second (_, y, _) = y
@@ -68,7 +58,6 @@ abs n | n >=0 = n
 Signum/Sign Function
 
 ```haskell
-
 -- Without Pattern Matching
 sign n = if n < 0 then - 1 else if n == 0 then 0 else 1
 
@@ -92,7 +81,6 @@ sign n | n <  0    = -1
 
 > map sign [-4..4]
 [-1,-1,-1,-1,0,1,1,1,1]
-
 ```
 
 ```haskell
@@ -100,11 +88,9 @@ f x y | y > z  = x^^2 - 10.5
       | y == z = x+10*y
       | y < z  = x/z + y
       where z = x^2 - 5*y
-
 ```
 
 ```haskell
-
 units angle sym | sym == "deg" = angle*pi/180.0
                 | sym == "rad" = angle
 
@@ -127,11 +113,10 @@ True
 1.0
 > sin(units 1.57 "rad")
 0.9999996829318346
-> 
+>
 ```
 
 ```haskell
-
 password :: (Eq a, Num a) => a -> [Char]
 password 3423 = "OK - Safe opened"
 password x    = "Error: Wrong Password pal"
@@ -156,7 +141,4 @@ sayMe x = "Not between 1 and 5"
 
 > map sayMe [1..8]
 ["One!","Two!","Three!","Four!","Five!","Not between 1 and 5", "Not between 1 and 5","Not between 1 and 5"]
-
-
 ```
-

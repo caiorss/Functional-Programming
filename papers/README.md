@@ -1,25 +1,17 @@
-# Functional Programming Papers
+- [Functional Programming Papers](#functional-programming-papers)
+  - [Why Functional Programming Matters (1984)](#why-functional-programming-matters-(1984))
+  - [Composing contracts: an adventure in financial engineering(functional pearl)](#composing-contracts:-an-adventure-in-financial-engineering(functional-pearl))
+  - [Learn Physics by Programming in Haskell](#learn-physics-by-programming-in-haskell)
+  - [Monads for functional programming](#monads-for-functional-programming)
+  - [FUNCTIONAL PEARL - Applicative programming with effects](#functional-pearl---applicative-programming-with-effects)
+  - [Monadic parsing in Haskell](#monadic-parsing-in-haskell)
+  - [The Typeclassopedia](#the-typeclassopedia)
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
-
-- [Why Functional Programming Matters (1984)](#why-functional-programming-matters-1984)
-- [Composing contracts: an adventure in financial engineering(functional pearl)](#composing-contracts-an-adventure-in-financial-engineeringfunctional-pearl)
-- [Learn Physics by Programming in Haskell](#learn-physics-by-programming-in-haskell)
-- [Monads for functional programming](#monads-for-functional-programming)
-- [FUNCTIONAL PEARL - Applicative programming with effects](#functional-pearl---applicative-programming-with-effects)
-- [Monadic parsing in Haskell](#monadic-parsing-in-haskell)
-- [The Typeclassopedia](#the-typeclassopedia)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-
+# Functional Programming Papers<a id="sec-1" name="sec-1"></a>
 
 Papers in this repository.
 
-### Why Functional Programming Matters (1984)
+## Why Functional Programming Matters (1984)<a id="sec-1-1" name="sec-1-1"></a>
 
 [PDF](Why_Functional_Programming_Matters-John_hughes.pdf)
 
@@ -33,6 +25,7 @@ The computer journal 32.2 (1989): 98-107.
 ```
 
 Bibtex
+
 ```bibtex
 @ARTICLE{Hughes84whyfunctional,
     author = {John Hughes},
@@ -44,17 +37,14 @@ Bibtex
 }
 ```
 
-
-### Composing contracts: an adventure in financial engineering(functional pearl)
+## Composing contracts: an adventure in financial engineering(functional pearl)<a id="sec-1-2" name="sec-1-2"></a>
 
 [PDF](Composing_Contracts_an_adventure_in_financial_engineering.pdf)
 [ACM Link](http://dl.acm.org/citation.cfm?id=351267)
 
-
 Abstract:
 
 Financial and insurance contracts do not sound like promising territory for functional programming and formal semantics, but in fact we have discovered that insights from programming languages bear directly on the complex subject of describing and valuing a large class of contracts.We introduce a combinator library that allows us to describe such contracts precisely, and a compositional denotational semantics that says what such contracts are worth. We sketch an implementation of our combinator library in Haskell. Interestingly, lazy evaluation plays a crucial role.
-
 
 ```
 Jones, Simon Peyton, Jean-Marc Eber, and Julian Seward. 
@@ -63,6 +53,7 @@ Jones, Simon Peyton, Jean-Marc Eber, and Julian Seward.
 ```
 
 Bibtex
+
 ```
 @article{jones2000composing,
   title={Composing contracts: an adventure in financial engineering(functional pearl)},
@@ -76,11 +67,11 @@ Bibtex
 }
 ```
 
-### Learn Physics by Programming in Haskell
+## Learn Physics by Programming in Haskell<a id="sec-1-3" name="sec-1-3"></a>
 
 [PDF](Learn_Physics_by_Programming_In_Haskell-Scott-N-Walck.pdf)
 
-Site: http://arxiv.org/abs/1412.4880
+Site: <http://arxiv.org/abs/1412.4880>
 
 Abstract:
 
@@ -92,6 +83,7 @@ arXiv preprint arXiv:1412.4880 (2014).
 ```
 
 Bibtex
+
 ```
 @article{walck2014learn,
   title={Learn Physics by Programming in Haskell},
@@ -101,7 +93,7 @@ Bibtex
 }
 ```
 
-### Monads for functional programming
+## Monads for functional programming<a id="sec-1-4" name="sec-1-4"></a>
 
 [PDF](Monads_for_functional_programming-Phillip_Walder.pdf)
 
@@ -115,6 +107,7 @@ Advanced Functional Programming. Springer Berlin Heidelberg, 1995. 24-52.
 ```
 
 Bibtex:
+
 ```
 @incollection{wadler1995monads,
   title={Monads for functional programming},
@@ -126,14 +119,13 @@ Bibtex:
 }
 ```
 
-### FUNCTIONAL PEARL - Applicative programming with effects
+## FUNCTIONAL PEARL - Applicative programming with effects<a id="sec-1-5" name="sec-1-5"></a>
 
 [PDF](Functiona_Pearls-Applicative_Programming_With_Effects.pdf)
 
 Abstract:
 
 In this article, we introduce Applicative functors – an abstract characterisation of an applicative style of effectful programming, weaker than Monads and hence more widespread. Indeed, it is the ubiquity of this programming pattern that drew us to the abstraction. We retrace our steps in this article, introducing the applicative pattern by diverse examples, then abstracting it to define the Applicative type class and introducing a bracket notation that interprets the normal application syntax in the idiom of an Applicative functor. Furthermore, we develop the properties of applicative functors and the generic operations they support. We close by identifying the categorical structure of applicative functors and examining their relationship both with Monads and with Arrow.
-
 
 ```
 McBride, Conor, and Ross Paterson. 
@@ -142,6 +134,7 @@ Journal of functional programming 18.01 (2008): 1-13.
 ```
 
 Bibtex
+
 ```
 @article{mcbride2008applicative,
   title={Applicative programming with effects},
@@ -155,12 +148,31 @@ Bibtex
 }
 ```
 
-### Monadic parsing in Haskell
+## Monadic parsing in Haskell<a id="sec-1-6" name="sec-1-6"></a>
 
-This paper is a tutorial on defining recursive descent parsers in Haskell. In the spirit of one-stop shopping, the paper combines material from three areas into a single source. The three areas are functional parsers (Burge, 1975; Wadler, 1985; Hutton, 1992; Fokker, 1995), the use of monads to structure functional programs (Wadler, 1990; Wadler, 1992a; Wadler, 1992b), and the use of special syntax for monadic programs in Haskell (Jones, 1995; Peterson et al. , 1996). More specifically, the paper shows how to define monadic parsers using do notation in Haskell.
-Of course, recursive descent parsers defined by hand lack the efficiency of bottom up parsers generated by machine (Aho et al., 1986; Mogensen, 1993; Gill & Marlow, 1995). However, for many research applications, a simple recursive descent parser is perfectly sufficient. Moreover, while parser generators typically offer a fixed set of combinators for describing grammars, the method described here is completely extensible: parsers are first-class values, and we have the full power of Haskell available to define new combinators for special applications. The method is also an
-excellent illustration of the elegance of functional programming. The paper is targeted at the level of a good undergraduate student who is familiar
-with Haskell, and has completed a grammars and parsing course. Some knowledge of functional parsers would be useful, but no experience with monads is assumed. A Haskell library derived from the paper is available on the web from:
+This paper is a tutorial on defining recursive descent parsers in
+Haskell. In the spirit of one-stop shopping, the paper combines
+material from three areas into a single source. The three areas are
+functional parsers (Burge, 1975; Wadler, 1985; Hutton, 1992; Fokker,
+1995), the use of monads to structure functional programs (Wadler,
+1990; Wadler, 1992a; Wadler, 1992b), and the use of special syntax for
+monadic programs in Haskell (Jones, 1995; Peterson et al. ,
+1996). More specifically, the paper shows how to define monadic
+parsers using do notation in Haskell.  Of course, recursive descent
+parsers defined by hand lack the efficiency of bottom up parsers
+generated by machine (Aho et al., 1986; Mogensen, 1993; Gill & Marlow,
+1995). However, for many research applications, a simple recursive
+descent parser is perfectly sufficient. Moreover, while parser
+generators typically offer a fixed set of combinators for describing
+grammars, the method described here is completely extensible: parsers
+are first-class values, and we have the full power of Haskell
+available to define new combinators for special applications. The
+method is also an excellent illustration of the elegance of functional
+programming. The paper is targeted at the level of a good
+undergraduate student who is familiar with Haskell, and has completed
+a grammars and parsing course. Some knowledge of functional parsers
+would be useful, but no experience with monads is assumed. A Haskell
+library derived from the paper is available on the web from:
 
 ```
 Hutton, Graham, and Erik Meijer. 
@@ -169,6 +181,7 @@ Journal of functional programming 8.04 (1998): 437-444.
 ```
 
 Bibtex
+
 ```
 @article{hutton1998monadic,
   title={Monadic parsing in Haskell},
@@ -182,10 +195,11 @@ Bibtex
 }
 ```
 
-### The Typeclassopedia
+## The Typeclassopedia<a id="sec-1-7" name="sec-1-7"></a>
 
-[PDF](Typeclassopedia.pdf)
-Site: https://wiki.haskell.org/Typeclassopedia
+<Typeclassopedia.pdf> 
+
+Site: <https://wiki.haskell.org/Typeclassopedia>
 
 Abstract:
 
@@ -198,6 +212,7 @@ The Monad. Reader Issue 13 (2009): 17.
 ```
 
 Bibtex
+
 ```
 @article{yorgey2009typeclassopedia,
   title={The typeclassopedia},

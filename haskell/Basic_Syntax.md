@@ -1,13 +1,9 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
 - [Basic Syntax](#basic-syntax)
   - [Operators](#operators)
     - [Logic Operators](#logic-operators)
     - [Powers](#powers)
-    - [Application Operator - $](#application-operator---)
-    - [Misc. Operators](#misc-operators)
+    - [Application Operator - $](#application-operator---$)
+    - [Misc. Operators](#misc.-operators)
   - [Defining Values and Types](#defining-values-and-types)
   - [Type System](#type-system)
     - [Basic Types](#basic-types)
@@ -15,46 +11,44 @@
     - [Standard Haskell Types](#standard-haskell-types)
     - [Standard Haskell Classes](#standard-haskell-classes)
     - [Numeric Types Conversion](#numeric-types-conversion)
-    - [Haskell-Style Syntax for types:](#haskell-style-syntax-for-types)
+    - [Haskell-Style Syntax for types:](#haskell-style-syntax-for-types:)
   - [Lists](#lists)
+    - [Overview](#overview)
     - [Creating Lists](#creating-lists)
     - [List Operations](#list-operations)
     - [Chekings Lists](#chekings-lists)
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Basic Syntax
+# Basic Syntax<a id="sec-1" name="sec-1"></a>
 
-### Operators
+## Operators<a id="sec-1-1" name="sec-1-1"></a>
 
-
-#### Logic Operators
+### Logic Operators<a id="sec-1-1-1" name="sec-1-1-1"></a>
 
 ```
   True || False ⇒ True  
   True && False ⇒ False 
   True == False ⇒ False 
-  True /= False ⇒ True  (/=) is the operator for different 
+  True /= False ⇒ True  (/=) is the operator for different
 ```
 
-#### Powers
+### Powers<a id="sec-1-1-2" name="sec-1-1-2"></a>
 
 ```
 x^n     for n an integral (understand Int or Integer)
 x**y    for y any kind of number (Float for example)
 ```
 
+### Application Operator - $<a id="sec-1-1-3" name="sec-1-1-3"></a>
 
-#### Application Operator - $
-
-The application operator '$' makes code more readable and cleaner since substitutes parenthesis.
-It is also useful in higher-order situations, such as map ($ 0) xs, or zipWith ($) fs xs. 
+The application operator '\(' makes code more readable and cleaner since substitutes parenthesis.
+It is also useful in higher-order situations, such as map (\) 0) xs, or zipWith ($) fs xs. 
 
 ```haskell
 > f $ g $ h x = f (g (h x))
 ```
 
-#### Misc. Operators
+### Misc. Operators<a id="sec-1-1-4" name="sec-1-1-4"></a>
 
 ```haskell
 >>=     bind
@@ -81,14 +75,9 @@ $                         (none, just as " " [whitespace])
 _       Whatever          Used in Pattern Matching
 ```
 
-
-
-
-
-### Defining Values and Types
+## Defining Values and Types<a id="sec-1-2" name="sec-1-2"></a>
 
 ```haskell
-
 > let b = 100 :: Float
 > let a  = 100 :: Int
 > let c = 100 :: Double
@@ -122,91 +111,334 @@ z :: [Float]
 k :: [Double]
 ```
 
-### Type System
+## Type System<a id="sec-1-3" name="sec-1-3"></a>
 
-* A type is a collection of related values.
+-   A type is a collection of related values.
 
-* Typeclasses are sets of types.
+-   Typeclasses are sets of types.
 
-* A class is a collection of types that support certain operations, called the methods of the class.
+-   A class is a collection of types that support certain operations, called the methods of the class.
 
-* Each expressions must have a valid type, which is calculated before to evaluating the expression by the Haskell compiler, it is called type inference;
+-   Each expressions must have a valid type, which is calculated before to evaluating the expression by the Haskell compiler, it is called type inference;
 
-* Haskell programs are type safe, since type errors can never occur during run time;
+-   Haskell programs are type safe, since type errors can never occur during run time;
 
-* Type inference detects a very large class of programming errors, and is one of the most powerful and useful features of Haskell.
-
+-   Type inference detects a very large class of programming errors, and is one of the most powerful and useful features of Haskell.
 
 Reference:
-* [Graham Hutton Lecture](http://www.cs.nott.ac.uk/~gmh/functional.ppt)
-* [Graham Hutton - University of Nottingham](http://www.cs.nott.ac.uk/~gmh/)
+
+-   [Graham Hutton Lecture](http://www.cs.nott.ac.uk/~gmh/functional.ppt)
+-   [Graham Hutton - University of Nottingham](http://www.cs.nott.ac.uk/~gmh/)
+
+### Basic Types<a id="sec-1-3-1" name="sec-1-3-1"></a>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
-#### Basic Types
+<colgroup>
+<col  class="left" />
 
-|            |                   |              |
-|------------|-------------------|--------------|
-| Char       |  'a' / 'b' / 'c'  |  Char Type   |
-| [Char]     |  "String"         |  String      |
-| Bool       |   True / False    |  Boolean     |
-| Int        |   1, 2, 3, 4      |  Integers in a finite range.  -2^29 to (2^29 - 1) |          
-| Integer    |   1, 2, 3, 4      |  Arbitrary Precision Integer |
-| Float      | 1.0, 2.0, 3.0     |  32 bits float point |
-| Double     | 1.0, 2.0, 3.0     |  64 bits float point |
-| (Int, Char)|  (1, 'a')         | Tuples, unlike lists elements can have different types. |
-| [a]        | [1, 2, 3, 4]      | List has the type [Int], [Char], [Double] |
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">&#xa0;</th>
+<th scope="col" class="left">&#xa0;</th>
+<th scope="col" class="left">&#xa0;</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">Char</td>
+<td class="left">'a' / 'b' / 'c'</td>
+<td class="left">Char Type</td>
+</tr>
 
 
+<tr>
+<td class="left">[Char]</td>
+<td class="left">"String"</td>
+<td class="left">String</td>
+</tr>
+
+
+<tr>
+<td class="left">Bool</td>
+<td class="left">True / False</td>
+<td class="left">Boolean</td>
+</tr>
+
+
+<tr>
+<td class="left">Int</td>
+<td class="left">1, 2, 3, 4</td>
+<td class="left">Integers in a finite range.  -2<sup>29</sup> to (2<sup>29</sup> - 1)</td>
+</tr>
+
+
+<tr>
+<td class="left">Integer</td>
+<td class="left">1, 2, 3, 4</td>
+<td class="left">Arbitrary Precision Integer</td>
+</tr>
+
+
+<tr>
+<td class="left">Float</td>
+<td class="left">1.0, 2.0, 3.0</td>
+<td class="left">32 bits float point</td>
+</tr>
+
+
+<tr>
+<td class="left">Double</td>
+<td class="left">1.0, 2.0, 3.0</td>
+<td class="left">64 bits float point</td>
+</tr>
+
+
+<tr>
+<td class="left">(Int, Char)</td>
+<td class="left">(1, 'a')</td>
+<td class="left">Tuples, unlike lists elements can have different types.</td>
+</tr>
+
+
+<tr>
+<td class="left">[a]</td>
+<td class="left">[1, 2, 3, 4]</td>
+<td class="left">List has the type [Int], [Char], [Double]</td>
+</tr>
+</tbody>
+</table>
 
 **Selected Numeric Types**
 
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
-| Type |  Description |
-|------|--------------|
-| Double |  Double-precision floating point. A common choice for floating-point data. |
-| Float |  Single-precision floating point. Often used when interfacing with C. |
-| Int |  Fixed-precision signed integer; minimum range [-2^29..2^29-1]. Commonly used. |
-| Int8 |  8-bit signed integer |
-| Int16 |  16-bit signed integer |
-| Int32 |  32-bit signed integer |
-| Int64 |  64-bit signed integer |
-| Integer |  Arbitrary-precision signed integer; range limited only by machine resources. Commonly used. |
-| Rational |  Arbitrary-precision rational numbers. Stored as a ratio of two Integers. |
-| Word |  Fixed-precision unsigned integer; storage size same as Int |
-| Word8 |  8-bit unsigned integer |
-| Word16 |  16-bit unsigned integer |
-| Word32 |  32-bit unsigned integer |
-| Word64 |  64-bit unsigned integer |
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Type</th>
+<th scope="col" class="left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">Double</td>
+<td class="left">Double-precision floating point. A common choice for floating-point data.</td>
+</tr>
+
+
+<tr>
+<td class="left">Float</td>
+<td class="left">Single-precision floating point. Often used when interfacing with C.</td>
+</tr>
+
+
+<tr>
+<td class="left">Int</td>
+<td class="left">Fixed-precision signed integer; minimum range [-2<sup>29</sup>..2<sup>29</sup>-1]. Commonly used.</td>
+</tr>
+
+
+<tr>
+<td class="left">Int8</td>
+<td class="left">8-bit signed integer</td>
+</tr>
+
+
+<tr>
+<td class="left">Int16</td>
+<td class="left">16-bit signed integer</td>
+</tr>
+
+
+<tr>
+<td class="left">Int32</td>
+<td class="left">32-bit signed integer</td>
+</tr>
+
+
+<tr>
+<td class="left">Int64</td>
+<td class="left">64-bit signed integer</td>
+</tr>
+
+
+<tr>
+<td class="left">Integer</td>
+<td class="left">Arbitrary-precision signed integer; range limited only by machine resources. Commonly used.</td>
+</tr>
+
+
+<tr>
+<td class="left">Rational</td>
+<td class="left">Arbitrary-precision rational numbers. Stored as a ratio of two Integers.</td>
+</tr>
+
+
+<tr>
+<td class="left">Word</td>
+<td class="left">Fixed-precision unsigned integer; storage size same as Int</td>
+</tr>
+
+
+<tr>
+<td class="left">Word8</td>
+<td class="left">8-bit unsigned integer</td>
+</tr>
+
+
+<tr>
+<td class="left">Word16</td>
+<td class="left">16-bit unsigned integer</td>
+</tr>
+
+
+<tr>
+<td class="left">Word32</td>
+<td class="left">32-bit unsigned integer</td>
+</tr>
+
+
+<tr>
+<td class="left">Word64</td>
+<td class="left">64-bit unsigned integer</td>
+</tr>
+</tbody>
+</table>
 
 References: 
 
-* http://shuklan.com/haskell/lec03.html#/0/1
-* http://shuklan.com/haskell/lec05.html
-* http://book.realworldhaskell.org/read/using-typeclasses.html
+-   <http://shuklan.com/haskell/lec03.html#/0/1>
+-   <http://shuklan.com/haskell/lec05.html>
+-   <http://book.realworldhaskell.org/read/using-typeclasses.html>
 
-| Class      |   Class Instance
-|------------|------------------------------|
-| Num        | Int, Integer, Nat, Float, Double, Complex  |
-| Real       | Int, Integer, Nat. Float, Double, Complex  |
-| Fractional | Float, Double, Rational, Complex  |
-| Integral   | Int, Nat, Integer, Natural      |
-| RealFrac   | Float, Double, Rational, Complex |
-| Floating   | Float, Double, Complex    |
-| RealFloat  | Float, Double, Complex |
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
-![](images/classes.gif)
+<colgroup>
+<col  class="left" />
 
-#### Basic Type Classes
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Class</th>
+<th scope="col" class="left">Class Instance</th>
+</tr>
+</thead>
 
-|        |                  |
-|--------|------------------|
-| Eq     |  Equality Types  |
-| Ord    |  Ordered Types   |
-| Show   |  Showables Types |
-| Read   |  Readable Types  |
-| Num    |  Numeric Types   |
-| Enum   |  Enum Types      |
+<tbody>
+<tr>
+<td class="left">Num</td>
+<td class="left">Int, Integer, Nat, Float, Double, Complex</td>
+</tr>
+
+
+<tr>
+<td class="left">Real</td>
+<td class="left">Int, Integer, Nat. Float, Double, Complex</td>
+</tr>
+
+
+<tr>
+<td class="left">Fractional</td>
+<td class="left">Float, Double, Rational, Complex</td>
+</tr>
+
+
+<tr>
+<td class="left">Integral</td>
+<td class="left">Int, Nat, Integer, Natural</td>
+</tr>
+
+
+<tr>
+<td class="left">RealFrac</td>
+<td class="left">Float, Double, Rational, Complex</td>
+</tr>
+
+
+<tr>
+<td class="left">Floating</td>
+<td class="left">Float, Double, Complex</td>
+</tr>
+
+
+<tr>
+<td class="left">RealFloat</td>
+<td class="left">Float, Double, Complex</td>
+</tr>
+</tbody>
+</table>
+
+![img](images/classes.gif)
+
+### Basic Type Classes<a id="sec-1-3-2" name="sec-1-3-2"></a>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">&#xa0;</th>
+<th scope="col" class="left">&#xa0;</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">Eq</td>
+<td class="left">Equality Types</td>
+</tr>
+
+
+<tr>
+<td class="left">Ord</td>
+<td class="left">Ordered Types</td>
+</tr>
+
+
+<tr>
+<td class="left">Show</td>
+<td class="left">Showables Types</td>
+</tr>
+
+
+<tr>
+<td class="left">Read</td>
+<td class="left">Readable Types</td>
+</tr>
+
+
+<tr>
+<td class="left">Num</td>
+<td class="left">Numeric Types</td>
+</tr>
+
+
+<tr>
+<td class="left">Enum</td>
+<td class="left">Enum Types</td>
+</tr>
+</tbody>
+</table>
 
 Example Methods:
 
@@ -222,20 +454,18 @@ read :: (Read a) => String -> a
 (*)  :: (Num a)  => a -> a -> a
 ```
 
-
 ```
 Value -->  Type --> Typeclass
 ```
 
 Standard Typeclasses:
 
-* Show: Representable as String
-* Enum: Enumerable in a list
-* Num:  Usable as a number
-* Ord:  Used for thing with total order
+-   Show: Representable as String
+-   Enum: Enumerable in a list
+-   Num:  Usable as a number
+-   Ord:  Used for thing with total order
 
-
-#### Standard Haskell Types
+### Standard Haskell Types<a id="sec-1-3-3" name="sec-1-3-3"></a>
 
 Credit: [The Haskell 98 Report - Predefined Types and Classes](http://www2.informatik.uni-freiburg.de/~thiemann/haskell/haskell98-report-html/basic.html)
 
@@ -271,12 +501,11 @@ data  Maybe a     =  Nothing | Just a  deriving (Eq, Ord, Read, Show)
 data  Either a b  =  Left a | Right b  deriving (Eq, Ord, Read, Show)
 data  Ordering    =  LT | EQ | GT deriving
                                   (Eq, Ord, Bounded, Enum, Read, Show)
-```                                  
+```
 
-#### Standard Haskell Classes
+### Standard Haskell Classes<a id="sec-1-3-4" name="sec-1-3-4"></a>
 
 Credit: [The Haskell 98 Report - Predefined Types and Classes](http://www2.informatik.uni-freiburg.de/~thiemann/haskell/haskell98-report-html/basic.html)
-
 
 The Eq Class
 
@@ -286,7 +515,7 @@ class  Eq a  where
 
     x /= y  = not (x == y)
     x == y  = not (x /= y)
-```   
+```
 
 The Ord Class
 
@@ -311,7 +540,6 @@ The Ord Class
     min x y | x <= y    =  x
             | otherwise =  y
 ```
-
 
 The Read and Show Classes
 
@@ -348,7 +576,7 @@ class  Enum a  where
     -- Default declarations given in Prelude
 ```
 
-#### Numeric Types Conversion
+### Numeric Types Conversion<a id="sec-1-3-5" name="sec-1-3-5"></a>
 
 ```
 fromInteger             :: (Num a) => Integer -> a
@@ -362,9 +590,9 @@ fromIntegral            =  fromInteger . toInteger
 fromRealFrac            =  fromRational . toRational
 ```
 
-https://www.haskell.org/tutorial/numbers.html
+<https://www.haskell.org/tutorial/numbers.html>
 
-#### Haskell-Style Syntax for types:
+### Haskell-Style Syntax for types:<a id="sec-1-3-6" name="sec-1-3-6"></a>
 
 Function g from type a to type b: 
 
@@ -391,7 +619,7 @@ a -> b and b -> c and returns a function of type a -> m b
 h :: ( a -> b) -> (b -> c) -> ( a -> m b)
 ```
 
-Credits: http://yannesposito.com/Scratch/en/blog/Haskell-the-Hard-Way/
+Credits: <http://yannesposito.com/Scratch/en/blog/Haskell-the-Hard-Way/>
 
 ```
 x :: Int            ⇔ x is of type Int
@@ -403,8 +631,9 @@ f :: a -> b -> c    ⇔ f is a function from a to (b→c)
 f :: (a -> b) -> c  ⇔ f is a function from (a→b) to c
 ```
 
+## Lists<a id="sec-1-4" name="sec-1-4"></a>
 
-### Lists
+### Overview<a id="sec-1-4-1" name="sec-1-4-1"></a>
 
 Haskell lists are built from nils ([]) empty list, and cons (:).
 
@@ -412,10 +641,9 @@ Haskell lists are built from nils ([]) empty list, and cons (:).
 [x0, x1, x2, x3, ..., xn-1, xn] = x0:x1:x2:x3:...:xn-1:xn:[]
 ```
 
-#### Creating Lists
+### Creating Lists<a id="sec-1-4-2" name="sec-1-4-2"></a>
 
 ```haskell
-
 > [-4, 10, 20, 30.40]
 
 > let x = [-23, 40, 60, 89, 100]
@@ -428,16 +656,14 @@ Haskell lists are built from nils ([]) empty list, and cons (:).
 > 
 > [-4..10]
 [-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10]
-> 
-
+>
 ```
 
-#### List Operations
+### List Operations<a id="sec-1-4-3" name="sec-1-4-3"></a>
 
 Picking the nth element of a list.
 
 ```haskell
-
 > [1, 2, 3, 4, 5, 6] !! 2
 3
 > [1, 2, 3, 4, 5, 6] !! 3
@@ -451,44 +677,51 @@ Picking the nth element of a list.
 > lst
 [-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10]
 ```
+
 First Element
+
 ```haskell
 > head [1, 2, 3, 4, 5]
 1
 ```
 
 Last Element
+
 ```haskell
 > last [1, 2, 3, 4, 5]
 5
 ```
 
 Maximum element
+
 ```haskell
 > maximum lst
 10
 ```
 
 Minimum element
+
 ```haskell
 > minimum lst
 -4
 ```
 
 Reversing a list
-```haskell
 
+```haskell
 > reverse [1, 2, 3, 4, 5]
 [5,4,3,2,1]
 ```
 
 Sum of all elements
+
 ```haskell
 > sum lst
 45
 ```
 
 Product of all elements
+
 ```haskell
 > product lst
 0
@@ -504,86 +737,77 @@ Adding an element to the begining of the list
 Adding an element to end of the list
 
 ```haskell
-
 > lst ++ [20]
 [-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10,20]
-> 
+>
 ```
 
 Extract the elements after the head of a list, which must be non-empty. 
-* tail :: [a] -> [a]    Source
+-   **tail:** [a] -> [a]    Source
 
 ```haskell
 > tail [1, 2, 3, 4, 5]
 [2,3,4,5]
-
 ```
 
 Return all the elements of a list except the last one. The list must be non-empty.
-* init :: [a] -> [a]    Source
+-   **init:** [a] -> [a]    Source
+
 ```haskell
 > init [1, 2, 3, 4, 5]
 [1,2,3,4]
-> 
+>
 ```
 
 Make a new list containing just the first N elements from an existing list. 
-* take n xs
+-   take n xs
+
 ```haskell
 > take 5 lst
 [-4,-3,-2,-1,0]
 ```
 
-
-
 Delete the first N elements from a list. 
-* drop n xs
+-   drop n xs
 
 ```haskell
-
 > lst
 [-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10]
 > 
 > drop 5 lst
 [1,2,3,4,5,6,7,8,9,10]
-
 ```
 
 Split a list into two smaller lists (at the Nth position). 
 
-* splitAt n xs
+-   splitAt n xs
 
 ```haskell
-
 -- (Returns a tuple of two lists.) 
 
 > splitAt 5 lst
 ([-4,-3,-2,-1,0],[1,2,3,4,5,6,7,8,9,10])
-> 
-
+>
 ```
 
 TakeWhile, applied to a predicate p and a list xs, returns the longest 
 prefix (possibly empty) of xs of elements that satisfy p:
-* takeWhile :: (a -> Bool) -> [a] -> [a]
+-   **takeWhile:** (a -> Bool) -> [a] -> [a]
 
 ```haskell
-
 > takeWhile (< 3) [1,2,3,4,1,2,3,4]
 [1,2]
 > takeWhile (< 9) [1,2,3]
 [1,2,3]
 >  takeWhile (< 0) [1,2,3]
 []
-
 ```
 
 DropWhile p xs returns the suffix remaining after takeWhile p xs: 
 
-* dropWhile :: (a -> Bool) -> [a] -> [a]    Source
+-   **dropWhile:** (a -> Bool) -> [a] -> [a]    Source
 
 ```haskell
-
 > takeWhile (< 3) [1,2,3,4,1,2,3,4]
 [1,2]
 > takeWhile (< 9) [1,2,3]
@@ -596,8 +820,7 @@ DropWhile p xs returns the suffix remaining after takeWhile p xs:
 []
 > dropWhile (< 0) [1,2,3] 
 [1,2,3]
-> 
-
+>
 ```
 
 Concating Nested Lists
@@ -611,31 +834,25 @@ concat :: [[a]] -> [a]
 
 > concat ["hello", " world", " Haskell", "FP"]
 "hello world HaskellFP"
-> 
- 
-
+>
 ```
 
-
-#### Chekings Lists
+### Chekings Lists<a id="sec-1-4-4" name="sec-1-4-4"></a>
 
 Check if a list is empty. 
-* null xs
+-   null xs
 
 ```haskell
-
 > null []
 True
 > null [1, 2, 3, 4, 5]
 False
-
 ```
 
 Find out whether any list element passes a given test. 
-* any my_test xs
+-   any my<sub>test</sub> xs
 
 ```haskell
-
 > any (>3) [1, 2, 3, 4, 5]
 True
 > any (>10) [1, 2, 3, 4, 5]
@@ -646,34 +863,30 @@ True
 > 
 > any (==10) [1, 2, 3, 4, 5]
 False
-> 
+>
 ```
 
 Check whether all list elements pass a given test. 
-* all my_test xs
+-   all my<sub>test</sub> xs
 
 ```haskell
-
 > all (>3) [1, 2, 3, 4, 5]
 False
 > all (<10) [1, 2, 3, 4, 5]
 True
 > all (<10) [1, 2, 3, 4, 5, 20]
 False
-> 
+>
 ```
 
 Check if elements belongs to the list.
 
-* elem :: Eq a => a -> [a] -> Bool
+-   **elem:** Eq a => a -> [a] -> Bool
 
 ```haskell
-
 > elem 1  [1,2,3] 
 True
 > elem 4 [1,2,3] 
 False
 >
 ```
-
-

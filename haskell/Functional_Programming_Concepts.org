@@ -46,18 +46,18 @@ Non Essential Features:
 
 Some Functional programing languages:
 
-| Language     | Evaluation    | Typing  | Type Inference | GIL | TCO | OO  | AGDT | Platform | Family | Curry | Feature                                  |
-|--------------+---------------+---------+----------------+-----+-----+-----+------+----------+--------+-------+------------------------------------------|
-| Haskell      | Lazy          | Static  | Yes            | No  | Yes | No  | Yes  | NAT      | ML/SML | Yes   | Concurrency/Parallelism                  |
-| Ocaml        | Strict        | Static  | Yes            | Yes | Yes | Yes | Yes  | NAT/BC   | ML/SML | Yes   |                                          |
-| F# (F sharp) | Strict        | Static  | Yes            | No  | Yes | Yes | Yes  | .NET     | ML/SML | Yes   | .NET Platform Integration                |
-| Scheme       | Strict        | Dynamic | No             | *   | Yes | No  | No   | -        | Lisp   | No    | Minimalistic Educational                 |
-| Clojure      | Strict + Lazy | Dynamic | No             | No  | No  | No  | No   | JVM      | Lisp   | No    | Java integration + Macro                 |
-| Scala        | Strict        | Static  | Yes            | No  | Yes | Yes | Yes  | JVM      |        |       | Java integration                         |
-| Erlang       | Strict        | Dynamic | ?              | ?   | No  | ?   | ?    | VM       |        | ?     | Telecommunications, Servers, Concurrency |
-|              |               |         |                |     |     |     |      |          |        |       |                                          |
-| R            | Strict        | Dynamic | No             | ?   | No  | Yes | -    | VM       |        | No    | DSL - Statics                            |
-| Mathematica  | Strict        | Dynamic | Yes            | ?   | ??  | ?   | ?    | ?        |        | No    | DSL - Computer Algebraic System          |
+| Language     | Evaluation    | Typing  | Type Inference | GIL | TCO | OO  | AGDT | Platform | Family | Currying | Feature                                  |
+|--------------+---------------+---------+----------------+-----+-----+-----+------+----------+--------+----------+------------------------------------------|
+| Haskell      | Lazy          | Static  | Yes            | No  | Yes | No  | Yes  | NAT      | ML/SML | Yes      | Concurrency/Parallelism                  |
+| Ocaml        | Strict        | Static  | Yes            | Yes | Yes | Yes | Yes  | NAT/BC   | ML/SML | Yes      |                                          |
+| F# (F sharp) | Strict        | Static  | Yes            | No  | Yes | Yes | Yes  | .NET     | ML/SML | Yes      | .NET Platform Integration                |
+| Scheme       | Strict        | Dynamic | No             | *   | Yes | No  | No   | -        | Lisp   | No       | Minimalistic Educational                 |
+| Clojure      | Strict + Lazy | Dynamic | No             | No  | No  | No  | No   | JVM      | Lisp   | No       | Java integration + Macro                 |
+| Scala        | Strict        | Static  | Yes            | No  | Yes | Yes | Yes  | JVM      |        |          | Java integration                         |
+| Erlang       | Strict        | Dynamic | ?              | ?   | No  | ?   | ?    | VM       |        | ?        | Telecommunications, Servers, Concurrency |
+|              |               |         |                |     |     |     |      |          |        |          |                                          |
+| R            | Strict        | Dynamic | No             | ?   | No  | Yes | -    | VM       |        | No       | DSL - Statics                            |
+| Mathematica  | Strict        | Dynamic | Yes            | ?   | ??  | ?   | ?    | ?        |        | No       | DSL - Computer Algebraic System          |
 
 
 Notes:
@@ -2166,7 +2166,6 @@ Related to Lazy Evaluation
  - [[https://en.wikipedia.org/wiki/Standard_ML][Standard ML]]
  - [[https://en.wikipedia.org/wiki/OCaml][OCaml]]
  - [[https://en.wikipedia.org/wiki/F_Sharp_%28programming_language%29][F# - Fsharp]]
-
 
 
 **** Selected Rosettacode Pages

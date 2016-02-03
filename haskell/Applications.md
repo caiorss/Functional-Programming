@@ -1,7 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
 - [Applications](#applications)
   - [Mathematics](#mathematics)
   - [Piecewise Functions](#piecewise-functions)
@@ -16,20 +12,14 @@
   - [Vectors](#vectors)
   - [Tax Brackets](#tax-brackets)
   - [Small DSL Domain Specific Language](#small-dsl-domain-specific-language)
-    - [String Processing](#string-processing)
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+# Applications<a id="sec-1" name="sec-1"></a>
 
-## Applications
-
-
-### Mathematics
-
+## Mathematics<a id="sec-1-1" name="sec-1-1"></a>
 
 **Trigonometric Degree Functions**
 
 ```haskell
-
 deg2rad deg = deg*pi/180.0  -- convert degrees to radians
 rad2deg rad = rad*180.0/pi  -- convert radians to degrees
 
@@ -42,9 +32,7 @@ atan2d y x = rad2deg (atan2 y x )
 
 Example:
 
-
 ```haskell
-
 > map rad2deg [pi/6, pi/4, pi/3, pi/2, pi]
 [29.999999999999996,45.0,59.99999999999999,90.0,180.0]
 > 
@@ -52,17 +40,14 @@ Example:
 
 > map sind [30.0, 45.0, 60.0, 90.0, 180.0 ]
 [0.49999999999999994,0.7071067811865475,0.8660254037844386,1.0,1.2246063538223773e-16]
-> 
+>
 ```
 
-
-### Piecewise Functions
-
+## Piecewise Functions<a id="sec-1-2" name="sec-1-2"></a>
 
 Implement the following functions in Haskell
 
 ```
-
        /  0.10    if 0.0      <= x <= 7150.0
        |  0.15    if 7150.0   <  x <= 29050.0
        |  0.25    if 29050.0  <  x <= 70350.0
@@ -77,7 +62,6 @@ f2(x) = |  x   - 1  if 0 <= x < 4
 ```
 
 ```haskell
-
 import Graphics.Gnuplot.Simple
 
 (|>) x f = f x
@@ -124,25 +108,23 @@ f2_table = [
 
 f1 = piecewiseFactory f1_table
 f2 = piecewiseFactory f2_table
-
 ```
 
 ```haskell
 > plotFxs f1 $ arange (1.0) 400000 1000.0
 ```
 
-![f1 chart](images/chartF1table.png)
+!f1 chart
 
 ```haskell
 > plotFxs f2 $ arange (-4) 4 0.01
 ```
 
+!f2 chart
 
-![f2 chart](images/chartF2table.png)
+## Numerical Methods<a id="sec-1-3" name="sec-1-3"></a>
 
-### Numerical Methods 
-
-#### Polynomial
+### Polynomial<a id="sec-1-3-1" name="sec-1-3-1"></a>
 
 Polynomial evaluation by the horner method.
 
@@ -153,8 +135,7 @@ polyval coeffs x = foldr (\b c -> b + x*c) 0 coeffs
 polyderv :: Fractional a => [a] -> [a] 
 polyderv coeffs = zipWith (*) (map fromIntegral [1..n]) (tail coeffs )
     where
-    n = (length coeffs) - 1    
-
+    n = (length coeffs) - 1
 ```
 
 Example:
@@ -171,7 +152,6 @@ Example: Evaluate the polynomial
 ```
 
 ```haskell
-    
 > let coeffs  = [9.0, 7.0, 5.0, 3.0, 1.0] 
 > let f  = polyval  coeffs
 
@@ -190,14 +170,9 @@ let df = polyval $  polyderv coeffs
 95
 ```
 
-
-
-
-
-#### Numerical Derivate
+### Numerical Derivate<a id="sec-1-3-2" name="sec-1-3-2"></a>
 
 ```haskell
-
 derv dx f x = (f(x+dx) - f(x))/dx
 
 f x = 2*x**2 - 2*x
@@ -218,18 +193,17 @@ df = derv 1e-5 f
 [6,10,14,18]
 ```
 
-#### Nonlinear Equation - Root-finding
+### Nonlinear Equation - Root-finding<a id="sec-1-3-3" name="sec-1-3-3"></a>
 
 See also: 
 
-* [Root finding](http://en.wikipedia.org/wiki/Root-finding_algorithm)
-* [Newton's method](http://en.wikipedia.org/wiki/Newton's_method)
-* [Bisection method](http://en.wikipedia.org/wiki/Bisection_method)
+-   [Root finding](http://en.wikipedia.org/wiki/Root-finding_algorithm)
+-   [Newton's method](http://en.wikipedia.org/wiki/Newton's_method)
+-   [Bisection method](http://en.wikipedia.org/wiki/Bisection_method)
 
 **Bisection Method**
 
 ```haskell
-
 bisection_iterator :: (Floating a, Floating a1, Ord a1) => (a -> a1) -> [a] -> [a]
 bisection_iterator f guesslist = newguess
     where
@@ -259,8 +233,7 @@ bisectionSolver eps itmax f x1 x2 = (root, error, iterations)
 *Main> let f x  =  exp(-x) -3*log(x)
 *Main> bisectionSolver 1e-5 100 f 0.05 3
 (1.1154509544372555,8.86237816760671e-6,19)
-*Main> 
-
+*Main>
 ```
 
 **Newton Raphson Method**
@@ -323,13 +296,12 @@ square_root a | a > 0       = newtonSolver 1e-6 50 (\x -> x^2 -a) (\x -> 2*x) a
 > 
 > newtonSolver 1e-3 100 f df 50
 (1.4142150098491113,4.094082521888254e-6,8)
-> 
+>
 ```
 
 **Secant Method**
 
 ```haskell
-
 (|>) x f = f x
 (|>>) x f = map f x
 
@@ -363,17 +335,16 @@ secantSolver eps itmax f x1 x2 = (root, error, iterations)
 *Main> let f x = exp(x) - 3.0*x^2
 *Main> secantSolver 1e-5 100 f (-2.0)  3.0
 (-0.458964305393305,6.899607281729558e-6,24)
-*Main> 
-
+*Main>
 ```
 
-#### Differential Equations
+### Differential Equations<a id="sec-1-3-4" name="sec-1-3-4"></a>
 
 **Euler Method**
 
 The task is to implement a routine of Euler's method and then to use it to solve the given example of Newton's cooling law with it for three different step sizes of 2 s, 5 s and 10 s and to compare with the analytical solution. The initial temperature T0 shall be 100 °C, the room temperature TR 20 °C, and the cooling constant k 0.07. The time interval to calculate shall be from 0 s to 100 s
 
-From: http://rosettacode.org/wiki/Euler_method
+From: <http://rosettacode.org/wiki/Euler_method>
 
 ```
 Solve differential equation by the Euler's Method.
@@ -386,8 +357,6 @@ Solve differential equation by the Euler's Method.
 ```
 
 ```haskell
-
-
 import Graphics.Gnuplot.Simple
 
 
@@ -412,17 +381,15 @@ euler f x0 xf y0 step = xypairs
 let t_temp = euler (dTemp 0.07 20.0) 0.0 100.0 100.0 5.0
 
 plotList [] t_temp
-
 ```
 
-![](images/euler_newton_cooling.png)
+![img](images/euler_newton_cooling.png)
 
 **Runge Kutta RK4**
 
 See also: [Runge Kutta Methods](http://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods)
 
 ```haskell
-
 import Graphics.Gnuplot.Simple
 
 rk4Step f h (x, y) = (xnext, ynext)
@@ -446,12 +413,12 @@ rk4 f x0 xf y0 h = xypairs
 > 
 > let t_temp = rk4 (dTemp 0.07 20.0) 0.0 100.0 100.0 5.0
 > plotList [] t_temp
-> 
+>
 ```
 
-### Statistics and Time Series
+## Statistics and Time Series<a id="sec-1-4" name="sec-1-4"></a>
 
-#### Some Statistical Functions
+### Some Statistical Functions<a id="sec-1-4-1" name="sec-1-4-1"></a>
 
 Arithmetic Mean of a Sequence
 
@@ -460,29 +427,34 @@ mean lst = sum lst / fromIntegral (length lst)
 ```
 
 Geometric Mean of Sequence 
+
 ```haskell
 geomean lst = (product lst) ** 1/(fromIntegral (length lst))
 ```
 
 Convert from decimal to percent
+
 ```haskell
 to_pct   lst = map (100.0 *) lst {- Decimal to percent -}
 from_pct lst = map (/100.0)  lsd {- from Percent to Decimal -}
 ```
 
 Lagged Difference of a time serie
-* lagddif [xi] = [x_i+1 - x_i]
+-   lagddif [xi] = [x<sub>i</sub>+1 - x<sub>i]</sub>
+
 ```haskell
 lagdiff lst = zipWith (-) (tail lst) lst
 ```
 
 Growth of a Time Series
-* growth [xi] = [(x_i+1 - x_i)/xi]
+-   growth [xi] = [(x<sub>i</sub>+1 - x<sub>i</sub>)/xi]
+
 ```haskell
 growth lst = zipWith (/) (lagdiff lst) lst
 ```
 
 Percentual Growth
+
 ```haskell
 growthp = to_pct . growth
 ```
@@ -511,7 +483,6 @@ price  16.06 23.83 33.13 50.26 46.97 39.89
 Solution:
 
 ```haskell
-
 > let (|>) x f = f x
 > let (|>>) x f = map f x
 >
@@ -529,19 +500,19 @@ Solution:
 > let annual_cagr = cagr prices 
 > annual_cagr 
 19.956476057259906
-> 
-
+>
 ```
 
-#### Monte Carlo Simulation Coin Toss
+### Monte Carlo Simulation Coin Toss<a id="sec-1-4-2" name="sec-1-4-2"></a>
 
 The simplest such situation must be the tossing of a coin. Any individual event will result in the coin falling with one side or the other uppermost (heads or tails). However, common sense tells us that, if we tossed it a very large number of times, the total number of heads and tails should become increasingly similar. For a greater number of tosses the percentage of heads or tails will be next to 50% in a non-biased coin. Credits: [Monte Carlo Simulation - Tossing a Coin](http://staff.argyll.epsb.ca/jreed/math7/strand4/4203.htm)
 
 See [Law of Large Numbers](http://en.wikipedia.org/wiki/Law_of_large_numbers)
 
-![](images/coinflip.gif)
+![img](images/coinflip.gif)
 
 File: coinSimulator.hs
+
 ```haskell
 import System.Random
 import Control.Monad (replicateM)
@@ -588,7 +559,6 @@ showSimulation ntimes = do
     putStrLn $ "The %erro is : "  ++ show(100*p_error)
     putStrLn "\n-------------------------------------"
 ```
-
 
 ```
 > :r
@@ -653,27 +623,24 @@ The %erro is : 2.4399999999996647e-2
 -------------------------------------
 ```
 
-### Vectors
+## Vectors<a id="sec-1-5" name="sec-1-5"></a>
 
 **Dot Product of Two Vectors / Escalar Product**
 
-* v1.v2 = (x1, y1, z1) . (x2, y2, z2) = x1.y1 + y1.y2 + z2.z1
-* v1.v2 = Σai.bi
+-   v1.v2 = (x1, y1, z1) . (x2, y2, z2) = x1.y1 + y1.y2 + z2.z1
+-   v1.v2 = Σai.bi
 
 ```haskell
-
 > let dotp v1 v2 = sum ( zipWith (*) v1 v2 )   - With Parenthesis
 > let dotp v1 v2 = sum $ zipWith (*) v1 v2     - Without Parenthesis with $ operator
 
 > dotp [1.23, 33.44, 22.23, 40] [23, 10, 44, 12]
 1820.81
-
-
 ```
 
 **Norm of a Vector**
 
-* norm = sqrt( Σxi^2)
+-   norm = sqrt( Σxi<sup>2</sup>)
 
 ```haskell
 > let norm vector = (sqrt . sum) (map (\x -> x^2) vector)
@@ -694,14 +661,12 @@ The %erro is : 2.4399999999996647e-2
 > 
 > norm2 [1, 2, 3, 4, 5]
 7.416198487095663
-> 
-
+>
 ```
 
 **Linspace and Range Matlab Function**
 
 ```haskell
-
 linspace d1 d2 n = [d1 + i*step | i <- [0..n-1] ]
     where 
     step = (d2 - d1)/(n-1)
@@ -710,17 +675,15 @@ linspace d1 d2 n = [d1 + i*step | i <- [0..n-1] ]
 range start stop step =  [start + i*step | i <- [0..n] ]
     where
     n = floor((stop - start)/step)
-
 ```
 
-### Tax Brackets
+## Tax Brackets<a id="sec-1-6" name="sec-1-6"></a>
 
 Progressive Income Tax Calculation
 
 Credits: [Ayend - Tax Challange](http://ayende.com/blog/108545/the-tax-calculation-challenge)
 
 The following table is the current tax rates in Israel:
-
 
 ```
                         Tax Rate
@@ -732,15 +695,15 @@ Up      to 5,070        10%
 Higher  than 40,230     45%
 ```
 
-
 Here are some example answers:
+
 ```
     5,000 –> 500
     5,800 –> 609.2
     9,000 –> 1087.8
     15,000 –> 2532.9
     50,000 –> 15,068.1
-``` 
+```
 
 This problem is a bit tricky because the tax rate doesn’t apply to the 
 whole sum, only to the part that is within the current rate.
@@ -771,7 +734,6 @@ Here nothing is taxed in the last bracket range at rate 40.
 Solution:
 
 ```haskell
-
 (|>) x f = f x
 (|>>) x f = map f x
 joinf functions element = map ($ element) functions
@@ -890,24 +852,18 @@ True
 16.886
 > taxRateOfIsrael 50000
 30.1362
-
 ```
 
 Sources: 
-    * http://ayende.com/blog/108545/the-tax-calculation-challenge
-    * http://gghez.com/c-net-implementation-of-a-progressive-tax-system/
+-   <http://ayende.com/blog/108545/the-tax-calculation-challenge>
+-   <http://gghez.com/c-net-implementation-of-a-progressive-tax-system/>
 
+## Small DSL Domain Specific Language<a id="sec-1-7" name="sec-1-7"></a>
 
-
-
-### Small DSL Domain Specific Language
-
-  
 Simple DSL for describing cups of Starbucks coffee and computing prices (in dollars). 
-Example taken from: http://www.fssnip.net/9w 
+Example taken from: <http://www.fssnip.net/9w> 
 
-
-starbuck_dsl.hs
+starbuck<sub>dsl</sub>.hs
 
 ```haskell
 data Size  = Tall | Grande | Venti
@@ -968,11 +924,9 @@ extra_options = [[], [Shot], [Syrup], [Shot, Syrup]]
 
 cup_combinations =  
             [ cupOf drink size extra | drink <- drink_options, size <- size_options, extra <- extra_options]
-
 ```
 
 Example:
-
 
 ```haskell
 > :load starbucks_dsl.hs 
@@ -1012,13 +966,7 @@ Cup {cupDrink = Americano, cupSize = Venti, cupExtra = [Shot,Syrup]}]
 (Cup {cupDrink = Americano, cupSize = Venti, cupExtra = [Shot]},2.98),
 (Cup {cupDrink = Americano, cupSize = Venti, cupExtra = [Syrup]},3.1799999999999997),
 (Cup {cupDrink = Americano, cupSize = Venti, cupExtra = [Shot,Syrup]},3.57)]
-> 
-
+>
 ```
 
-#### String Processing
-
-<!--
-@TODO: Add String Processing Examples
--->
-
+1.  String Processing
