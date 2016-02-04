@@ -2,15 +2,14 @@
 #+AUTHOR: Caio Rodrigues Soares Silva
 #+EMAIL: <caiorss.rodrigues@gmail.com>
 
-* Functional Programming in Haskell, OCaml and Python by Examples
+* Functional Programming by Example
 
 # <a href="https://www.haskell.org"><img src="haskell/images/haskellLogo.png"/></a>  <a href="https://ocaml.org"><img src="ocaml/images/ocamlogo.png" width="30%" /></a>
 
 
 The purpose of this tutorial is to illustrate functional programming
 concepts in many functional languages by providing reusable and
-useful snippets of code, examples, case studies, and 
-applications. 
+useful snippets of code, examples, case studies and applications. 
 
 
 Author:   [[https://www.linkedin.com/in/caiorodrigues][Caio Rodrigues]] / <caiorss.rodrigue@gmail.com> 

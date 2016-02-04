@@ -1044,10 +1044,10 @@ f = lambda x: x**5
         >>>
         ```
     
-    3.  Map in Untyped Languages
+    3.  Map in Dynamic Typed Languages
     
-        In untyped languages like Python, Clojure and Scheme the function map
-        can take multiple lists or sequences. In typed languages the function 
+        In dynamic typed languages like Python, Clojure and Scheme the function map
+        can take multiple arguments. In typed languages the function 
         takes only one argument.
         
         Map in Python:
@@ -1108,12 +1108,12 @@ f = lambda x: x**5
         
         ;; The function mapv is similar to map, but returns a vector: 
         ;;
-        
-        user=> (map identity {:a 10 :b 20 :c "hello world"})
-        ([:a 10] [:b 20] [:c "hello world"])
+        user=> (mapv identity {:a 10 :b 20 :c "hello world"})
+        [[:a 10] [:b 20] [:c "hello world"]]
         user=> 
         
-        ;; Clojure also have desctructuring 
+        
+        ;; Clojure also have destructuring 
         ;;
         user=> (map (fn [[[a b] c]] (+ (* 100 a ) (* 10 b) c))  [[[1 2] 3] [[3 4] 5] [[1 2] 4]])
         (123 345 124)
@@ -2606,7 +2606,7 @@ Notes:
 
 More Information: [Comparison of Functional Programming Languages](http://en.wikipedia.org/wiki/Comparison_of_functional_programming_languages)
 
-See also: [ML Dialects and Haskell: SML, OCaml, F#, Haskell](http://hyperpolyglot.org/ml)
+See also: [ML Dialects and Haskell: SML, OCaml, F#, Haskell](http://hyperpolyglot.org/ml) 
 
 # Notable People<a id="sec-3" name="sec-3"></a>
 

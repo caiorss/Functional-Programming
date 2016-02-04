@@ -1,13 +1,12 @@
-- [Functional Programming in Haskell, OCaml and Python by Examples](#functional-programming-in-haskell,-ocaml-and-python-by-examples)
+- [Functional Programming by Example](#functional-programming-by-example)
 
 
-# Functional Programming in Haskell, OCaml and Python by Examples<a id="sec-1" name="sec-1"></a>
+# Functional Programming by Example<a id="sec-1" name="sec-1"></a>
 
 
 The purpose of this tutorial is to illustrate functional programming
 concepts in many functional languages by providing reusable and
-useful snippets of code, examples, case studies, and 
-applications. 
+useful snippets of code, examples, case studies and applications. 
 
 Author:   [Caio Rodrigues](https://www.linkedin.com/in/caiorodrigues) / <caiorss.rodrigue@gmail.com> 
 

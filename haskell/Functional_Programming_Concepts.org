@@ -1051,10 +1051,10 @@ curry2 = lambda f: lambda x: lambda y: f(x, y)
 >>>  
 #+END_SRC
 
-***** Map in Untyped Languages 
+***** Map in Dynamic Typed Languages 
 
-In untyped languages like Python, Clojure and Scheme the function map
-can take multiple lists or sequences. In typed languages the function 
+In dynamic typed languages like Python, Clojure and Scheme the function map
+can take multiple arguments. In typed languages the function 
 takes only one argument.
 
 Map in Python:
@@ -1119,12 +1119,12 @@ user=>
 
 ;; The function mapv is similar to map, but returns a vector: 
 ;;
-
-user=> (map identity {:a 10 :b 20 :c "hello world"})
-([:a 10] [:b 20] [:c "hello world"])
+user=> (mapv identity {:a 10 :b 20 :c "hello world"})
+[[:a 10] [:b 20] [:c "hello world"]]
 user=> 
 
-;; Clojure also have desctructuring 
+
+;; Clojure also have destructuring 
 ;;
 user=> (map (fn [[[a b] c]] (+ (* 100 a ) (* 10 b) c))  [[[1 2] 3] [[3 4] 5] [[1 2] 4]])
 (123 345 124)
@@ -2451,7 +2451,8 @@ Notes:
 
 More Information: [[http://en.wikipedia.org/wiki/Comparison_of_functional_programming_languages][Comparison of Functional Programming Languages]]
 
-See also: [[http://hyperpolyglot.org/ml][ML Dialects and Haskell: SML, OCaml, F#, Haskell]]
+See also: [[http://hyperpolyglot.org/ml][ML Dialects and Haskell: SML, OCaml, F#, Haskell]] 
+
 * Notable People
 
 A selection of people who influenced functional programming:
