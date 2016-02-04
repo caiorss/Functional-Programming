@@ -1,4 +1,4 @@
-- [Functional Programming Concepts](#functional-programming-concepts)
+- [Concepts](#concepts)
   - [Overview](#overview)
   - [Concepts](#concepts)
     - [First-Class Function](#first-class-function)
@@ -8,14 +8,14 @@
     - [Lazy Evaluation](#lazy-evaluation)
     - [Fundamental Higher Order Functions](#fundamental-higher-order-functions)
     - [Function Composition](#function-composition)
-- [Functional Programming Languages](#functional-programming-languages)
+- [Functional Languages](#functional-languages)
 - [Notable People](#notable-people)
 - [Miscellaneous](#miscellaneous)
     - [Concepts Examples](#concepts-examples)
     - [Languages](#languages)
 
 
-# Functional Programming Concepts<a id="sec-1" name="sec-1"></a>
+# Concepts<a id="sec-1" name="sec-1"></a>
 
 ## Overview<a id="sec-1-1" name="sec-1-1"></a>
 
@@ -1796,6 +1796,145 @@ f = lambda x: x**5
     user=>
     ```
 
+6.  Apply
+
+    The function <span class="underline">apply</span> applies a function to a list or array of
+    arguments. It is common in dynamic languages like Lisp, Scheme,
+    Clojure, Javascript and Python.
+    
+    See also: [Apply Higher Oder Function - Wikipedia](https://en.wikipedia.org/w/index.php?title%3DApply&oldid%3D674998740)
+    
+    Example:
+    
+    **Scheme**
+    
+    ```scheme
+    > (define (f1 x y z) (+ (* 2 x) (* 3 y) z))
+    
+    > (apply f1 '(1 2 3))
+    $1 = 11
+    
+    > (apply f1 1 2 '(3))
+    $2 = 11
+    
+    > (apply f1 1 '(2 3))
+    $3 = 11
+    
+    > (apply + '(1 2 3 4 5))
+    $1 = 15
+    
+    ;;; The function apply can be used to transform a function of
+    ;;; multiple arguments into a function of a single argument that
+    ;;; takes a list of arguments
+    ;;;
+    
+    (define (f-apply f) 
+       (lambda (xs) (apply f xs)))
+    
+    > (map (f-apply f1) '((1 2 3) (3 4 5) (6 7 8)) )
+    $2 = (11 23 41)
+    
+    ;;  It can be also used to create a function that  maps a function 
+    ;;  of multiple arguments over a list of arguments.
+    ;;
+    (define (map-apply f xss)
+       (map (lambda (xs) (apply f xs)) xss))
+    
+    > (map-apply f1  '((1 2 3) (3 4 5) (6 7 8)))
+    $1 = (11 23 41)
+    ```
+    
+    **Clojure**
+    
+    ```clojure
+    user=> (defn f1 [x y z] (+ (* 2 x) (* 3 y) z))
+    #'user/f1
+    user=> 
+    
+    ;; The higher order function apply is polymorphic.
+    ;;
+    user=> (apply f1 '(1 2 3))
+    11
+    user=> (apply f1 [1 2 3])
+    11
+    user=> (apply f1 1 [2 3])
+    11
+    user=> (apply f1 1 2 [ 3])
+    11
+    user=> (apply f1 1 2 3 [ ])
+    11
+    
+    user=> (apply + [1 2 3 4 5])
+    15
+    
+    user=> (defn map-apply [f xss]
+                  (map (fn [xs] (apply f xs)) xss))
+    #'user/map-apply
+    user=> 
+    
+    
+    user=> (map-apply f1 [[1 2 3] [3 4 5] [6 7 8]])
+    (11 23 41)
+    user=>
+    ```
+    
+    **Python**
+    
+    ```python
+    # In Python the * asterisk notation is used to expand
+    # a list into function arguments.
+    #
+    >>> f1 = lambda x, y, z: 2 * x + 3 * y + z
+    >>> 
+    >>> f1(1, 2, 3)
+    11
+    >>> f1(*[1, 2, 3])
+    11
+    >>> 
+    
+    >>> def apply (f, xs): return f(*xs)
+    ... 
+    >>> 
+    
+    >>> apply (f1, [1, 2, 3])
+    11
+    
+    
+    #
+    # The function apply can also be defined  as:
+    #
+    
+    def apply2 (f, * args):    
+        return f(*(tuple(args[:-1]) + tuple(args[-1])))
+        
+    >>> apply2 (f1, [1, 2, 3])
+    11
+    >>> apply2 (f1, 1, [2, 3])
+    11
+    >>> apply2 (f1, 1, 2, [3])
+    11
+    >>> apply2 (f1, 1, 2, 3, [])
+    11
+    >>> 
+    
+    >>> f_apply = lambda f: lambda xs: f(*xs)
+    >>> 
+    
+    >>> list(map (f_apply(f1), [[1, 2, 3], [3, 4, 5], [6, 7, 8]]))
+    [11, 23, 41]
+    >>> 
+    
+    def map_apply (f, xss):
+        return map(lambda xs: f(*xs), xss)
+    
+    >>> map_apply(f1, [[1, 2, 3], [3, 4, 5], [6, 7, 8]])
+    <map object at 0xb6daaaac>
+    >>> 
+    >>> list(map_apply(f1, [[1, 2, 3], [3, 4, 5], [6, 7, 8]]))
+    [11, 23, 41]
+    >>>
+    ```
+
 ### Function Composition<a id="sec-1-2-7" name="sec-1-2-7"></a>
 
 Function composition promotes shorter code, code reuse and higher
@@ -2355,7 +2494,7 @@ See also: [Function composition (computer science)](http://en.wikipedia.org/wiki
      [3563.23000, 100.23000, 45.23000]]
     ```
 
-# Functional Programming Languages<a id="sec-2" name="sec-2"></a>
+# Functional Languages<a id="sec-2" name="sec-2"></a>
 
 Some Functional programming languages:
 

@@ -1,9 +1,8 @@
 #+TITLE:  Functional Programming Concepts
 #+AUTHOR: Caio Rodrigues Soares Silva
 #+EMAIL: <caiorss.rodrigues@gmail.com>
-#+URL:   
 
-* Functional Programming Concepts
+* Concepts
 ** Overview
 
 *Functional Programming*
@@ -1834,6 +1833,151 @@ nil
 user=> 
 
 #+END_SRC
+ 
+**** Apply 
+
+The function _apply_ applies a function to a list or array of
+arguments. It is common in dynamic languages like Lisp, Scheme,
+Clojure, Javascript and Python.
+
+See also: [[https://en.wikipedia.org/w/index.php?title%3DApply&oldid%3D674998740][Apply Higher Oder Function - Wikipedia]]
+
+Example:
+
+*Scheme*
+
+#+BEGIN_SRC scheme 
+
+> (define (f1 x y z) (+ (* 2 x) (* 3 y) z))
+
+> (apply f1 '(1 2 3))
+$1 = 11
+
+> (apply f1 1 2 '(3))
+$2 = 11
+
+> (apply f1 1 '(2 3))
+$3 = 11
+
+> (apply + '(1 2 3 4 5))
+$1 = 15
+
+;;; The function apply can be used to transform a function of
+;;; multiple arguments into a function of a single argument that
+;;; takes a list of arguments
+;;;
+
+(define (f-apply f) 
+   (lambda (xs) (apply f xs)))
+
+> (map (f-apply f1) '((1 2 3) (3 4 5) (6 7 8)) )
+$2 = (11 23 41)
+
+;;  It can be also used to create a function that  maps a function 
+;;  of multiple arguments over a list of arguments.
+;;
+(define (map-apply f xss)
+   (map (lambda (xs) (apply f xs)) xss))
+
+> (map-apply f1  '((1 2 3) (3 4 5) (6 7 8)))
+$1 = (11 23 41)
+
+#+END_SRC
+
+*Clojure*
+
+#+BEGIN_SRC clojure
+
+user=> (defn f1 [x y z] (+ (* 2 x) (* 3 y) z))
+#'user/f1
+user=> 
+
+;; The higher order function apply is polymorphic.
+;;
+user=> (apply f1 '(1 2 3))
+11
+user=> (apply f1 [1 2 3])
+11
+user=> (apply f1 1 [2 3])
+11
+user=> (apply f1 1 2 [ 3])
+11
+user=> (apply f1 1 2 3 [ ])
+11
+
+user=> (apply + [1 2 3 4 5])
+15
+
+user=> (defn map-apply [f xss]
+              (map (fn [xs] (apply f xs)) xss))
+#'user/map-apply
+user=> 
+
+
+user=> (map-apply f1 [[1 2 3] [3 4 5] [6 7 8]])
+(11 23 41)
+user=> 
+#+END_SRC
+
+*Python*
+
+#+BEGIN_SRC python
+
+# In Python the * asterisk notation is used to expand
+# a list into function arguments.
+#
+>>> f1 = lambda x, y, z: 2 * x + 3 * y + z
+>>> 
+>>> f1(1, 2, 3)
+11
+>>> f1(*[1, 2, 3])
+11
+>>> 
+
+>>> def apply (f, xs): return f(*xs)
+... 
+>>> 
+
+>>> apply (f1, [1, 2, 3])
+11
+
+
+#
+# The function apply can also be defined  as:
+#
+
+def apply2 (f, * args):    
+    return f(*(tuple(args[:-1]) + tuple(args[-1])))
+    
+>>> apply2 (f1, [1, 2, 3])
+11
+>>> apply2 (f1, 1, [2, 3])
+11
+>>> apply2 (f1, 1, 2, [3])
+11
+>>> apply2 (f1, 1, 2, 3, [])
+11
+>>> 
+
+>>> f_apply = lambda f: lambda xs: f(*xs)
+>>> 
+
+>>> list(map (f_apply(f1), [[1, 2, 3], [3, 4, 5], [6, 7, 8]]))
+[11, 23, 41]
+>>> 
+
+def map_apply (f, xss):
+    return map(lambda xs: f(*xs), xss)
+
+>>> map_apply(f1, [[1, 2, 3], [3, 4, 5], [6, 7, 8]])
+<map object at 0xb6daaaac>
+>>> 
+>>> list(map_apply(f1, [[1, 2, 3], [3, 4, 5], [6, 7, 8]]))
+[11, 23, 41]
+>>> 
+
+
+#+END_SRC
 
 *** Function Composition 
 
@@ -2405,7 +2549,7 @@ parse_csvtable_optmized =  composef(
 
     
 #+END_SRC
-* Functional Programming Languages
+* Functional Languages
 
 Some Functional programming languages:
 

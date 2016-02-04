@@ -1,6 +1,7 @@
 #+TITLE: Functional Programming by Example
 #+AUTHOR: Caio Rodrigues Soares Silva
 #+EMAIL: <caiorss.rodrigues@gmail.com>
+#+URL:   https://github.com/caiorss/Functional-Programming
 
 * Functional Programming by Example
 

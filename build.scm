@@ -17,17 +17,21 @@
               (run/port
                (find ,directory -name ,pattern))))
 
-
+;; Move file from origin to destine  
+;;
 (define (mv orig dest)
    (run (mv ,orig ,dest)))
 
 (define (mv-backup filename)
    (mv filename (string-append filename ".back" )))
 
-
+;; Converts org-mode to html file 
+;;
 (define (org->html filename)
   (& (emacs ,filename --batch  -f org-html-export-to-html --kill)))
 
+;; Converts org-mode to github markdown file *.md
+;;
 (define (org->gfm filename)
   (& (emacs -l ~/.emacs.d/init.el --batch --visit ,filename -funcall org-gfm-export-to-markdown --kill)))
 
@@ -36,9 +40,7 @@
 
 (define (update)
 
-    ;; Export all .org mode files to github markdown .md 
-  ;;
-    
+   ;; Export all .org mode files to github markdown .md    
   (for-each (lambda (f)
 
               (display (string-append "Updating " f))
@@ -47,12 +49,7 @@
               (org->gfm  f)
               (org->html f))
 
-          (find-files "." "*.org"))
-
-   
-
-
-  )
+          (find-files "." "*.org")))
 
 
 (define (main . args)
