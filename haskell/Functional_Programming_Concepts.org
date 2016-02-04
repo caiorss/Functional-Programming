@@ -41,105 +41,6 @@ Non Essential Features:
  - Pattern Matching
  - Monads
 
-** Functional Programming Languages
-
-
-Some Functional programing languages:
-
-| Language     | Evaluation    | Typing  | Type Inference | GIL | TCO | OO  | AGDT | Platform | Family | Currying | Feature                                  |
-|--------------+---------------+---------+----------------+-----+-----+-----+------+----------+--------+----------+------------------------------------------|
-| Haskell      | Lazy          | Static  | Yes            | No  | Yes | No  | Yes  | NAT      | ML/SML | Yes      | Concurrency/Parallelism                  |
-| Ocaml        | Strict        | Static  | Yes            | Yes | Yes | Yes | Yes  | NAT/BC   | ML/SML | Yes      |                                          |
-| F# (F sharp) | Strict        | Static  | Yes            | No  | Yes | Yes | Yes  | .NET     | ML/SML | Yes      | .NET Platform Integration                |
-| Scheme       | Strict        | Dynamic | No             | *   | Yes | No  | No   | -        | Lisp   | No       | Minimalistic Educational                 |
-| Clojure      | Strict + Lazy | Dynamic | No             | No  | No  | No  | No   | JVM      | Lisp   | No       | Java integration + Macro                 |
-| Scala        | Strict        | Static  | Yes            | No  | Yes | Yes | Yes  | JVM      |        |          | Java integration                         |
-| Erlang       | Strict        | Dynamic | ?              | ?   | No  | ?   | ?    | VM       |        | ?        | Telecommunications, Servers, Concurrency |
-|              |               |         |                |     |     |     |      |          |        |          |                                          |
-| R            | Strict        | Dynamic | No             | ?   | No  | Yes | -    | VM       |        | No       | DSL - Statics                            |
-| Mathematica  | Strict        | Dynamic | Yes            | ?   | ??  | ?   | ?    | ?        |        | No       | DSL - Computer Algebraic System          |
-
-
-Notes:
-
- - AGDT   - Algebraic Data Types
-
- - GIL    - Global Interpreter Locking. Languages with GIL cannot
-   support multi-core processors.
-
- - TCO - Tail Call Optimization. Languages without TCO cannot perform
-   recursion safely. It can lead to a stack overflow. The JVM doesn't
-   support TCO.
-
- - JVM    - Java Virtual Machine / Java Platform
-
- - .NET   - Dot Net Platform
-
- - NAT    - Native Code
-
- - VM     - Virtual Machine 
-
- - OO     - Object Orientated
-
- - Curry  - Curried functions like in Haskell
-
- - DSL    - Domain Specific Language
-
-
-More Information: [[http://en.wikipedia.org/wiki/Comparison_of_functional_programming_languages][Comparison of Functional Programming Languages]]
-
-See also: [[http://hyperpolyglot.org/ml][ML Dialects and Haskell: SML, OCaml, F#, Haskell]]
-
-** Notable People
-
-A selection of people who influenced functional programming:
-
- - [[https://en.wikipedia.org/wiki/Alonzo_Church][Alonzo Church]], Mathematician -> Lambda Calculus
-
- - [[https://en.wikipedia.org/wiki/Haskell_Curry][Haskell Curry]], Mathematician -> Concept of currying
-
- - [[https://en.wikipedia.org/wiki/Robin_Milner][Robin Milner]], Computer Scientist -> Type inference, [[https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system][Hindley–Milner type system]], [[https://en.wikipedia.org/wiki/ML_(programming_language][ML language]])
-
- - [[https://en.wikipedia.org/wiki/John_McCarthy_(computer_scientist][John McCarthy]]),  Computer Scientist -> Creator of [[https://en.wikipedia.org/wiki/Lisp_(programming_language][Lisp]]), Artificial intelligence
-
-    * [[http://www.infoq.com/interviews/Steele-Interviews-John-McCarthy][Guy Steele Interviews John McCarthy, Father of Lisp]]
-
- - [[https://en.wikipedia.org/wiki/John_Backus][John Backus]], Computer Scientist ->  Backus-Naur form (BNF), Fortran
-   Language, 
-
-    * [[https://web.stanford.edu/class/cs242/readings/backus.pdf][Can Programming Be Liberated from the von Neumann Style? A Functional Style and Its Algebra of Programs]]
-
- - [[https://en.wikipedia.org/wiki/Philip_Wadler][Philip Wadler]], Theory behind functional programming and the use of
-   monads in functional programming, the design of the purely
-   functional language Haskell.
-
-    * [[http://www.eliza.ch/doc/wadler92essence_of_FP.pdf][The essence of functional programing]]
-    * [[http://www.infoq.com/interviews/wadler-functional-programming][Philip Wadler on Functional Programming - Interview]]
-
- - [[https://en.wikipedia.org/wiki/Eugenio_Moggi][Eugenio Moggi]], Professor of computer science at the University of
-   Genoa, Italy. - He first described the general use of monads to
-   structure programs.
-
-    * [[http://www.disi.unige.it/person/MoggiE/ftp/ic91.pdf][Notions of computation and monads - Eugenio Moggi]]
-
- - [[https://en.wikipedia.org/wiki/Simon_Peyton_Jones][Simon Peyton Jones]], Computer Scientist -> Major contributor to the
-   design of the Haskell programming language.
-
- - [[https://en.wikipedia.org/wiki/John_Hughes_(computer_scientist][John Hughes]]), Computer Scientist -> One of the most influentials
-   papers in FP field: Why functional programing matters.
-
-
- - [[https://en.wikipedia.org/wiki/Gerald_Jay_Sussman][Gerald Jay Sussman]], Mathematician and Computer Scientist
-
-   * [[https://en.wikipedia.org/wiki/Scheme_(programming_language][Scheme Lisp]]) Language
-   * Book: [[https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Computer_Programs][Structure and Interpretation of Computer Programs]]
-   * Book: [[https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Classical_Mechanics][Structure and Interpretation of Classical Mechanics]]
-
-   * [[https://en.wikipedia.org/wiki/History_of_the_Scheme_programming_language#The_Lambda_Papers][Lambda Papers]]: A series of MIT AI Memos published between 1975
-     and 1980, developing the Scheme programming language and a number
-     of influential concepts in programming language design and
-     implementation.
-
 ** Concepts
 *** First-Class Function 
 
@@ -214,102 +115,6 @@ Many examples of first class functions in several languages.
  - [[http://slidegur.com/doc/1814324/first-class-functions-in-scientific-programming][First-class Functions in Scientific Programming]]
 
  - [[http://adv-r.had.co.nz/Functional-programming.html][Functional programming in R]]
-
-*** Closure
-
-Closure is a function that remembers the environment at which it was created.
-
-#+BEGIN_SRC python
-
->>> x = 10
-
- # The function adder remembers the environment at which it was created
- # it remembers the value of x
- #
-def make_adder(x):
-    def adder(y):
-        return x + y
-    return adder
-
->>> add5 = make_adder(5)
->>> add10 = make_adder(10)
->>> 
->>> add5(4)
-9
->>> list(map(add5, [1, 2, 3, 4, 5]))
-[6, 7, 8, 9, 10]
-
->>> x
-10
->>> 
-
->>> list(map(add10, [1, 2, 3, 4, 5]))
-[11, 12, 13, 14, 15]
-
- #
- 
-def make_printer(msg):
-    def printer():
-        print(msg)
-    return printer
-
->>> p1 = make_printer ("Hello world")
->>> p2 = make_printer ("FP programming Rocks!!")
->>> 
->>> p1()
-Hello world
->>> p2()
-FP p
-
- # Mutable state with closure
- 
-idx = 100 
- 
-def make_counter():
-    idx = -1    
-    def _():
-        nonlocal idx
-        idx = idx + 1
-        return idx    
-    return _
-
->>> idx = 100
->>> counter1 = make_counter()
->>> counter1()
-0
->>> counter1()
-1
->>> counter1()
-2
->>> counter1()
-3
-
->>> idx
-100
->>> counter2 = make_counter ()
->>> counter2()
-0
->>> counter2()
-1
->>> counter2()
-2
-
->>> counter1()
-5
->>> 
-
->>> del make_counter
->>> make_counter
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-NameError: name 'make_counter' is not defined
->>> 
->>> counter1()
-6
->>> counter1()
-7
-
-#+END_SRC
 
 *** Pure Functions
 
@@ -416,8 +221,190 @@ Reverse list function purified:
 
 #+END_SRC
 
-*** Currying and Partial Application
+*** Closure
 
+Closure is a function that remembers the environment at which it was created.
+
+#+BEGIN_SRC python
+
+>>> x = 10
+
+ # The function adder remembers the environment at which it was created
+ # it remembers the value of x
+ #
+def make_adder(x):
+    def adder(y):
+        return x + y
+    return adder
+
+>>> add5 = make_adder(5)
+>>> add10 = make_adder(10)
+>>> 
+>>> add5(4)
+9
+>>> list(map(add5, [1, 2, 3, 4, 5]))
+[6, 7, 8, 9, 10]
+
+>>> x
+10
+>>> 
+
+>>> list(map(add10, [1, 2, 3, 4, 5]))
+[11, 12, 13, 14, 15]
+
+ #
+ 
+def make_printer(msg):
+    def printer():
+        print(msg)
+    return printer
+
+>>> p1 = make_printer ("Hello world")
+>>> p2 = make_printer ("FP programming Rocks!!")
+>>> 
+>>> p1()
+Hello world
+>>> p2()
+FP p
+
+ # Mutable state with closure
+ 
+idx = 100 
+ 
+def make_counter():
+    idx = -1    
+    def _():
+        nonlocal idx
+        idx = idx + 1
+        return idx    
+    return _
+
+>>> idx = 100
+>>> counter1 = make_counter()
+>>> counter1()
+0
+>>> counter1()
+1
+>>> counter1()
+2
+>>> counter1()
+3
+
+>>> idx
+100
+>>> counter2 = make_counter ()
+>>> counter2()
+0
+>>> counter2()
+1
+>>> counter2()
+2
+
+>>> counter1()
+5
+>>> 
+
+>>> del make_counter
+>>> make_counter
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'make_counter' is not defined
+>>> 
+>>> counter1()
+6
+>>> counter1()
+7
+
+#+END_SRC
+
+Example of closure in Clojure: 
+
+#+BEGIN_SRC clojure
+
+(defn make-adder [x]
+   (fn [y] (+ x y)))
+
+user=> (def add5 (make-adder 5))
+#'user/add5
+user=> 
+user=> (def add10 (make-adder 10))
+#'user/add10
+user=> 
+user=> (add5 10)
+15
+user=> (add10 20)
+30
+user=> (map (juxt add5 add10)  [1 2 3 4 5 6])
+([6 11] [7 12] [8 13] [9 14] [10 15] [11 16])
+user=> 
+
+(defn make-printer [message]
+  
+  (fn [] (println message)))
+
+user=> (def printer-1 (make-printer "Hello world"))
+#'user/printer-1
+user=> 
+user=> (def printer-2 (make-printer "Hola Mundo"))
+#'user/printer-2
+user=> 
+user=> (printer-1)
+Hello world
+nil
+user=> (printer-2)
+Hola Mundo
+nil
+user=> 
+
+#+END_SRC
+
+Example of closure in F# (F sharp):
+
+#+BEGIN_SRC fsharp 
+
+let make_adder x =
+    fun y -> x + y 
+
+val make_adder : x:int -> y:int -> int
+
+> let add5 = make_adder 5 ;;
+
+val add5 : (int -> int)
+
+> let add10 = make_adder 10 ;;
+
+val add10 : (int -> int)
+
+> add5 20 ;;
+val it : int = 25
+> 
+- add10 30 ;;
+val it : int = 40
+> 
+- List.map add5 [1 ; 2; 3; 4; 5; 6] ;;
+val it : int list = [6; 7; 8; 9; 10; 11]
+> 
+
+//  As F# have currying like OCaml and Haskell 
+//  it could be also be done as 
+//
+
+- let make_adder x y = x + y ;;
+
+val make_adder : x:int -> y:int -> int
+
+> let add10 = make_adder 10 ;;
+
+val add10 : (int -> int)
+
+> add10 20 ;;
+val it : int = 30
+> 
+
+
+#+END_SRC
+
+*** Currying and Partial Application
 **** Currying
 
 Currying is the decomposition of a function of multiples arguments in
@@ -717,7 +704,6 @@ h_of_z :: Integer -> Integer
 #+END_SRC
 
 
-
 **** Partial Application
 
 A function of multiple arguments is converted into a new function that
@@ -861,6 +847,7 @@ f = lambda x: x**5
 #+END_SRC
 
 *** Fundamental Higher Order Functions 
+**** Overview 
 
 The functions map, filter and reduce (fold left) are ubiquitous in
 many programming languages and also the most used higher order
@@ -870,6 +857,9 @@ They can be stricted evaluated like in Scheme and Javascript or lazy
 evaluated like in Python and Haskell.
 
 **** Map
+
+The function map applies a function to each element of a sequence:
+list, vector, hash map or dictionary and trees. 
 
 #+BEGIN_SRC
     map :: ( a -> b) -> [a] -> [b]                
@@ -889,8 +879,7 @@ evaluated like in Python and Haskell.
     
 #+END_SRC
 
-
-*Haskell*
+***** Map in Haskell
 
 The function map is lazy evaluated.
 
@@ -958,10 +947,10 @@ fs :: [Integer] -> [Integer]
 > 
 #+END_SRC
 
+***** Map in Python
 
-*Python*
-
-In Python 3 map and filter are lazy evaluated, they return a generator.
+In Python 3 map and filter are lazy evaluated, they return a
+generator. 
 
 #+BEGIN_SRC python
 >>> def fun1 (x):
@@ -988,7 +977,7 @@ StopIteration
  #
  >>> list(map(fun1, [1, 2, 3]))
  [9, 12, 15]
- 
+
 
  # Strict Version of map
  # 
@@ -1062,6 +1051,88 @@ curry2 = lambda f: lambda x: lambda y: f(x, y)
 >>>  
 #+END_SRC
 
+***** Map in Untyped Languages 
+
+In untyped languages like Python, Clojure and Scheme the function map
+can take multiple lists or sequences. In typed languages the function 
+takes only one argument.
+
+Map in Python:
+
+#+BEGIN_SRC python 
+
+>>> list(map (lambda a, b, c: 100 * a + 10 * b + c, [1, 2, 3, 4, 5], [8, 9, 10, 11, 12], [3, 4, 7, 8, 10]))
+[183, 294, 407, 518, 630]
+>>> 
+
+#+END_SRC
+
+
+Map in Scheme: 
+
+#+BEGIN_SRC scheme 
+(map (lambda (a b c) (+ (* 100 a) (* 10 b) c)) 
+      '(1 2 3 4 5) 
+      '(8 9 10 11 12) 
+      '(3 4 7 8 10))
+
+$1 = (183 294 407 518 630)
+#+END_SRC
+
+Map in Clojure:
+
+#+BEGIN_SRC clojure
+
+;; f a b c = 100 * a + 10 * b + c
+;; 
+;; 183 = f 1 8 3 
+;; 294 = f 2 9 4 
+;; ...
+;; 630 = f 6 3 0
+;;
+user=> (map (fn [a b c] (+ (* 100 a) (* 10 b) c)) [1 2 3 4 5] [8 9 10 11 12] [3 4 7 8 10])
+(183 294 407 518 630)
+user=> 
+
+;;
+;; The clojure map is Polymorphic it can be applied to any collection 
+;; of seq abstraction like lists, vectors and hash maps.
+;;
+
+;; Map applied to a list  
+;;
+user=> (map inc '(1 2 3 4 5 6))
+(2 3 4 5 6 7)
+user=> 
+
+;; Map applied to a vector 
+;;
+user=> (map inc [1 2 3 4 5 6])
+(2 3 4 5 6 7)
+user=> 
+
+;; Map applied to a hash map 
+;;
+user=> (map identity {:a 10 :b 20 :c "hello world"})
+([:a 10] [:b 20] [:c "hello world"])
+user=> 
+
+;; The function mapv is similar to map, but returns a vector: 
+;;
+
+user=> (map identity {:a 10 :b 20 :c "hello world"})
+([:a 10] [:b 20] [:c "hello world"])
+user=> 
+
+;; Clojure also have desctructuring 
+;;
+user=> (map (fn [[[a b] c]] (+ (* 100 a ) (* 10 b) c))  [[[1 2] 3] [[3 4] 5] [[1 2] 4]])
+(123 345 124)
+user=>
+
+
+#+END_SRC
+
 **** Filter
 
 *Python*
@@ -1130,14 +1201,58 @@ StopIteration
   
 #+END_SRC
 
-**** Reduce (Fold)
+**** Reduce or Fold
+***** Overview 
+
+*Fold Left*
+
+The  function fold left is tail recursive, whereas the function fold
+right is not. This functions is also known as reduce or inject (in
+Ruby). The function fold left is often called just _fold_ like in F#
+or _reduce_ (Python, Javascript, Clojure) and also Inject (Ruby).
+
+=foldl :: (State -> x -> State) -> State -> [x] -> State=
+=foldl (f :: S -> x -> S)  S [x]=
+
+
+#+BEGIN_SRC
+Sn = foldl f S0 [x0, x1, x2, x3 ... xn-1]
+
+S1   = f S0 x0
+S2   = f S1 x1     = f (f S0 x0) x1
+S3   = f S2 x2     = f (f (f S0 x0) x1) x2
+S4   = f S3 x3     = f (f (f (f S0 x0) x1) x2) x3
+...
+Sn-1 = f Sn-2 Xn-2 = ...
+Sn   = f Sn-1 Xn-1 = f ...(f (f (f (f S0 x0) x1) x2) x3 ... xn
+
+  ;;; -> Result
+#+END_SRC
+
+
+*Fold Right*
+
+=foldr :: (x -> acc -> acc) -> acc -> [x] -> acc=
+
+#+BEGIN_SRC 
+S1   = f xn-1 S0
+S2   = f xn-2 S1     = f xn-2 (f xn-1 S0)
+S3   = f xn-3 S2     = f xn-3 (f xn-2 (f xn-1 S0))
+S4   = f xn-4 S3     = f xn-4 (f xn-3 (f xn-2 (f xn-1 S0)))
+....
+Sn-1 = f x1   Sn-2   = ...
+Sn   = f x0   Sn-1   = f x0 (f x1 ... (f xn-2 (f xn-1 S0)))
+#+END_SRC
+
+***** Haskell
 
 See also: 
+
   * [[https://en.wikipedia.org/wiki/Fold_(higher-order_function][Fold (higher-order function) - Wikipedia, the free encyclopedia]])
   * [[http://www.cs.nott.ac.uk/~pszgmh/fold.pdf][A tutorial on the universality and expressiveness of fold. GRAHAM HUTTON]]
   * [[http://www.cantab.net/users/antoni.diller/haskell/units/unit06.html][Haskell unit 6: The higher-order fold functions | Antoni Diller]]
 
-*Haskell*
+
 
 Fold Left:
 
@@ -1192,7 +1307,28 @@ It is equivalent to:
 > 
 #+END_SRC
 
-Fold right:
+Evaluation of Fold left:
+
+
+#+BEGIN_SRC
+> foldl (\acc x -> 10 * acc + x ) 0 [1, 2, 3, 4, 5]
+1234
+
+S0 = 0
+
+f = \acc x -> 10 * acc + x
+
+                 x  acc
+S1 = f S0 x0 = f 0   1 = 10 * 0  + 1 = 1
+S2 = f S1 x1 = f 10  2 = 10 * 1    + 2 = 12
+S3 = f S2 x2 = f 12  3 = 10 * 12   + 3 = 123
+S4 = f S3 x3 = f 123 4 = 10 * 123  + 4 = 1234
+S5 = f S3 x3 = f 123 4 = 10 * 1234 + 5 = 12345
+#+END_SRC
+
+
+
+*Fold right*
 
 #+BEGIN_SRC
  foldr :: (x -> acc -> acc) -> acc -> [x] -> acc
@@ -1235,10 +1371,32 @@ fold_right :: (b -> a -> a) -> a -> [b] -> a
 
 #+END_SRC
 
+Evaluation of Fold Right:
 
-*Python*
+#+BEGIN_SRC 
+Example:
 
-In Python 3 the function reduce is not default anymore, however it can be found in the native library functools, that has a lot of builtin functions for functional programing. The function reduce is equivalent to Haskell function foldl (fold left) which is tail recursive. 
+> foldr (\x acc -> 10 * acc + x ) 0 [1, 2, 3, 4, 5]
+54321
+>
+
+f  = \x acc -> 10 * acc + x
+S0 = 0
+n = 5
+                       x acc
+S1   = f x4 S0     = f 5  0    = 10 * 0    + 5 = 5
+S2   = f x3 S1     = f 4  5    = 10 * 5    + 4 = 54
+S3   = f x2 S2     = f 3  54   = 10 * 54   + 3 = 543
+S4   = f x1 S3     = f 2  543  = 10 * 543  + 2 = 5432
+S5   = f x0 S4     = f 1  5432 = 10 * 5432 + 1 = 54321
+#+END_SRC
+
+***** Python
+
+In Python 3 the function reduce is not default anymore, however it can
+be found in the native library functools, that has a lot of built-in
+functions for functional programming. The function reduce is equivalent
+to Haskell function foldl (fold left) which is tail recursive.
 
 #+BEGIN_SRC
 reduce(function, sequence[, initial]) -> value
@@ -1341,12 +1499,14 @@ def fold_right2 (f, acc0, xs):
 
 *Usefulness of Fold*
 
-Many functions and recursive algorithms can be implemented using the fold function, including map, filter, sum, product and others.
+Many functions and recursive algorithms can be implemented using the
+fold function, including map, filter, sum, product and others.
 
 It is based in the paper:  
+
    - [[http://www.cs.nott.ac.uk/~pszgmh/fold.pdf][A tutorial on the universality and expressiveness of fold. GRAHAM HUTTON]]
 
-In the paper was usef fold right, here was used fold left. 
+In the paper was used fold right, here was used fold left. 
 
 #+BEGIN_SRC python 
 
@@ -1437,6 +1597,242 @@ True
 >>> (f3 (f2 (f1 (3))))
 16384
 >>>  
+#+END_SRC
+
+***** Clojure
+
+The function reduce is similar to Haskell _fold left_ and Python
+reduce. This function is Polymorphic. It works on any collection of
+seq abstraction: lists, vectors and hash maps. 
+
+Signature:
+
+#+BEGIN_SRC 
+(reduce f coll)      -> reduce :: (f :: acc -> x -> acc) -> [x]
+
+Or 
+
+(reduce f val coll)  -> reduce :: (f :: acc -> x -> acc) -> acc -> [x] 
+
+f :: acc -> x -> acc 
+#+END_SRC
+
+
+#+BEGIN_SRC clojure
+
+;; Applying fold/reduce to a list 
+;;
+;;
+user=> (reduce (fn [acc x] (+ (* 10 acc) x)) 0 '(1 2 3 4 5))
+12345
+
+
+;; Applying fold/reduce to a vector 
+;;
+user=> (reduce (fn [acc x] (+ (* 10 acc) x))  0 [1 2 3 4 5])
+12345
+user=> 
+
+user=> (reduce (fn [acc x] (+ (* 10 acc) x)) 0 [])
+0
+
+;; Applyind fold/reduce to a Hash map 
+;;
+user=> (reduce (fn [acc x] (cons x  acc )) '()  { :a 10 :b 20 :c 30 })
+([:c 30] [:b 20] [:a 10])
+user=>
+
+;; Without Initial value of accumulator it will fail on a empty list. 
+;; 
+user=> (reduce (fn [acc x] (+ (* 10 acc) x)) [1 2 3 4 5])
+12345
+
+user=> (reduce (fn [acc x] (+ (* 10 acc) x)) [])
+ArityException Wrong number of args (0) passed to: user/eval44/fn--45  clojure.lang.AFn.throwArity (AFn.java:429)
+user=> 
+
+;; Implementing fold right  
+;;
+(defn foldr 
+   ([f xs]       (reduce (fn [acc x] (f x acc))     (reverse xs)))
+   ([f acc xs]   (reduce (fn [acc x] (f x acc)) acc (reverse xs)))
+  )
+
+user=> (foldr (fn [x acc] (+ (* 10 acc) x)) 0 [1 2 3 4 5])
+54321
+
+
+;; Clojure has destructuring 
+;;
+user=> (reduce (fn [acc [a b]] (conj acc (+ (* 10 a) b) )) '[] [[1 2] [3 4] [5 8]] )
+[12 34 58]
+user=> 
+
+;; Implementing map with fold left (reduce)
+;;
+user=> (defn map2 [f xs] 
+          (reverse (reduce (fn [acc x] (cons (f x) acc)) 
+                        () 
+                        xs)))
+#'user/map2
+user=> 
+user=> (map2 inc '(1 2 3 3 4 5))
+(2 3 4 4 5 6)
+user=> 
+
+;; Implementing map with fold right 
+;;
+;;
+
+(defn map2 [f xs] 
+   (foldr (fn [x acc] (cons (f x) acc)) 
+          ()
+          xs
+   ))
+
+user=> (map2 inc '(1 2 3 4 5 6))
+(2 3 4 5 6 7)
+user=> 
+
+
+#+END_SRC 
+
+**** For Each, Impure map 
+
+For each is an _impure higher order function_ which maps an impure,
+output function to each element of a list. Unlike map this function
+neither have a standard name and or return anything.
+
+*Scheme*
+
+#+BEGIN_SRC scheme
+> (for-each (lambda (i) (display i) (newline))  '(1 2 3 4 5 6))
+1
+2
+3
+4
+5
+6
+>
+
+> (for-each
+   (lambda (a b c)
+      (display a) (display b) (display c)
+      (newline)
+    )
+   '(a b c d e f)
+   '(1 2 3 4 5 6)
+   '("x" "y" "z" "w" "h" "k"))
+a1x
+b2y
+c3z
+d4w
+e5h
+f6k
+
+
+#+END_SRC
+
+*Common Lisp*
+
+#+BEGIN_SRC lisp
+> (mapc #'print '(1 2 3 3 4))
+
+1
+2
+3
+3
+4
+
+#+END_SRC
+
+*Ocaml*
+
+#+BEGIN_SRC
+> List.iter ;;
+- : ('a -> unit) -> 'a list -> unit = <fun>
+
+> List.iter (fun x -> print_int x ; print_string "\n") [1 ; 2; 3; 4; 5] ;;
+1
+2
+3
+4
+5
+- : unit = ()
+#+END_SRC
+
+
+*F#*
+
+#+BEGIN_SRC
+> List.iter ;;
+val it : (('a -> unit) -> 'a list -> unit) = <fun:clo@1>
+
+> List.iter (fun x -> printfn "x = %d" x) [1; 2; 3; 4; 5] ;;
+x = 1
+x = 2
+x = 3
+x = 4
+x = 5
+val it : unit = ()
+>
+#+END_SRC
+
+*Python*
+
+This function is not in Python standard library however, it can be
+defined as this.
+
+#+BEGIN_SRC python
+def for_each(f, * xss):
+    for xs in zip(* xss):
+        f(*xs)
+
+>>> for_each (print, [1, 2, 4, 5, 6])
+1
+2
+4
+5
+6
+
+>>> for_each (lambda a, b: print (a, b), [1, 2, 3, 4, 5, 6], ["a", "b", "c", "d", "e", "f"])
+1 a
+2 b
+3 c
+4 d
+5 e
+6 f
+
+#+END_SRC
+
+*Clojure* 
+
+#+BEGIN_SRC clojure 
+
+user=> (defn f [a b] (println (format "a = %s , b = %s" a b)))
+#'user/f
+
+
+(defn for-each [f & xss]
+   (doseq [args (apply map vector xss)]  (apply f args)))
+
+
+user=> (for-each println [1 2 3 4])
+1
+2
+3
+4
+nil
+
+
+user=> (for-each f [1 2 3 4] [3 4 5 6])
+a = 1 , b = 3
+a = 2 , b = 4
+a = 3 , b = 5
+a = 4 , b = 6
+nil
+user=> 
+
 #+END_SRC
 
 *** Function Composition 
@@ -2009,8 +2405,104 @@ parse_csvtable_optmized =  composef(
 
     
 #+END_SRC
+* Functional Programming Languages
 
-** Miscellaneous
+Some Functional programming languages:
+
+| Language     | Evaluation    | Typing  | Type Inference | Pattern Matching         | GIL | TCO | OO  | AGDT | Platform | Family | Currying | Feature                                  |
+|--------------+---------------+---------+----------------+--------------------------+-----+-----+-----+------+----------+--------+----------+------------------------------------------|
+| Haskell      | Lazy          | Static  | Yes            | Yes                      | No  | Yes | No  | Yes  | NAT      | ML/SML | Yes      | Concurrency/Parallelism                  |
+| Ocaml        | Strict        | Static  | Yes            | Yes                      | Yes | Yes | Yes | Yes  | NAT/BC   | ML/SML | Yes      |                                          |
+| F# (F sharp) | Strict        | Static  | Yes            | Yes                      | No  | Yes | Yes | Yes  | .NET     | ML/SML | Yes      | .NET Integration                         |
+| Scheme       | Strict        | Dynamic | No             | No                       | *   | Yes | No  | No   | -        | Lisp   | No       | Minimalist Educational                   |
+| Clojure      | Strict + Lazy | Dynamic | No             | Destructuring and macros | No  | No  | No  | No   | JVM      | Lisp   | No       | Java integration + Macro                 |
+| Scala        | Strict        | Static  | Yes            | Yes                      | No  | Yes | Yes | Yes  | JVM      |        |          | Java integration                         |
+| Erlang       | Strict        | Dynamic | ?              | Yes                      | ?   | No  | ?   | ?    | VM       |        | ?        | Telecommunications, Servers, Concurrency |
+|              |               |         |                |                          |     |     |     |      |          |        |          |                                          |
+| R            | Strict        | Dynamic | No             | No                       | ?   | No  | Yes | -    | VM       |        | No       | DSL - Statics                            |
+| Mathematica  | Strict        | Dynamic | Yes            | ?                        | ?   | ??  | ?   | ?    | ?        |        | No       | DSL - Computer Algebraic System          |
+
+
+Notes:
+
+ - AGDT   - Algebraic Data Types
+
+ - GIL    - Global Interpreter Locking. Languages with GIL cannot
+   support multi-core processors.
+
+ - TCO - Tail Call Optimization. Languages without TCO cannot perform
+   recursion safely. It can lead to a stack overflow for a big number
+   of interactions. 
+
+ - JVM    - Java Virtual Machine / Java Platform
+
+ - .NET   - Dot Net Platform
+
+ - NAT    - Native Code
+
+ - VM     - Virtual Machine 
+
+ - OO     - Object Orientated
+
+ - Currying  - Curried functions like in Haskell
+
+ - DSL    - Domain Specific Language
+
+
+More Information: [[http://en.wikipedia.org/wiki/Comparison_of_functional_programming_languages][Comparison of Functional Programming Languages]]
+
+See also: [[http://hyperpolyglot.org/ml][ML Dialects and Haskell: SML, OCaml, F#, Haskell]]
+* Notable People
+
+A selection of people who influenced functional programming:
+
+ - [[https://en.wikipedia.org/wiki/Alonzo_Church][Alonzo Church]], Mathematician -> Lambda Calculus
+
+ - [[https://en.wikipedia.org/wiki/Haskell_Curry][Haskell Curry]], Mathematician -> Concept of currying
+
+ - [[https://en.wikipedia.org/wiki/Robin_Milner][Robin Milner]], Computer Scientist -> Type inference, [[https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system][Hindley–Milner type system]], [[https://en.wikipedia.org/wiki/ML_(programming_language][ML language]])
+
+ - [[https://en.wikipedia.org/wiki/John_McCarthy_(computer_scientist][John McCarthy]]),  Computer Scientist -> Creator of [[https://en.wikipedia.org/wiki/Lisp_(programming_language][Lisp]]), Artificial intelligence
+
+    * [[http://www.infoq.com/interviews/Steele-Interviews-John-McCarthy][Guy Steele Interviews John McCarthy, Father of Lisp]]
+
+ - [[https://en.wikipedia.org/wiki/John_Backus][John Backus]], Computer Scientist ->  Backus-Naur form (BNF), Fortran
+   Language, 
+
+    * [[https://web.stanford.edu/class/cs242/readings/backus.pdf][Can Programming Be Liberated from the von Neumann Style? A Functional Style and Its Algebra of Programs]]
+
+ - [[https://en.wikipedia.org/wiki/Philip_Wadler][Philip Wadler]], Theory behind functional programming and the use of
+   monads in functional programming, the design of the purely
+   functional language Haskell.
+
+    * [[http://www.eliza.ch/doc/wadler92essence_of_FP.pdf][The essence of functional programing]]
+    * [[http://www.infoq.com/interviews/wadler-functional-programming][Philip Wadler on Functional Programming - Interview]]
+
+ - [[https://en.wikipedia.org/wiki/Eugenio_Moggi][Eugenio Moggi]], Professor of computer science at the University of
+   Genoa, Italy. - He first described the general use of monads to
+   structure programs.
+
+    * [[http://www.disi.unige.it/person/MoggiE/ftp/ic91.pdf][Notions of computation and monads - Eugenio Moggi]]
+
+ - [[https://en.wikipedia.org/wiki/Simon_Peyton_Jones][Simon Peyton Jones]], Computer Scientist -> Major contributor to the
+   design of the Haskell programming language.
+
+ - [[https://en.wikipedia.org/wiki/John_Hughes_(computer_scientist][John Hughes]]), Computer Scientist -> One of the most influentials
+   papers in FP field: Why functional programing matters.
+
+
+ - [[https://en.wikipedia.org/wiki/Gerald_Jay_Sussman][Gerald Jay Sussman]], Mathematician and Computer Scientist
+
+   * [[https://en.wikipedia.org/wiki/Scheme_(programming_language][Scheme Lisp]]) Language
+   * Book: [[https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Computer_Programs][Structure and Interpretation of Computer Programs]]
+   * Book: [[https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Classical_Mechanics][Structure and Interpretation of Classical Mechanics]]
+
+   * [[https://en.wikipedia.org/wiki/History_of_the_Scheme_programming_language#The_Lambda_Papers][Lambda Papers]]: A series of MIT AI Memos published between 1975
+     and 1980, developing the Scheme programming language and a number
+     of influential concepts in programming language design and
+     implementation.
+
+* Miscellaneous
 **** Selected Wikipedia Articles
 
 Selected Wikipedia Pages:
@@ -2166,7 +2658,6 @@ Related to Lazy Evaluation
  - [[https://en.wikipedia.org/wiki/Standard_ML][Standard ML]]
  - [[https://en.wikipedia.org/wiki/OCaml][OCaml]]
  - [[https://en.wikipedia.org/wiki/F_Sharp_%28programming_language%29][F# - Fsharp]]
-
 
 **** Selected Rosettacode Pages
 *** Concepts Examples

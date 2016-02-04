@@ -1,16 +1,16 @@
 - [Functional Programming Concepts](#functional-programming-concepts)
   - [Overview](#overview)
-  - [Functional Programming Languages](#functional-programming-languages)
-  - [Notable People](#notable-people)
   - [Concepts](#concepts)
     - [First-Class Function](#first-class-function)
-    - [Closure](#closure)
     - [Pure Functions](#pure-functions)
+    - [Closure](#closure)
     - [Currying and Partial Application](#currying-and-partial-application)
     - [Lazy Evaluation](#lazy-evaluation)
     - [Fundamental Higher Order Functions](#fundamental-higher-order-functions)
     - [Function Composition](#function-composition)
-  - [Miscellaneous](#miscellaneous)
+- [Functional Programming Languages](#functional-programming-languages)
+- [Notable People](#notable-people)
+- [Miscellaneous](#miscellaneous)
     - [Concepts Examples](#concepts-examples)
     - [Languages](#languages)
 
@@ -54,293 +54,9 @@ Non Essential Features:
 -   Pattern Matching
 -   Monads
 
-## Functional Programming Languages<a id="sec-1-2" name="sec-1-2"></a>
+## Concepts<a id="sec-1-2" name="sec-1-2"></a>
 
-Some Functional programing languages:
-
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col  class="left" />
-
-<col  class="left" />
-
-<col  class="left" />
-
-<col  class="left" />
-
-<col  class="left" />
-
-<col  class="left" />
-
-<col  class="left" />
-
-<col  class="left" />
-
-<col  class="left" />
-
-<col  class="left" />
-
-<col  class="left" />
-
-<col  class="left" />
-</colgroup>
-<thead>
-<tr>
-<th scope="col" class="left">Language</th>
-<th scope="col" class="left">Evaluation</th>
-<th scope="col" class="left">Typing</th>
-<th scope="col" class="left">Type Inference</th>
-<th scope="col" class="left">GIL</th>
-<th scope="col" class="left">TCO</th>
-<th scope="col" class="left">OO</th>
-<th scope="col" class="left">AGDT</th>
-<th scope="col" class="left">Platform</th>
-<th scope="col" class="left">Family</th>
-<th scope="col" class="left">Currying</th>
-<th scope="col" class="left">Feature</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td class="left">Haskell</td>
-<td class="left">Lazy</td>
-<td class="left">Static</td>
-<td class="left">Yes</td>
-<td class="left">No</td>
-<td class="left">Yes</td>
-<td class="left">No</td>
-<td class="left">Yes</td>
-<td class="left">NAT</td>
-<td class="left">ML/SML</td>
-<td class="left">Yes</td>
-<td class="left">Concurrency/Parallelism</td>
-</tr>
-
-
-<tr>
-<td class="left">Ocaml</td>
-<td class="left">Strict</td>
-<td class="left">Static</td>
-<td class="left">Yes</td>
-<td class="left">Yes</td>
-<td class="left">Yes</td>
-<td class="left">Yes</td>
-<td class="left">Yes</td>
-<td class="left">NAT/BC</td>
-<td class="left">ML/SML</td>
-<td class="left">Yes</td>
-<td class="left">&#xa0;</td>
-</tr>
-
-
-<tr>
-<td class="left">F# (F sharp)</td>
-<td class="left">Strict</td>
-<td class="left">Static</td>
-<td class="left">Yes</td>
-<td class="left">No</td>
-<td class="left">Yes</td>
-<td class="left">Yes</td>
-<td class="left">Yes</td>
-<td class="left">.NET</td>
-<td class="left">ML/SML</td>
-<td class="left">Yes</td>
-<td class="left">.NET Platform Integration</td>
-</tr>
-
-
-<tr>
-<td class="left">Scheme</td>
-<td class="left">Strict</td>
-<td class="left">Dynamic</td>
-<td class="left">No</td>
-<td class="left">\*</td>
-<td class="left">Yes</td>
-<td class="left">No</td>
-<td class="left">No</td>
-<td class="left">-</td>
-<td class="left">Lisp</td>
-<td class="left">No</td>
-<td class="left">Minimalistic Educational</td>
-</tr>
-
-
-<tr>
-<td class="left">Clojure</td>
-<td class="left">Strict + Lazy</td>
-<td class="left">Dynamic</td>
-<td class="left">No</td>
-<td class="left">No</td>
-<td class="left">No</td>
-<td class="left">No</td>
-<td class="left">No</td>
-<td class="left">JVM</td>
-<td class="left">Lisp</td>
-<td class="left">No</td>
-<td class="left">Java integration + Macro</td>
-</tr>
-
-
-<tr>
-<td class="left">Scala</td>
-<td class="left">Strict</td>
-<td class="left">Static</td>
-<td class="left">Yes</td>
-<td class="left">No</td>
-<td class="left">Yes</td>
-<td class="left">Yes</td>
-<td class="left">Yes</td>
-<td class="left">JVM</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">Java integration</td>
-</tr>
-
-
-<tr>
-<td class="left">Erlang</td>
-<td class="left">Strict</td>
-<td class="left">Dynamic</td>
-<td class="left">?</td>
-<td class="left">?</td>
-<td class="left">No</td>
-<td class="left">?</td>
-<td class="left">?</td>
-<td class="left">VM</td>
-<td class="left">&#xa0;</td>
-<td class="left">?</td>
-<td class="left">Telecommunications, Servers, Concurrency</td>
-</tr>
-
-
-<tr>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-</tr>
-
-
-<tr>
-<td class="left">R</td>
-<td class="left">Strict</td>
-<td class="left">Dynamic</td>
-<td class="left">No</td>
-<td class="left">?</td>
-<td class="left">No</td>
-<td class="left">Yes</td>
-<td class="left">-</td>
-<td class="left">VM</td>
-<td class="left">&#xa0;</td>
-<td class="left">No</td>
-<td class="left">DSL - Statics</td>
-</tr>
-
-
-<tr>
-<td class="left">Mathematica</td>
-<td class="left">Strict</td>
-<td class="left">Dynamic</td>
-<td class="left">Yes</td>
-<td class="left">?</td>
-<td class="left">??</td>
-<td class="left">?</td>
-<td class="left">?</td>
-<td class="left">?</td>
-<td class="left">&#xa0;</td>
-<td class="left">No</td>
-<td class="left">DSL - Computer Algebraic System</td>
-</tr>
-</tbody>
-</table>
-
-Notes:
-
--   AGDT   - Algebraic Data Types
-
--   GIL    - Global Interpreter Locking. Languages with GIL cannot
-    support multi-core processors.
-
--   TCO - Tail Call Optimization. Languages without TCO cannot perform
-    recursion safely. It can lead to a stack overflow. The JVM doesn't
-    support TCO.
-
--   JVM    - Java Virtual Machine / Java Platform
-
--   .NET   - Dot Net Platform
-
--   NAT    - Native Code
-
--   VM     - Virtual Machine
-
--   OO     - Object Orientated
-
--   Curry  - Curried functions like in Haskell
-
--   DSL    - Domain Specific Language
-
-More Information: [Comparison of Functional Programming Languages](http://en.wikipedia.org/wiki/Comparison_of_functional_programming_languages)
-
-See also: [ML Dialects and Haskell: SML, OCaml, F#, Haskell](http://hyperpolyglot.org/ml)
-
-## Notable People<a id="sec-1-3" name="sec-1-3"></a>
-
-A selection of people who influenced functional programming:
-
--   [Alonzo Church](https://en.wikipedia.org/wiki/Alonzo_Church), Mathematician -> Lambda Calculus
-
--   [Haskell Curry](https://en.wikipedia.org/wiki/Haskell_Curry), Mathematician -> Concept of currying
-
--   [Robin Milner](https://en.wikipedia.org/wiki/Robin_Milner), Computer Scientist -> Type inference, [Hindley–Milner type system](https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system), [ML language](https://en.wikipedia.org/wiki/ML_(programming_language))
-
--   [John McCarthy](https://en.wikipedia.org/wiki/John_McCarthy_(computer_scientist)),  Computer Scientist -> Creator of [Lisp](https://en.wikipedia.org/wiki/Lisp_(programming_language)), Artificial intelligence
-    -   [Guy Steele Interviews John McCarthy, Father of Lisp](http://www.infoq.com/interviews/Steele-Interviews-John-McCarthy)
-
--   [John Backus](https://en.wikipedia.org/wiki/John_Backus), Computer Scientist ->  Backus-Naur form (BNF), Fortran
-    Language, 
-    -   [Can Programming Be Liberated from the von Neumann Style? A Functional Style and Its Algebra of Programs](https://web.stanford.edu/class/cs242/readings/backus.pdf)
-
--   [Philip Wadler](https://en.wikipedia.org/wiki/Philip_Wadler), Theory behind functional programming and the use of
-    monads in functional programming, the design of the purely
-    functional language Haskell.
-    -   [The essence of functional programing](http://www.eliza.ch/doc/wadler92essence_of_FP.pdf)
-    -   [Philip Wadler on Functional Programming - Interview](http://www.infoq.com/interviews/wadler-functional-programming)
-
--   [Eugenio Moggi](https://en.wikipedia.org/wiki/Eugenio_Moggi), Professor of computer science at the University of
-    Genoa, Italy. - He first described the general use of monads to
-    structure programs.
-    -   [Notions of computation and monads - Eugenio Moggi](http://www.disi.unige.it/person/MoggiE/ftp/ic91.pdf)
-
--   [Simon Peyton Jones](https://en.wikipedia.org/wiki/Simon_Peyton_Jones), Computer Scientist -> Major contributor to the
-    design of the Haskell programming language.
-
--   [John Hughes](https://en.wikipedia.org/wiki/John_Hughes_(computer_scientist)), Computer Scientist -> One of the most influentials
-    papers in FP field: Why functional programing matters.
-
--   [Gerald Jay Sussman](https://en.wikipedia.org/wiki/Gerald_Jay_Sussman), Mathematician and Computer Scientist
-    -   [Scheme Lisp](https://en.wikipedia.org/wiki/Scheme_(programming_language)) Language
-    -   Book: [Structure and Interpretation of Computer Programs](https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Computer_Programs)
-    -   Book: [Structure and Interpretation of Classical Mechanics](https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Classical_Mechanics)
-    
-    -   [Lambda Papers](https://en.wikipedia.org/wiki/History_of_the_Scheme_programming_language#The_Lambda_Papers): A series of MIT AI Memos published between 1975
-        and 1980, developing the Scheme programming language and a number
-        of influential concepts in programming language design and
-        implementation.
-
-## Concepts<a id="sec-1-4" name="sec-1-4"></a>
-
-### First-Class Function<a id="sec-1-4-1" name="sec-1-4-1"></a>
+### First-Class Function<a id="sec-1-2-1" name="sec-1-2-1"></a>
 
 Functions can be passed as arguments to another functions, returned
 from functions, stored in variables and data structures and built at
@@ -414,101 +130,7 @@ Many examples of first class functions in several languages.
 
 -   [Functional programming in R](http://adv-r.had.co.nz/Functional-programming.html)
 
-### Closure<a id="sec-1-4-2" name="sec-1-4-2"></a>
-
-Closure is a function that remembers the environment at which it was created.
-
-```python
->>> x = 10
-
- # The function adder remembers the environment at which it was created
- # it remembers the value of x
- #
-def make_adder(x):
-    def adder(y):
-        return x + y
-    return adder
-
->>> add5 = make_adder(5)
->>> add10 = make_adder(10)
->>> 
->>> add5(4)
-9
->>> list(map(add5, [1, 2, 3, 4, 5]))
-[6, 7, 8, 9, 10]
-
->>> x
-10
->>> 
-
->>> list(map(add10, [1, 2, 3, 4, 5]))
-[11, 12, 13, 14, 15]
-
- #
- 
-def make_printer(msg):
-    def printer():
-        print(msg)
-    return printer
-
->>> p1 = make_printer ("Hello world")
->>> p2 = make_printer ("FP programming Rocks!!")
->>> 
->>> p1()
-Hello world
->>> p2()
-FP p
-
- # Mutable state with closure
- 
-idx = 100 
- 
-def make_counter():
-    idx = -1    
-    def _():
-        nonlocal idx
-        idx = idx + 1
-        return idx    
-    return _
-
->>> idx = 100
->>> counter1 = make_counter()
->>> counter1()
-0
->>> counter1()
-1
->>> counter1()
-2
->>> counter1()
-3
-
->>> idx
-100
->>> counter2 = make_counter ()
->>> counter2()
-0
->>> counter2()
-1
->>> counter2()
-2
-
->>> counter1()
-5
->>> 
-
->>> del make_counter
->>> make_counter
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-NameError: name 'make_counter' is not defined
->>> 
->>> counter1()
-6
->>> counter1()
-7
-```
-
-### Pure Functions<a id="sec-1-4-3" name="sec-1-4-3"></a>
+### Pure Functions<a id="sec-1-2-2" name="sec-1-2-2"></a>
 
 Pure functions:
 
@@ -609,7 +231,183 @@ Reverse list function purified:
 [1, 2, 3, 4]
 ```
 
-### Currying and Partial Application<a id="sec-1-4-4" name="sec-1-4-4"></a>
+### Closure<a id="sec-1-2-3" name="sec-1-2-3"></a>
+
+Closure is a function that remembers the environment at which it was created.
+
+```python
+>>> x = 10
+
+ # The function adder remembers the environment at which it was created
+ # it remembers the value of x
+ #
+def make_adder(x):
+    def adder(y):
+        return x + y
+    return adder
+
+>>> add5 = make_adder(5)
+>>> add10 = make_adder(10)
+>>> 
+>>> add5(4)
+9
+>>> list(map(add5, [1, 2, 3, 4, 5]))
+[6, 7, 8, 9, 10]
+
+>>> x
+10
+>>> 
+
+>>> list(map(add10, [1, 2, 3, 4, 5]))
+[11, 12, 13, 14, 15]
+
+ #
+ 
+def make_printer(msg):
+    def printer():
+        print(msg)
+    return printer
+
+>>> p1 = make_printer ("Hello world")
+>>> p2 = make_printer ("FP programming Rocks!!")
+>>> 
+>>> p1()
+Hello world
+>>> p2()
+FP p
+
+ # Mutable state with closure
+ 
+idx = 100 
+ 
+def make_counter():
+    idx = -1    
+    def _():
+        nonlocal idx
+        idx = idx + 1
+        return idx    
+    return _
+
+>>> idx = 100
+>>> counter1 = make_counter()
+>>> counter1()
+0
+>>> counter1()
+1
+>>> counter1()
+2
+>>> counter1()
+3
+
+>>> idx
+100
+>>> counter2 = make_counter ()
+>>> counter2()
+0
+>>> counter2()
+1
+>>> counter2()
+2
+
+>>> counter1()
+5
+>>> 
+
+>>> del make_counter
+>>> make_counter
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'make_counter' is not defined
+>>> 
+>>> counter1()
+6
+>>> counter1()
+7
+```
+
+Example of closure in Clojure: 
+
+```clojure
+(defn make-adder [x]
+   (fn [y] (+ x y)))
+
+user=> (def add5 (make-adder 5))
+#'user/add5
+user=> 
+user=> (def add10 (make-adder 10))
+#'user/add10
+user=> 
+user=> (add5 10)
+15
+user=> (add10 20)
+30
+user=> (map (juxt add5 add10)  [1 2 3 4 5 6])
+([6 11] [7 12] [8 13] [9 14] [10 15] [11 16])
+user=> 
+
+(defn make-printer [message]
+  
+  (fn [] (println message)))
+
+user=> (def printer-1 (make-printer "Hello world"))
+#'user/printer-1
+user=> 
+user=> (def printer-2 (make-printer "Hola Mundo"))
+#'user/printer-2
+user=> 
+user=> (printer-1)
+Hello world
+nil
+user=> (printer-2)
+Hola Mundo
+nil
+user=>
+```
+
+Example of closure in F# (F sharp):
+
+```fsharp
+let make_adder x =
+    fun y -> x + y 
+
+val make_adder : x:int -> y:int -> int
+
+> let add5 = make_adder 5 ;;
+
+val add5 : (int -> int)
+
+> let add10 = make_adder 10 ;;
+
+val add10 : (int -> int)
+
+> add5 20 ;;
+val it : int = 25
+> 
+- add10 30 ;;
+val it : int = 40
+> 
+- List.map add5 [1 ; 2; 3; 4; 5; 6] ;;
+val it : int list = [6; 7; 8; 9; 10; 11]
+> 
+
+//  As F# have currying like OCaml and Haskell 
+//  it could be also be done as 
+//
+
+- let make_adder x y = x + y ;;
+
+val make_adder : x:int -> y:int -> int
+
+> let add10 = make_adder 10 ;;
+
+val add10 : (int -> int)
+
+> add10 20 ;;
+val it : int = 30
+>
+```
+
+### Currying and Partial Application<a id="sec-1-2-4" name="sec-1-2-4"></a>
 
 1.  Currying
 
@@ -969,7 +767,7 @@ Reverse list function purified:
     -   [Partial application - Wikipedia](https://en.wikipedia.org/wiki/Partial_application)
     -   [What's Wrong with Java 8: Currying vs Closures](https://dzone.com/articles/whats-wrong-java-8-currying-vs)
 
-### Lazy Evaluation<a id="sec-1-4-5" name="sec-1-4-5"></a>
+### Lazy Evaluation<a id="sec-1-2-5" name="sec-1-2-5"></a>
 
 "Lazy evaluation" means that data structures are computed
 incrementally, as they are needed (so the trees never exist in memory
@@ -1042,17 +840,22 @@ f = lambda x: x**5
 >>>
 ```
 
-### Fundamental Higher Order Functions<a id="sec-1-4-6" name="sec-1-4-6"></a>
+### Fundamental Higher Order Functions<a id="sec-1-2-6" name="sec-1-2-6"></a>
 
-The functions map, filter and reduce (fold left) are ubiquitous in
-many programming languages and also the most used higher order
-functions.
+1.  Overview
 
-They can be stricted evaluated like in Scheme and Javascript or lazy
-evaluated like in Python and Haskell.
+    The functions map, filter and reduce (fold left) are ubiquitous in
+    many programming languages and also the most used higher order
+    functions.
+    
+    They can be stricted evaluated like in Scheme and Javascript or lazy
+    evaluated like in Python and Haskell.
 
-1.  Map
+2.  Map
 
+    The function map applies a function to each element of a sequence:
+    list, vector, hash map or dictionary and trees. 
+    
     ```
         map :: ( a -> b) -> [a] -> [b]                
                     |
@@ -1069,178 +872,255 @@ evaluated like in Python and Haskell.
         [a] ------------------------->>> [b]
     ```
     
-    **Haskell**
+    1.  Map in Haskell
     
-    The function map is lazy evaluated.
-    
-    ```haskell
-    > let fun1 x = 3 * x + 1
-    > fun1 2
-    7
-    > map fun1 [1, 2, 3]
-    [4,7,10]
-    > 
-    
-      -- The sequence 1 to 1000000 is not evaluated at all, 
-      --
-    > take 10 (map fun1 [1..1000000])
-    [4,7,10,13,16,19,22,25,28,31]
-    
-    > take 10 (map fun1 [1..10000000000])
-    [4,7,10,13,16,19,22,25,28,31]
-    > 
-    > 
-    
-    
-    
-     -- 
-     -- When applied to a function without a list, it creates 
-     -- another function that operates over lists because all
-     -- Haskell functions are curried by default.
-     --
-     --         f :: (a -> b)
-     --  map    :: (a -> b) -> [a] -> [b]
-     --
-     -- It can be seen as:
-     --
-     --  When map is applied to f, it will create the function fs
-     --  that take list of type a and returns list of type b.
-     --
-     --  map    :: (a -> b) -> ([a] -> [b])
-     --                |            |
-     --                |            |------ fs :: [a] -> [b] 
-     --                |    
-     --                -------------------- f  :: a -> b 
-     --
-    > :t map
-    map :: (a -> b) -> [a] -> [b]
-      
-    > let f x = 3 * x + 6
-    > :t f
-    f :: Num a => a -> a
-    > 
-    
-    
-    > map f [1, 2, 3]
-    [9,12,15]
-    > 
-    
-     -- Note: let is only needed in the REPL
-     --
-    > let fs = map f
-    
-    > :t fs
-    fs :: [Integer] -> [Integer]
-    
-    > fs [1, 2, 3]
-    [9,12,15]
-    >
-    ```
-    
-    **Python**
-    
-    In Python 3 map and filter are lazy evaluated, they return a generator.
-    
-    ```python
-    >>> def fun1 (x):
-        return 3*x + 6
-    ... 
-    >>> g = map(fun1, [1, 2, 3])
-    >>> g
-    <map object at 0xb6b4a76c>
-    >>> next (g)
-    9
-    >>> next (g)
-    12
-    >>> next (g)
-    15
-    >>> next (g)
-    Traceback (most recent call last):
-      File "<stdin>", line 1, in <module>
-    StopIteration
-    >>> g
-    <map object at 0xb6b4a76c>
-    >>> 
-    
-     # Force the evaluation: 
-     #
-     >>> list(map(fun1, [1, 2, 3]))
-     [9, 12, 15]
-     
-    
-     # Strict Version of map
-     # 
-     # s_ stands for strict map.
-    
-    def s_map (f, xs):
-        return list(map(f, xs))
-     
-    >>> s_map (fun1, [1, 2, 3])
-    [9, 12, 15]
-    >>> 
-    
-     # Due to python doesn't have tail call optimization
-     # recusion must be avoided, a higher number of iterations
-     # can lead to a stack overflow.
-     
-    def strict_map (f, xs):
-        return [f (x) for x in xs]
+        The function map is lazy evaluated.
         
-    >>> strict_map (fun1, [1, 2, 3])
-    [9, 12, 15]
-    >>> strict_map (fun1, range(5))
-    [6, 9, 12, 15, 18]
-    >>> 
+        ```haskell
+        > let fun1 x = 3 * x + 1
+        > fun1 2
+        7
+        > map fun1 [1, 2, 3]
+        [4,7,10]
+        > 
+        
+          -- The sequence 1 to 1000000 is not evaluated at all, 
+          --
+        > take 10 (map fun1 [1..1000000])
+        [4,7,10,13,16,19,22,25,28,31]
+        
+        > take 10 (map fun1 [1..10000000000])
+        [4,7,10,13,16,19,22,25,28,31]
+        > 
+        > 
+        
+        
+        
+         -- 
+         -- When applied to a function without a list, it creates 
+         -- another function that operates over lists because all
+         -- Haskell functions are curried by default.
+         --
+         --         f :: (a -> b)
+         --  map    :: (a -> b) -> [a] -> [b]
+         --
+         -- It can be seen as:
+         --
+         --  When map is applied to f, it will create the function fs
+         --  that take list of type a and returns list of type b.
+         --
+         --  map    :: (a -> b) -> ([a] -> [b])
+         --                |            |
+         --                |            |------ fs :: [a] -> [b] 
+         --                |    
+         --                -------------------- f  :: a -> b 
+         --
+        > :t map
+        map :: (a -> b) -> [a] -> [b]
+          
+        > let f x = 3 * x + 6
+        > :t f
+        f :: Num a => a -> a
+        > 
+        
+        
+        > map f [1, 2, 3]
+        [9,12,15]
+        > 
+        
+         -- Note: let is only needed in the REPL
+         --
+        > let fs = map f
+        
+        > :t fs
+        fs :: [Integer] -> [Integer]
+        
+        > fs [1, 2, 3]
+        [9,12,15]
+        >
+        ```
     
-      # Lazy map implementation:
-      # Note: the python native map is implemented in C, so
-      # it is faster.
-      #
-      
-    def lazy_map (f, xs):
-        for x in xs:
-            yield x
+    2.  Map in Python
+    
+        In Python 3 map and filter are lazy evaluated, they return a
+        generator. 
+        
+        ```python
+        >>> def fun1 (x):
+            return 3*x + 6
+        ... 
+        >>> g = map(fun1, [1, 2, 3])
+        >>> g
+        <map object at 0xb6b4a76c>
+        >>> next (g)
+        9
+        >>> next (g)
+        12
+        >>> next (g)
+        15
+        >>> next (g)
+        Traceback (most recent call last):
+          File "<stdin>", line 1, in <module>
+        StopIteration
+        >>> g
+        <map object at 0xb6b4a76c>
+        >>> 
+        
+         # Force the evaluation: 
+         #
+         >>> list(map(fun1, [1, 2, 3]))
+         [9, 12, 15]
+        
+        
+         # Strict Version of map
+         # 
+         # s_ stands for strict map.
+        
+        def s_map (f, xs):
+            return list(map(f, xs))
+         
+        >>> s_map (fun1, [1, 2, 3])
+        [9, 12, 15]
+        >>> 
+        
+         # Due to python doesn't have tail call optimization
+         # recusion must be avoided, a higher number of iterations
+         # can lead to a stack overflow.
+         
+        def strict_map (f, xs):
+            return [f (x) for x in xs]
             
-    >>> g = lazy_map (fun1, [1, 2, 3])
-    >>> next(g)
-    1
-    >>> next(g)
-    2
-    >>> next(g)
-    3
-    >>> next(g)
-    Traceback (most recent call last):
-      File "<stdin>", line 1, in <module>
-    StopIteration
-    >>> list(lazy_map (fun1, [1, 2, 3]))
-    [1, 2, 3]
-    >>>           
+        >>> strict_map (fun1, [1, 2, 3])
+        [9, 12, 15]
+        >>> strict_map (fun1, range(5))
+        [6, 9, 12, 15, 18]
+        >>> 
+        
+          # Lazy map implementation:
+          # Note: the python native map is implemented in C, so
+          # it is faster.
+          #
+          
+        def lazy_map (f, xs):
+            for x in xs:
+                yield x
+                
+        >>> g = lazy_map (fun1, [1, 2, 3])
+        >>> next(g)
+        1
+        >>> next(g)
+        2
+        >>> next(g)
+        3
+        >>> next(g)
+        Traceback (most recent call last):
+          File "<stdin>", line 1, in <module>
+        StopIteration
+        >>> list(lazy_map (fun1, [1, 2, 3]))
+        [1, 2, 3]
+        >>>           
+        
+         #
+         # To the map function work like in Haskell and ML 
+         # it is need to be curried.   
+         #
+        
+        curry2 = lambda f: lambda x: lambda y: f(x, y)
+        
+         # The function curry2 currify a function of two arguments
+         #
+        >>> strict_map_c = curry2(strict_map) 
+        
+        >>> strict_map_c(fun1)
+        <function <lambda>.<locals>.<lambda>.<locals>.<lambda> at 0xb6afc0bc>
+        
+        >>> strict_map_c(fun1)([1, 2, 3, 4])
+        [9, 12, 15, 18]
+        >>> 
+        
+        >>> fun1_xs = strict_map_c(fun1)
+        >>> fun1_xs ([1, 2, 3, 4])
+        [9, 12, 15, 18]
+        >>>
+        ```
     
-     #
-     # To the map function work like in Haskell and ML 
-     # it is need to be curried.   
-     #
+    3.  Map in Untyped Languages
     
-    curry2 = lambda f: lambda x: lambda y: f(x, y)
-    
-     # The function curry2 currify a function of two arguments
-     #
-    >>> strict_map_c = curry2(strict_map) 
-    
-    >>> strict_map_c(fun1)
-    <function <lambda>.<locals>.<lambda>.<locals>.<lambda> at 0xb6afc0bc>
-    
-    >>> strict_map_c(fun1)([1, 2, 3, 4])
-    [9, 12, 15, 18]
-    >>> 
-    
-    >>> fun1_xs = strict_map_c(fun1)
-    >>> fun1_xs ([1, 2, 3, 4])
-    [9, 12, 15, 18]
-    >>>
-    ```
+        In untyped languages like Python, Clojure and Scheme the function map
+        can take multiple lists or sequences. In typed languages the function 
+        takes only one argument.
+        
+        Map in Python:
+        
+        ```python
+        >>> list(map (lambda a, b, c: 100 * a + 10 * b + c, [1, 2, 3, 4, 5], [8, 9, 10, 11, 12], [3, 4, 7, 8, 10]))
+        [183, 294, 407, 518, 630]
+        >>>
+        ```
+        
+        Map in Scheme: 
+        
+        ```scheme
+        (map (lambda (a b c) (+ (* 100 a) (* 10 b) c)) 
+              '(1 2 3 4 5) 
+              '(8 9 10 11 12) 
+              '(3 4 7 8 10))
+        
+        $1 = (183 294 407 518 630)
+        ```
+        
+        Map in Clojure:
+        
+        ```clojure
+        ;; f a b c = 100 * a + 10 * b + c
+        ;; 
+        ;; 183 = f 1 8 3 
+        ;; 294 = f 2 9 4 
+        ;; ...
+        ;; 630 = f 6 3 0
+        ;;
+        user=> (map (fn [a b c] (+ (* 100 a) (* 10 b) c)) [1 2 3 4 5] [8 9 10 11 12] [3 4 7 8 10])
+        (183 294 407 518 630)
+        user=> 
+        
+        ;;
+        ;; The clojure map is Polymorphic it can be applied to any collection 
+        ;; of seq abstraction like lists, vectors and hash maps.
+        ;;
+        
+        ;; Map applied to a list  
+        ;;
+        user=> (map inc '(1 2 3 4 5 6))
+        (2 3 4 5 6 7)
+        user=> 
+        
+        ;; Map applied to a vector 
+        ;;
+        user=> (map inc [1 2 3 4 5 6])
+        (2 3 4 5 6 7)
+        user=> 
+        
+        ;; Map applied to a hash map 
+        ;;
+        user=> (map identity {:a 10 :b 20 :c "hello world"})
+        ([:a 10] [:b 20] [:c "hello world"])
+        user=> 
+        
+        ;; The function mapv is similar to map, but returns a vector: 
+        ;;
+        
+        user=> (map identity {:a 10 :b 20 :c "hello world"})
+        ([:a 10] [:b 20] [:c "hello world"])
+        user=> 
+        
+        ;; Clojure also have desctructuring 
+        ;;
+        user=> (map (fn [[[a b] c]] (+ (* 100 a ) (* 10 b) c))  [[[1 2] 3] [[3 4] 5] [[1 2] 4]])
+        (123 345 124)
+        user=>
+        ```
 
-2.  Filter
+3.  Filter
 
     **Python**
     
@@ -1306,308 +1186,617 @@ evaluated like in Python and Haskell.
     >>>
     ```
 
-3.  Reduce (Fold)
+4.  Reduce or Fold
 
-    See also: 
-    -   [Fold (higher-order function) - Wikipedia, the free encyclopedia](https://en.wikipedia.org/wiki/Fold_(higher-order_function))
-    -   [A tutorial on the universality and expressiveness of fold. GRAHAM HUTTON](http://www.cs.nott.ac.uk/~pszgmh/fold.pdf)
-    -   [Haskell unit 6: The higher-order fold functions | Antoni Diller](http://www.cantab.net/users/antoni.diller/haskell/units/unit06.html)
+    1.  Overview
     
-    **Haskell**
+        **Fold Left**
+        
+        The  function fold left is tail recursive, whereas the function fold
+        right is not. This functions is also known as reduce or inject (in
+        Ruby). The function fold left is often called just <span class="underline">fold</span> like in F#
+        or <span class="underline">reduce</span> (Python, Javascript, Clojure) and also Inject (Ruby).
+        
+        `foldl :: (State -> x -> State) -> State -> [x] -> State`
+        `foldl (f :: S -> x -> S)  S [x]`
+        
+        ```
+        Sn = foldl f S0 [x0, x1, x2, x3 ... xn-1]
+        
+        S1   = f S0 x0
+        S2   = f S1 x1     = f (f S0 x0) x1
+        S3   = f S2 x2     = f (f (f S0 x0) x1) x2
+        S4   = f S3 x3     = f (f (f (f S0 x0) x1) x2) x3
+        ...
+        Sn-1 = f Sn-2 Xn-2 = ...
+        Sn   = f Sn-1 Xn-1 = f ...(f (f (f (f S0 x0) x1) x2) x3 ... xn
+        
+          ;;; -> Result
+        ```
+        
+        **Fold Right**
+        
+        `foldr :: (x -> acc -> acc) -> acc -> [x] -> acc`
+        
+        ```
+        S1   = f xn-1 S0
+        S2   = f xn-2 S1     = f xn-2 (f xn-1 S0)
+        S3   = f xn-3 S2     = f xn-3 (f xn-2 (f xn-1 S0))
+        S4   = f xn-4 S3     = f xn-4 (f xn-3 (f xn-2 (f xn-1 S0)))
+        ....
+        Sn-1 = f x1   Sn-2   = ...
+        Sn   = f x0   Sn-1   = f x0 (f x1 ... (f xn-2 (f xn-1 S0)))
+        ```
     
-    Fold Left:
+    2.  Haskell
     
-    ```
-     foldl :: (acc -> x -> acc) -> acc -> [x] -> acc
-     
-                      |             |      |       | 
-                      |             |      |       |---> Returns the accumulated 
-                      |             |      |             value
-                      |             |      |----- xs 
-                      |             |                  
-                      |             |     Inital Value of accumulator
-                      |             |---  acc0
-                      |
-                      |-----------------  f :: acc -> x -> acc
-                                                      |
-                                                      |--- Element of list 
+        See also: 
+        
+        -   [Fold (higher-order function) - Wikipedia, the free encyclopedia](https://en.wikipedia.org/wiki/Fold_(higher-order_function))
+        -   [A tutorial on the universality and expressiveness of fold. GRAHAM HUTTON](http://www.cs.nott.ac.uk/~pszgmh/fold.pdf)
+        -   [Haskell unit 6: The higher-order fold functions | Antoni Diller](http://www.cantab.net/users/antoni.diller/haskell/units/unit06.html)
+        
+        Fold Left:
+        
+        ```
+         foldl :: (acc -> x -> acc) -> acc -> [x] -> acc
+         
+                          |             |      |       | 
+                          |             |      |       |---> Returns the accumulated 
+                          |             |      |             value
+                          |             |      |----- xs 
+                          |             |                  
+                          |             |     Inital Value of accumulator
+                          |             |---  acc0
+                          |
+                          |-----------------  f :: acc -> x -> acc
+                                                          |
+                                                          |--- Element of list 
+        
+         foldl :: (b -> a -> b) -> b -> [a] -> b
+         foldl f z []     = z
+         foldl f z (x:xs) = foldl f (f z x) xs
+        ```
+        
+        ```haskell
+        > :t foldl
+        foldl :: (a -> b -> a) -> a -> [b] -> a
+        > 
+        > foldl (\acc x -> 10 * acc + x) 0 [1, 2, 3, 4, 5] 
+        12345
+        >
+        ```
+        
+        It is equivalent to:
+        
+        ```haskell
+        > let f acc x = 10 * acc + x
+        > 
+        > (f 0 1)
+        1
+        > (f (f 0 1) 2)
+        12
+        > (f (f (f 0 1) 2) 3)
+        123
+        > 
+        > (f (f (f (f 0 1) 2) 3) 4)
+        1234
+        > (f (f (f (f (f 0 1) 2) 3) 4) 5)
+        12345
+        >
+        ```
+        
+        Evaluation of Fold left:
+        
+        ```
+        > foldl (\acc x -> 10 * acc + x ) 0 [1, 2, 3, 4, 5]
+        1234
+        
+        S0 = 0
+        
+        f = \acc x -> 10 * acc + x
+        
+                         x  acc
+        S1 = f S0 x0 = f 0   1 = 10 * 0  + 1 = 1
+        S2 = f S1 x1 = f 10  2 = 10 * 1    + 2 = 12
+        S3 = f S2 x2 = f 12  3 = 10 * 12   + 3 = 123
+        S4 = f S3 x3 = f 123 4 = 10 * 123  + 4 = 1234
+        S5 = f S3 x3 = f 123 4 = 10 * 1234 + 5 = 12345
+        ```
+        
+        **Fold right**
+        
+        ```
+         foldr :: (x -> acc -> acc) -> acc -> [x] -> acc
+        
+         foldr :: (a -> b -> b) -> b -> [a] -> b
+         foldr f z []     = z
+         foldr f z (x:xs) = f x (foldr f z xs)
+        ```
+        
+        ```haskell
+        > foldr (\x acc -> 10 * acc + x) 0 [1, 2, 3, 4, 5] 
+        54321
+        
+        > (f 0 5)
+        5
+        > (f (f 0 5) 4)
+        54
+        > (f (f (f 0 5) 4) 3)
+        543
+        > (f (f (f (f 0 5) 4) 3) 2)
+        5432
+        > (f (f (f (f (f 0 5) 4) 3) 2) 1)
+        54321
+        > 
+        
+         --
+         -- Derive fold_right from foldl (fold left)
+         -- 
+        
+        > let fold_right f acc xs = foldl (\x acc -> f acc x) acc (reverse xs)
+        > 
+        > :t fold_right
+        fold_right :: (b -> a -> a) -> a -> [b] -> a
+        > 
+        > 
+        > fold_right (\x acc -> 10 * acc + x) 0 [1, 2, 3, 4, 5]
+        54321
+        >
+        ```
+        
+        Evaluation of Fold Right:
+        
+        ```
+        Example:
+        
+        > foldr (\x acc -> 10 * acc + x ) 0 [1, 2, 3, 4, 5]
+        54321
+        >
+        
+        f  = \x acc -> 10 * acc + x
+        S0 = 0
+        n = 5
+                               x acc
+        S1   = f x4 S0     = f 5  0    = 10 * 0    + 5 = 5
+        S2   = f x3 S1     = f 4  5    = 10 * 5    + 4 = 54
+        S3   = f x2 S2     = f 3  54   = 10 * 54   + 3 = 543
+        S4   = f x1 S3     = f 2  543  = 10 * 543  + 2 = 5432
+        S5   = f x0 S4     = f 1  5432 = 10 * 5432 + 1 = 54321
+        ```
     
-     foldl :: (b -> a -> b) -> b -> [a] -> b
-     foldl f z []     = z
-     foldl f z (x:xs) = foldl f (f z x) xs
-    ```
+    3.  Python
     
-    ```haskell
-    > :t foldl
-    foldl :: (a -> b -> a) -> a -> [b] -> a
-    > 
-    > foldl (\acc x -> 10 * acc + x) 0 [1, 2, 3, 4, 5] 
-    12345
-    >
-    ```
+        In Python 3 the function reduce is not default anymore, however it can
+        be found in the native library functools, that has a lot of built-in
+        functions for functional programming. The function reduce is equivalent
+        to Haskell function foldl (fold left) which is tail recursive.
+        
+        ```
+        reduce(function, sequence[, initial]) -> value
+        
+        reduce :: (acc -> x -> acc) -> [x] ?acc0  -> acc
+        ```
+        
+        ```python
+        >>> from functools import reduce
+        >>> 
+        
+        >>> reduce (lambda acc, x: 10 *  acc + x , [1, 2, 3, 4, 5], 0)
+        12345
+        >>> 
+        
+        >>> f = lambda acc, x: 10 *  acc + x
+        >>> 
+        >>> f(0, 1)
+        1
+        >>> f( f(0, 1), 2)
+        12
+        >>> f( f( f(0, 1), 2), 3)
+        123
+        >>> f( f( f( f(0, 1), 2), 3), 4)
+        1234
+        >>> f( f( f( f( f(0, 1), 2), 3), 4), 5)
+        12345
+        >>> 
+        
+        def my_reduce (f, xs, acc0=None):
+            "Non recursive implementation of reduce (fold_left)
+             with optional initial accumulator value.
+            "
+        
+            if acc0 is None:
+                acc = xs[0]   
+                xss = xs[1:]
+            else:
+                acc = acc0
+                xss = xs
+                
+            for x in xss:
+                acc = f (acc, x)
+                
+            return acc
+        
+        
+        >>> 
+        >>> my_reduce(lambda acc, x: 10 * acc + x, [1, 2, 3, 4, 5], 0)
+        12345
+        >>> my_reduce(lambda acc, x: 10 * acc + x, [1, 2, 3, 4, 5])
+        12345
+        >>> my_reduce(lambda acc, x:  acc + x, [1, 2, 3, 4, 5], 0)
+        15
+        >>> my_reduce(lambda acc, x:  acc * x, [1, 2, 3, 4, 5], 1)
+        120
+        >>> 
+         
+         #
+         # Implementation without recursion.
+         #
+        
+        def fold_left (f_acc_x_to_acc, acc0, xs):
+            "Haskell-like fold left function
+            
+            fold_left :: (acc -> x -> acc) -> acc -> [x]
+            "
+            acc = acc0
+            
+            for x in xs:
+                acc = f_acc_x_to_acc (acc, x)
+                
+            return acc
+              
+        >>> fold_left (lambda acc, x: 10 * acc + x, 0, [1, 2, 3, 4, 5])
+        12345
+        >>>       
+        
+        
+        def fold_right (f, acc0, xs):
+            return fold_left ((lambda acc, x: f(x, acc)), acc0, reversed(xs))
+        
+        >>> fold_right (lambda x, acc: 10 * acc + x, 0, [1, 2, 3, 4, 5])
+        54321
+        >>>
+        
+        def fold_right2 (f, acc0, xs):
+            acc = acc0
+            
+            for x in reversed(xs):
+                acc = f(x, acc)
+                
+            return acc
+        
+        >>> fold_right2 (lambda x, acc: 10 * acc + x, 0, [1, 2, 3, 4, 5])
+        54321
+        >>>
+        ```
+        
+        **Usefulness of Fold**
+        
+        Many functions and recursive algorithms can be implemented using the
+        fold function, including map, filter, sum, product and others.
+        
+        It is based in the paper:  
+        
+        -   [A tutorial on the universality and expressiveness of fold. GRAHAM HUTTON](http://www.cs.nott.ac.uk/~pszgmh/fold.pdf)
+        
+        In the paper was used fold right, here was used fold left. 
+        
+        ```python
+        def fold_left (f_acc_x_to_acc, acc0, xs):
+            "Haskell-like fold left function
+            
+            fold_left :: (acc -> x -> acc) -> acc -> [x]
+            "
+            acc = acc0
+            
+            for x in xs:
+                acc = f_acc_x_to_acc (acc, x)
+                
+            return acc
+            
+            
+            ;;; Function fold in curried form 
+            
+        curry3 = lambda f: lambda x: lambda y: lambda z: f(x, y, z)
+        
+        fold = curry3(fold_left)
+        
+        >>> summation = fold(lambda acc, x: acc + x)(0)
+        >>> 
+        >>> summation([1, 2, 3, 4, 5, 6])
+        21
+        >>> 
+        
+        >>> product = fold(lambda acc, x: acc * x)(1)
+        >>> product([1, 2, 3, 4, 5])
+        120
+        >>> 
+        
+        >>> f_or = fold(lambda acc, x: acc or x)(False)
+        >>> f_or([False, False, False])
+        False
+        >>> 
+        >>> f_or([False, False, True])
+        True
+        >>> 
+        
+        >>> f_and = fold(lambda acc, x: acc and x)(True)
+        >>> 
+        >>> f_and([False, True, True])
+        False
+        >>> f_and([True, True, True])
+        True
+        >>> 
+        
+        >>> length = fold(lambda acc, x: acc + 1)(0)
+        >>> length ([1, 2, 3, 4, 5])
+        5
+        
+        >>> _map = lambda f, xs: fold(lambda acc, x: acc + [f(x)] )([])(xs)
+        >>> _map (lambda x: x * 3, [1, 2, 3, 4])
+        [3, 6, 9, 12]
+        >>> 
+        
+        >>> _filter = lambda p, xs: fold(lambda acc, x: (acc + [x]) if p(x) else  acc )([])(xs)
+        >>> 
+        >>> _filter(lambda x: x > 10, [10, 3, 8, 2, 20, 30])
+        [20, 30]
+        >>> 
+        
+        
+         #
+         # Function composition
+         # 
+         #  (f3 (f2 (f1 (f0 x))))
+         #
+         #  (f3 . f2 . f1 . f0) x
+         #
+         #  or using, forward composition:
+         # 
+         #  (f0 >> f2 >> f1 >> f0) x
+         #
+         
+        >>> f1 = lambda x: 3 * x
+        >>> f2 = lambda x: 5 + x
+        >>> f3 = lambda x: 2 ** x
+        
+        
+        >>> _fcomp = lambda functions: lambda x: fold(lambda acc, f: f(acc)) (x) (functions)
+        
+        >>> _fcomp([f1, f2, f3])(3)
+        16384
+        
+        >>> (f3 (f2 (f1 (3))))
+        16384
+        >>>
+        ```
     
-    It is equivalent to:
+    4.  Clojure
     
-    ```haskell
-    > let f acc x = 10 * acc + x
-    > 
-    > (f 0 1)
+        The function reduce is similar to Haskell <span class="underline">fold left</span> and Python
+        reduce. This function is Polymorphic. It works on any collection of
+        seq abstraction: lists, vectors and hash maps. 
+        
+        Signature:
+        
+        ```
+        (reduce f coll)      -> reduce :: (f :: acc -> x -> acc) -> [x]
+        
+        Or 
+        
+        (reduce f val coll)  -> reduce :: (f :: acc -> x -> acc) -> acc -> [x] 
+        
+        f :: acc -> x -> acc
+        ```
+        
+        ```clojure
+        ;; Applying fold/reduce to a list 
+        ;;
+        ;;
+        user=> (reduce (fn [acc x] (+ (* 10 acc) x)) 0 '(1 2 3 4 5))
+        12345
+        
+        
+        ;; Applying fold/reduce to a vector 
+        ;;
+        user=> (reduce (fn [acc x] (+ (* 10 acc) x))  0 [1 2 3 4 5])
+        12345
+        user=> 
+        
+        user=> (reduce (fn [acc x] (+ (* 10 acc) x)) 0 [])
+        0
+        
+        ;; Applyind fold/reduce to a Hash map 
+        ;;
+        user=> (reduce (fn [acc x] (cons x  acc )) '()  { :a 10 :b 20 :c 30 })
+        ([:c 30] [:b 20] [:a 10])
+        user=>
+        
+        ;; Without Initial value of accumulator it will fail on a empty list. 
+        ;; 
+        user=> (reduce (fn [acc x] (+ (* 10 acc) x)) [1 2 3 4 5])
+        12345
+        
+        user=> (reduce (fn [acc x] (+ (* 10 acc) x)) [])
+        ArityException Wrong number of args (0) passed to: user/eval44/fn--45  clojure.lang.AFn.throwArity (AFn.java:429)
+        user=> 
+        
+        ;; Implementing fold right  
+        ;;
+        (defn foldr 
+           ([f xs]       (reduce (fn [acc x] (f x acc))     (reverse xs)))
+           ([f acc xs]   (reduce (fn [acc x] (f x acc)) acc (reverse xs)))
+          )
+        
+        user=> (foldr (fn [x acc] (+ (* 10 acc) x)) 0 [1 2 3 4 5])
+        54321
+        
+        
+        ;; Clojure has destructuring 
+        ;;
+        user=> (reduce (fn [acc [a b]] (conj acc (+ (* 10 a) b) )) '[] [[1 2] [3 4] [5 8]] )
+        [12 34 58]
+        user=> 
+        
+        ;; Implementing map with fold left (reduce)
+        ;;
+        user=> (defn map2 [f xs] 
+                  (reverse (reduce (fn [acc x] (cons (f x) acc)) 
+                                () 
+                                xs)))
+        #'user/map2
+        user=> 
+        user=> (map2 inc '(1 2 3 3 4 5))
+        (2 3 4 4 5 6)
+        user=> 
+        
+        ;; Implementing map with fold right 
+        ;;
+        ;;
+        
+        (defn map2 [f xs] 
+           (foldr (fn [x acc] (cons (f x) acc)) 
+                  ()
+                  xs
+           ))
+        
+        user=> (map2 inc '(1 2 3 4 5 6))
+        (2 3 4 5 6 7)
+        user=>
+        ```
+
+5.  For Each, Impure map
+
+    For each is an <span class="underline">impure higher order function</span> which maps an impure,
+    output function to each element of a list. Unlike map this function
+    neither have a standard name and or return anything.
+    
+    **Scheme**
+    
+    ```scheme
+    > (for-each (lambda (i) (display i) (newline))  '(1 2 3 4 5 6))
     1
-    > (f (f 0 1) 2)
-    12
-    > (f (f (f 0 1) 2) 3)
-    123
-    > 
-    > (f (f (f (f 0 1) 2) 3) 4)
-    1234
-    > (f (f (f (f (f 0 1) 2) 3) 4) 5)
-    12345
-    >
-    ```
-    
-    Fold right:
-    
-    ```
-     foldr :: (x -> acc -> acc) -> acc -> [x] -> acc
-    
-     foldr :: (a -> b -> b) -> b -> [a] -> b
-     foldr f z []     = z
-     foldr f z (x:xs) = f x (foldr f z xs)
-    ```
-    
-    ```haskell
-    > foldr (\x acc -> 10 * acc + x) 0 [1, 2, 3, 4, 5] 
-    54321
-    
-    > (f 0 5)
+    2
+    3
+    4
     5
-    > (f (f 0 5) 4)
-    54
-    > (f (f (f 0 5) 4) 3)
-    543
-    > (f (f (f (f 0 5) 4) 3) 2)
-    5432
-    > (f (f (f (f (f 0 5) 4) 3) 2) 1)
-    54321
-    > 
+    6
+    >
     
-     --
-     -- Derive fold_right from foldl (fold left)
-     -- 
+    > (for-each
+       (lambda (a b c)
+          (display a) (display b) (display c)
+          (newline)
+        )
+       '(a b c d e f)
+       '(1 2 3 4 5 6)
+       '("x" "y" "z" "w" "h" "k"))
+    a1x
+    b2y
+    c3z
+    d4w
+    e5h
+    f6k
+    ```
     
-    > let fold_right f acc xs = foldl (\x acc -> f acc x) acc (reverse xs)
-    > 
-    > :t fold_right
-    fold_right :: (b -> a -> a) -> a -> [b] -> a
-    > 
-    > 
-    > fold_right (\x acc -> 10 * acc + x) 0 [1, 2, 3, 4, 5]
-    54321
+    **Common Lisp**
+    
+    ```lisp
+    > (mapc #'print '(1 2 3 3 4))
+    
+    1
+    2
+    3
+    3
+    4
+    ```
+    
+    **Ocaml**
+    
+    ```
+    > List.iter ;;
+    - : ('a -> unit) -> 'a list -> unit = <fun>
+    
+    > List.iter (fun x -> print_int x ; print_string "\n") [1 ; 2; 3; 4; 5] ;;
+    1
+    2
+    3
+    4
+    5
+    - : unit = ()
+    ```
+    
+    **F#**
+    
+    ```
+    > List.iter ;;
+    val it : (('a -> unit) -> 'a list -> unit) = <fun:clo@1>
+    
+    > List.iter (fun x -> printfn "x = %d" x) [1; 2; 3; 4; 5] ;;
+    x = 1
+    x = 2
+    x = 3
+    x = 4
+    x = 5
+    val it : unit = ()
     >
     ```
     
     **Python**
     
-    In Python 3 the function reduce is not default anymore, however it can be found in the native library functools, that has a lot of builtin functions for functional programing. The function reduce is equivalent to Haskell function foldl (fold left) which is tail recursive. 
-    
-    ```
-    reduce(function, sequence[, initial]) -> value
-    
-    reduce :: (acc -> x -> acc) -> [x] ?acc0  -> acc
-    ```
+    This function is not in Python standard library however, it can be
+    defined as this.
     
     ```python
-    >>> from functools import reduce
-    >>> 
+    def for_each(f, * xss):
+        for xs in zip(* xss):
+            f(*xs)
     
-    >>> reduce (lambda acc, x: 10 *  acc + x , [1, 2, 3, 4, 5], 0)
-    12345
-    >>> 
-    
-    >>> f = lambda acc, x: 10 *  acc + x
-    >>> 
-    >>> f(0, 1)
+    >>> for_each (print, [1, 2, 4, 5, 6])
     1
-    >>> f( f(0, 1), 2)
-    12
-    >>> f( f( f(0, 1), 2), 3)
-    123
-    >>> f( f( f( f(0, 1), 2), 3), 4)
-    1234
-    >>> f( f( f( f( f(0, 1), 2), 3), 4), 5)
-    12345
-    >>> 
+    2
+    4
+    5
+    6
     
-    def my_reduce (f, xs, acc0=None):
-        "Non recursive implementation of reduce (fold_left)
-         with optional initial accumulator value.
-        "
-    
-        if acc0 is None:
-            acc = xs[0]   
-            xss = xs[1:]
-        else:
-            acc = acc0
-            xss = xs
-            
-        for x in xss:
-            acc = f (acc, x)
-            
-        return acc
-    
-    
-    >>> 
-    >>> my_reduce(lambda acc, x: 10 * acc + x, [1, 2, 3, 4, 5], 0)
-    12345
-    >>> my_reduce(lambda acc, x: 10 * acc + x, [1, 2, 3, 4, 5])
-    12345
-    >>> my_reduce(lambda acc, x:  acc + x, [1, 2, 3, 4, 5], 0)
-    15
-    >>> my_reduce(lambda acc, x:  acc * x, [1, 2, 3, 4, 5], 1)
-    120
-    >>> 
-     
-     #
-     # Implementation without recursion.
-     #
-    
-    def fold_left (f_acc_x_to_acc, acc0, xs):
-        "Haskell-like fold left function
-        
-        fold_left :: (acc -> x -> acc) -> acc -> [x]
-        "
-        acc = acc0
-        
-        for x in xs:
-            acc = f_acc_x_to_acc (acc, x)
-            
-        return acc
-          
-    >>> fold_left (lambda acc, x: 10 * acc + x, 0, [1, 2, 3, 4, 5])
-    12345
-    >>>       
-    
-    
-    def fold_right (f, acc0, xs):
-        return fold_left ((lambda acc, x: f(x, acc)), acc0, reversed(xs))
-    
-    >>> fold_right (lambda x, acc: 10 * acc + x, 0, [1, 2, 3, 4, 5])
-    54321
-    >>>
-    
-    def fold_right2 (f, acc0, xs):
-        acc = acc0
-        
-        for x in reversed(xs):
-            acc = f(x, acc)
-            
-        return acc
-    
-    >>> fold_right2 (lambda x, acc: 10 * acc + x, 0, [1, 2, 3, 4, 5])
-    54321
-    >>>
+    >>> for_each (lambda a, b: print (a, b), [1, 2, 3, 4, 5, 6], ["a", "b", "c", "d", "e", "f"])
+    1 a
+    2 b
+    3 c
+    4 d
+    5 e
+    6 f
     ```
     
-    **Usefulness of Fold**
+    **Clojure** 
     
-    Many functions and recursive algorithms can be implemented using the fold function, including map, filter, sum, product and others.
-    
-    It is based in the paper:  
-    -   [A tutorial on the universality and expressiveness of fold. GRAHAM HUTTON](http://www.cs.nott.ac.uk/~pszgmh/fold.pdf)
-    
-    In the paper was usef fold right, here was used fold left. 
-    
-    ```python
-    def fold_left (f_acc_x_to_acc, acc0, xs):
-        "Haskell-like fold left function
-        
-        fold_left :: (acc -> x -> acc) -> acc -> [x]
-        "
-        acc = acc0
-        
-        for x in xs:
-            acc = f_acc_x_to_acc (acc, x)
-            
-        return acc
-        
-        
-        ;;; Function fold in curried form 
-        
-    curry3 = lambda f: lambda x: lambda y: lambda z: f(x, y, z)
-    
-    fold = curry3(fold_left)
-    
-    >>> summation = fold(lambda acc, x: acc + x)(0)
-    >>> 
-    >>> summation([1, 2, 3, 4, 5, 6])
-    21
-    >>> 
-    
-    >>> product = fold(lambda acc, x: acc * x)(1)
-    >>> product([1, 2, 3, 4, 5])
-    120
-    >>> 
-    
-    >>> f_or = fold(lambda acc, x: acc or x)(False)
-    >>> f_or([False, False, False])
-    False
-    >>> 
-    >>> f_or([False, False, True])
-    True
-    >>> 
-    
-    >>> f_and = fold(lambda acc, x: acc and x)(True)
-    >>> 
-    >>> f_and([False, True, True])
-    False
-    >>> f_and([True, True, True])
-    True
-    >>> 
-    
-    >>> length = fold(lambda acc, x: acc + 1)(0)
-    >>> length ([1, 2, 3, 4, 5])
-    5
-    
-    >>> _map = lambda f, xs: fold(lambda acc, x: acc + [f(x)] )([])(xs)
-    >>> _map (lambda x: x * 3, [1, 2, 3, 4])
-    [3, 6, 9, 12]
-    >>> 
-    
-    >>> _filter = lambda p, xs: fold(lambda acc, x: (acc + [x]) if p(x) else  acc )([])(xs)
-    >>> 
-    >>> _filter(lambda x: x > 10, [10, 3, 8, 2, 20, 30])
-    [20, 30]
-    >>> 
+    ```clojure
+    user=> (defn f [a b] (println (format "a = %s , b = %s" a b)))
+    #'user/f
     
     
-     #
-     # Function composition
-     # 
-     #  (f3 (f2 (f1 (f0 x))))
-     #
-     #  (f3 . f2 . f1 . f0) x
-     #
-     #  or using, forward composition:
-     # 
-     #  (f0 >> f2 >> f1 >> f0) x
-     #
-     
-    >>> f1 = lambda x: 3 * x
-    >>> f2 = lambda x: 5 + x
-    >>> f3 = lambda x: 2 ** x
+    (defn for-each [f & xss]
+       (doseq [args (apply map vector xss)]  (apply f args)))
     
     
-    >>> _fcomp = lambda functions: lambda x: fold(lambda acc, f: f(acc)) (x) (functions)
+    user=> (for-each println [1 2 3 4])
+    1
+    2
+    3
+    4
+    nil
     
-    >>> _fcomp([f1, f2, f3])(3)
-    16384
     
-    >>> (f3 (f2 (f1 (3))))
-    16384
-    >>>
+    user=> (for-each f [1 2 3 4] [3 4 5 6])
+    a = 1 , b = 3
+    a = 2 , b = 4
+    a = 3 , b = 5
+    a = 4 , b = 6
+    nil
+    user=>
     ```
 
-### Function Composition<a id="sec-1-4-7" name="sec-1-4-7"></a>
+### Function Composition<a id="sec-1-2-7" name="sec-1-2-7"></a>
 
 Function composition promotes shorter code, code reuse and higher
 modularity by creating new functions from previous defined ones. They
@@ -2166,7 +2355,304 @@ See also: [Function composition (computer science)](http://en.wikipedia.org/wiki
      [3563.23000, 100.23000, 45.23000]]
     ```
 
-## Miscellaneous<a id="sec-1-5" name="sec-1-5"></a>
+# Functional Programming Languages<a id="sec-2" name="sec-2"></a>
+
+Some Functional programming languages:
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Language</th>
+<th scope="col" class="left">Evaluation</th>
+<th scope="col" class="left">Typing</th>
+<th scope="col" class="left">Type Inference</th>
+<th scope="col" class="left">Pattern Matching</th>
+<th scope="col" class="left">GIL</th>
+<th scope="col" class="left">TCO</th>
+<th scope="col" class="left">OO</th>
+<th scope="col" class="left">AGDT</th>
+<th scope="col" class="left">Platform</th>
+<th scope="col" class="left">Family</th>
+<th scope="col" class="left">Currying</th>
+<th scope="col" class="left">Feature</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">Haskell</td>
+<td class="left">Lazy</td>
+<td class="left">Static</td>
+<td class="left">Yes</td>
+<td class="left">Yes</td>
+<td class="left">No</td>
+<td class="left">Yes</td>
+<td class="left">No</td>
+<td class="left">Yes</td>
+<td class="left">NAT</td>
+<td class="left">ML/SML</td>
+<td class="left">Yes</td>
+<td class="left">Concurrency/Parallelism</td>
+</tr>
+
+
+<tr>
+<td class="left">Ocaml</td>
+<td class="left">Strict</td>
+<td class="left">Static</td>
+<td class="left">Yes</td>
+<td class="left">Yes</td>
+<td class="left">Yes</td>
+<td class="left">Yes</td>
+<td class="left">Yes</td>
+<td class="left">Yes</td>
+<td class="left">NAT/BC</td>
+<td class="left">ML/SML</td>
+<td class="left">Yes</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+
+<tr>
+<td class="left">F# (F sharp)</td>
+<td class="left">Strict</td>
+<td class="left">Static</td>
+<td class="left">Yes</td>
+<td class="left">Yes</td>
+<td class="left">No</td>
+<td class="left">Yes</td>
+<td class="left">Yes</td>
+<td class="left">Yes</td>
+<td class="left">.NET</td>
+<td class="left">ML/SML</td>
+<td class="left">Yes</td>
+<td class="left">.NET Integration</td>
+</tr>
+
+
+<tr>
+<td class="left">Scheme</td>
+<td class="left">Strict</td>
+<td class="left">Dynamic</td>
+<td class="left">No</td>
+<td class="left">No</td>
+<td class="left">\*</td>
+<td class="left">Yes</td>
+<td class="left">No</td>
+<td class="left">No</td>
+<td class="left">-</td>
+<td class="left">Lisp</td>
+<td class="left">No</td>
+<td class="left">Minimalist Educational</td>
+</tr>
+
+
+<tr>
+<td class="left">Clojure</td>
+<td class="left">Strict + Lazy</td>
+<td class="left">Dynamic</td>
+<td class="left">No</td>
+<td class="left">Destructuring and macros</td>
+<td class="left">No</td>
+<td class="left">No</td>
+<td class="left">No</td>
+<td class="left">No</td>
+<td class="left">JVM</td>
+<td class="left">Lisp</td>
+<td class="left">No</td>
+<td class="left">Java integration + Macro</td>
+</tr>
+
+
+<tr>
+<td class="left">Scala</td>
+<td class="left">Strict</td>
+<td class="left">Static</td>
+<td class="left">Yes</td>
+<td class="left">Yes</td>
+<td class="left">No</td>
+<td class="left">Yes</td>
+<td class="left">Yes</td>
+<td class="left">Yes</td>
+<td class="left">JVM</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">Java integration</td>
+</tr>
+
+
+<tr>
+<td class="left">Erlang</td>
+<td class="left">Strict</td>
+<td class="left">Dynamic</td>
+<td class="left">?</td>
+<td class="left">Yes</td>
+<td class="left">?</td>
+<td class="left">No</td>
+<td class="left">?</td>
+<td class="left">?</td>
+<td class="left">VM</td>
+<td class="left">&#xa0;</td>
+<td class="left">?</td>
+<td class="left">Telecommunications, Servers, Concurrency</td>
+</tr>
+
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+
+<tr>
+<td class="left">R</td>
+<td class="left">Strict</td>
+<td class="left">Dynamic</td>
+<td class="left">No</td>
+<td class="left">No</td>
+<td class="left">?</td>
+<td class="left">No</td>
+<td class="left">Yes</td>
+<td class="left">-</td>
+<td class="left">VM</td>
+<td class="left">&#xa0;</td>
+<td class="left">No</td>
+<td class="left">DSL - Statics</td>
+</tr>
+
+
+<tr>
+<td class="left">Mathematica</td>
+<td class="left">Strict</td>
+<td class="left">Dynamic</td>
+<td class="left">Yes</td>
+<td class="left">?</td>
+<td class="left">?</td>
+<td class="left">??</td>
+<td class="left">?</td>
+<td class="left">?</td>
+<td class="left">?</td>
+<td class="left">&#xa0;</td>
+<td class="left">No</td>
+<td class="left">DSL - Computer Algebraic System</td>
+</tr>
+</tbody>
+</table>
+
+Notes:
+
+-   AGDT   - Algebraic Data Types
+
+-   GIL    - Global Interpreter Locking. Languages with GIL cannot
+    support multi-core processors.
+
+-   TCO - Tail Call Optimization. Languages without TCO cannot perform
+    recursion safely. It can lead to a stack overflow for a big number
+    of interactions.
+
+-   JVM    - Java Virtual Machine / Java Platform
+
+-   .NET   - Dot Net Platform
+
+-   NAT    - Native Code
+
+-   VM     - Virtual Machine
+
+-   OO     - Object Orientated
+
+-   Currying  - Curried functions like in Haskell
+
+-   DSL    - Domain Specific Language
+
+More Information: [Comparison of Functional Programming Languages](http://en.wikipedia.org/wiki/Comparison_of_functional_programming_languages)
+
+See also: [ML Dialects and Haskell: SML, OCaml, F#, Haskell](http://hyperpolyglot.org/ml)
+
+# Notable People<a id="sec-3" name="sec-3"></a>
+
+A selection of people who influenced functional programming:
+
+-   [Alonzo Church](https://en.wikipedia.org/wiki/Alonzo_Church), Mathematician -> Lambda Calculus
+
+-   [Haskell Curry](https://en.wikipedia.org/wiki/Haskell_Curry), Mathematician -> Concept of currying
+
+-   [Robin Milner](https://en.wikipedia.org/wiki/Robin_Milner), Computer Scientist -> Type inference, [Hindley–Milner type system](https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system), [ML language](https://en.wikipedia.org/wiki/ML_(programming_language))
+
+-   [John McCarthy](https://en.wikipedia.org/wiki/John_McCarthy_(computer_scientist)),  Computer Scientist -> Creator of [Lisp](https://en.wikipedia.org/wiki/Lisp_(programming_language)), Artificial intelligence
+    -   [Guy Steele Interviews John McCarthy, Father of Lisp](http://www.infoq.com/interviews/Steele-Interviews-John-McCarthy)
+
+-   [John Backus](https://en.wikipedia.org/wiki/John_Backus), Computer Scientist ->  Backus-Naur form (BNF), Fortran
+    Language, 
+    -   [Can Programming Be Liberated from the von Neumann Style? A Functional Style and Its Algebra of Programs](https://web.stanford.edu/class/cs242/readings/backus.pdf)
+
+-   [Philip Wadler](https://en.wikipedia.org/wiki/Philip_Wadler), Theory behind functional programming and the use of
+    monads in functional programming, the design of the purely
+    functional language Haskell.
+    -   [The essence of functional programing](http://www.eliza.ch/doc/wadler92essence_of_FP.pdf)
+    -   [Philip Wadler on Functional Programming - Interview](http://www.infoq.com/interviews/wadler-functional-programming)
+
+-   [Eugenio Moggi](https://en.wikipedia.org/wiki/Eugenio_Moggi), Professor of computer science at the University of
+    Genoa, Italy. - He first described the general use of monads to
+    structure programs.
+    -   [Notions of computation and monads - Eugenio Moggi](http://www.disi.unige.it/person/MoggiE/ftp/ic91.pdf)
+
+-   [Simon Peyton Jones](https://en.wikipedia.org/wiki/Simon_Peyton_Jones), Computer Scientist -> Major contributor to the
+    design of the Haskell programming language.
+
+-   [John Hughes](https://en.wikipedia.org/wiki/John_Hughes_(computer_scientist)), Computer Scientist -> One of the most influentials
+    papers in FP field: Why functional programing matters.
+
+-   [Gerald Jay Sussman](https://en.wikipedia.org/wiki/Gerald_Jay_Sussman), Mathematician and Computer Scientist
+    -   [Scheme Lisp](https://en.wikipedia.org/wiki/Scheme_(programming_language)) Language
+    -   Book: [Structure and Interpretation of Computer Programs](https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Computer_Programs)
+    -   Book: [Structure and Interpretation of Classical Mechanics](https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Classical_Mechanics)
+    
+    -   [Lambda Papers](https://en.wikipedia.org/wiki/History_of_the_Scheme_programming_language#The_Lambda_Papers): A series of MIT AI Memos published between 1975
+        and 1980, developing the Scheme programming language and a number
+        of influential concepts in programming language design and
+        implementation.
+
+# Miscellaneous<a id="sec-4" name="sec-4"></a>
 
 1.  Selected Wikipedia Articles
 
@@ -2319,7 +2805,7 @@ See also: [Function composition (computer science)](http://en.wikipedia.org/wiki
 
 2.  Selected Rosettacode Pages
 
-### Concepts Examples<a id="sec-1-5-1" name="sec-1-5-1"></a>
+### Concepts Examples<a id="sec-4-0-1" name="sec-4-0-1"></a>
 
 -   [Call a function](http://rosettacode.org/wiki/Call_a_function)
 
@@ -2345,7 +2831,7 @@ Recursion:
 
 -   [Ackermann function](http://rosettacode.org/wiki/Ackermann_function)
 
-### Languages<a id="sec-1-5-2" name="sec-1-5-2"></a>
+### Languages<a id="sec-4-0-2" name="sec-4-0-2"></a>
 
 -   [Haskell](http://rosettacode.org/wiki/Haskell)
 

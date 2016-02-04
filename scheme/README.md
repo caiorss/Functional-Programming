@@ -138,7 +138,7 @@ Products that use lisp:
 
 <tbody>
 <tr>
-<td class="left">[MIT - Scheme](http://www.gnu.org/software/mit-scheme)</td>
+<td class="left">[MIT Scheme](http://www.gnu.org/software/mit-scheme)</td>
 <td class="left">Classical Scheme Implementation  used by [SCIP](https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Computer_Programs)</td>
 </tr>
 

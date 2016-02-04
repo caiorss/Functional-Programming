@@ -29,7 +29,7 @@ Products that use lisp:
 
 | Implementation           | Feature                                                                                                                                                                                        |
 |--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [[http://www.gnu.org/software/mit-scheme][MIT - Scheme]]             | Classical Scheme Implementation  used by [[https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Computer_Programs][SCIP]]                                                                                                                                                  |
+| [[http://www.gnu.org/software/mit-scheme][MIT Scheme]]               | Classical Scheme Implementation  used by [[https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Computer_Programs][SCIP]]                                                                                                                                                  |
 | [[http://www.gnu.org/software/kawa/][Kawa]]                     | Scheme for the JVM - Java API access. Compiles to the JVM                                                                                                                                      |
 | [[https://ironscheme.codeplex.com/][Iron Scheme]]              | Scheme for .NET platform - .NET API Acess                                                                                                                                                      |
 | [[http://www.gnu.org/software/guile/gnu-guile-projects.html#Applications][GNU Guile]]                | Used as embedded extension language for many apps like GIMP, [[http://wiki.gnucash.org/wiki/Custom_Reports][GNUCash]], GEDA                                                                                                                     |
@@ -4369,7 +4369,6 @@ See also:
 
 #+END_SRC
 
-
 ** Debugging
 
 *** MIT Scheme 
@@ -5387,7 +5386,6 @@ $24 = 85085
 
         
 #+END_SRC
-
 
 ** Applications
 *** Lisp Evaluator written in Lisp
