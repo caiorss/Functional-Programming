@@ -1,6 +1,7 @@
 #+TITLE:  Functional Programming Concepts
 #+AUTHOR: Caio Rodrigues Soares Silva
 #+EMAIL: <caiorss.rodrigues@gmail.com>
+#+DESCRIPTION: Functional programming concepts, examples, algorithms and ideas.
 
 * Concepts
 ** Overview
@@ -40,8 +41,213 @@ Non Essential Features:
  - Pattern Matching
  - Monads
 
-** Concepts
-*** First-Class Function 
+** Evaluation Strategy / Parameter Passing 
+*** Call-by-value
+
+Call-by-value (aka pass-by-value, eager evaluation, strict evaluation or
+applicative-order evaluation) Evaluation at the point of call, before
+the function application application. This evaluation strategy is used
+by most programming languages like Python, Scheme, Ocaml and others.
+
+
+#+BEGIN_SRC 
+let add2xy x y = x + x + y 
+
+add2xy (3 * 4) ( 2 + 3) 
+add2xy 12 5 
+=  12 + 12 + 5 
+=  29
+
+#+END_SRC
+
+Example in Python:
+
+#+BEGIN_SRC python
+>>> def add(x, y):
+...   sum = x + y
+...   x = sum 
+...   return (x, sum)
+... 
+>>> 
+
+
+>>> x = 10
+>>> y = 20
+
+# In call-by-value strategy. The function doesn't change its arguments. 
+# 
+>>> add(x, y)
+(30, 30)
+
+# They remain unchanged.
+#
+>>> x
+10
+>>> y
+20
+
+# Arguments are evaluated before the function invocation.
+#
+# add((10 + 20), (3 * 3))
+# add(30, 9)
+# (39, 39)
+#
+>>> add((10 + 20),(3 * 3))
+(39, 39)
+>>> 
+>>> add((10 + 20),(3 / 0))
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ZeroDivisionError: division by zero
+>>> 
+
+#+END_SRC
+
+*** Call-by-name
+
+Call-by-name (aka pass-by-name): It is a _non-memoized lazy_
+_evaluation_. Arguments are passed non evaluated, they are only
+evaluated when it is needed. The arguments are substituted in the
+function. This evaluation strategy can be inefficient when the
+arguments are evaluated many times.
+
+Example: 
+
+#+BEGIN_SRC
+// Each use of x y and replaced in the function by (3 * 4) and (2 + 3)
+// respectively. The arguments are evaluated after substituted 
+// in the function
+
+let add2xy x y = x + x + y
+let add2xy (3 * 4) (2 + 3) 
+= (3 * 4) + (3 * 4) + (2 + 3)
+= 12 + 12 + 5
+= 29
+#+END_SRC
+
+
+
+Call-by-name can be simulated using thunks (functions without arguments).
+
+Example in Python: 
+
+#+BEGIN_SRC python
+>>> def add2xy (x, y):
+...     return x() + x() + y()
+... 
+>>> add2xy (lambda : (3 * 4), lambda: (2 + 3))
+29
+>>> 
+
+#+END_SRC
+
+Example in Scheme:
+
+#+BEGIN_SRC scheme
+>  (define (add2xy x y) (+ (x) (x) (y))) 
+> 
+;; The parameter is evaluated every time it is used. 
+;;
+> (define (displayln msg) 
+      (display msg)
+      (newline))
+
+
+> (add2xy (lambda () (displayln "Eval x") (* 3 4))  
+          (lambda () (displayln "Eval y") (+ 2 3))
+  )               
+Eval x
+Eval x
+Eval y
+29
+> 
+#+END_SRC
+
+*** Call-by-need 
+
+Call-by-need_ (aka lazy evaluation, non-strict evaluation or
+normal-order evaluation): _Memoized lazy-evaluation_. It is a 
+memoized version of call-by-name, after its argument is evaluated,
+the values are stored for further computations. When the argument
+evaluation has no side-effects, in other words, always yields the
+same output when evaluated many times it produces the same result
+as call-by-name. This strategy is used in Haskell.
+
+Example: In Haskell the parameters are not evaluated at the point they
+are passed to the function. They are only evaluated when needed.
+
+#+BEGIN_SRC haskell
+> let add_xy x y z = x + y
+> 
+> :t add_xy
+add_xy :: Num a => a -> a -> t -> a
+>
+
+-- The parameter z: (3 / 0) is not evaluated 
+-- because it is not needed.
+-- 
+> add_xy 3 4 (3 / 0)
+7
+> 
+
+-- The infinite list is not fully evaluated 
+--
+> let ones = 1:ones
+
+> take 10 ones
+[1,1,1,1,1,1,1,1,1,1]
+> 
+> take 20 ones
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+> 
+#+END_SRC
+
+*** Call-by-reference 
+
+ - _Call-by-reference_ (aka pass-by-reference): The function changes
+   the value of the argument. Supported in: C++, Pascal, Python
+   Objects.
+
+Example in C:
+
+#+BEGIN_SRC C
+// The function add10 changes it argument.
+//
+#include <stdio.h>
+
+void add10(int * x){
+  *x = *x + 10 ;
+}
+
+void main (){
+  
+  int x = 5;
+  add10(&x);
+  printf("x = %d\n", x);  
+}
+
+#+END_SRC
+
+Test:
+
+#+BEGIN_SRC 
+$ gcc /tmp/test.c
+$ ./a.out 
+x = 15
+
+$ tcc -run /tmp/test.c
+x = 15
+#+END_SRC
+
+*** References
+
+  - [[http://www.lix.polytechnique.fr/~catuscia/teaching/cg428/02Spring/lecture_notes/L07.1.html][CSE 428: Lecture Notes 8]]
+  - [[http://users-cs.au.dk/danvy/dProgSprog12/Lecture-notes/parameter-passing-strategies.html][Parameter-passing strategies — dProgSprog 2012 Lecture Notes]]
+  - [[http://academic.udayton.edu/saverioperugini/courses/cps343/lecture_notes/lazyevaluation.html][CPS 343/543 Lecture notes: Lazy evaluation and thunks]]
+  - [[https://en.wikipedia.org/wiki/Evaluation_strategy#Strict_evaluation][Evaluation strategy - Wikipedia, the free encyclopedia]]
+  - [[http://www.lix.polytechnique.fr/~catuscia/teaching/cg428/02Spring/lecture_notes/L07.1.html][CSE 428: Lecture Notes 8 - Procedures and Functions]] 
+
+** First-Class Function 
 
 Functions can be passed as arguments to another functions, returned
 from functions, stored in variables and data structures and built at
@@ -115,7 +321,7 @@ Many examples of first class functions in several languages.
 
  - [[http://adv-r.had.co.nz/Functional-programming.html][Functional programming in R]]
 
-*** Pure Functions
+** Pure Functions
 
 Pure functions:
 
@@ -220,7 +426,7 @@ Reverse list function purified:
 
 #+END_SRC
 
-*** Closure
+** Closure
 
 Closure is a function that remembers the environment at which it was created.
 
@@ -403,8 +609,8 @@ val it : int = 30
 
 #+END_SRC
 
-*** Currying and Partial Application
-**** Currying
+** Currying and Partial Application
+*** Currying
 
 Currying is the decomposition of a function of multiples arguments in
 a chained sequence of functions of a single argument. The name
@@ -702,8 +908,7 @@ h_of_z :: Integer -> Integer
 
 #+END_SRC
 
-
-**** Partial Application
+*** Partial Application
 
 A function of multiple arguments is converted into a new function that
 takes fewer arguments, some arguments are supplied and returns
@@ -734,6 +939,18 @@ Example in Python:
   
 >>> list(map(partial(f, 2, 3), [2, 3, 5]))
     [37, 41, 49]
+
+#
+# Alternative implementation of partial
+#
+def partial(f, *xs):
+    return lambda x: f( * (tuple(xs) + (x,)))
+
+>>> list(map(partial(f, 2, 3), [2, 3, 5]))
+    [37, 41, 49]
+>>> 
+
+
 #+END_SRC
 
 In languages like Haskell, Standard ML, OCaml and F# currying is
@@ -770,7 +987,7 @@ See also:
  - [[https://en.wikipedia.org/wiki/Partial_application][Partial application - Wikipedia]]
  - [[https://dzone.com/articles/whats-wrong-java-8-currying-vs][What's Wrong with Java 8: Currying vs Closures]]
 
-*** Lazy Evaluation
+** Lazy Evaluation
 
 "Lazy evaluation" means that data structures are computed
 incrementally, as they are needed (so the trees never exist in memory
@@ -845,8 +1062,8 @@ f = lambda x: x**5
 
 #+END_SRC
 
-*** Fundamental Higher Order Functions 
-**** Overview 
+** Fundamental Higher Order Functions 
+*** Overview 
 
 The functions map, filter and reduce (fold left) are ubiquitous in
 many programming languages and also the most used higher order
@@ -855,7 +1072,8 @@ functions.
 They can be stricted evaluated like in Scheme and Javascript or lazy
 evaluated like in Python and Haskell.
 
-**** Map
+*** Map
+***** Overview 
 
 The function map applies a function to each element of a sequence:
 list, vector, hash map or dictionary and trees. 
@@ -1132,7 +1350,7 @@ user=>
 
 #+END_SRC
 
-**** Filter
+*** Filter
 
 *Python*
 
@@ -1200,8 +1418,8 @@ StopIteration
   
 #+END_SRC
 
-**** Reduce or Fold
-***** Overview 
+*** Reduce or Fold
+**** Overview 
 
 *Fold Left*
 
@@ -1243,7 +1461,7 @@ Sn-1 = f x1   Sn-2   = ...
 Sn   = f x0   Sn-1   = f x0 (f x1 ... (f xn-2 (f xn-1 S0)))
 #+END_SRC
 
-***** Haskell
+**** Haskell
 
 See also: 
 
@@ -1311,7 +1529,7 @@ Evaluation of Fold left:
 
 #+BEGIN_SRC
 > foldl (\acc x -> 10 * acc + x ) 0 [1, 2, 3, 4, 5]
-1234
+12345
 
 S0 = 0
 
@@ -1390,7 +1608,7 @@ S4   = f x1 S3     = f 2  543  = 10 * 543  + 2 = 5432
 S5   = f x0 S4     = f 1  5432 = 10 * 5432 + 1 = 54321
 #+END_SRC
 
-***** Python
+**** Python
 
 In Python 3 the function reduce is not default anymore, however it can
 be found in the native library functools, that has a lot of built-in
@@ -1598,7 +1816,7 @@ True
 >>>  
 #+END_SRC
 
-***** Clojure
+**** Clojure
 
 The function reduce is similar to Haskell _fold left_ and Python
 reduce. This function is Polymorphic. It works on any collection of
@@ -1696,11 +1914,11 @@ user=>
 
 #+END_SRC 
 
-**** For Each, Impure map 
+*** For Each, Impure map 
 
-For each is an _impure higher order function_ which maps an impure,
-output function to each element of a list. Unlike map this function
-neither have a standard name and or return anything.
+For each is an _impure higher order function_ which performs
+side-effect on each element of a list, array or sequence. Unlike map
+this function neither have a standard name or return anything.
 
 *Scheme*
 
@@ -1775,6 +1993,32 @@ x = 4
 x = 5
 val it : unit = ()
 >
+
+> List.iter2 ;;
+val it : (('a -> 'b -> unit) -> 'a list -> 'b list -> unit) = <fun:clo@1>
+> 
+
+- List.iter2 (fun a b -> printfn "a = %d b = %d" a b) [2; 3; 4; 5] [1; 2; 3; 4] - ;;
+a = 2 b = 1
+a = 3 b = 2
+a = 4 b = 3
+a = 5 b = 4
+val it : unit = ()
+> 
+
+- Array.iter ;; 
+val it : (('a -> unit) -> 'a [] -> unit) = <fun:it@6-4>
+> 
+- 
+
+- Array.iter (fun x -> printfn "x = %d" x) [| 1; 2; 3; 4 |] ;;
+x = 1
+x = 2
+x = 3
+x = 4
+val it : unit = ()
+> 
+
 #+END_SRC
 
 *Python*
@@ -1834,7 +2078,7 @@ user=>
 
 #+END_SRC
  
-**** Apply 
+*** Apply 
 
 The function _apply_ applies a function to a list or array of
 arguments. It is common in dynamic languages like Lisp, Scheme,
@@ -1979,7 +2223,8 @@ def map_apply (f, xss):
 
 #+END_SRC
 
-*** Function Composition 
+** Function Composition 
+*** Overview
 
 Function composition promotes shorter code, code reuse and higher
 modularity by creating new functions from previous defined ones. They
@@ -1994,8 +2239,7 @@ operators that are built in to the language.  In Haskell the operator
 
 See also: [[http://en.wikipedia.org/wiki/Function_composition_%28computer_science%29][Function composition (computer science)]]
 
-
-**** Function Composition In Haskell
+*** Function Composition in Haskell
 
 #+BEGIN_SRC
 (.) :: (b -> c) -> (a -> b) -> a -> c
@@ -2341,7 +2585,7 @@ let sum_ord = sum . map r . ordStr
 
 #+END_SRC
 
-**** Function Composition in Python
+*** Function Composition in Python
 
 #+BEGIN_SRC python
 
@@ -2549,34 +2793,363 @@ parse_csvtable_optmized =  composef(
 
     
 #+END_SRC
+*** Function Composition in F#
+
+F# uses the operator (<<) for composition which is similar to Haskell
+composition operator (.) dot. It also uses the operator (>>) for forward
+composition that performs the operation in the inverse order of
+operator (<<).
+
+Composition Operator (<<):
+
+#+BEGIN_SRC fsharp
+- (<<) ;;
+val it : (('a -> 'b) -> ('c -> 'a) -> 'c -> 'b) 
+> 
+
+> let h x = x + 3 ;;         
+
+val h : x:int -> int
+
+> let g x = x * 5 ;;
+
+val g : x:int -> int
+
+- let m x = x - 4 ;;
+
+val m : x:int -> int
+
+// The composition is performed in the same way as math composition 
+// from right to left. 
+//
+- h (g 4) ;;
+val it : int = 23
+> 
+- 
+- (h << g) 4 ;;
+val it : int = 23
+> 
+
+
+
+> m (h (g 4)) ;;
+val it : int = 19
+> 
+- (m << h << g) 4 ;;
+val it : int = 19
+> 
+
+// It is the same as math composition: f(x) = m ° h ° g
+//
+- let f = m << h << g ;;
+
+val f : (int -> int)
+
+> f 4 ;;
+val it : int = 19
+> 
+
+
+
+#+END_SRC
+
+Forward Composition Operator (>>):
+
+#+BEGIN_SRC fsharp
+> (>>) ;;
+val it : (('a -> 'b) -> ('b -> 'c) -> 'a -> 'c) 
+
+> let h x = x + 3 ;;         
+
+val h : x:int -> int
+
+> let g x = x * 5 ;;
+
+val g : x:int -> int
+
+- let m x = x - 4 ;;
+
+val m : x:int -> int
+
+
+- h (g 4) ;;
+val it : int = 23
+> 
+
+- (g >> h) 4 ;;
+val it : int = 23
+> 
+- let f = g >> h ;;
+
+val f : (int -> int)
+
+> f 4 ;;
+val it : int = 23
+> 
+
+
+- m (h (g 4)) ;;
+val it : int = 19
+> 
+- 
+
+- (g >> h >> m ) 4 ;;
+val it : int = 19
+> 
+- 
+
+// The argument is seen flowing from left to right, in the inverse
+// order of math composition and Haskell composition operator (.) dot,
+// which is more easier to read.  
+//
+//  (g >> h >> m) 4 => It is seen as passing through each function 
+//
+//   Evaluating:  g >> h >> m                    
+//
+//                    f =  g >> h >> m 
+//       .........................................................
+//       .                                                       .         
+//       .   |-----------|      |-----------|     |-----------|  .
+//     ----> |g = x * 5  ||---->| h = x + 3 |---->| m = x - 4 |----->
+//   4   .   |-----------|  20  |-----------| 23  |-----------|  .  19 
+//       .       = 4 * 5 = 20    = 20 + 3 = 23    = 23 - 4 = 19  . 
+//       .........................................................
+//
+
+- let f = g >> h >> m ;;
+
+val f : (int -> int)
+
+> f 4 ;;
+val it : int = 19
+> 
+
+#+END_SRC
+
+F# Argument Piping operator (|>) 
+
+#+BEGIN_SRC fsharp 
+- let h x = x + 3 ;; 
+
+val h : x:int -> int
+
+> let g x = x * 5 ;;
+
+val g : x:int -> int
+
+>  let m x = x - 4 ;;
+
+val m : x:int -> int
+
+> 
+
+// The piping operator feeds the function input forward. 
+//
+- (|>) ;;
+val it : ('a -> ('a -> 'b) -> 'b) 
+> 
+
+- (g 4) ;;
+val it : int = 20
+> 
+- 4 |> g ;;
+val it : int = 20
+> 
+
+// It is the same as:  4 |> g |> h 
+//
+- h (g 4) ;;
+val it : int = 23
+>
+
+- 4 |> g |> h ;;
+val it : int = 23
+> 
+
+// It is the same as:  4 |> g |> h |> m ;; 
+//
+- m (h (g 4)) ;;
+val it : int = 19
+> 
+
+- 4 |> g |> h |> m ;; 
+val it : int = 19
+> 
+#+END_SRC
+
+Example of a non numeric function composition:
+
+#+BEGIN_SRC fsharp
+
+let text = "
+ 12.23,30.23,892.2323
+ 23.23,90.23,1000.23
+ 3563.23,100.23,45.23
+
+"
+
+// Negate predicate. Invert a predicate function. 
+//
+> let neg pred = fun x -> not (pred x) ;;
+
+val neg : pred:('a -> bool) -> x:'a -> bool
+
+
+
+let split_string sep str =                                
+    List.ofArray  (System.Text.RegularExpressions.Regex.Split (str, sep))
+
+> let split_lines = split_string "\n" ;;
+
+val split_lines : (string -> string list)
+
+> let trim_string (s: string) = s.Trim() ;;              
+
+val trim_string : s:string -> string
+
+- let is_string_empty (s: string) = s.Length = 0 
+- ;;
+
+val is_string_emtpy : s:string -> bool
+
+- text |> split_lines ;;       
+val it : string list =
+  [""; " 12.23,30.23,892.2323"; " 23.23,90.23,1000.23";
+   " 3563.23,100.23,45.23"; ""; ""]
+> 
+
+- text |> split_lines |> List.filter (neg is_string_empty) ;;
+val it : string list =
+  [" 12.23,30.23,892.2323"; " 23.23,90.23,1000.23"; " 3563.23,100.23,45.23"]
+> 
+
+- text |> split_lines |> List.filter (neg is_string_empty) |> List.map trim_stri- ng ;;
+val it : string list =
+  ["12.23,30.23,892.2323"; "23.23,90.23,1000.23"; "3563.23,100.23,45.23"]
+> 
+- 
+
+- text |> split_lines |> List.filter (neg is_string_empty) |> List.map trim_stri- ng |> List.map (split_string ",") ;;
+val it : string list list =
+  [["12.23"; "30.23"; "892.2323"]; ["23.23"; "90.23"; "1000.23"];
+   ["3563.23"; "100.23"; "45.23"]]
+> 
+- 
+
+- text |> split_lines |> List.filter (neg is_string_empty) |> List.map trim_stri- ng |> List.map (split_string ",") |> List.map (List.map float) ;;
+val it : float list list =
+  [[12.23; 30.23; 892.2323]; [23.23; 90.23; 1000.23]; [3563.23; 100.23; 45.23]]
+> 
+
+// Or in multiple lines:
+
+text 
+|> split_lines 
+|> List.filter (neg is_string_empty) 
+|> List.map trim_string 
+|> List.map (split_string ",") 
+|> List.map (List.map float) 
+;;
+
+val it : float list list =
+  [[12.23; 30.23; 892.2323]; [23.23; 90.23; 1000.23]; [3563.23; 100.23; 45.23]]
+> 
+
+// Then transformed into a function: 
+//
+let parse_csv text =
+   text
+   |> split_lines 
+   |> List.filter (neg is_string_empty) 
+   |> List.map trim_string 
+   |> List.map (split_string ",") 
+   |> List.map (List.map float) 
+;;
+
+val parse_csv : text:string -> float list list
+
+> parse_csv text ;;
+val it : float list list =
+  [[12.23; 30.23; 892.2323]; [23.23; 90.23; 1000.23]; [3563.23; 100.23; 45.23]]
+> 
+- 
+
+// This operation can be optimized with function (forward) composition.
+// 
+let parse_csv2 text =
+   text
+   |> split_lines 
+   |> List.filter (neg is_string_empty) 
+   |> List.map (trim_string >> (split_string ",") >> (List.map float)) 
+;;
+
+val parse_csv2 : text:string -> float list list
+
+> parse_csv2 text ;;
+val it : float list list =
+  [[12.23; 30.23; 892.2323]; [23.23; 90.23; 1000.23]; [3563.23; 100.23; 45.23]]
+> 
+
+// It could be implemented using the math compostion (<<) operator.
+// in the same as in Haskell.  
+// 
+let parse_csv3 text =
+   text
+   |> split_lines 
+   |> List.filter (neg is_string_empty) 
+   |> List.map ((List.map float) << (split_string ",") << trim_string) 
+;;
+
+val parse_csv3 : text:string -> float list list
+
+- parse_csv3 text ;;
+val it : float list list =
+  [[12.23; 30.23; 892.2323]; [23.23; 90.23; 1000.23]; [3563.23; 100.23; 45.23]]
+> 
+
+//  934.6923 = 12.23 + 30.23 + 892.2323
+//
+- parse_csv3 text |> List.map List.sum ;;            
+val it : float list = [934.6923; 1113.69; 3708.69]
+> 
+- 
+
+- parse_csv3 text |> List.map List.sum |> List.sum ;;
+val it : float = 5757.0723
+> 
+
+#+END_SRC
+
 * Functional Languages
 
 Some Functional programming languages:
 
-| Language     | Evaluation    | Typing  | Type Inference | Pattern Matching         | GIL | TCO | OO  | AGDT | Platform | Family | Currying | Feature                                  |
-|--------------+---------------+---------+----------------+--------------------------+-----+-----+-----+------+----------+--------+----------+------------------------------------------|
-| Haskell      | Lazy          | Static  | Yes            | Yes                      | No  | Yes | No  | Yes  | NAT      | ML/SML | Yes      | Concurrency/Parallelism                  |
-| Ocaml        | Strict        | Static  | Yes            | Yes                      | Yes | Yes | Yes | Yes  | NAT/BC   | ML/SML | Yes      |                                          |
-| F# (F sharp) | Strict        | Static  | Yes            | Yes                      | No  | Yes | Yes | Yes  | .NET     | ML/SML | Yes      | .NET Integration                         |
-| Scheme       | Strict        | Dynamic | No             | No                       | *   | Yes | No  | No   | -        | Lisp   | No       | Minimalist Educational                   |
-| Clojure      | Strict + Lazy | Dynamic | No             | Destructuring and macros | No  | No  | No  | No   | JVM      | Lisp   | No       | Java integration + Macro                 |
-| Scala        | Strict        | Static  | Yes            | Yes                      | No  | Yes | Yes | Yes  | JVM      |        |          | Java integration                         |
-| Erlang       | Strict        | Dynamic | ?              | Yes                      | ?   | No  | ?   | ?    | VM       |        | ?        | Telecommunications, Servers, Concurrency |
-|              |               |         |                |                          |     |     |     |      |          |        |          |                                          |
-| R            | Strict        | Dynamic | No             | No                       | ?   | No  | Yes | -    | VM       |        | No       | DSL - Statics                            |
-| Mathematica  | Strict        | Dynamic | Yes            | ?                        | ?   | ??  | ?   | ?    | ?        |        | No       | DSL - Computer Algebraic System          |
+| Language     | Evaluation    | Typing  | Type Inference | Pattern Matching         | GIL | TCO | OO  | AGDT | Platform    | Family        | Currying | Feature                                  |
+|--------------+---------------+---------+----------------+--------------------------+-----+-----+-----+------+-------------+---------------+----------+------------------------------------------|
+| Haskell      | Lazy          | Static  | Yes            | Yes                      | No  | Yes | No  | Yes  | NAT         | ML/SML        | Yes      | Concurrency/Parallelism                  |
+| Ocaml        | Strict        | Static  | Yes            | Yes                      | Yes | Yes | Yes | Yes  | NAT/BC      | ML/SML        | Yes      |                                          |
+| F# (F sharp) | Strict        | Static  | Yes            | Yes                      | No  | Yes | Yes | Yes  | .NET        | ML/SML        | Yes      | .NET Integration                         |
+| Scheme       | Strict        | Dynamic | No             | No                       | *   | Yes | No  | No   | -           | Lisp          | No       | Minimalist Educational                   |
+| Clojure      | Strict + Lazy | Dynamic | No             | Destructuring and macros | No  | No  | No  | No   | JVM         | Lisp          | No       | Java integration + Macros                |
+| Scala        | Strict        | Static  | Yes            | Yes                      | No  | Yes | Yes | Yes  | JVM         |               | Yes      | Java integration + Type safety           |
+| Erlang       | Strict        | Dynamic | ?              | Yes                      | No  | No  | ?   | ?    | VM          |               | ?        | Telecommunications, Servers, Concurrency |
+| JavaScript   | Strict        | Dynamic | No             | No                       | Yes | No  | Yes | No   | Interpreted | *Lisp/ Scheme | No       | Only language that runs in the browser.  |
+|              |               |         |                |                          |     |     |     |      |             |               |          |                                          |
+| R            | Strict        | Dynamic | No             | No                       | ?   | No  | Yes | -    | VM          | *Lisp/ Scheme | No       | DSL - Statics                            |
+| Mathematica  | Strict        | Dynamic | Yes            | ?                        | ?   | ??  | ?   | ?    | ?           |               | No       | DSL - Computer Algebraic System          |
+
 
 
 Notes:
 
  - AGDT   - Algebraic Data Types
 
- - GIL    - Global Interpreter Locking. Languages with GIL cannot
-   support multi-core processors.
+ - GIL    - Global Interpreter Locking. Languages with GIL cannot take
+   advantage of multi-core processors.
 
  - TCO - Tail Call Optimization. Languages without TCO cannot perform
    recursion safely. It can lead to a stack overflow for a big number
-   of interactions. 
+   of iterations. 
 
  - JVM    - Java Virtual Machine / Java Platform
 
@@ -2591,6 +3164,10 @@ Notes:
  - Currying  - Curried functions like in Haskell
 
  - DSL    - Domain Specific Language
+
+ - It is controversial that Javascript is based on scheme. According
+   to Douglas Crockford JavaScript is Scheme on a C clothe. With a
+   C-like syntax.
 
 
 More Information: [[http://en.wikipedia.org/wiki/Comparison_of_functional_programming_languages][Comparison of Functional Programming Languages]]

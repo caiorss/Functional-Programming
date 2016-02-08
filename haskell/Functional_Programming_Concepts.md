@@ -1,13 +1,30 @@
 - [Concepts](#concepts)
   - [Overview](#overview)
-  - [Concepts](#concepts)
-    - [First-Class Function](#first-class-function)
-    - [Pure Functions](#pure-functions)
-    - [Closure](#closure)
-    - [Currying and Partial Application](#currying-and-partial-application)
-    - [Lazy Evaluation](#lazy-evaluation)
-    - [Fundamental Higher Order Functions](#fundamental-higher-order-functions)
-    - [Function Composition](#function-composition)
+  - [Evaluation Strategy / Parameter Passing](#evaluation-strategy-/-parameter-passing)
+    - [Call-by-value](#call-by-value)
+    - [Call-by-name](#call-by-name)
+    - [Call-by-need](#call-by-need)
+    - [Call-by-reference](#call-by-reference)
+    - [References](#references)
+  - [First-Class Function](#first-class-function)
+  - [Pure Functions](#pure-functions)
+  - [Closure](#closure)
+  - [Currying and Partial Application](#currying-and-partial-application)
+    - [Currying](#currying)
+    - [Partial Application](#partial-application)
+  - [Lazy Evaluation](#lazy-evaluation)
+  - [Fundamental Higher Order Functions](#fundamental-higher-order-functions)
+    - [Overview](#overview)
+    - [Map](#map)
+    - [Filter](#filter)
+    - [Reduce or Fold](#reduce-or-fold)
+    - [For Each, Impure map](#for-each,-impure-map)
+    - [Apply](#apply)
+  - [Function Composition](#function-composition)
+    - [Overview](#overview)
+    - [Function Composition in Haskell](#function-composition-in-haskell)
+    - [Function Composition in Python](#function-composition-in-python)
+    - [Function Composition in F#](#function-composition-in-f#)
 - [Functional Languages](#functional-languages)
 - [Notable People](#notable-people)
 - [Miscellaneous](#miscellaneous)
@@ -54,9 +71,207 @@ Non Essential Features:
 -   Pattern Matching
 -   Monads
 
-## Concepts<a id="sec-1-2" name="sec-1-2"></a>
+## Evaluation Strategy / Parameter Passing<a id="sec-1-2" name="sec-1-2"></a>
 
-### First-Class Function<a id="sec-1-2-1" name="sec-1-2-1"></a>
+### Call-by-value<a id="sec-1-2-1" name="sec-1-2-1"></a>
+
+Call-by-value (aka pass-by-value, eager evaluation, strict evaluation or
+applicative-order evaluation) Evaluation at the point of call, before
+the function application application. This evaluation strategy is used
+by most programming languages like Python, Scheme, Ocaml and others.
+
+```
+let add2xy x y = x + x + y 
+
+add2xy (3 * 4) ( 2 + 3) 
+add2xy 12 5 
+=  12 + 12 + 5 
+=  29
+```
+
+Example in Python:
+
+```python
+>>> def add(x, y):
+...   sum = x + y
+...   x = sum 
+...   return (x, sum)
+... 
+>>> 
+
+
+>>> x = 10
+>>> y = 20
+
+# In call-by-value strategy. The function doesn't change its arguments. 
+# 
+>>> add(x, y)
+(30, 30)
+
+# They remain unchanged.
+#
+>>> x
+10
+>>> y
+20
+
+# Arguments are evaluated before the function invocation.
+#
+# add((10 + 20), (3 * 3))
+# add(30, 9)
+# (39, 39)
+#
+>>> add((10 + 20),(3 * 3))
+(39, 39)
+>>> 
+>>> add((10 + 20),(3 / 0))
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ZeroDivisionError: division by zero
+>>>
+```
+
+### Call-by-name<a id="sec-1-2-2" name="sec-1-2-2"></a>
+
+Call-by-name (aka pass-by-name): It is a <span class="underline">non-memoized lazy</span>
+<span class="underline">evaluation</span>. Arguments are passed non evaluated, they are only
+evaluated when it is needed. The arguments are substituted in the
+function. This evaluation strategy can be inefficient when the
+arguments are evaluated many times.
+
+Example: 
+
+```
+// Each use of x y and replaced in the function by (3 * 4) and (2 + 3)
+// respectively. The arguments are evaluated after substituted 
+// in the function
+
+let add2xy x y = x + x + y
+let add2xy (3 * 4) (2 + 3) 
+= (3 * 4) + (3 * 4) + (2 + 3)
+= 12 + 12 + 5
+= 29
+```
+
+Call-by-name can be simulated using thunks (functions without arguments).
+
+Example in Python: 
+
+```python
+>>> def add2xy (x, y):
+...     return x() + x() + y()
+... 
+>>> add2xy (lambda : (3 * 4), lambda: (2 + 3))
+29
+>>>
+```
+
+Example in Scheme:
+
+```scheme
+>  (define (add2xy x y) (+ (x) (x) (y))) 
+> 
+;; The parameter is evaluated every time it is used. 
+;;
+> (define (displayln msg) 
+      (display msg)
+      (newline))
+
+
+> (add2xy (lambda () (displayln "Eval x") (* 3 4))  
+          (lambda () (displayln "Eval y") (+ 2 3))
+  )               
+Eval x
+Eval x
+Eval y
+29
+>
+```
+
+### Call-by-need<a id="sec-1-2-3" name="sec-1-2-3"></a>
+
+Call-by-need\_ (aka lazy evaluation, non-strict evaluation or
+normal-order evaluation): <span class="underline">Memoized lazy-evaluation</span>. It is a 
+memoized version of call-by-name, after its argument is evaluated,
+the values are stored for further computations. When the argument
+evaluation has no side-effects, in other words, always yields the
+same output when evaluated many times it produces the same result
+as call-by-name. This strategy is used in Haskell.
+
+Example: In Haskell the parameters are not evaluated at the point they
+are passed to the function. They are only evaluated when needed.
+
+```haskell
+> let add_xy x y z = x + y
+> 
+> :t add_xy
+add_xy :: Num a => a -> a -> t -> a
+>
+
+-- The parameter z: (3 / 0) is not evaluated 
+-- because it is not needed.
+-- 
+> add_xy 3 4 (3 / 0)
+7
+> 
+
+-- The infinite list is not fully evaluated 
+--
+> let ones = 1:ones
+
+> take 10 ones
+[1,1,1,1,1,1,1,1,1,1]
+> 
+> take 20 ones
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+>
+```
+
+### Call-by-reference<a id="sec-1-2-4" name="sec-1-2-4"></a>
+
+-   <span class="underline">Call-by-reference</span> (aka pass-by-reference): The function changes
+    the value of the argument. Supported in: C++, Pascal, Python
+    Objects.
+
+Example in C:
+
+```C
+// The function add10 changes it argument.
+//
+#include <stdio.h>
+
+void add10(int * x){
+  *x = *x + 10 ;
+}
+
+void main (){
+  
+  int x = 5;
+  add10(&x);
+  printf("x = %d\n", x);  
+}
+```
+
+Test:
+
+```
+$ gcc /tmp/test.c
+$ ./a.out 
+x = 15
+
+$ tcc -run /tmp/test.c
+x = 15
+```
+
+### References<a id="sec-1-2-5" name="sec-1-2-5"></a>
+
+-   [CSE 428: Lecture Notes 8](http://www.lix.polytechnique.fr/~catuscia/teaching/cg428/02Spring/lecture_notes/L07.1.html)
+-   [Parameter-passing strategies — dProgSprog 2012 Lecture Notes](http://users-cs.au.dk/danvy/dProgSprog12/Lecture-notes/parameter-passing-strategies.html)
+-   [CPS 343/543 Lecture notes: Lazy evaluation and thunks](http://academic.udayton.edu/saverioperugini/courses/cps343/lecture_notes/lazyevaluation.html)
+-   [Evaluation strategy - Wikipedia, the free encyclopedia](https://en.wikipedia.org/wiki/Evaluation_strategy#Strict_evaluation)
+-   [CSE 428: Lecture Notes 8 - Procedures and Functions](http://www.lix.polytechnique.fr/~catuscia/teaching/cg428/02Spring/lecture_notes/L07.1.html)
+
+## First-Class Function<a id="sec-1-3" name="sec-1-3"></a>
 
 Functions can be passed as arguments to another functions, returned
 from functions, stored in variables and data structures and built at
@@ -130,7 +345,7 @@ Many examples of first class functions in several languages.
 
 -   [Functional programming in R](http://adv-r.had.co.nz/Functional-programming.html)
 
-### Pure Functions<a id="sec-1-2-2" name="sec-1-2-2"></a>
+## Pure Functions<a id="sec-1-4" name="sec-1-4"></a>
 
 Pure functions:
 
@@ -231,7 +446,7 @@ Reverse list function purified:
 [1, 2, 3, 4]
 ```
 
-### Closure<a id="sec-1-2-3" name="sec-1-2-3"></a>
+## Closure<a id="sec-1-5" name="sec-1-5"></a>
 
 Closure is a function that remembers the environment at which it was created.
 
@@ -407,367 +622,377 @@ val it : int = 30
 >
 ```
 
-### Currying and Partial Application<a id="sec-1-2-4" name="sec-1-2-4"></a>
+## Currying and Partial Application<a id="sec-1-6" name="sec-1-6"></a>
 
-1.  Currying
+### Currying<a id="sec-1-6-1" name="sec-1-6-1"></a>
 
-    Currying is the decomposition of a function of multiples arguments in
-    a chained sequence of functions of a single argument. The name
-    currying comes from the mathematician [Haskell Curry](https://en.wikipedia.org/wiki/Haskell_Curry) who developed the
-    concept of curried functions.
+Currying is the decomposition of a function of multiples arguments in
+a chained sequence of functions of a single argument. The name
+currying comes from the mathematician [Haskell Curry](https://en.wikipedia.org/wiki/Haskell_Curry) who developed the
+concept of curried functions.
+
+In Haskell, Standard ML, OCaml and F# all functions are curryfied by
+default:
+
+```
+    f (x, y) = 10*x - 3*y   
     
-    In Haskell, Standard ML, OCaml and F# all functions are curryfied by
-    default:
+    f (4, 3)  = 10* 4 - 3*3 = 40 - 9 = 31
+    f (4, 3)  = 31
     
-    ```
-        f (x, y) = 10*x - 3*y   
-        
-        f (4, 3)  = 10* 4 - 3*3 = 40 - 9 = 31
-        f (4, 3)  = 31
-        
-    In the curried form becomes:
-    
-         g(x) = (x -> y -> 10 * x - 3*y)
-         
-    To evaluate f(4, 3): 
-    
-        h(y)  = (x -> y -> 10 * x - 3*y) 4 
-              = ( y -> 10 * 4 -  3*y )
-              =  y -> 40 - 3*y
-              
-        h(3)  = (y -> 40 - 3*y) 3
-              = 40 - 3*3
-              = 31
-              
-    Or:
-        (x -> y -> 10 * x - 3*y) 4 3 
-          = (x -> (y -> 10 * x - 3*y)) 4 3 
-          = ((x -> (y -> 10 * x - 3*y)) 4) 3 
-          = (y -> 10 * 4 - 3 * y) 3
-          = 10 * 4 - 3 * 3 
-          = 31
-    ```
-    
-    The same function h(y) can be reused: applied to another arguments, used in mapping, filtering and another higher order functions.
-    
-    ```
-    Ex1
-        h(y) = (y -> 40 - 3*y)
-        
-        h(10) = 40 - 3*10 = 40 - 30 = 10
-    
-    Ex2    
-        map(h, [2, 3, 4])
-          = [h 2, h 3, h 4] 
-          = [(y -> 40 - 3*y) 2, (y -> 40 - 3*y) 3, (y -> 40 - 3*y) 4]
-          = [34, 31, 28]
-    ```
-    
-    **Example in Haskell GHCI**
-    
-    ```haskell
-    > let f x y = 10 * x - 3 * y
-    > :t f
-    f :: Num a => a -> a -> a
-    > 
-    > f 4 3 
-    31
-    > let h_y = f 4
-    > :t h_y
-    h_y :: Integer -> Integer
-    > 
-    > h_y 3
-    31
-    > map h_y [2, 3, 4]
-    [34,31,28]
-    > 
-    
-    > -- It is evaluated as:
-    
-    > ((f 4) 3)
-    31
-    > 
-    
-    {-
-       The function f can be also seen in this way
-    -}   
-    
-    > let f' = \x -> \y -> 10 * x - 3 * y 
-    > 
-    
-    > :t f'
-    f' :: Integer -> Integer -> Integer
-    > 
-    
-    > f' 4 3
-    31
-    > 
-    
-    > (f' 4 ) 3
-    31
-    > 
-    
-    > let h__x_is_4_of_y = f' 4
-    
-    > h__x_is_4_of_y 3
-    31
-    > 
-    {-
-        (\x -> \y -> 10 * x - 3 * y) 4 3
-        =  (\x -> (\y -> 10 * x - 3 * y) 4) 3
-        =  (\y -> 10 * 4 - 3 * y) 3
-        =  (10 * 4 - 3 * 3)
-        =  40 - 9 
-        =  31    
-    -}
-    > (\x -> \y -> 10 * x - 3 * y) 4 3
-    31
-    > 
-    
-    > ((\x -> (\y -> 10 * x - 3 * y)) 4) 3
-    31
-    > 
-    
-    
-    {-
-    Curried functions are suitable for composition, pipelining 
-    (F#, OCaml with the |> operator),  mapping/ filtering operations,
-    and to create new function from previous defined increasing code reuse.
-    
-    -}
-    
-    > map (f 4) [2, 3, 4]
-    [34,31,28]
-    > 
-    
-    > map ((\x -> \y -> 10 * x - 3 * y) 4) [2, 3, 4]
-    [34,31,28]
-    > 
-    
-    
-    > -- ----------------- 
-    
-    > let f_of_x_y_z x y z = 10 * x + 3 * y + 4 * z
-    > 
-    
-    > :t f_of_x_y_z 
-    f_of_x_y_z :: Num a => a -> a -> a -> a
-    
-    > f_of_x_y_z 2 3 5
-    49
-    > 
-    
-    > let g_of_y_z = f_of_x_y_z 2
-    
-    > :t g_of_y_z 
-    g_of_y_z :: Integer -> Integer -> Integer
-    > 
-    
-    > g_of_y_z 3 5
-    49
-    > 
-    
-    > let h_of_z = g_of_y_z 3
-    > :t h_of_z 
-    h_of_z :: Integer -> Integer
-    > 
-    
-    > h_of_z 5
-    49
-    > 
-    
-    > -- So it is evaluated as 
-    > (((f_of_x_y_z 2) 3) 5)
-    49
-    >
-    ```
-    
-    **Example in Python 3**
-    
-    ```python
-     # In Python, the functions are not curried by default as in Haskell, 
-     # Standard ML, OCaml and F#
-     #
-    >>> def f(x, y): return 10 * x - 3*y
-    
-    >>> f(4, 3)
-        31
-    
-     # However the user can create the curried form of the function f:
-    
-    >>> curried_f = lambda x: lambda y: 10*x - 3*y
-    
-    >>> curried_f(4)
-        <function __main__.<lambda>.<locals>.<lambda>>
-    
-    >>> curried_f(4)(3)
-        31
-    
-    >>> h_y = curried_f(4) # x = 4 constant
-    
-    >>> h_y(3)
-        31
-    
-    >>> h_y(5)
-        25
-    
-    >>> mapl = lambda f_x, xs: list(map(f_x, xs))
-    
-    >>> mapl(h_y, [2, 3, 4])
-        [34, 31, 28]
-    
-     # Or 
-    
-    >>> mapl(curried_f(4), [2, 3, 4])
-        [34, 31, 28]
-    
-     # Without currying the mapping would be:
-    
-    >>> mapl(lambda y: f(4, y), [2, 3, 4])
-        [34, 31, 28]
-    
-       ########################################
-    
-    >> f_of_x_y_z = lambda x, y, z: 10 * x + 3 * y + 4 * z
-    
-     ## Curried form:
+In the curried form becomes:
+
+     g(x) = (x -> y -> 10 * x - 3*y)
      
-    >>> curried_f_of_x_y_z = lambda x: lambda y: lambda z: 10 * x + 3 * y + 4 * z
-    
-    >>> f_of_x_y_z (2, 3, 5)
-        49
-    
-    >>> curried_f_of_x_y_z (2)(3)(5)
-        49
-    
-    >>> g_of_y_z = curried_f_of_x_y_z(2)
-    
-    >>> g_of_y_z
-        <function __main__.<lambda>.<locals>.<lambda>>
-    
-    >>> g_of_y_z (3)(5)
-        49
-    
-    
-    >>> h_of_z = g_of_y_z(3)
-    
-    >>> h_of_z
-        <function __main__.<lambda>.<locals>.<lambda>.<locals>.<lambda>>
-    
-    >>> h_of_z(5)
-        49
-    ```
-    
-    **Example in Ocaml and F#**
-    
-    ```ocaml
-        # let f x y = 10 * x - 3 * y ;;
-        val f : int -> int -> int = <fun>
-    
-        # f 4 3 ;;
-        - : int = 31
-    
-        # f 4 ;;
-        - : int -> int = <fun>
-    
-        # (f 4) 3 ;;
-        - : int = 31
-        # 
-    
-        # let h_y = f 4 ;;
-        val h_y : int -> int = <fun>
-    
-        # h_y 3 ;;
-        - : int = 31
-        # 
-    
-        # List.map h_y [2; 3; 4] ;;
-        - : int list = [34; 31; 28]
-        # 
-    
-        # List.map (f 4) [2; 3; 4] ;;
-        - : int list = [34; 31; 28]
-    
-        # let f' = fun x -> fun y -> 10 * x - 3 * y ;;
-        val f' : int -> int -> int = <fun>
-    
-        # (f' 4) 3 ;;
-        - : int = 31
-    
-        # (fun x -> fun y -> 10 * x - 3 * y) 4 3 ;;
-        - : int = 31
-        # 
-    
-        # List.map ((fun x -> fun y -> 10 * x - 3 * y) 4) [2; 3; 4] ;;
-        - : int list = [34; 31; 28]
-    ```
+To evaluate f(4, 3): 
 
-2.  Partial Application
+    h(y)  = (x -> y -> 10 * x - 3*y) 4 
+          = ( y -> 10 * 4 -  3*y )
+          =  y -> 40 - 3*y
+          
+    h(3)  = (y -> 40 - 3*y) 3
+          = 40 - 3*3
+          = 31
+          
+Or:
+    (x -> y -> 10 * x - 3*y) 4 3 
+      = (x -> (y -> 10 * x - 3*y)) 4 3 
+      = ((x -> (y -> 10 * x - 3*y)) 4) 3 
+      = (y -> 10 * 4 - 3 * y) 3
+      = 10 * 4 - 3 * 3 
+      = 31
+```
 
-    A function of multiple arguments is converted into a new function that
-    takes fewer arguments, some arguments are supplied and returns
-    function with signature consisting of remaining arguments. **Partially
-    applied\*** functions must not be confused with **\*currying**.
-    
-    Example in Python:
-    
-    ```python
-    >>> from functools import partial
-    
-    >>> def f(x, y, z): return 10 * x + 3 * y + 4 * z
-    
-    >>> f(2, 3, 5)
-        49
-    
-    >>> f_yz = partial(f, 2) # x = 2
-    >>> f_yz(3, 5)
-        49
-    
-    >>> f_z = partial(f_yz, 3)
-    
-    >>> f_z(5)
-        49
-        
-    >>> partial(f, 2, 3)(5)
-        49
-      
-    >>> list(map(partial(f, 2, 3), [2, 3, 5]))
-        [37, 41, 49]
-    ```
-    
-    In languages like Haskell, Standard ML, OCaml and F# currying is
-    similar to partial application.
-    
-    Example in OCaml:
-    
-    ```ocaml
-        # let f x y z = 10 * x + 3 *y + 4 * z ;;
-        val f : int -> int -> int -> int = <fun>
-        # 
-    
-        # (f 2 3) ;;
-        - : int -> int = <fun>
-        
-        # let f_z = f 2 3 ;;
-        val f_z : int -> int = <fun>
-    
-        # f_z 5 ;;
-        - : int = 49
-        #    
-        
-        (** Write (f 2 3) is the same as write (f 2)(3)  *)
-        # List.map (f 2 3) [2; 3; 5] ;;
-        - : int list = [37; 41; 49]
-        #
-    ```
-    
-    See also:
-    
-    -   [Java.next: Currying and partial application](http://www.ibm.com/developerworks/library/j-jn9/)
-    -   [Partial application - Wikipedia](https://en.wikipedia.org/wiki/Partial_application)
-    -   [What's Wrong with Java 8: Currying vs Closures](https://dzone.com/articles/whats-wrong-java-8-currying-vs)
+The same function h(y) can be reused: applied to another arguments, used in mapping, filtering and another higher order functions.
 
-### Lazy Evaluation<a id="sec-1-2-5" name="sec-1-2-5"></a>
+```
+Ex1
+    h(y) = (y -> 40 - 3*y)
+    
+    h(10) = 40 - 3*10 = 40 - 30 = 10
+
+Ex2    
+    map(h, [2, 3, 4])
+      = [h 2, h 3, h 4] 
+      = [(y -> 40 - 3*y) 2, (y -> 40 - 3*y) 3, (y -> 40 - 3*y) 4]
+      = [34, 31, 28]
+```
+
+**Example in Haskell GHCI**
+
+```haskell
+> let f x y = 10 * x - 3 * y
+> :t f
+f :: Num a => a -> a -> a
+> 
+> f 4 3 
+31
+> let h_y = f 4
+> :t h_y
+h_y :: Integer -> Integer
+> 
+> h_y 3
+31
+> map h_y [2, 3, 4]
+[34,31,28]
+> 
+
+> -- It is evaluated as:
+
+> ((f 4) 3)
+31
+> 
+
+{-
+   The function f can be also seen in this way
+-}   
+
+> let f' = \x -> \y -> 10 * x - 3 * y 
+> 
+
+> :t f'
+f' :: Integer -> Integer -> Integer
+> 
+
+> f' 4 3
+31
+> 
+
+> (f' 4 ) 3
+31
+> 
+
+> let h__x_is_4_of_y = f' 4
+
+> h__x_is_4_of_y 3
+31
+> 
+{-
+    (\x -> \y -> 10 * x - 3 * y) 4 3
+    =  (\x -> (\y -> 10 * x - 3 * y) 4) 3
+    =  (\y -> 10 * 4 - 3 * y) 3
+    =  (10 * 4 - 3 * 3)
+    =  40 - 9 
+    =  31    
+-}
+> (\x -> \y -> 10 * x - 3 * y) 4 3
+31
+> 
+
+> ((\x -> (\y -> 10 * x - 3 * y)) 4) 3
+31
+> 
+
+
+{-
+Curried functions are suitable for composition, pipelining 
+(F#, OCaml with the |> operator),  mapping/ filtering operations,
+and to create new function from previous defined increasing code reuse.
+
+-}
+
+> map (f 4) [2, 3, 4]
+[34,31,28]
+> 
+
+> map ((\x -> \y -> 10 * x - 3 * y) 4) [2, 3, 4]
+[34,31,28]
+> 
+
+
+> -- ----------------- 
+
+> let f_of_x_y_z x y z = 10 * x + 3 * y + 4 * z
+> 
+
+> :t f_of_x_y_z 
+f_of_x_y_z :: Num a => a -> a -> a -> a
+
+> f_of_x_y_z 2 3 5
+49
+> 
+
+> let g_of_y_z = f_of_x_y_z 2
+
+> :t g_of_y_z 
+g_of_y_z :: Integer -> Integer -> Integer
+> 
+
+> g_of_y_z 3 5
+49
+> 
+
+> let h_of_z = g_of_y_z 3
+> :t h_of_z 
+h_of_z :: Integer -> Integer
+> 
+
+> h_of_z 5
+49
+> 
+
+> -- So it is evaluated as 
+> (((f_of_x_y_z 2) 3) 5)
+49
+>
+```
+
+**Example in Python 3**
+
+```python
+ # In Python, the functions are not curried by default as in Haskell, 
+ # Standard ML, OCaml and F#
+ #
+>>> def f(x, y): return 10 * x - 3*y
+
+>>> f(4, 3)
+    31
+
+ # However the user can create the curried form of the function f:
+
+>>> curried_f = lambda x: lambda y: 10*x - 3*y
+
+>>> curried_f(4)
+    <function __main__.<lambda>.<locals>.<lambda>>
+
+>>> curried_f(4)(3)
+    31
+
+>>> h_y = curried_f(4) # x = 4 constant
+
+>>> h_y(3)
+    31
+
+>>> h_y(5)
+    25
+
+>>> mapl = lambda f_x, xs: list(map(f_x, xs))
+
+>>> mapl(h_y, [2, 3, 4])
+    [34, 31, 28]
+
+ # Or 
+
+>>> mapl(curried_f(4), [2, 3, 4])
+    [34, 31, 28]
+
+ # Without currying the mapping would be:
+
+>>> mapl(lambda y: f(4, y), [2, 3, 4])
+    [34, 31, 28]
+
+   ########################################
+
+>> f_of_x_y_z = lambda x, y, z: 10 * x + 3 * y + 4 * z
+
+ ## Curried form:
+ 
+>>> curried_f_of_x_y_z = lambda x: lambda y: lambda z: 10 * x + 3 * y + 4 * z
+
+>>> f_of_x_y_z (2, 3, 5)
+    49
+
+>>> curried_f_of_x_y_z (2)(3)(5)
+    49
+
+>>> g_of_y_z = curried_f_of_x_y_z(2)
+
+>>> g_of_y_z
+    <function __main__.<lambda>.<locals>.<lambda>>
+
+>>> g_of_y_z (3)(5)
+    49
+
+
+>>> h_of_z = g_of_y_z(3)
+
+>>> h_of_z
+    <function __main__.<lambda>.<locals>.<lambda>.<locals>.<lambda>>
+
+>>> h_of_z(5)
+    49
+```
+
+**Example in Ocaml and F#**
+
+```ocaml
+    # let f x y = 10 * x - 3 * y ;;
+    val f : int -> int -> int = <fun>
+
+    # f 4 3 ;;
+    - : int = 31
+
+    # f 4 ;;
+    - : int -> int = <fun>
+
+    # (f 4) 3 ;;
+    - : int = 31
+    # 
+
+    # let h_y = f 4 ;;
+    val h_y : int -> int = <fun>
+
+    # h_y 3 ;;
+    - : int = 31
+    # 
+
+    # List.map h_y [2; 3; 4] ;;
+    - : int list = [34; 31; 28]
+    # 
+
+    # List.map (f 4) [2; 3; 4] ;;
+    - : int list = [34; 31; 28]
+
+    # let f' = fun x -> fun y -> 10 * x - 3 * y ;;
+    val f' : int -> int -> int = <fun>
+
+    # (f' 4) 3 ;;
+    - : int = 31
+
+    # (fun x -> fun y -> 10 * x - 3 * y) 4 3 ;;
+    - : int = 31
+    # 
+
+    # List.map ((fun x -> fun y -> 10 * x - 3 * y) 4) [2; 3; 4] ;;
+    - : int list = [34; 31; 28]
+```
+
+### Partial Application<a id="sec-1-6-2" name="sec-1-6-2"></a>
+
+A function of multiple arguments is converted into a new function that
+takes fewer arguments, some arguments are supplied and returns
+function with signature consisting of remaining arguments. **Partially
+applied\*** functions must not be confused with **\*currying**.
+
+Example in Python:
+
+```python
+>>> from functools import partial
+
+>>> def f(x, y, z): return 10 * x + 3 * y + 4 * z
+
+>>> f(2, 3, 5)
+    49
+
+>>> f_yz = partial(f, 2) # x = 2
+>>> f_yz(3, 5)
+    49
+
+>>> f_z = partial(f_yz, 3)
+
+>>> f_z(5)
+    49
+    
+>>> partial(f, 2, 3)(5)
+    49
+  
+>>> list(map(partial(f, 2, 3), [2, 3, 5]))
+    [37, 41, 49]
+
+#
+# Alternative implementation of partial
+#
+def partial(f, *xs):
+    return lambda x: f( * (tuple(xs) + (x,)))
+
+>>> list(map(partial(f, 2, 3), [2, 3, 5]))
+    [37, 41, 49]
+>>>
+```
+
+In languages like Haskell, Standard ML, OCaml and F# currying is
+similar to partial application.
+
+Example in OCaml:
+
+```ocaml
+    # let f x y z = 10 * x + 3 *y + 4 * z ;;
+    val f : int -> int -> int -> int = <fun>
+    # 
+
+    # (f 2 3) ;;
+    - : int -> int = <fun>
+    
+    # let f_z = f 2 3 ;;
+    val f_z : int -> int = <fun>
+
+    # f_z 5 ;;
+    - : int = 49
+    #    
+    
+    (** Write (f 2 3) is the same as write (f 2)(3)  *)
+    # List.map (f 2 3) [2; 3; 5] ;;
+    - : int list = [37; 41; 49]
+    #
+```
+
+See also:
+
+-   [Java.next: Currying and partial application](http://www.ibm.com/developerworks/library/j-jn9/)
+-   [Partial application - Wikipedia](https://en.wikipedia.org/wiki/Partial_application)
+-   [What's Wrong with Java 8: Currying vs Closures](https://dzone.com/articles/whats-wrong-java-8-currying-vs)
+
+## Lazy Evaluation<a id="sec-1-7" name="sec-1-7"></a>
 
 "Lazy evaluation" means that data structures are computed
 incrementally, as they are needed (so the trees never exist in memory
@@ -840,18 +1065,20 @@ f = lambda x: x**5
 >>>
 ```
 
-### Fundamental Higher Order Functions<a id="sec-1-2-6" name="sec-1-2-6"></a>
+## Fundamental Higher Order Functions<a id="sec-1-8" name="sec-1-8"></a>
+
+### Overview<a id="sec-1-8-1" name="sec-1-8-1"></a>
+
+The functions map, filter and reduce (fold left) are ubiquitous in
+many programming languages and also the most used higher order
+functions.
+
+They can be stricted evaluated like in Scheme and Javascript or lazy
+evaluated like in Python and Haskell.
+
+### Map<a id="sec-1-8-2" name="sec-1-8-2"></a>
 
 1.  Overview
-
-    The functions map, filter and reduce (fold left) are ubiquitous in
-    many programming languages and also the most used higher order
-    functions.
-    
-    They can be stricted evaluated like in Scheme and Javascript or lazy
-    evaluated like in Python and Haskell.
-
-2.  Map
 
     The function map applies a function to each element of a sequence:
     list, vector, hash map or dictionary and trees. 
@@ -871,1071 +1098,1098 @@ f = lambda x: x**5
                map f :: [a] -> [b]                    
         [a] ------------------------->>> [b]
     ```
-    
-    1.  Map in Haskell
-    
-        The function map is lazy evaluated.
-        
-        ```haskell
-        > let fun1 x = 3 * x + 1
-        > fun1 2
-        7
-        > map fun1 [1, 2, 3]
-        [4,7,10]
-        > 
-        
-          -- The sequence 1 to 1000000 is not evaluated at all, 
-          --
-        > take 10 (map fun1 [1..1000000])
-        [4,7,10,13,16,19,22,25,28,31]
-        
-        > take 10 (map fun1 [1..10000000000])
-        [4,7,10,13,16,19,22,25,28,31]
-        > 
-        > 
-        
-        
-        
-         -- 
-         -- When applied to a function without a list, it creates 
-         -- another function that operates over lists because all
-         -- Haskell functions are curried by default.
-         --
-         --         f :: (a -> b)
-         --  map    :: (a -> b) -> [a] -> [b]
-         --
-         -- It can be seen as:
-         --
-         --  When map is applied to f, it will create the function fs
-         --  that take list of type a and returns list of type b.
-         --
-         --  map    :: (a -> b) -> ([a] -> [b])
-         --                |            |
-         --                |            |------ fs :: [a] -> [b] 
-         --                |    
-         --                -------------------- f  :: a -> b 
-         --
-        > :t map
-        map :: (a -> b) -> [a] -> [b]
-          
-        > let f x = 3 * x + 6
-        > :t f
-        f :: Num a => a -> a
-        > 
-        
-        
-        > map f [1, 2, 3]
-        [9,12,15]
-        > 
-        
-         -- Note: let is only needed in the REPL
-         --
-        > let fs = map f
-        
-        > :t fs
-        fs :: [Integer] -> [Integer]
-        
-        > fs [1, 2, 3]
-        [9,12,15]
-        >
-        ```
-    
-    2.  Map in Python
-    
-        In Python 3 map and filter are lazy evaluated, they return a
-        generator. 
-        
-        ```python
-        >>> def fun1 (x):
-            return 3*x + 6
-        ... 
-        >>> g = map(fun1, [1, 2, 3])
-        >>> g
-        <map object at 0xb6b4a76c>
-        >>> next (g)
-        9
-        >>> next (g)
-        12
-        >>> next (g)
-        15
-        >>> next (g)
-        Traceback (most recent call last):
-          File "<stdin>", line 1, in <module>
-        StopIteration
-        >>> g
-        <map object at 0xb6b4a76c>
-        >>> 
-        
-         # Force the evaluation: 
-         #
-         >>> list(map(fun1, [1, 2, 3]))
-         [9, 12, 15]
-        
-        
-         # Strict Version of map
-         # 
-         # s_ stands for strict map.
-        
-        def s_map (f, xs):
-            return list(map(f, xs))
-         
-        >>> s_map (fun1, [1, 2, 3])
-        [9, 12, 15]
-        >>> 
-        
-         # Due to python doesn't have tail call optimization
-         # recusion must be avoided, a higher number of iterations
-         # can lead to a stack overflow.
-         
-        def strict_map (f, xs):
-            return [f (x) for x in xs]
-            
-        >>> strict_map (fun1, [1, 2, 3])
-        [9, 12, 15]
-        >>> strict_map (fun1, range(5))
-        [6, 9, 12, 15, 18]
-        >>> 
-        
-          # Lazy map implementation:
-          # Note: the python native map is implemented in C, so
-          # it is faster.
-          #
-          
-        def lazy_map (f, xs):
-            for x in xs:
-                yield x
-                
-        >>> g = lazy_map (fun1, [1, 2, 3])
-        >>> next(g)
-        1
-        >>> next(g)
-        2
-        >>> next(g)
-        3
-        >>> next(g)
-        Traceback (most recent call last):
-          File "<stdin>", line 1, in <module>
-        StopIteration
-        >>> list(lazy_map (fun1, [1, 2, 3]))
-        [1, 2, 3]
-        >>>           
-        
-         #
-         # To the map function work like in Haskell and ML 
-         # it is need to be curried.   
-         #
-        
-        curry2 = lambda f: lambda x: lambda y: f(x, y)
-        
-         # The function curry2 currify a function of two arguments
-         #
-        >>> strict_map_c = curry2(strict_map) 
-        
-        >>> strict_map_c(fun1)
-        <function <lambda>.<locals>.<lambda>.<locals>.<lambda> at 0xb6afc0bc>
-        
-        >>> strict_map_c(fun1)([1, 2, 3, 4])
-        [9, 12, 15, 18]
-        >>> 
-        
-        >>> fun1_xs = strict_map_c(fun1)
-        >>> fun1_xs ([1, 2, 3, 4])
-        [9, 12, 15, 18]
-        >>>
-        ```
-    
-    3.  Map in Dynamic Typed Languages
-    
-        In dynamic typed languages like Python, Clojure and Scheme the function map
-        can take multiple arguments. In typed languages the function 
-        takes only one argument.
-        
-        Map in Python:
-        
-        ```python
-        >>> list(map (lambda a, b, c: 100 * a + 10 * b + c, [1, 2, 3, 4, 5], [8, 9, 10, 11, 12], [3, 4, 7, 8, 10]))
-        [183, 294, 407, 518, 630]
-        >>>
-        ```
-        
-        Map in Scheme: 
-        
-        ```scheme
-        (map (lambda (a b c) (+ (* 100 a) (* 10 b) c)) 
-              '(1 2 3 4 5) 
-              '(8 9 10 11 12) 
-              '(3 4 7 8 10))
-        
-        $1 = (183 294 407 518 630)
-        ```
-        
-        Map in Clojure:
-        
-        ```clojure
-        ;; f a b c = 100 * a + 10 * b + c
-        ;; 
-        ;; 183 = f 1 8 3 
-        ;; 294 = f 2 9 4 
-        ;; ...
-        ;; 630 = f 6 3 0
-        ;;
-        user=> (map (fn [a b c] (+ (* 100 a) (* 10 b) c)) [1 2 3 4 5] [8 9 10 11 12] [3 4 7 8 10])
-        (183 294 407 518 630)
-        user=> 
-        
-        ;;
-        ;; The clojure map is Polymorphic it can be applied to any collection 
-        ;; of seq abstraction like lists, vectors and hash maps.
-        ;;
-        
-        ;; Map applied to a list  
-        ;;
-        user=> (map inc '(1 2 3 4 5 6))
-        (2 3 4 5 6 7)
-        user=> 
-        
-        ;; Map applied to a vector 
-        ;;
-        user=> (map inc [1 2 3 4 5 6])
-        (2 3 4 5 6 7)
-        user=> 
-        
-        ;; Map applied to a hash map 
-        ;;
-        user=> (map identity {:a 10 :b 20 :c "hello world"})
-        ([:a 10] [:b 20] [:c "hello world"])
-        user=> 
-        
-        ;; The function mapv is similar to map, but returns a vector: 
-        ;;
-        user=> (mapv identity {:a 10 :b 20 :c "hello world"})
-        [[:a 10] [:b 20] [:c "hello world"]]
-        user=> 
-        
-        
-        ;; Clojure also have destructuring 
-        ;;
-        user=> (map (fn [[[a b] c]] (+ (* 100 a ) (* 10 b) c))  [[[1 2] 3] [[3 4] 5] [[1 2] 4]])
-        (123 345 124)
-        user=>
-        ```
 
-3.  Filter
+2.  Map in Haskell
 
-    **Python**
+    The function map is lazy evaluated.
+    
+    ```haskell
+    > let fun1 x = 3 * x + 1
+    > fun1 2
+    7
+    > map fun1 [1, 2, 3]
+    [4,7,10]
+    > 
+    
+      -- The sequence 1 to 1000000 is not evaluated at all, 
+      --
+    > take 10 (map fun1 [1..1000000])
+    [4,7,10,13,16,19,22,25,28,31]
+    
+    > take 10 (map fun1 [1..10000000000])
+    [4,7,10,13,16,19,22,25,28,31]
+    > 
+    > 
+    
+    
+    
+     -- 
+     -- When applied to a function without a list, it creates 
+     -- another function that operates over lists because all
+     -- Haskell functions are curried by default.
+     --
+     --         f :: (a -> b)
+     --  map    :: (a -> b) -> [a] -> [b]
+     --
+     -- It can be seen as:
+     --
+     --  When map is applied to f, it will create the function fs
+     --  that take list of type a and returns list of type b.
+     --
+     --  map    :: (a -> b) -> ([a] -> [b])
+     --                |            |
+     --                |            |------ fs :: [a] -> [b] 
+     --                |    
+     --                -------------------- f  :: a -> b 
+     --
+    > :t map
+    map :: (a -> b) -> [a] -> [b]
+      
+    > let f x = 3 * x + 6
+    > :t f
+    f :: Num a => a -> a
+    > 
+    
+    
+    > map f [1, 2, 3]
+    [9,12,15]
+    > 
+    
+     -- Note: let is only needed in the REPL
+     --
+    > let fs = map f
+    
+    > :t fs
+    fs :: [Integer] -> [Integer]
+    
+    > fs [1, 2, 3]
+    [9,12,15]
+    >
+    ```
+
+3.  Map in Python
+
+    In Python 3 map and filter are lazy evaluated, they return a
+    generator. 
     
     ```python
-     ;;; Filter returns by default a 
-    >>> g = filter (lambda x: x > 10, [1, 20, 3, 40, 4, 14, 8])
+    >>> def fun1 (x):
+        return 3*x + 6
+    ... 
+    >>> g = map(fun1, [1, 2, 3])
     >>> g
-    <filter object at 0xb6b4a58c>
-    >>> [x for x in g]
-    [20, 40, 14]
-    >>> [x for x in g]
-    []
-    >>> list(filter (lambda x: x > 10, [1, 20, 3, 40, 4, 14, 8]))
-    [20, 40, 14]
-    >>> 
-    
-      # Stritct Version of filter function
-      #
-    >>> _filter = lambda f, xs: list(filter(f, xs))
-    >>> 
-    >>> _filter (lambda x: x > 10,  [1, 20, 3, 40, 4, 14, 8])
-    [20, 40, 14]
-    >>> 
-    
-      # Filter implementation without recursion:
-      #
-    
-    def strict_filter (f, xs):
-        result = []
-        for x in xs:
-            if f(x):
-                result.append(x)
-        return result
-    
-    def lazy_filter (f, xs):
-        for x in xs:
-            if f(x):
-                yield x
-    
-    >>> strict_filter (lambda x: x > 10, [1, 20, 3, 40, 4, 14, 8])
-    [20, 40, 14]
-    
-    >>> lazy_filter (lambda x: x > 10, [1, 20, 3, 40, 4, 14, 8])
-    <generator object lazy_filter at 0xb6b0f1bc>
-    
-    >>> g = lazy_filter (lambda x: x > 10, [1, 20, 3, 40, 4, 14, 8])
+    <map object at 0xb6b4a76c>
+    >>> next (g)
+    9
+    >>> next (g)
+    12
+    >>> next (g)
+    15
+    >>> next (g)
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    StopIteration
     >>> g
-    <generator object lazy_filter at 0xb6b0f194>
+    <map object at 0xb6b4a76c>
+    >>> 
+    
+     # Force the evaluation: 
+     #
+     >>> list(map(fun1, [1, 2, 3]))
+     [9, 12, 15]
+    
+    
+     # Strict Version of map
+     # 
+     # s_ stands for strict map.
+    
+    def s_map (f, xs):
+        return list(map(f, xs))
+     
+    >>> s_map (fun1, [1, 2, 3])
+    [9, 12, 15]
+    >>> 
+    
+     # Due to python doesn't have tail call optimization
+     # recusion must be avoided, a higher number of iterations
+     # can lead to a stack overflow.
+     
+    def strict_map (f, xs):
+        return [f (x) for x in xs]
+        
+    >>> strict_map (fun1, [1, 2, 3])
+    [9, 12, 15]
+    >>> strict_map (fun1, range(5))
+    [6, 9, 12, 15, 18]
+    >>> 
+    
+      # Lazy map implementation:
+      # Note: the python native map is implemented in C, so
+      # it is faster.
+      #
+      
+    def lazy_map (f, xs):
+        for x in xs:
+            yield x
+            
+    >>> g = lazy_map (fun1, [1, 2, 3])
     >>> next(g)
-    20
+    1
     >>> next(g)
-    40
+    2
     >>> next(g)
-    14
+    3
     >>> next(g)
     Traceback (most recent call last):
       File "<stdin>", line 1, in <module>
     StopIteration
+    >>> list(lazy_map (fun1, [1, 2, 3]))
+    [1, 2, 3]
+    >>>           
+    
+     #
+     # To the map function work like in Haskell and ML 
+     # it is need to be curried.   
+     #
+    
+    curry2 = lambda f: lambda x: lambda y: f(x, y)
+    
+     # The function curry2 currify a function of two arguments
+     #
+    >>> strict_map_c = curry2(strict_map) 
+    
+    >>> strict_map_c(fun1)
+    <function <lambda>.<locals>.<lambda>.<locals>.<lambda> at 0xb6afc0bc>
+    
+    >>> strict_map_c(fun1)([1, 2, 3, 4])
+    [9, 12, 15, 18]
     >>> 
     
-    >>> list(lazy_filter (lambda x: x > 10, [1, 20, 3, 40, 4, 14, 8]))
-    [20, 40, 14]
+    >>> fun1_xs = strict_map_c(fun1)
+    >>> fun1_xs ([1, 2, 3, 4])
+    [9, 12, 15, 18]
     >>>
     ```
 
-4.  Reduce or Fold
+4.  Map in Dynamic Typed Languages
 
-    1.  Overview
+    In dynamic typed languages like Python, Clojure and Scheme the function map
+    can take multiple arguments. In typed languages the function 
+    takes only one argument.
     
-        **Fold Left**
-        
-        The  function fold left is tail recursive, whereas the function fold
-        right is not. This functions is also known as reduce or inject (in
-        Ruby). The function fold left is often called just <span class="underline">fold</span> like in F#
-        or <span class="underline">reduce</span> (Python, Javascript, Clojure) and also Inject (Ruby).
-        
-        `foldl :: (State -> x -> State) -> State -> [x] -> State`
-        `foldl (f :: S -> x -> S)  S [x]`
-        
-        ```
-        Sn = foldl f S0 [x0, x1, x2, x3 ... xn-1]
-        
-        S1   = f S0 x0
-        S2   = f S1 x1     = f (f S0 x0) x1
-        S3   = f S2 x2     = f (f (f S0 x0) x1) x2
-        S4   = f S3 x3     = f (f (f (f S0 x0) x1) x2) x3
-        ...
-        Sn-1 = f Sn-2 Xn-2 = ...
-        Sn   = f Sn-1 Xn-1 = f ...(f (f (f (f S0 x0) x1) x2) x3 ... xn
-        
-          ;;; -> Result
-        ```
-        
-        **Fold Right**
-        
-        `foldr :: (x -> acc -> acc) -> acc -> [x] -> acc`
-        
-        ```
-        S1   = f xn-1 S0
-        S2   = f xn-2 S1     = f xn-2 (f xn-1 S0)
-        S3   = f xn-3 S2     = f xn-3 (f xn-2 (f xn-1 S0))
-        S4   = f xn-4 S3     = f xn-4 (f xn-3 (f xn-2 (f xn-1 S0)))
-        ....
-        Sn-1 = f x1   Sn-2   = ...
-        Sn   = f x0   Sn-1   = f x0 (f x1 ... (f xn-2 (f xn-1 S0)))
-        ```
-    
-    2.  Haskell
-    
-        See also: 
-        
-        -   [Fold (higher-order function) - Wikipedia, the free encyclopedia](https://en.wikipedia.org/wiki/Fold_(higher-order_function))
-        -   [A tutorial on the universality and expressiveness of fold. GRAHAM HUTTON](http://www.cs.nott.ac.uk/~pszgmh/fold.pdf)
-        -   [Haskell unit 6: The higher-order fold functions | Antoni Diller](http://www.cantab.net/users/antoni.diller/haskell/units/unit06.html)
-        
-        Fold Left:
-        
-        ```
-         foldl :: (acc -> x -> acc) -> acc -> [x] -> acc
-         
-                          |             |      |       | 
-                          |             |      |       |---> Returns the accumulated 
-                          |             |      |             value
-                          |             |      |----- xs 
-                          |             |                  
-                          |             |     Inital Value of accumulator
-                          |             |---  acc0
-                          |
-                          |-----------------  f :: acc -> x -> acc
-                                                          |
-                                                          |--- Element of list 
-        
-         foldl :: (b -> a -> b) -> b -> [a] -> b
-         foldl f z []     = z
-         foldl f z (x:xs) = foldl f (f z x) xs
-        ```
-        
-        ```haskell
-        > :t foldl
-        foldl :: (a -> b -> a) -> a -> [b] -> a
-        > 
-        > foldl (\acc x -> 10 * acc + x) 0 [1, 2, 3, 4, 5] 
-        12345
-        >
-        ```
-        
-        It is equivalent to:
-        
-        ```haskell
-        > let f acc x = 10 * acc + x
-        > 
-        > (f 0 1)
-        1
-        > (f (f 0 1) 2)
-        12
-        > (f (f (f 0 1) 2) 3)
-        123
-        > 
-        > (f (f (f (f 0 1) 2) 3) 4)
-        1234
-        > (f (f (f (f (f 0 1) 2) 3) 4) 5)
-        12345
-        >
-        ```
-        
-        Evaluation of Fold left:
-        
-        ```
-        > foldl (\acc x -> 10 * acc + x ) 0 [1, 2, 3, 4, 5]
-        1234
-        
-        S0 = 0
-        
-        f = \acc x -> 10 * acc + x
-        
-                         x  acc
-        S1 = f S0 x0 = f 0   1 = 10 * 0  + 1 = 1
-        S2 = f S1 x1 = f 10  2 = 10 * 1    + 2 = 12
-        S3 = f S2 x2 = f 12  3 = 10 * 12   + 3 = 123
-        S4 = f S3 x3 = f 123 4 = 10 * 123  + 4 = 1234
-        S5 = f S3 x3 = f 123 4 = 10 * 1234 + 5 = 12345
-        ```
-        
-        **Fold right**
-        
-        ```
-         foldr :: (x -> acc -> acc) -> acc -> [x] -> acc
-        
-         foldr :: (a -> b -> b) -> b -> [a] -> b
-         foldr f z []     = z
-         foldr f z (x:xs) = f x (foldr f z xs)
-        ```
-        
-        ```haskell
-        > foldr (\x acc -> 10 * acc + x) 0 [1, 2, 3, 4, 5] 
-        54321
-        
-        > (f 0 5)
-        5
-        > (f (f 0 5) 4)
-        54
-        > (f (f (f 0 5) 4) 3)
-        543
-        > (f (f (f (f 0 5) 4) 3) 2)
-        5432
-        > (f (f (f (f (f 0 5) 4) 3) 2) 1)
-        54321
-        > 
-        
-         --
-         -- Derive fold_right from foldl (fold left)
-         -- 
-        
-        > let fold_right f acc xs = foldl (\x acc -> f acc x) acc (reverse xs)
-        > 
-        > :t fold_right
-        fold_right :: (b -> a -> a) -> a -> [b] -> a
-        > 
-        > 
-        > fold_right (\x acc -> 10 * acc + x) 0 [1, 2, 3, 4, 5]
-        54321
-        >
-        ```
-        
-        Evaluation of Fold Right:
-        
-        ```
-        Example:
-        
-        > foldr (\x acc -> 10 * acc + x ) 0 [1, 2, 3, 4, 5]
-        54321
-        >
-        
-        f  = \x acc -> 10 * acc + x
-        S0 = 0
-        n = 5
-                               x acc
-        S1   = f x4 S0     = f 5  0    = 10 * 0    + 5 = 5
-        S2   = f x3 S1     = f 4  5    = 10 * 5    + 4 = 54
-        S3   = f x2 S2     = f 3  54   = 10 * 54   + 3 = 543
-        S4   = f x1 S3     = f 2  543  = 10 * 543  + 2 = 5432
-        S5   = f x0 S4     = f 1  5432 = 10 * 5432 + 1 = 54321
-        ```
-    
-    3.  Python
-    
-        In Python 3 the function reduce is not default anymore, however it can
-        be found in the native library functools, that has a lot of built-in
-        functions for functional programming. The function reduce is equivalent
-        to Haskell function foldl (fold left) which is tail recursive.
-        
-        ```
-        reduce(function, sequence[, initial]) -> value
-        
-        reduce :: (acc -> x -> acc) -> [x] ?acc0  -> acc
-        ```
-        
-        ```python
-        >>> from functools import reduce
-        >>> 
-        
-        >>> reduce (lambda acc, x: 10 *  acc + x , [1, 2, 3, 4, 5], 0)
-        12345
-        >>> 
-        
-        >>> f = lambda acc, x: 10 *  acc + x
-        >>> 
-        >>> f(0, 1)
-        1
-        >>> f( f(0, 1), 2)
-        12
-        >>> f( f( f(0, 1), 2), 3)
-        123
-        >>> f( f( f( f(0, 1), 2), 3), 4)
-        1234
-        >>> f( f( f( f( f(0, 1), 2), 3), 4), 5)
-        12345
-        >>> 
-        
-        def my_reduce (f, xs, acc0=None):
-            "Non recursive implementation of reduce (fold_left)
-             with optional initial accumulator value.
-            "
-        
-            if acc0 is None:
-                acc = xs[0]   
-                xss = xs[1:]
-            else:
-                acc = acc0
-                xss = xs
-                
-            for x in xss:
-                acc = f (acc, x)
-                
-            return acc
-        
-        
-        >>> 
-        >>> my_reduce(lambda acc, x: 10 * acc + x, [1, 2, 3, 4, 5], 0)
-        12345
-        >>> my_reduce(lambda acc, x: 10 * acc + x, [1, 2, 3, 4, 5])
-        12345
-        >>> my_reduce(lambda acc, x:  acc + x, [1, 2, 3, 4, 5], 0)
-        15
-        >>> my_reduce(lambda acc, x:  acc * x, [1, 2, 3, 4, 5], 1)
-        120
-        >>> 
-         
-         #
-         # Implementation without recursion.
-         #
-        
-        def fold_left (f_acc_x_to_acc, acc0, xs):
-            "Haskell-like fold left function
-            
-            fold_left :: (acc -> x -> acc) -> acc -> [x]
-            "
-            acc = acc0
-            
-            for x in xs:
-                acc = f_acc_x_to_acc (acc, x)
-                
-            return acc
-              
-        >>> fold_left (lambda acc, x: 10 * acc + x, 0, [1, 2, 3, 4, 5])
-        12345
-        >>>       
-        
-        
-        def fold_right (f, acc0, xs):
-            return fold_left ((lambda acc, x: f(x, acc)), acc0, reversed(xs))
-        
-        >>> fold_right (lambda x, acc: 10 * acc + x, 0, [1, 2, 3, 4, 5])
-        54321
-        >>>
-        
-        def fold_right2 (f, acc0, xs):
-            acc = acc0
-            
-            for x in reversed(xs):
-                acc = f(x, acc)
-                
-            return acc
-        
-        >>> fold_right2 (lambda x, acc: 10 * acc + x, 0, [1, 2, 3, 4, 5])
-        54321
-        >>>
-        ```
-        
-        **Usefulness of Fold**
-        
-        Many functions and recursive algorithms can be implemented using the
-        fold function, including map, filter, sum, product and others.
-        
-        It is based in the paper:  
-        
-        -   [A tutorial on the universality and expressiveness of fold. GRAHAM HUTTON](http://www.cs.nott.ac.uk/~pszgmh/fold.pdf)
-        
-        In the paper was used fold right, here was used fold left. 
-        
-        ```python
-        def fold_left (f_acc_x_to_acc, acc0, xs):
-            "Haskell-like fold left function
-            
-            fold_left :: (acc -> x -> acc) -> acc -> [x]
-            "
-            acc = acc0
-            
-            for x in xs:
-                acc = f_acc_x_to_acc (acc, x)
-                
-            return acc
-            
-            
-            ;;; Function fold in curried form 
-            
-        curry3 = lambda f: lambda x: lambda y: lambda z: f(x, y, z)
-        
-        fold = curry3(fold_left)
-        
-        >>> summation = fold(lambda acc, x: acc + x)(0)
-        >>> 
-        >>> summation([1, 2, 3, 4, 5, 6])
-        21
-        >>> 
-        
-        >>> product = fold(lambda acc, x: acc * x)(1)
-        >>> product([1, 2, 3, 4, 5])
-        120
-        >>> 
-        
-        >>> f_or = fold(lambda acc, x: acc or x)(False)
-        >>> f_or([False, False, False])
-        False
-        >>> 
-        >>> f_or([False, False, True])
-        True
-        >>> 
-        
-        >>> f_and = fold(lambda acc, x: acc and x)(True)
-        >>> 
-        >>> f_and([False, True, True])
-        False
-        >>> f_and([True, True, True])
-        True
-        >>> 
-        
-        >>> length = fold(lambda acc, x: acc + 1)(0)
-        >>> length ([1, 2, 3, 4, 5])
-        5
-        
-        >>> _map = lambda f, xs: fold(lambda acc, x: acc + [f(x)] )([])(xs)
-        >>> _map (lambda x: x * 3, [1, 2, 3, 4])
-        [3, 6, 9, 12]
-        >>> 
-        
-        >>> _filter = lambda p, xs: fold(lambda acc, x: (acc + [x]) if p(x) else  acc )([])(xs)
-        >>> 
-        >>> _filter(lambda x: x > 10, [10, 3, 8, 2, 20, 30])
-        [20, 30]
-        >>> 
-        
-        
-         #
-         # Function composition
-         # 
-         #  (f3 (f2 (f1 (f0 x))))
-         #
-         #  (f3 . f2 . f1 . f0) x
-         #
-         #  or using, forward composition:
-         # 
-         #  (f0 >> f2 >> f1 >> f0) x
-         #
-         
-        >>> f1 = lambda x: 3 * x
-        >>> f2 = lambda x: 5 + x
-        >>> f3 = lambda x: 2 ** x
-        
-        
-        >>> _fcomp = lambda functions: lambda x: fold(lambda acc, f: f(acc)) (x) (functions)
-        
-        >>> _fcomp([f1, f2, f3])(3)
-        16384
-        
-        >>> (f3 (f2 (f1 (3))))
-        16384
-        >>>
-        ```
-    
-    4.  Clojure
-    
-        The function reduce is similar to Haskell <span class="underline">fold left</span> and Python
-        reduce. This function is Polymorphic. It works on any collection of
-        seq abstraction: lists, vectors and hash maps. 
-        
-        Signature:
-        
-        ```
-        (reduce f coll)      -> reduce :: (f :: acc -> x -> acc) -> [x]
-        
-        Or 
-        
-        (reduce f val coll)  -> reduce :: (f :: acc -> x -> acc) -> acc -> [x] 
-        
-        f :: acc -> x -> acc
-        ```
-        
-        ```clojure
-        ;; Applying fold/reduce to a list 
-        ;;
-        ;;
-        user=> (reduce (fn [acc x] (+ (* 10 acc) x)) 0 '(1 2 3 4 5))
-        12345
-        
-        
-        ;; Applying fold/reduce to a vector 
-        ;;
-        user=> (reduce (fn [acc x] (+ (* 10 acc) x))  0 [1 2 3 4 5])
-        12345
-        user=> 
-        
-        user=> (reduce (fn [acc x] (+ (* 10 acc) x)) 0 [])
-        0
-        
-        ;; Applyind fold/reduce to a Hash map 
-        ;;
-        user=> (reduce (fn [acc x] (cons x  acc )) '()  { :a 10 :b 20 :c 30 })
-        ([:c 30] [:b 20] [:a 10])
-        user=>
-        
-        ;; Without Initial value of accumulator it will fail on a empty list. 
-        ;; 
-        user=> (reduce (fn [acc x] (+ (* 10 acc) x)) [1 2 3 4 5])
-        12345
-        
-        user=> (reduce (fn [acc x] (+ (* 10 acc) x)) [])
-        ArityException Wrong number of args (0) passed to: user/eval44/fn--45  clojure.lang.AFn.throwArity (AFn.java:429)
-        user=> 
-        
-        ;; Implementing fold right  
-        ;;
-        (defn foldr 
-           ([f xs]       (reduce (fn [acc x] (f x acc))     (reverse xs)))
-           ([f acc xs]   (reduce (fn [acc x] (f x acc)) acc (reverse xs)))
-          )
-        
-        user=> (foldr (fn [x acc] (+ (* 10 acc) x)) 0 [1 2 3 4 5])
-        54321
-        
-        
-        ;; Clojure has destructuring 
-        ;;
-        user=> (reduce (fn [acc [a b]] (conj acc (+ (* 10 a) b) )) '[] [[1 2] [3 4] [5 8]] )
-        [12 34 58]
-        user=> 
-        
-        ;; Implementing map with fold left (reduce)
-        ;;
-        user=> (defn map2 [f xs] 
-                  (reverse (reduce (fn [acc x] (cons (f x) acc)) 
-                                () 
-                                xs)))
-        #'user/map2
-        user=> 
-        user=> (map2 inc '(1 2 3 3 4 5))
-        (2 3 4 4 5 6)
-        user=> 
-        
-        ;; Implementing map with fold right 
-        ;;
-        ;;
-        
-        (defn map2 [f xs] 
-           (foldr (fn [x acc] (cons (f x) acc)) 
-                  ()
-                  xs
-           ))
-        
-        user=> (map2 inc '(1 2 3 4 5 6))
-        (2 3 4 5 6 7)
-        user=>
-        ```
-
-5.  For Each, Impure map
-
-    For each is an <span class="underline">impure higher order function</span> which maps an impure,
-    output function to each element of a list. Unlike map this function
-    neither have a standard name and or return anything.
-    
-    **Scheme**
-    
-    ```scheme
-    > (for-each (lambda (i) (display i) (newline))  '(1 2 3 4 5 6))
-    1
-    2
-    3
-    4
-    5
-    6
-    >
-    
-    > (for-each
-       (lambda (a b c)
-          (display a) (display b) (display c)
-          (newline)
-        )
-       '(a b c d e f)
-       '(1 2 3 4 5 6)
-       '("x" "y" "z" "w" "h" "k"))
-    a1x
-    b2y
-    c3z
-    d4w
-    e5h
-    f6k
-    ```
-    
-    **Common Lisp**
-    
-    ```lisp
-    > (mapc #'print '(1 2 3 3 4))
-    
-    1
-    2
-    3
-    3
-    4
-    ```
-    
-    **Ocaml**
-    
-    ```
-    > List.iter ;;
-    - : ('a -> unit) -> 'a list -> unit = <fun>
-    
-    > List.iter (fun x -> print_int x ; print_string "\n") [1 ; 2; 3; 4; 5] ;;
-    1
-    2
-    3
-    4
-    5
-    - : unit = ()
-    ```
-    
-    **F#**
-    
-    ```
-    > List.iter ;;
-    val it : (('a -> unit) -> 'a list -> unit) = <fun:clo@1>
-    
-    > List.iter (fun x -> printfn "x = %d" x) [1; 2; 3; 4; 5] ;;
-    x = 1
-    x = 2
-    x = 3
-    x = 4
-    x = 5
-    val it : unit = ()
-    >
-    ```
-    
-    **Python**
-    
-    This function is not in Python standard library however, it can be
-    defined as this.
+    Map in Python:
     
     ```python
-    def for_each(f, * xss):
-        for xs in zip(* xss):
-            f(*xs)
-    
-    >>> for_each (print, [1, 2, 4, 5, 6])
-    1
-    2
-    4
-    5
-    6
-    
-    >>> for_each (lambda a, b: print (a, b), [1, 2, 3, 4, 5, 6], ["a", "b", "c", "d", "e", "f"])
-    1 a
-    2 b
-    3 c
-    4 d
-    5 e
-    6 f
+    >>> list(map (lambda a, b, c: 100 * a + 10 * b + c, [1, 2, 3, 4, 5], [8, 9, 10, 11, 12], [3, 4, 7, 8, 10]))
+    [183, 294, 407, 518, 630]
+    >>>
     ```
     
-    **Clojure** 
+    Map in Scheme: 
+    
+    ```scheme
+    (map (lambda (a b c) (+ (* 100 a) (* 10 b) c)) 
+          '(1 2 3 4 5) 
+          '(8 9 10 11 12) 
+          '(3 4 7 8 10))
+    
+    $1 = (183 294 407 518 630)
+    ```
+    
+    Map in Clojure:
     
     ```clojure
-    user=> (defn f [a b] (println (format "a = %s , b = %s" a b)))
-    #'user/f
+    ;; f a b c = 100 * a + 10 * b + c
+    ;; 
+    ;; 183 = f 1 8 3 
+    ;; 294 = f 2 9 4 
+    ;; ...
+    ;; 630 = f 6 3 0
+    ;;
+    user=> (map (fn [a b c] (+ (* 100 a) (* 10 b) c)) [1 2 3 4 5] [8 9 10 11 12] [3 4 7 8 10])
+    (183 294 407 518 630)
+    user=> 
+    
+    ;;
+    ;; The clojure map is Polymorphic it can be applied to any collection 
+    ;; of seq abstraction like lists, vectors and hash maps.
+    ;;
+    
+    ;; Map applied to a list  
+    ;;
+    user=> (map inc '(1 2 3 4 5 6))
+    (2 3 4 5 6 7)
+    user=> 
+    
+    ;; Map applied to a vector 
+    ;;
+    user=> (map inc [1 2 3 4 5 6])
+    (2 3 4 5 6 7)
+    user=> 
+    
+    ;; Map applied to a hash map 
+    ;;
+    user=> (map identity {:a 10 :b 20 :c "hello world"})
+    ([:a 10] [:b 20] [:c "hello world"])
+    user=> 
+    
+    ;; The function mapv is similar to map, but returns a vector: 
+    ;;
+    user=> (mapv identity {:a 10 :b 20 :c "hello world"})
+    [[:a 10] [:b 20] [:c "hello world"]]
+    user=> 
     
     
-    (defn for-each [f & xss]
-       (doseq [args (apply map vector xss)]  (apply f args)))
-    
-    
-    user=> (for-each println [1 2 3 4])
-    1
-    2
-    3
-    4
-    nil
-    
-    
-    user=> (for-each f [1 2 3 4] [3 4 5 6])
-    a = 1 , b = 3
-    a = 2 , b = 4
-    a = 3 , b = 5
-    a = 4 , b = 6
-    nil
+    ;; Clojure also have destructuring 
+    ;;
+    user=> (map (fn [[[a b] c]] (+ (* 100 a ) (* 10 b) c))  [[[1 2] 3] [[3 4] 5] [[1 2] 4]])
+    (123 345 124)
     user=>
     ```
 
-6.  Apply
+### Filter<a id="sec-1-8-3" name="sec-1-8-3"></a>
 
-    The function <span class="underline">apply</span> applies a function to a list or array of
-    arguments. It is common in dynamic languages like Lisp, Scheme,
-    Clojure, Javascript and Python.
+**Python**
+
+```python
+ ;;; Filter returns by default a 
+>>> g = filter (lambda x: x > 10, [1, 20, 3, 40, 4, 14, 8])
+>>> g
+<filter object at 0xb6b4a58c>
+>>> [x for x in g]
+[20, 40, 14]
+>>> [x for x in g]
+[]
+>>> list(filter (lambda x: x > 10, [1, 20, 3, 40, 4, 14, 8]))
+[20, 40, 14]
+>>> 
+
+  # Stritct Version of filter function
+  #
+>>> _filter = lambda f, xs: list(filter(f, xs))
+>>> 
+>>> _filter (lambda x: x > 10,  [1, 20, 3, 40, 4, 14, 8])
+[20, 40, 14]
+>>> 
+
+  # Filter implementation without recursion:
+  #
+
+def strict_filter (f, xs):
+    result = []
+    for x in xs:
+        if f(x):
+            result.append(x)
+    return result
+
+def lazy_filter (f, xs):
+    for x in xs:
+        if f(x):
+            yield x
+
+>>> strict_filter (lambda x: x > 10, [1, 20, 3, 40, 4, 14, 8])
+[20, 40, 14]
+
+>>> lazy_filter (lambda x: x > 10, [1, 20, 3, 40, 4, 14, 8])
+<generator object lazy_filter at 0xb6b0f1bc>
+
+>>> g = lazy_filter (lambda x: x > 10, [1, 20, 3, 40, 4, 14, 8])
+>>> g
+<generator object lazy_filter at 0xb6b0f194>
+>>> next(g)
+20
+>>> next(g)
+40
+>>> next(g)
+14
+>>> next(g)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+StopIteration
+>>> 
+
+>>> list(lazy_filter (lambda x: x > 10, [1, 20, 3, 40, 4, 14, 8]))
+[20, 40, 14]
+>>>
+```
+
+### Reduce or Fold<a id="sec-1-8-4" name="sec-1-8-4"></a>
+
+1.  Overview
+
+    **Fold Left**
     
-    See also: [Apply Higher Oder Function - Wikipedia](https://en.wikipedia.org/w/index.php?title%3DApply&oldid%3D674998740)
+    The  function fold left is tail recursive, whereas the function fold
+    right is not. This functions is also known as reduce or inject (in
+    Ruby). The function fold left is often called just <span class="underline">fold</span> like in F#
+    or <span class="underline">reduce</span> (Python, Javascript, Clojure) and also Inject (Ruby).
     
+    `foldl :: (State -> x -> State) -> State -> [x] -> State`
+    `foldl (f :: S -> x -> S)  S [x]`
+    
+    ```
+    Sn = foldl f S0 [x0, x1, x2, x3 ... xn-1]
+    
+    S1   = f S0 x0
+    S2   = f S1 x1     = f (f S0 x0) x1
+    S3   = f S2 x2     = f (f (f S0 x0) x1) x2
+    S4   = f S3 x3     = f (f (f (f S0 x0) x1) x2) x3
+    ...
+    Sn-1 = f Sn-2 Xn-2 = ...
+    Sn   = f Sn-1 Xn-1 = f ...(f (f (f (f S0 x0) x1) x2) x3 ... xn
+    
+      ;;; -> Result
+    ```
+    
+    **Fold Right**
+    
+    `foldr :: (x -> acc -> acc) -> acc -> [x] -> acc`
+    
+    ```
+    S1   = f xn-1 S0
+    S2   = f xn-2 S1     = f xn-2 (f xn-1 S0)
+    S3   = f xn-3 S2     = f xn-3 (f xn-2 (f xn-1 S0))
+    S4   = f xn-4 S3     = f xn-4 (f xn-3 (f xn-2 (f xn-1 S0)))
+    ....
+    Sn-1 = f x1   Sn-2   = ...
+    Sn   = f x0   Sn-1   = f x0 (f x1 ... (f xn-2 (f xn-1 S0)))
+    ```
+
+2.  Haskell
+
+    See also: 
+    
+    -   [Fold (higher-order function) - Wikipedia, the free encyclopedia](https://en.wikipedia.org/wiki/Fold_(higher-order_function))
+    -   [A tutorial on the universality and expressiveness of fold. GRAHAM HUTTON](http://www.cs.nott.ac.uk/~pszgmh/fold.pdf)
+    -   [Haskell unit 6: The higher-order fold functions | Antoni Diller](http://www.cantab.net/users/antoni.diller/haskell/units/unit06.html)
+    
+    Fold Left:
+    
+    ```
+     foldl :: (acc -> x -> acc) -> acc -> [x] -> acc
+     
+                      |             |      |       | 
+                      |             |      |       |---> Returns the accumulated 
+                      |             |      |             value
+                      |             |      |----- xs 
+                      |             |                  
+                      |             |     Inital Value of accumulator
+                      |             |---  acc0
+                      |
+                      |-----------------  f :: acc -> x -> acc
+                                                      |
+                                                      |--- Element of list 
+    
+     foldl :: (b -> a -> b) -> b -> [a] -> b
+     foldl f z []     = z
+     foldl f z (x:xs) = foldl f (f z x) xs
+    ```
+    
+    ```haskell
+    > :t foldl
+    foldl :: (a -> b -> a) -> a -> [b] -> a
+    > 
+    > foldl (\acc x -> 10 * acc + x) 0 [1, 2, 3, 4, 5] 
+    12345
+    >
+    ```
+    
+    It is equivalent to:
+    
+    ```haskell
+    > let f acc x = 10 * acc + x
+    > 
+    > (f 0 1)
+    1
+    > (f (f 0 1) 2)
+    12
+    > (f (f (f 0 1) 2) 3)
+    123
+    > 
+    > (f (f (f (f 0 1) 2) 3) 4)
+    1234
+    > (f (f (f (f (f 0 1) 2) 3) 4) 5)
+    12345
+    >
+    ```
+    
+    Evaluation of Fold left:
+    
+    ```
+    > foldl (\acc x -> 10 * acc + x ) 0 [1, 2, 3, 4, 5]
+    12345
+    
+    S0 = 0
+    
+    f = \acc x -> 10 * acc + x
+    
+                     x  acc
+    S1 = f S0 x0 = f 0   1 = 10 * 0  + 1 = 1
+    S2 = f S1 x1 = f 10  2 = 10 * 1    + 2 = 12
+    S3 = f S2 x2 = f 12  3 = 10 * 12   + 3 = 123
+    S4 = f S3 x3 = f 123 4 = 10 * 123  + 4 = 1234
+    S5 = f S3 x3 = f 123 4 = 10 * 1234 + 5 = 12345
+    ```
+    
+    **Fold right**
+    
+    ```
+     foldr :: (x -> acc -> acc) -> acc -> [x] -> acc
+    
+     foldr :: (a -> b -> b) -> b -> [a] -> b
+     foldr f z []     = z
+     foldr f z (x:xs) = f x (foldr f z xs)
+    ```
+    
+    ```haskell
+    > foldr (\x acc -> 10 * acc + x) 0 [1, 2, 3, 4, 5] 
+    54321
+    
+    > (f 0 5)
+    5
+    > (f (f 0 5) 4)
+    54
+    > (f (f (f 0 5) 4) 3)
+    543
+    > (f (f (f (f 0 5) 4) 3) 2)
+    5432
+    > (f (f (f (f (f 0 5) 4) 3) 2) 1)
+    54321
+    > 
+    
+     --
+     -- Derive fold_right from foldl (fold left)
+     -- 
+    
+    > let fold_right f acc xs = foldl (\x acc -> f acc x) acc (reverse xs)
+    > 
+    > :t fold_right
+    fold_right :: (b -> a -> a) -> a -> [b] -> a
+    > 
+    > 
+    > fold_right (\x acc -> 10 * acc + x) 0 [1, 2, 3, 4, 5]
+    54321
+    >
+    ```
+    
+    Evaluation of Fold Right:
+    
+    ```
     Example:
     
-    **Scheme**
+    > foldr (\x acc -> 10 * acc + x ) 0 [1, 2, 3, 4, 5]
+    54321
+    >
     
-    ```scheme
-    > (define (f1 x y z) (+ (* 2 x) (* 3 y) z))
-    
-    > (apply f1 '(1 2 3))
-    $1 = 11
-    
-    > (apply f1 1 2 '(3))
-    $2 = 11
-    
-    > (apply f1 1 '(2 3))
-    $3 = 11
-    
-    > (apply + '(1 2 3 4 5))
-    $1 = 15
-    
-    ;;; The function apply can be used to transform a function of
-    ;;; multiple arguments into a function of a single argument that
-    ;;; takes a list of arguments
-    ;;;
-    
-    (define (f-apply f) 
-       (lambda (xs) (apply f xs)))
-    
-    > (map (f-apply f1) '((1 2 3) (3 4 5) (6 7 8)) )
-    $2 = (11 23 41)
-    
-    ;;  It can be also used to create a function that  maps a function 
-    ;;  of multiple arguments over a list of arguments.
-    ;;
-    (define (map-apply f xss)
-       (map (lambda (xs) (apply f xs)) xss))
-    
-    > (map-apply f1  '((1 2 3) (3 4 5) (6 7 8)))
-    $1 = (11 23 41)
+    f  = \x acc -> 10 * acc + x
+    S0 = 0
+    n = 5
+                           x acc
+    S1   = f x4 S0     = f 5  0    = 10 * 0    + 5 = 5
+    S2   = f x3 S1     = f 4  5    = 10 * 5    + 4 = 54
+    S3   = f x2 S2     = f 3  54   = 10 * 54   + 3 = 543
+    S4   = f x1 S3     = f 2  543  = 10 * 543  + 2 = 5432
+    S5   = f x0 S4     = f 1  5432 = 10 * 5432 + 1 = 54321
     ```
+
+3.  Python
+
+    In Python 3 the function reduce is not default anymore, however it can
+    be found in the native library functools, that has a lot of built-in
+    functions for functional programming. The function reduce is equivalent
+    to Haskell function foldl (fold left) which is tail recursive.
     
-    **Clojure**
-    
-    ```clojure
-    user=> (defn f1 [x y z] (+ (* 2 x) (* 3 y) z))
-    #'user/f1
-    user=> 
-    
-    ;; The higher order function apply is polymorphic.
-    ;;
-    user=> (apply f1 '(1 2 3))
-    11
-    user=> (apply f1 [1 2 3])
-    11
-    user=> (apply f1 1 [2 3])
-    11
-    user=> (apply f1 1 2 [ 3])
-    11
-    user=> (apply f1 1 2 3 [ ])
-    11
-    
-    user=> (apply + [1 2 3 4 5])
-    15
-    
-    user=> (defn map-apply [f xss]
-                  (map (fn [xs] (apply f xs)) xss))
-    #'user/map-apply
-    user=> 
-    
-    
-    user=> (map-apply f1 [[1 2 3] [3 4 5] [6 7 8]])
-    (11 23 41)
-    user=>
     ```
+    reduce(function, sequence[, initial]) -> value
     
-    **Python**
+    reduce :: (acc -> x -> acc) -> [x] ?acc0  -> acc
+    ```
     
     ```python
-    # In Python the * asterisk notation is used to expand
-    # a list into function arguments.
-    #
-    >>> f1 = lambda x, y, z: 2 * x + 3 * y + z
-    >>> 
-    >>> f1(1, 2, 3)
-    11
-    >>> f1(*[1, 2, 3])
-    11
+    >>> from functools import reduce
     >>> 
     
-    >>> def apply (f, xs): return f(*xs)
-    ... 
+    >>> reduce (lambda acc, x: 10 *  acc + x , [1, 2, 3, 4, 5], 0)
+    12345
     >>> 
     
-    >>> apply (f1, [1, 2, 3])
-    11
+    >>> f = lambda acc, x: 10 *  acc + x
+    >>> 
+    >>> f(0, 1)
+    1
+    >>> f( f(0, 1), 2)
+    12
+    >>> f( f( f(0, 1), 2), 3)
+    123
+    >>> f( f( f( f(0, 1), 2), 3), 4)
+    1234
+    >>> f( f( f( f( f(0, 1), 2), 3), 4), 5)
+    12345
+    >>> 
+    
+    def my_reduce (f, xs, acc0=None):
+        "Non recursive implementation of reduce (fold_left)
+         with optional initial accumulator value.
+        "
+    
+        if acc0 is None:
+            acc = xs[0]   
+            xss = xs[1:]
+        else:
+            acc = acc0
+            xss = xs
+            
+        for x in xss:
+            acc = f (acc, x)
+            
+        return acc
     
     
-    #
-    # The function apply can also be defined  as:
-    #
+    >>> 
+    >>> my_reduce(lambda acc, x: 10 * acc + x, [1, 2, 3, 4, 5], 0)
+    12345
+    >>> my_reduce(lambda acc, x: 10 * acc + x, [1, 2, 3, 4, 5])
+    12345
+    >>> my_reduce(lambda acc, x:  acc + x, [1, 2, 3, 4, 5], 0)
+    15
+    >>> my_reduce(lambda acc, x:  acc * x, [1, 2, 3, 4, 5], 1)
+    120
+    >>> 
+     
+     #
+     # Implementation without recursion.
+     #
     
-    def apply2 (f, * args):    
-        return f(*(tuple(args[:-1]) + tuple(args[-1])))
+    def fold_left (f_acc_x_to_acc, acc0, xs):
+        "Haskell-like fold left function
         
-    >>> apply2 (f1, [1, 2, 3])
-    11
-    >>> apply2 (f1, 1, [2, 3])
-    11
-    >>> apply2 (f1, 1, 2, [3])
-    11
-    >>> apply2 (f1, 1, 2, 3, [])
-    11
+        fold_left :: (acc -> x -> acc) -> acc -> [x]
+        "
+        acc = acc0
+        
+        for x in xs:
+            acc = f_acc_x_to_acc (acc, x)
+            
+        return acc
+          
+    >>> fold_left (lambda acc, x: 10 * acc + x, 0, [1, 2, 3, 4, 5])
+    12345
+    >>>       
+    
+    
+    def fold_right (f, acc0, xs):
+        return fold_left ((lambda acc, x: f(x, acc)), acc0, reversed(xs))
+    
+    >>> fold_right (lambda x, acc: 10 * acc + x, 0, [1, 2, 3, 4, 5])
+    54321
+    >>>
+    
+    def fold_right2 (f, acc0, xs):
+        acc = acc0
+        
+        for x in reversed(xs):
+            acc = f(x, acc)
+            
+        return acc
+    
+    >>> fold_right2 (lambda x, acc: 10 * acc + x, 0, [1, 2, 3, 4, 5])
+    54321
+    >>>
+    ```
+    
+    **Usefulness of Fold**
+    
+    Many functions and recursive algorithms can be implemented using the
+    fold function, including map, filter, sum, product and others.
+    
+    It is based in the paper:  
+    
+    -   [A tutorial on the universality and expressiveness of fold. GRAHAM HUTTON](http://www.cs.nott.ac.uk/~pszgmh/fold.pdf)
+    
+    In the paper was used fold right, here was used fold left. 
+    
+    ```python
+    def fold_left (f_acc_x_to_acc, acc0, xs):
+        "Haskell-like fold left function
+        
+        fold_left :: (acc -> x -> acc) -> acc -> [x]
+        "
+        acc = acc0
+        
+        for x in xs:
+            acc = f_acc_x_to_acc (acc, x)
+            
+        return acc
+        
+        
+        ;;; Function fold in curried form 
+        
+    curry3 = lambda f: lambda x: lambda y: lambda z: f(x, y, z)
+    
+    fold = curry3(fold_left)
+    
+    >>> summation = fold(lambda acc, x: acc + x)(0)
+    >>> 
+    >>> summation([1, 2, 3, 4, 5, 6])
+    21
     >>> 
     
-    >>> f_apply = lambda f: lambda xs: f(*xs)
+    >>> product = fold(lambda acc, x: acc * x)(1)
+    >>> product([1, 2, 3, 4, 5])
+    120
     >>> 
     
-    >>> list(map (f_apply(f1), [[1, 2, 3], [3, 4, 5], [6, 7, 8]]))
-    [11, 23, 41]
+    >>> f_or = fold(lambda acc, x: acc or x)(False)
+    >>> f_or([False, False, False])
+    False
+    >>> 
+    >>> f_or([False, False, True])
+    True
     >>> 
     
-    def map_apply (f, xss):
-        return map(lambda xs: f(*xs), xss)
-    
-    >>> map_apply(f1, [[1, 2, 3], [3, 4, 5], [6, 7, 8]])
-    <map object at 0xb6daaaac>
+    >>> f_and = fold(lambda acc, x: acc and x)(True)
     >>> 
-    >>> list(map_apply(f1, [[1, 2, 3], [3, 4, 5], [6, 7, 8]]))
-    [11, 23, 41]
+    >>> f_and([False, True, True])
+    False
+    >>> f_and([True, True, True])
+    True
+    >>> 
+    
+    >>> length = fold(lambda acc, x: acc + 1)(0)
+    >>> length ([1, 2, 3, 4, 5])
+    5
+    
+    >>> _map = lambda f, xs: fold(lambda acc, x: acc + [f(x)] )([])(xs)
+    >>> _map (lambda x: x * 3, [1, 2, 3, 4])
+    [3, 6, 9, 12]
+    >>> 
+    
+    >>> _filter = lambda p, xs: fold(lambda acc, x: (acc + [x]) if p(x) else  acc )([])(xs)
+    >>> 
+    >>> _filter(lambda x: x > 10, [10, 3, 8, 2, 20, 30])
+    [20, 30]
+    >>> 
+    
+    
+     #
+     # Function composition
+     # 
+     #  (f3 (f2 (f1 (f0 x))))
+     #
+     #  (f3 . f2 . f1 . f0) x
+     #
+     #  or using, forward composition:
+     # 
+     #  (f0 >> f2 >> f1 >> f0) x
+     #
+     
+    >>> f1 = lambda x: 3 * x
+    >>> f2 = lambda x: 5 + x
+    >>> f3 = lambda x: 2 ** x
+    
+    
+    >>> _fcomp = lambda functions: lambda x: fold(lambda acc, f: f(acc)) (x) (functions)
+    
+    >>> _fcomp([f1, f2, f3])(3)
+    16384
+    
+    >>> (f3 (f2 (f1 (3))))
+    16384
     >>>
     ```
 
-### Function Composition<a id="sec-1-2-7" name="sec-1-2-7"></a>
+4.  Clojure
+
+    The function reduce is similar to Haskell <span class="underline">fold left</span> and Python
+    reduce. This function is Polymorphic. It works on any collection of
+    seq abstraction: lists, vectors and hash maps. 
+    
+    Signature:
+    
+    ```
+    (reduce f coll)      -> reduce :: (f :: acc -> x -> acc) -> [x]
+    
+    Or 
+    
+    (reduce f val coll)  -> reduce :: (f :: acc -> x -> acc) -> acc -> [x] 
+    
+    f :: acc -> x -> acc
+    ```
+    
+    ```clojure
+    ;; Applying fold/reduce to a list 
+    ;;
+    ;;
+    user=> (reduce (fn [acc x] (+ (* 10 acc) x)) 0 '(1 2 3 4 5))
+    12345
+    
+    
+    ;; Applying fold/reduce to a vector 
+    ;;
+    user=> (reduce (fn [acc x] (+ (* 10 acc) x))  0 [1 2 3 4 5])
+    12345
+    user=> 
+    
+    user=> (reduce (fn [acc x] (+ (* 10 acc) x)) 0 [])
+    0
+    
+    ;; Applyind fold/reduce to a Hash map 
+    ;;
+    user=> (reduce (fn [acc x] (cons x  acc )) '()  { :a 10 :b 20 :c 30 })
+    ([:c 30] [:b 20] [:a 10])
+    user=>
+    
+    ;; Without Initial value of accumulator it will fail on a empty list. 
+    ;; 
+    user=> (reduce (fn [acc x] (+ (* 10 acc) x)) [1 2 3 4 5])
+    12345
+    
+    user=> (reduce (fn [acc x] (+ (* 10 acc) x)) [])
+    ArityException Wrong number of args (0) passed to: user/eval44/fn--45  clojure.lang.AFn.throwArity (AFn.java:429)
+    user=> 
+    
+    ;; Implementing fold right  
+    ;;
+    (defn foldr 
+       ([f xs]       (reduce (fn [acc x] (f x acc))     (reverse xs)))
+       ([f acc xs]   (reduce (fn [acc x] (f x acc)) acc (reverse xs)))
+      )
+    
+    user=> (foldr (fn [x acc] (+ (* 10 acc) x)) 0 [1 2 3 4 5])
+    54321
+    
+    
+    ;; Clojure has destructuring 
+    ;;
+    user=> (reduce (fn [acc [a b]] (conj acc (+ (* 10 a) b) )) '[] [[1 2] [3 4] [5 8]] )
+    [12 34 58]
+    user=> 
+    
+    ;; Implementing map with fold left (reduce)
+    ;;
+    user=> (defn map2 [f xs] 
+              (reverse (reduce (fn [acc x] (cons (f x) acc)) 
+                            () 
+                            xs)))
+    #'user/map2
+    user=> 
+    user=> (map2 inc '(1 2 3 3 4 5))
+    (2 3 4 4 5 6)
+    user=> 
+    
+    ;; Implementing map with fold right 
+    ;;
+    ;;
+    
+    (defn map2 [f xs] 
+       (foldr (fn [x acc] (cons (f x) acc)) 
+              ()
+              xs
+       ))
+    
+    user=> (map2 inc '(1 2 3 4 5 6))
+    (2 3 4 5 6 7)
+    user=>
+    ```
+
+### For Each, Impure map<a id="sec-1-8-5" name="sec-1-8-5"></a>
+
+For each is an <span class="underline">impure higher order function</span> which performs
+side-effect on each element of a list, array or sequence. Unlike map
+this function neither have a standard name or return anything.
+
+**Scheme**
+
+```scheme
+> (for-each (lambda (i) (display i) (newline))  '(1 2 3 4 5 6))
+1
+2
+3
+4
+5
+6
+>
+
+> (for-each
+   (lambda (a b c)
+      (display a) (display b) (display c)
+      (newline)
+    )
+   '(a b c d e f)
+   '(1 2 3 4 5 6)
+   '("x" "y" "z" "w" "h" "k"))
+a1x
+b2y
+c3z
+d4w
+e5h
+f6k
+```
+
+**Common Lisp**
+
+```lisp
+> (mapc #'print '(1 2 3 3 4))
+
+1
+2
+3
+3
+4
+```
+
+**Ocaml**
+
+```
+> List.iter ;;
+- : ('a -> unit) -> 'a list -> unit = <fun>
+
+> List.iter (fun x -> print_int x ; print_string "\n") [1 ; 2; 3; 4; 5] ;;
+1
+2
+3
+4
+5
+- : unit = ()
+```
+
+**F#**
+
+```
+> List.iter ;;
+val it : (('a -> unit) -> 'a list -> unit) = <fun:clo@1>
+
+> List.iter (fun x -> printfn "x = %d" x) [1; 2; 3; 4; 5] ;;
+x = 1
+x = 2
+x = 3
+x = 4
+x = 5
+val it : unit = ()
+>
+
+> List.iter2 ;;
+val it : (('a -> 'b -> unit) -> 'a list -> 'b list -> unit) = <fun:clo@1>
+> 
+
+- List.iter2 (fun a b -> printfn "a = %d b = %d" a b) [2; 3; 4; 5] [1; 2; 3; 4] - ;;
+a = 2 b = 1
+a = 3 b = 2
+a = 4 b = 3
+a = 5 b = 4
+val it : unit = ()
+> 
+
+- Array.iter ;; 
+val it : (('a -> unit) -> 'a [] -> unit) = <fun:it@6-4>
+> 
+- 
+
+- Array.iter (fun x -> printfn "x = %d" x) [| 1; 2; 3; 4 |] ;;
+x = 1
+x = 2
+x = 3
+x = 4
+val it : unit = ()
+>
+```
+
+**Python**
+
+This function is not in Python standard library however, it can be
+defined as this.
+
+```python
+def for_each(f, * xss):
+    for xs in zip(* xss):
+        f(*xs)
+
+>>> for_each (print, [1, 2, 4, 5, 6])
+1
+2
+4
+5
+6
+
+>>> for_each (lambda a, b: print (a, b), [1, 2, 3, 4, 5, 6], ["a", "b", "c", "d", "e", "f"])
+1 a
+2 b
+3 c
+4 d
+5 e
+6 f
+```
+
+**Clojure** 
+
+```clojure
+user=> (defn f [a b] (println (format "a = %s , b = %s" a b)))
+#'user/f
+
+
+(defn for-each [f & xss]
+   (doseq [args (apply map vector xss)]  (apply f args)))
+
+
+user=> (for-each println [1 2 3 4])
+1
+2
+3
+4
+nil
+
+
+user=> (for-each f [1 2 3 4] [3 4 5 6])
+a = 1 , b = 3
+a = 2 , b = 4
+a = 3 , b = 5
+a = 4 , b = 6
+nil
+user=>
+```
+
+### Apply<a id="sec-1-8-6" name="sec-1-8-6"></a>
+
+The function <span class="underline">apply</span> applies a function to a list or array of
+arguments. It is common in dynamic languages like Lisp, Scheme,
+Clojure, Javascript and Python.
+
+See also: [Apply Higher Oder Function - Wikipedia](https://en.wikipedia.org/w/index.php?title%3DApply&oldid%3D674998740)
+
+Example:
+
+**Scheme**
+
+```scheme
+> (define (f1 x y z) (+ (* 2 x) (* 3 y) z))
+
+> (apply f1 '(1 2 3))
+$1 = 11
+
+> (apply f1 1 2 '(3))
+$2 = 11
+
+> (apply f1 1 '(2 3))
+$3 = 11
+
+> (apply + '(1 2 3 4 5))
+$1 = 15
+
+;;; The function apply can be used to transform a function of
+;;; multiple arguments into a function of a single argument that
+;;; takes a list of arguments
+;;;
+
+(define (f-apply f) 
+   (lambda (xs) (apply f xs)))
+
+> (map (f-apply f1) '((1 2 3) (3 4 5) (6 7 8)) )
+$2 = (11 23 41)
+
+;;  It can be also used to create a function that  maps a function 
+;;  of multiple arguments over a list of arguments.
+;;
+(define (map-apply f xss)
+   (map (lambda (xs) (apply f xs)) xss))
+
+> (map-apply f1  '((1 2 3) (3 4 5) (6 7 8)))
+$1 = (11 23 41)
+```
+
+**Clojure**
+
+```clojure
+user=> (defn f1 [x y z] (+ (* 2 x) (* 3 y) z))
+#'user/f1
+user=> 
+
+;; The higher order function apply is polymorphic.
+;;
+user=> (apply f1 '(1 2 3))
+11
+user=> (apply f1 [1 2 3])
+11
+user=> (apply f1 1 [2 3])
+11
+user=> (apply f1 1 2 [ 3])
+11
+user=> (apply f1 1 2 3 [ ])
+11
+
+user=> (apply + [1 2 3 4 5])
+15
+
+user=> (defn map-apply [f xss]
+              (map (fn [xs] (apply f xs)) xss))
+#'user/map-apply
+user=> 
+
+
+user=> (map-apply f1 [[1 2 3] [3 4 5] [6 7 8]])
+(11 23 41)
+user=>
+```
+
+**Python**
+
+```python
+# In Python the * asterisk notation is used to expand
+# a list into function arguments.
+#
+>>> f1 = lambda x, y, z: 2 * x + 3 * y + z
+>>> 
+>>> f1(1, 2, 3)
+11
+>>> f1(*[1, 2, 3])
+11
+>>> 
+
+>>> def apply (f, xs): return f(*xs)
+... 
+>>> 
+
+>>> apply (f1, [1, 2, 3])
+11
+
+
+#
+# The function apply can also be defined  as:
+#
+
+def apply2 (f, * args):    
+    return f(*(tuple(args[:-1]) + tuple(args[-1])))
+    
+>>> apply2 (f1, [1, 2, 3])
+11
+>>> apply2 (f1, 1, [2, 3])
+11
+>>> apply2 (f1, 1, 2, [3])
+11
+>>> apply2 (f1, 1, 2, 3, [])
+11
+>>> 
+
+>>> f_apply = lambda f: lambda xs: f(*xs)
+>>> 
+
+>>> list(map (f_apply(f1), [[1, 2, 3], [3, 4, 5], [6, 7, 8]]))
+[11, 23, 41]
+>>> 
+
+def map_apply (f, xss):
+    return map(lambda xs: f(*xs), xss)
+
+>>> map_apply(f1, [[1, 2, 3], [3, 4, 5], [6, 7, 8]])
+<map object at 0xb6daaaac>
+>>> 
+>>> list(map_apply(f1, [[1, 2, 3], [3, 4, 5], [6, 7, 8]]))
+[11, 23, 41]
+>>>
+```
+
+## Function Composition<a id="sec-1-9" name="sec-1-9"></a>
+
+### Overview<a id="sec-1-9-1" name="sec-1-9-1"></a>
 
 Function composition promotes shorter code, code reuse and higher
 modularity by creating new functions from previous defined ones. They
@@ -1950,549 +2204,870 @@ operators that are built in to the language.  In Haskell the operator
 
 See also: [Function composition (computer science)](http://en.wikipedia.org/wiki/Function_composition_%28computer_science%29)
 
-1.  Function Composition In Haskell
+### Function Composition in Haskell<a id="sec-1-9-2" name="sec-1-9-2"></a>
 
-    ```
+```
+(.) :: (b -> c) -> (a -> b) -> a -> c
+
+Given:
+    
+    f :: b -> c
+    g :: a -> b
+
+(f . g ) x = f (g x)
+
+    h = f . g
+    h :: a -> c
+```
+
+Function Composition Block Diagram
+
+```haskell
+                f . g
+        ................................
+        . /------\        /------\     . 
+a -->   . |  g   |  -->   |  f   | --> .---> c
+        . \------/   b    \------/  c  . 
+        ................................
+           g :: a -> b   f :: b -> c
+    
     (.) :: (b -> c) -> (a -> b) -> a -> c
-    
-    Given:
-        
-        f :: b -> c
-        g :: a -> b
-    
-    (f . g ) x = f (g x)
-    
-        h = f . g
-        h :: a -> c
-    ```
-    
-    Function Composition Block Diagram
-    
-    ```haskell
-                    f . g
-            ................................
-            . /------\        /------\     . 
-    a -->   . |  g   |  -->   |  f   | --> .---> c
-            . \------/   b    \------/  c  . 
-            ................................
-               g :: a -> b   f :: b -> c
-        
-        (.) :: (b -> c) -> (a -> b) -> a -> c
-    ```
-    
-    Composition Law
-    
-    ```
-    id . f = f                  Left  identity law
-    f . id = f                  Right identity law
-    (f . g) . h = f . (g . h)   Associativity
-    
-    
-    Constant Function Composition
-    f       . const a = const (f a)
-    const a . f       = const a
-    
-    dentity function            -->  id x = x 
-    const - Constant Function   --> const a b =  a
-    ```
-    
-    Simplifying Code with function composition:
-    
-    ```
-        h( f ( g( x)))  ==>  (h . f . g ) x   OR  h . f . g  $ x 
-    OR   
-        h $ f $ g x     ==>   h . f . g $ x    
-    
-                                     Point Free Style
-    composed x = h . f . g $ x ==>   composed = h . f . g
-    ```
-    
-    Function Composition with Map
-    
-    ```
-        (map g (map f xs) == (map g . map f) xs = (map g . f) xs
-    
-    OR
-        map g . map f  == map (g . f)
-            
-    Generalizing
-        
-        map f1 (map f2 (map f3 (map f4 xs))) 
-        = (map f1)
-        =  map (f1 . f2 . f3 . f4)  xs     
-        =  f xs
-        
-    Where f = map $ f1 . f2 . f3 . f4
-    
-    Example:
-    
-        > map  (+3) [1, 2, 3, 4]
-        [4,5,6,7]
-        > map  (*2) [4, 5, 6, 7]
-        [8,10,12,14]
-        > 
-        > map  (*2) (map (+3)  [1, 2, 3, 4])
-        [8,10,12,14]
-        > 
-        > map  (*2) . map (+3) $  [1, 2, 3, 4]
-        [8,10,12,14]
-        > 
-    
-        > map ((*2) . (+3)) [1, 2, 3, 4]
-        [8,10,12,14]
-    
-        > let f = map $ (*2) . (+3)
-        > f [1, 2, 3, 4]
-        [8,10,12,14]
-    ```
-    
-    ```
-    h :: c -> [a]
-    f :: a -> b
-    
-    map :: (a -> b) -> [a] -> [b]
-    filter :: (a -> Bool) -> [a] -> [a]
-    
-    
-    map     f (h c) = map    f . h $ c
-    filter  f (h c) = filter f . h $ c
-    ```
-    
-    Inverting Predicate Functions
-    
-    ```
-    inverted_predicate == not . predicate
-    ```
-    
-    ```haskell
-    > not True
-    False
-    > not False
-    True
-    > 
-    
-    > (>5) 10
-    True
-    > (>5) 3
-    False
-    
-    > not . (>5) $ 10
-    False
-    > not . (>5) $ 3
-    True
-    > 
-    
-    > let f = not . (>5)
-    > f 10
-    False
-    > f 5
-    True
-    
-    > import Data.List
-    > 
-    > filter ( isPrefixOf "a" ) ["a","ab","cd","abcd","xyz"]
-    ["a","ab","abcd"]
-    > 
-    > filter ( not . isPrefixOf "a" ) ["a","ab","cd","abcd","xyz"]
-    ["cd","xyz"]
-    >
-    ```
-    
-    Example:
-    
-    ```haskell
-    > let f = (+4)
-    > let g = (*3)
-    > 
-    > 
-    > f (g 6) -- (+4) ((*3) 6) = (+4) 18 = 22
-    22
-    > 
-    > (f . g) 6
-    22
-    > 
-    > (.) f g 6
-    22
-    > 
-    > let h = f . g
-    > 
-    > h 6
-    22
-    >  
-    
-    > id 10
-    10
-    > id 3
-    3
-    > 
-    > id Nothing
-    Nothing
-    > id 'a'
-    'a'
-    > id (Just 10)
-    Just 10
-    > 
-    
-    
-    > (f . id) 10
-    14
-    > (id . f) 10
-    14
-    > 
-    
-    > const 10 20
-    10
-    > const 10 3
-    10
-    > 
-    
-    > (f . (const 10)) 4
-    14
-    > (f . (const 10)) 3
-    14
-    > const 10 . f $ 7
-    10
-    > const 10 . f $ 3
-    10
-    > 
-    
-    {- Avoiding Parenthesis with composition -}
-    > let g x = x * 2
-    > let f x = x + 10
-    > let h x = x - 5
-    > 
-    > h (f (g 3))
-    11
-    > h $ f $ g 3
-    11
-    > 
-    > (h . f . g ) 3
-    11
-    > h . f . g $ 3
-    11
-    > 
-    
-    {- Function Composition with curried functions -}
-    
-    > let f1 x y = 10*x + 4*y
-    > let f2 a b c = 4*a -3*b + 2*c
-    > let f3 x = 3*x
-    
-    > (f1 3 ( f3 5))
-    90
-    > 
-    > f1 3 $ f3 5
-    90
-    > 
-    > f1 3 . f3 $ 5
-    90
-    > 
-    > let f = f1 3 . f3 
-    > 
-    > f 5
-    90
-    > f 8
-    126
-    > 
-    
-    
-    > (f1 4 (f2 5 6 (f3 5)))
-    168
-    > 
-    > f1 4 $ f2 5 6 $ f3 5
-    168
-    > 
-    > f1 4 . f2 5 6 . f3 $ 5
-    168
-    > 
-    > let g = f1 4 . f2 5 6 . f3 {- You can also create new functions -}
-    > :t g
-    g :: Integer -> Integer
-    > g 5
-    168
-    > g 10
-    288
-    > 
-    
-    {- Function Composition with Map and Filter -}
-    
-    > import Data.Char
-    
-    > :t ord
-    ord :: Char -> Int
-    
-    > :t ordStr
-    ordStr :: [Char] -> [Int]
-    > 
-    
-    > ordStr "curry"
-    [99,117,114,114,121]
-    > 
-    > let r x= x + 30
-    > 
-    > map r (ordStr "curry")
-    [129,147,144,144,151]
-    > 
-    > map r $ ordStr "curry"
-    [129,147,144,144,151]
-    > 
-    > map r . ordStr $ "curry"
-    [129,147,144,144,151]
-    > 
-    > sum . map r . ordStr $ "curry"
-    715
-    > 
-    
-    > let s =  map r . ordStr
-    > s "curry"
-    [129,147,144,144,151]
-    > s "haskell"
-    [134,127,145,137,131,138,138]
-    > 
-    
-    let sum_ord = sum . map r . ordStr 
-    
-    > sum_s "curry"
-    715
-    > sum_s "haskell"
-    950
-    > 
-    > sum_ord "curry"
-    715
-    > sum_ord "haskell"
-    950
-    > 
-    
-    
-    > map ord (map toUpper "haskell")
-    [72,65,83,75,69,76,76]
-    > 
-    > map ord . map toUpper $ "haskell"
-    [72,65,83,75,69,76,76]
-    > 
-    
-    > map (flip (-) 10) . map ord . map toUpper $ "haskell"
-    [62,55,73,65,59,66,66]
-    > 
-    
-    > map chr . map (flip (-) 10) . map ord . map toUpper $ "haskell"
-    ">7IA;BB"
-    > 
-    
-    {- The function f is in point free style -}
-    
-    > let f = map chr . map (flip (-) 10) . map ord . map toUpper
-    > 
-    > f "haskell"
-    ">7IA;BB"
-    >
-    ```
+```
 
-2.  Function Composition in Python
+Composition Law
 
-    ```python
-    def compose(funclist):   
+```
+id . f = f                  Left  identity law
+f . id = f                  Right identity law
+(f . g) . h = f . (g . h)   Associativity
+
+
+Constant Function Composition
+f       . const a = const (f a)
+const a . f       = const a
+
+dentity function            -->  id x = x 
+const - Constant Function   --> const a b =  a
+```
+
+Simplifying Code with function composition:
+
+```
+    h( f ( g( x)))  ==>  (h . f . g ) x   OR  h . f . g  $ x 
+OR   
+    h $ f $ g x     ==>   h . f . g $ x    
+
+                                 Point Free Style
+composed x = h . f . g $ x ==>   composed = h . f . g
+```
+
+Function Composition with Map
+
+```
+    (map g (map f xs) == (map g . map f) xs = (map g . f) xs
+
+OR
+    map g . map f  == map (g . f)
         
-        def _(x):
-            y = x 
-            
-            for f in reversed(funclist):
-                y = f(y)
-            return y
+Generalizing
+    
+    map f1 (map f2 (map f3 (map f4 xs))) 
+    = (map f1)
+    =  map (f1 . f2 . f3 . f4)  xs     
+    =  f xs
+    
+Where f = map $ f1 . f2 . f3 . f4
+
+Example:
+
+    > map  (+3) [1, 2, 3, 4]
+    [4,5,6,7]
+    > map  (*2) [4, 5, 6, 7]
+    [8,10,12,14]
+    > 
+    > map  (*2) (map (+3)  [1, 2, 3, 4])
+    [8,10,12,14]
+    > 
+    > map  (*2) . map (+3) $  [1, 2, 3, 4]
+    [8,10,12,14]
+    > 
+
+    > map ((*2) . (+3)) [1, 2, 3, 4]
+    [8,10,12,14]
+
+    > let f = map $ (*2) . (+3)
+    > f [1, 2, 3, 4]
+    [8,10,12,14]
+```
+
+```
+h :: c -> [a]
+f :: a -> b
+
+map :: (a -> b) -> [a] -> [b]
+filter :: (a -> Bool) -> [a] -> [a]
+
+
+map     f (h c) = map    f . h $ c
+filter  f (h c) = filter f . h $ c
+```
+
+Inverting Predicate Functions
+
+```
+inverted_predicate == not . predicate
+```
+
+```haskell
+> not True
+False
+> not False
+True
+> 
+
+> (>5) 10
+True
+> (>5) 3
+False
+
+> not . (>5) $ 10
+False
+> not . (>5) $ 3
+True
+> 
+
+> let f = not . (>5)
+> f 10
+False
+> f 5
+True
+
+> import Data.List
+> 
+> filter ( isPrefixOf "a" ) ["a","ab","cd","abcd","xyz"]
+["a","ab","abcd"]
+> 
+> filter ( not . isPrefixOf "a" ) ["a","ab","cd","abcd","xyz"]
+["cd","xyz"]
+>
+```
+
+Example:
+
+```haskell
+> let f = (+4)
+> let g = (*3)
+> 
+> 
+> f (g 6) -- (+4) ((*3) 6) = (+4) 18 = 22
+22
+> 
+> (f . g) 6
+22
+> 
+> (.) f g 6
+22
+> 
+> let h = f . g
+> 
+> h 6
+22
+>  
+
+> id 10
+10
+> id 3
+3
+> 
+> id Nothing
+Nothing
+> id 'a'
+'a'
+> id (Just 10)
+Just 10
+> 
+
+
+> (f . id) 10
+14
+> (id . f) 10
+14
+> 
+
+> const 10 20
+10
+> const 10 3
+10
+> 
+
+> (f . (const 10)) 4
+14
+> (f . (const 10)) 3
+14
+> const 10 . f $ 7
+10
+> const 10 . f $ 3
+10
+> 
+
+{- Avoiding Parenthesis with composition -}
+> let g x = x * 2
+> let f x = x + 10
+> let h x = x - 5
+> 
+> h (f (g 3))
+11
+> h $ f $ g 3
+11
+> 
+> (h . f . g ) 3
+11
+> h . f . g $ 3
+11
+> 
+
+{- Function Composition with curried functions -}
+
+> let f1 x y = 10*x + 4*y
+> let f2 a b c = 4*a -3*b + 2*c
+> let f3 x = 3*x
+
+> (f1 3 ( f3 5))
+90
+> 
+> f1 3 $ f3 5
+90
+> 
+> f1 3 . f3 $ 5
+90
+> 
+> let f = f1 3 . f3 
+> 
+> f 5
+90
+> f 8
+126
+> 
+
+
+> (f1 4 (f2 5 6 (f3 5)))
+168
+> 
+> f1 4 $ f2 5 6 $ f3 5
+168
+> 
+> f1 4 . f2 5 6 . f3 $ 5
+168
+> 
+> let g = f1 4 . f2 5 6 . f3 {- You can also create new functions -}
+> :t g
+g :: Integer -> Integer
+> g 5
+168
+> g 10
+288
+> 
+
+{- Function Composition with Map and Filter -}
+
+> import Data.Char
+
+> :t ord
+ord :: Char -> Int
+
+> :t ordStr
+ordStr :: [Char] -> [Int]
+> 
+
+> ordStr "curry"
+[99,117,114,114,121]
+> 
+> let r x= x + 30
+> 
+> map r (ordStr "curry")
+[129,147,144,144,151]
+> 
+> map r $ ordStr "curry"
+[129,147,144,144,151]
+> 
+> map r . ordStr $ "curry"
+[129,147,144,144,151]
+> 
+> sum . map r . ordStr $ "curry"
+715
+> 
+
+> let s =  map r . ordStr
+> s "curry"
+[129,147,144,144,151]
+> s "haskell"
+[134,127,145,137,131,138,138]
+> 
+
+let sum_ord = sum . map r . ordStr 
+
+> sum_s "curry"
+715
+> sum_s "haskell"
+950
+> 
+> sum_ord "curry"
+715
+> sum_ord "haskell"
+950
+> 
+
+
+> map ord (map toUpper "haskell")
+[72,65,83,75,69,76,76]
+> 
+> map ord . map toUpper $ "haskell"
+[72,65,83,75,69,76,76]
+> 
+
+> map (flip (-) 10) . map ord . map toUpper $ "haskell"
+[62,55,73,65,59,66,66]
+> 
+
+> map chr . map (flip (-) 10) . map ord . map toUpper $ "haskell"
+">7IA;BB"
+> 
+
+{- The function f is in point free style -}
+
+> let f = map chr . map (flip (-) 10) . map ord . map toUpper
+> 
+> f "haskell"
+">7IA;BB"
+>
+```
+
+### Function Composition in Python<a id="sec-1-9-3" name="sec-1-9-3"></a>
+
+```python
+def compose(funclist):   
+    
+    def _(x):
+        y = x 
         
-        return _
+        for f in reversed(funclist):
+            y = f(y)
+        return y
     
-    >>> add10 = lambda x: x + 10
+    return _
+
+>>> add10 = lambda x: x + 10
+
+>>> mul3 = lambda x: x * 3
+
+>>> x = 3
+>>> a = add10(x)
+>>> a
+    13
+>>> b = mul3(a)
+>>> b
+    39
+
+
+>>> def f_without_composition (x):
+ ...    a = add10(x)
+ ...    b = mul3(a)
+ ...    return b
+ ...
+
+>>> f_without_composition(3)
+    39
+
+>>> f_without_composition(4)
+    42
+
+ # It will create the function f = (mul3 ° add10)(x)
+ # The flow is from right to left
+ #
+ #                   
+ #     (mul3 . add10) 3 
+ #   =  mul3 (add10 3) 
+ #   =  mul3 13 
+ #   =  39 
+ #
+>>> f = compose ([mul3, add10])  
+
+>>> f(3)
+    39
+
+>>> f(4)
+    42
+
+>>> f
+    <function __main__.compose.<locals>._>
+
+>>> compose ([add10, mul3])(3)
+    39
+
+>>> compose ([add10, mul3])(4)
+    42
+
+ #
+ # Composition is more intuitive when the flow is from
+ # left to right, the functions in the left side are
+ # executed first. 
+ #
+ #
+
+ # Compose Forward
+def composef (funclist):   
     
-    >>> mul3 = lambda x: x * 3
+    def _(x):
+        y = x         
+        for f in funclist:
+            y = f(y)
+        return y
     
-    >>> x = 3
-    >>> a = add10(x)
-    >>> a
-        13
-    >>> b = mul3(a)
-    >>> b
-        39
+    return _
+
+ #
+ #   The symbol (>>) from F# will be used to mean forward composition
+ #   here
+ #
+ #      (add10 >> mul3) 3 
+ #    = mul3 (add10 3) 
+ #    = mul3 13 
+ #    = 39
+ #                          add10 >> mul3
+ #    Input  .................................................  Output
+ #           .    |----------|           |---------|         .   39
+ #   3  ---> .--> |  add10   | --------> |   mul3  | ------->.  ------->  
+ #           .  3 |----------| 13 =(10+3)|---------|  39     .
+ #           .                                39 = 3 * 13    .
+ #           .................................................        
+ #       
+ #  The execution flow is from left to right, in the same order as the
+ #  functions are written in the code.
+ #
+ 
+>>> g = composef ([add10, mul3])
+
+>>> g(3)
+    39
+
+>>> g(4)
+    42
+
+
+>>> ### A more useful example: parse the following table:
+
+text = """
+ 12.23,30.23,892.2323
+ 23.23,90.23,1000.23
+ 3563.23,100.23,45.23
+
+"""
+
+
+
+ # Unfortunately Python, don't have a favorable syntax to function 
+ # composition like: composition operator, lightweight lambda and function
+ # application without parenthesis.
+ #
+
+>>> mapl = lambda f: lambda xs: list(map(f, xs))
+>>> filterl = lambda f: lambda xs: list(filter(f, xs))
+
+
+>>> splitlines = lambda s: s.splitlines()
+>>> reject_empty = lambda xs: list(filter(lambda x: x, xs))
+>>> strip = lambda s: s.strip()
+>>> split = lambda sep: lambda s: s.split(sep)
+
+
+>>> composef([splitlines])(text)
+    ['',
+ ' 12.23,30.23,892.2323',
+ ' 23.23,90.23,1000.23',
+ ' 3563.23,100.23,45.23',
+ '']
+ 
+ 
+>>> composef([splitlines, reject_empty])(text)
+    [' 12.23,30.23,892.2323', 
+    ' 23.23,90.23,1000.23', 
+    ' 3563.23,100.23,45.23']
+
     
+>>> composef([splitlines, reject_empty, mapl(strip)])(text)
+    ['12.23,30.23,892.2323', '23.23,90.23,1000.23', 
+    '3563.23,100.23,45.23']
+
+
+>>> composef([splitlines, reject_empty, mapl(strip), mapl(split(","))])(text)
+    [['12.23', '30.23', '892.2323'],
+ ['23.23', '90.23', '1000.23'],
+ ['3563.23', '100.23', '45.23']]
+
+>>> composef([splitlines, reject_empty, mapl(strip), mapl(split(",")), mapl(mapl(float))])(text)
+    [[12.23000, 30.23000, 892.23230],
+ [23.23000, 90.23000, 1000.23000],
+ [3563.23000, 100.23000, 45.23000]]
+
+parse_csvtable =  composef(
+    [splitlines, 
+    reject_empty, 
+    mapl(strip), 
+    mapl(split(",")), 
+    mapl(mapl(float))]
+    )
+
+
+>>> parse_csvtable(text)
+    [[12.23000, 30.23000, 892.23230],
+ [23.23000, 90.23000, 1000.23000],
+ [3563.23000, 100.23000, 45.23000]]
+
+    #  Notice there is three maps together, so that it can be optimized 
+    #  each map is like a for loop, by composing the functions in map1,  
+    #  map2 and map3 the code can be more faster.
+    #
+    # parse_csvtable =  composef(
+    # [splitlines, 
+    # reject_empty, 
+    # mapl(strip),          ---> map1
+    # mapl(split(",")),     ---> map2
+    # mapl(mapl(float))]    ---> map3
+    # )
+
+
+parse_csvtable_optmized =  composef(
+    [splitlines, 
+    reject_empty, 
+    mapl(composef([strip, split(","), mapl(float)]))
+    ])
     
-    >>> def f_without_composition (x):
-     ...    a = add10(x)
-     ...    b = mul3(a)
-     ...    return b
-     ...
-    
-    >>> f_without_composition(3)
-        39
-    
-    >>> f_without_composition(4)
-        42
-    
-     # It will create the function f = (mul3 ° add10)(x)
-     # The flow is from right to left
-     #
-     #                   
-     #     (mul3 . add10) 3 
-     #   =  mul3 (add10 3) 
-     #   =  mul3 13 
-     #   =  39 
-     #
-    >>> f = compose ([mul3, add10])  
-    
-    >>> f(3)
-        39
-    
-    >>> f(4)
-        42
-    
-    >>> f
-        <function __main__.compose.<locals>._>
-    
-    >>> compose ([add10, mul3])(3)
-        39
-    
-    >>> compose ([add10, mul3])(4)
-        42
-    
-     #
-     # Composition is more intuitive when the flow is from
-     # left to right, the functions in the left side are
-     # executed first. 
-     #
-     #
-    
-     # Compose Forward
-    def composef (funclist):   
-        
-        def _(x):
-            y = x         
-            for f in funclist:
-                y = f(y)
-            return y
-        
-        return _
-    
-     #
-     #   The symbol (>>) from F# will be used to mean forward composition
-     #   here
-     #
-     #      (add10 >> mul3) 3 
-     #    = mul3 (add10 3) 
-     #    = mul3 13 
-     #    = 39
-     #                          add10 >> mul3
-     #    Input  .................................................  Output
-     #           .    |----------|           |---------|         .   39
-     #   3  ---> .--> |  add10   | --------> |   mul3  | ------->.  ------->  
-     #           .  3 |----------| 13 =(10+3)|---------|  39     .
-     #           .                                39 = 3 * 13    .
-     #           .................................................        
-     #       
-     #  The execution flow is from left to right, in the same order as the
-     #  functions are written in the code.
-     #
-     
-    >>> g = composef ([add10, mul3])
-    
-    >>> g(3)
-        39
-    
-    >>> g(4)
-        42
-    
-    
-    >>> ### A more useful example: parse the following table:
-    
-    text = """
-     12.23,30.23,892.2323
-     23.23,90.23,1000.23
-     3563.23,100.23,45.23
-    
-    """
-    
-    
-    
-     # Unfortunately Python, don't have a favorable syntax to function 
-     # composition like: composition operator, lightweight lambda and function
-     # application without parenthesis.
-     #
-    
-    >>> mapl = lambda f: lambda xs: list(map(f, xs))
-    >>> filterl = lambda f: lambda xs: list(filter(f, xs))
-    
-    
-    >>> splitlines = lambda s: s.splitlines()
-    >>> reject_empty = lambda xs: list(filter(lambda x: x, xs))
-    >>> strip = lambda s: s.strip()
-    >>> split = lambda sep: lambda s: s.split(sep)
-    
-    
-    >>> composef([splitlines])(text)
-        ['',
-     ' 12.23,30.23,892.2323',
-     ' 23.23,90.23,1000.23',
-     ' 3563.23,100.23,45.23',
-     '']
-     
-     
-    >>> composef([splitlines, reject_empty])(text)
-        [' 12.23,30.23,892.2323', 
-        ' 23.23,90.23,1000.23', 
-        ' 3563.23,100.23,45.23']
-    
-        
-    >>> composef([splitlines, reject_empty, mapl(strip)])(text)
-        ['12.23,30.23,892.2323', '23.23,90.23,1000.23', 
-        '3563.23,100.23,45.23']
-    
-    
-    >>> composef([splitlines, reject_empty, mapl(strip), mapl(split(","))])(text)
-        [['12.23', '30.23', '892.2323'],
-     ['23.23', '90.23', '1000.23'],
-     ['3563.23', '100.23', '45.23']]
-    
-    >>> composef([splitlines, reject_empty, mapl(strip), mapl(split(",")), mapl(mapl(float))])(text)
-        [[12.23000, 30.23000, 892.23230],
-     [23.23000, 90.23000, 1000.23000],
-     [3563.23000, 100.23000, 45.23000]]
-    
-    parse_csvtable =  composef(
-        [splitlines, 
-        reject_empty, 
-        mapl(strip), 
-        mapl(split(",")), 
-        mapl(mapl(float))]
-        )
-    
-    
-    >>> parse_csvtable(text)
-        [[12.23000, 30.23000, 892.23230],
-     [23.23000, 90.23000, 1000.23000],
-     [3563.23000, 100.23000, 45.23000]]
-    
-        #  Notice there is three maps together, so that it can be optimized 
-        #  each map is like a for loop, by composing the functions in map1,  
-        #  map2 and map3 the code can be more faster.
-        #
-        # parse_csvtable =  composef(
-        # [splitlines, 
-        # reject_empty, 
-        # mapl(strip),          ---> map1
-        # mapl(split(",")),     ---> map2
-        # mapl(mapl(float))]    ---> map3
-        # )
-    
-    
-    parse_csvtable_optmized =  composef(
-        [splitlines, 
-        reject_empty, 
-        mapl(composef([strip, split(","), mapl(float)]))
-        ])
-        
-    >>> parse_csvtable_optmized(text)
-        [[12.23000, 30.23000, 892.23230],
-     [23.23000, 90.23000, 1000.23000],
-     [3563.23000, 100.23000, 45.23000]]
-    ```
+>>> parse_csvtable_optmized(text)
+    [[12.23000, 30.23000, 892.23230],
+ [23.23000, 90.23000, 1000.23000],
+ [3563.23000, 100.23000, 45.23000]]
+```
+
+### Function Composition in F#<a id="sec-1-9-4" name="sec-1-9-4"></a>
+
+F# uses the operator (<<) for composition which is similar to Haskell
+composition operator (.) dot. It also uses the operator (>>) for forward
+composition that performs the operation in the inverse order of
+operator (<<).
+
+Composition Operator (<<):
+
+```fsharp
+- (<<) ;;
+val it : (('a -> 'b) -> ('c -> 'a) -> 'c -> 'b) 
+> 
+
+> let h x = x + 3 ;;         
+
+val h : x:int -> int
+
+> let g x = x * 5 ;;
+
+val g : x:int -> int
+
+- let m x = x - 4 ;;
+
+val m : x:int -> int
+
+// The composition is performed in the same way as math composition 
+// from right to left. 
+//
+- h (g 4) ;;
+val it : int = 23
+> 
+- 
+- (h << g) 4 ;;
+val it : int = 23
+> 
+
+
+
+> m (h (g 4)) ;;
+val it : int = 19
+> 
+- (m << h << g) 4 ;;
+val it : int = 19
+> 
+
+// It is the same as math composition: f(x) = m ° h ° g
+//
+- let f = m << h << g ;;
+
+val f : (int -> int)
+
+> f 4 ;;
+val it : int = 19
+>
+```
+
+Forward Composition Operator (>>):
+
+```fsharp
+> (>>) ;;
+val it : (('a -> 'b) -> ('b -> 'c) -> 'a -> 'c) 
+
+> let h x = x + 3 ;;         
+
+val h : x:int -> int
+
+> let g x = x * 5 ;;
+
+val g : x:int -> int
+
+- let m x = x - 4 ;;
+
+val m : x:int -> int
+
+
+- h (g 4) ;;
+val it : int = 23
+> 
+
+- (g >> h) 4 ;;
+val it : int = 23
+> 
+- let f = g >> h ;;
+
+val f : (int -> int)
+
+> f 4 ;;
+val it : int = 23
+> 
+
+
+- m (h (g 4)) ;;
+val it : int = 19
+> 
+- 
+
+- (g >> h >> m ) 4 ;;
+val it : int = 19
+> 
+- 
+
+// The argument is seen flowing from left to right, in the inverse
+// order of math composition and Haskell composition operator (.) dot,
+// which is more easier to read.  
+//
+//  (g >> h >> m) 4 => It is seen as passing through each function 
+//
+//   Evaluating:  g >> h >> m                    
+//
+//                    f =  g >> h >> m 
+//       .........................................................
+//       .                                                       .         
+//       .   |-----------|      |-----------|     |-----------|  .
+//     ----> |g = x * 5  ||---->| h = x + 3 |---->| m = x - 4 |----->
+//   4   .   |-----------|  20  |-----------| 23  |-----------|  .  19 
+//       .       = 4 * 5 = 20    = 20 + 3 = 23    = 23 - 4 = 19  . 
+//       .........................................................
+//
+
+- let f = g >> h >> m ;;
+
+val f : (int -> int)
+
+> f 4 ;;
+val it : int = 19
+>
+```
+
+F# Argument Piping operator (|>) 
+
+```fsharp
+- let h x = x + 3 ;; 
+
+val h : x:int -> int
+
+> let g x = x * 5 ;;
+
+val g : x:int -> int
+
+>  let m x = x - 4 ;;
+
+val m : x:int -> int
+
+> 
+
+// The piping operator feeds the function input forward. 
+//
+- (|>) ;;
+val it : ('a -> ('a -> 'b) -> 'b) 
+> 
+
+- (g 4) ;;
+val it : int = 20
+> 
+- 4 |> g ;;
+val it : int = 20
+> 
+
+// It is the same as:  4 |> g |> h 
+//
+- h (g 4) ;;
+val it : int = 23
+>
+
+- 4 |> g |> h ;;
+val it : int = 23
+> 
+
+// It is the same as:  4 |> g |> h |> m ;; 
+//
+- m (h (g 4)) ;;
+val it : int = 19
+> 
+
+- 4 |> g |> h |> m ;; 
+val it : int = 19
+>
+```
+
+Example of a non numeric function composition:
+
+```fsharp
+let text = "
+ 12.23,30.23,892.2323
+ 23.23,90.23,1000.23
+ 3563.23,100.23,45.23
+
+"
+
+// Negate predicate. Invert a predicate function. 
+//
+> let neg pred = fun x -> not (pred x) ;;
+
+val neg : pred:('a -> bool) -> x:'a -> bool
+
+
+
+let split_string sep str =                                
+    List.ofArray  (System.Text.RegularExpressions.Regex.Split (str, sep))
+
+> let split_lines = split_string "\n" ;;
+
+val split_lines : (string -> string list)
+
+> let trim_string (s: string) = s.Trim() ;;              
+
+val trim_string : s:string -> string
+
+- let is_string_empty (s: string) = s.Length = 0 
+- ;;
+
+val is_string_emtpy : s:string -> bool
+
+- text |> split_lines ;;       
+val it : string list =
+  [""; " 12.23,30.23,892.2323"; " 23.23,90.23,1000.23";
+   " 3563.23,100.23,45.23"; ""; ""]
+> 
+
+- text |> split_lines |> List.filter (neg is_string_empty) ;;
+val it : string list =
+  [" 12.23,30.23,892.2323"; " 23.23,90.23,1000.23"; " 3563.23,100.23,45.23"]
+> 
+
+- text |> split_lines |> List.filter (neg is_string_empty) |> List.map trim_stri- ng ;;
+val it : string list =
+  ["12.23,30.23,892.2323"; "23.23,90.23,1000.23"; "3563.23,100.23,45.23"]
+> 
+- 
+
+- text |> split_lines |> List.filter (neg is_string_empty) |> List.map trim_stri- ng |> List.map (split_string ",") ;;
+val it : string list list =
+  [["12.23"; "30.23"; "892.2323"]; ["23.23"; "90.23"; "1000.23"];
+   ["3563.23"; "100.23"; "45.23"]]
+> 
+- 
+
+- text |> split_lines |> List.filter (neg is_string_empty) |> List.map trim_stri- ng |> List.map (split_string ",") |> List.map (List.map float) ;;
+val it : float list list =
+  [[12.23; 30.23; 892.2323]; [23.23; 90.23; 1000.23]; [3563.23; 100.23; 45.23]]
+> 
+
+// Or in multiple lines:
+
+text 
+|> split_lines 
+|> List.filter (neg is_string_empty) 
+|> List.map trim_string 
+|> List.map (split_string ",") 
+|> List.map (List.map float) 
+;;
+
+val it : float list list =
+  [[12.23; 30.23; 892.2323]; [23.23; 90.23; 1000.23]; [3563.23; 100.23; 45.23]]
+> 
+
+// Then transformed into a function: 
+//
+let parse_csv text =
+   text
+   |> split_lines 
+   |> List.filter (neg is_string_empty) 
+   |> List.map trim_string 
+   |> List.map (split_string ",") 
+   |> List.map (List.map float) 
+;;
+
+val parse_csv : text:string -> float list list
+
+> parse_csv text ;;
+val it : float list list =
+  [[12.23; 30.23; 892.2323]; [23.23; 90.23; 1000.23]; [3563.23; 100.23; 45.23]]
+> 
+- 
+
+// This operation can be optimized with function (forward) composition.
+// 
+let parse_csv2 text =
+   text
+   |> split_lines 
+   |> List.filter (neg is_string_empty) 
+   |> List.map (trim_string >> (split_string ",") >> (List.map float)) 
+;;
+
+val parse_csv2 : text:string -> float list list
+
+> parse_csv2 text ;;
+val it : float list list =
+  [[12.23; 30.23; 892.2323]; [23.23; 90.23; 1000.23]; [3563.23; 100.23; 45.23]]
+> 
+
+// It could be implemented using the math compostion (<<) operator.
+// in the same as in Haskell.  
+// 
+let parse_csv3 text =
+   text
+   |> split_lines 
+   |> List.filter (neg is_string_empty) 
+   |> List.map ((List.map float) << (split_string ",") << trim_string) 
+;;
+
+val parse_csv3 : text:string -> float list list
+
+- parse_csv3 text ;;
+val it : float list list =
+  [[12.23; 30.23; 892.2323]; [23.23; 90.23; 1000.23]; [3563.23; 100.23; 45.23]]
+> 
+
+//  934.6923 = 12.23 + 30.23 + 892.2323
+//
+- parse_csv3 text |> List.map List.sum ;;            
+val it : float list = [934.6923; 1113.69; 3708.69]
+> 
+- 
+
+- parse_csv3 text |> List.map List.sum |> List.sum ;;
+val it : float = 5757.0723
+>
+```
 
 # Functional Languages<a id="sec-2" name="sec-2"></a>
 
@@ -2628,7 +3203,7 @@ Some Functional programming languages:
 <td class="left">JVM</td>
 <td class="left">Lisp</td>
 <td class="left">No</td>
-<td class="left">Java integration + Macro</td>
+<td class="left">Java integration + Macros</td>
 </tr>
 
 
@@ -2644,8 +3219,8 @@ Some Functional programming languages:
 <td class="left">Yes</td>
 <td class="left">JVM</td>
 <td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">Java integration</td>
+<td class="left">Yes</td>
+<td class="left">Java integration + Type safety</td>
 </tr>
 
 
@@ -2655,7 +3230,7 @@ Some Functional programming languages:
 <td class="left">Dynamic</td>
 <td class="left">?</td>
 <td class="left">Yes</td>
-<td class="left">?</td>
+<td class="left">No</td>
 <td class="left">No</td>
 <td class="left">?</td>
 <td class="left">?</td>
@@ -2663,6 +3238,23 @@ Some Functional programming languages:
 <td class="left">&#xa0;</td>
 <td class="left">?</td>
 <td class="left">Telecommunications, Servers, Concurrency</td>
+</tr>
+
+
+<tr>
+<td class="left">JavaScript</td>
+<td class="left">Strict</td>
+<td class="left">Dynamic</td>
+<td class="left">No</td>
+<td class="left">No</td>
+<td class="left">Yes</td>
+<td class="left">No</td>
+<td class="left">Yes</td>
+<td class="left">No</td>
+<td class="left">Interpreted</td>
+<td class="left">\*Lisp/ Scheme</td>
+<td class="left">No</td>
+<td class="left">Only language that runs in the browser.</td>
 </tr>
 
 
@@ -2694,7 +3286,7 @@ Some Functional programming languages:
 <td class="left">Yes</td>
 <td class="left">-</td>
 <td class="left">VM</td>
-<td class="left">&#xa0;</td>
+<td class="left">\*Lisp/ Scheme</td>
 <td class="left">No</td>
 <td class="left">DSL - Statics</td>
 </tr>
@@ -2722,12 +3314,12 @@ Notes:
 
 -   AGDT   - Algebraic Data Types
 
--   GIL    - Global Interpreter Locking. Languages with GIL cannot
-    support multi-core processors.
+-   GIL    - Global Interpreter Locking. Languages with GIL cannot take
+    advantage of multi-core processors.
 
 -   TCO - Tail Call Optimization. Languages without TCO cannot perform
     recursion safely. It can lead to a stack overflow for a big number
-    of interactions.
+    of iterations.
 
 -   JVM    - Java Virtual Machine / Java Platform
 
@@ -2742,6 +3334,10 @@ Notes:
 -   Currying  - Curried functions like in Haskell
 
 -   DSL    - Domain Specific Language
+
+-   It is controversial that Javascript is based on scheme. According
+    to Douglas Crockford JavaScript is Scheme on a C clothe. With a
+    C-like syntax.
 
 More Information: [Comparison of Functional Programming Languages](http://en.wikipedia.org/wiki/Comparison_of_functional_programming_languages)
 
