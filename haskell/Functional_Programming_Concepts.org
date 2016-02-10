@@ -2480,6 +2480,322 @@ user=>
 
 #+END_SRC 
 
+**** Fsharp 
+
+#+BEGIN_SRC fsharp 
+// Fold left for Lists 
+//
+//
+
+// List.fold (acc -> 'x -> 'acc) -> acc -> 'x list -> 'acc
+//
+- List.fold ;;  
+val it : (('a -> 'b -> 'a) -> 'a -> 'b list -> 'a) 
+
+- List.fold (fun acc x -> 10 * acc + x) 0 [1; 2; 3; 4; 5]  ;;
+val it : int = 12345
+>
+
+// Array.fold 
+// 
+//
+- Array.fold ;;  
+val it : (('a -> 'b -> 'a) -> 'a -> 'b [] -> 'a) 
+> 
+
+- Array.fold (fun acc x -> 10 * acc + x) 0 [| 1; 2; 3; 4; 5 |]  ;;
+val it : int = 12345
+> 
+
+// Fold left for Arrays 
+
+#+END_SRC
+
+
+Example: Implementing Higher Order Functions and recursive functions
+with fold.
+
+#+BEGIN_SRC fsharp 
+
+// Implementing fold_left for lists 
+//
+let rec fold_left f xs acc =
+    match xs with 
+    | []      ->   acc 
+    | hd::tl  ->   fold_left f tl (f acc hd)
+;;
+
+val fold_left : f:('a -> 'b -> 'a) -> xs:'b list -> acc:'a -> 'a
+
+- fold_left (fun acc x -> 10 * acc + x) [1; 2; 3; 4 ; 5] 0 ;; 
+val it : int = 12345
+> 
+
+let length xs = fold_left (fun acc x -> acc + 1) xs 0
+
+> length ["a"; "b"; "c"; "d" ] ;;
+val it : int = 4
+> length [ ] ;;                  
+val it : int = 0
+> 
+
+- let sum xs  = fold_left (fun acc x -> acc + x) xs 0 ;;
+
+> sum [1; 2; 3; 4; 5; 6] ;;                             
+val it : int = 21
+> 
+
+> let product xs = fold_left (fun acc x -> acc * x) xs 1 ;;  
+
+val product : xs:int list -> int
+
+> product [1; 2; 3; 4; 5; 6] ;;
+val it : int = 720
+> 
+
+- let reverse xs = fold_left (fun acc x -> x :: acc) xs []
+- ;;
+
+val reverse : xs:'a list -> 'a list
+
+> reverse [1; 2; 3; 4; 5 ] ;;
+val it : int list = [5; 4; 3; 2; 1]
+> 
+
+let fold_right f xs acc =
+  fold_left (fun acc x -> f x acc) (reverse xs) acc
+;;
+     
+val fold_right : f:('a -> 'b -> 'b) -> xs:'a list -> acc:'b -> 'b
+
+- fold_right (fun x acc -> 10 * acc + x) [1; 2; 3; 4; 5] 0 ;;
+val it : int = 54321
+> 
+
+// Reverse map 
+//
+- let rev_map f xs = fold_left (fun acc x -> (f x)::acc) xs [] ;;  
+
+val rev_map : f:('a -> 'b) -> xs:'a list -> 'b list
+
+- rev_map (fun x -> x * 2) [1; 2; 3; 4; 5; 6] ;;
+val it : int list = [12; 10; 8; 6; 4; 2]
+> 
+
+- let map f xs = reverse ( fold_left (fun acc x -> (f x)::acc) xs [] ) ;;
+
+val map : f:('a -> 'b) -> xs:'a list -> 'b list
+
+- map (fun x -> x * 2) [1; 2; 3; 4; 5; 6] ;;
+val it : int list = [2; 4; 6; 8; 10; 12]
+> 
+
+// Or 
+// 
+let rev_fold_left f  xs acc = reverse (fold_left f xs acc) ;;
+
+val rev_fold_left :
+  f:('a list -> 'b -> 'a list) -> xs:'b list -> acc:'a list -> 'a list
+
+// Map with fold left and reverse 
+//
+//
+> let map f xs = rev_fold_left (fun acc x -> (f x)::acc) xs [] ;;
+
+val map : f:('a -> 'b) -> xs:'b list -> 'b list
+
+- map (fun x -> x * 2) [1; 2; 3; 4; 5; 6] ;;
+val it : int list = [2; 4; 6; 8; 10; 12]
+> 
+
+// Map with fold right 
+//
+> let map f xs = fold_right (fun x acc -> (f x)::acc) xs [] ;;
+
+val map : f:('a -> 'b) -> xs:'a list -> 'b list
+
+> map (fun x -> x * 2) [1; 2; 3; 4; 5; 6] ;;
+val it : int list = [2; 4; 6; 8; 10; 12]
+> 
+
+// Filter with fold left and reverse
+//
+let filter f xs = rev_fold_left (fun acc x -> if (f x) then (x::acc) else acc) xs [] ;;
+
+val filter : f:('a -> bool) -> xs:'a list -> 'a list
+
+- filter (fun x -> x % 2 = 0) [1; 2; 3; 4; 5; 6; 7; 8; 9 ] ;; 
+val it : int list = [2; 4; 6; 8]
+> 
+
+// Filter with fold right 
+//
+let filter f xs =
+  fold_right (fun x acc ->  if (f x)
+                            then x::acc
+                            else acc
+             )
+             xs
+             []
+             ;;
+
+-  filter (fun x -> x % 2 = 0) [1; 2; 3; 4; 5; 6; 7; 8; 9 ] ;; 
+val it : int list = [2; 4; 6; 8]
+> 
+
+
+
+let take n xs =
+  let _, result = 
+    fold_left (fun acc x -> let (c, xss) = acc in
+                            if c = 0
+                            then  (0, xss)
+                            else  (c - 1, x::xss))
+              xs
+              (n, [])
+
+  in reverse result 
+
+            ;;
+
+- take ;;
+val it : (int -> 'a list -> 'a list) = <fun:clo@202-3>
+> 
+
+
+> take 3 [1; 2; 3 ; 4; 5; 6; 7; 8] ;;               
+val it : int list = [1; 2; 3]
+> 
+
+- take 18 [1; 2; 3 ; 4; 5; 6; 7; 8] ;;
+val it : int list = [1; 2; 3; 4; 5; 6; 7; 8]
+> 
+
+// drop with fold left 
+// 
+let drop n xs =
+  let _, result = 
+    fold_left (fun acc x -> let (c, xss) = acc in
+                            if c = 0
+                            then  (0, x::xss)
+                            else  (c - 1, xss))
+              xs
+              (n, [])
+
+  in reverse result 
+
+            ;;
+
+val drop : n:int -> xs:'a list -> 'a list
+
+
+- drop 3 [1; 2; 3 ; 4; 5; 6; 7; 8] ;;              
+val it : int list = [4; 5; 6; 7; 8]
+> 
+- drop 13 [1; 2; 3 ; 4; 5; 6; 7; 8] ;;
+val it : int list = []
+> 
+
+let take_while f xs =
+  fold_right   (fun x acc ->  if (f x)
+                              then  x::acc
+                              else  acc )
+
+               xs
+               []
+;;
+
+
+let take_while f xs =
+  fold_right   (fun x acc ->  if (f x)
+                              then  x::acc
+                              else  match acc with
+                                    |  []     -> []
+                                    |  _::tl -> tl
+               )
+
+               xs
+               []
+;;
+val take_while : f:('a -> bool) -> xs:'a list -> 'a list
+
+> take_while (fun x -> x < 10) [2; 8 ; 9 ; 26 ; 7; 10; 53] ;;
+val it : int list = [2; 8; 9]
+> 
+
+
+
+let find f xs =
+  fold_left (fun acc x -> if (f x)
+                          then Some x
+                          else None 
+            )
+            xs
+            None
+;;
+  
+val find : f:('a -> bool) -> xs:'a list -> 'a option
+
+- find (fun x -> x * x > 40) [1; 2; 6; 5; 4; 8; 10; 20 ; 9 ] ;;
+val it : int option = Some 9
+> 
+
+- find (fun x -> x * x > 400) [1; 2; 6; 5; 4; 8; 10; 20 ; 9 ] ;;
+val it : int option = None
+> 
+
+
+// Map with side-effect 
+//
+let for_each f xs =
+  fold_left (fun acc x -> f x)
+            xs
+            ()
+            ;;
+
+val for_each : f:('a -> unit) -> xs:'a list -> unit
+
+> for_each (fun x -> printfn "x = %d" x) [2; 3; 4; 5; 6] ;;
+x = 2
+x = 3
+x = 4
+x = 5
+x = 6
+val it : unit = ()
+> 
+
+// Filter map - fusion / optimization  
+//
+// (Eliminate intermediate data structure )
+//
+
+let filter_map f_filter f_map xs = 
+  fold_right (fun x acc ->  if (f_filter x)
+                            then (f_map x)::acc
+                            else acc
+             )
+             xs
+             []
+;;
+             
+val filter_map :
+  f_filter:('a -> bool) -> f_map:('a -> 'b) -> xs:'a list -> 'b list
+
+- filter_map (fun x -> x % 2 = 0) (fun x -> x + 3) [1; 5; 2; 6; 8; 7]
+- ;;             
+val it : int list = [5; 9; 11]
+> 
+
+
+ // Without optimization
+- map (fun x -> x + 3) (filter (fun x -> x % 2 = 0) [1; 5; 2; 6; 8; 7]) ;;
+val it : int list = [5; 9; 11]
+> 
+- 
+
+
+#+END_SRC
+
 *** For Each, Impure map 
 
 For each is an _impure higher order function_ which performs
