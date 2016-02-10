@@ -4629,15 +4629,20 @@ The examples bellow are in GNU Guile.
 
     
 Non tail recursive functions:
+
  - Uses a growing amount of stack frames, for a big number of iterations it can cause a stack overflow.
     
 
 Tail recursive functions:
 
- - A function is said to be *tail recursive* when the recursive call is the last function executed in the body of the function.
- - It uses a fixed amount stack frame, therefore there is no risk of stack overflow.
+ - A function is said to be *tail recursive* when the recursive call
+   is the last function executed in the body of the function.
+ - It uses a fixed amount stack frame, therefore there is no risk of
+   stack overflow.
  - It can be turned into loops
- - Sometimes non tail recursive functions can be changed to tail recursive by adding a new function with extra parameters (accumulators) to store partial results (state).
+ - Sometimes non tail recursive functions can be changed to tail
+   recursive by adding a new function with extra parameters
+   (accumulators) to store partial results (state).
 
 Example1: Factorial
 
@@ -4652,7 +4657,7 @@ Example1: Factorial
 $1 = 3628800
 > 
 
-;;  For a very big number of iteration, non tail recursive functions
+;;  For a very big number of iterations, non tail recursive functions
 ;;  will cause a stack overflow.
 ;;
 > (factorial 20000000)

@@ -13,6 +13,11 @@
     - [Currying](#currying)
     - [Partial Application](#partial-application)
   - [Lazy Evaluation](#lazy-evaluation)
+  - [Tail Call Optimization and Tail Recursive Functions](#tail-call-optimization-and-tail-recursive-functions)
+    - [Tail Call](#tail-call)
+    - [Tail Call Optimization](#tail-call-optimization)
+    - [Examples](#examples)
+    - [See also](#see-also)
   - [Fundamental Higher Order Functions](#fundamental-higher-order-functions)
     - [Overview](#overview)
     - [Map](#map)
@@ -1065,9 +1070,566 @@ f = lambda x: x**5
 >>>
 ```
 
-## Fundamental Higher Order Functions<a id="sec-1-8" name="sec-1-8"></a>
+## Tail Call Optimization and Tail Recursive Functions<a id="sec-1-8" name="sec-1-8"></a>
 
-### Overview<a id="sec-1-8-1" name="sec-1-8-1"></a>
+### Tail Call<a id="sec-1-8-1" name="sec-1-8-1"></a>
+
+A tail call is a function call which is the last action performerd by
+a function.
+
+Examples of <span class="underline">tail calls</span> and <span class="underline">non tail calls</span>: 
+
+Example 1: Tail call 
+
+```python
+def func1(x):
+    return  tail_call_function (x * 2) # It is a tail call
+```
+
+Example 2: Tail recusive call or tail recursive function. 
+
+```python
+def tail_recursive_call (n, acc);
+    if n = 0:
+       return acc 
+       return tai_recursive_acll (n - 1, n * acc) # Tail recursive call, the 
+                                                  # function call is the last
+                                                  # thing the function does.
+```
+
+Example 3: Non tail call 
+
+```python
+def non_tail_call_function(x):
+    return 1 + non_tail_call_function (x + 3)
+```
+
+### Tail Call Optimization<a id="sec-1-8-2" name="sec-1-8-2"></a>
+
+Tail call optimization - TCO. (aka. tail call elimination - TCE or
+tail recursion elimination - TRE) is a optimization that replaces
+calls in tail positions with jumps which guarantees that loops
+implemented using recursion are executed in constant stack
+space.  
+
+Without tail call optimization each recursive call creates a
+new stack frame by growing the execution stack. Eventually the
+stack runs out of space and the program has to stop.  To support
+iteration by recursion functional languages need tail call
+optimization.  
+
+If the language doesn't support TCO it is not possible to perform
+recursion safely. A big number of calls will lead to a stack overflow
+exception and the program will crash unexpectedly .
+
+Sometimes non tail recursive functions can be changed to tail
+recursive by adding a new function with extra parameters
+(accumulators) to store partial results (state).
+
+Languages with TCO support: 
+
+-   Scheme
+-   Common Lisp
+-   Haskell
+-   Ocaml
+-   F# (F sharp)
+-   C# (C sharp)
+-   Scala
+-   Erlang
+
+Languages without TCO support: 
+
+-   Python
+-   Ruby
+-   Java   (Note: The JVM doesn't support TCO)
+-   Clojure
+-   JavaScript
+-   R
+-   Elisp - Emacs Lisp
+
+### Examples<a id="sec-1-8-3" name="sec-1-8-3"></a>
+
+Example of non tail recursive function in Scheme (GNU Guile): 
+
+```scheme
+(define (factorial n)
+    (if (or (= n 0) (= n 1))
+        1
+        (* n  (factorial (- n 1)))))
+        
+> (factorial 10)
+$1 = 3628800
+> 
+
+;;  For a very big number of iterations, non tail recursive functions
+;;  will cause a stack overflow.
+;;
+> (factorial 20000000)
+warnings can be silenced by the --no-warnings (-n) option
+Aborted (core dumped)
+
+;;
+;; This execution requires 5 stack frames
+;;
+;;  (factorial 5)
+;;  (* 5 (factorial 4))
+;;  (* 5 (* 4 (factorial 3)))
+;;  (* 5 (* 4 (3 * (factorial 2))))
+;;  (* 5 (* 4 (* 3 (factorial 2))))
+;;  (* 5 (* 4 (* 3 (* 2 (factorial 1)))))
+;;
+;;  (* 5 (* 4 (* 3 (* 2 1))))
+;;  (* 5 (* 4 (* 3 2)))
+;;  (* 5 (* 4 6))
+;;  (* 5 24)
+;;  120
+;;
+;;
+;;
+;;
+> ,trace (factorial 5)
+trace: |  (#<procedure 99450c0> #(#<directory (guile-user) 95c3630> …))
+trace: |  #(#<directory (guile-user) 95c3630> factorial)
+trace: (#<procedure 9953350 at <current input>:8:7 ()>)
+trace: (factorial 5)
+trace: |  (factorial 4)
+trace: |  |  (factorial 3)
+trace: |  |  |  (factorial 2)
+trace: |  |  |  |  (factorial 1)
+trace: |  |  |  |  1
+trace: |  |  |  2
+trace: |  |  6
+trace: |  24
+trace: 120
+> 
+
+;;
+;; It requires 10 stack frames
+;;
+;;        
+> ,trace (factorial 10)
+trace: |  (#<procedure 985cbd0> #(#<directory (guile-user) 95c3630> …))
+trace: |  #(#<directory (guile-user) 95c3630> factorial)
+trace: (#<procedure 9880800 at <current input>:6:7 ()>)
+trace: (factorial 10)
+trace: |  (factorial 9)
+trace: |  |  (factorial 8)
+trace: |  |  |  (factorial 7)
+trace: |  |  |  |  (factorial 6)
+trace: |  |  |  |  |  (factorial 5)
+trace: |  |  |  |  |  |  (factorial 4)
+trace: |  |  |  |  |  |  |  (factorial 3)
+trace: |  |  |  |  |  |  |  |  (factorial 2)
+trace: |  |  |  |  |  |  |  |  |  (factorial 1)
+trace: |  |  |  |  |  |  |  |  |  1
+trace: |  |  |  |  |  |  |  |  2
+trace: |  |  |  |  |  |  |  6
+trace: |  |  |  |  |  |  24
+trace: |  |  |  |  |  120
+trace: |  |  |  |  720
+trace: |  |  |  5040
+trace: |  |  40320
+trace: |  362880
+trace: 3628800
+>
+```
+
+This function can be converted to a tail recursive function by using
+an accumulator:
+
+```scheme
+(define (factorial-aux n acc)
+    (if (or (= n 0) (= n 1))
+        acc
+        (factorial-aux (- n 1) (* n acc))))
+
+> (factorial-aux 6 1)
+$1 = 720
+
+> ,trace (factorial-aux 6 1)
+trace: |  (#<procedure 9becf10> #(#<directory (guile-user) 984c630> …))
+trace: |  #(#<directory (guile-user) 984c630> factorial-aux)
+trace: (#<procedure 9bec320 at <current input>:26:7 ()>)
+trace: (factorial-aux 6 1)
+trace: (factorial-aux 5 6)
+trace: (factorial-aux 4 30)
+trace: (factorial-aux 3 120)
+trace: (factorial-aux 2 360)
+trace: (factorial-aux 1 720)
+trace: 720
+scheme@(guile-user)> 
+
+> (define (factorial2 n) (factorial-aux n 1))
+
+scheme@(guile-user)> (factorial2 5)
+$3 = 120
+
+;; This function could also be implemented in this way:
+;;
+;;
+(define (factorial3 n) 
+    (define (factorial-aux n acc)
+        (if (or (= n 0) (= n 1))
+            acc
+            (factorial-aux (- n 1) (* n acc))))        
+    (factorial-aux n 1))
+
+> (factorial3 6)
+$4 = 720
+
+> (factorial3 5)
+$5 = 120
+```
+
+Example: Summation of a range of numbers:
+
+```scheme
+;;  Non tail recursive function:
+;;
+(define (sum-ints a b)
+    (if (> a b)
+        0
+        (+ a (sum-ints (+ a 1) b))))
+
+
+;;
+;; Using the trace command is possible to notice the growing amount of
+;; stack frame In this case it requires 11 stack frames.
+
+> ,trace (sum-ints 1 10)
+trace: |  (#<procedure 9c42420> #(#<directory (guile-user) 984c630> …))
+trace: |  #(#<directory (guile-user) 984c630> sum-ints)
+trace: (#<procedure 9c4b8c0 at <current input>:56:7 ()>)
+trace: (sum-ints 1 10)
+trace: |  (sum-ints 2 10)
+trace: |  |  (sum-ints 3 10)
+trace: |  |  |  (sum-ints 4 10)
+trace: |  |  |  |  (sum-ints 5 10)
+trace: |  |  |  |  |  (sum-ints 6 10)
+trace: |  |  |  |  |  |  (sum-ints 7 10)
+trace: |  |  |  |  |  |  |  (sum-ints 8 10)
+trace: |  |  |  |  |  |  |  |  (sum-ints 9 10)
+trace: |  |  |  |  |  |  |  |  |  (sum-ints 10 10)
+trace: |  |  |  |  |  |  |  |  |  |  (sum-ints 11 10)
+trace: |  |  |  |  |  |  |  |  |  |  0
+trace: |  |  |  |  |  |  |  |  |  10
+trace: |  |  |  |  |  |  |  |  19
+trace: |  |  |  |  |  |  |  27
+trace: |  |  |  |  |  |  34
+trace: |  |  |  |  |  40
+trace: |  |  |  |  45
+trace: |  |  |  49
+trace: |  |  52
+trace: |  54
+trace: 55
+
+
+;;  Stack Overflow Error
+;;
+> (sum-ints 1 10000)
+> <unnamed port>:4:13: In procedure sum-ints:
+<unnamed port>:4:13: Throw to key `vm-error' with args `(vm-run "VM: Stack overflow" ())'.
+
+;; 
+;; Safe summation 
+;;
+(define (sum-ints-aux a b acc)
+    (if (> a b)
+        acc
+        (sum-ints-aux (+ a 1) b (+ a acc))))
+    
+(define (sum-ints-aux a b acc)
+    (if (> a b)
+        acc
+        (sum-ints-aux (+ a 1) b (+ a acc))))
+    
+> (sum-ints-aux 1 10 0)
+$4 = 55
+> 
+
+> (sum-ints-aux 1 10000 0)
+$6 = 50005000
+
+;;
+;; It uses only one stack frame each call
+;;
+> ,trace (sum-ints-aux 1 10 0)
+trace: |  (#<procedure 985a270> #(#<directory (guile-user) 93fd630> …))
+trace: |  #(#<directory (guile-user) 93fd630> sum-ints-aux)
+trace: (#<procedure 98646a0 at <current input>:31:7 ()>)
+trace: (sum-ints-aux 1 10 0)
+trace: (sum-ints-aux 2 10 1)
+trace: (sum-ints-aux 3 10 3)
+trace: (sum-ints-aux 4 10 6)
+trace: (sum-ints-aux 5 10 10)
+trace: (sum-ints-aux 6 10 15)
+trace: (sum-ints-aux 7 10 21)
+trace: (sum-ints-aux 8 10 28)
+trace: (sum-ints-aux 9 10 36)
+trace: (sum-ints-aux 10 10 45)
+trace: (sum-ints-aux 11 10 55)
+trace: 55
+> 
+
+;; It can also be implemented in this way:
+;; 
+(define (sum-ints-safe a b)
+    (define (sum-ints-aux a b acc)
+        (if (> a b)
+            acc
+            (sum-ints-aux (+ a 1) b (+ a acc))))    
+    (sum-ints-aux a b 0))
+
+> (sum-ints-safe 1 10000)
+$7 = 50005000
+
+>  (sum-ints-safe 1 100000)
+$8 = 5000050000
+scheme@(guile-user)>
+```
+
+Example: Implementing map with tail recursion. 
+
+```scheme
+(define (map2 f xs)
+   (if (null? xs)
+       '() 
+        (cons  (f (car xs)) 
+               (map2 f (cdr xs)))))
+
+
+(define (inc x) (+ x 1))
+
+
+;; It will eventually lead to an stack overflow for a big list. 
+;;
+> ,trace (map2 inc '(1 2 3))
+trace: |  (#<procedure 9e14500> #(#<directory (guile-user) 984c630> …))
+trace: |  #(#<directory (guile-user) 984c630> map2 inc (1 2 3))
+trace: (#<procedure 9e48360 at <current input>:109:7 ()>)
+trace: (map2 #<procedure inc (x)> (1 2 3))
+trace: |  (inc 1)
+trace: |  2
+trace: |  (map2 #<procedure inc (x)> (2 3))
+trace: |  |  (inc 2)
+trace: |  |  3
+trace: |  |  (map2 #<procedure inc (x)> (3))
+trace: |  |  |  (inc 3)
+trace: |  |  |  4
+trace: |  |  |  (map2 #<procedure inc (x)> ())
+trace: |  |  |  ()
+trace: |  |  (4)
+trace: |  (3 4)
+trace: (2 3 4)
+
+
+
+,trace (map2 inc '(1 2 3 4 5 6 7 8 9))
+trace: |  (#<procedure 9cdcb00> #(#<directory (guile-user) 984c630> …))
+trace: |  #(#<directory (guile-user) 984c630> map2 inc (1 2 3 4 5 6 …))
+trace: (#<procedure 9ceebf0 at <current input>:104:7 ()>)
+trace: (map2 #<procedure inc (x)> (1 2 3 4 5 6 7 8 9))
+trace: |  (inc 1)
+trace: |  2
+trace: |  (map2 #<procedure inc (x)> (2 3 4 5 6 7 8 9))
+trace: |  |  (inc 2)
+trace: |  |  3
+trace: |  |  (map2 #<procedure inc (x)> (3 4 5 6 7 8 9))
+trace: |  |  |  (inc 3)
+trace: |  |  |  4
+trace: |  |  |  (map2 #<procedure inc (x)> (4 5 6 7 8 9))
+trace: |  |  |  |  (inc 4)
+trace: |  |  |  |  5
+trace: |  |  |  |  (map2 #<procedure inc (x)> (5 6 7 8 9))
+trace: |  |  |  |  |  (inc 5)
+trace: |  |  |  |  |  6
+trace: |  |  |  |  |  (map2 #<procedure inc (x)> (6 7 8 9))
+trace: |  |  |  |  |  |  (inc 6)
+trace: |  |  |  |  |  |  7
+trace: |  |  |  |  |  |  (map2 #<procedure inc (x)> (7 8 9))
+trace: |  |  |  |  |  |  |  (inc 7)
+trace: |  |  |  |  |  |  |  8
+trace: |  |  |  |  |  |  |  (map2 #<procedure inc (x)> (8 9))
+trace: |  |  |  |  |  |  |  |  (inc 8)
+trace: |  |  |  |  |  |  |  |  9
+trace: |  |  |  |  |  |  |  |  (map2 #<procedure inc (x)> (9))
+trace: |  |  |  |  |  |  |  |  |  (inc 9)
+trace: |  |  |  |  |  |  |  |  |  10
+trace: |  |  |  |  |  |  |  |  |  (map2 #<procedure inc (x)> ())
+trace: |  |  |  |  |  |  |  |  |  ()
+trace: |  |  |  |  |  |  |  |  (10)
+trace: |  |  |  |  |  |  |  (9 10)
+trace: |  |  |  |  |  |  (8 9 10)
+trace: |  |  |  |  |  (7 8 9 10)
+trace: |  |  |  |  (6 7 8 9 10)
+trace: |  |  |  (5 6 7 8 9 10)
+trace: |  |  (4 5 6 7 8 9 10)
+trace: |  (3 4 5 6 7 8 9 10)
+trace: (2 3 4 5 6 7 8 9 10)
+
+
+(define (map-aux f xs acc) 
+
+    (if (null? xs)
+
+        (reverse acc)
+
+        (map-aux f 
+                 (cdr xs)
+                 (cons (f (car xs)) 
+                       acc)
+        )
+      )
+     ) 
+ 
+> ,trace (map-aux inc '(1 2 3 4 5) '())
+trace: |  (#<procedure 9e0c420> #(#<directory (guile-user) 984c630> …))
+trace: |  #(#<directory (guile-user) 984c630> map-aux inc (1 2 3 4 5))
+trace: (#<procedure 9e4c070 at <current input>:180:7 ()>)
+trace: (map-aux #<procedure inc (x)> (1 2 3 4 5) ())
+trace: |  (inc 1)
+trace: |  2
+trace: (map-aux #<procedure inc (x)> (2 3 4 5) (2))
+trace: |  (inc 2)
+trace: |  3
+trace: (map-aux #<procedure inc (x)> (3 4 5) (3 2))
+trace: |  (inc 3)
+trace: |  4
+trace: (map-aux #<procedure inc (x)> (4 5) (4 3 2))
+trace: |  (inc 4)
+trace: |  5
+trace: (map-aux #<procedure inc (x)> (5) (5 4 3 2))
+trace: |  (inc 5)
+trace: |  6
+trace: (map-aux #<procedure inc (x)> () (6 5 4 3 2))
+trace: (reverse (6 5 4 3 2))
+trace: (2 3 4 5 6)
+
+;; Finally 
+;; 
+
+(define (map-safe f xs)
+        (map-aux f xs '()))
+
+> (map-safe inc '(1 2 3 3 4 5))
+$14 = (2 3 4 4 5 6)
+```
+
+Example in F#:
+
+```fsharp
+> let inc x = x +  1 ;;
+
+val inc : x:int -> int
+
+let rec map_aux f xs acc =
+    match xs with 
+    | []    ->  List.rev acc 
+    | hd::tl ->  map_aux f tl ((f hd)::acc)
+;;
+
+val map_aux : f:('a -> 'b) -> xs:'a list -> acc:'b list -> 'b list
+
+> map_aux inc [1; 2; 3; 4; 5] [] ;;
+val it : int list = [2; 3; 4; 5; 6]
+
+let map2 f xs = 
+    map_aux f xs [] ;;
+
+val map2 : f:('a -> 'b) -> xs:'a list -> 'b list
+
+> map2 inc [1; 2; 3; 4; 5] ;;
+val it : int list = [2; 3; 4; 5; 6]
+> 
+
+//  map_aux without pattern matching 
+// 
+let rec map_aux f xs acc =
+    if List.isEmpty xs 
+    then  List.rev acc 
+    else (let hd, tl = (List.head xs, List.tail xs) in 
+        map_aux f tl ((f hd)::acc))
+;;
+
+val map_aux : f:('a -> 'b) -> xs:'a list -> acc:'b list -> 'b list
+
+>  map2 inc [1; 2; 3; 4; 5] ;;
+val it : int list = [2; 3; 4; 5; 6]
+> 
+
+//  Another way:
+//  
+//
+let map3  f xs = 
+  
+    let rec map_aux f xs acc =
+        match xs with 
+        | []    ->  List.rev acc 
+        | hd::tl ->  map_aux f tl ((f hd)::acc)
+    
+    in map_aux f xs [] 
+
+;;
+
+val map3 : f:('a -> 'b) -> xs:'a list -> 'b list
+
+> map3 inc [1; 2; 3; 4; 5; 6] ;;
+val it : int list = [2; 3; 4; 5; 6; 7]
+>
+```
+
+Example: Tail recursive filter function.
+
+```fsharp
+let rec filter_aux f xs acc = 
+    match xs with 
+    | []      ->  List.rev acc 
+    | hd::tl  ->  if (f hd) 
+                  then  filter_aux f tl (hd::acc)
+                  else  filter_aux f tl acc
+;;
+
+val filter_aux : f:('a -> bool) -> xs:'a list -> acc:'a list -> 'a list
+
+> filter_aux (fun x -> x % 2 = 0) [1; 2; 3; 4; 5; 6; 7; 8] [] ;;
+val it : int list = [2; 4; 6; 8]
+> 
+
+let filter f xs = 
+    filter_aux f xs [] 
+;;
+val filter : f:('a -> bool) -> xs:'a list -> 'a list
+
+> filter (fun x -> x % 2 = 0) [1; 2; 3; 4; 5; 6; 7; 8] ;;    
+val it : int list = [2; 4; 6; 8]
+>
+```
+
+### See also<a id="sec-1-8-4" name="sec-1-8-4"></a>
+
+-   [Tail call - Wikipedia, the free encyclopedia](https://en.wikipedia.org/wiki/Tail_call)
+
+-   [Optimizing Tail Call Recursion](https://spin.atomicobject.com/2014/11/05/tail-call-recursion-optimization/)
+
+-   [Trampolines in JavaScript](http://raganwald.com/2013/03/28/trampolines-in-javascript.html)
+
+-   [Functional JavaScript – Tail Call Optimization and Trampolines | @taylodl's getting IT done](https://taylodl.wordpress.com/2013/06/07/functional-javascript-tail-call-optimization-and-trampolines/)
+
+-   [java - Why does the JVM still not support tail-call optimization? - Stack Overflow](http://stackoverflow.com/questions/3616483/why-does-the-jvm-still-not-support-tail-call-optimization)
+
+-   [Tail Recursion: Iteration in Haskell – Good Math, Bad Math](http://scienceblogs.com/goodmath/2006/12/20/tail-recursion-iteration-in-ha-1/)
+
+-   [Tail call explained](http://everything.explained.today/Tail_call/)
+
+-   [Automatic Transformation of Iterative Loops into Recursive Methods](http://users.dsic.upv.es/~jsilva/papers/TechReport-iter2rec.pdf)
+
+-   [The Road to Functional Programming in F# – From Imperative to Computation Expressions « Inviting Epiphany](http://richardminerich.com/2011/02/the-road-to-functional-programming-in-f-from-imperative-to-computation-expressions/)
+
+-   [Optimizing List.map - Jane Street Tech Blogs](https://blogs.janestreet.com/optimizing-list-map/)
+
+## Fundamental Higher Order Functions<a id="sec-1-9" name="sec-1-9"></a>
+
+### Overview<a id="sec-1-9-1" name="sec-1-9-1"></a>
 
 The functions map, filter and reduce (fold left) are ubiquitous in
 many programming languages and also the most used higher order
@@ -1076,7 +1638,7 @@ functions.
 They can be stricted evaluated like in Scheme and Javascript or lazy
 evaluated like in Python and Haskell.
 
-### Map<a id="sec-1-8-2" name="sec-1-8-2"></a>
+### Map<a id="sec-1-9-2" name="sec-1-9-2"></a>
 
 1.  Overview
 
@@ -1347,7 +1909,7 @@ evaluated like in Python and Haskell.
     user=>
     ```
 
-### Filter<a id="sec-1-8-3" name="sec-1-8-3"></a>
+### Filter<a id="sec-1-9-3" name="sec-1-9-3"></a>
 
 **Python**
 
@@ -1413,7 +1975,7 @@ StopIteration
 >>>
 ```
 
-### Reduce or Fold<a id="sec-1-8-4" name="sec-1-8-4"></a>
+### Reduce or Fold<a id="sec-1-9-4" name="sec-1-9-4"></a>
 
 1.  Overview
 
@@ -1892,7 +2454,7 @@ StopIteration
     user=>
     ```
 
-### For Each, Impure map<a id="sec-1-8-5" name="sec-1-8-5"></a>
+### For Each, Impure map<a id="sec-1-9-5" name="sec-1-9-5"></a>
 
 For each is an <span class="underline">impure higher order function</span> which performs
 side-effect on each element of a list, array or sequence. Unlike map
@@ -1936,6 +2498,29 @@ f6k
 3
 3
 4
+```
+
+**Scala**
+
+```scala
+scala> var xs = List(1.0, 2.0, 3.0, 4.0, 5.0, 6.0)
+xs: List[Double] = List(1.0, 2.0, 3.0, 4.0, 5.0, 6.0)
+
+scala> xs.foreach(println)
+1.0
+2.0
+3.0
+4.0
+5.0
+6.0
+
+scala> xs.foreach(x => println( "x = %.3f".format(x)))
+x = 1,000
+x = 2,000
+x = 3,000
+x = 4,000
+x = 5,000
+x = 6,000
 ```
 
 **Ocaml**
@@ -2048,7 +2633,7 @@ nil
 user=>
 ```
 
-### Apply<a id="sec-1-8-6" name="sec-1-8-6"></a>
+### Apply<a id="sec-1-9-6" name="sec-1-9-6"></a>
 
 The function <span class="underline">apply</span> applies a function to a list or array of
 arguments. It is common in dynamic languages like Lisp, Scheme,
@@ -2187,9 +2772,9 @@ def map_apply (f, xss):
 >>>
 ```
 
-## Function Composition<a id="sec-1-9" name="sec-1-9"></a>
+## Function Composition<a id="sec-1-10" name="sec-1-10"></a>
 
-### Overview<a id="sec-1-9-1" name="sec-1-9-1"></a>
+### Overview<a id="sec-1-10-1" name="sec-1-10-1"></a>
 
 Function composition promotes shorter code, code reuse and higher
 modularity by creating new functions from previous defined ones. They
@@ -2204,7 +2789,7 @@ operators that are built in to the language.  In Haskell the operator
 
 See also: [Function composition (computer science)](http://en.wikipedia.org/wiki/Function_composition_%28computer_science%29)
 
-### Function Composition in Haskell<a id="sec-1-9-2" name="sec-1-9-2"></a>
+### Function Composition in Haskell<a id="sec-1-10-2" name="sec-1-10-2"></a>
 
 ```
 (.) :: (b -> c) -> (a -> b) -> a -> c
@@ -2542,7 +3127,7 @@ let sum_ord = sum . map r . ordStr
 >
 ```
 
-### Function Composition in Python<a id="sec-1-9-3" name="sec-1-9-3"></a>
+### Function Composition in Python<a id="sec-1-10-3" name="sec-1-10-3"></a>
 
 ```python
 def compose(funclist):   
@@ -2748,7 +3333,7 @@ parse_csvtable_optmized =  composef(
  [3563.23000, 100.23000, 45.23000]]
 ```
 
-### Function Composition in F#<a id="sec-1-9-4" name="sec-1-9-4"></a>
+### Function Composition in F#<a id="sec-1-10-4" name="sec-1-10-4"></a>
 
 F# uses the operator (<<) for composition which is similar to Haskell
 composition operator (.) dot. It also uses the operator (>>) for forward
@@ -3234,7 +3819,7 @@ Some Functional programming languages:
 <td class="left">No</td>
 <td class="left">?</td>
 <td class="left">?</td>
-<td class="left">VM</td>
+<td class="left">VM/Bytecode</td>
 <td class="left">&#xa0;</td>
 <td class="left">?</td>
 <td class="left">Telecommunications, Servers, Concurrency</td>
@@ -3251,7 +3836,7 @@ Some Functional programming languages:
 <td class="left">No</td>
 <td class="left">Yes</td>
 <td class="left">No</td>
-<td class="left">Interpreted</td>
+<td class="left">VM/Interpreted</td>
 <td class="left">\*Lisp/ Scheme</td>
 <td class="left">No</td>
 <td class="left">Only language that runs in the browser.</td>
@@ -3285,7 +3870,7 @@ Some Functional programming languages:
 <td class="left">No</td>
 <td class="left">Yes</td>
 <td class="left">-</td>
-<td class="left">VM</td>
+<td class="left">VM/Bytecode</td>
 <td class="left">\*Lisp/ Scheme</td>
 <td class="left">No</td>
 <td class="left">DSL - Statics</td>
@@ -3582,4 +4167,5 @@ Recursion:
 
 -   [Scala](http://rosettacode.org/wiki/Scala)
 
--   [JavaScript / ECMAScript](http://rosettacode.org/wiki/Category:JavaScript)
+-   [JavaScript /
+    ECMAScript](http://rosettacode.org/wiki/Category:JavaScript)
