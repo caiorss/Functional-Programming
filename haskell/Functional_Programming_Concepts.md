@@ -16,6 +16,7 @@
   - [Tail Call Optimization and Tail Recursive Functions](#tail-call-optimization-and-tail-recursive-functions)
     - [Tail Call](#tail-call)
     - [Tail Call Optimization](#tail-call-optimization)
+    - [Summary](#summary)
     - [Examples](#examples)
     - [See also](#see-also)
   - [Fundamental Higher Order Functions](#fundamental-higher-order-functions)
@@ -1147,7 +1148,21 @@ Languages without TCO support:
 -   R
 -   Elisp - Emacs Lisp
 
-### Examples<a id="sec-1-8-3" name="sec-1-8-3"></a>
+### Summary<a id="sec-1-8-3" name="sec-1-8-3"></a>
+
+1.  To perform recursion safely a language must support TCO - Tail Call
+    Optimization.
+
+2.  Even if there is TCO support a non tail recursive function can lead
+    to an unexpected stack overflow.
+
+3.  Recursion allow greater expressiveness and many algorithms are
+    better expressed with recursion.
+
+4.  Recursion must be replaced by loops constructs in languages that
+    doesn't support TCO.
+
+### Examples<a id="sec-1-8-4" name="sec-1-8-4"></a>
 
 Example of non tail recursive function in Scheme (GNU Guile): 
 
@@ -1380,12 +1395,65 @@ trace: 55
             (sum-ints-aux (+ a 1) b (+ a acc))))    
     (sum-ints-aux a b 0))
 
+> scheme@(guile-user)> (sum-ints-safe 1 1000)
+$2 = 500500
+
+
 > (sum-ints-safe 1 10000)
 $7 = 50005000
 
 >  (sum-ints-safe 1 100000)
 $8 = 5000050000
 scheme@(guile-user)>
+```
+
+Example: of summation in a language without TCO: python  
+
+```python
+def sum_ints_aux (a, b, acc):
+    if a > b:
+       return acc 
+    else:
+       return sum_ints_aux (a + 1, b, a + acc)
+
+ # Until now works 
+>>> 
+>>> sum_ints_aux(1, 10, 0)
+55
+>>> sum_ints_aux(1, 100, 0)
+5050
+
+ # Now it is going to fail: Stack Overflow!
+
+>>> sum_ints_aux(1, 1000, 0)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<stdin>", line 5, in sum_ints_aux
+  File "<stdin>", line 5, in sum_ints_aux
+...
+  File "<stdin>", line 5, in sum_ints_aux
+  File "<stdin>", line 2, in sum_ints_aux
+RuntimeError: maximum recursion depth exceeded in comparison
+>>> 
+
+#  Solution: Turn the recursion into a loop:
+# 
+def sum_ints (a, b):
+    x  = a 
+    acc = 0
+
+    while x < b:
+
+        x = x + 1
+        acc = acc + x 
+           
+    return acc + 1
+    
+>> sum_ints (1, 1000)
+    500500
+
+>> sum_ints (1, 10000)
+    50005000
 ```
 
 Example: Implementing map with tail recursion. 
@@ -1605,7 +1673,7 @@ val it : int list = [2; 4; 6; 8]
 >
 ```
 
-### See also<a id="sec-1-8-4" name="sec-1-8-4"></a>
+### See also<a id="sec-1-8-5" name="sec-1-8-5"></a>
 
 -   [Tail call - Wikipedia, the free encyclopedia](https://en.wikipedia.org/wiki/Tail_call)
 
@@ -3967,12 +4035,18 @@ val it : float = 5757.0723
 
 # Functional Languages<a id="sec-2" name="sec-2"></a>
 
+Note: There is no consensus about what is really a functional
+language. In this table were selected programming languages which can
+be programmed in functional style or favors this style. 
+
 Some Functional programming languages:
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
 <colgroup>
+<col  class="left" />
+
 <col  class="left" />
 
 <col  class="left" />
@@ -4006,6 +4080,7 @@ Some Functional programming languages:
 <th scope="col" class="left">Typing</th>
 <th scope="col" class="left">Type Inference</th>
 <th scope="col" class="left">Pattern Matching</th>
+<th scope="col" class="left">Syntax Sugars</th>
 <th scope="col" class="left">GIL</th>
 <th scope="col" class="left">TCO</th>
 <th scope="col" class="left">OO</th>
@@ -4024,6 +4099,7 @@ Some Functional programming languages:
 <td class="left">Static</td>
 <td class="left">Yes</td>
 <td class="left">Yes</td>
+<td class="left">Yes</td>
 <td class="left">No</td>
 <td class="left">Yes</td>
 <td class="left">No</td>
@@ -4031,7 +4107,7 @@ Some Functional programming languages:
 <td class="left">NAT</td>
 <td class="left">ML/SML</td>
 <td class="left">Yes</td>
-<td class="left">Concurrency/Parallelism</td>
+<td class="left">Concurrency, Parallelism and Purity</td>
 </tr>
 
 
@@ -4039,6 +4115,7 @@ Some Functional programming languages:
 <td class="left">Ocaml</td>
 <td class="left">Strict</td>
 <td class="left">Static</td>
+<td class="left">Yes</td>
 <td class="left">Yes</td>
 <td class="left">Yes</td>
 <td class="left">Yes</td>
@@ -4058,6 +4135,7 @@ Some Functional programming languages:
 <td class="left">Static</td>
 <td class="left">Yes</td>
 <td class="left">Yes</td>
+<td class="left">Yes</td>
 <td class="left">No</td>
 <td class="left">Yes</td>
 <td class="left">Yes</td>
@@ -4075,6 +4153,7 @@ Some Functional programming languages:
 <td class="left">Dynamic</td>
 <td class="left">No</td>
 <td class="left">No</td>
+<td class="left">Yes/ Macros</td>
 <td class="left">\*</td>
 <td class="left">Yes</td>
 <td class="left">No</td>
@@ -4092,6 +4171,7 @@ Some Functional programming languages:
 <td class="left">Dynamic</td>
 <td class="left">No</td>
 <td class="left">Destructuring and macros</td>
+<td class="left">Yes/ Macros</td>
 <td class="left">No</td>
 <td class="left">No</td>
 <td class="left">No</td>
@@ -4107,6 +4187,7 @@ Some Functional programming languages:
 <td class="left">Scala</td>
 <td class="left">Strict</td>
 <td class="left">Static</td>
+<td class="left">Yes</td>
 <td class="left">Yes</td>
 <td class="left">Yes</td>
 <td class="left">No</td>
@@ -4126,6 +4207,7 @@ Some Functional programming languages:
 <td class="left">Dynamic</td>
 <td class="left">?</td>
 <td class="left">Yes</td>
+<td class="left">Yes</td>
 <td class="left">No</td>
 <td class="left">No</td>
 <td class="left">?</td>
@@ -4138,36 +4220,38 @@ Some Functional programming languages:
 
 
 <tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+
+<tr>
 <td class="left">JavaScript</td>
 <td class="left">Strict</td>
 <td class="left">Dynamic</td>
 <td class="left">No</td>
 <td class="left">No</td>
-<td class="left">Yes</td>
+<td class="left">No</td>
+<td class="left">\*\*</td>
 <td class="left">No</td>
 <td class="left">Yes</td>
 <td class="left">No</td>
 <td class="left">VM/Interpreted</td>
 <td class="left">\*Lisp/ Scheme</td>
 <td class="left">No</td>
-<td class="left">Only language that runs in the browser.</td>
-</tr>
-
-
-<tr>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
+<td class="left">The only language allowed to run in the browser.</td>
 </tr>
 
 
@@ -4175,6 +4259,7 @@ Some Functional programming languages:
 <td class="left">R</td>
 <td class="left">Strict</td>
 <td class="left">Dynamic</td>
+<td class="left">No</td>
 <td class="left">No</td>
 <td class="left">No</td>
 <td class="left">?</td>
@@ -4193,6 +4278,7 @@ Some Functional programming languages:
 <td class="left">Strict</td>
 <td class="left">Dynamic</td>
 <td class="left">Yes</td>
+<td class="left">?</td>
 <td class="left">?</td>
 <td class="left">?</td>
 <td class="left">??</td>
@@ -4234,6 +4320,27 @@ Notes:
 -   It is controversial that Javascript is based on scheme. According
     to Douglas Crockford JavaScript is Scheme on a C clothe. With a
     C-like syntax.
+
+-   <span class="underline">Syntax Sugars</span> help increase expressiveness and to write shorter,
+    concise and more readable code. 
+    -   Short lambda functions:
+        -   Haskell:      (\\ x y -> 3 \* x + y)
+        -   Ocaml and F#  (fun x y -> x + y)
+    
+    -   Monad bind operator: >>= from Haskell
+    
+    -   Function application.
+        -   The operator (|>) from F# that pipes an argument into a
+            function.  10 |> sin |> exp |> cos is equivalent to:  (sin (exp (cos 10)))
+        
+        -   Clojure (->) macro: (-> 10 Math/sin Math/exp Math/cos) which is
+            expanded to: (Math/cos (Math/exp (Math/sin 10)))
+    
+    -   Function composition operator:  (>>) from F# and (.) dot from
+        Haskell
+
+-   JavaScript: Is single-thread with event loop and uses
+    asynchronous IO (non blocking IO) with callbacks.
 
 More Information: [Comparison of Functional Programming Languages](http://en.wikipedia.org/wiki/Comparison_of_functional_programming_languages)
 
