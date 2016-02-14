@@ -1109,7 +1109,6 @@ Credits: http://shuklan.com/haskell/lec06.html#/0/10
 > 
 #+END_SRC
 
-
 **** Higher-order predicates
 
 Predicates (boolean-valued functions) can be extended to lists via the higher-order predicates any and all. 
@@ -1129,17 +1128,26 @@ True
 
 **** Fold
 
-The fold functions foldl and foldr combine elements of a list based on a binary function and an initial value. In some programming languages fold is known as reduce. The fold in some programming languages Python is called reduce.
+The fold functions foldl and foldr combine elements of a list based on
+a binary function and an initial value. In some programming languages
+fold is known as reduce. The fold in some programming languages Python
+is called reduce.
 
-"The higher-order library function foldr (“fold right”) encapsulates this simple pattern of recursion, with the function  and the value v as arguments" (Graham Hutton)
+"The higher-order library function foldr (“fold right”) encapsulates
+this simple pattern of recursion, with the function and the value v as
+arguments" (Graham Hutton)
 
 *Why Is Foldr Useful?* (Graham Hutton)
 
- - Some recursive functions on lists, such as sum, are simpler to define using foldr;
+ - Some recursive functions on lists, such as sum, are simpler to
+   define using foldr;
 
- - Properties of functions defined using foldr can be proved using algebraic properties of foldr, such as fusion and the banana split rule;
+ - Properties of functions defined using foldr can be proved using
+   algebraic properties of foldr, such as fusion and the banana split
+   rule;
 
- - Advanced program optimisations can be simpler if foldr is used in place of explicit recursion.
+ - Advanced program optimisations can be simpler if foldr is used in
+   place of explicit recursion.
 
 *Right Fold*
 
@@ -1234,10 +1242,10 @@ Examples:
 #+END_SRC
 
 
-Reference:
+References:
+
  - [[http://www.cs.nott.ac.uk/~gmh/functional.ppt][Graham Hutton Lecture]]
  - [[http://www.cs.nott.ac.uk/~gmh/][Graham Hutton - University of Nottingham]]
-
 
 **** Scanl
 
@@ -1665,7 +1673,6 @@ Example: Unzip
 
 #+END_SRC
 
-
 **** ZipWith 
 
 ZipWith function applies a function of two arguments to each elements of two given lists returning a new list.
@@ -1810,7 +1817,6 @@ mulVectors :: [Integer] -> [Integer] -> [Integer]
 > 
 
 #+END_SRC
-
 
 **** Replicate
 

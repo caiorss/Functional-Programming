@@ -1696,7 +1696,6 @@ val it : int list = [2; 4; 6; 8]
  - [[http://richardminerich.com/2011/02/the-road-to-functional-programming-in-f-from-imperative-to-computation-expressions/][The Road to Functional Programming in F# – From Imperative to Computation Expressions « Inviting Epiphany]]
 
  - [[https://blogs.janestreet.com/optimizing-list-map/][Optimizing List.map - Jane Street Tech Blogs]]
-
 ** Fundamental Higher Order Functions 
 *** Overview 
 
@@ -3196,6 +3195,329 @@ def map_apply (f, xss):
 
 
 #+END_SRC
+** Special Functions 
+*** Identity Function 
+
+The identity function is a polymorphic function which returns the
+value of its argument.
+
+#+BEGIN_SRC haskell 
+
+ -- This is a built-in Haskell function 
+> :t id
+id :: a -> a
+> 
+
+> id 10 
+10
+> id (Just 100)
+Just 100
+> 
+> let identity x = x
+> identity 200 
+200
+> 
+
+#+END_SRC
+
+*** Constant Function 
+
+The constant function returns the value of the first argument (the
+constant) regardless of the value of second argument.
+
+#+BEGIN_SRC haskell 
+> :t const
+const :: a -> b -> a
+
+> let const10 = const 10 
+> const10 100 
+10
+> const10 300
+10
+> map const10 ["a", "b", "c", "d"]
+[10,10,10,10]
+> 
+#+END_SRC
+
+Python Implementation:
+
+#+BEGIN_SRC python
+>>> constant = lambda const: lambda x: const
+>>> 
+
+>>> const10 = constant(10)
+>>> 
+>>> const10(100)
+10
+>>> const10("hello world")
+10
+>>> 
+#+END_SRC
+
+*** List Constructor (Cons)
+
+The cons operator is widely used in list recursive functions and
+higher order functions that operates on lists. 
+
+Scheme: 
+
+#+BEGIN_SRC scheme 
+> (cons 1 (cons 2 (cons 3 (cons 4 '()))))
+(1 2 3 4)
+
+#+END_SRC
+
+
+Haskell:
+
+#+BEGIN_SRC haskell
+
+ -- Cons Operator 
+ -- 
+> :t (:)
+(:) :: a -> [a] -> [a]
+
+> 1:[]
+[1]
+
+> 1:2:3:4:[]
+[1,2,3,4]
+
+> let cons = (:)
+
+> (cons 1 (cons 2 (cons 3 (cons 4 []))))
+[1,2,3,4]
+
+
+#+END_SRC
+
+Ocaml and F#
+
+#+BEGIN_SRC ocaml 
+> 1::[] ;;
+val it : int list = [1]
+> 
+- 1::2::3::[] ;;
+val it : int list = [1; 2; 3]
+> 
+
+- let cons x xs = x::xs ;;
+
+val cons : x:'a -> xs:'a list -> 'a list
+
+cons 1 (cons 2 (cons 3 (cons 4 []))) ;;
+
+> cons 1 (cons 2 (cons 3 (cons 4 []))) ;;  
+val it : int list = [1; 2; 3; 4]
+> 
+
+#+END_SRC
+
+*** Zip 
+**** Overview 
+
+The function zip and its variants combine two or more sequence into one sequence.
+
+See also: [[https://en.wikipedia.org/wiki/Convolution_(computer_science)][Convolution (computer science)]]
+
+**** Zip in Haskell 
+
+#+BEGIN_SRC haskell 
+> :t zip
+zip :: [a] -> [b] -> [(a, b)]
+
+> zip [1, 2, 3, 4] ["a", "b", "c"]
+[(1,"a"),(2,"b"),(3,"c")]
+> 
+
+> zip [1, 2, 3, 4] ["a", "b", "c"]
+[(1,"a"),(2,"b"),(3,"c")]
+>
+
+ -- Zip a list and a infinite list 
+
+> zip ["a", "b", "c"] [1 ..]
+[("a",1),("b",2),("c",3)]
+> 
+> 
+
+> zip ["a", "b", "c", "d"] [1, 2, 3]
+[("a",1),("b",2),("c",3)]
+> 
+
+
+> :t zip3
+zip3 :: [a] -> [b] -> [c] -> [(a, b, c)]
+> 
+
+> zip3 ["a", "b", "c", "d"] [1, 2, 3, 4, 5, 6] [Just 10, Just 100, Nothing]
+[("a",1,Just 10),("b",2,Just 100),("c",3,Nothing)]
+> 
+
+ -- There is more zip functions in the module Data.List
+ --
+> import Data.List (zip4, zip5, zip6)
+> 
+
+> :t zip4
+zip4 :: [a] -> [b] -> [c] -> [d] -> [(a, b, c, d)]
+> 
+> :t zip5
+zip5 :: [a] -> [b] -> [c] -> [d] -> [e] -> [(a, b, c, d, e)]
+> 
+
+#+END_SRC
+
+**** Zip in Python 
+
+The Python zip function is inspired by Haskell. The Python zip
+functions can take a variable number of arguments.
+
+
+Python 2: In python2 this function is evaluated eagerly. 
+
+#+BEGIN_SRC python
+>>> zip([1, 2, 3], ["a", "b", "c", "d", "e"])
+[(1, 'a'), (2, 'b'), (3, 'c')]
+>>>
+
+>>> zip([1, 2, 3], ["a", "b", "c", "d", "e"], ["x", "y", "z"])
+[(1, 'a', 'x'), (2, 'b', 'y'), (3, 'c', 'z')]
+>>>
+
+>>> zip([1, 2, 3], ["a", "b", "c", "d", "e"], ["x", "y", "z"], range(1, 20))
+[(1, 'a', 'x', 1), (2, 'b', 'y', 2), (3, 'c', 'z', 3)]
+>>> 
+
+>>> for x, y in zip([1, 2, 3, 4, 5], ["a", "b", "c", "d", "e"]):
+...   print "x = ", x, "y = ", y
+... 
+x =  1 y =  a
+x =  2 y =  b
+x =  3 y =  c
+x =  4 y =  d
+x =  5 y =  e
+
+
+#+END_SRC
+
+Python 3: In python3 this function returns a generator. It is evaluated lazily.
+
+#+BEGIN_SRC python
+
+>>> zip([1, 2, 3, 4, 5], ["a", "b", "c", "d", "e"])
+<zip object at 0xb6d01ecc>
+>>> 
+
+>>> list(zip([1, 2, 3, 4, 5], ["a", "b", "c", "d", "e"]))
+[(1, 'a'), (2, 'b'), (3, 'c'), (4, 'd'), (5, 'e')]
+>>> 
+
+>>> g = zip([1, 2, 3, 4, 5], ["a", "b", "c", "d", "e"])
+>>> g
+<zip object at 0xb6747e8c>
+>>> next(g)
+(1, 'a')
+>>> next(g)
+(2, 'b')
+>>> next(g)
+(3, 'c')
+>>> next(g)
+(4, 'd')
+>>> next(g)
+(5, 'e')
+>>> next(g)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+StopIteration
+>>> 
+
+>>> g = zip([1, 2, 3, 4, 5], ["a", "b", "c", "d", "e"], range(1, 1000000000))
+>>> g
+<zip object at 0xb6747f2c>
+>>> list(g)
+[(1, 'a', 1), (2, 'b', 2), (3, 'c', 3), (4, 'd', 4), (5, 'e', 5)]
+>>> list(g)
+[]
+>>> 
+
+>>> for x, y in zip([1, 2, 3, 4, 5], ["a", "b", "c", "d", "e"]):
+...    print ("x = ", x, "y = ", y)
+... 
+x =  1 y =  a
+x =  2 y =  b
+x =  3 y =  c
+x =  4 y =  d
+x =  5 y =  e
+
+
+
+#+END_SRC
+
+**** Zip in Scheme 
+
+It can be defined as:
+
+#+BEGIN_SRC scheme 
+
+(define (zip . lists)
+   (apply map  vector lists))
+
+> (zip '(1 2 3 4) '("a" "b" "c" "d"))       
+(#(1 "a") #(2 "b") #(3 "c") #(4 "d"))
+> 
+
+;; Or 
+
+(define (zip . lists)
+   (apply map  list lists))
+
+> (zip '(1 2 3 4) '("a" "b" "c" "d"))
+((1 "a") (2 "b") (3 "c") (4 "d"))
+> 
+
+> (zip '(1 2 3 4) '("a" "b" "c" "d") '(89 199 100 43))
+((1 "a" 89) (2 "b" 199) (3 "c" 100) (4 "d" 43))
+> 
+
+#+END_SRC
+
+**** Zip in Clojure 
+
+#+BEGIN_SRC clojure 
+
+;; Zip returning list
+;;
+(defn zip [& seqs] 
+  (apply map list seqs))
+
+user=> (zip '(1 2 3 4 5) '(x y z w k m n))
+((1 x) (2 y) (3 z) (4 w) (5 k))
+
+user=> (zip '(1 2 3 4 5) '(x y z w k m n) (range 10 1000000))
+((1 x 10) (2 y 11) (3 z 12) (4 w 13) (5 k 14))
+
+user=> (zip '[1 2 3 4 5] '(x y z w k m n) (range 10 1000000))
+((1 x 10) (2 y 11) (3 z 12) (4 w 13) (5 k 14))
+
+user=> (zip '[1 2 3 4 5] '(x y z w k m n) {:key_x "hello" :key_y "world" :key_z "clojure"})
+((1 x [:key_x "hello"]) (2 y [:key_y "world"]) (3 z [:key_z "clojure"]))
+user=> 
+
+
+;; Zip returning vector 
+;;
+(defn zipv [& seqs] 
+  (apply mapv vector seqs))
+
+user=> (zipv '(1 2 3 4 5) '(x y z w k m n))
+[[1 x] [2 y] [3 z] [4 w] [5 k]]
+user=> 
+
+user=>  (zipv '[1 2 3 4 5] '(x y z w k m n) (range 10 1000000))
+[[1 x 10] [2 y 11] [3 z 12] [4 w 13] [5 k 14]]
+user=>
+#+END_SRC
 
 ** Function Composition 
 *** Overview
@@ -3880,7 +4202,7 @@ val it : int = 19
 //
 //   Evaluating:  g >> h >> m                    
 //
-//                    f =  g >> h >> m 
+//  Input              f =  g >> h >> m                          Output 
 //       .........................................................
 //       .                                                       .         
 //       .   |-----------|      |-----------|     |-----------|  .
@@ -4094,11 +4416,621 @@ val it : float = 5757.0723
 
 #+END_SRC
 
+** Monads 
+*** Overview 
+
+A monad is a concept from _Category Theory_, which is defined by three
+things:
+
+ + a type constructor m that wraps a, parameter a;
+
+ + a return (unit) function: takes a value from a plain type and puts it
+   into a monadic container using the constructor, creating a monadic
+   value. The return operator must not be confused with the "return"
+   from a function in a imperative language. This operator is also
+   known as unit, lift, pure and point. It is a polymorphic
+   constructor.
+
+ + a bind operator (>>=). It takes as its arguments a monadic value
+   and a function from a plain type to a monadic value, and returns a
+   new monadic value.
+
+In Haskell the type class Monad specifies the type signature of all
+its instances. Each Monad implementation must have the type signature
+that matches the Monad type class. 
+
+
+#+BEGIN_SRC haskell
+class Monad m where
+
+    -- Constructor (aka unit or lift)
+    -- 
+    return :: a -> m a      
+
+    -- Bind operator
+    --
+    (>>=)  :: m a -> (a -> m b) -> m b   
+
+    (>>)   :: m a -> m b -> m b
+
+    fail   :: String -> m a       
+#+END_SRC
+
+*** List Monad
+**** List Monad in Haskell 
+
+The list Monad is used for non-deterministic computations where there
+is a unknown number of results. It is useful for constraint solving:
+solve a problem by trying all possibilities by brute force.
+
+In Haskell it is defined as an instance of Monad type class:
+
+#+BEGIN_SRC haskell
+instance  Monad []  where
+    m >>= k          = concat (map k m)
+    return x         = [x]
+    fail s           = []
+#+END_SRC
+
+Examples: 
+
+ - return wraps a value into a list 
+
+#+BEGIN_SRC haskell 
+
+> :t return
+return :: Monad m => a -> m a
+> 
+ -- Wraps a value into a list 
+ -- 
+> return 10 :: [Int]
+[10]
+> 
+#+END_SRC
+
+
+ - Bind operator for lists is equivalent to List comprehensions which
+   is similar to Python list comprehension.
+
+#+BEGIN_SRC haskell 
+> :t (>>=)
+(>>=) :: Monad m => m a -> (a -> m b) -> m b
+> 
+
+ 
+
+>  [10,20,30] >>= \x -> [2*x, x+5] 
+[20,15,40,25,60,35]
+> 
+
+-- It is equivalent to: 
+--
+--  
+
+> map ( \x -> [2*x, x+5] ) [10, 20, 30]
+[[20,15],[40,25],[60,35]]
+> 
+> concat (map ( \x -> [2*x, x+5] ) [10, 20, 30])
+[20,15,40,25,60,35]
+> 
+#+END_SRC
+
+Do notation:
+
+#+BEGIN_SRC 
+  The do notation is a syntax sugar to -> 
+ 
+Do Notation:                   Do Notation Dessugarized: 
+
+cartesianProduct  = do         cartesianProduct = 
+   x <- [1, 2, 3, 4]             [1, 2, 3, 4] >>= \x ->
+   y <- ["a", "b"]               ["a", "b"]   >>= \y ->
+   return (x, y)                 return (x, y) 
+
+                               Or 
+
+                               cartesianProduct = 
+                                 bind [1 2, 3, 4]  (\x -> 
+                                 bind ["a", "b"]   (\y -> 
+                                 unit (x, y)))
+
+#+END_SRC
+
+
+#+BEGIN_SRC haskell 
+-- file cartesian.hs 
+--
+-- Run in the repl:  
+--                  :load cartesian.hs  
+--                  
+
+cartesianProduct = do 
+    x <- [1, 2, 3, 4] 
+    y <- ["a", "b"]
+    return (x, y)
+
+--  End of file: cartesian.hs 
+-- -----------------
+
+> cartesianProduct 
+[(1,"a"),(1,"b"),(2,"a"),(2,"b"),(3,"a"),(3,"b"),(4,"a"),(4,"b")]
+> 
+
+ -- Or it can be typed in the repl directly:
+ --
+
+ 
+> :set +m  -- Enable multiline paste 
+> 
+ 
+--  Or copy the following code in the repl 
+--  by typing :set +m to enable multiline paste 
+--
+ 
+let cartesianProduct = do 
+    x <- [1, 2, 3, 4] 
+    y <- ["a", "b"]
+    return (x, y)
+
+> :set +m  -- paste 
+> 
+> let cartesianProduct = do 
+,*Main Control.Exception E Text.Read|     x <- [1, 2, 3, 4] 
+,*Main Control.Exception E Text.Read|     y <- ["a", "b"]
+,*Main Control.Exception E Text.Read|     return (x, y)
+,*Main Control.Exception E Text.Read| 
+> 
+
+ -- 
+ -- Or: Dessugarizing 
+
+> [1, 2, 3, 4] >>= \x -> ["a", "b"] >>= \y -> return (x, y)
+[(1,"a"),(1,"b"),(2,"a"),(2,"b"),(3,"a"),(3,"b"),(4,"a"),(4,"b")]
+> 
+  
+cartesian :: [a] -> [b] -> [(a, b)]
+cartesian xs ys = do
+    x <- xs 
+    y <- ys 
+    return (x, y)
+
+> cartesian [1, 2, 3, 4] ["a", "b"]
+[(1,"a"),(1,"b"),(2,"a"),(2,"b"),(3,"a"),(3,"b"),(4,"a"),(4,"b")]
+> 
+
+
+-- Returns all possible combinations between a, b and c
+--
+--
+triples :: [a] -> [b] -> [c] -> [(a, b, c)]
+triples  xs ys zs = do 
+  x <- xs 
+  y <- ys 
+  z <- zs 
+  return (x, y, z)
+
+--   The triples have 24 results 
+--
+--   x -> 2 possibilities
+--   y -> 3 possibilities
+--   z -> 4 possibilities 
+--
+--  Total of possibilities:  2 * 3 * 4 = 24
+--  the computation will return 24 results 
+-- 
+--
+> triples [1, 2] ["a", "b", "c"] ["x", "y", "z", "w"]
+[(1,"a","x"),(1,"a","y"),(1,"a","z"),(1,"a","w"),(1,"b","x"),
+(1,"b","y"),(1,"b","z"),(1,"b","w"),(1,"c","x"),(1,"c","y"),
+(1,"c","z"),(1,"c","w"),(2,"a","x"),(2,"a","y"),(2,"a","z"),
+(2,"a","w"),(2,"b","x"),(2,"b","y"),(2,"b","z"),(2,"b","w"),
+(2,"c","x"),(2,"c","y"),(2,"c","z"),(2,"c","w")]
+
+> length ( triples [1, 2] ["a", "b", "c"] ["x", "y", "z", "w"] )
+24
+> 
+
+--
+--  Find all numbers for which a ^ 2 + b ^ 2 = c ^ 2 
+--  up to 100:
+--
+--  There is 100 x 100 x 100 = 1,000,000 of combinations 
+--  to be tested:
+--
+pthytriples = do 
+    a <- [1 .. 100]
+    b <- [1 .. 100]
+    c <- [1 .. 100]
+
+    if (a ^ 2 + b ^ 2 == c ^ 2)
+      then (return (Just (a, b, c)))
+      else (return Nothing)
+
+> import Data.Maybe (catMaybes)
+
+> take 10 (catMaybes pthytriples)
+[(3,4,5),(4,3,5),(5,12,13),(6,8,10),(7,24,25),(8,6,10),(8,15,17),(9,12,15),(9,40,41),(10,24,26)]
+> 
+
+-- Example: Find all possible values of a functions applied 
+--          to all combinations possible of 3 lists:
+--
+applyComb3 = do 
+   x <- [1, 2, 3]
+   y <- [9, 8]
+   z <- [3, 8, 7, 4]
+   return ([x, y, z], 100 * x + 10 *  y + z)
+
+> applyComb3 
+[([1,9,3],193),([1,9,8],198),([1,9,7],197),([1,9,4],194) ...]
+
+
+-- Example: Crack a 4 letter password using brute force 
+--
+--
+
+
+import Data.List (find)
+import Data.Maybe (isJust)
+
+alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+make_password :: String -> String -> Bool 
+make_password password input = password == input 
+
+-- It will try 62 combinations for each letter
+-- wich means it will try up to 62 x 62 x 62 x 62 = 14,776,336 
+-- (=~ 15 millions) combinations at the worst case.
+--
+-- 
+crack_4pass  pass_function = do
+    ch0 <- alphabet 
+    ch1 <- alphabet 
+    ch2 <- alphabet 
+    ch3 <- alphabet 
+    let trial = [ch0, ch1, ch2, ch3] in
+      if   pass_function trial
+      then return (Just trial)
+      else return Nothing 
+    
+crackpass pass_function = 
+   find isJust (crack_4pass pass_function)
+
+passwd1 = make_password "fX87" 
+
+
+> :set +s
+
+> crackpass passwd1 
+Just (Just "fX87")
+(2.00 secs, 434045068 bytes)
+> 
+
+> crackpass (make_password "2f8z")
+Just (Just "2f8z")
+(18.19 secs, 4038359812 bytes)
+> 
+
+#+END_SRC
+
+**** List Monad in F# 
+
+Example without syntax sugar: 
+
+#+BEGIN_SRC fsharp
+
+module ListM =
+
+  let bind ma f = List.concat (List.map f ma)
+
+  let (>>=) = bind 
+
+  (* return  *)
+  let unit a  = [a]
+
+
+;;
+
+
+module ListM = begin
+  val bind : ma:'a list -> f:('a -> 'b list) -> 'b list
+  val ( >>= ) : ('a list -> ('a -> 'b list) -> 'b list)
+  val unit : a:'a -> 'a list
+end
+
+
+(*  Example:
+
+cartesian :: [a] -> [b] -> [(a, b)]
+cartesian xs ys = do
+    x <- xs 
+    y <- ys 
+    return (x, y)
+
+> cartesian [1, 2, 3, 4] ["a", "b", "c"]
+,*)
+
+
+let cartesian xs ys =  
+    let (>>=) = ListM.(>>=) in 
+    let unit  = ListM.unit in 
+   
+    xs >>= fun x ->
+    ys >>= fun y ->
+    unit (x, y) 
+;;
+
+val cartesian : 'a list -> 'b list -> ('a * 'b) list = <fun>                                                           > 
+
+
+> 
+> cartesian [1; 2; 3; 4; ] ["a"; "b"; "c"]  ;;
+val it : (int * string) list =
+  [(1, "a"); (1, "b"); (1, "c"); 
+   (2, "a"); (2, "b"); (2, "c"); 
+   (3, "a"); (3, "b"); (3, "c"); 
+   (4, "a"); (4, "b"); (4, "c")]
+> 
+
+
+(*  
+
+F# List type is eager evaluated so the it will
+really loop over 100 * 100 * 100 = 100,000,000
+of combinations:  
+
+pthytriples = do 
+    a <- [1 .. 100]
+    b <- [1 .. 100]
+    c <- [1 .. 100]
+
+    if (a ^ 2 + b ^ 2 == c ^ 2)
+      then (return (Just (a, b, c)))
+      else (return Nothing)
+
+
+,*)
+  
+
+(* Tail recursive function 
+
+,*)
+let range start stop step  =
+
+    let rec range_aux start acc = 
+        if start >= stop 
+        then  List.rev acc 
+        else  range_aux (start + step)  (start::acc)
+
+    in range_aux start []
+  ;;
+
+val range : start:int -> stop:int -> step:int -> int list
+
+>  range 1 11 1 ;;
+- : int list = [1; 2; 3; 4; 5; 6; 7; 8; 9; 10]
+ 
+
+let pthytriples () = 
+    let (>>=) = ListM.(>>=) in 
+    let unit  = ListM.unit in 
+
+    range 1 101 1 >>= fun a ->
+    range 1 101 1 >>= fun b ->
+    range 1 101 1 >>= fun c ->
+    if (a * a + b * b = c * c)
+    then unit (Some (a, b, c))
+    else unit None
+;;
+
+val pthytriples : unit -> (int * int * int) option list
+
+
+let option_to_list opt_list = 
+    List.foldBack                     (* Fold right *)
+      (fun x acc -> match x with
+                    | Some a -> a::acc
+                    | None   -> acc
+      )
+      opt_list
+      []
+;;      
+             
+
+- option_to_list (pthytriples ()) ;;
+
+val it : (int * int * int) list =
+  [(3, 4, 5); (4, 3, 5); (5, 12, 13); (6, 8, 10); (7, 24, 25); (8, 6, 10);
+   (8, 15, 17); (9, 12, 15); (9, 40, 41); (10, 24, 26); (11, 60, 61);
+   (12, 5, 13); (12, 9, 15); (12, 16, 20); (12, 35, 37); (13, 84, 85);
+   (14, 48, 50); (15, 8, 17); (15, 20, 25); (15, 36, 39); (16, 12, 20);
+   (16, 30, 34); (16, 63, 65); (18, 24, 30); (18, 80, 82); (20, 15, 25);
+   (20, 21, 29); (20, 48, 52); (21, 20, 29); (21, 28, 35); (21, 72, 75);
+   (24, 7, 25); (24, 10, 26); (24, 18, 30); (24, 32, 40); (24, 45, 51);
+   (24, 70, 74); (25, 60, 65); (27, 36, 45); (28, 21, 35); (28, 45, 53);
+   (28, 96, 100); (30, 16, 34); (30, 40, 50); (30, 72, 78); (32, 24, 40);
+   (32, 60, 68); (33, 44, 55); (33, 56, 65); (35, 12, 37); (35, 84, 91);
+   (36, 15, 39); (36, 27, 45); (36, 48, 60); (36, 77, 85); (39, 52, 65);
+   (39, 80, 89); (40, 9, 41); (40, 30, 50); (40, 42, 58); (40, 75, 85);
+   (42, 40, 58); (42, 56, 70); (44, 33, 55); (45, 24, 51); (45, 28, 53);
+   (45, 60, 75); (48, 14, 50); (48, 20, 52); (48, 36, 60); (48, 55, 73);
+   (48, 64, 80); (51, 68, 85); (52, 39, 65); (54, 72, 90); (55, 48, 73);
+   (56, 33, 65); (56, 42, 70); (57, 76, 95); (60, 11, 61); (60, 25, 65);
+   (60, 32, 68); (60, 45, 75); (60, 63, 87); (60, 80, 100); (63, 16, 65);
+   (63, 60, 87); (64, 48, 80); (65, 72, 97); (68, 51, 85); (70, 24, 74);
+   (72, 21, 75); (72, 30, 78); (72, 54, 90); (72, 65, 97); (75, 40, 85);
+   (76, 57, 95); (77, 36, 85); (80, 18, 82); (80, 39, 89); ...]
+>     
+
+
+#+END_SRC
+
+Example with F# "workflow" or "computation expression" syntax:
+
+#+BEGIN_SRC ocaml
+- List.concat [[1]; []; [2; 3; 4; 5]; [10; 20]] ;;
+val it : int list = [1; 2; 3; 4; 5; 10; 20]
+> 
+
+(* The F# workflow works like Haskell do-noation  
+
+*)
+type ListBuilder () =    
+    member this.Bind(xs, f) = List.concat (List.map f xs)
+
+    member this.Return(x) = [x]
+;;
+
+
+type ListBuilder =
+  class
+    new : unit -> ListBuilder
+    member Bind : xs:'b list * f:('b -> 'c list) -> 'c list
+    member Return : x:'a -> 'a list
+  end
+
+let listDo = ListBuilder () ;;
+
+val listDo : ListBuilder
+
+(*
+cartesian :: [a] -> [b] -> [(a, b)]
+cartesian xs ys = do
+    x <- xs 
+    y <- ys 
+    return (x, y)
+*)
+
+let cartesian xs ys = 
+    listDo {
+      let! x = xs 
+      let! y = ys 
+      return (x, y)
+   }
+;;
+
+val cartesian : xs:'a list -> ys:'b list -> ('a * 'b) list
+
+>  cartesian [1; 2; 3; 4; ] ["a"; "b"; "c"] ;;
+val it : (int * string) list =
+  [(1, "a"); (1, "b"); (1, "c"); 
+   (2, "a"); (2, "b"); (2, "c"); 
+   (3, "a"); (3, "b"); (3, "c"); 
+   (4, "a"); (4, "b"); (4, "c")]
+> 
+
+
+#+END_SRC
+
+**** List Monad in Python
+
+#+BEGIN_SRC python
+from functools import reduce
+
+def concat(xss):
+    "concat :: [[a]] -> [a]"
+    return  reduce(lambda acc, x: acc + x, xss, [])
+
+
+def listUnit (x):
+    "listUnit :: x -> [x]"
+    return [x]
+
+def listBind (xss, f):
+    "listBind :: [a] -> (a -> [b]) -> [b] "
+    return concat(map(f, xss))
+
+# Haskel Code:
+#
+# cartesian :: [a] -> [b] -> [(a, b)]              cartesian :: [a] -> [b] -> [(a, b)]   
+# cartesian xs ys = do                             carteasian xs ys = 
+#    x <- xs                              ==>>        xs >>= \x ->    
+#    y <- ys                                          ys >>= \y -> 
+#    return (x, y)                                    return (x, y)
+#
+#
+# cartesian :: [a] -> [b] -> [(a, b)] 
+# carteasian xs ys = 
+#   bind xs (\x -> 
+#   bind ys (\y -> 
+#   return (x, y)))
+#
+def cartesian(xs, ys):
+    
+    return listBind(xs,
+                    lambda x: listBind(ys,
+                    lambda y: listUnit ((x, y))))
+
+
+def triples(xs, ys, zs):
+
+    return listBind(xs,
+                    lambda x: listBind(ys,
+                    lambda y: listBind(zs,
+                    lambda z: listUnit((x, y, z)))))
+
+>>> cartesian([1, 2, 3, 4], ["a", "b", "c"])
+[(1, 'a'), (1, 'b'), (1, 'c'), 
+(2, 'a'), (2, 'b'), (2, 'c'), 
+(3, 'a'), (3, 'b'), (3, 'c'), 
+(4, 'a'), (4, 'b'), (4, 'c')]
+>>> 
+
+>>> triples([1, 2], ["a", "b", "c"], ["x", "y", "z"])
+[(1, 'a', 'x'), 
+(1, 'a', 'y'), 
+(1, 'a', 'z'), 
+(1, 'b', 'x'), 
+(1, 'b', 'y'), 
+(1, 'b', 'z'), 
+(1, 'c', 'x'), 
+...
+>>> 
+
+#+END_SRC
+
+*** See also 
+
+*Monads*
+
+ - [[https://en.wikibooks.org/wiki/Haskell/Understanding_monads][Haskell/Understanding monads - Wikibooks, open books for an open world]]
+
+ - [[http://book.realworldhaskell.org/read/monads.html][Chapter 14. Monads]] - Real World Haskell 
+
+ - [[http://techguyinmidtown.com/2008/05/20/monads-demystified/][Monads Demystified | tech guy in midtown]]
+
+ - [[http://ocw.mit.edu/courses/mathematics/18-s996-category-theory-for-scientists-spring-2013/projects/MIT18_S996S13_Monad.pdf][In search of a Monad for system call abstractions - Taesoo Kim - MIT CSAIL]]
+ 
+
+*List Monad*
+
+ - [[http://eed3si9n.com/learning-scalaz/List+Monad.html][learning Scalaz — List Monad]]
+
+ - [[https://en.wikibooks.org/wiki/Haskell/Understanding_monads/List][Haskell/Understanding monads/List - Wikibooks, open books for an open world]]
+
+ - [[https://en.wikibooks.org/wiki/Haskell/Understanding_monads/Maybe][Haskell/Understanding monads/Maybe - Wikibooks, open books for an open world]]
+
+*Monads in F#*
+
+ - [[http://research.microsoft.com/pubs/217375/computation-zoo.pdf][The F# Computation Expression Zoo]]
+
+ - [[https://msdn.microsoft.com/en-us/library/dd233182.aspx][Computation Expressions (F#)]]
+
+ - [[https://en.wikibooks.org/wiki/F_Sharp_Programming/Computation_Expressions][F Sharp Programming/Computation Expressions]]
+
+ - [[http://tomasp.net/blog/2013/computation-zoo-padl/][The F# Computation Expression Zoo (PADL'14)]]
+
+*Option Type/ Maybe*
+
+ - [[http://james-iry.blogspot.com.br/2010/08/why-scalas-and-haskells-types-will-save.html][One Div Zero: Why Scala's "Option" and Haskell's "Maybe" types will save you from null]]
+ - [[http://www.codecommit.com/blog/scala/the-option-pattern][The “Option” Pattern - Code Commit]]
+ - 
+ 
 * Functional Languages
 
-Note: There is no consensus about what is really a functional
+Note: There is no consensus about what really is a functional
 language. In this table were selected programming languages which can
-be programmed in functional style or favors this style. 
+be programmed in functional-style or favors this style. 
 
 Some Functional programming languages:
 
@@ -4120,9 +5052,9 @@ Some Functional programming languages:
 
 Notes:
 
- - AGDT   - Algebraic Data Types
+ - [[https://en.wikipedia.org/wiki/Algebraic_data_type][AGDT]]  - Algebraic Data Types
 
- - GIL    - Global Interpreter Locking. Languages with GIL cannot take
+ - [[https://en.wikipedia.org/wiki/Global_interpreter_lock][GIL]] - Global Interpreter Locking. Languages with GIL cannot take
    advantage of multi-core processors.
 
  - TCO - Tail Call Optimization. Languages without TCO cannot perform
@@ -4131,21 +5063,19 @@ Notes:
 
  - JVM    - Java Virtual Machine / Java Platform
 
- - .NET   - Dot Net Platform
+ - .NET  - Dot Net Platform: [[https://en.wikipedia.org/wiki/Common_Language_Runtime][CLR]] - Virtual Machine
 
- - NAT    - Native Code
+ - NAT    - Native Code. Native code is not portable like a virtual
+   machine, its execution is constrained to the processor architecture
+   and to the system calls of the operating system. 
 
  - VM     - Virtual Machine 
 
  - OO     - Object Orientated
 
- - Currying  - Curried functions like in Haskell
+ - Currying  - Curried functions like in Haskell, F# and Ocaml 
 
  - DSL    - Domain Specific Language
-
- - It is controversial that Javascript is based on scheme. According
-   to Douglas Crockford JavaScript is Scheme on a C clothe. With a
-   C-like syntax.
 
  - _Syntax Sugars_ help increase expressiveness and to write shorter,
    concise and more readable code. 
@@ -4169,6 +5099,10 @@ Notes:
 
  - JavaScript: Is single-thread with event loop and uses
    asynchronous IO (non blocking IO) with callbacks.
+
+ - It is controversial that Javascript is based on scheme. According
+   to Douglas Crockford JavaScript is Scheme on a C clothe. With a
+   C-like syntax [[http://www.crockford.com/javascript/little.html][{Reference}]].
 
 More Information: [[http://en.wikipedia.org/wiki/Comparison_of_functional_programming_languages][Comparison of Functional Programming Languages]]
 
@@ -4225,9 +5159,9 @@ A selection of people who influenced functional programming:
      implementation.
 
 * Miscellaneous
-**** Selected Wikipedia Articles
+** Selected Wikipedia Articles
 
-Selected Wikipedia Pages:
+*General*
 
  - [[http://en.wikipedia.org/wiki/List_of_functional_programming_topics][List of functional programming topics]]
 
@@ -4252,7 +5186,7 @@ First Class Functions
  - [[https://en.wikipedia.org/wiki/Arity][Arity]]
  - [[https://en.wikipedia.org/wiki/Variadic_function][Variadic function]]
 
-Composition
+*Composition*
 
  - [[https://en.wikipedia.org/wiki/Function_composition_%28computer_science%29][Function composition (computer science)]]
  - [[https://en.wikipedia.org/wiki/Function_composition][Function composition - Mathematics]]
@@ -4260,16 +5194,16 @@ Composition
 
  - [[https://en.wikipedia.org/wiki/Functional_decomposition][Functional decomposition]]
 
-Scope
+*Scope*
 
  - [[https://en.wikipedia.org/wiki/Scope_%28computer_science%29][Scope (computer science)]]
 
-Currying and Partial Evaluation
+*Currying and Partial Evaluation*
 
  - [[https://en.wikipedia.org/wiki/Currying][Currying]]
  - [[https://en.wikipedia.org/wiki/Partial_evaluation][Partial evaluation]]
 
-Higher Order Functions, Closures, Anonymous Functions
+*Higher Order Functions, Closures, Anonymous Functions*
 
  - [[https://en.wikipedia.org/wiki/Anonymous_function][Anonymous function]]
  - [[https://en.wikipedia.org/wiki/Closure_%28computer_programming%29][Closure (computer programming)]]
@@ -4282,7 +5216,7 @@ Higher Order Functions, Closures, Anonymous Functions
  - [[http://en.wikipedia.org/wiki/Coroutine][Coroutine]]
 
 
-Recursion
+*Recursion*
 
  - [[https://en.wikipedia.org/wiki/Recursion_%28computer_science%29][Recursion (computer science)]]
  - [[https://en.wikipedia.org/wiki/Tail_call][Tail call]]
@@ -4294,10 +5228,10 @@ Recursion
  - [[https://en.wikipedia.org/wiki/Tak_%28function%29][Tak (function)]]
 
 
-Lambda Calculus and Process Calculus
+*Lambda Calculus and Process Calculus*
 
- - [[https://en.wikipedia.org/wiki/Typed_lambda_calculus][Typed lambda calculus]]
  - [[http://en.wikipedia.org/wiki/Lambda_calculus][Lambda calculus]]
+ - [[https://en.wikipedia.org/wiki/Typed_lambda_calculus][Typed lambda calculus]]
  - [[https://en.wikipedia.org/wiki/Process_calculus][Process calculus]]
 
 
@@ -4312,7 +5246,7 @@ Lambda Calculus and Process Calculus
  - [[http://en.wikipedia.org/wiki/Eager_evaluation][Eager Evaluation]]
  - [[http://en.wikipedia.org/wiki/Short-circuit_evaluation][Short-circuit evaluation]]
 
-Related to Lazy Evaluation
+*Related to Lazy Evaluation*
 
  - [[http://en.wikipedia.org/wiki/Lazy_evaluation][Lazy Evaluation]]
  - [[https://en.wikipedia.org/wiki/Thunk][Thunk]]
@@ -4328,7 +5262,7 @@ Related to Lazy Evaluation
  - [[http://en.wikipedia.org/wiki/Continuation][Continuation]]
  - [[http://en.wikipedia.org/wiki/Continuation-passing_style][Continuation-passing style]]
 
-*Fundamental Data Structure*
+*Fundamental Data Structures*
 
  - [[https://en.wikipedia.org/wiki/List_%28abstract_data_type%29][List (abstract data type)]]
  - [[https://en.wikipedia.org/wiki/Array_data_structure][Array data structure]]
@@ -4356,6 +5290,20 @@ Related to Lazy Evaluation
 
  - [[https://en.wikipedia.org/wiki/Disjoint_union][Disjoint union]]
 
+
+*Concurrency* 
+
+ - [[https://en.wikipedia.org/wiki/Thread_(computing)][Thread (computing)]]
+ - [[https://en.wikipedia.org/wiki/Concurrency_(computer_science)][Concurrency (computer science)]]
+ - [[https://en.wikipedia.org/wiki/Concurrent_computing][Concurrent computing ]]
+ - [[https://en.wikipedia.org/wiki/Actor_model][Actor model ]]
+ - [[https://en.wikipedia.org/wiki/Event_loop][Event loop ]]
+ - [[https://en.wikipedia.org/wiki/Channel_(programming)][Channel (programming)]]
+ - [[https://en.wikipedia.org/wiki/MapReduce][MapReduce ]]
+ - [[https://en.wikipedia.org/wiki/Futures_and_promises][Futures and promises]]
+ - [[https://en.wikipedia.org/wiki/Asynchronous_I/O][Asynchronous I/O]]
+ - [[https://en.wikipedia.org/wiki/Multi-core_processor][Multicore processor]]
+
 *Miscellaneous*
 
  - [[https://en.wikipedia.org/wiki/Call_stack][Call stack]]
@@ -4373,15 +5321,13 @@ Related to Lazy Evaluation
 
  - [[https://en.wikipedia.org/wiki/Lisp_%28programming_language%29][Lisp (programming language)]]
  - [[https://en.wikipedia.org/wiki/Scheme_%28programming_language%29][Scheme Lisp]]
-
  - [[https://en.wikipedia.org/wiki/Haskell][Haskell]]
-
  - [[https://en.wikipedia.org/wiki/ML_%28programming_language%29][ML (programming language)]]
  - [[https://en.wikipedia.org/wiki/Standard_ML][Standard ML]]
  - [[https://en.wikipedia.org/wiki/OCaml][OCaml]]
  - [[https://en.wikipedia.org/wiki/F_Sharp_%28programming_language%29][F# - Fsharp]]
 
-**** Selected Rosettacode Pages
+** Selected Rosettacode Pages
 *** Concepts Examples
 
  - [[http://rosettacode.org/wiki/Call_a_function][Call a function]]
@@ -4424,8 +5370,28 @@ Recursion:
 
  - [[http://rosettacode.org/wiki/Scala][Scala]]
 
- - [[http://rosettacode.org/wiki/Category:JavaScript][JavaScript /
-   ECMAScript]]
+ - [[http://rosettacode.org/wiki/Category:JavaScript][JavaScript / ECMAScript]]
+
+** Libraries and Frameworks
+
+*Python*
+
+ - Python Libraries Useful for functional programming:
+
+   - [[https://docs.python.org/3/library/functools.html][functools — Higher-order functions and operations on callable objects]]
+
+   - [[https://docs.python.org/3/library/itertools.html][itertools — Functions creating iterators for efficient looping]]
+
+   - [[https://docs.python.org/3/library/operator.html][operator — Standard operators as functions]]
+
+   - [[https://www.ics.uci.edu/~pattis/ICS-33/lectures/functionalprogramming.txt][Functional Programming]]
+
+*Javascript*
+
+ - [[http://underscorejs.org/][Underscore.js]]: "Underscore is a JavaScript library that provides a
+   whole mess of useful functional programming helpers without
+   extending any built-in objects."
+
 * Footnotes
 
 [fn:Schwaighofer-2009]  Schwaighofer A. *Tail Call Optimization in the

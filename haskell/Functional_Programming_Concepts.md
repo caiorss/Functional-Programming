@@ -26,16 +26,28 @@
     - [Reduce or Fold](#reduce-or-fold)
     - [For Each, Impure map](#for-each,-impure-map)
     - [Apply](#apply)
+  - [Special Functions](#special-functions)
+    - [Identity Function](#identity-function)
+    - [Constant Function](#constant-function)
+    - [List Constructor (Cons)](#list-constructor-(cons))
+    - [Zip](#zip)
   - [Function Composition](#function-composition)
     - [Overview](#overview)
     - [Function Composition in Haskell](#function-composition-in-haskell)
     - [Function Composition in Python](#function-composition-in-python)
     - [Function Composition in F#](#function-composition-in-f#)
+  - [Monads](#monads)
+    - [Overview](#overview)
+    - [List Monad](#list-monad)
+    - [See also](#see-also)
 - [Functional Languages](#functional-languages)
 - [Notable People](#notable-people)
 - [Miscellaneous](#miscellaneous)
+  - [Selected Wikipedia Articles](#selected-wikipedia-articles)
+  - [Selected Rosettacode Pages](#selected-rosettacode-pages)
     - [Concepts Examples](#concepts-examples)
     - [Languages](#languages)
+  - [Libraries and Frameworks](#libraries-and-frameworks)
 
 
 # Concepts<a id="sec-1" name="sec-1"></a>
@@ -3151,9 +3163,316 @@ def map_apply (f, xss):
 >>>
 ```
 
-## Function Composition<a id="sec-1-10" name="sec-1-10"></a>
+## Special Functions<a id="sec-1-10" name="sec-1-10"></a>
 
-### Overview<a id="sec-1-10-1" name="sec-1-10-1"></a>
+### Identity Function<a id="sec-1-10-1" name="sec-1-10-1"></a>
+
+The identity function is a polymorphic function which returns the
+value of its argument.
+
+```haskell
+ -- This is a built-in Haskell function 
+> :t id
+id :: a -> a
+> 
+
+> id 10 
+10
+> id (Just 100)
+Just 100
+> 
+> let identity x = x
+> identity 200 
+200
+>
+```
+
+### Constant Function<a id="sec-1-10-2" name="sec-1-10-2"></a>
+
+The constant function returns the value of the first argument (the
+constant) regardless of the value of second argument.
+
+```haskell
+> :t const
+const :: a -> b -> a
+
+> let const10 = const 10 
+> const10 100 
+10
+> const10 300
+10
+> map const10 ["a", "b", "c", "d"]
+[10,10,10,10]
+>
+```
+
+Python Implementation:
+
+```python
+>>> constant = lambda const: lambda x: const
+>>> 
+
+>>> const10 = constant(10)
+>>> 
+>>> const10(100)
+10
+>>> const10("hello world")
+10
+>>>
+```
+
+### List Constructor (Cons)<a id="sec-1-10-3" name="sec-1-10-3"></a>
+
+The cons operator is widely used in list recursive functions and
+higher order functions that operates on lists. 
+
+Scheme: 
+
+```scheme
+> (cons 1 (cons 2 (cons 3 (cons 4 '()))))
+(1 2 3 4)
+```
+
+Haskell:
+
+```haskell
+ -- Cons Operator 
+ -- 
+> :t (:)
+(:) :: a -> [a] -> [a]
+
+> 1:[]
+[1]
+
+> 1:2:3:4:[]
+[1,2,3,4]
+
+> let cons = (:)
+
+> (cons 1 (cons 2 (cons 3 (cons 4 []))))
+[1,2,3,4]
+```
+
+Ocaml and F#
+
+```ocaml
+> 1::[] ;;
+val it : int list = [1]
+> 
+- 1::2::3::[] ;;
+val it : int list = [1; 2; 3]
+> 
+
+- let cons x xs = x::xs ;;
+
+val cons : x:'a -> xs:'a list -> 'a list
+
+cons 1 (cons 2 (cons 3 (cons 4 []))) ;;
+
+> cons 1 (cons 2 (cons 3 (cons 4 []))) ;;  
+val it : int list = [1; 2; 3; 4]
+>
+```
+
+### Zip<a id="sec-1-10-4" name="sec-1-10-4"></a>
+
+1.  Overview
+
+    The function zip and its variants combine two or more sequence into one sequence.
+    
+    See also: [Convolution (computer science)](https://en.wikipedia.org/wiki/Convolution_(computer_science))
+
+2.  Zip in Haskell
+
+    ```haskell
+    > :t zip
+    zip :: [a] -> [b] -> [(a, b)]
+    
+    > zip [1, 2, 3, 4] ["a", "b", "c"]
+    [(1,"a"),(2,"b"),(3,"c")]
+    > 
+    
+    > zip [1, 2, 3, 4] ["a", "b", "c"]
+    [(1,"a"),(2,"b"),(3,"c")]
+    >
+    
+     -- Zip a list and a infinite list 
+    
+    > zip ["a", "b", "c"] [1 ..]
+    [("a",1),("b",2),("c",3)]
+    > 
+    > 
+    
+    > zip ["a", "b", "c", "d"] [1, 2, 3]
+    [("a",1),("b",2),("c",3)]
+    > 
+    
+    
+    > :t zip3
+    zip3 :: [a] -> [b] -> [c] -> [(a, b, c)]
+    > 
+    
+    > zip3 ["a", "b", "c", "d"] [1, 2, 3, 4, 5, 6] [Just 10, Just 100, Nothing]
+    [("a",1,Just 10),("b",2,Just 100),("c",3,Nothing)]
+    > 
+    
+     -- There is more zip functions in the module Data.List
+     --
+    > import Data.List (zip4, zip5, zip6)
+    > 
+    
+    > :t zip4
+    zip4 :: [a] -> [b] -> [c] -> [d] -> [(a, b, c, d)]
+    > 
+    > :t zip5
+    zip5 :: [a] -> [b] -> [c] -> [d] -> [e] -> [(a, b, c, d, e)]
+    >
+    ```
+
+3.  Zip in Python
+
+    The Python zip function is inspired by Haskell. The Python zip
+    functions can take a variable number of arguments.
+    
+    Python 2: In python2 this function is evaluated eagerly. 
+    
+    ```python
+    >>> zip([1, 2, 3], ["a", "b", "c", "d", "e"])
+    [(1, 'a'), (2, 'b'), (3, 'c')]
+    >>>
+    
+    >>> zip([1, 2, 3], ["a", "b", "c", "d", "e"], ["x", "y", "z"])
+    [(1, 'a', 'x'), (2, 'b', 'y'), (3, 'c', 'z')]
+    >>>
+    
+    >>> zip([1, 2, 3], ["a", "b", "c", "d", "e"], ["x", "y", "z"], range(1, 20))
+    [(1, 'a', 'x', 1), (2, 'b', 'y', 2), (3, 'c', 'z', 3)]
+    >>> 
+    
+    >>> for x, y in zip([1, 2, 3, 4, 5], ["a", "b", "c", "d", "e"]):
+    ...   print "x = ", x, "y = ", y
+    ... 
+    x =  1 y =  a
+    x =  2 y =  b
+    x =  3 y =  c
+    x =  4 y =  d
+    x =  5 y =  e
+    ```
+    
+    Python 3: In python3 this function returns a generator. It is evaluated lazily.
+    
+    ```python
+    >>> zip([1, 2, 3, 4, 5], ["a", "b", "c", "d", "e"])
+    <zip object at 0xb6d01ecc>
+    >>> 
+    
+    >>> list(zip([1, 2, 3, 4, 5], ["a", "b", "c", "d", "e"]))
+    [(1, 'a'), (2, 'b'), (3, 'c'), (4, 'd'), (5, 'e')]
+    >>> 
+    
+    >>> g = zip([1, 2, 3, 4, 5], ["a", "b", "c", "d", "e"])
+    >>> g
+    <zip object at 0xb6747e8c>
+    >>> next(g)
+    (1, 'a')
+    >>> next(g)
+    (2, 'b')
+    >>> next(g)
+    (3, 'c')
+    >>> next(g)
+    (4, 'd')
+    >>> next(g)
+    (5, 'e')
+    >>> next(g)
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    StopIteration
+    >>> 
+    
+    >>> g = zip([1, 2, 3, 4, 5], ["a", "b", "c", "d", "e"], range(1, 1000000000))
+    >>> g
+    <zip object at 0xb6747f2c>
+    >>> list(g)
+    [(1, 'a', 1), (2, 'b', 2), (3, 'c', 3), (4, 'd', 4), (5, 'e', 5)]
+    >>> list(g)
+    []
+    >>> 
+    
+    >>> for x, y in zip([1, 2, 3, 4, 5], ["a", "b", "c", "d", "e"]):
+    ...    print ("x = ", x, "y = ", y)
+    ... 
+    x =  1 y =  a
+    x =  2 y =  b
+    x =  3 y =  c
+    x =  4 y =  d
+    x =  5 y =  e
+    ```
+
+4.  Zip in Scheme
+
+    It can be defined as:
+    
+    ```scheme
+    (define (zip . lists)
+       (apply map  vector lists))
+    
+    > (zip '(1 2 3 4) '("a" "b" "c" "d"))       
+    (#(1 "a") #(2 "b") #(3 "c") #(4 "d"))
+    > 
+    
+    ;; Or 
+    
+    (define (zip . lists)
+       (apply map  list lists))
+    
+    > (zip '(1 2 3 4) '("a" "b" "c" "d"))
+    ((1 "a") (2 "b") (3 "c") (4 "d"))
+    > 
+    
+    > (zip '(1 2 3 4) '("a" "b" "c" "d") '(89 199 100 43))
+    ((1 "a" 89) (2 "b" 199) (3 "c" 100) (4 "d" 43))
+    >
+    ```
+
+5.  Zip in Clojure
+
+    ```clojure
+    ;; Zip returning list
+    ;;
+    (defn zip [& seqs] 
+      (apply map list seqs))
+    
+    user=> (zip '(1 2 3 4 5) '(x y z w k m n))
+    ((1 x) (2 y) (3 z) (4 w) (5 k))
+    
+    user=> (zip '(1 2 3 4 5) '(x y z w k m n) (range 10 1000000))
+    ((1 x 10) (2 y 11) (3 z 12) (4 w 13) (5 k 14))
+    
+    user=> (zip '[1 2 3 4 5] '(x y z w k m n) (range 10 1000000))
+    ((1 x 10) (2 y 11) (3 z 12) (4 w 13) (5 k 14))
+    
+    user=> (zip '[1 2 3 4 5] '(x y z w k m n) {:key_x "hello" :key_y "world" :key_z "clojure"})
+    ((1 x [:key_x "hello"]) (2 y [:key_y "world"]) (3 z [:key_z "clojure"]))
+    user=> 
+    
+    
+    ;; Zip returning vector 
+    ;;
+    (defn zipv [& seqs] 
+      (apply mapv vector seqs))
+    
+    user=> (zipv '(1 2 3 4 5) '(x y z w k m n))
+    [[1 x] [2 y] [3 z] [4 w] [5 k]]
+    user=> 
+    
+    user=>  (zipv '[1 2 3 4 5] '(x y z w k m n) (range 10 1000000))
+    [[1 x 10] [2 y 11] [3 z 12] [4 w 13] [5 k 14]]
+    user=>
+    ```
+
+## Function Composition<a id="sec-1-11" name="sec-1-11"></a>
+
+### Overview<a id="sec-1-11-1" name="sec-1-11-1"></a>
 
 Function composition promotes shorter code, code reuse and higher
 modularity by creating new functions from previous defined ones. They
@@ -3168,7 +3487,7 @@ operators that are built in to the language.  In Haskell the operator
 
 See also: [Function composition (computer science)](http://en.wikipedia.org/wiki/Function_composition_%28computer_science%29)
 
-### Function Composition in Haskell<a id="sec-1-10-2" name="sec-1-10-2"></a>
+### Function Composition in Haskell<a id="sec-1-11-2" name="sec-1-11-2"></a>
 
 ```
 (.) :: (b -> c) -> (a -> b) -> a -> c
@@ -3506,7 +3825,7 @@ let sum_ord = sum . map r . ordStr
 >
 ```
 
-### Function Composition in Python<a id="sec-1-10-3" name="sec-1-10-3"></a>
+### Function Composition in Python<a id="sec-1-11-3" name="sec-1-11-3"></a>
 
 ```python
 def compose(funclist):   
@@ -3712,7 +4031,7 @@ parse_csvtable_optmized =  composef(
  [3563.23000, 100.23000, 45.23000]]
 ```
 
-### Function Composition in F#<a id="sec-1-10-4" name="sec-1-10-4"></a>
+### Function Composition in F#<a id="sec-1-11-4" name="sec-1-11-4"></a>
 
 F# uses the operator (<<) for composition which is similar to Haskell
 composition operator (.) dot. It also uses the operator (>>) for forward
@@ -3822,7 +4141,7 @@ val it : int = 19
 //
 //   Evaluating:  g >> h >> m                    
 //
-//                    f =  g >> h >> m 
+//  Input              f =  g >> h >> m                          Output 
 //       .........................................................
 //       .                                                       .         
 //       .   |-----------|      |-----------|     |-----------|  .
@@ -4033,11 +4352,610 @@ val it : float = 5757.0723
 >
 ```
 
+## Monads<a id="sec-1-12" name="sec-1-12"></a>
+
+### Overview<a id="sec-1-12-1" name="sec-1-12-1"></a>
+
+A monad is a concept from <span class="underline">Category Theory</span>, which is defined by three
+things:
+
+-   a type constructor m that wraps a, parameter a;
+
+-   a return (unit) function: takes a value from a plain type and puts it
+    into a monadic container using the constructor, creating a monadic
+    value. The return operator must not be confused with the "return"
+    from a function in a imperative language. This operator is also
+    known as unit, lift, pure and point. It is a polymorphic
+    constructor.
+
+-   a bind operator (>>=). It takes as its arguments a monadic value
+    and a function from a plain type to a monadic value, and returns a
+    new monadic value.
+
+In Haskell the type class Monad specifies the type signature of all
+its instances. Each Monad implementation must have the type signature
+that matches the Monad type class. 
+
+```haskell
+class Monad m where
+
+    -- Constructor (aka unit or lift)
+    -- 
+    return :: a -> m a      
+
+    -- Bind operator
+    --
+    (>>=)  :: m a -> (a -> m b) -> m b   
+
+    (>>)   :: m a -> m b -> m b
+
+    fail   :: String -> m a
+```
+
+### List Monad<a id="sec-1-12-2" name="sec-1-12-2"></a>
+
+1.  List Monad in Haskell
+
+    The list Monad is used for non-deterministic computations where there
+    is a unknown number of results. It is useful for constraint solving:
+    solve a problem by trying all possibilities by brute force.
+    
+    In Haskell it is defined as an instance of Monad type class:
+    
+    ```haskell
+    instance  Monad []  where
+        m >>= k          = concat (map k m)
+        return x         = [x]
+        fail s           = []
+    ```
+    
+    Examples: 
+    
+    -   return wraps a value into a list
+    
+    ```haskell
+    > :t return
+    return :: Monad m => a -> m a
+    > 
+     -- Wraps a value into a list 
+     -- 
+    > return 10 :: [Int]
+    [10]
+    >
+    ```
+    
+    -   Bind operator for lists is equivalent to List comprehensions which
+        is similar to Python list comprehension.
+    
+    ```haskell
+    > :t (>>=)
+    (>>=) :: Monad m => m a -> (a -> m b) -> m b
+    > 
+    
+     
+    
+    >  [10,20,30] >>= \x -> [2*x, x+5] 
+    [20,15,40,25,60,35]
+    > 
+    
+    -- It is equivalent to: 
+    --
+    --  
+    
+    > map ( \x -> [2*x, x+5] ) [10, 20, 30]
+    [[20,15],[40,25],[60,35]]
+    > 
+    > concat (map ( \x -> [2*x, x+5] ) [10, 20, 30])
+    [20,15,40,25,60,35]
+    >
+    ```
+    
+    Do notation:
+    
+    ```
+      The do notation is a syntax sugar to -> 
+     
+    Do Notation:                   Do Notation Dessugarized: 
+    
+    cartesianProduct  = do         cartesianProduct = 
+       x <- [1, 2, 3, 4]             [1, 2, 3, 4] >>= \x ->
+       y <- ["a", "b"]               ["a", "b"]   >>= \y ->
+       return (x, y)                 return (x, y) 
+    
+                                   Or 
+    
+                                   cartesianProduct = 
+                                     bind [1 2, 3, 4]  (\x -> 
+                                     bind ["a", "b"]   (\y -> 
+                                     unit (x, y)))
+    ```
+    
+    ```haskell
+    -- file cartesian.hs 
+    --
+    -- Run in the repl:  
+    --                  :load cartesian.hs  
+    --                  
+    
+    cartesianProduct = do 
+        x <- [1, 2, 3, 4] 
+        y <- ["a", "b"]
+        return (x, y)
+    
+    --  End of file: cartesian.hs 
+    -- -----------------
+    
+    > cartesianProduct 
+    [(1,"a"),(1,"b"),(2,"a"),(2,"b"),(3,"a"),(3,"b"),(4,"a"),(4,"b")]
+    > 
+    
+     -- Or it can be typed in the repl directly:
+     --
+    
+     
+    > :set +m  -- Enable multiline paste 
+    > 
+     
+    --  Or copy the following code in the repl 
+    --  by typing :set +m to enable multiline paste 
+    --
+     
+    let cartesianProduct = do 
+        x <- [1, 2, 3, 4] 
+        y <- ["a", "b"]
+        return (x, y)
+    
+    > :set +m  -- paste 
+    > 
+    > let cartesianProduct = do 
+    *Main Control.Exception E Text.Read|     x <- [1, 2, 3, 4] 
+    *Main Control.Exception E Text.Read|     y <- ["a", "b"]
+    *Main Control.Exception E Text.Read|     return (x, y)
+    *Main Control.Exception E Text.Read| 
+    > 
+    
+     -- 
+     -- Or: Dessugarizing 
+    
+    > [1, 2, 3, 4] >>= \x -> ["a", "b"] >>= \y -> return (x, y)
+    [(1,"a"),(1,"b"),(2,"a"),(2,"b"),(3,"a"),(3,"b"),(4,"a"),(4,"b")]
+    > 
+      
+    cartesian :: [a] -> [b] -> [(a, b)]
+    cartesian xs ys = do
+        x <- xs 
+        y <- ys 
+        return (x, y)
+    
+    > cartesian [1, 2, 3, 4] ["a", "b"]
+    [(1,"a"),(1,"b"),(2,"a"),(2,"b"),(3,"a"),(3,"b"),(4,"a"),(4,"b")]
+    > 
+    
+    
+    -- Returns all possible combinations between a, b and c
+    --
+    --
+    triples :: [a] -> [b] -> [c] -> [(a, b, c)]
+    triples  xs ys zs = do 
+      x <- xs 
+      y <- ys 
+      z <- zs 
+      return (x, y, z)
+    
+    --   The triples have 24 results 
+    --
+    --   x -> 2 possibilities
+    --   y -> 3 possibilities
+    --   z -> 4 possibilities 
+    --
+    --  Total of possibilities:  2 * 3 * 4 = 24
+    --  the computation will return 24 results 
+    -- 
+    --
+    > triples [1, 2] ["a", "b", "c"] ["x", "y", "z", "w"]
+    [(1,"a","x"),(1,"a","y"),(1,"a","z"),(1,"a","w"),(1,"b","x"),
+    (1,"b","y"),(1,"b","z"),(1,"b","w"),(1,"c","x"),(1,"c","y"),
+    (1,"c","z"),(1,"c","w"),(2,"a","x"),(2,"a","y"),(2,"a","z"),
+    (2,"a","w"),(2,"b","x"),(2,"b","y"),(2,"b","z"),(2,"b","w"),
+    (2,"c","x"),(2,"c","y"),(2,"c","z"),(2,"c","w")]
+    
+    > length ( triples [1, 2] ["a", "b", "c"] ["x", "y", "z", "w"] )
+    24
+    > 
+    
+    --
+    --  Find all numbers for which a ^ 2 + b ^ 2 = c ^ 2 
+    --  up to 100:
+    --
+    --  There is 100 x 100 x 100 = 1,000,000 of combinations 
+    --  to be tested:
+    --
+    pthytriples = do 
+        a <- [1 .. 100]
+        b <- [1 .. 100]
+        c <- [1 .. 100]
+    
+        if (a ^ 2 + b ^ 2 == c ^ 2)
+          then (return (Just (a, b, c)))
+          else (return Nothing)
+    
+    > import Data.Maybe (catMaybes)
+    
+    > take 10 (catMaybes pthytriples)
+    [(3,4,5),(4,3,5),(5,12,13),(6,8,10),(7,24,25),(8,6,10),(8,15,17),(9,12,15),(9,40,41),(10,24,26)]
+    > 
+    
+    -- Example: Find all possible values of a functions applied 
+    --          to all combinations possible of 3 lists:
+    --
+    applyComb3 = do 
+       x <- [1, 2, 3]
+       y <- [9, 8]
+       z <- [3, 8, 7, 4]
+       return ([x, y, z], 100 * x + 10 *  y + z)
+    
+    > applyComb3 
+    [([1,9,3],193),([1,9,8],198),([1,9,7],197),([1,9,4],194) ...]
+    
+    
+    -- Example: Crack a 4 letter password using brute force 
+    --
+    --
+    
+    
+    import Data.List (find)
+    import Data.Maybe (isJust)
+    
+    alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    
+    make_password :: String -> String -> Bool 
+    make_password password input = password == input 
+    
+    -- It will try 62 combinations for each letter
+    -- wich means it will try up to 62 x 62 x 62 x 62 = 14,776,336 
+    -- (=~ 15 millions) combinations at the worst case.
+    --
+    -- 
+    crack_4pass  pass_function = do
+        ch0 <- alphabet 
+        ch1 <- alphabet 
+        ch2 <- alphabet 
+        ch3 <- alphabet 
+        let trial = [ch0, ch1, ch2, ch3] in
+          if   pass_function trial
+          then return (Just trial)
+          else return Nothing 
+        
+    crackpass pass_function = 
+       find isJust (crack_4pass pass_function)
+    
+    passwd1 = make_password "fX87" 
+    
+    
+    > :set +s
+    
+    > crackpass passwd1 
+    Just (Just "fX87")
+    (2.00 secs, 434045068 bytes)
+    > 
+    
+    > crackpass (make_password "2f8z")
+    Just (Just "2f8z")
+    (18.19 secs, 4038359812 bytes)
+    >
+    ```
+
+2.  List Monad in F#
+
+    Example without syntax sugar: 
+    
+    ```fsharp
+    module ListM =
+    
+      let bind ma f = List.concat (List.map f ma)
+    
+      let (>>=) = bind 
+    
+      (* return  *)
+      let unit a  = [a]
+    
+    
+    ;;
+    
+    
+    module ListM = begin
+      val bind : ma:'a list -> f:('a -> 'b list) -> 'b list
+      val ( >>= ) : ('a list -> ('a -> 'b list) -> 'b list)
+      val unit : a:'a -> 'a list
+    end
+    
+    
+    (*  Example:
+    
+    cartesian :: [a] -> [b] -> [(a, b)]
+    cartesian xs ys = do
+        x <- xs 
+        y <- ys 
+        return (x, y)
+    
+    > cartesian [1, 2, 3, 4] ["a", "b", "c"]
+    *)
+    
+    
+    let cartesian xs ys =  
+        let (>>=) = ListM.(>>=) in 
+        let unit  = ListM.unit in 
+       
+        xs >>= fun x ->
+        ys >>= fun y ->
+        unit (x, y) 
+    ;;
+    
+    val cartesian : 'a list -> 'b list -> ('a * 'b) list = <fun>                                                           > 
+    
+    
+    > 
+    > cartesian [1; 2; 3; 4; ] ["a"; "b"; "c"]  ;;
+    val it : (int * string) list =
+      [(1, "a"); (1, "b"); (1, "c"); 
+       (2, "a"); (2, "b"); (2, "c"); 
+       (3, "a"); (3, "b"); (3, "c"); 
+       (4, "a"); (4, "b"); (4, "c")]
+    > 
+    
+    
+    (*  
+    
+    F# List type is eager evaluated so the it will
+    really loop over 100 * 100 * 100 = 100,000,000
+    of combinations:  
+    
+    pthytriples = do 
+        a <- [1 .. 100]
+        b <- [1 .. 100]
+        c <- [1 .. 100]
+    
+        if (a ^ 2 + b ^ 2 == c ^ 2)
+          then (return (Just (a, b, c)))
+          else (return Nothing)
+    
+    
+    *)
+      
+    
+    (* Tail recursive function 
+    
+    *)
+    let range start stop step  =
+    
+        let rec range_aux start acc = 
+            if start >= stop 
+            then  List.rev acc 
+            else  range_aux (start + step)  (start::acc)
+    
+        in range_aux start []
+      ;;
+    
+    val range : start:int -> stop:int -> step:int -> int list
+    
+    >  range 1 11 1 ;;
+    - : int list = [1; 2; 3; 4; 5; 6; 7; 8; 9; 10]
+     
+    
+    let pthytriples () = 
+        let (>>=) = ListM.(>>=) in 
+        let unit  = ListM.unit in 
+    
+        range 1 101 1 >>= fun a ->
+        range 1 101 1 >>= fun b ->
+        range 1 101 1 >>= fun c ->
+        if (a * a + b * b = c * c)
+        then unit (Some (a, b, c))
+        else unit None
+    ;;
+    
+    val pthytriples : unit -> (int * int * int) option list
+    
+    
+    let option_to_list opt_list = 
+        List.foldBack                     (* Fold right *)
+          (fun x acc -> match x with
+                        | Some a -> a::acc
+                        | None   -> acc
+          )
+          opt_list
+          []
+    ;;      
+                 
+    
+    - option_to_list (pthytriples ()) ;;
+    
+    val it : (int * int * int) list =
+      [(3, 4, 5); (4, 3, 5); (5, 12, 13); (6, 8, 10); (7, 24, 25); (8, 6, 10);
+       (8, 15, 17); (9, 12, 15); (9, 40, 41); (10, 24, 26); (11, 60, 61);
+       (12, 5, 13); (12, 9, 15); (12, 16, 20); (12, 35, 37); (13, 84, 85);
+       (14, 48, 50); (15, 8, 17); (15, 20, 25); (15, 36, 39); (16, 12, 20);
+       (16, 30, 34); (16, 63, 65); (18, 24, 30); (18, 80, 82); (20, 15, 25);
+       (20, 21, 29); (20, 48, 52); (21, 20, 29); (21, 28, 35); (21, 72, 75);
+       (24, 7, 25); (24, 10, 26); (24, 18, 30); (24, 32, 40); (24, 45, 51);
+       (24, 70, 74); (25, 60, 65); (27, 36, 45); (28, 21, 35); (28, 45, 53);
+       (28, 96, 100); (30, 16, 34); (30, 40, 50); (30, 72, 78); (32, 24, 40);
+       (32, 60, 68); (33, 44, 55); (33, 56, 65); (35, 12, 37); (35, 84, 91);
+       (36, 15, 39); (36, 27, 45); (36, 48, 60); (36, 77, 85); (39, 52, 65);
+       (39, 80, 89); (40, 9, 41); (40, 30, 50); (40, 42, 58); (40, 75, 85);
+       (42, 40, 58); (42, 56, 70); (44, 33, 55); (45, 24, 51); (45, 28, 53);
+       (45, 60, 75); (48, 14, 50); (48, 20, 52); (48, 36, 60); (48, 55, 73);
+       (48, 64, 80); (51, 68, 85); (52, 39, 65); (54, 72, 90); (55, 48, 73);
+       (56, 33, 65); (56, 42, 70); (57, 76, 95); (60, 11, 61); (60, 25, 65);
+       (60, 32, 68); (60, 45, 75); (60, 63, 87); (60, 80, 100); (63, 16, 65);
+       (63, 60, 87); (64, 48, 80); (65, 72, 97); (68, 51, 85); (70, 24, 74);
+       (72, 21, 75); (72, 30, 78); (72, 54, 90); (72, 65, 97); (75, 40, 85);
+       (76, 57, 95); (77, 36, 85); (80, 18, 82); (80, 39, 89); ...]
+    >
+    ```
+    
+    Example with F# "workflow" or "computation expression" syntax:
+    
+    ```ocaml
+    - List.concat [[1]; []; [2; 3; 4; 5]; [10; 20]] ;;
+    val it : int list = [1; 2; 3; 4; 5; 10; 20]
+    > 
+    
+    (* The F# workflow works like Haskell do-noation  
+    
+    *)
+    type ListBuilder () =    
+        member this.Bind(xs, f) = List.concat (List.map f xs)
+    
+        member this.Return(x) = [x]
+    ;;
+    
+    
+    type ListBuilder =
+      class
+        new : unit -> ListBuilder
+        member Bind : xs:'b list * f:('b -> 'c list) -> 'c list
+        member Return : x:'a -> 'a list
+      end
+    
+    let listDo = ListBuilder () ;;
+    
+    val listDo : ListBuilder
+    
+    (*
+    cartesian :: [a] -> [b] -> [(a, b)]
+    cartesian xs ys = do
+        x <- xs 
+        y <- ys 
+        return (x, y)
+    *)
+    
+    let cartesian xs ys = 
+        listDo {
+          let! x = xs 
+          let! y = ys 
+          return (x, y)
+       }
+    ;;
+    
+    val cartesian : xs:'a list -> ys:'b list -> ('a * 'b) list
+    
+    >  cartesian [1; 2; 3; 4; ] ["a"; "b"; "c"] ;;
+    val it : (int * string) list =
+      [(1, "a"); (1, "b"); (1, "c"); 
+       (2, "a"); (2, "b"); (2, "c"); 
+       (3, "a"); (3, "b"); (3, "c"); 
+       (4, "a"); (4, "b"); (4, "c")]
+    >
+    ```
+
+3.  List Monad in Python
+
+    ```python
+    from functools import reduce
+    
+    def concat(xss):
+        "concat :: [[a]] -> [a]"
+        return  reduce(lambda acc, x: acc + x, xss, [])
+    
+    
+    def listUnit (x):
+        "listUnit :: x -> [x]"
+        return [x]
+    
+    def listBind (xss, f):
+        "listBind :: [a] -> (a -> [b]) -> [b] "
+        return concat(map(f, xss))
+    
+    # Haskel Code:
+    #
+    # cartesian :: [a] -> [b] -> [(a, b)]              cartesian :: [a] -> [b] -> [(a, b)]   
+    # cartesian xs ys = do                             carteasian xs ys = 
+    #    x <- xs                              ==>>        xs >>= \x ->    
+    #    y <- ys                                          ys >>= \y -> 
+    #    return (x, y)                                    return (x, y)
+    #
+    #
+    # cartesian :: [a] -> [b] -> [(a, b)] 
+    # carteasian xs ys = 
+    #   bind xs (\x -> 
+    #   bind ys (\y -> 
+    #   return (x, y)))
+    #
+    def cartesian(xs, ys):
+        
+        return listBind(xs,
+                        lambda x: listBind(ys,
+                        lambda y: listUnit ((x, y))))
+    
+    
+    def triples(xs, ys, zs):
+    
+        return listBind(xs,
+                        lambda x: listBind(ys,
+                        lambda y: listBind(zs,
+                        lambda z: listUnit((x, y, z)))))
+    
+    >>> cartesian([1, 2, 3, 4], ["a", "b", "c"])
+    [(1, 'a'), (1, 'b'), (1, 'c'), 
+    (2, 'a'), (2, 'b'), (2, 'c'), 
+    (3, 'a'), (3, 'b'), (3, 'c'), 
+    (4, 'a'), (4, 'b'), (4, 'c')]
+    >>> 
+    
+    >>> triples([1, 2], ["a", "b", "c"], ["x", "y", "z"])
+    [(1, 'a', 'x'), 
+    (1, 'a', 'y'), 
+    (1, 'a', 'z'), 
+    (1, 'b', 'x'), 
+    (1, 'b', 'y'), 
+    (1, 'b', 'z'), 
+    (1, 'c', 'x'), 
+    ...
+    >>>
+    ```
+
+### See also<a id="sec-1-12-3" name="sec-1-12-3"></a>
+
+**Monads**
+
+-   [Haskell/Understanding monads - Wikibooks, open books for an open world](https://en.wikibooks.org/wiki/Haskell/Understanding_monads)
+
+-   [Chapter 14. Monads](http://book.realworldhaskell.org/read/monads.html) - Real World Haskell
+
+-   [Monads Demystified | tech guy in midtown](http://techguyinmidtown.com/2008/05/20/monads-demystified/)
+
+-   [In search of a Monad for system call abstractions - Taesoo Kim - MIT CSAIL](http://ocw.mit.edu/courses/mathematics/18-s996-category-theory-for-scientists-spring-2013/projects/MIT18_S996S13_Monad.pdf)
+
+**List Monad**
+
+-   [learning Scalaz — List Monad](http://eed3si9n.com/learning-scalaz/List+Monad.html)
+
+-   [Haskell/Understanding monads/List - Wikibooks, open books for an open world](https://en.wikibooks.org/wiki/Haskell/Understanding_monads/List)
+
+-   [Haskell/Understanding monads/Maybe - Wikibooks, open books for an open world](https://en.wikibooks.org/wiki/Haskell/Understanding_monads/Maybe)
+
+**Monads in F#**
+
+-   [The F# Computation Expression Zoo](http://research.microsoft.com/pubs/217375/computation-zoo.pdf)
+
+-   [Computation Expressions (F#)](https://msdn.microsoft.com/en-us/library/dd233182.aspx)
+
+-   [F Sharp Programming/Computation Expressions](https://en.wikibooks.org/wiki/F_Sharp_Programming/Computation_Expressions)
+
+-   [The F# Computation Expression Zoo (PADL'14)](http://tomasp.net/blog/2013/computation-zoo-padl/)
+
+**Option Type/ Maybe**
+
+-   [One Div Zero: Why Scala's "Option" and Haskell's "Maybe" types will save you from null](http://james-iry.blogspot.com.br/2010/08/why-scalas-and-haskells-types-will-save.html)
+-   [The “Option” Pattern - Code Commit](http://www.codecommit.com/blog/scala/the-option-pattern)
+-   
+
 # Functional Languages<a id="sec-2" name="sec-2"></a>
 
-Note: There is no consensus about what is really a functional
+Note: There is no consensus about what really is a functional
 language. In this table were selected programming languages which can
-be programmed in functional style or favors this style. 
+be programmed in functional-style or favors this style. 
 
 Some Functional programming languages:
 
@@ -4294,9 +5212,9 @@ Some Functional programming languages:
 
 Notes:
 
--   AGDT   - Algebraic Data Types
+-   [AGDT](https://en.wikipedia.org/wiki/Algebraic_data_type)  - Algebraic Data Types
 
--   GIL    - Global Interpreter Locking. Languages with GIL cannot take
+-   [GIL](https://en.wikipedia.org/wiki/Global_interpreter_lock) - Global Interpreter Locking. Languages with GIL cannot take
     advantage of multi-core processors.
 
 -   TCO - Tail Call Optimization. Languages without TCO cannot perform
@@ -4305,21 +5223,19 @@ Notes:
 
 -   JVM    - Java Virtual Machine / Java Platform
 
--   .NET   - Dot Net Platform
+-   .NET  - Dot Net Platform: [CLR](https://en.wikipedia.org/wiki/Common_Language_Runtime) - Virtual Machine
 
--   NAT    - Native Code
+-   NAT    - Native Code. Native code is not portable like a virtual
+    machine, its execution is constrained to the processor architecture
+    and to the system calls of the operating system.
 
 -   VM     - Virtual Machine
 
 -   OO     - Object Orientated
 
--   Currying  - Curried functions like in Haskell
+-   Currying  - Curried functions like in Haskell, F# and Ocaml
 
 -   DSL    - Domain Specific Language
-
--   It is controversial that Javascript is based on scheme. According
-    to Douglas Crockford JavaScript is Scheme on a C clothe. With a
-    C-like syntax.
 
 -   <span class="underline">Syntax Sugars</span> help increase expressiveness and to write shorter,
     concise and more readable code. 
@@ -4341,6 +5257,10 @@ Notes:
 
 -   JavaScript: Is single-thread with event loop and uses
     asynchronous IO (non blocking IO) with callbacks.
+
+-   It is controversial that Javascript is based on scheme. According
+    to Douglas Crockford JavaScript is Scheme on a C clothe. With a
+    C-like syntax [{Reference}](http://www.crockford.com/javascript/little.html).
 
 More Information: [Comparison of Functional Programming Languages](http://en.wikipedia.org/wiki/Comparison_of_functional_programming_languages)
 
@@ -4392,158 +5312,169 @@ A selection of people who influenced functional programming:
 
 # Miscellaneous<a id="sec-4" name="sec-4"></a>
 
-1.  Selected Wikipedia Articles
+## Selected Wikipedia Articles<a id="sec-4-1" name="sec-4-1"></a>
 
-    Selected Wikipedia Pages:
-    
-    -   [List of functional programming topics](http://en.wikipedia.org/wiki/List_of_functional_programming_topics)
-    
-    -   [Comparison of Functional Programming Languages](http://en.wikipedia.org/wiki/Comparison_of_functional_programming_languages)
-    -   [Functional programming](http://en.wikipedia.org/wiki/Functional_programming)
-    
-    -   [Declarative programming](http://en.wikipedia.org/wiki/Declarative_programming)
-    -   [Aspect-oriented programming](http://en.wikipedia.org/wiki/Aspect-oriented_programming)
-    
-    **Functions**
-    
-    First Class Functions
-    
-    -   [First-class function](https://en.wikipedia.org/wiki/First-class_function)
-    -   [Pure function](https://en.wikipedia.org/wiki/Pure_function)
-    -   [Side effect (computer science)](https://en.wikipedia.org/wiki/Side_effect_%28computer_science%29)
-    -   [Purely functional](https://en.wikipedia.org/wiki/Purely_functional)
-    
-    -   [Referential transparency (computer science)](https://en.wikipedia.org/wiki/Referential_transparency_%28computer_science%29)
-    -   [Function type](https://en.wikipedia.org/wiki/Function_type)
-    
-    -   [Arity](https://en.wikipedia.org/wiki/Arity)
-    -   [Variadic function](https://en.wikipedia.org/wiki/Variadic_function)
-    
-    Composition
-    
-    -   [Function composition (computer science)](https://en.wikipedia.org/wiki/Function_composition_%28computer_science%29)
-    -   [Function composition - Mathematics](https://en.wikipedia.org/wiki/Function_composition)
-    -   [Composability](https://en.wikipedia.org/wiki/Composability)
-    
-    -   [Functional decomposition](https://en.wikipedia.org/wiki/Functional_decomposition)
-    
-    Scope
-    
-    -   [Scope (computer science)](https://en.wikipedia.org/wiki/Scope_%28computer_science%29)
-    
-    Currying and Partial Evaluation
-    
-    -   [Currying](https://en.wikipedia.org/wiki/Currying)
-    -   [Partial evaluation](https://en.wikipedia.org/wiki/Partial_evaluation)
-    
-    Higher Order Functions, Closures, Anonymous Functions
-    
-    -   [Anonymous function](https://en.wikipedia.org/wiki/Anonymous_function)
-    -   [Closure (computer programming)](https://en.wikipedia.org/wiki/Closure_%28computer_programming%29)
-    -   [Higher-order function](https://en.wikipedia.org/wiki/Higher-order_function)
-    -   [Fixed-point combinator](https://en.wikipedia.org/wiki/Fixed-point_combinator)
-    -   [Defunctionalization](https://en.wikipedia.org/wiki/Defunctionalization)
-    
-    -   [Closure (computer programming)](http://en.wikipedia.org/wiki/Closure_(computer_programming))
-    -   [Callback (computer programming)](http://en.wikipedia.org/wiki/Callback_(computer_programming))
-    -   [Coroutine](http://en.wikipedia.org/wiki/Coroutine)
-    
-    Recursion
-    
-    -   [Recursion (computer science)](https://en.wikipedia.org/wiki/Recursion_%28computer_science%29)
-    -   [Tail call](https://en.wikipedia.org/wiki/Tail_call)
-    -   [Double recursion](https://en.wikipedia.org/wiki/Double_recursion)
-    -   [Primitive recursive function](https://en.wikipedia.org/wiki/Primitive_recursive_function)
-    
-    -   [Ackermann function](https://en.wikipedia.org/wiki/Ackermann_function)
-    -   [Tak (function)](https://en.wikipedia.org/wiki/Tak_%28function%29)
-    
-    Lambda Calculus and Process Calculus
-    
-    -   [Typed lambda calculus](https://en.wikipedia.org/wiki/Typed_lambda_calculus)
-    -   [Lambda calculus](http://en.wikipedia.org/wiki/Lambda_calculus)
-    -   [Process calculus](https://en.wikipedia.org/wiki/Process_calculus)
-    
-    -   [Futures and promises](https://en.wikipedia.org/wiki/Futures_and_promises)
-    -   [Combinatory logic](https://en.wikipedia.org/wiki/Combinatory_logic)
-    
-    **Evaluation**
-    
-    -   [Evaluation strategy](https://en.wikipedia.org/wiki/Evaluation_strategy)
-    
-    -   [Eager Evaluation](http://en.wikipedia.org/wiki/Eager_evaluation)
-    -   [Short-circuit evaluation](http://en.wikipedia.org/wiki/Short-circuit_evaluation)
-    
-    Related to Lazy Evaluation
-    
-    -   [Lazy Evaluation](http://en.wikipedia.org/wiki/Lazy_evaluation)
-    -   [Thunk](https://en.wikipedia.org/wiki/Thunk)
-    
-    **Monads**
-    
-    -   [Monads Functional Programming](http://en.wikipedia.org/wiki/Monad_(functional_programming))
-    -   [Haskell/Understanding monads](http://en.wikibooks.org/wiki/Haskell/Understanding_monads)
-    -   [Monad transformer](http://en.wikipedia.org/wiki/Monad_transformer)
-    
-    **Continuations**
-    
-    -   [Continuation](http://en.wikipedia.org/wiki/Continuation)
-    -   [Continuation-passing style](http://en.wikipedia.org/wiki/Continuation-passing_style)
-    
-    **Fundamental Data Structure**
-    
-    -   [List (abstract data type)](https://en.wikipedia.org/wiki/List_%28abstract_data_type%29)
-    -   [Array data structure](https://en.wikipedia.org/wiki/Array_data_structure)
-    -   [Array data type](https://en.wikipedia.org/wiki/Array_data_type)
-    
-    **Types**
-    
-    -   [Category theory](https://en.wikipedia.org/wiki/Category_theory)
-    -   [Type Theory](https://en.wikipedia.org/wiki/Type_theory)
-    -   [Type System](https://en.wikipedia.org/wiki/Type_system)
-    
-    -   [Algebraic data type](https://en.wikipedia.org/wiki/Algebraic_data_type)
-    
-    -   [Type signature](https://en.wikipedia.org/wiki/Type_signature)
-    -   [Enumerated type](https://en.wikipedia.org/wiki/Enumerated_type)
-    -   [Product type](https://en.wikipedia.org/wiki/Product_type)
-    -   [Tagged union](https://en.wikipedia.org/wiki/Tagged_union)
-    -   [Dependent type](https://en.wikipedia.org/wiki/Dependent_type)
-    
-    -   [Recursive data type](https://en.wikipedia.org/wiki/Recursive_data_type)
-    
-    -   [Generalized algebraic data type](https://en.wikipedia.org/wiki/Generalized_algebraic_data_type)
-    
-    -   [Disjoint union](https://en.wikipedia.org/wiki/Disjoint_union)
-    
-    **Miscellaneous**
-    
-    -   [Call stack](https://en.wikipedia.org/wiki/Call_stack)
-    -   [Call graph](https://en.wikipedia.org/wiki/Call_graph)
-    
-    -   [Reflection (computer programming)](https://en.wikipedia.org/wiki/Reflection_%28computer_programming%29)
-    
-    -   [Function object](https://en.wikipedia.org/wiki/Function_object)
-    
-    -   [Memoization](https://en.wikipedia.org/wiki/Memoization)
-    
-    -   [Garbage collection (computer science)](https://en.wikipedia.org/wiki/Garbage_collection_%28computer_science%29)
-    
-    **Functional Languages**
-    
-    -   [Lisp (programming language)](https://en.wikipedia.org/wiki/Lisp_%28programming_language%29)
-    -   [Scheme Lisp](https://en.wikipedia.org/wiki/Scheme_%28programming_language%29)
-    
-    -   [Haskell](https://en.wikipedia.org/wiki/Haskell)
-    
-    -   [ML (programming language)](https://en.wikipedia.org/wiki/ML_%28programming_language%29)
-    -   [Standard ML](https://en.wikipedia.org/wiki/Standard_ML)
-    -   [OCaml](https://en.wikipedia.org/wiki/OCaml)
-    -   [F# - Fsharp](https://en.wikipedia.org/wiki/F_Sharp_%28programming_language%29)
+**General**
 
-2.  Selected Rosettacode Pages
+-   [List of functional programming topics](http://en.wikipedia.org/wiki/List_of_functional_programming_topics)
 
-### Concepts Examples<a id="sec-4-0-1" name="sec-4-0-1"></a>
+-   [Comparison of Functional Programming Languages](http://en.wikipedia.org/wiki/Comparison_of_functional_programming_languages)
+-   [Functional programming](http://en.wikipedia.org/wiki/Functional_programming)
+
+-   [Declarative programming](http://en.wikipedia.org/wiki/Declarative_programming)
+-   [Aspect-oriented programming](http://en.wikipedia.org/wiki/Aspect-oriented_programming)
+
+**Functions**
+
+First Class Functions
+
+-   [First-class function](https://en.wikipedia.org/wiki/First-class_function)
+-   [Pure function](https://en.wikipedia.org/wiki/Pure_function)
+-   [Side effect (computer science)](https://en.wikipedia.org/wiki/Side_effect_%28computer_science%29)
+-   [Purely functional](https://en.wikipedia.org/wiki/Purely_functional)
+
+-   [Referential transparency (computer science)](https://en.wikipedia.org/wiki/Referential_transparency_%28computer_science%29)
+-   [Function type](https://en.wikipedia.org/wiki/Function_type)
+
+-   [Arity](https://en.wikipedia.org/wiki/Arity)
+-   [Variadic function](https://en.wikipedia.org/wiki/Variadic_function)
+
+**Composition**
+
+-   [Function composition (computer science)](https://en.wikipedia.org/wiki/Function_composition_%28computer_science%29)
+-   [Function composition - Mathematics](https://en.wikipedia.org/wiki/Function_composition)
+-   [Composability](https://en.wikipedia.org/wiki/Composability)
+
+-   [Functional decomposition](https://en.wikipedia.org/wiki/Functional_decomposition)
+
+**Scope**
+
+-   [Scope (computer science)](https://en.wikipedia.org/wiki/Scope_%28computer_science%29)
+
+**Currying and Partial Evaluation**
+
+-   [Currying](https://en.wikipedia.org/wiki/Currying)
+-   [Partial evaluation](https://en.wikipedia.org/wiki/Partial_evaluation)
+
+**Higher Order Functions, Closures, Anonymous Functions**
+
+-   [Anonymous function](https://en.wikipedia.org/wiki/Anonymous_function)
+-   [Closure (computer programming)](https://en.wikipedia.org/wiki/Closure_%28computer_programming%29)
+-   [Higher-order function](https://en.wikipedia.org/wiki/Higher-order_function)
+-   [Fixed-point combinator](https://en.wikipedia.org/wiki/Fixed-point_combinator)
+-   [Defunctionalization](https://en.wikipedia.org/wiki/Defunctionalization)
+
+-   [Closure (computer programming)](http://en.wikipedia.org/wiki/Closure_(computer_programming))
+-   [Callback (computer programming)](http://en.wikipedia.org/wiki/Callback_(computer_programming))
+-   [Coroutine](http://en.wikipedia.org/wiki/Coroutine)
+
+**Recursion**
+
+-   [Recursion (computer science)](https://en.wikipedia.org/wiki/Recursion_%28computer_science%29)
+-   [Tail call](https://en.wikipedia.org/wiki/Tail_call)
+-   [Double recursion](https://en.wikipedia.org/wiki/Double_recursion)
+-   [Primitive recursive function](https://en.wikipedia.org/wiki/Primitive_recursive_function)
+
+-   [Ackermann function](https://en.wikipedia.org/wiki/Ackermann_function)
+-   [Tak (function)](https://en.wikipedia.org/wiki/Tak_%28function%29)
+
+**Lambda Calculus and Process Calculus**
+
+-   [Lambda calculus](http://en.wikipedia.org/wiki/Lambda_calculus)
+-   [Typed lambda calculus](https://en.wikipedia.org/wiki/Typed_lambda_calculus)
+-   [Process calculus](https://en.wikipedia.org/wiki/Process_calculus)
+
+-   [Futures and promises](https://en.wikipedia.org/wiki/Futures_and_promises)
+-   [Combinatory logic](https://en.wikipedia.org/wiki/Combinatory_logic)
+
+**Evaluation**
+
+-   [Evaluation strategy](https://en.wikipedia.org/wiki/Evaluation_strategy)
+
+-   [Eager Evaluation](http://en.wikipedia.org/wiki/Eager_evaluation)
+-   [Short-circuit evaluation](http://en.wikipedia.org/wiki/Short-circuit_evaluation)
+
+**Related to Lazy Evaluation**
+
+-   [Lazy Evaluation](http://en.wikipedia.org/wiki/Lazy_evaluation)
+-   [Thunk](https://en.wikipedia.org/wiki/Thunk)
+
+**Monads**
+
+-   [Monads Functional Programming](http://en.wikipedia.org/wiki/Monad_(functional_programming))
+-   [Haskell/Understanding monads](http://en.wikibooks.org/wiki/Haskell/Understanding_monads)
+-   [Monad transformer](http://en.wikipedia.org/wiki/Monad_transformer)
+
+**Continuations**
+
+-   [Continuation](http://en.wikipedia.org/wiki/Continuation)
+-   [Continuation-passing style](http://en.wikipedia.org/wiki/Continuation-passing_style)
+
+**Fundamental Data Structures**
+
+-   [List (abstract data type)](https://en.wikipedia.org/wiki/List_%28abstract_data_type%29)
+-   [Array data structure](https://en.wikipedia.org/wiki/Array_data_structure)
+-   [Array data type](https://en.wikipedia.org/wiki/Array_data_type)
+
+**Types**
+
+-   [Category theory](https://en.wikipedia.org/wiki/Category_theory)
+-   [Type Theory](https://en.wikipedia.org/wiki/Type_theory)
+-   [Type System](https://en.wikipedia.org/wiki/Type_system)
+
+-   [Algebraic data type](https://en.wikipedia.org/wiki/Algebraic_data_type)
+
+-   [Type signature](https://en.wikipedia.org/wiki/Type_signature)
+-   [Enumerated type](https://en.wikipedia.org/wiki/Enumerated_type)
+-   [Product type](https://en.wikipedia.org/wiki/Product_type)
+-   [Tagged union](https://en.wikipedia.org/wiki/Tagged_union)
+-   [Dependent type](https://en.wikipedia.org/wiki/Dependent_type)
+
+-   [Recursive data type](https://en.wikipedia.org/wiki/Recursive_data_type)
+
+-   [Generalized algebraic data type](https://en.wikipedia.org/wiki/Generalized_algebraic_data_type)
+
+-   [Disjoint union](https://en.wikipedia.org/wiki/Disjoint_union)
+
+**Concurrency** 
+
+-   [Thread (computing)](https://en.wikipedia.org/wiki/Thread_(computing))
+-   [Concurrency (computer science)](https://en.wikipedia.org/wiki/Concurrency_(computer_science))
+-   [Concurrent computing ](https://en.wikipedia.org/wiki/Concurrent_computing)
+-   [Actor model ](https://en.wikipedia.org/wiki/Actor_model)
+-   [Event loop ](https://en.wikipedia.org/wiki/Event_loop)
+-   [Channel (programming)](https://en.wikipedia.org/wiki/Channel_(programming))
+-   [MapReduce ](https://en.wikipedia.org/wiki/MapReduce)
+-   [Futures and promises](https://en.wikipedia.org/wiki/Futures_and_promises)
+-   [Asynchronous I/O](https://en.wikipedia.org/wiki/Asynchronous_I/O)
+-   [Multicore processor](https://en.wikipedia.org/wiki/Multi-core_processor)
+
+**Miscellaneous**
+
+-   [Call stack](https://en.wikipedia.org/wiki/Call_stack)
+-   [Call graph](https://en.wikipedia.org/wiki/Call_graph)
+
+-   [Reflection (computer programming)](https://en.wikipedia.org/wiki/Reflection_%28computer_programming%29)
+
+-   [Function object](https://en.wikipedia.org/wiki/Function_object)
+
+-   [Memoization](https://en.wikipedia.org/wiki/Memoization)
+
+-   [Garbage collection (computer science)](https://en.wikipedia.org/wiki/Garbage_collection_%28computer_science%29)
+
+**Functional Languages**
+
+-   [Lisp (programming language)](https://en.wikipedia.org/wiki/Lisp_%28programming_language%29)
+-   [Scheme Lisp](https://en.wikipedia.org/wiki/Scheme_%28programming_language%29)
+-   [Haskell](https://en.wikipedia.org/wiki/Haskell)
+-   [ML (programming language)](https://en.wikipedia.org/wiki/ML_%28programming_language%29)
+-   [Standard ML](https://en.wikipedia.org/wiki/Standard_ML)
+-   [OCaml](https://en.wikipedia.org/wiki/OCaml)
+-   [F# - Fsharp](https://en.wikipedia.org/wiki/F_Sharp_%28programming_language%29)
+
+## Selected Rosettacode Pages<a id="sec-4-2" name="sec-4-2"></a>
+
+### Concepts Examples<a id="sec-4-2-1" name="sec-4-2-1"></a>
 
 -   [Call a function](http://rosettacode.org/wiki/Call_a_function)
 
@@ -4569,7 +5500,7 @@ Recursion:
 
 -   [Ackermann function](http://rosettacode.org/wiki/Ackermann_function)
 
-### Languages<a id="sec-4-0-2" name="sec-4-0-2"></a>
+### Languages<a id="sec-4-2-2" name="sec-4-2-2"></a>
 
 -   [Haskell](http://rosettacode.org/wiki/Haskell)
 
@@ -4585,5 +5516,23 @@ Recursion:
 
 -   [Scala](http://rosettacode.org/wiki/Scala)
 
--   [JavaScript /
-    ECMAScript](http://rosettacode.org/wiki/Category:JavaScript)
+-   [JavaScript / ECMAScript](http://rosettacode.org/wiki/Category:JavaScript)
+
+## Libraries and Frameworks<a id="sec-4-3" name="sec-4-3"></a>
+
+**Python**
+
+-   Python Libraries Useful for functional programming:
+    -   [functools — Higher-order functions and operations on callable objects](https://docs.python.org/3/library/functools.html)
+    
+    -   [itertools — Functions creating iterators for efficient looping](https://docs.python.org/3/library/itertools.html)
+    
+    -   [operator — Standard operators as functions](https://docs.python.org/3/library/operator.html)
+    
+    -   [Functional Programming](https://www.ics.uci.edu/~pattis/ICS-33/lectures/functionalprogramming.txt)
+
+**Javascript**
+
+-   [Underscore.js](http://underscorejs.org/): "Underscore is a JavaScript library that provides a
+    whole mess of useful functional programming helpers without
+    extending any built-in objects."

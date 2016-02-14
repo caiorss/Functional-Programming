@@ -4,7 +4,8 @@ The concepts of functors, monads and applicative comes from [[http://en.wikipedi
 
 ** Functors
 
-Functors is a prelude class for types which the function fmap is defined. The function fmap is a generalization of map function.
+Functors is a prelude class for types which the function fmap is
+defined. The function fmap is a generalization of map function.
 
 #+BEGIN_SRC haskell
 class  Functor f  where
@@ -28,7 +29,9 @@ fmap (f . g) = fmap f . fmap g  -- Composition law
 fmap id = id                    -- Identity law
 #+END_SRC
 
-The following functors defined in Haskell standard library prelude.hs. The function fmap is defined for each of the functor types.
+The following functors defined in Haskell standard library
+prelude.hs. The function fmap is defined for each of the functor
+types.
 
 *List*
 
@@ -195,7 +198,8 @@ References:
 ** Monads
 *** Overview
 
-Monads in Haskell are used to perform IO, State, Parallelism, Exception Handling, parallelism, continuations and coroutines.
+Monads in Haskell are used to perform IO, State, Parallelism,
+Exception Handling, parallelism, continuations and coroutines.
 
 Most common applications of monads include:
 
@@ -216,9 +220,15 @@ A monad is defined by three things:
  - Return/unit:     return :: Monad m => a -> m a
  - Bind:            (>>=)  :: (Monad m) => m a -> (a -> m b) -> m b
 
-A type class is an interface which is a set of functions and type signatures. Each type derived from a type class must implement the functions described with the same type signatures and same name as described in the interface/type class. It is similar to a Java interface.
+A type class is an interface which is a set of functions and type
+signatures. Each type derived from a type class must implement the
+functions described with the same type signatures and same name as
+described in the interface/type class. It is similar to a Java
+interface.
 
-In Haskell, the Monad type class is used to implement monads. It is provided by the Control.Monad module which is included in the Prelude. The class has the following methods:
+In Haskell, the Monad type class is used to implement monads. It is
+provided by the Control.Monad module which is included in the
+Prelude. The class has the following methods:
 
 
 #+BEGIN_SRC haskell
