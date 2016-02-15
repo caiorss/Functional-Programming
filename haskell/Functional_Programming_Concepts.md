@@ -5013,10 +5013,10 @@ class Monad m where
 
 1.  Overview
 
-    The Maybe type (Haskell)  or Option type (ML, F# and OCaml) is used to
-    indicate that a function returns nothing or a computation can fail. 
-    The maybe monad is helpful to remove nested null checks, avoid null
-    pointer or null object exceptions. 
+    The Maybe type (Haskell) or Option type (ML, F# and OCaml) is used to
+    indicate that a function might return nothing, the value might not
+    exists or that a computation maight fail. This is helpful to remove
+    nested null checks, avoid null pointer or null object exceptions.
     
     Some functions are a natural candidates to return a <span class="underline">maybe</span> or
     <span class="underline">option</span> type like parser function, user input validation, lookup functions
