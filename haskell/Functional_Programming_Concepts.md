@@ -39,6 +39,7 @@
   - [Monads](#monads)
     - [Overview](#overview)
     - [List Monad](#list-monad)
+    - [Maybe / Option Monad](#maybe-/-option-monad)
     - [See also](#see-also)
 - [Functional Languages](#functional-languages)
 - [Notable People](#notable-people)
@@ -4424,8 +4425,7 @@ class Monad m where
     >
     ```
     
-    -   Bind operator for lists is equivalent to List comprehensions which
-        is similar to Python list comprehension.
+    Bind operator for list monad: 
     
     ```haskell
     > :t (>>=)
@@ -4469,6 +4469,8 @@ class Monad m where
                                      bind ["a", "b"]   (\y -> 
                                      unit (x, y)))
     ```
+    
+    Do notation examples for List monad: 
     
     ```haskell
     -- file cartesian.hs 
@@ -4645,7 +4647,101 @@ class Monad m where
     >
     ```
 
-2.  List Monad in F#
+2.  List Monad in OCaml
+
+    ```ocaml
+    module ListM =
+      struct 
+      let bind ma f = List.concat (List.map f ma)
+    
+      let (>>=) = bind 
+    
+      (* return  *)
+      let unit a  = [a]
+    
+    end
+    ;;
+    
+    
+    module ListM :
+      sig
+        val bind : 'a list -> ('a -> 'b list) -> 'b list
+        val ( >>= ) : 'a list -> ('a -> 'b list) -> 'b list
+        val unit : 'a -> 'a list
+      end
+    
+    (*
+     Haskel Code:
+    
+     cartesian :: [a] -> [b] -> [(a, b)]              cartesian :: [a] -> [b] -> [(a, b)]   
+     cartesian xs ys = do                             carteasian xs ys = 
+        x <- xs                              ==>>        xs >>= \x ->    
+        y <- ys                                          ys >>= \y -> 
+        return (x, y)                                    return (x, y)
+    
+    
+     cartesian :: [a] -> [b] -> [(a, b)] 
+     carteasian xs ys = 
+       bind xs (\x -> 
+       bind ys (\y -> 
+       return (x, y)))
+    
+    *)
+    
+    
+    let cartesian xs ys = 
+        let open ListM in 
+        xs >>= fun x -> 
+        ys >>= fun y ->
+        unit (x, y)
+    ;;
+    
+    val cartesian : 'a list -> 'b list -> ('a * 'b) list = <fun>
+    
+    
+    >   cartesian [1; 2; 3; 4; ] ["a"; "b"; "c"]  ;;
+    - : (int * string) list =
+    [(1, "a"); (1, "b"); (1, "c"); (2, "a"); (2, "b"); (2, "c"); (3, "a");
+     (3, "b"); (3, "c"); (4, "a"); (4, "b"); (4, "c")]
+    
+    
+    (*
+    
+    Haskel Code                               Do-natation Dessugarized
+                                                           
+    triples :: [a] [b] [c] -> [(a, b, c)]     triples :: [a] [b] [c] -> [(a, b, c)]
+    triples xs ys zs = do                     tripes xs ys zs = 
+        x <- xs                                   xs >>= \x ->
+        y <- ys                     ==>           ys >>= \y ->
+        z <- zs                                   zs >>= \z ->
+        return (x, y, z)                          return (x, y, z)  
+    
+    *)
+    
+    let triples (xs: 'a list) (ys: 'b list) (zs: 'c list) : ('a * 'b * 'c) list =
+        let open ListM in 
+        xs >>= fun x ->
+        ys >>= fun y ->
+        zs >>= fun z -> 
+        unit (x, y, z)
+    ;;
+    
+    val triples : 'a list -> 'b list -> 'c list -> ('a * 'b * 'c) list = <fun>
+    
+    
+    >  triples ["x"; "z"; "w"]  [Some 10; None] [1; 2; 3; 4; 5] ;;
+    - : (string * int option * int) list =
+    [("x", Some 10, 1); ("x", Some 10, 2); ("x", Some 10, 3); ("x", Some 10, 4);
+     ("x", Some 10, 5); ("x", None, 1); ("x", None, 2); ("x", None, 3);
+     ("x", None, 4); ("x", None, 5); ("z", Some 10, 1); ("z", Some 10, 2);
+     ("z", Some 10, 3); ("z", Some 10, 4); ("z", Some 10, 5); ("z", None, 1);
+     ("z", None, 2); ("z", None, 3); ("z", None, 4); ("z", None, 5);
+     ("w", Some 10, 1); ("w", Some 10, 2); ("w", Some 10, 3); ("w", Some 10, 4);
+     ("w", Some 10, 5); ("w", None, 1); ("w", None, 2); ("w", None, 3);
+     ("w", None, 4); ("w", None, 5)]
+    ```
+
+3.  List Monad in F#
 
     Example without syntax sugar: 
     
@@ -4658,8 +4754,6 @@ class Monad m where
     
       (* return  *)
       let unit a  = [a]
-    
-    
     ;;
     
     
@@ -4849,7 +4943,7 @@ class Monad m where
     >
     ```
 
-3.  List Monad in Python
+4.  List Monad in Python
 
     ```python
     from functools import reduce
@@ -4915,7 +5009,450 @@ class Monad m where
     >>>
     ```
 
-### See also<a id="sec-1-12-3" name="sec-1-12-3"></a>
+### Maybe / Option Monad<a id="sec-1-12-3" name="sec-1-12-3"></a>
+
+1.  Overview
+
+    The Maybe type (Haskell)  or Option type (ML, F# and OCaml) is used to
+    indicate that a function returns nothing or a computation can fail. 
+    The maybe monad is helpful to remove nested null checks, avoid null
+    pointer or null object exceptions. 
+    
+    Some functions are a natural candidates to return a <span class="underline">maybe</span> or
+    <span class="underline">option</span> type like parser function, user input validation, lookup functions
+    that search an input in data structure or database and functions with
+    invalid input.
+
+2.  Maybe Monad in Haskell
+
+    The Maybe monad ends the computation if any step fails. The module
+    [Data.Maybe](https://hackage.haskell.org/package/base-4.8.2.0/docs/Data-Maybe.html) has useful function to deal with Maybe type.
+    
+    ```haskell
+    data Maybe a = Just a | Nothing
+    
+    instance Monad Maybe where
+      (Just x) >>= k = k x
+      Nothing  >>= k = Nothing
+    
+      return = Just
+    ```
+    
+    Example: The function below parses two numbers and adds them. 
+    
+    ```haskell
+    --- test.hs 
+    --
+    import Data.List (lookup)
+    import Text.Read (readMaybe)
+    
+    
+      -- Parser functions 
+    
+    parseInt :: String -> Maybe Int 
+    parseInt x = readMaybe x :: Maybe Int 
+    
+    parseDouble :: String -> Maybe Double
+    parseDouble x = readMaybe x :: Maybe Double
+    
+     -- Function with invalid input 
+    
+    sqrtSafe :: Double -> Maybe Double 
+    sqrtSafe x = if x > 0
+                 then Just (sqrt x)
+                 else Nothing
+    
+    addSafe :: Maybe Double -> Maybe Double -> Maybe Double 
+    addSafe some_x some_y = do
+      x <- some_x 
+      y <- some_y 
+      return (x + y)
+    
+    
+    addOneSafe :: Maybe Double -> Double -> Maybe Double 
+    addOneSafe a b = do
+      sa <- a
+      let c =  3.0 * (b + sa)
+      return (sa + c)
+      
+    
+     -- s - stands for Some  
+     --
+    addSqrtSafe :: Double -> Double -> Maybe Double 
+    addSqrtSafe x y = do
+      sx <- sqrtSafe x   
+      sy <- sqrtSafe y   
+      return (sx + sy)
+    
+    -- addSqrtSafe desugarized 
+    --
+    addSqrtSafe2 x y = 
+       sqrtSafe x >>= \sx ->
+       sqrtSafe y >>= \sy ->
+       return (sx +  sy)
+    
+    
+     -- End of test file 
+     --------------------------------
+    
+    > :load /tmp/test.hs 
+    
+    > :t readMaybe
+    readMaybe :: Read a => String -> Maybe a
+    > 
+    
+    > parseInt "100" 
+    Just 100
+    
+    
+     -- Returns nothing if computation fails 
+     -- instead of perform an exception 
+     --
+    > parseInt "not an int." 
+    Nothing
+    > 
+    
+    > parseDouble "1200" 
+    Just 1200.0
+    > parseDouble "1200.232" 
+    Just 1200.232
+    > parseDouble "12e3" 
+    Just 12000.0
+    > parseDouble "not a valid number" 
+    Nothing
+    > 
+    
+    
+    -- This haskell function is safe, however in another language 
+    -- it would yield a exception. 
+    --
+    > sqrt (-100.0)
+    NaN
+    > 
+    
+    > sqrtSafe (-1000.0)
+    Nothing
+    > 
+    
+    > sqrtSafe 100.0
+    Just 10.0
+    > 
+    
+    -- Thea function fmap is a generalization of map and applies a function 
+    -- to the value wrapped in the monad. 
+    --
+    
+    > :t fmap
+    fmap :: Functor f => (a -> b) -> f a -> f b
+    > 
+    
+    > fmap (\x -> x + 1.0) (Just 10.0)
+    Just 11.0
+    > fmap (\x -> x + 1.0) Nothing 
+    Nothing
+    >
+    > fmap (\x -> x + 1.0) (parseDouble "10.233") 
+    Just 11.233
+    > fmap (\x -> x + 1.0) (parseDouble "ase10.2x3") 
+    Nothing
+    > 
+    
+    --   return function 
+    -- 
+    
+    > :t return
+    return :: Monad m => a -> m a
+    > 
+    
+     return 10 :: Maybe Int
+    Just 10
+    > 
+    
+    > return "hello world" :: Maybe String
+    Just "hello world"
+    > 
+    
+    
+    -- Bind function 
+    --
+    -- The bind operator or funciton short circuits the computation if 
+    -- it fails at any point 
+    -- 
+    --
+    
+    > :t (>>=)
+    (>>=) :: Monad m => m a -> (a -> m b) -> m b
+    > 
+    
+    > Just "100.0" >>= parseDouble >>= sqrtSafe
+    Just 10.0
+    > 
+    > Nothing  >>= parseDouble >>= sqrtSafe
+    Nothing
+    > 
+    
+    > return "100.0" >>= parseDouble >>= sqrtSafe
+    Just 10.0
+    > 
+    > return "-100.0" >>= parseDouble >>= sqrtSafe
+    Nothing
+    > 
+    
+    
+    -- Do noation 
+    --
+    --
+    -- addSafe some_x some_y = do         addSafe = do 
+    --   x <- some_x                        some_x >>= \x ->
+    --   y <- some_y                 ==>    some_y >>= \y ->
+    --   return (x + y)                           return (x + y)
+    --
+    --
+    --
+    --
+    --
+    > :t addSafe
+    addSafe :: Maybe Double -> Maybe Double -> Maybe Double
+    > 
+    
+    
+    
+    > addSafe (Just 100.0) (Just 20.0)
+    Just 120.0
+    > 
+    
+    > addSafe (Just 100.0) Nothing
+    Nothing
+    > 
+    
+    > addSafe Nothing (Just 100.0)
+    Nothing
+    > 
+    
+    > addSafe Nothing Nothing
+    Nothing
+    > 
+    
+    > addSafe (parseDouble "100.0") (sqrtSafe 400.0)
+    Just 120.0
+    > 
+    
+    > addSafe (Just 100.0) (sqrtSafe (-20.0))
+    Nothing
+    > 
+    
+    > addSafe (parseDouble "asd100.0") (sqrtSafe 400.0)
+    Nothing
+    > 
+    
+    
+    > :t addSqrtSafe 
+    addSqrtSafe :: Double -> Double -> Maybe Double
+    > 
+    
+    > addSqrtSafe 100.0 400.0
+    Just 30.0
+    > 
+    
+    > addSqrtSafe (-100.0) 400.0
+    Nothing
+    > 
+    
+    > addSqrtSafe2 (-100.0) 400.0
+    Nothing
+    > addSqrtSafe2 100.0 400.0
+    Just 30.0
+    > 
+    
+    > addOneSafe (Just 10.0) 20.0 
+    Just 100.0
+    > 
+    > addOneSafe Nothing 20.0 
+    Nothing
+    > 
+    
+    > addOneSafe (parseDouble "100.0") 20.0 
+    Just 460.0
+    >
+    
+    > addOneSafe (parseDouble "1dfd00.0") 20.0 
+    Nothing
+    >
+    ```
+
+3.  Maybe / Option Monad in Ocaml
+
+    The maybe type is called Option in Ocaml and F#.
+    
+    ```ocaml
+    -> Some 100 ;;
+    - : int option = Some 100
+     
+    
+    -> None ;;
+    - : 'a option = None
+     
+    module OptM =
+      struct 
+    
+        let unit x = Some x
+    
+        let bind ma f =
+          match ma with
+          | Some x  ->  f x
+          | None    ->  None 
+    
+        let (>>=) = bind 
+    
+        (* Haskell fmap *)
+        let map f ma =
+          match ma with
+          | Some x -> Some (f x)
+          | None   -> None 
+       
+         
+      end
+    
+    
+    module OptM :
+      sig
+        val unit : 'a -> 'a option
+        val bind : 'a option -> ('a -> 'b option) -> 'b option
+        val ( >>= ) : 'a option -> ('a -> 'b option) -> 'b option
+        val map : ('a -> 'b) -> 'a option -> 'b option
+      end
+    
+    
+    #  OptM.unit ;;
+    - : 'a -> 'a option = <fun>
+    
+    # OptM.bind ;;
+    - : 'a option -> ('a -> 'b option) -> 'b option = <fun>
+    # 
+    
+    # OptM.map ;;
+    - : ('a -> 'b) -> 'a option -> 'b option = <fun>
+    # 
+        
+    # OptM.map (fun x -> x + 3) (Some 10) ;;
+    - : int option = Some 13
+    
+    #  OptM.map (fun x -> x + 3) None ;;
+    - : int option = None
+    
+    #  float_of_string "100.23" ;;
+    - : float = 100.23
+    # float_of_string "a100.23" ;;
+    Exception: Failure "float_of_string".
+    
+    let parseFloat x = 
+      try Some (float_of_string x)
+      with _ -> None
+    ;;               
+    
+    #  parseFloat "100.00" ;;
+    - : float option = Some 100.
+    # 
+    #  parseFloat "asds100.00" ;;
+    - : float option = None
+    # 
+    
+    (*
+    
+    addSafe :: Maybe Double -> Maybe Double -> Maybe Double 
+    addSafe some_x some_y = do
+      x <- some_x 
+      y <- some_y 
+      return (x + y) 
+    
+    addSafe some_x some_y = 
+      some_x >>= \x ->
+      some_y >>= \y ->
+      return (x + y)
+    
+    *)
+    
+    let addSafe sx sy = 
+        let open OptM in 
+        sx >>= fun x ->
+        sy >>= fun y ->
+        unit (x +. y)
+    ;;
+    
+    val addSafe : float option -> float option -> float option = <fun>
+    
+    # addSafe (Some 10.0) (Some 20.0) ;;
+    - : float option = Some 30.
+    # addSafe None (Some 20.0) ;;
+    - : float option = None
+    # addSafe None None ;;
+    - : float option = None
+    # 
+    
+    
+    (*
+    
+    If Haskell functions were impure it would work:
+    
+    addInputsSafe () = do
+      x <- parseDouble (readLine ())
+      y <- parseDouble (readLine ())
+      z <- parseDouble (readLine ())
+      return (x + y + z)
+    
+    addInputsSafe some_x some_y = 
+       readLine () >>= \x ->
+       readLine () >>= \y ->
+       readLine () >>= \x -> 
+       return (x + y + z)
+    *)
+    
+    
+    let prompt  message = 
+        print_string message ;
+        parseFloat (read_line())
+    ;;
+    
+    val prompt : string -> float option = <fun>
+    
+    let addInputsSafe () = 
+        let open OptM in 
+        prompt "Enter x: "  >>= fun x ->
+        prompt "Enter y: "  >>= fun y ->
+        prompt "Enter z: "  >>= fun z ->
+        unit (print_float  (x +. y +. z))
+    ;;
+    
+    val addInputsSafe : unit -> unit option = <fun>
+    
+    (* It will stop the computation if any input is invalid *)
+    
+    # addInputsSafe () ;;
+    Enter x: 10.0
+    Enter y: 20.0
+    Enter z: 30.0
+    60.- : unit option = Some ()
+    # 
+    
+    # addInputsSafe () ;;
+    Enter x: 20.0
+    Enter y: dsfd
+    - : unit option = None
+    # 
+    
+    - :  addInputsSafe () ;;
+    Enter x: 20.0
+    Enter y: 30.0
+    Enter z: a20afdf
+    - : unit option = None
+    
+    # addInputsSafe () ;;
+    Enter x: erew34
+    - : unit option = None
+    #
+    ```
+
+### See also<a id="sec-1-12-4" name="sec-1-12-4"></a>
 
 **Monads**
 
@@ -4948,7 +5485,9 @@ class Monad m where
 **Option Type/ Maybe**
 
 -   [One Div Zero: Why Scala's "Option" and Haskell's "Maybe" types will save you from null](http://james-iry.blogspot.com.br/2010/08/why-scalas-and-haskells-types-will-save.html)
--   [The “Option” Pattern - Code Commit](http://www.codecommit.com/blog/scala/the-option-pattern)
+
+-   [The Option Pattern/ Code Commit](http://www.codecommit.com/blog/scala/the-option-pattern)
+
 -   
 
 # Functional Languages<a id="sec-2" name="sec-2"></a>
