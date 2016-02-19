@@ -217,8 +217,6 @@ A monad is defined by three things:
 
  - A monadic function is a function which returns a Monad (a -> m b)
 
- - Return/unit:     return :: Monad m => a -> m a
- - Bind:            (>>=)  :: (Monad m) => m a -> (a -> m b) -> m b
 
 A type class is an interface which is a set of functions and type
 signatures. Each type derived from a type class must implement the
@@ -465,7 +463,9 @@ data  Ordering    =  LT | EQ | GT deriving
 
 ** Maybe Monad
 
-Using the Maybe type is possible to indicate that a function might or not return value. It is also useful to avoid many boilerplate null checkings.
+Using the Maybe type is possible to indicate that a function might or
+not return value. It is also useful to avoid many boilerplate null
+checkings.
 
 #+BEGIN_SRC
 data Maybe x = Nothing | Just x

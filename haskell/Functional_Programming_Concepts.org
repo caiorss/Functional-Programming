@@ -253,7 +253,8 @@ Functions can be passed as arguments to another functions, returned
 from functions, stored in variables and data structures and built at
 run time. The majority of languages supports first-class functions
 like Scheme, Javascript, Python, Haskell, ML, OCaml and many others
-some exceptions are C, Java, Matlab and Forth.
+some exceptions are C, Java, Matlab (Octave open source
+implementation), Bash, and Forth.
 
 Examples:
 
@@ -336,7 +337,7 @@ Pure functions:
 Why Pure Functions:
 
  - Composability, one function can be connected to another.
- - Can run in parallel, multi threading, multi core, GPU and distributed systems.
+ - Can run in parallel, multi-threading, multi-core, GPU and distributed systems.
  - Better debugging and testing.
  - Predictability
 
@@ -1065,7 +1066,7 @@ f = lambda x: x**5
 ** Tail Call Optimization and Tail Recursive Functions 
 *** Tail Call 
 
-A tail call is a function call which is the last action performerd by
+A tail call is a function call which is the last action performed by
 a function.
 
 Examples of _tail calls_ and _non tail calls_: 
@@ -1102,13 +1103,13 @@ Tail call optimization - TCO. (aka. tail call elimination - TCE or
 tail recursion elimination - TRE) is a optimization that replaces
 calls in tail positions with jumps which guarantees that loops
 implemented using recursion are executed in constant stack
-space.  [fn:martin-odersky-tail-call]
+space. [[http://citeseerx.ist.psu.edu/viewdoc/download?doi%3D10.1.1.98.1934&rep%3Drep1&type%3Dpdf][{Schinz M. and Odersky M. - 2001}]] 
 
 Without tail call optimization each recursive call creates a
 new stack frame by growing the execution stack. Eventually the
 stack runs out of space and the program has to stop.  To support
 iteration by recursion functional languages need tail call
-optimization.  [fn:Schwaighofer-2009]
+optimization. [[http://www.ssw.uni-linz.ac.at/Research/Papers/Schwaighofer09Master/schwaighofer09master.pdf][{Schwaighofer A. 2009}]]  [fn:Schwaighofer-2009]
 
 If the language doesn't support TCO it is not possible to perform
 recursion safely. A big number of calls will lead to a stack overflow
@@ -4416,6 +4417,572 @@ val it : float = 5757.0723
 
 #+END_SRC
 
+** Functors 
+*** Overview
+
+Functors are type constructors that can be mapped over like lists are
+mapped with _map_ function. Its concept comes from category theory and like many mathematical concepts
+it is defined by the laws that it satisfies: Functor's laws. 
+
+In Haskell functors are instances of the type class Functor that must
+implement the function fmap for each functor implementation.
+
+#+BEGIN_SRC haskell
+class  Functor f  where
+  fmap :: (a -> b) -> f a -> f b
+#+END_SRC
+
+
+#+BEGIN_SRC 
+Map Diagram                                Functor Diagram 
+
+
+          f :: a -> b             =====>        f :: a -> b
+  a   ----------------------> b           a ------------------------> b
+             
+         map f :: [a] -> [b]                   fmap f :: F a -> F b 
+  [a] ----------------------> [b]       F a ----------------------> F b
+
+Where F is a type constructor.
+
+#+END_SRC
+A functor must satisfy the laws:
+
+ + Identity Law.  
+
+fmap id == id   
+
+Where id is the identity function. 
+
+ + Composition Law 
+
+fmap (f . g) == fmap f . fmap g
+
+The composition law can be generalized to:
+
+fmap (f1 . f2 . f3 ... fn) = fmap f1 . fmap f2 . fmap f3 ... fmap fn 
+
+*** List all Functor instances 
+
+#+BEGIN_SRC haskell 
+> :info Functor 
+class Functor f where
+  fmap :: (a -> b) -> f a -> f b
+  (<$) :: a -> f b -> f a
+  	-- Defined in `GHC.Base'
+instance Functor (Either a) -- Defined in `Data.Either'
+instance Functor Maybe -- Defined in `Data.Maybe'
+instance Functor ZipList -- Defined in `Control.Applicative'
+instance Monad m => Functor (WrappedMonad m)
+  -- Defined in `Control.Applicative'
+instance Functor (Const m) -- Defined in `Control.Applicative'
+instance Functor [] -- Defined in `GHC.Base'
+instance Functor IO -- Defined in `GHC.Base'
+instance Functor ((->) r) -- Defined in `GHC.Base'
+instance Functor ((,) a) -- Defined in `GHC.Base'
+>
+
+> :info IO
+newtype IO a
+  = GHC.Types.IO (GHC.Prim.State# GHC.Prim.RealWorld
+                  -> (# GHC.Prim.State# GHC.Prim.RealWorld, a #))
+  	-- Defined in `GHC.Types'
+instance Monad IO -- Defined in `GHC.Base'
+instance Functor IO -- Defined in `GHC.Base'
+instance Applicative IO -- Defined in `Control.Applicative'
+> 
+> :info Maybe
+data Maybe a = Nothing | Just a 	-- Defined in `Data.Maybe'
+instance Eq a => Eq (Maybe a) -- Defined in `Data.Maybe'
+instance Monad Maybe -- Defined in `Data.Maybe'
+instance Functor Maybe -- Defined in `Data.Maybe'
+instance Ord a => Ord (Maybe a) -- Defined in `Data.Maybe'
+instance Read a => Read (Maybe a) -- Defined in `GHC.Read'
+instance Show a => Show (Maybe a) -- Defined in `GHC.Show'
+instance MonadPlus Maybe -- Defined in `Control.Monad'
+instance Applicative Maybe -- Defined in `Control.Applicative'
+instance Alternative Maybe -- Defined in `Control.Applicative'
+> 
+#+END_SRC
+
+*** Functors Implementations 
+**** Identity
+
+#+BEGIN_SRC haskell 
+-- File: identity.hs 
+--
+data Id a = Id a  deriving (Show, Eq)
+
+instance Functor Id where
+  fmap f (Id a) = Id (f a)
+
+ -- Specialized version of fmap 
+ --
+fmap_id :: (a -> b) -> (Id a -> Id b)
+fmap_id f = fmap f 
+
+-- -- End of file identity.hs ------
+------------------------------------
+
+> :load /tmp/identity.hs
+
+> Id 10
+Id 10
+
+> fmap (\x -> x + 3) (Id 30)
+Id 33
+> 
+
+> let plus5 =  \x -> x + 5
+> :t plus5
+plus5 :: Integer -> Integer
+> 
+
+> plus5 10
+15
+> 
+
+> fmap plus5 (Id 30)
+Id 35
+> 
+
+> let fmap_plus5 = fmap plus5
+
+<interactive>:68:18:
+    No instance for (Functor f0) arising from a use of `fmap'
+    The type variable `f0' is ambiguous
+ 
+ -- Solution:
+ 
+ 
+> let fmap_plus5 = fmap plus5 :: Id Integer -> Id Integer 
+> :t fmap_plus5
+fmap_plus5 :: Id Integer -> Id Integer
+> 
+
+> fmap_plus5 (Id 30)
+Id 35
+> 
+
+
+> :t fmap_id
+fmap_id :: (a -> b) -> Id a -> Id b
+> 
+
+> fmap_id sqrt (Id 100.0)
+Id 10.0
+> 
+ 
+> let sqrt_id = fmap_id sqrt
+> :t sqrt_id
+sqrt_id :: Id Double -> Id Double
+> 
+
+> sqrt_id (Id 100.0)
+Id 10.0
+>
+
+#+END_SRC
+
+**** List
+
+For lists the function fmap is equal to map. 
+
+#+BEGIN_SRC haskell 
+instance Functor [] where
+  fmap = map
+
+> map (\x -> x + 3) [1, 2, 3]
+[4,5,6]
+> fmap (\x -> x + 3) [1, 2, 3]
+[4,5,6]
+> 
+
+> let f = fmap (\x -> x + 3) :: [Int] -> [Int]
+> :t f
+f :: [Int] -> [Int]
+
+> f [1, 2, 3, 4]
+[4,5,6,7]
+> 
+#+END_SRC
+
+
+Alternative Implementation of list functor:
+
+#+BEGIN_SRC haskell 
+-- File: list_functor.hs 
+--
+
+data List a  = Cons a (List a)  | Nil 
+  deriving (Show, Eq)
+
+           
+instance Functor List where
+  
+  fmap f xss = case xss of
+               Nil          -> Nil
+               Cons x xs    -> Cons (f x) (fmap f xs)
+
+
+-- End of file -------------
+---------------------------
+
+> :load /tmp/list_functor.hs
+
+> Cons 10 (Cons 20 (Cons 30 Nil))
+Cons 10 (Cons 20 (Cons 30 Nil))
+> 
+
+> let xs = Cons 10 (Cons 20 (Cons 30 Nil))
+> xs
+Cons 10 (Cons 20 (Cons 30 Nil))
+> :t xs
+xs :: List Integer
+> 
+
+> fmap (\x -> x + 5) xs 
+Cons 15 (Cons 25 (Cons 35 Nil))
+> 
+
+> let fm = fmap (\x -> x + 5) :: List Integer -> List Integer
+
+> fm  xs
+Cons 15 (Cons 25 (Cons 35 Nil))
+> 
+
+#+END_SRC
+
+**** Maybe / Option
+
+#+BEGIN_SRC haskell 
+data Maybe a = Just a | Nothing deriving (Eq, Show)
+
+instance Functor Maybe where  
+    fmap f (Just x) = Just (f x)  
+    fmap f Nothing = Nothing 
+#+END_SRC
+
+Example: 
+
+#+BEGIN_SRC haskell 
+> fmap (\x -> x + 10) (Just 5)
+Just 15
+> 
+> fmap (\x -> x + 10) Nothing
+Nothing
+> 
+
+> let f = \x -> x + 10
+> :t f
+f :: Integer -> Integer
+> 
+
+> let fmap_f = fmap f :: Maybe Integer -> Maybe Integer
+> fmap_f (Just 20)
+Just 30
+> 
+
+> fmap_f Nothing
+Nothing
+> 
+
+> import Text.Read (readMaybe)
+
+
+> readMaybe "100" :: Maybe Integer
+Just 100
+> 
+> readMaybe "asd100" :: Maybe Integer
+Nothing
+> 
+
+> let parseInteger str = readMaybe str :: Maybe Integer
+> 
+> :t parseInteger 
+parseInteger :: String -> Maybe Integer
+> 
+
+> parseInteger "100" 
+Just 100
+> 
+> parseInteger "Not a number" 
+Nothing
+>
+
+> fmap (\x -> x + 10) (parseInteger "200")
+Just 210
+> 
+> fmap (\x -> x + 10) (parseInteger "2sadas00")
+Nothing
+> 
+
+ -- Specialized version of fmap 
+ -- 
+fmap_maybe :: (a -> b) -> (Maybe a -> Maybe b)
+fmap_maybe func = fmap func 
+
+> fmap_maybe (\x -> x + 10) (Just 10)
+Just 20
+> 
+
+> fmap_maybe (\x -> x + 10) Nothing
+Nothing
+> 
+
+
+#+END_SRC
+
+**** Either
+
+The type constructor Either is similar to Maybe and it can short
+circuit a computation in the similar way to Maybe, however it allows
+to attach an error message. 
+
+#+BEGIN_SRC haskell 
+data Either a b = Left a | Right b 
+
+instance Functor (Either a) where  
+    fmap f (Right x) = Right (f x)  
+    fmap f (Left x) = Left x  
+#+END_SRC
+
+Example:
+
+#+BEGIN_SRC haskell 
+--
+-- File: either_functor.hs 
+-------------------------
+
+ 
+ --  Specialized version of fmap to Either type 
+ --  constructor like map is specialized for lists.
+ --
+fmap_either :: (a -> b) -> (Either s a -> Either s b)
+fmap_either f = fmap f
+
+import Text.Read (readMaybe)
+
+data ErrorCode = 
+        ParserError 
+      | InvalidInput 
+      deriving (Eq, Show)
+
+describeErrorCode ParserError  = "The parser failed." 
+describeErrorCode InvalidInput = "Input out function domain."
+
+describeError (Right x)    = Right x 
+describeError (Left  code) = Left (describeErrorCode code)
+
+parseDouble :: String -> Either String Double 
+parseDouble  str = 
+    case (readMaybe str :: Maybe Double) of
+    Just x  ->  Right x 
+    Nothing ->  Left  "Error: Not a Double" 
+
+sqrt_safe :: Double -> Either String Double 
+sqrt_safe x = 
+    if x >= 0 
+    then (Right x)
+    else (Left "Error: Square root of negative number")
+
+
+parseDouble2 :: String -> Either ErrorCode Double 
+parseDouble2  str = 
+    case (readMaybe str :: Maybe Double) of
+    Just x  ->  Right x 
+    Nothing ->  Left  ParserError
+
+sqrt_safe2 :: Double -> Either ErrorCode Double 
+sqrt_safe2 x = 
+    if x >= 0 
+    then (Right x)
+    else (Left InvalidInput)
+
+---------------------------------------
+--             End of file            -
+---------------------------------------
+
+> :load /tmp/either_functor.hs  
+
+> sqrt_safe 100
+Right 100.0
+> 
+> sqrt_safe (-100)
+Left "Error: Square root of negative number"
+> 
+
+> sqrt_safe2 100
+Right 100.0
+> 
+> sqrt_safe2 (-100)
+Left InvalidInput
+> 
+
+
+> parseDouble "100.25e3"
+Right 100250.0
+> 
+
+> parseDouble "not a double"
+Left "Error: Not a Double"
+> 
+
+> parseDouble2 "-200.3"
+Right (-200.3)
+> 
+
+> parseDouble2 "Not a double"
+Left ParserError
+> 
+
+> fmap sqrt (Right 100.0)
+Right 10.0
+> 
+> fmap sqrt (Left "Error not found")
+Left "Error not found"
+>
+
+> let fmap_sqrt = fmap sqrt :: Either String Double -> Either String Double
+> fmap_sqrt (parseDouble "400.0")
+Right 20.0
+> 
+> fmap_sqrt (parseDouble "4adsfdas00.0")
+Left "Error: Not a Double"
+> 
+
+
+> describeError (sqrt_safe2 100)
+Right 100.0
+> 
+> describeError (sqrt_safe2 (-100))
+Left "Input out function domain."
+> 
+
+> describeError (parseDouble2 "200.23")
+Right 200.23
+> 
+
+> describeError (parseDouble2 "2dsfsd00.23")
+Left "The parser failed."
+>
+
+> fmap_either (\x -> x + 10) (Right 200)
+Right 210
+> 
+
+> let sqrt_either = fmap_either sqrt
+>
+> :t sqrt_either 
+sqrt_either :: Either s Double -> Either s Double
+>
+
+> sqrt_either (Right 100.0)
+Right 10.0
+> 
+> sqrt_either (Left "Failed to fetch data")
+Left "Failed to fetch data"
+> 
+
+#+END_SRC
+
+**** IO
+
+Source: Book [[http://learnyouahaskell.com/functors-applicative-functors-and-monoids][learnyouahaskell]] 
+
+#+BEGIN_SRC haskell 
+instance Functor IO where  
+    fmap f action = do  
+        result <- action  
+        return (f result)
+#+END_SRC
+
+#+BEGIN_SRC haskell 
+
+-- File: fmap_io.hs 
+--
+
+fmap_io :: (a -> b) -> (IO a -> IO b)
+fmap_io f = fmap f 
+
+--
+------------------
+
+> :load /tmp/fmap_io.hs 
+
+> import System.Directory (getDirectoryContents)
+> 
+
+> :t getDirectoryContents "/etc/R"
+getDirectoryContents "/etc/R" :: IO [FilePath]
+> 
+
+> getDirectoryContents "/etc/R"
+["Renviron",".","ldpaths","..","repositories","Makeconf","Renviron.site","Rprofile.site"]
+> 
+
+ -- It will fail because the data is inside an IO container 
+ -- and can only be extracted inside another IO container 
+ -- or IO Monad. 
+ -- 
+> length (getDirectoryContents "/etc/R")
+
+<interactive>:165:9:
+    Couldn't match expected type `[a0]'
+                with actual type `IO [FilePath]'
+    In the return type of a call of `getDirectoryContents'
+    In the first argument of `length', namely
+      `(getDirectoryContents "/etc/R")'
+    In the expression: length (getDirectoryContents "/etc/R")
+
+
+> fmap length (getDirectoryContents "/etc/R")
+8
+> :t fmap length (getDirectoryContents "/etc/R")
+fmap length (getDirectoryContents "/etc/R") :: IO Int
+> 
+
+
+> fmap_io length (getDirectoryContents "/etc/R")
+8
+> 
+
+> :t length
+length :: [a] -> Int
+> 
+
+> let length_io = fmap_io length
+> 
+
+> :t length_io 
+length_io :: IO [a] -> IO Int
+>
+
+> fmap_io length (getDirectoryContents "/etc/R")
+8
+
+
+-- In the REPL is possible to extract the data wrapped inside an IO 
+-- type constructor.
+--
+
+> dirlist <- getDirectoryContents "/etc/R"
+> :t dirlist
+dirlist :: [FilePath]
+> 
+> dirlist
+["Renviron",".","ldpaths","..","repositories","Makeconf","Renviron.site","Rprofile.site"]
+> 
+> length dirlist
+8
+>
+
+> :t length dirlist
+length dirlist :: Int
+> 
+
+#+END_SRC
+
 ** Monads 
 *** Overview 
 
@@ -5083,6 +5650,32 @@ def triples(xs, ys, zs):
 ...
 >>> 
 
+
+ # Emulate ML module 
+ #
+class ListM ():
+
+    @classmethod
+    def bind(cls, xss, f):
+        return concat(map(f, xss))
+
+    @classmethod
+    def unit(cls, x):
+        return [x]
+
+def cartesian (xs, ys):
+    return ListM.bind( xs, lambda x:
+           ListM.bind( ys, lambda y:
+           ListM.unit ((x, y))))
+
+>>> cartesian([1, 2, 3, 4], ["a", "b", "c"])
+
+[(1, 'a'), (1, 'b'), (1, 'c'), 
+(2, 'a'), (2, 'b'), (2, 'c'), 
+(3, 'a'), (3, 'b'), (3, 'c'), 
+(4, 'a'), (4, 'b'), (4, 'c')]
+>>> 
+
 #+END_SRC
 
 *** Maybe / Option Monad 
@@ -5117,7 +5710,7 @@ instance Monad Maybe where
 Example: The function below parses two numbers and adds them. 
 
 #+BEGIN_SRC haskell 
---- test.hs 
+--- File: test.hs 
 --
 import Data.List (lookup)
 import Text.Read (readMaybe)
@@ -5388,8 +5981,7 @@ module OptM =
     let map f ma =
       match ma with
       | Some x -> Some (f x)
-      | None   -> None 
-   
+      | None   -> None   
      
   end
 
@@ -5536,6 +6128,12 @@ Enter x: erew34
 
 *Monads*
 
+ - [[http://www.idryman.org/blog/2014/01/23/yet-another-monad-tutorial/][Yet Another Monad Tutorial in 15 Minutes - Carpe diem (Felix's blog)]]
+
+ - [[http://www.muitovar.com/monad/moncow.xhtml][Haskell Monad Tutorial - The Greenhorn's Guide to becoming a Monad Cowboy]] 
+
+ - [[http://homepages.inf.ed.ac.uk/wadler/papers/marktoberdorf/baastad.pdf][Monads for functional programming - Philip Wadler]]
+
  - [[https://en.wikibooks.org/wiki/Haskell/Understanding_monads][Haskell/Understanding monads - Wikibooks, open books for an open world]]
 
  - [[http://book.realworldhaskell.org/read/monads.html][Chapter 14. Monads]] - Real World Haskell 
@@ -5543,7 +6141,10 @@ Enter x: erew34
  - [[http://techguyinmidtown.com/2008/05/20/monads-demystified/][Monads Demystified | tech guy in midtown]]
 
  - [[http://ocw.mit.edu/courses/mathematics/18-s996-category-theory-for-scientists-spring-2013/projects/MIT18_S996S13_Monad.pdf][In search of a Monad for system call abstractions - Taesoo Kim - MIT CSAIL]]
- 
+
+ - [[https://wiki.haskell.org/All_About_Monads][All about Monads - Haskell Wiki]]
+
+ - [[http://www.eli.sdsu.edu/courses/fall14/cs596/notes/D22MonadsDesignPatterns.pdf][CS 596 Functional Programming and Design Fall Semester, 2014 Doc 22 Monads & Design Patterns]]
 
 *List Monad*
 
@@ -5552,6 +6153,10 @@ Enter x: erew34
  - [[https://en.wikibooks.org/wiki/Haskell/Understanding_monads/List][Haskell/Understanding monads/List - Wikibooks, open books for an open world]]
 
  - [[https://en.wikibooks.org/wiki/Haskell/Understanding_monads/Maybe][Haskell/Understanding monads/Maybe - Wikibooks, open books for an open world]]
+
+*Monads in Ocaml*
+
+ - [[https://www.cs.cornell.edu/Courses/cs3110/2015sp/lectures/21/lec21.html][Lecture 21: Monads - CS 3110 Spring 2015 - Data Structures and Functional Programming]]
 
 *Monads in F#*
 
@@ -5563,13 +6168,21 @@ Enter x: erew34
 
  - [[http://tomasp.net/blog/2013/computation-zoo-padl/][The F# Computation Expression Zoo (PADL'14)]]
 
-*Option Type/ Maybe*
+*Option/ Maybe Monad*
 
  - [[http://james-iry.blogspot.com.br/2010/08/why-scalas-and-haskells-types-will-save.html][One Div Zero: Why Scala's "Option" and Haskell's "Maybe" types will save you from null]]
 
  - [[http://www.codecommit.com/blog/scala/the-option-pattern][The Option Pattern/ Code Commit]]
 
- - 
+ - [[http://www.codeproject.com/Articles/845601/MayBe-Monad-Usage-Examples][MayBe Monad: Usage Examples - CodeProject]]
+
+ - [[http://sean.voisen.org/blog/2013/10/intro-monads-maybe/][Sean Voisen » A Gentle Intro to Monads … Maybe?]]
+
+ - [[https://www.niwi.nz/2015/03/08/error-handling/][Niwi.Nz : A little overview of error handling.]]
+
+ - [[http://robotlolita.me/2013/12/08/a-monad-in-practicality-first-class-failures.html][A Monad in Practicality: First-Class Failures - Quils in Space]]
+
+ - [[https://boykin.wordpress.com/2011/09/11/option-monad-in-scala/][Option Monad in Scala | Patrick Oscar Boykin's Personal Weblog]]
  
 * Functional Languages
 
@@ -5653,7 +6266,7 @@ More Information: [[http://en.wikipedia.org/wiki/Comparison_of_functional_progra
 
 See also: [[http://hyperpolyglot.org/ml][ML Dialects and Haskell: SML, OCaml, F#, Haskell]] 
 
-* Notable People
+* Influential People
 
 A selection of people who influenced functional programming:
 
@@ -5661,32 +6274,37 @@ A selection of people who influenced functional programming:
 
  - [[https://en.wikipedia.org/wiki/Haskell_Curry][Haskell Curry]], Mathematician -> Concept of currying
 
- - [[https://en.wikipedia.org/wiki/Robin_Milner][Robin Milner]], Computer Scientist -> Type inference, [[https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system][Hindley–Milner type system]], [[https://en.wikipedia.org/wiki/ML_(programming_language][ML language]])
+ - [[https://en.wikipedia.org/wiki/Robin_Milner][Robin Milner]], Computer Scientist -> Type inference, [[https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system][Hindley–Milner type system]], [[https://en.wikipedia.org/wiki/ML_(programming_language][ML language]]
 
- - [[https://en.wikipedia.org/wiki/John_McCarthy_(computer_scientist][John McCarthy]]),  Computer Scientist -> Creator of [[https://en.wikipedia.org/wiki/Lisp_(programming_language][Lisp]]), Artificial intelligence
+ - [[https://en.wikipedia.org/wiki/John_McCarthy_(computer_scientist][John McCarthy]],  Computer Scientist -> Creator of [[https://en.wikipedia.org/wiki/Lisp_(programming_language][Lisp]] and the
+   father of Artificial intelligence research.
 
-    * [[http://www.infoq.com/interviews/Steele-Interviews-John-McCarthy][Guy Steele Interviews John McCarthy, Father of Lisp]]
+   * [[http://www.infoq.com/interviews/Steele-Interviews-John-McCarthy][Guy Steele Interviews John McCarthy, Father of Lisp]]
 
  - [[https://en.wikipedia.org/wiki/John_Backus][John Backus]], Computer Scientist ->  Backus-Naur form (BNF), Fortran
    Language, 
 
-    * [[https://web.stanford.edu/class/cs242/readings/backus.pdf][Can Programming Be Liberated from the von Neumann Style? A Functional Style and Its Algebra of Programs]]
+   * [[https://web.stanford.edu/class/cs242/readings/backus.pdf][Can Programming Be Liberated from the von Neumann Style? A Functional Style and Its Algebra of Programs]]
 
  - [[https://en.wikipedia.org/wiki/Philip_Wadler][Philip Wadler]], Theory behind functional programming and the use of
    monads in functional programming, the design of the purely
    functional language Haskell.
 
-    * [[http://www.eliza.ch/doc/wadler92essence_of_FP.pdf][The essence of functional programing]]
-    * [[http://www.infoq.com/interviews/wadler-functional-programming][Philip Wadler on Functional Programming - Interview]]
+   * [[http://www.eliza.ch/doc/wadler92essence_of_FP.pdf][The essence of functional programing]]
+   * [[http://www.infoq.com/interviews/wadler-functional-programming][Philip Wadler on Functional Programming - Interview]]
 
  - [[https://en.wikipedia.org/wiki/Eugenio_Moggi][Eugenio Moggi]], Professor of computer science at the University of
    Genoa, Italy. - He first described the general use of monads to
    structure programs.
 
-    * [[http://www.disi.unige.it/person/MoggiE/ftp/ic91.pdf][Notions of computation and monads - Eugenio Moggi]]
+   * [[http://www.disi.unige.it/person/MoggiE/ftp/ic91.pdf][Notions of computation and monads - Eugenio Moggi]]
 
  - [[https://en.wikipedia.org/wiki/Simon_Peyton_Jones][Simon Peyton Jones]], Computer Scientist -> Major contributor to the
    design of the Haskell programming language.
+
+   * [[http://www.techworld.com.au/article/261007/a-z_programming_languages_haskell/?][Interview with Peyton Jones - The A-Z of Programming Languages: Haskell - Techworld]]
+
+   * [[http://research.microsoft.com/en-us/people/simonpj/][Simon Peyton Jones - Microsoft Research]]
 
  - [[https://en.wikipedia.org/wiki/John_Hughes_(computer_scientist][John Hughes]]), Computer Scientist -> One of the most influentials
    papers in FP field: Why functional programing matters.
