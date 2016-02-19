@@ -26,7 +26,12 @@
     - [IO - Input / Output](#io---input-/-output)
     - [Type Casting](#type-casting)
   - [Algebraic Data Types and Pattern Matching](#algebraic-data-types-and-pattern-matching)
-    - [Algebraic Data Types](#algebraic-data-types)
+    - [Overview](#overview)
+    - [Record Types](#record-types)
+    - [Disjoint Union](#disjoint-union)
+    - [Agreggated Data types](#agreggated-data-types)
+    - [Pattern Matching](#pattern-matching)
+    - [Recursive Data Structures](#recursive-data-structures)
   - [Lazy Evaluation](#lazy-evaluation)
   - [Foreign Function Interface FFI](#foreign-function-interface-ffi)
     - [Calling C Standard Library and Unix System Calls](#calling-c-standard-library-and-unix-system-calls)
@@ -34,6 +39,7 @@
     - [Finding Shared Libraries](#finding-shared-libraries)
     - [References](#references)
   - [Module System](#module-system)
+    - [Overview](#overview)
     - [Opening Modules](#opening-modules)
     - [Defining a module in the Toplevel](#defining-a-module-in-the-toplevel)
     - [Loading file as module in the toplevel](#loading-file-as-module-in-the-toplevel)
@@ -2767,7 +2773,10 @@ hello world / hit return to continue
 
 ## Standard (Native) Library Modules<a id="sec-1-5" name="sec-1-5"></a>
 
-Then native library is small and lacks many things someone would like and most functions are [not tail recursive](https://blogs.janestreet.com/optimizing-list-map/), it means that it will overflow stack for a very big number of iterations. For a better standard library see: Batteries and Core.
+Then native library is small and lacks many things someone would like
+and most functions are [not tail recursive](https://blogs.janestreet.com/optimizing-list-map/), it means that it will
+overflow stack for a very big number of iterations. For a better
+standard library see: Batteries and Core.
 
 
 -   [Documentation](http://caml.inria.fr/pub/docs/manual-ocaml/libref)
@@ -4545,618 +4554,619 @@ utop # string_of_float 23.2323 ;;
 
 ## Algebraic Data Types and Pattern Matching<a id="sec-1-6" name="sec-1-6"></a>
 
--   Product Types: Corresponds to cartesian product. Examples: Tupĺes, Records, Constructs.
+### Overview<a id="sec-1-6-1" name="sec-1-6-1"></a>
+
+-   Product Types: Corresponds to cartesian product. Examples: Tupĺes,
+    Records, Constructs.
 -   Sum Types: Disjoin Unions of types. Used to express possibilities.
 
-### Algebraic Data Types<a id="sec-1-6-1" name="sec-1-6-1"></a>
+### Record Types<a id="sec-1-6-2" name="sec-1-6-2"></a>
 
-1.  Record Types
+```ocaml
+> type country = {
+     name : string ;
+     domain : string ;
+     language : string ;
+     id : int ;
+  }
+  ;;
+
+
+> let brazil = {name = "Brazil" ; domain = ".br" ; language = "Portuguese" ; id = 100 } ;;
+val brazil : country =
+  {name = "Brazil"; domain = ".br"; language = "Portuguese"; id = 100}
+
+>  brazil.name ;;
+- : string = "Brazil"
+
+> brazil.domain ;;
+- : string = ".br"
+
+> brazil.language ;;
+- : string = "Portuguese"
+
+> brazil.id ;;
+- : int = 100
+
+
+> let countries = [
+    {name = "Brazil" ; domain = ".br" ; language = "Portuguese" ; id = 100 } ;
+    {name = "United Kingdom" ; domain = ".co.uk" ; language = "English" ; id = 10 } ;
+    {name = "South Africa" ; domain = ".co.za" ; language = "English" ; id = 40 } ;
+    {name = "France" ; domain = ".fr" ; language = "French" ; id = 20 } ;
+    {name = "Taiwan ROC" ; domain = ".tw" ; language = "Chinese" ; id = 54 } ;
+    {name = "Australia" ; domain = ".au" ; language = "English" ; id = 354 } ;
+      ]
+  ;;
+val countries : country list =
+  [{name = "Brazil"; domain = ".br"; language = "Portuguese"; id = 100};
+   {name = "United Kingdom"; domain = ".co.uk"; language = "English";
+    id = 10};
+   {name = "South Africa"; domain = ".co.za"; language = "English"; id = 40};
+   {name = "France"; domain = ".fr"; language = "French"; id = 20};
+   {name = "Taiwan ROC"; domain = ".tw"; language = "Chinese"; id = 54};
+   {name = "Australia"; domain = ".au"; language = "English"; id = 354}]
+
+
+> List.map (fun c -> c.name ) countries ;;
+- : string list =
+["Brazil"; "United Kingdom"; "South Africa"; "France"; "Taiwan ROC";
+ "Australia"]
+
+
+> List.map (fun c -> c.domain ) countries ;;
+- : string list = [".br"; ".co.uk"; ".co.za"; ".fr"; ".tw"; ".au"]
+
+> List.filter (fun c -> c.name = "France") countries ;;
+- : country list =
+[{name = "France"; domain = ".fr"; language = "French"; id = 20}]
+
+> List.filter (fun c -> c.language = "English") countries ;;
+- : country list =
+[{name = "United Kingdom"; domain = ".co.uk"; language = "English"; id = 10};
+ {name = "South Africa"; domain = ".co.za"; language = "English"; id = 40};
+ {name = "Australia"; domain = ".au"; language = "English"; id = 354}]
+
+> countries 
+  |> List.filter (fun c -> c.language = "English") 
+  |> List.map (fun c -> c.name)
+  ;;
+- : string list = ["United Kingdom"; "South Africa"; "Australia"]
+ 
+> let english_speaking_countries = 
+  countries 
+  |> List.filter (fun c -> c.language = "English") 
+  |> List.map (fun c -> c.name)
+  ;;
+val english_speaking_countries : string list =
+  ["United Kingdom"; "South Africa"; "Australia"]
+
+
+> english_speaking_countries ;;
+- : string list = ["United Kingdom"; "South Africa"; "Australia"] 
+
+> countries 
+  |> List.filter (fun c -> c.language = "English")
+  |> List.map (fun c -> c.name, c.domain)
+  ;;
+- : (string * string) list =
+[("United Kingdom", ".co.uk"); ("South Africa", ".co.za");
+ ("Australia", ".au")]
+
+
+> List.find (fun x -> x.id = 100) countries ;;
+- : country =
+{name = "Brazil"; domain = ".br"; language = "Portuguese"; id = 100}
+
+> List.find (fun x -> x.id = 354) countries ;;
+- : country =
+{name = "Australia"; domain = ".au"; language = "English"; id = 354}
+ 
+>  List.find (fun x -> x.id = 1354) countries ;;
+Exception: Not_found.
+
+> countries 
+  |> List.find (fun x -> x.id = 100)
+  |> fun x -> x.name
+  ;;
+- : string = "Brazil"
+```
+
+### Disjoint Union<a id="sec-1-6-3" name="sec-1-6-3"></a>
+
+```ocaml
+type literal =
+    | Integer   of int
+    | Float     of float
+    | String    of string
+
+type operator =
+    | Add
+    | Div
+    | Mul
+    | Sub
+```
+
+### Agreggated Data types<a id="sec-1-6-4" name="sec-1-6-4"></a>
+
+```ocaml
+> type agg = Agg of int * string
+
+>  let a = Agg (1, "hi") ;;
+val a : agg = Agg (1, "hi")
+
+>  a ;;
+- : agg = Agg (1, "hi")
+>
+```
+
+```ocaml
+type shape =
+      Rect    of float * float          (*width * lenght *)
+    | Circle  of float                  (* radius *)
+    | Triang  of float * float * float  (* a * b *  c *)
+
+let pictures = [Rect (3.0, 4.0) ; Circle 5.0 ; Triang (5.0, 5.0, 5.0)]
+
+let perimiter s =
+    match s with
+         Rect    (a, b)      ->  2.0 *. (a +. b)
+       | Circle   r          ->  2.0 *. 3.1415 *. r
+       | Triang  (a, b, c)   ->  a +. b +. c
+
+
+>  perimiter (Rect (3.0, 4.0)) ;;
+- : float = 14.
+
+>  perimiter (Circle 3.0 ) ;;
+- : float = 18.849
+
+
+>  perimiter (Triang (2.0, 3.0, 4.0)) ;;
+- : float = 9.
+>
+
+> List.map perimiter pictures ;;
+- : float list = [14.; 31.4150000000000027; 15.]
+```
+
+### Pattern Matching<a id="sec-1-6-5" name="sec-1-6-5"></a>
+
+1.  Basic Pattern Matching
 
     ```ocaml
-    > type country = {
-         name : string ;
-         domain : string ;
-         language : string ;
-         id : int ;
-      }
+    > match 4 with x -> x;;                        (* ⇒ 4 *)
+    - : int = 4
+    
+    > match 4 with xyz -> xyz;;                    (* ⇒ 4 *)
+    - : int = 4
+    
+    > match [3;4;5] with [a;b;c] -> b;;            (* ⇒ 4 *)
+    - : int = 4
+    
+    > match (3, 7, 4) with ( a, b, c ) -> c;;      (* ⇒ 4 *)
+    - : int = 4
+    
+    >  match (3, 4, (8,9)) with (a, b, c ) -> c;;   (* ⇒ (8, 9) *)
+    - : int * int = (8, 9)
+    >
+    
+    
+    > let sign x = match x with
+        x when x < 0 -> -1
+        | 0           -> 0
+        | x           -> 1
+    
+    ;;
+    val sign : int -> int = <fun>
+    
+    
+    >  sign 10 ;;
+    - : int = 1
+    >  sign 0 ;;
+    - : int = 0
+    >  sign 100 ;;
+    - : int = 1
+    >  sign (-1) ;;
+    - : int = -1
+    >  sign (-100) ;;
+    - : int = -1
+    >
+    
+    let getPassword passw = match passw with
+        "hello"   -> "OK. Safe Opened."
+        | _       -> "Wrong Password Pal."
       ;;
     
-    
-    > let brazil = {name = "Brazil" ; domain = ".br" ; language = "Portuguese" ; id = 100 } ;;
-    val brazil : country =
-      {name = "Brazil"; domain = ".br"; language = "Portuguese"; id = 100}
-    
-    >  brazil.name ;;
-    - : string = "Brazil"
-    
-    > brazil.domain ;;
-    - : string = ".br"
-    
-    > brazil.language ;;
-    - : string = "Portuguese"
-    
-    > brazil.id ;;
-    - : int = 100
-    
-    
-    > let countries = [
-        {name = "Brazil" ; domain = ".br" ; language = "Portuguese" ; id = 100 } ;
-        {name = "United Kingdom" ; domain = ".co.uk" ; language = "English" ; id = 10 } ;
-        {name = "South Africa" ; domain = ".co.za" ; language = "English" ; id = 40 } ;
-        {name = "France" ; domain = ".fr" ; language = "French" ; id = 20 } ;
-        {name = "Taiwan ROC" ; domain = ".tw" ; language = "Chinese" ; id = 54 } ;
-        {name = "Australia" ; domain = ".au" ; language = "English" ; id = 354 } ;
-          ]
-      ;;
-    val countries : country list =
-      [{name = "Brazil"; domain = ".br"; language = "Portuguese"; id = 100};
-       {name = "United Kingdom"; domain = ".co.uk"; language = "English";
-        id = 10};
-       {name = "South Africa"; domain = ".co.za"; language = "English"; id = 40};
-       {name = "France"; domain = ".fr"; language = "French"; id = 20};
-       {name = "Taiwan ROC"; domain = ".tw"; language = "Chinese"; id = 54};
-       {name = "Australia"; domain = ".au"; language = "English"; id = 354}]
-    
-    
-    > List.map (fun c -> c.name ) countries ;;
-    - : string list =
-    ["Brazil"; "United Kingdom"; "South Africa"; "France"; "Taiwan ROC";
-     "Australia"]
-    
-    
-    > List.map (fun c -> c.domain ) countries ;;
-    - : string list = [".br"; ".co.uk"; ".co.za"; ".fr"; ".tw"; ".au"]
-    
-    > List.filter (fun c -> c.name = "France") countries ;;
-    - : country list =
-    [{name = "France"; domain = ".fr"; language = "French"; id = 20}]
-    
-    > List.filter (fun c -> c.language = "English") countries ;;
-    - : country list =
-    [{name = "United Kingdom"; domain = ".co.uk"; language = "English"; id = 10};
-     {name = "South Africa"; domain = ".co.za"; language = "English"; id = 40};
-     {name = "Australia"; domain = ".au"; language = "English"; id = 354}]
-    
-    > countries 
-      |> List.filter (fun c -> c.language = "English") 
-      |> List.map (fun c -> c.name)
-      ;;
-    - : string list = ["United Kingdom"; "South Africa"; "Australia"]
-     
-    > let english_speaking_countries = 
-      countries 
-      |> List.filter (fun c -> c.language = "English") 
-      |> List.map (fun c -> c.name)
-      ;;
-    val english_speaking_countries : string list =
-      ["United Kingdom"; "South Africa"; "Australia"]
-    
-    
-    > english_speaking_countries ;;
-    - : string list = ["United Kingdom"; "South Africa"; "Australia"] 
-    
-    > countries 
-      |> List.filter (fun c -> c.language = "English")
-      |> List.map (fun c -> c.name, c.domain)
-      ;;
-    - : (string * string) list =
-    [("United Kingdom", ".co.uk"); ("South Africa", ".co.za");
-     ("Australia", ".au")]
-    
-    
-    > List.find (fun x -> x.id = 100) countries ;;
-    - : country =
-    {name = "Brazil"; domain = ".br"; language = "Portuguese"; id = 100}
-    
-    > List.find (fun x -> x.id = 354) countries ;;
-    - : country =
-    {name = "Australia"; domain = ".au"; language = "English"; id = 354}
-     
-    >  List.find (fun x -> x.id = 1354) countries ;;
-    Exception: Not_found.
-    
-    > countries 
-      |> List.find (fun x -> x.id = 100)
-      |> fun x -> x.name
-      ;;
-    - : string = "Brazil"
-    ```
-
-2.  Disjoint Union
-
-    ```ocaml
-    type literal =
-        | Integer   of int
-        | Float     of float
-        | String    of string
-    
-    type operator =
-        | Add
-        | Div
-        | Mul
-        | Sub
-    ```
-
-3.  Agreggated Data types
-
-    ```ocaml
-    > type agg = Agg of int * string
-    
-    >  let a = Agg (1, "hi") ;;
-    val a : agg = Agg (1, "hi")
-    
-    >  a ;;
-    - : agg = Agg (1, "hi")
+    val getPassword : string -> string = <fun>
+    >
+      getPassword "hellow" ;;
+    - : string = "Wrong Password Pal."
+    >  getPassword "Pass" ;;
+    - : string = "Wrong Password Pal."
+    >  getPassword "hello" ;;
+    - : string = "OK. Safe Opened."
     >
     ```
+
+2.  Tuple Pattern Matching
+
+    Extracting elements of a tuple
+    
+    ```
+    > let fst (a, _) = a ;;
+    val fst : 'a * 'b -> 'a = <fun>
+    > let snd (_, b) = b ;;
+    val snd : 'a * 'b -> 'b = <fun>
+    
+    > fst (2, 3) ;;
+    - : int = 2
+    
+    > fst ("a", 23) ;;
+    - : string = "a"
+    
+    > snd (2, 3) ;;
+    - : int = 3
+    
+    > snd (2, "a") ;;
+    - : string = "a"
+    
+    > List.map fst [("a", 12); ("b", 23) ; ("c", 23) ; ("d", 67)] ;;
+    - : string list = ["a"; "b"; "c"; "d"]
+    
+    > List.map snd [("a", 12); ("b", 23) ; ("c", 23) ; ("d", 67)] ;;
+    - : int list = [12; 23; 23; 67]
+    
+    
+    >
+    let tpl3_1 (a, _, _) = a
+    let tpl3_2 (_, a, _) = a
+    let tpl3_3 (_, _, a) = a;;
+    
+    > tpl3_1 (2, "ocaml", 2.323) ;;
+    - : int = 2
+    > tpl3_2 (2, "ocaml", 2.323) ;;
+    - : string = "ocaml"
+    > tpl3_3 (2, "ocaml", 2.323) ;;
+    - : float = 2.323
+    ```
+    
+    Returning Multiple Values
     
     ```ocaml
-    type shape =
-          Rect    of float * float          (*width * lenght *)
-        | Circle  of float                  (* radius *)
-        | Triang  of float * float * float  (* a * b *  c *)
+    >  let divmod a b = a/b, a mod b ;;
+    val divmod : int -> int -> int * int = <fun>
     
-    let pictures = [Rect (3.0, 4.0) ; Circle 5.0 ; Triang (5.0, 5.0, 5.0)]
-    
-    let perimiter s =
-        match s with
-             Rect    (a, b)      ->  2.0 *. (a +. b)
-           | Circle   r          ->  2.0 *. 3.1415 *. r
-           | Triang  (a, b, c)   ->  a +. b +. c
+      divmod 10 3 ;;
+    - : int * int = (3, 1)
     
     
-    >  perimiter (Rect (3.0, 4.0)) ;;
-    - : float = 14.
     
-    >  perimiter (Circle 3.0 ) ;;
-    - : float = 18.849
+    > let swap (x, y) = (y, x) ;;
+    val swap : 'a * 'b -> 'b * 'a = <fun>
+    
+      swap (2, 3) ;;
+    - : int * int = (3, 2)
+    
+    > List.map swap [("a", 12); ("b", 23) ; ("c", 23) ; ("d", 67)] ;;
+    - : (int * string) list = [(12, "a"); (23, "b"); (23, "c"); (67, "d")]
+    ```
+    
+    Source:
+    
+    -   <http://xahlee.info/ocaml/pattern_matching.html>
+
+### Recursive Data Structures<a id="sec-1-6-6" name="sec-1-6-6"></a>
+
+1.  Alternative List Implementation
+
+    List of Intergers
+    
+    ```ocaml
+    type intlist = Nil | Cons of (int * intlist)
+    
+    let rec length (alist : intlist) : int =
+        match alist with
+        | Nil           -> 0
+        | Cons(h, t)    -> 1 + (length t)
     
     
-    >  perimiter (Triang (2.0, 3.0, 4.0)) ;;
-    - : float = 9.
+    let is_empty (alist: intlist) : bool =
+        match alist with
+        | Nil           -> true
+        | Cons(_, _)   ->  false
+    
+    let rec sum (alist : intlist) : int =
+        match alist with
+        | Nil               -> failwith "Error empty list"
+        | Cons (a, Nil)     -> a
+        | Cons (h, remain)  -> h + sum remain
+    
+    let rec product (alist : intlist) : int =
+        match alist with
+        | Nil               -> failwith "Error empty list"
+        | Cons (a, Nil)     -> a
+        | Cons (h, remain)  -> h * product remain
+    
+    let head (alist: intlist) : int =
+        match alist with
+        | Nil           -> failwith "Error empty list"
+        | Cons (a, _)   -> a
+    
+    let rec last (alist : intlist) : int =
+        match alist with
+        | Nil               -> failwith "Error empty list"
+        | Cons (a, Nil)     -> a
+        | Cons (h, remain)  -> last remain
+    
+    
+    let rec map f alist =
+        match alist with
+        | Nil               -> Nil
+        | Cons (e, remain)  -> Cons(f e, map f remain)
+    
+    let rec iter (f : int -> unit) (alist : intlist) : unit =
+        match alist with
+        | Nil           -> failwith "Error empty list"
+        | Cons(a,  Nil) -> f a
+        | Cons(hd, tl)  -> f hd ; iter f tl
+    
+    
+    let rec filter f alist =
+        match alist with
+        | Nil               -> Nil
+        | Cons (e, remain)  ->
+                    if (f e)
+                        then Cons(e, filter f remain)
+                        else filter f remain
+    
+    let rec foldl1 func alist  =  match alist with
+        | Nil                -> failwith "Error empty list"
+        | Cons (a, Nil)      -> a
+        | Cons (hd, tl)      -> func hd (foldl func tl)
+    
+    
+    let rec foldl func acc alist =
+        match alist with
+        | Nil               -> acc
+        | Cons (hd, tl)     -> func hd (foldl func acc tl)
+    
+    
+    let rec nth alist n =
+        match (alist, n) with
+        | (Nil,     _       )   -> failwith  "Empty list"
+        | (Cons(h, _  ),   1)   -> h
+        | (Cons(hd, tl),   k)   -> nth tl  (k-1)
+    
+    let rec take n alist =
+        match (n, alist) with
+        | (_, Nil)           -> Nil
+        | (0, _  )           -> Nil
+        | (k, Cons(hd, tl))  -> Cons(hd, take (k-1) tl)
+    
+    
+    let rec append ((list1:intlist), (list2:intlist)) : intlist =
+        match list1 with
+        | Nil               -> list2
+        | Cons(hd, tl)      -> Cons(hd, append( (tl, list2)))
+    
+    let rec reverse(list:intlist):intlist =
+        match list with
+          Nil -> Nil
+        | Cons(hd,tl) -> append(reverse(tl), Cons(hd,Nil))
+    ```
+    
+    ```ocaml
+    let l1 = Nil
+    let l2 = Cons(1, Nil)  (* [1] *)
+    let l3 = Cons(2, l2)   (* [2; 1] *)
+    let l4 = Cons(3, l3)   (* [3; 2; 1] *)
+    let l5 = Cons(1, Cons(2, Cons(3, Cons(4, Cons(5, Nil)))))
+    
+    > List.map length [l1 ; l2 ; l4 ; l5 ] ;;
+    - : int list = [0; 1; 3; 5]
+    
+    > List.map is_empty [l1 ; l2 ; l4 ; l5 ] ;;
+    - : bool list = [true; false; false; false]
+    
+    >  sum l1 ;;
+    Exception: Failure "Error empty list".
+    >  sum l2 ;;
+    - : int = 1
+    >  sum l3 ;;
+    - : int = 3
+    >  sum l4 ;;
+    - : int = 6
+    >  sum l5 ;;
+    - : int = 15
     >
     
-    > List.map perimiter pictures ;;
-    - : float list = [14.; 31.4150000000000027; 15.]
+    
+    >  product l1 ;;
+    Exception: Failure "Error empty list".
+    >  product l2 ;;
+    - : int = 1
+    >  product l3 ;;
+    - : int = 2
+    >  product l4 ;;
+    - : int = 6
+    >  product l5 ;;
+    - : int = 120
+    >
+    
+    
+    > List.map head [l2 ; l3 ; l4 ; l5 ] ;;
+    - : int list = [1; 2; 3; 1]
+    
+    
+    >  last l1 ;;
+    Exception: Failure "Error empty list".
+    >  last l2 ;;
+    - : int = 1
+    >  last l3 ;;
+    - : int = 1
+    >  last l4 ;;
+    - : int = 1
+    >  last l5 ;;
+    - : int = 5
+    
+    
+    > map ((+) 1) Nil ;;
+    - : intlist = Nil
+    > map ((+) 1) (Cons(1, Nil))  ;;
+    - : intlist = Cons (2, Nil)
+    > map ((+) 1) (Cons(1, Cons(3, Cons(4, Cons(5, Nil)))))  ;;
+    - : intlist = Cons (2, Cons (4, Cons (5, Cons (6, Nil))))
+    
+    
+    >  append(l4, l5) ;;
+    - : intlist = Cons  (3, Cons (2, Cons (1, Cons (1, Cons (2, Cons (3, Cons (4, Cons (5, Nil))))))))
+    
+    > reverse l5 ;;
+    - : intlist = Cons (5, Cons (4, Cons (3, Cons (2, Cons (1, Nil)))))
+    
+    >   let even x = x mod 2 == 0 ;;
+    >   filter even l5 ;;
+    - : intlist = Cons (2, Cons (4, Nil)
+    
+    > l5 ;;
+    - : intlist = Cons (1, Cons (2, Cons (3, Cons (4, Cons (5, Nil)))))
+    
+    >  nth l5 2 ;;
+    - : int = 2
+    >  nth l5 1 ;;
+    - : int = 1
+    >  nth l5 3 ;;
+    - : int = 3
+    >  nth l5 4 ;;
+    - : int = 4
+    >  nth l5 5 ;;
+    - : int = 5
+    
+    > foldl1 (+) l5 ;;
+    - : int = 15
+    
+    > foldl1 (fun x y -> x * y) l5 ;;
+    - : int = 120
+    
+    > foldl1 (fun x y -> x + 10*y) l5 ;;
+    - : int = 54321
+    
+    
+    > foldl (+) 0 l5 ;;
+    - : int = 15
+    
+    > foldl (fun x y -> x * y) 2 l5 ;;
+    - : int = 240
+    
+    
+    >
+      take 0 l5 ;;
+    - : intlist = Nil
+    >  take 1 l5 ;;
+    - : intlist = Cons (1, Nil)
+    >  take 3 l5 ;;
+    - : intlist = Cons (1, Cons (2, Cons (3, Nil)))
+    >  take 4 l5 ;;
+    - : intlist = Cons (1, Cons (2, Cons (3, Cons (4, Nil))))
+    >  take 10 l5 ;;
+    - : intlist = Cons (1, Cons (2, Cons (3, Cons (4, Cons (5, Nil)))))
+    
+    
+    > iter (Printf.printf "= %d\n") l5 ;;
+    = 1
+    = 2
+    = 3
+    = 4
+    = 5
+    - : unit = ()
     ```
 
-4.  Pattern Matching
+2.  File Tree Recursive Directory Walk
 
-    1.  Basic Pattern Matching
+    ```ocaml
+    > type fileTree =
+      | File of string
+      | Folder of string * fileTree list
     
-        ```ocaml
-        > match 4 with x -> x;;                        (* ⇒ 4 *)
-        - : int = 4
-        
-        > match 4 with xyz -> xyz;;                    (* ⇒ 4 *)
-        - : int = 4
-        
-        > match [3;4;5] with [a;b;c] -> b;;            (* ⇒ 4 *)
-        - : int = 4
-        
-        > match (3, 7, 4) with ( a, b, c ) -> c;;      (* ⇒ 4 *)
-        - : int = 4
-        
-        >  match (3, 4, (8,9)) with (a, b, c ) -> c;;   (* ⇒ (8, 9) *)
-        - : int * int = (8, 9)
-        >
-        
-        
-        > let sign x = match x with
-            x when x < 0 -> -1
-            | 0           -> 0
-            | x           -> 1
-        
-        ;;
-        val sign : int -> int = <fun>
-        
-        
-        >  sign 10 ;;
-        - : int = 1
-        >  sign 0 ;;
-        - : int = 0
-        >  sign 100 ;;
-        - : int = 1
-        >  sign (-1) ;;
-        - : int = -1
-        >  sign (-100) ;;
-        - : int = -1
-        >
-        
-        let getPassword passw = match passw with
-            "hello"   -> "OK. Safe Opened."
-            | _       -> "Wrong Password Pal."
-          ;;
-        
-        val getPassword : string -> string = <fun>
-        >
-          getPassword "hellow" ;;
-        - : string = "Wrong Password Pal."
-        >  getPassword "Pass" ;;
-        - : string = "Wrong Password Pal."
-        >  getPassword "hello" ;;
-        - : string = "OK. Safe Opened."
-        >
-        ```
+    let neg f x = not (f x) ;;
+    type fileTree = File of string | Folder of string * fileTree list
+    val neg : ('a -> bool) -> 'a -> bool = <fun>
     
-    2.  Tuple Pattern Matching
+    let relpath p str = p ^ "/" ^ str
     
-        Extracting elements of a tuple
-        
-        ```
-        > let fst (a, _) = a ;;
-        val fst : 'a * 'b -> 'a = <fun>
-        > let snd (_, b) = b ;;
-        val snd : 'a * 'b -> 'b = <fun>
-        
-        > fst (2, 3) ;;
-        - : int = 2
-        
-        > fst ("a", 23) ;;
-        - : string = "a"
-        
-        > snd (2, 3) ;;
-        - : int = 3
-        
-        > snd (2, "a") ;;
-        - : string = "a"
-        
-        > List.map fst [("a", 12); ("b", 23) ; ("c", 23) ; ("d", 67)] ;;
-        - : string list = ["a"; "b"; "c"; "d"]
-        
-        > List.map snd [("a", 12); ("b", 23) ; ("c", 23) ; ("d", 67)] ;;
-        - : int list = [12; 23; 23; 67]
-        
-        
-        >
-        let tpl3_1 (a, _, _) = a
-        let tpl3_2 (_, a, _) = a
-        let tpl3_3 (_, _, a) = a;;
-        
-        > tpl3_1 (2, "ocaml", 2.323) ;;
-        - : int = 2
-        > tpl3_2 (2, "ocaml", 2.323) ;;
-        - : string = "ocaml"
-        > tpl3_3 (2, "ocaml", 2.323) ;;
-        - : float = 2.323
-        ```
-        
-        Returning Multiple Values
-        
-        ```ocaml
-        >  let divmod a b = a/b, a mod b ;;
-        val divmod : int -> int -> int * int = <fun>
-        
-          divmod 10 3 ;;
-        - : int * int = (3, 1)
-        
-        
-        
-        > let swap (x, y) = (y, x) ;;
-        val swap : 'a * 'b -> 'b * 'a = <fun>
-        
-          swap (2, 3) ;;
-        - : int * int = (3, 2)
-        
-        > List.map swap [("a", 12); ("b", 23) ; ("c", 23) ; ("d", 67)] ;;
-        - : (int * string) list = [(12, "a"); (23, "b"); (23, "c"); (67, "d")]
-        ```
-        
-        Source:
-        
-        -   <http://xahlee.info/ocaml/pattern_matching.html>
-
-5.  Recursive Data Structures
-
-    1.  Alternative List Implementation
+    let scand_dir path =
+        Sys.readdir path
+        |> Array.to_list
     
-        List of Intergers
-        
-        ```ocaml
-        type intlist = Nil | Cons of (int * intlist)
-        
-        let rec length (alist : intlist) : int =
-            match alist with
-            | Nil           -> 0
-            | Cons(h, t)    -> 1 + (length t)
-        
-        
-        let is_empty (alist: intlist) : bool =
-            match alist with
-            | Nil           -> true
-            | Cons(_, _)   ->  false
-        
-        let rec sum (alist : intlist) : int =
-            match alist with
-            | Nil               -> failwith "Error empty list"
-            | Cons (a, Nil)     -> a
-            | Cons (h, remain)  -> h + sum remain
-        
-        let rec product (alist : intlist) : int =
-            match alist with
-            | Nil               -> failwith "Error empty list"
-            | Cons (a, Nil)     -> a
-            | Cons (h, remain)  -> h * product remain
-        
-        let head (alist: intlist) : int =
-            match alist with
-            | Nil           -> failwith "Error empty list"
-            | Cons (a, _)   -> a
-        
-        let rec last (alist : intlist) : int =
-            match alist with
-            | Nil               -> failwith "Error empty list"
-            | Cons (a, Nil)     -> a
-            | Cons (h, remain)  -> last remain
-        
-        
-        let rec map f alist =
-            match alist with
-            | Nil               -> Nil
-            | Cons (e, remain)  -> Cons(f e, map f remain)
-        
-        let rec iter (f : int -> unit) (alist : intlist) : unit =
-            match alist with
-            | Nil           -> failwith "Error empty list"
-            | Cons(a,  Nil) -> f a
-            | Cons(hd, tl)  -> f hd ; iter f tl
-        
-        
-        let rec filter f alist =
-            match alist with
-            | Nil               -> Nil
-            | Cons (e, remain)  ->
-                        if (f e)
-                            then Cons(e, filter f remain)
-                            else filter f remain
-        
-        let rec foldl1 func alist  =  match alist with
-            | Nil                -> failwith "Error empty list"
-            | Cons (a, Nil)      -> a
-            | Cons (hd, tl)      -> func hd (foldl func tl)
-        
-        
-        let rec foldl func acc alist =
-            match alist with
-            | Nil               -> acc
-            | Cons (hd, tl)     -> func hd (foldl func acc tl)
-        
-        
-        let rec nth alist n =
-            match (alist, n) with
-            | (Nil,     _       )   -> failwith  "Empty list"
-            | (Cons(h, _  ),   1)   -> h
-            | (Cons(hd, tl),   k)   -> nth tl  (k-1)
-        
-        let rec take n alist =
-            match (n, alist) with
-            | (_, Nil)           -> Nil
-            | (0, _  )           -> Nil
-            | (k, Cons(hd, tl))  -> Cons(hd, take (k-1) tl)
-        
-        
-        let rec append ((list1:intlist), (list2:intlist)) : intlist =
-            match list1 with
-            | Nil               -> list2
-            | Cons(hd, tl)      -> Cons(hd, append( (tl, list2)))
-        
-        let rec reverse(list:intlist):intlist =
-            match list with
-              Nil -> Nil
-            | Cons(hd,tl) -> append(reverse(tl), Cons(hd,Nil))
-        ```
-        
-        ```ocaml
-        let l1 = Nil
-        let l2 = Cons(1, Nil)  (* [1] *)
-        let l3 = Cons(2, l2)   (* [2; 1] *)
-        let l4 = Cons(3, l3)   (* [3; 2; 1] *)
-        let l5 = Cons(1, Cons(2, Cons(3, Cons(4, Cons(5, Nil)))))
-        
-        > List.map length [l1 ; l2 ; l4 ; l5 ] ;;
-        - : int list = [0; 1; 3; 5]
-        
-        > List.map is_empty [l1 ; l2 ; l4 ; l5 ] ;;
-        - : bool list = [true; false; false; false]
-        
-        >  sum l1 ;;
-        Exception: Failure "Error empty list".
-        >  sum l2 ;;
-        - : int = 1
-        >  sum l3 ;;
-        - : int = 3
-        >  sum l4 ;;
-        - : int = 6
-        >  sum l5 ;;
-        - : int = 15
-        >
-        
-        
-        >  product l1 ;;
-        Exception: Failure "Error empty list".
-        >  product l2 ;;
-        - : int = 1
-        >  product l3 ;;
-        - : int = 2
-        >  product l4 ;;
-        - : int = 6
-        >  product l5 ;;
-        - : int = 120
-        >
-        
-        
-        > List.map head [l2 ; l3 ; l4 ; l5 ] ;;
-        - : int list = [1; 2; 3; 1]
-        
-        
-        >  last l1 ;;
-        Exception: Failure "Error empty list".
-        >  last l2 ;;
-        - : int = 1
-        >  last l3 ;;
-        - : int = 1
-        >  last l4 ;;
-        - : int = 1
-        >  last l5 ;;
-        - : int = 5
-        
-        
-        > map ((+) 1) Nil ;;
-        - : intlist = Nil
-        > map ((+) 1) (Cons(1, Nil))  ;;
-        - : intlist = Cons (2, Nil)
-        > map ((+) 1) (Cons(1, Cons(3, Cons(4, Cons(5, Nil)))))  ;;
-        - : intlist = Cons (2, Cons (4, Cons (5, Cons (6, Nil))))
-        
-        
-        >  append(l4, l5) ;;
-        - : intlist = Cons  (3, Cons (2, Cons (1, Cons (1, Cons (2, Cons (3, Cons (4, Cons (5, Nil))))))))
-        
-        > reverse l5 ;;
-        - : intlist = Cons (5, Cons (4, Cons (3, Cons (2, Cons (1, Nil)))))
-        
-        >   let even x = x mod 2 == 0 ;;
-        >   filter even l5 ;;
-        - : intlist = Cons (2, Cons (4, Nil)
-        
-        > l5 ;;
-        - : intlist = Cons (1, Cons (2, Cons (3, Cons (4, Cons (5, Nil)))))
-        
-        >  nth l5 2 ;;
-        - : int = 2
-        >  nth l5 1 ;;
-        - : int = 1
-        >  nth l5 3 ;;
-        - : int = 3
-        >  nth l5 4 ;;
-        - : int = 4
-        >  nth l5 5 ;;
-        - : int = 5
-        
-        > foldl1 (+) l5 ;;
-        - : int = 15
-        
-        > foldl1 (fun x y -> x * y) l5 ;;
-        - : int = 120
-        
-        > foldl1 (fun x y -> x + 10*y) l5 ;;
-        - : int = 54321
-        
-        
-        > foldl (+) 0 l5 ;;
-        - : int = 15
-        
-        > foldl (fun x y -> x * y) 2 l5 ;;
-        - : int = 240
-        
-        
-        >
-          take 0 l5 ;;
-        - : intlist = Nil
-        >  take 1 l5 ;;
-        - : intlist = Cons (1, Nil)
-        >  take 3 l5 ;;
-        - : intlist = Cons (1, Cons (2, Cons (3, Nil)))
-        >  take 4 l5 ;;
-        - : intlist = Cons (1, Cons (2, Cons (3, Cons (4, Nil))))
-        >  take 10 l5 ;;
-        - : intlist = Cons (1, Cons (2, Cons (3, Cons (4, Cons (5, Nil)))))
-        
-        
-        > iter (Printf.printf "= %d\n") l5 ;;
-        = 1
-        = 2
-        = 3
-        = 4
-        = 5
-        - : unit = ()
-        ```
+    let is_dir_relpath path rel =
+        Sys.is_directory (relpath path rel)
     
-    2.  File Tree Recursive Directory Walk
+    let rec walkdir path =
     
-        ```ocaml
-        > type fileTree =
-          | File of string
-          | Folder of string * fileTree list
-        
-        let neg f x = not (f x) ;;
-        type fileTree = File of string | Folder of string * fileTree list
-        val neg : ('a -> bool) -> 'a -> bool = <fun>
-        
-        let relpath p str = p ^ "/" ^ str
-        
-        let scand_dir path =
-            Sys.readdir path
-            |> Array.to_list
-        
-        let is_dir_relpath path rel =
-            Sys.is_directory (relpath path rel)
-        
-        let rec walkdir path =
-        
-            let files = path
-            |> scand_dir
-            |> List.filter @@ neg  (is_dir_relpath path)
-            |> List.map (fun x -> File x) in
-        
-            let dirs = path
-            |> scand_dir
-            |> List.filter (is_dir_relpath path)
-            |> List.map (fun x -> Folder (x, walkdir (relpath path x ))) in
-        
-              dirs @ files
-          ;;
-        val relpath : string -> string -> string = <fun>
-        val scand_dir : string -> string list = <fun>
-        val is_dir_relpath : string -> string -> bool = <fun>
-        val walkdir : string -> fileTree list = <fun>
-        >
-        
-        > Folder ("Documents", [File "file1.txt"; File "filte2.txt" ;
-        Folder("Pictures", []) ; Folder("bin",[File "cmd.dat" ; File "thumbs.db" ])
-        ])
-        ;;
-        - : fileTree =
-        Folder ("Documents",
-         [File "file1.txt"; File "filte2.txt"; Folder ("Pictures", []);
-          Folder ("bin", [File "cmd.dat"; File "thumbs.db"])])
-        
-        
-        > walkdir "/boot" ;;
-        - : fileTree list =
-        [Folder ("grub",
-          [Folder ("i386-pc",
-            [File "cpio_be.mod"; File "reiserfs.mod"; File "disk.mod";
-             File "dm_nv.mod"; File "xfs.mod"; File "zfscrypt.mod";
-             File "setjmp.mod"; File "boot.img"; File "uhci.mod"; File "hwmatch.mod";
-             File "ohci.mod"; File "xzio.mod"; File "btrfs.mod"; File "echo.mod";
-             File "efiemu.mod"; File "ufs1_be.mod"; File "romfs.mod";
-             File "minix2_be.mod"; File "fs.lst"; File "gdb.mod"; File "search.mod";
-             File "part_gpt.mod"; File "halt.mod"; File "setjmp_test.mod";
-            ...
-        
-        >  walkdir "/home/tux/PycharmProjects/Haskell/haskell" ;;
-        - : fileTree list =
-        [Folder ("src",
-          [File "stack.hs"; File "a.out"; File "OldState.hs";
-           File "bisection_state.hs"; File "FPUtils.hs"; File "randomst.hs"]);
-         Folder ("images",
-          [File "haskellLogo.png"; File "number-system-in-haskell-9-638.jpg";
-           File "euler_newton_cooling.png"; File "monadTable.png";
-           File "coinflip.gid"; File "coinflip.gif"; File "chartF2table.png";
-           File "chartF1table.png"; File "classes.gif"; File "qrcode_url.png"]);
-         File "Functions.md"; File "List_Comprehension.md"; File "Haskell.md";
-         File "Useful_Custom_Functions__Iterators_and_Operators.md";
-         File "Miscellaneous.md"; File "Pattern_Matching.md"; File "Basic_Syntax.md";
-         File "Functors__Monads__Applicatives_and_Monoids.md";
-         File "Algebraic_Data_Types.md"; File "Libraries.md";
-         File "Documentation_and_Learning_Materials.md"; File "Applications.md";
-         File "Functional_Programming_Concepts.md"]
-        ```
-        
-        Sources:
-        
-        -   <http://www.cs.cornell.edu/courses/cs3110/2008fa/lectures/lec04.html>
+        let files = path
+        |> scand_dir
+        |> List.filter @@ neg  (is_dir_relpath path)
+        |> List.map (fun x -> File x) in
+    
+        let dirs = path
+        |> scand_dir
+        |> List.filter (is_dir_relpath path)
+        |> List.map (fun x -> Folder (x, walkdir (relpath path x ))) in
+    
+          dirs @ files
+      ;;
+    val relpath : string -> string -> string = <fun>
+    val scand_dir : string -> string list = <fun>
+    val is_dir_relpath : string -> string -> bool = <fun>
+    val walkdir : string -> fileTree list = <fun>
+    >
+    
+    > Folder ("Documents", [File "file1.txt"; File "filte2.txt" ;
+    Folder("Pictures", []) ; Folder("bin",[File "cmd.dat" ; File "thumbs.db" ])
+    ])
+    ;;
+    - : fileTree =
+    Folder ("Documents",
+     [File "file1.txt"; File "filte2.txt"; Folder ("Pictures", []);
+      Folder ("bin", [File "cmd.dat"; File "thumbs.db"])])
+    
+    
+    > walkdir "/boot" ;;
+    - : fileTree list =
+    [Folder ("grub",
+      [Folder ("i386-pc",
+        [File "cpio_be.mod"; File "reiserfs.mod"; File "disk.mod";
+         File "dm_nv.mod"; File "xfs.mod"; File "zfscrypt.mod";
+         File "setjmp.mod"; File "boot.img"; File "uhci.mod"; File "hwmatch.mod";
+         File "ohci.mod"; File "xzio.mod"; File "btrfs.mod"; File "echo.mod";
+         File "efiemu.mod"; File "ufs1_be.mod"; File "romfs.mod";
+         File "minix2_be.mod"; File "fs.lst"; File "gdb.mod"; File "search.mod";
+         File "part_gpt.mod"; File "halt.mod"; File "setjmp_test.mod";
+        ...
+    
+    >  walkdir "/home/tux/PycharmProjects/Haskell/haskell" ;;
+    - : fileTree list =
+    [Folder ("src",
+      [File "stack.hs"; File "a.out"; File "OldState.hs";
+       File "bisection_state.hs"; File "FPUtils.hs"; File "randomst.hs"]);
+     Folder ("images",
+      [File "haskellLogo.png"; File "number-system-in-haskell-9-638.jpg";
+       File "euler_newton_cooling.png"; File "monadTable.png";
+       File "coinflip.gid"; File "coinflip.gif"; File "chartF2table.png";
+       File "chartF1table.png"; File "classes.gif"; File "qrcode_url.png"]);
+     File "Functions.md"; File "List_Comprehension.md"; File "Haskell.md";
+     File "Useful_Custom_Functions__Iterators_and_Operators.md";
+     File "Miscellaneous.md"; File "Pattern_Matching.md"; File "Basic_Syntax.md";
+     File "Functors__Monads__Applicatives_and_Monoids.md";
+     File "Algebraic_Data_Types.md"; File "Libraries.md";
+     File "Documentation_and_Learning_Materials.md"; File "Applications.md";
+     File "Functional_Programming_Concepts.md"]
+    ```
+    
+    Sources:
+    
+    -   <http://www.cs.cornell.edu/courses/cs3110/2008fa/lectures/lec04.html>
 
 ## Lazy Evaluation<a id="sec-1-7" name="sec-1-7"></a>
 
@@ -5886,10 +5896,12 @@ libpython2.7-dev - Header files and a static library for Python (v2.7)
 
 ## Module System<a id="sec-1-9" name="sec-1-9"></a>
 
+### Overview<a id="sec-1-9-1" name="sec-1-9-1"></a>
+
 The Ocaml module system helps to organize the code, avoid names
 collision, provides local namespacing and hide implementation details.
 
-### Opening Modules<a id="sec-1-9-1" name="sec-1-9-1"></a>
+### Opening Modules<a id="sec-1-9-2" name="sec-1-9-2"></a>
 
 ```ocaml
     (** Show Module Contents *)
@@ -6032,7 +6044,7 @@ collision, provides local namespacing and hide implementation details.
     - : int = 3
 ```
 
-### Defining a module in the Toplevel<a id="sec-1-9-2" name="sec-1-9-2"></a>
+### Defining a module in the Toplevel<a id="sec-1-9-3" name="sec-1-9-3"></a>
 
 ```ocaml
     # module MyModule = 
@@ -6206,7 +6218,7 @@ collision, provides local namespacing and hide implementation details.
     #
 ```
 
-### Loading file as module in the toplevel<a id="sec-1-9-3" name="sec-1-9-3"></a>
+### Loading file as module in the toplevel<a id="sec-1-9-4" name="sec-1-9-4"></a>
 
 Let the file myModule.ml have the content:
 
@@ -6279,7 +6291,7 @@ Load file as module
     #
 ```
 
-### Loading Libraries Modules<a id="sec-1-9-4" name="sec-1-9-4"></a>
+### Loading Libraries Modules<a id="sec-1-9-5" name="sec-1-9-5"></a>
 
 It will load the library pcre, that can be installed with $ opam install pcre
 
@@ -6339,7 +6351,7 @@ It will load the library pcre, that can be installed with $ opam install pcre
     - : int * int = (23213, 132345)
 ```
 
-### Including Modules<a id="sec-1-9-5" name="sec-1-9-5"></a>
+### Including Modules<a id="sec-1-9-6" name="sec-1-9-6"></a>
 
 All functions of the native library module List will be included in the new module List that
 defines the functions take, drop and range.
