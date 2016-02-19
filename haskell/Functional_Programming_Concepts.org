@@ -2,6 +2,8 @@
 #+AUTHOR: Caio Rodrigues Soares Silva
 #+EMAIL: <caiorss.rodrigues@gmail.com>
 #+DESCRIPTION: Functional programming concepts, examples, algorithms and ideas.
+#+OPTIONS: ^:nil
+#+OPTIONS:   H:4
 
 * Concepts
 ** Overview
@@ -25,7 +27,7 @@ Functional Programming is all about programming with functions.
 Non Essential Features:
 
  - Static Typing
- - Type Inferencing
+ - Type Inference
  - Algebraic Data Types
 
 *Functional Programming Design Patterns*
@@ -4462,7 +4464,7 @@ The composition law can be generalized to:
 
 fmap (f1 . f2 . f3 ... fn) = fmap f1 . fmap f2 . fmap f3 ... fmap fn 
 
-*** List all Functor instances 
+*** Show all Functor instances 
 
 #+BEGIN_SRC haskell 
 > :info Functor 
@@ -4505,7 +4507,7 @@ instance Alternative Maybe -- Defined in `Control.Applicative'
 > 
 #+END_SRC
 
-*** Functors Implementations 
+*** Functor Implementations 
 **** Identity
 
 #+BEGIN_SRC haskell 
@@ -4737,7 +4739,7 @@ Nothing
 
 The type constructor Either is similar to Maybe and it can short
 circuit a computation in the similar way to Maybe, however it allows
-to attach an error message. 
+to attach an error value. 
 
 #+BEGIN_SRC haskell 
 data Either a b = Left a | Right b 
@@ -5868,6 +5870,7 @@ Nothing
 > 
 
 
+
 -- Do noation 
 --
 --
@@ -6124,6 +6127,617 @@ Enter x: erew34
 # 
 #+END_SRC
 
+*** Either Monad 
+**** Overview 
+
+The Either type is an extension of Maybe, it end a computation if any
+step fails. Unlike Maybe it can indicate the source of the error. It
+represents two values Right that holds a correct value (mneumonic
+"right" meaning correct) and the constructor Left that holds an error value.
+
+The module [[https://downloads.haskell.org/~ghc/6.12.2/docs/html/libraries/base-4.2.0.1/Data-Either.html][Data.Either]] has combinators to manipulate the Either type.
+
+From: [[https://hackage.haskell.org/package/category-extras-0.53.4/docs/src/Control-Monad-Either.html][src/Control/Monad/Either.hs]]
+
+
+#+BEGIN_SRC haskell 
+data Either a b = Left a | Right b deriving (Eq, Show)
+
+instance Monad (Either e) where
+        return = Right
+        Right m >>= k = k m
+        Left e  >>= _ = Left e
+
+#+END_SRC
+
+**** Example
+
+file: either_monad.hs 
+
+#+BEGIN_SRC haskell 
+--  File: either_monad.hs
+------------------------------
+
+import Text.Read (readMaybe)
+
+data ErrorCode = 
+        ParserError 
+      | InvalidInput 
+      deriving (Eq, Show)
+
+describeErrorCode ParserError  = "The parser failed." 
+describeErrorCode InvalidInput = "Input out function domain."
+
+describeError (Right x)    = Right x 
+describeError (Left  code) = Left (describeErrorCode code)
+
+parseDouble2 :: String -> Either ErrorCode Double 
+parseDouble2  str = 
+    case (readMaybe str :: Maybe Double) of
+    Just x  ->  Right x 
+    Nothing ->  Left  ParserError
+
+
+sqrt_safe2 :: Double -> Either ErrorCode Double 
+sqrt_safe2 x = 
+    if x >= 0 
+    then (Right x)
+    else (Left InvalidInput)
+
+
+addSafe1 :: Either err Double -> Either err Double -> Either err Double 
+addSafe1 ex ey = do
+  x <- ex
+  y <- ey 
+  return $ x + y 
+
+addSafe2 :: Either err Double -> Either err Double -> Either err Double
+addSafe2 ex ey = 
+ ex >>= \x -> 
+ ey >>= \y ->
+ return (x + y)
+
+test1 input = do
+   x <- parseDouble2 input 
+   y <- sqrt_safe2 x 
+   return (x + y)
+
+test2 input = 
+  parseDouble2 input >>= \x ->
+  sqrt_safe2 x       >>= \y ->
+  return (x + y)
+  
+
+-- ----- End of File  --------------------
+------------------------------------------
+#+END_SRC
+
+Repl:
+
+#+BEGIN_SRC haskell 
+
+> :load /tmp/either_monad.hs
+
+ -- Playing with Return 
+ --
+> return 10 :: Either a Double
+Right 10.0
+> 
+
+> let returnEither x = Right x 
+> 
+> returnEither 10
+Right 10
+
+> returnEither 10.0
+Right 10.0
+
+> :t returnEither 10.0
+returnEither 10.0 :: Fractional b => Either a b
+> 
+
+> :t returnEither (10.0 :: Double)
+returnEither (10.0 :: Double) :: Either a Double
+>
+
+ ---  Playing with bind operator  
+ ---
+
+> Right 10 >>= \x -> Right (x + 5)
+Right 15
+> 
+
+> return 10 >>= \x -> Right (x + 5)
+Right 15
+> 
+
+
+> Right 10 >>= \x -> Left "It always will fail"
+Left "It always will fail"
+> 
+
+> Left "Computation failed" >>= \x -> Right (x + 5)
+Left "Computation failed"
+> 
+
+> return 5 >>= \x -> if x < 20 then Right (x + 5) else Left "Number out of range greater than 20"
+Right 10
+> 
+> return 30 >>= \x -> if x < 20 then Right (x + 5) else Left "Number out of range greater than 20"
+Left "Number out of range greater than 20"
+> 
+
+
+> return "100.23" >>= \x -> parseDouble2 x
+Right 100.23
+> 
+> return "1dsf00.23" >>= \x -> parseDouble2 x
+Left ParserError
+> 
+ 
+ 
+> test1 "100.0"
+Right 200.0
+>
+> 
+> test1 "asd100.0"
+Left ParserError
+> 
+>
+> test1 "-100"
+Left InvalidInput
+> 
+
+> test2 "100"
+Right 200.0
+>
+> test2 "asdd10sd0"
+Left ParserError
+>
+> test2 "-200"
+Left InvalidInput
+> 
+
+
+> :t addSafe1 
+addSafe1
+  :: Either err Double -> Either err Double -> Either err Double
+> 
+
+> addSafe1 (Right 100) (Right 200)
+Right 300.0
+> 
+
+> addSafe1 (Right 100) (Left "Error: second argument not a number")
+Left "Error: second argument not a number"
+> 
+
+> addSafe1 (Left "Error: first argument not a number") (Right 100)
+Left "Error: first argument not a number"
+>
+
+> addSafe1 (parseDouble2 "200.0") (sqrt_safe2 100.0)
+Right 300.0
+> 
+
+> addSafe1 (parseDouble2 "200.0") (sqrt_safe2 (-100.0))
+Left InvalidInput
+> 
+
+> addSafe1 (parseDouble2 "2sdfs00.0") (sqrt_safe2 (-100.0))
+Left ParserError
+> 
+
+> addSafe2 (parseDouble2 "200.0") (sqrt_safe2 100.0)
+Right 300.0
+>
+
+> describeError $ addSafe2 (parseDouble2 "20asdas0.0") (sqrt_safe2 100.0)
+Left "The parser failed."
+> 
+
+> describeError $ addSafe2 (parseDouble2 "2000.0") (sqrt_safe2 (-100.0))
+Left "Input out function domain."
+> 
+
+> import qualified Data.Either as E
+
+-- Extracts from a list of Either all the Left elements All the Left
+--   elements are extracted in order.
+--
+> E.lefts [Left "Error 1", Right 10, Left "Error 2", Right 200]
+["Error 1","Error 2"]
+> 
+
+-- Extracts from a list of Either all the Right elements All the Right
+-- elements are extracted in order.
+--
+> E.rights  [Left "Error 1", Right 10, Left "Error 2", Right 200]
+[10,200]
+>
+
+
+> E.partitionEithers  [Left "Error 1", Right 10, Left "Error 2", Right 200]
+(["Error 1","Error 2"],[10,200])
+> 
+
+--   Case analysis for the Either type. If the value is Left a, apply
+--   the first function to a; if it is Right b, apply the second
+--   function to b.
+-- 
+
+> :t E.either
+E.either :: (a -> c) -> (b -> c) -> Either a b -> c
+> 
+
+> E.either (\left -> left + 10) (\right -> right * 3) (Right 10)
+30
+> 
+
+> E.either (\left -> left + 10) (\right -> right * 3) (Left 10)
+20
+> 
+
+> let f = E.either (\left -> left + 10) (\right -> right * 3) 
+> :t f
+f :: Either Integer Integer -> Integer
+> 
+
+> f (Right 10)
+30
+> f (Left 10)
+20
+> 
+
+#+END_SRC 
+
+*** IO Monad 
+**** Overview 
+
+The type IO indicates an action that when evaluated may perform some
+IO. The function =putChar :: Char -> IO ()= takes a char and returns
+an _IO action_ that prints a char, no character is printed on the
+screen and no side-effect is performed. This IO action can be passed
+as a ordinary values to another IO actions and combined with another
+IO actions. This IO action only will be executed when called from the
+function =main :: IO ()=, the entry-point of Haskell programs, or
+called from another IO actions called from main.
+
+The values wrapped in an IO type like =getChar :: IO Char= can only be
+extracted inside an IO action. 
+
+Summary: 
+
+ - The Haskell's IO is pure and lazy.
+ - There is no way to extract a value of an IO outside an IO. 
+ - Only IO actions perform IO actions.  
+ - The entry point of a Haskell program is the function _main_. Only
+   the IO functions called from main will be run.
+ - Haskell IO functions can be executed in the REPL ghci.
+
+
+Example: 
+
+file: haskell_io1.hs
+
+#+BEGIN_SRC haskell 
+
+import System.IO (hFlush, stdout)
+
+action1 :: IO ()
+action1 = putStrLn "Say action 1 dummy"
+
+-- action2 :: IO ()
+action2 = putStrLn "Action2 won't be executed"
+
+action3 :: IO ()
+action3 = putStrLn "Action3 won't be executed"
+
+newline :: IO ()
+newline = putStrLn ""
+
+-- prompt :: String -> IO String
+prompt message = do
+  putStr message
+  hFlush stdout 
+  line <- getLine  
+  newline
+  newline
+  return line 
+
+askQuestion :: IO String 
+askQuestion = prompt "> Enter a line: "
+
+main :: IO ()
+main = do
+  putStrLn "Hello world"
+  action1
+  line <- askQuestion
+  putStrLn ("You entered the line: " ++ line)
+  
+#+END_SRC
+ 
+Compiling and running:
+
+#+BEGIN_SRC sh
+# Compiling 
+
+$ ghc haskell_test.hs
+[1 of 1] Compiling Main             ( haskell_test.hs, haskell_test.o )
+Linking haskell_test ...
+
+# Running the executable
+#
+$ ./haskell_test 
+Hello world
+Say action 1 dummy
+> Enter a line: Hola mundo. Muchas gracias Haskell!
+
+
+You entered the line: Hola mundo. Muchas gracias Haskell!
+
+
+# Executing in batch mode (script) 
+#
+$ runghc haskell_test.hs
+Hello world
+Say action 1 dummy
+> Enter a line: Hola mundo Haskell.
+
+
+You entered the line: Hola mundo Haskell.
+
+
+
+#+END_SRC
+
+It is noticeable that: 
+
+ - action2 neither action3 are executed and they don't print anything.
+ - Only the IO actions called from main are executed.
+ - The string returned by the function askQuestion can only be
+   extracted inside an IO action.
+
+The application of the function =putStrLn :: String -> IO ()= to a
+string ={putStrLn "Hello world"}= is equivalent to the code below in
+OCaml. 
+
+#+BEGIN_SRC ocaml
+> let putStrLn message = fun () -> print_string message ; 
+                                   print_string "\n" ;;
+
+val putStrLn : string -> unit -> unit = <fun>
+
+
+>  putStrLn "Hello world" ;;
+- : unit -> unit = <fun>
+
+(* Nothing is printed. It is created an action that prints 
+    hello world
+*)
+> let action = putStrLn "hello world" ;;
+
+> let action = putStrLn "hello world" ;;
+val action : unit -> unit = <fun>
+
+
+(* Not executed  *)
+- action ;; 
+val it : (unit -> unit) 
+> 
+
+>  action () ;;
+hello world
+- : unit = ()
+
+
+#+END_SRC
+
+Bind and Return: 
+
+#+BEGIN_SRC 
+(>>=) :: IO a -> a -> IO b -> IO b 
+(>>) :: IO () -> IO () -> IO ()
+return :: a -> IO a
+#+END_SRC
+
+**** Example 
+
+
+Examples with IO Monad:
+
+#+BEGIN_SRC haskell 
+
+ -- Wrapping a value into IO
+ -- 
+
+> return "Hello world" :: IO String
+"Hello world"
+> 
+> return 100 :: IO Integer
+100
+> :t return 100 :: IO Integer
+return 100 :: IO Integer :: IO Integer
+> 
+
+
+-- The repl forces the evaluation of an IO action. 
+--
+> return "Hello world" >>= putStrLn 
+Hello world
+>
+
+> :t return "Hello world" >>= putStrLn 
+return "Hello world" >>= putStrLn :: IO ()
+> 
+
+-- This is not executed, unless forced. 
+-- 
+> let action0 = return "Hello world" >>= putStrLn 
+> 
+> :t action0 
+action0 :: IO ()
+> 
+
+> action0
+Hello world
+> 
+
+> let action = putStrLn "Line1" >> putStrLn "Line2" >> putStrLn "Line3"
+> :t action 
+action :: IO ()
+
+> action 
+Line1
+Line2
+Line3
+> 
+
+#+END_SRC
+
+
+
+File: haskelldo.hs 
+
+#+BEGIN_SRC haskell
+sumTwoNumbers = do 
+   putStr "Enter the first number: "
+   line1 <- getLine 
+   putStr "Enter the second number: "
+   line2 <- getLine 
+   let  x1 = read line1 :: Integer
+   let  x2 = read line2  :: Integer 
+   let sum = x1 + x2 
+   putStrLn ("The sum is " ++ show sum)
+   return sum
+
+
+-- SumTwonumbers dessugarized 
+--
+sumTwoNumbers_v2 = 
+  putStr "Enter the first number: "     >>= \_      ->
+  getLine                               >>= \line1  ->
+  putStr "Enter the second number: "    >>= \_      ->
+  getLine                               >>=  \line2 -> 
+  let x1 = read line1 :: Integer in 
+  let x2 = read line2 :: Integer in 
+  let sum = x1 + x2 in 
+  putStrLn  ("The sum is " ++ show sum) >>= \_ -> 
+  return sum
+
+showResult :: IO Integer ->  IO ()
+showResult inputAction = do
+  x <- inputAction 
+  putStrLn ( "The result is " ++ show x)
+
+#+END_SRC
+
+
+Running in the REPL:
+
+#+BEGIN_SRC haskell
+> :load haskelldo.hs
+
+
+> sumTwoNumbers 
+Enter the first number: 100
+Enter the second number: 200
+The sum is 300
+300
+> 
+> :t sumTwoNumbers 
+sumTwoNumbers :: IO Integer
+> 
+
+
+> sumTwoNumbers_v2
+Enter the first number: 100
+Enter the second number: 200
+The sum is 300
+300
+> 
+
+> :t sumTwoNumbers_v2
+sumTwoNumbers_v2 :: IO Integer
+> 
+
+> :t showResult 
+showResult :: IO Integer -> IO ()
+> 
+
+
+ -- It creates a new IO action. 
+ --
+> let action = showResult sumTwoNumbers
+> 
+> action 
+Enter the first number: 100
+Enter the second number: 200
+The sum is 300
+The result is 300
+> 
+
+> :t action
+action :: IO ()
+>
+
+-- The IO actions can be manipulated like values:
+--
+-------------------------------------------------
+> :t mapM_
+mapM_ :: Monad m => (a -> m b) -> [a] -> m ()
+> 
+
+> mapM_ putStrLn ["line 0", "line 1", "line2", "line 3"] 
+line 0
+line 1
+line2
+line 3
+> 
+
+> let forEachPrint = mapM_ putStrLn 
+> 
+> :t forEachPrint 
+forEachPrint :: [String] -> IO ()
+> 
+> forEachPrint put
+putChar   putStr    putStrLn
+> forEachPrint ["line 0", "line 1", "line2", "line 3"]
+line 0
+line 1
+line2
+line 3
+> 
+
+> :t replicateM
+replicateM :: Monad m => Int -> m a -> m [a]
+> 
+
+> let askTwoTimes = replicateM 2 sumTwoNumbers
+>
+
+> askTwoTimes 
+Enter the first number: 100
+Enter the second number: 200
+The sum is 300
+Enter the first number: 300
+Enter the second number: 90
+The sum is 390
+[300,390]
+>
+#+END_SRC
+
+
+Some IO Primitives: 
+
+| Console Output Functions         | Console Input Functions  |
+|----------------------------------+--------------------------|
+| putChar  :: Char -> IO ()        | getChar :: Char -> IO () |
+| putStr   :: String -> IO ()      |                          |
+| putStrLn :: String -> IO ()      | getLine :: IO String     |
+| print    :: Show a => a -> IO () | readLn :: Read a => IO a |
+|                                  |                          |
+
 *** See also 
 
 *Monads*
@@ -6184,6 +6798,43 @@ Enter x: erew34
 
  - [[https://boykin.wordpress.com/2011/09/11/option-monad-in-scala/][Option Monad in Scala | Patrick Oscar Boykin's Personal Weblog]]
  
+
+*IO Monad*
+
+ - https://wiki.haskell.org/IO_inside 
+
+ - [[http://learnyouahaskell.com/input-and-output][Input and Output - Learn You a Haskell for Great Good!]]
+
+ - [[https://www.haskell.org/tutorial/io.html][A Gentle Introduction to Haskell: IO]]
+
+ - [[https://en.wikibooks.org/wiki/Haskell/Understanding_monads/IO][Haskell/Understanding monads/IO - Wikibooks, open books for an open world]]
+
+*Papers*
+
+  - Philip Wadler, How to declare an imperative, ACM Computing
+    Surveys, 29(3):240--263, September 1997. Available at
+    <http://homepages.inf.ed.ac.uk/wadler/papers/monadsdeclare/monadsdeclare.ps>
+
+
+
+  - Philip Wadler, The essence of functional programming. Invited
+    talk, 19'th Symposium on Principles of Programming Languages, ACM
+    Press, Albuquerque, January 1992. Available at
+    <http://homepages.inf.ed.ac.uk/wadler/papers/essence/essence.ps>
+
+
+  - Philip Wadler, Monads for functional programming. Available at
+    <http://homepages.inf.ed.ac.uk/wadler/papers/marktoberdorf/baastad.pdf>
+
+
+  - Peyton Jones, Simon L., and Philip Wadler. "Imperative functional
+    programming." Proceedings of the 20th ACM SIGPLAN-SIGACT symposium
+    on Principles of programming languages. ACM, 1993. Available at
+    <http://www.cs.tufts.edu/~nr/cs257/archive/simon-peyton-jones/imperative.pdf>
+
+
+  - [[http://okmij.org/ftp/Computation/IO-monad-history.html#Peyton-Jones-2000][Kiselyov O. - IO monad in 1965]]
+
 * Functional Languages
 
 Note: There is no consensus about what really is a functional
@@ -6274,7 +6925,11 @@ A selection of people who influenced functional programming:
 
  - [[https://en.wikipedia.org/wiki/Haskell_Curry][Haskell Curry]], Mathematician -> Concept of currying
 
- - [[https://en.wikipedia.org/wiki/Robin_Milner][Robin Milner]], Computer Scientist -> Type inference, [[https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system][Hindley–Milner type system]], [[https://en.wikipedia.org/wiki/ML_(programming_language][ML language]]
+ - [[https://en.wikipedia.org/wiki/Robin_Milner][Robin Milner]], Computer Scientist -> Type inference
+
+   * [[https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system][Hindley–Milner type system]] 
+
+   * [[https://en.wikipedia.org/wiki/ML_(programming_language][ML language]]
 
  - [[https://en.wikipedia.org/wiki/John_McCarthy_(computer_scientist][John McCarthy]],  Computer Scientist -> Creator of [[https://en.wikipedia.org/wiki/Lisp_(programming_language][Lisp]] and the
    father of Artificial intelligence research.
@@ -6306,13 +6961,13 @@ A selection of people who influenced functional programming:
 
    * [[http://research.microsoft.com/en-us/people/simonpj/][Simon Peyton Jones - Microsoft Research]]
 
- - [[https://en.wikipedia.org/wiki/John_Hughes_(computer_scientist][John Hughes]]), Computer Scientist -> One of the most influentials
+ - [[https://en.wikipedia.org/wiki/John_Hughes_(computer_scientist][John Hughes]], Computer Scientist -> One of the most influentials
    papers in FP field: Why functional programing matters.
 
 
  - [[https://en.wikipedia.org/wiki/Gerald_Jay_Sussman][Gerald Jay Sussman]], Mathematician and Computer Scientist
 
-   * [[https://en.wikipedia.org/wiki/Scheme_(programming_language][Scheme Lisp]]) Language
+   * [[https://en.wikipedia.org/wiki/Scheme_(programming_language][Scheme Lisp]] Language
    * Book: [[https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Computer_Programs][Structure and Interpretation of Computer Programs]]
    * Book: [[https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Classical_Mechanics][Structure and Interpretation of Classical Mechanics]]
 
@@ -6539,7 +7194,7 @@ Recursion:
 
 *Python*
 
- - Python Libraries Useful for functional programming:
+ - Useful Python libraries for functional programming:
 
    - [[https://docs.python.org/3/library/functools.html][functools — Higher-order functions and operations on callable objects]]
 

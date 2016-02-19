@@ -24,6 +24,11 @@
     - [Map](#map)
     - [Filter](#filter)
     - [Reduce or Fold](#reduce-or-fold)
+      - [Overview](#overview)
+      - [Haskell](#haskell)
+      - [Python](#python)
+      - [Clojure](#clojure)
+      - [Fsharp](#fsharp)
     - [For Each, Impure map](#for-each,-impure-map)
     - [Apply](#apply)
   - [Special Functions](#special-functions)
@@ -31,6 +36,11 @@
     - [Constant Function](#constant-function)
     - [List Constructor (Cons)](#list-constructor-(cons))
     - [Zip](#zip)
+      - [Overview](#overview)
+      - [Zip in Haskell](#zip-in-haskell)
+      - [Zip in Python](#zip-in-python)
+      - [Zip in Scheme](#zip-in-scheme)
+      - [Zip in Clojure](#zip-in-clojure)
   - [Function Composition](#function-composition)
     - [Overview](#overview)
     - [Function Composition in Haskell](#function-composition-in-haskell)
@@ -38,12 +48,30 @@
     - [Function Composition in F#](#function-composition-in-f#)
   - [Functors](#functors)
     - [Overview](#overview)
-    - [List all Functor instances](#list-all-functor-instances)
-    - [Functors Implementations](#functors-implementations)
+    - [Show all Functor instances](#show-all-functor-instances)
+    - [Functor Implementations](#functor-implementations)
+      - [Identity](#identity)
+      - [List](#list)
+      - [Maybe / Option](#maybe-/-option)
+      - [Either](#either)
+      - [IO](#io)
   - [Monads](#monads)
     - [Overview](#overview)
     - [List Monad](#list-monad)
+      - [List Monad in Haskell](#list-monad-in-haskell)
+      - [List Monad in OCaml](#list-monad-in-ocaml)
+      - [List Monad in F#](#list-monad-in-f#)
+      - [List Monad in Python](#list-monad-in-python)
     - [Maybe / Option Monad](#maybe-/-option-monad)
+      - [Overview](#overview)
+      - [Maybe Monad in Haskell](#maybe-monad-in-haskell)
+      - [Maybe / Option Monad in Ocaml](#maybe-/-option-monad-in-ocaml)
+    - [Either Monad](#either-monad)
+      - [Overview](#overview)
+      - [Example](#example)
+    - [IO Monad](#io-monad)
+      - [Overview](#overview)
+      - [Example](#example)
     - [See also](#see-also)
 - [Functional Languages](#functional-languages)
 - [Influential People](#influential-people)
@@ -78,7 +106,7 @@ Functional Programming is all about programming with functions.
 Non Essential Features:
 
 -   Static Typing
--   Type Inferencing
+-   Type Inference
 -   Algebraic Data Types
 
 **Functional Programming Design Patterns**
@@ -2063,793 +2091,793 @@ StopIteration
 
 ### Reduce or Fold<a id="sec-1-9-4" name="sec-1-9-4"></a>
 
-1.  Overview
+#### Overview<a id="sec-1-9-4-1" name="sec-1-9-4-1"></a>
 
-    **Fold Left**
-    
-    The  function fold left is tail recursive, whereas the function fold
-    right is not. This functions is also known as reduce or inject (in
-    Ruby). The function fold left is often called just <span class="underline">fold</span> like in F#
-    or <span class="underline">reduce</span> (Python, Javascript, Clojure) and also Inject (Ruby).
-    
-    `foldl :: (State -> x -> State) -> State -> [x] -> State`
-    `foldl (f :: S -> x -> S)  S [x]`
-    
-    ```
-    Sn = foldl f S0 [x0, x1, x2, x3 ... xn-1]
-    
-    S1   = f S0 x0
-    S2   = f S1 x1     = f (f S0 x0) x1
-    S3   = f S2 x2     = f (f (f S0 x0) x1) x2
-    S4   = f S3 x3     = f (f (f (f S0 x0) x1) x2) x3
-    ...
-    Sn-1 = f Sn-2 Xn-2 = ...
-    Sn   = f Sn-1 Xn-1 = f ...(f (f (f (f S0 x0) x1) x2) x3 ... xn
-    
-      ;;; -> Result
-    ```
-    
-    **Fold Right**
-    
-    `foldr :: (x -> acc -> acc) -> acc -> [x] -> acc`
-    
-    ```
-    S1   = f xn-1 S0
-    S2   = f xn-2 S1     = f xn-2 (f xn-1 S0)
-    S3   = f xn-3 S2     = f xn-3 (f xn-2 (f xn-1 S0))
-    S4   = f xn-4 S3     = f xn-4 (f xn-3 (f xn-2 (f xn-1 S0)))
-    ....
-    Sn-1 = f x1   Sn-2   = ...
-    Sn   = f x0   Sn-1   = f x0 (f x1 ... (f xn-2 (f xn-1 S0)))
-    ```
+**Fold Left**
 
-2.  Haskell
+The  function fold left is tail recursive, whereas the function fold
+right is not. This functions is also known as reduce or inject (in
+Ruby). The function fold left is often called just <span class="underline">fold</span> like in F#
+or <span class="underline">reduce</span> (Python, Javascript, Clojure) and also Inject (Ruby).
 
-    See also: 
-    
-    -   [Fold (higher-order function) - Wikipedia, the free encyclopedia](https://en.wikipedia.org/wiki/Fold_(higher-order_function))
-    -   [A tutorial on the universality and expressiveness of fold. GRAHAM HUTTON](http://www.cs.nott.ac.uk/~pszgmh/fold.pdf)
-    -   [Haskell unit 6: The higher-order fold functions | Antoni Diller](http://www.cantab.net/users/antoni.diller/haskell/units/unit06.html)
-    
-    Fold Left:
-    
-    ```
-     foldl :: (acc -> x -> acc) -> acc -> [x] -> acc
-     
-                      |             |      |       | 
-                      |             |      |       |---> Returns the accumulated 
-                      |             |      |             value
-                      |             |      |----- xs 
-                      |             |                  
-                      |             |     Inital Value of accumulator
-                      |             |---  acc0
-                      |
-                      |-----------------  f :: acc -> x -> acc
-                                                      |
-                                                      |--- Element of list 
-    
-     foldl :: (b -> a -> b) -> b -> [a] -> b
-     foldl f z []     = z
-     foldl f z (x:xs) = foldl f (f z x) xs
-    ```
-    
-    ```haskell
-    > :t foldl
-    foldl :: (a -> b -> a) -> a -> [b] -> a
-    > 
-    > foldl (\acc x -> 10 * acc + x) 0 [1, 2, 3, 4, 5] 
-    12345
-    >
-    ```
-    
-    It is equivalent to:
-    
-    ```haskell
-    > let f acc x = 10 * acc + x
-    > 
-    > (f 0 1)
-    1
-    > (f (f 0 1) 2)
-    12
-    > (f (f (f 0 1) 2) 3)
-    123
-    > 
-    > (f (f (f (f 0 1) 2) 3) 4)
-    1234
-    > (f (f (f (f (f 0 1) 2) 3) 4) 5)
-    12345
-    >
-    ```
-    
-    Evaluation of Fold left:
-    
-    ```
-    > foldl (\acc x -> 10 * acc + x ) 0 [1, 2, 3, 4, 5]
-    12345
-    
-    S0 = 0
-    
-    f = \acc x -> 10 * acc + x
-    
-                     x  acc
-    S1 = f S0 x0 = f 0   1 = 10 * 0  + 1 = 1
-    S2 = f S1 x1 = f 10  2 = 10 * 1    + 2 = 12
-    S3 = f S2 x2 = f 12  3 = 10 * 12   + 3 = 123
-    S4 = f S3 x3 = f 123 4 = 10 * 123  + 4 = 1234
-    S5 = f S3 x3 = f 123 4 = 10 * 1234 + 5 = 12345
-    ```
-    
-    **Fold right**
-    
-    ```
-     foldr :: (x -> acc -> acc) -> acc -> [x] -> acc
-    
-     foldr :: (a -> b -> b) -> b -> [a] -> b
-     foldr f z []     = z
-     foldr f z (x:xs) = f x (foldr f z xs)
-    ```
-    
-    ```haskell
-    > foldr (\x acc -> 10 * acc + x) 0 [1, 2, 3, 4, 5] 
-    54321
-    
-    > (f 0 5)
-    5
-    > (f (f 0 5) 4)
-    54
-    > (f (f (f 0 5) 4) 3)
-    543
-    > (f (f (f (f 0 5) 4) 3) 2)
-    5432
-    > (f (f (f (f (f 0 5) 4) 3) 2) 1)
-    54321
-    > 
-    
-     --
-     -- Derive fold_right from foldl (fold left)
-     -- 
-    
-    > let fold_right f acc xs = foldl (\x acc -> f acc x) acc (reverse xs)
-    > 
-    > :t fold_right
-    fold_right :: (b -> a -> a) -> a -> [b] -> a
-    > 
-    > 
-    > fold_right (\x acc -> 10 * acc + x) 0 [1, 2, 3, 4, 5]
-    54321
-    >
-    ```
-    
-    Evaluation of Fold Right:
-    
-    ```
-    Example:
-    
-    > foldr (\x acc -> 10 * acc + x ) 0 [1, 2, 3, 4, 5]
-    54321
-    >
-    
-    f  = \x acc -> 10 * acc + x
-    S0 = 0
-    n = 5
-                           x acc
-    S1   = f x4 S0     = f 5  0    = 10 * 0    + 5 = 5
-    S2   = f x3 S1     = f 4  5    = 10 * 5    + 4 = 54
-    S3   = f x2 S2     = f 3  54   = 10 * 54   + 3 = 543
-    S4   = f x1 S3     = f 2  543  = 10 * 543  + 2 = 5432
-    S5   = f x0 S4     = f 1  5432 = 10 * 5432 + 1 = 54321
-    ```
+`foldl :: (State -> x -> State) -> State -> [x] -> State`
+`foldl (f :: S -> x -> S)  S [x]`
 
-3.  Python
+```
+Sn = foldl f S0 [x0, x1, x2, x3 ... xn-1]
 
-    In Python 3 the function reduce is not default anymore, however it can
-    be found in the native library functools, that has a lot of built-in
-    functions for functional programming. The function reduce is equivalent
-    to Haskell function foldl (fold left) which is tail recursive.
-    
-    ```
-    reduce(function, sequence[, initial]) -> value
-    
-    reduce :: (acc -> x -> acc) -> [x] ?acc0  -> acc
-    ```
-    
-    ```python
-    >>> from functools import reduce
-    >>> 
-    
-    >>> reduce (lambda acc, x: 10 *  acc + x , [1, 2, 3, 4, 5], 0)
-    12345
-    >>> 
-    
-    >>> f = lambda acc, x: 10 *  acc + x
-    >>> 
-    >>> f(0, 1)
-    1
-    >>> f( f(0, 1), 2)
-    12
-    >>> f( f( f(0, 1), 2), 3)
-    123
-    >>> f( f( f( f(0, 1), 2), 3), 4)
-    1234
-    >>> f( f( f( f( f(0, 1), 2), 3), 4), 5)
-    12345
-    >>> 
-    
-    def my_reduce (f, xs, acc0=None):
-        "Non recursive implementation of reduce (fold_left)
-         with optional initial accumulator value.
-        "
-    
-        if acc0 is None:
-            acc = xs[0]   
-            xss = xs[1:]
-        else:
-            acc = acc0
-            xss = xs
-            
-        for x in xss:
-            acc = f (acc, x)
-            
-        return acc
-    
-    
-    >>> 
-    >>> my_reduce(lambda acc, x: 10 * acc + x, [1, 2, 3, 4, 5], 0)
-    12345
-    >>> my_reduce(lambda acc, x: 10 * acc + x, [1, 2, 3, 4, 5])
-    12345
-    >>> my_reduce(lambda acc, x:  acc + x, [1, 2, 3, 4, 5], 0)
-    15
-    >>> my_reduce(lambda acc, x:  acc * x, [1, 2, 3, 4, 5], 1)
-    120
-    >>> 
-     
-     #
-     # Implementation without recursion.
-     #
-    
-    def fold_left (f_acc_x_to_acc, acc0, xs):
-        "Haskell-like fold left function
-        
-        fold_left :: (acc -> x -> acc) -> acc -> [x]
-        "
+S1   = f S0 x0
+S2   = f S1 x1     = f (f S0 x0) x1
+S3   = f S2 x2     = f (f (f S0 x0) x1) x2
+S4   = f S3 x3     = f (f (f (f S0 x0) x1) x2) x3
+...
+Sn-1 = f Sn-2 Xn-2 = ...
+Sn   = f Sn-1 Xn-1 = f ...(f (f (f (f S0 x0) x1) x2) x3 ... xn
+
+  ;;; -> Result
+```
+
+**Fold Right**
+
+`foldr :: (x -> acc -> acc) -> acc -> [x] -> acc`
+
+```
+S1   = f xn-1 S0
+S2   = f xn-2 S1     = f xn-2 (f xn-1 S0)
+S3   = f xn-3 S2     = f xn-3 (f xn-2 (f xn-1 S0))
+S4   = f xn-4 S3     = f xn-4 (f xn-3 (f xn-2 (f xn-1 S0)))
+....
+Sn-1 = f x1   Sn-2   = ...
+Sn   = f x0   Sn-1   = f x0 (f x1 ... (f xn-2 (f xn-1 S0)))
+```
+
+#### Haskell<a id="sec-1-9-4-2" name="sec-1-9-4-2"></a>
+
+See also: 
+
+-   [Fold (higher-order function) - Wikipedia, the free encyclopedia](https://en.wikipedia.org/wiki/Fold_(higher-order_function))
+-   [A tutorial on the universality and expressiveness of fold. GRAHAM HUTTON](http://www.cs.nott.ac.uk/~pszgmh/fold.pdf)
+-   [Haskell unit 6: The higher-order fold functions | Antoni Diller](http://www.cantab.net/users/antoni.diller/haskell/units/unit06.html)
+
+Fold Left:
+
+```
+ foldl :: (acc -> x -> acc) -> acc -> [x] -> acc
+ 
+                  |             |      |       | 
+                  |             |      |       |---> Returns the accumulated 
+                  |             |      |             value
+                  |             |      |----- xs 
+                  |             |                  
+                  |             |     Inital Value of accumulator
+                  |             |---  acc0
+                  |
+                  |-----------------  f :: acc -> x -> acc
+                                                  |
+                                                  |--- Element of list 
+
+ foldl :: (b -> a -> b) -> b -> [a] -> b
+ foldl f z []     = z
+ foldl f z (x:xs) = foldl f (f z x) xs
+```
+
+```haskell
+> :t foldl
+foldl :: (a -> b -> a) -> a -> [b] -> a
+> 
+> foldl (\acc x -> 10 * acc + x) 0 [1, 2, 3, 4, 5] 
+12345
+>
+```
+
+It is equivalent to:
+
+```haskell
+> let f acc x = 10 * acc + x
+> 
+> (f 0 1)
+1
+> (f (f 0 1) 2)
+12
+> (f (f (f 0 1) 2) 3)
+123
+> 
+> (f (f (f (f 0 1) 2) 3) 4)
+1234
+> (f (f (f (f (f 0 1) 2) 3) 4) 5)
+12345
+>
+```
+
+Evaluation of Fold left:
+
+```
+> foldl (\acc x -> 10 * acc + x ) 0 [1, 2, 3, 4, 5]
+12345
+
+S0 = 0
+
+f = \acc x -> 10 * acc + x
+
+                 x  acc
+S1 = f S0 x0 = f 0   1 = 10 * 0  + 1 = 1
+S2 = f S1 x1 = f 10  2 = 10 * 1    + 2 = 12
+S3 = f S2 x2 = f 12  3 = 10 * 12   + 3 = 123
+S4 = f S3 x3 = f 123 4 = 10 * 123  + 4 = 1234
+S5 = f S3 x3 = f 123 4 = 10 * 1234 + 5 = 12345
+```
+
+**Fold right**
+
+```
+ foldr :: (x -> acc -> acc) -> acc -> [x] -> acc
+
+ foldr :: (a -> b -> b) -> b -> [a] -> b
+ foldr f z []     = z
+ foldr f z (x:xs) = f x (foldr f z xs)
+```
+
+```haskell
+> foldr (\x acc -> 10 * acc + x) 0 [1, 2, 3, 4, 5] 
+54321
+
+> (f 0 5)
+5
+> (f (f 0 5) 4)
+54
+> (f (f (f 0 5) 4) 3)
+543
+> (f (f (f (f 0 5) 4) 3) 2)
+5432
+> (f (f (f (f (f 0 5) 4) 3) 2) 1)
+54321
+> 
+
+ --
+ -- Derive fold_right from foldl (fold left)
+ -- 
+
+> let fold_right f acc xs = foldl (\x acc -> f acc x) acc (reverse xs)
+> 
+> :t fold_right
+fold_right :: (b -> a -> a) -> a -> [b] -> a
+> 
+> 
+> fold_right (\x acc -> 10 * acc + x) 0 [1, 2, 3, 4, 5]
+54321
+>
+```
+
+Evaluation of Fold Right:
+
+```
+Example:
+
+> foldr (\x acc -> 10 * acc + x ) 0 [1, 2, 3, 4, 5]
+54321
+>
+
+f  = \x acc -> 10 * acc + x
+S0 = 0
+n = 5
+                       x acc
+S1   = f x4 S0     = f 5  0    = 10 * 0    + 5 = 5
+S2   = f x3 S1     = f 4  5    = 10 * 5    + 4 = 54
+S3   = f x2 S2     = f 3  54   = 10 * 54   + 3 = 543
+S4   = f x1 S3     = f 2  543  = 10 * 543  + 2 = 5432
+S5   = f x0 S4     = f 1  5432 = 10 * 5432 + 1 = 54321
+```
+
+#### Python<a id="sec-1-9-4-3" name="sec-1-9-4-3"></a>
+
+In Python 3 the function reduce is not default anymore, however it can
+be found in the native library functools, that has a lot of built-in
+functions for functional programming. The function reduce is equivalent
+to Haskell function foldl (fold left) which is tail recursive.
+
+```
+reduce(function, sequence[, initial]) -> value
+
+reduce :: (acc -> x -> acc) -> [x] ?acc0  -> acc
+```
+
+```python
+>>> from functools import reduce
+>>> 
+
+>>> reduce (lambda acc, x: 10 *  acc + x , [1, 2, 3, 4, 5], 0)
+12345
+>>> 
+
+>>> f = lambda acc, x: 10 *  acc + x
+>>> 
+>>> f(0, 1)
+1
+>>> f( f(0, 1), 2)
+12
+>>> f( f( f(0, 1), 2), 3)
+123
+>>> f( f( f( f(0, 1), 2), 3), 4)
+1234
+>>> f( f( f( f( f(0, 1), 2), 3), 4), 5)
+12345
+>>> 
+
+def my_reduce (f, xs, acc0=None):
+    "Non recursive implementation of reduce (fold_left)
+     with optional initial accumulator value.
+    "
+
+    if acc0 is None:
+        acc = xs[0]   
+        xss = xs[1:]
+    else:
         acc = acc0
+        xss = xs
         
-        for x in xs:
-            acc = f_acc_x_to_acc (acc, x)
-            
-        return acc
-          
-    >>> fold_left (lambda acc, x: 10 * acc + x, 0, [1, 2, 3, 4, 5])
-    12345
-    >>>       
-    
-    
-    def fold_right (f, acc0, xs):
-        return fold_left ((lambda acc, x: f(x, acc)), acc0, reversed(xs))
-    
-    >>> fold_right (lambda x, acc: 10 * acc + x, 0, [1, 2, 3, 4, 5])
-    54321
-    >>>
-    
-    def fold_right2 (f, acc0, xs):
-        acc = acc0
+    for x in xss:
+        acc = f (acc, x)
         
-        for x in reversed(xs):
-            acc = f(x, acc)
-            
-        return acc
-    
-    >>> fold_right2 (lambda x, acc: 10 * acc + x, 0, [1, 2, 3, 4, 5])
-    54321
-    >>>
-    ```
-    
-    **Usefulness of Fold**
-    
-    Many functions and recursive algorithms can be implemented using the
-    fold function, including map, filter, sum, product and others.
-    
-    It is based in the paper:  
-    
-    -   [A tutorial on the universality and expressiveness of fold. GRAHAM HUTTON](http://www.cs.nott.ac.uk/~pszgmh/fold.pdf)
-    
-    In the paper was used fold right, here was used fold left. 
-    
-    ```python
-    def fold_left (f_acc_x_to_acc, acc0, xs):
-        "Haskell-like fold left function
-        
-        fold_left :: (acc -> x -> acc) -> acc -> [x]
-        "
-        acc = acc0
-        
-        for x in xs:
-            acc = f_acc_x_to_acc (acc, x)
-            
-        return acc
-        
-        
-        ;;; Function fold in curried form 
-        
-    curry3 = lambda f: lambda x: lambda y: lambda z: f(x, y, z)
-    
-    fold = curry3(fold_left)
-    
-    >>> summation = fold(lambda acc, x: acc + x)(0)
-    >>> 
-    >>> summation([1, 2, 3, 4, 5, 6])
-    21
-    >>> 
-    
-    >>> product = fold(lambda acc, x: acc * x)(1)
-    >>> product([1, 2, 3, 4, 5])
-    120
-    >>> 
-    
-    >>> f_or = fold(lambda acc, x: acc or x)(False)
-    >>> f_or([False, False, False])
-    False
-    >>> 
-    >>> f_or([False, False, True])
-    True
-    >>> 
-    
-    >>> f_and = fold(lambda acc, x: acc and x)(True)
-    >>> 
-    >>> f_and([False, True, True])
-    False
-    >>> f_and([True, True, True])
-    True
-    >>> 
-    
-    >>> length = fold(lambda acc, x: acc + 1)(0)
-    >>> length ([1, 2, 3, 4, 5])
-    5
-    
-    >>> _map = lambda f, xs: fold(lambda acc, x: acc + [f(x)] )([])(xs)
-    >>> _map (lambda x: x * 3, [1, 2, 3, 4])
-    [3, 6, 9, 12]
-    >>> 
-    
-    >>> _filter = lambda p, xs: fold(lambda acc, x: (acc + [x]) if p(x) else  acc )([])(xs)
-    >>> 
-    >>> _filter(lambda x: x > 10, [10, 3, 8, 2, 20, 30])
-    [20, 30]
-    >>> 
-    
-    
-     #
-     # Function composition
-     # 
-     #  (f3 (f2 (f1 (f0 x))))
-     #
-     #  (f3 . f2 . f1 . f0) x
-     #
-     #  or using, forward composition:
-     # 
-     #  (f0 >> f2 >> f1 >> f0) x
-     #
-     
-    >>> f1 = lambda x: 3 * x
-    >>> f2 = lambda x: 5 + x
-    >>> f3 = lambda x: 2 ** x
-    
-    
-    >>> _fcomp = lambda functions: lambda x: fold(lambda acc, f: f(acc)) (x) (functions)
-    
-    >>> _fcomp([f1, f2, f3])(3)
-    16384
-    
-    >>> (f3 (f2 (f1 (3))))
-    16384
-    >>>
-    ```
+    return acc
 
-4.  Clojure
 
-    The function reduce is similar to Haskell <span class="underline">fold left</span> and Python
-    reduce. This function is Polymorphic. It works on any collection of
-    seq abstraction: lists, vectors and hash maps. 
-    
-    Signature:
-    
-    ```
-    (reduce f coll)      -> reduce :: (f :: acc -> x -> acc) -> [x]
-    
-    Or 
-    
-    (reduce f val coll)  -> reduce :: (f :: acc -> x -> acc) -> acc -> [x] 
-    
-    f :: acc -> x -> acc
-    ```
-    
-    ```clojure
-    ;; Applying fold/reduce to a list 
-    ;;
-    ;;
-    user=> (reduce (fn [acc x] (+ (* 10 acc) x)) 0 '(1 2 3 4 5))
-    12345
-    
-    
-    ;; Applying fold/reduce to a vector 
-    ;;
-    user=> (reduce (fn [acc x] (+ (* 10 acc) x))  0 [1 2 3 4 5])
-    12345
-    user=> 
-    
-    user=> (reduce (fn [acc x] (+ (* 10 acc) x)) 0 [])
-    0
-    
-    ;; Applyind fold/reduce to a Hash map 
-    ;;
-    user=> (reduce (fn [acc x] (cons x  acc )) '()  { :a 10 :b 20 :c 30 })
-    ([:c 30] [:b 20] [:a 10])
-    user=>
-    
-    ;; Without Initial value of accumulator it will fail on a empty list. 
-    ;; 
-    user=> (reduce (fn [acc x] (+ (* 10 acc) x)) [1 2 3 4 5])
-    12345
-    
-    user=> (reduce (fn [acc x] (+ (* 10 acc) x)) [])
-    ArityException Wrong number of args (0) passed to: user/eval44/fn--45  clojure.lang.AFn.throwArity (AFn.java:429)
-    user=> 
-    
-    ;; Implementing fold right  
-    ;;
-    (defn foldr 
-       ([f xs]       (reduce (fn [acc x] (f x acc))     (reverse xs)))
-       ([f acc xs]   (reduce (fn [acc x] (f x acc)) acc (reverse xs)))
-      )
-    
-    user=> (foldr (fn [x acc] (+ (* 10 acc) x)) 0 [1 2 3 4 5])
-    54321
-    
-    
-    ;; Clojure has destructuring 
-    ;;
-    user=> (reduce (fn [acc [a b]] (conj acc (+ (* 10 a) b) )) '[] [[1 2] [3 4] [5 8]] )
-    [12 34 58]
-    user=> 
-    
-    ;; Implementing map with fold left (reduce)
-    ;;
-    user=> (defn map2 [f xs] 
-              (reverse (reduce (fn [acc x] (cons (f x) acc)) 
-                            () 
-                            xs)))
-    #'user/map2
-    user=> 
-    user=> (map2 inc '(1 2 3 3 4 5))
-    (2 3 4 4 5 6)
-    user=> 
-    
-    ;; Implementing map with fold right 
-    ;;
-    ;;
-    
-    (defn map2 [f xs] 
-       (foldr (fn [x acc] (cons (f x) acc)) 
-              ()
-              xs
-       ))
-    
-    user=> (map2 inc '(1 2 3 4 5 6))
-    (2 3 4 5 6 7)
-    user=>
-    ```
+>>> 
+>>> my_reduce(lambda acc, x: 10 * acc + x, [1, 2, 3, 4, 5], 0)
+12345
+>>> my_reduce(lambda acc, x: 10 * acc + x, [1, 2, 3, 4, 5])
+12345
+>>> my_reduce(lambda acc, x:  acc + x, [1, 2, 3, 4, 5], 0)
+15
+>>> my_reduce(lambda acc, x:  acc * x, [1, 2, 3, 4, 5], 1)
+120
+>>> 
+ 
+ #
+ # Implementation without recursion.
+ #
 
-5.  Fsharp
-
-    ```fsharp
-    // Fold left for Lists 
-    //
-    //
-    
-    // List.fold (acc -> 'x -> 'acc) -> acc -> 'x list -> 'acc
-    //
-    - List.fold ;;  
-    val it : (('a -> 'b -> 'a) -> 'a -> 'b list -> 'a) 
-    
-    - List.fold (fun acc x -> 10 * acc + x) 0 [1; 2; 3; 4; 5]  ;;
-    val it : int = 12345
-    >
-    
-    // Array.fold 
-    // 
-    //
-    - Array.fold ;;  
-    val it : (('a -> 'b -> 'a) -> 'a -> 'b [] -> 'a) 
-    > 
-    
-    - Array.fold (fun acc x -> 10 * acc + x) 0 [| 1; 2; 3; 4; 5 |]  ;;
-    val it : int = 12345
-    > 
-    
-    // Fold left for Arrays
-    ```
-    
-    Example: Implementing Higher Order Functions and recursive functions
-    with fold.
-    
-    ```fsharp
-    // Implementing fold_left for lists 
-    //
-    let rec fold_left f xs acc =
-        match xs with 
-        | []      ->   acc 
-        | hd::tl  ->   fold_left f tl (f acc hd)
-    ;;
-    
-    val fold_left : f:('a -> 'b -> 'a) -> xs:'b list -> acc:'a -> 'a
-    
-    - fold_left (fun acc x -> 10 * acc + x) [1; 2; 3; 4 ; 5] 0 ;; 
-    val it : int = 12345
-    > 
-    
-    let length xs = fold_left (fun acc x -> acc + 1) xs 0
-    
-    > length ["a"; "b"; "c"; "d" ] ;;
-    val it : int = 4
-    > length [ ] ;;                  
-    val it : int = 0
-    > 
-    
-    - let sum xs  = fold_left (fun acc x -> acc + x) xs 0 ;;
-    
-    > sum [1; 2; 3; 4; 5; 6] ;;                             
-    val it : int = 21
-    > 
-    
-    > let product xs = fold_left (fun acc x -> acc * x) xs 1 ;;  
-    
-    val product : xs:int list -> int
-    
-    > product [1; 2; 3; 4; 5; 6] ;;
-    val it : int = 720
-    > 
-    
-    - let reverse xs = fold_left (fun acc x -> x :: acc) xs []
-    - ;;
-    
-    val reverse : xs:'a list -> 'a list
-    
-    > reverse [1; 2; 3; 4; 5 ] ;;
-    val it : int list = [5; 4; 3; 2; 1]
-    > 
-    
-    let fold_right f xs acc =
-      fold_left (fun acc x -> f x acc) (reverse xs) acc
-    ;;
-         
-    val fold_right : f:('a -> 'b -> 'b) -> xs:'a list -> acc:'b -> 'b
-    
-    - fold_right (fun x acc -> 10 * acc + x) [1; 2; 3; 4; 5] 0 ;;
-    val it : int = 54321
-    > 
-    
-    // Reverse map 
-    //
-    - let rev_map f xs = fold_left (fun acc x -> (f x)::acc) xs [] ;;  
-    
-    val rev_map : f:('a -> 'b) -> xs:'a list -> 'b list
-    
-    - rev_map (fun x -> x * 2) [1; 2; 3; 4; 5; 6] ;;
-    val it : int list = [12; 10; 8; 6; 4; 2]
-    > 
-    
-    - let map f xs = reverse ( fold_left (fun acc x -> (f x)::acc) xs [] ) ;;
-    
-    val map : f:('a -> 'b) -> xs:'a list -> 'b list
-    
-    - map (fun x -> x * 2) [1; 2; 3; 4; 5; 6] ;;
-    val it : int list = [2; 4; 6; 8; 10; 12]
-    > 
-    
-    // Or 
-    // 
-    let rev_fold_left f  xs acc = reverse (fold_left f xs acc) ;;
-    
-    val rev_fold_left :
-      f:('a list -> 'b -> 'a list) -> xs:'b list -> acc:'a list -> 'a list
-    
-    // Map with fold left and reverse 
-    //
-    //
-    > let map f xs = rev_fold_left (fun acc x -> (f x)::acc) xs [] ;;
-    
-    val map : f:('a -> 'b) -> xs:'b list -> 'b list
-    
-    - map (fun x -> x * 2) [1; 2; 3; 4; 5; 6] ;;
-    val it : int list = [2; 4; 6; 8; 10; 12]
-    > 
-    
-    // Map with fold right 
-    //
-    > let map f xs = fold_right (fun x acc -> (f x)::acc) xs [] ;;
-    
-    val map : f:('a -> 'b) -> xs:'a list -> 'b list
-    
-    > map (fun x -> x * 2) [1; 2; 3; 4; 5; 6] ;;
-    val it : int list = [2; 4; 6; 8; 10; 12]
-    > 
-    
-    // Filter with fold left and reverse
-    //
-    let filter f xs = rev_fold_left (fun acc x -> if (f x) then (x::acc) else acc) xs [] ;;
-    
-    val filter : f:('a -> bool) -> xs:'a list -> 'a list
-    
-    - filter (fun x -> x % 2 = 0) [1; 2; 3; 4; 5; 6; 7; 8; 9 ] ;; 
-    val it : int list = [2; 4; 6; 8]
-    > 
-    
-    // Filter with fold right 
-    //
-    let filter f xs =
-      fold_right (fun x acc ->  if (f x)
-                                then x::acc
-                                else acc
-                 )
-                 xs
-                 []
-                 ;;
-    
-    -  filter (fun x -> x % 2 = 0) [1; 2; 3; 4; 5; 6; 7; 8; 9 ] ;; 
-    val it : int list = [2; 4; 6; 8]
-    > 
-    
-    
-    
-    let take n xs =
-      let _, result = 
-        fold_left (fun acc x -> let (c, xss) = acc in
-                                if c = 0
-                                then  (0, xss)
-                                else  (c - 1, x::xss))
-                  xs
-                  (n, [])
-    
-      in reverse result 
-    
-                ;;
-    
-    - take ;;
-    val it : (int -> 'a list -> 'a list) = <fun:clo@202-3>
-    > 
-    
-    
-    > take 3 [1; 2; 3 ; 4; 5; 6; 7; 8] ;;               
-    val it : int list = [1; 2; 3]
-    > 
-    
-    - take 18 [1; 2; 3 ; 4; 5; 6; 7; 8] ;;
-    val it : int list = [1; 2; 3; 4; 5; 6; 7; 8]
-    > 
-    
-    // drop with fold left 
-    // 
-    let drop n xs =
-      let _, result = 
-        fold_left (fun acc x -> let (c, xss) = acc in
-                                if c = 0
-                                then  (0, x::xss)
-                                else  (c - 1, xss))
-                  xs
-                  (n, [])
-    
-      in reverse result 
-    
-                ;;
-    
-    val drop : n:int -> xs:'a list -> 'a list
-    
-    
-    - drop 3 [1; 2; 3 ; 4; 5; 6; 7; 8] ;;              
-    val it : int list = [4; 5; 6; 7; 8]
-    > 
-    - drop 13 [1; 2; 3 ; 4; 5; 6; 7; 8] ;;
-    val it : int list = []
-    > 
-    
-    let take_while f xs =
-      fold_right   (fun x acc ->  if (f x)
-                                  then  x::acc
-                                  else  acc )
-    
-                   xs
-                   []
-    ;;
-    
-    
-    let take_while f xs =
-      fold_right   (fun x acc ->  if (f x)
-                                  then  x::acc
-                                  else  match acc with
-                                        |  []     -> []
-                                        |  _::tl -> tl
-                   )
-    
-                   xs
-                   []
-    ;;
-    val take_while : f:('a -> bool) -> xs:'a list -> 'a list
-    
-    > take_while (fun x -> x < 10) [2; 8 ; 9 ; 26 ; 7; 10; 53] ;;
-    val it : int list = [2; 8; 9]
-    > 
-    
-    
-    
-    let find f xs =
-      fold_left (fun acc x -> if (f x)
-                              then Some x
-                              else None 
-                )
-                xs
-                None
-    ;;
+def fold_left (f_acc_x_to_acc, acc0, xs):
+    "Haskell-like fold left function
+    
+    fold_left :: (acc -> x -> acc) -> acc -> [x]
+    "
+    acc = acc0
+    
+    for x in xs:
+        acc = f_acc_x_to_acc (acc, x)
+        
+    return acc
       
-    val find : f:('a -> bool) -> xs:'a list -> 'a option
+>>> fold_left (lambda acc, x: 10 * acc + x, 0, [1, 2, 3, 4, 5])
+12345
+>>>       
+
+
+def fold_right (f, acc0, xs):
+    return fold_left ((lambda acc, x: f(x, acc)), acc0, reversed(xs))
+
+>>> fold_right (lambda x, acc: 10 * acc + x, 0, [1, 2, 3, 4, 5])
+54321
+>>>
+
+def fold_right2 (f, acc0, xs):
+    acc = acc0
     
-    - find (fun x -> x * x > 40) [1; 2; 6; 5; 4; 8; 10; 20 ; 9 ] ;;
-    val it : int option = Some 9
-    > 
+    for x in reversed(xs):
+        acc = f(x, acc)
+        
+    return acc
+
+>>> fold_right2 (lambda x, acc: 10 * acc + x, 0, [1, 2, 3, 4, 5])
+54321
+>>>
+```
+
+**Usefulness of Fold**
+
+Many functions and recursive algorithms can be implemented using the
+fold function, including map, filter, sum, product and others.
+
+It is based in the paper:  
+
+-   [A tutorial on the universality and expressiveness of fold. GRAHAM HUTTON](http://www.cs.nott.ac.uk/~pszgmh/fold.pdf)
+
+In the paper was used fold right, here was used fold left. 
+
+```python
+def fold_left (f_acc_x_to_acc, acc0, xs):
+    "Haskell-like fold left function
     
-    - find (fun x -> x * x > 400) [1; 2; 6; 5; 4; 8; 10; 20 ; 9 ] ;;
-    val it : int option = None
-    > 
+    fold_left :: (acc -> x -> acc) -> acc -> [x]
+    "
+    acc = acc0
     
-    
-    // Map with side-effect 
-    //
-    let for_each f xs =
-      fold_left (fun acc x -> f x)
-                xs
-                ()
-                ;;
-    
-    val for_each : f:('a -> unit) -> xs:'a list -> unit
-    
-    > for_each (fun x -> printfn "x = %d" x) [2; 3; 4; 5; 6] ;;
-    x = 2
-    x = 3
-    x = 4
-    x = 5
-    x = 6
-    val it : unit = ()
-    > 
-    
-    // Filter map - fusion / optimization  
-    //
-    // (Eliminate intermediate data structure )
-    //
-    
-    let filter_map f_filter f_map xs = 
-      fold_right (fun x acc ->  if (f_filter x)
-                                then (f_map x)::acc
-                                else acc
-                 )
-                 xs
-                 []
-    ;;
-                 
-    val filter_map :
-      f_filter:('a -> bool) -> f_map:('a -> 'b) -> xs:'a list -> 'b list
-    
-    - filter_map (fun x -> x % 2 = 0) (fun x -> x + 3) [1; 5; 2; 6; 8; 7]
-    - ;;             
-    val it : int list = [5; 9; 11]
-    > 
+    for x in xs:
+        acc = f_acc_x_to_acc (acc, x)
+        
+    return acc
     
     
-     // Without optimization
-    - map (fun x -> x + 3) (filter (fun x -> x % 2 = 0) [1; 5; 2; 6; 8; 7]) ;;
-    val it : int list = [5; 9; 11]
-    > 
-    -
-    ```
+    ;;; Function fold in curried form 
+    
+curry3 = lambda f: lambda x: lambda y: lambda z: f(x, y, z)
+
+fold = curry3(fold_left)
+
+>>> summation = fold(lambda acc, x: acc + x)(0)
+>>> 
+>>> summation([1, 2, 3, 4, 5, 6])
+21
+>>> 
+
+>>> product = fold(lambda acc, x: acc * x)(1)
+>>> product([1, 2, 3, 4, 5])
+120
+>>> 
+
+>>> f_or = fold(lambda acc, x: acc or x)(False)
+>>> f_or([False, False, False])
+False
+>>> 
+>>> f_or([False, False, True])
+True
+>>> 
+
+>>> f_and = fold(lambda acc, x: acc and x)(True)
+>>> 
+>>> f_and([False, True, True])
+False
+>>> f_and([True, True, True])
+True
+>>> 
+
+>>> length = fold(lambda acc, x: acc + 1)(0)
+>>> length ([1, 2, 3, 4, 5])
+5
+
+>>> _map = lambda f, xs: fold(lambda acc, x: acc + [f(x)] )([])(xs)
+>>> _map (lambda x: x * 3, [1, 2, 3, 4])
+[3, 6, 9, 12]
+>>> 
+
+>>> _filter = lambda p, xs: fold(lambda acc, x: (acc + [x]) if p(x) else  acc )([])(xs)
+>>> 
+>>> _filter(lambda x: x > 10, [10, 3, 8, 2, 20, 30])
+[20, 30]
+>>> 
+
+
+ #
+ # Function composition
+ # 
+ #  (f3 (f2 (f1 (f0 x))))
+ #
+ #  (f3 . f2 . f1 . f0) x
+ #
+ #  or using, forward composition:
+ # 
+ #  (f0 >> f2 >> f1 >> f0) x
+ #
+ 
+>>> f1 = lambda x: 3 * x
+>>> f2 = lambda x: 5 + x
+>>> f3 = lambda x: 2 ** x
+
+
+>>> _fcomp = lambda functions: lambda x: fold(lambda acc, f: f(acc)) (x) (functions)
+
+>>> _fcomp([f1, f2, f3])(3)
+16384
+
+>>> (f3 (f2 (f1 (3))))
+16384
+>>>
+```
+
+#### Clojure<a id="sec-1-9-4-4" name="sec-1-9-4-4"></a>
+
+The function reduce is similar to Haskell <span class="underline">fold left</span> and Python
+reduce. This function is Polymorphic. It works on any collection of
+seq abstraction: lists, vectors and hash maps. 
+
+Signature:
+
+```
+(reduce f coll)      -> reduce :: (f :: acc -> x -> acc) -> [x]
+
+Or 
+
+(reduce f val coll)  -> reduce :: (f :: acc -> x -> acc) -> acc -> [x] 
+
+f :: acc -> x -> acc
+```
+
+```clojure
+;; Applying fold/reduce to a list 
+;;
+;;
+user=> (reduce (fn [acc x] (+ (* 10 acc) x)) 0 '(1 2 3 4 5))
+12345
+
+
+;; Applying fold/reduce to a vector 
+;;
+user=> (reduce (fn [acc x] (+ (* 10 acc) x))  0 [1 2 3 4 5])
+12345
+user=> 
+
+user=> (reduce (fn [acc x] (+ (* 10 acc) x)) 0 [])
+0
+
+;; Applyind fold/reduce to a Hash map 
+;;
+user=> (reduce (fn [acc x] (cons x  acc )) '()  { :a 10 :b 20 :c 30 })
+([:c 30] [:b 20] [:a 10])
+user=>
+
+;; Without Initial value of accumulator it will fail on a empty list. 
+;; 
+user=> (reduce (fn [acc x] (+ (* 10 acc) x)) [1 2 3 4 5])
+12345
+
+user=> (reduce (fn [acc x] (+ (* 10 acc) x)) [])
+ArityException Wrong number of args (0) passed to: user/eval44/fn--45  clojure.lang.AFn.throwArity (AFn.java:429)
+user=> 
+
+;; Implementing fold right  
+;;
+(defn foldr 
+   ([f xs]       (reduce (fn [acc x] (f x acc))     (reverse xs)))
+   ([f acc xs]   (reduce (fn [acc x] (f x acc)) acc (reverse xs)))
+  )
+
+user=> (foldr (fn [x acc] (+ (* 10 acc) x)) 0 [1 2 3 4 5])
+54321
+
+
+;; Clojure has destructuring 
+;;
+user=> (reduce (fn [acc [a b]] (conj acc (+ (* 10 a) b) )) '[] [[1 2] [3 4] [5 8]] )
+[12 34 58]
+user=> 
+
+;; Implementing map with fold left (reduce)
+;;
+user=> (defn map2 [f xs] 
+          (reverse (reduce (fn [acc x] (cons (f x) acc)) 
+                        () 
+                        xs)))
+#'user/map2
+user=> 
+user=> (map2 inc '(1 2 3 3 4 5))
+(2 3 4 4 5 6)
+user=> 
+
+;; Implementing map with fold right 
+;;
+;;
+
+(defn map2 [f xs] 
+   (foldr (fn [x acc] (cons (f x) acc)) 
+          ()
+          xs
+   ))
+
+user=> (map2 inc '(1 2 3 4 5 6))
+(2 3 4 5 6 7)
+user=>
+```
+
+#### Fsharp<a id="sec-1-9-4-5" name="sec-1-9-4-5"></a>
+
+```fsharp
+// Fold left for Lists 
+//
+//
+
+// List.fold (acc -> 'x -> 'acc) -> acc -> 'x list -> 'acc
+//
+- List.fold ;;  
+val it : (('a -> 'b -> 'a) -> 'a -> 'b list -> 'a) 
+
+- List.fold (fun acc x -> 10 * acc + x) 0 [1; 2; 3; 4; 5]  ;;
+val it : int = 12345
+>
+
+// Array.fold 
+// 
+//
+- Array.fold ;;  
+val it : (('a -> 'b -> 'a) -> 'a -> 'b [] -> 'a) 
+> 
+
+- Array.fold (fun acc x -> 10 * acc + x) 0 [| 1; 2; 3; 4; 5 |]  ;;
+val it : int = 12345
+> 
+
+// Fold left for Arrays
+```
+
+Example: Implementing Higher Order Functions and recursive functions
+with fold.
+
+```fsharp
+// Implementing fold_left for lists 
+//
+let rec fold_left f xs acc =
+    match xs with 
+    | []      ->   acc 
+    | hd::tl  ->   fold_left f tl (f acc hd)
+;;
+
+val fold_left : f:('a -> 'b -> 'a) -> xs:'b list -> acc:'a -> 'a
+
+- fold_left (fun acc x -> 10 * acc + x) [1; 2; 3; 4 ; 5] 0 ;; 
+val it : int = 12345
+> 
+
+let length xs = fold_left (fun acc x -> acc + 1) xs 0
+
+> length ["a"; "b"; "c"; "d" ] ;;
+val it : int = 4
+> length [ ] ;;                  
+val it : int = 0
+> 
+
+- let sum xs  = fold_left (fun acc x -> acc + x) xs 0 ;;
+
+> sum [1; 2; 3; 4; 5; 6] ;;                             
+val it : int = 21
+> 
+
+> let product xs = fold_left (fun acc x -> acc * x) xs 1 ;;  
+
+val product : xs:int list -> int
+
+> product [1; 2; 3; 4; 5; 6] ;;
+val it : int = 720
+> 
+
+- let reverse xs = fold_left (fun acc x -> x :: acc) xs []
+- ;;
+
+val reverse : xs:'a list -> 'a list
+
+> reverse [1; 2; 3; 4; 5 ] ;;
+val it : int list = [5; 4; 3; 2; 1]
+> 
+
+let fold_right f xs acc =
+  fold_left (fun acc x -> f x acc) (reverse xs) acc
+;;
+     
+val fold_right : f:('a -> 'b -> 'b) -> xs:'a list -> acc:'b -> 'b
+
+- fold_right (fun x acc -> 10 * acc + x) [1; 2; 3; 4; 5] 0 ;;
+val it : int = 54321
+> 
+
+// Reverse map 
+//
+- let rev_map f xs = fold_left (fun acc x -> (f x)::acc) xs [] ;;  
+
+val rev_map : f:('a -> 'b) -> xs:'a list -> 'b list
+
+- rev_map (fun x -> x * 2) [1; 2; 3; 4; 5; 6] ;;
+val it : int list = [12; 10; 8; 6; 4; 2]
+> 
+
+- let map f xs = reverse ( fold_left (fun acc x -> (f x)::acc) xs [] ) ;;
+
+val map : f:('a -> 'b) -> xs:'a list -> 'b list
+
+- map (fun x -> x * 2) [1; 2; 3; 4; 5; 6] ;;
+val it : int list = [2; 4; 6; 8; 10; 12]
+> 
+
+// Or 
+// 
+let rev_fold_left f  xs acc = reverse (fold_left f xs acc) ;;
+
+val rev_fold_left :
+  f:('a list -> 'b -> 'a list) -> xs:'b list -> acc:'a list -> 'a list
+
+// Map with fold left and reverse 
+//
+//
+> let map f xs = rev_fold_left (fun acc x -> (f x)::acc) xs [] ;;
+
+val map : f:('a -> 'b) -> xs:'b list -> 'b list
+
+- map (fun x -> x * 2) [1; 2; 3; 4; 5; 6] ;;
+val it : int list = [2; 4; 6; 8; 10; 12]
+> 
+
+// Map with fold right 
+//
+> let map f xs = fold_right (fun x acc -> (f x)::acc) xs [] ;;
+
+val map : f:('a -> 'b) -> xs:'a list -> 'b list
+
+> map (fun x -> x * 2) [1; 2; 3; 4; 5; 6] ;;
+val it : int list = [2; 4; 6; 8; 10; 12]
+> 
+
+// Filter with fold left and reverse
+//
+let filter f xs = rev_fold_left (fun acc x -> if (f x) then (x::acc) else acc) xs [] ;;
+
+val filter : f:('a -> bool) -> xs:'a list -> 'a list
+
+- filter (fun x -> x % 2 = 0) [1; 2; 3; 4; 5; 6; 7; 8; 9 ] ;; 
+val it : int list = [2; 4; 6; 8]
+> 
+
+// Filter with fold right 
+//
+let filter f xs =
+  fold_right (fun x acc ->  if (f x)
+                            then x::acc
+                            else acc
+             )
+             xs
+             []
+             ;;
+
+-  filter (fun x -> x % 2 = 0) [1; 2; 3; 4; 5; 6; 7; 8; 9 ] ;; 
+val it : int list = [2; 4; 6; 8]
+> 
+
+
+
+let take n xs =
+  let _, result = 
+    fold_left (fun acc x -> let (c, xss) = acc in
+                            if c = 0
+                            then  (0, xss)
+                            else  (c - 1, x::xss))
+              xs
+              (n, [])
+
+  in reverse result 
+
+            ;;
+
+- take ;;
+val it : (int -> 'a list -> 'a list) = <fun:clo@202-3>
+> 
+
+
+> take 3 [1; 2; 3 ; 4; 5; 6; 7; 8] ;;               
+val it : int list = [1; 2; 3]
+> 
+
+- take 18 [1; 2; 3 ; 4; 5; 6; 7; 8] ;;
+val it : int list = [1; 2; 3; 4; 5; 6; 7; 8]
+> 
+
+// drop with fold left 
+// 
+let drop n xs =
+  let _, result = 
+    fold_left (fun acc x -> let (c, xss) = acc in
+                            if c = 0
+                            then  (0, x::xss)
+                            else  (c - 1, xss))
+              xs
+              (n, [])
+
+  in reverse result 
+
+            ;;
+
+val drop : n:int -> xs:'a list -> 'a list
+
+
+- drop 3 [1; 2; 3 ; 4; 5; 6; 7; 8] ;;              
+val it : int list = [4; 5; 6; 7; 8]
+> 
+- drop 13 [1; 2; 3 ; 4; 5; 6; 7; 8] ;;
+val it : int list = []
+> 
+
+let take_while f xs =
+  fold_right   (fun x acc ->  if (f x)
+                              then  x::acc
+                              else  acc )
+
+               xs
+               []
+;;
+
+
+let take_while f xs =
+  fold_right   (fun x acc ->  if (f x)
+                              then  x::acc
+                              else  match acc with
+                                    |  []     -> []
+                                    |  _::tl -> tl
+               )
+
+               xs
+               []
+;;
+val take_while : f:('a -> bool) -> xs:'a list -> 'a list
+
+> take_while (fun x -> x < 10) [2; 8 ; 9 ; 26 ; 7; 10; 53] ;;
+val it : int list = [2; 8; 9]
+> 
+
+
+
+let find f xs =
+  fold_left (fun acc x -> if (f x)
+                          then Some x
+                          else None 
+            )
+            xs
+            None
+;;
+  
+val find : f:('a -> bool) -> xs:'a list -> 'a option
+
+- find (fun x -> x * x > 40) [1; 2; 6; 5; 4; 8; 10; 20 ; 9 ] ;;
+val it : int option = Some 9
+> 
+
+- find (fun x -> x * x > 400) [1; 2; 6; 5; 4; 8; 10; 20 ; 9 ] ;;
+val it : int option = None
+> 
+
+
+// Map with side-effect 
+//
+let for_each f xs =
+  fold_left (fun acc x -> f x)
+            xs
+            ()
+            ;;
+
+val for_each : f:('a -> unit) -> xs:'a list -> unit
+
+> for_each (fun x -> printfn "x = %d" x) [2; 3; 4; 5; 6] ;;
+x = 2
+x = 3
+x = 4
+x = 5
+x = 6
+val it : unit = ()
+> 
+
+// Filter map - fusion / optimization  
+//
+// (Eliminate intermediate data structure )
+//
+
+let filter_map f_filter f_map xs = 
+  fold_right (fun x acc ->  if (f_filter x)
+                            then (f_map x)::acc
+                            else acc
+             )
+             xs
+             []
+;;
+             
+val filter_map :
+  f_filter:('a -> bool) -> f_map:('a -> 'b) -> xs:'a list -> 'b list
+
+- filter_map (fun x -> x % 2 = 0) (fun x -> x + 3) [1; 5; 2; 6; 8; 7]
+- ;;             
+val it : int list = [5; 9; 11]
+> 
+
+
+ // Without optimization
+- map (fun x -> x + 3) (filter (fun x -> x % 2 = 0) [1; 5; 2; 6; 8; 7]) ;;
+val it : int list = [5; 9; 11]
+> 
+-
+```
 
 ### For Each, Impure map<a id="sec-1-9-5" name="sec-1-9-5"></a>
 
@@ -3282,199 +3310,199 @@ val it : int list = [1; 2; 3; 4]
 
 ### Zip<a id="sec-1-10-4" name="sec-1-10-4"></a>
 
-1.  Overview
+#### Overview<a id="sec-1-10-4-1" name="sec-1-10-4-1"></a>
 
-    The function zip and its variants combine two or more sequence into one sequence.
-    
-    See also: [Convolution (computer science)](https://en.wikipedia.org/wiki/Convolution_(computer_science))
+The function zip and its variants combine two or more sequence into one sequence.
 
-2.  Zip in Haskell
+See also: [Convolution (computer science)](https://en.wikipedia.org/wiki/Convolution_(computer_science))
 
-    ```haskell
-    > :t zip
-    zip :: [a] -> [b] -> [(a, b)]
-    
-    > zip [1, 2, 3, 4] ["a", "b", "c"]
-    [(1,"a"),(2,"b"),(3,"c")]
-    > 
-    
-    > zip [1, 2, 3, 4] ["a", "b", "c"]
-    [(1,"a"),(2,"b"),(3,"c")]
-    >
-    
-     -- Zip a list and a infinite list 
-    
-    > zip ["a", "b", "c"] [1 ..]
-    [("a",1),("b",2),("c",3)]
-    > 
-    > 
-    
-    > zip ["a", "b", "c", "d"] [1, 2, 3]
-    [("a",1),("b",2),("c",3)]
-    > 
-    
-    
-    > :t zip3
-    zip3 :: [a] -> [b] -> [c] -> [(a, b, c)]
-    > 
-    
-    > zip3 ["a", "b", "c", "d"] [1, 2, 3, 4, 5, 6] [Just 10, Just 100, Nothing]
-    [("a",1,Just 10),("b",2,Just 100),("c",3,Nothing)]
-    > 
-    
-     -- There is more zip functions in the module Data.List
-     --
-    > import Data.List (zip4, zip5, zip6)
-    > 
-    
-    > :t zip4
-    zip4 :: [a] -> [b] -> [c] -> [d] -> [(a, b, c, d)]
-    > 
-    > :t zip5
-    zip5 :: [a] -> [b] -> [c] -> [d] -> [e] -> [(a, b, c, d, e)]
-    >
-    ```
+#### Zip in Haskell<a id="sec-1-10-4-2" name="sec-1-10-4-2"></a>
 
-3.  Zip in Python
+```haskell
+> :t zip
+zip :: [a] -> [b] -> [(a, b)]
 
-    The Python zip function is inspired by Haskell. The Python zip
-    functions can take a variable number of arguments.
-    
-    Python 2: In python2 this function is evaluated eagerly. 
-    
-    ```python
-    >>> zip([1, 2, 3], ["a", "b", "c", "d", "e"])
-    [(1, 'a'), (2, 'b'), (3, 'c')]
-    >>>
-    
-    >>> zip([1, 2, 3], ["a", "b", "c", "d", "e"], ["x", "y", "z"])
-    [(1, 'a', 'x'), (2, 'b', 'y'), (3, 'c', 'z')]
-    >>>
-    
-    >>> zip([1, 2, 3], ["a", "b", "c", "d", "e"], ["x", "y", "z"], range(1, 20))
-    [(1, 'a', 'x', 1), (2, 'b', 'y', 2), (3, 'c', 'z', 3)]
-    >>> 
-    
-    >>> for x, y in zip([1, 2, 3, 4, 5], ["a", "b", "c", "d", "e"]):
-    ...   print "x = ", x, "y = ", y
-    ... 
-    x =  1 y =  a
-    x =  2 y =  b
-    x =  3 y =  c
-    x =  4 y =  d
-    x =  5 y =  e
-    ```
-    
-    Python 3: In python3 this function returns a generator. It is evaluated lazily.
-    
-    ```python
-    >>> zip([1, 2, 3, 4, 5], ["a", "b", "c", "d", "e"])
-    <zip object at 0xb6d01ecc>
-    >>> 
-    
-    >>> list(zip([1, 2, 3, 4, 5], ["a", "b", "c", "d", "e"]))
-    [(1, 'a'), (2, 'b'), (3, 'c'), (4, 'd'), (5, 'e')]
-    >>> 
-    
-    >>> g = zip([1, 2, 3, 4, 5], ["a", "b", "c", "d", "e"])
-    >>> g
-    <zip object at 0xb6747e8c>
-    >>> next(g)
-    (1, 'a')
-    >>> next(g)
-    (2, 'b')
-    >>> next(g)
-    (3, 'c')
-    >>> next(g)
-    (4, 'd')
-    >>> next(g)
-    (5, 'e')
-    >>> next(g)
-    Traceback (most recent call last):
-      File "<stdin>", line 1, in <module>
-    StopIteration
-    >>> 
-    
-    >>> g = zip([1, 2, 3, 4, 5], ["a", "b", "c", "d", "e"], range(1, 1000000000))
-    >>> g
-    <zip object at 0xb6747f2c>
-    >>> list(g)
-    [(1, 'a', 1), (2, 'b', 2), (3, 'c', 3), (4, 'd', 4), (5, 'e', 5)]
-    >>> list(g)
-    []
-    >>> 
-    
-    >>> for x, y in zip([1, 2, 3, 4, 5], ["a", "b", "c", "d", "e"]):
-    ...    print ("x = ", x, "y = ", y)
-    ... 
-    x =  1 y =  a
-    x =  2 y =  b
-    x =  3 y =  c
-    x =  4 y =  d
-    x =  5 y =  e
-    ```
+> zip [1, 2, 3, 4] ["a", "b", "c"]
+[(1,"a"),(2,"b"),(3,"c")]
+> 
 
-4.  Zip in Scheme
+> zip [1, 2, 3, 4] ["a", "b", "c"]
+[(1,"a"),(2,"b"),(3,"c")]
+>
 
-    It can be defined as:
-    
-    ```scheme
-    (define (zip . lists)
-       (apply map  vector lists))
-    
-    > (zip '(1 2 3 4) '("a" "b" "c" "d"))       
-    (#(1 "a") #(2 "b") #(3 "c") #(4 "d"))
-    > 
-    
-    ;; Or 
-    
-    (define (zip . lists)
-       (apply map  list lists))
-    
-    > (zip '(1 2 3 4) '("a" "b" "c" "d"))
-    ((1 "a") (2 "b") (3 "c") (4 "d"))
-    > 
-    
-    > (zip '(1 2 3 4) '("a" "b" "c" "d") '(89 199 100 43))
-    ((1 "a" 89) (2 "b" 199) (3 "c" 100) (4 "d" 43))
-    >
-    ```
+ -- Zip a list and a infinite list 
 
-5.  Zip in Clojure
+> zip ["a", "b", "c"] [1 ..]
+[("a",1),("b",2),("c",3)]
+> 
+> 
 
-    ```clojure
-    ;; Zip returning list
-    ;;
-    (defn zip [& seqs] 
-      (apply map list seqs))
-    
-    user=> (zip '(1 2 3 4 5) '(x y z w k m n))
-    ((1 x) (2 y) (3 z) (4 w) (5 k))
-    
-    user=> (zip '(1 2 3 4 5) '(x y z w k m n) (range 10 1000000))
-    ((1 x 10) (2 y 11) (3 z 12) (4 w 13) (5 k 14))
-    
-    user=> (zip '[1 2 3 4 5] '(x y z w k m n) (range 10 1000000))
-    ((1 x 10) (2 y 11) (3 z 12) (4 w 13) (5 k 14))
-    
-    user=> (zip '[1 2 3 4 5] '(x y z w k m n) {:key_x "hello" :key_y "world" :key_z "clojure"})
-    ((1 x [:key_x "hello"]) (2 y [:key_y "world"]) (3 z [:key_z "clojure"]))
-    user=> 
-    
-    
-    ;; Zip returning vector 
-    ;;
-    (defn zipv [& seqs] 
-      (apply mapv vector seqs))
-    
-    user=> (zipv '(1 2 3 4 5) '(x y z w k m n))
-    [[1 x] [2 y] [3 z] [4 w] [5 k]]
-    user=> 
-    
-    user=>  (zipv '[1 2 3 4 5] '(x y z w k m n) (range 10 1000000))
-    [[1 x 10] [2 y 11] [3 z 12] [4 w 13] [5 k 14]]
-    user=>
-    ```
+> zip ["a", "b", "c", "d"] [1, 2, 3]
+[("a",1),("b",2),("c",3)]
+> 
+
+
+> :t zip3
+zip3 :: [a] -> [b] -> [c] -> [(a, b, c)]
+> 
+
+> zip3 ["a", "b", "c", "d"] [1, 2, 3, 4, 5, 6] [Just 10, Just 100, Nothing]
+[("a",1,Just 10),("b",2,Just 100),("c",3,Nothing)]
+> 
+
+ -- There is more zip functions in the module Data.List
+ --
+> import Data.List (zip4, zip5, zip6)
+> 
+
+> :t zip4
+zip4 :: [a] -> [b] -> [c] -> [d] -> [(a, b, c, d)]
+> 
+> :t zip5
+zip5 :: [a] -> [b] -> [c] -> [d] -> [e] -> [(a, b, c, d, e)]
+>
+```
+
+#### Zip in Python<a id="sec-1-10-4-3" name="sec-1-10-4-3"></a>
+
+The Python zip function is inspired by Haskell. The Python zip
+functions can take a variable number of arguments.
+
+Python 2: In python2 this function is evaluated eagerly. 
+
+```python
+>>> zip([1, 2, 3], ["a", "b", "c", "d", "e"])
+[(1, 'a'), (2, 'b'), (3, 'c')]
+>>>
+
+>>> zip([1, 2, 3], ["a", "b", "c", "d", "e"], ["x", "y", "z"])
+[(1, 'a', 'x'), (2, 'b', 'y'), (3, 'c', 'z')]
+>>>
+
+>>> zip([1, 2, 3], ["a", "b", "c", "d", "e"], ["x", "y", "z"], range(1, 20))
+[(1, 'a', 'x', 1), (2, 'b', 'y', 2), (3, 'c', 'z', 3)]
+>>> 
+
+>>> for x, y in zip([1, 2, 3, 4, 5], ["a", "b", "c", "d", "e"]):
+...   print "x = ", x, "y = ", y
+... 
+x =  1 y =  a
+x =  2 y =  b
+x =  3 y =  c
+x =  4 y =  d
+x =  5 y =  e
+```
+
+Python 3: In python3 this function returns a generator. It is evaluated lazily.
+
+```python
+>>> zip([1, 2, 3, 4, 5], ["a", "b", "c", "d", "e"])
+<zip object at 0xb6d01ecc>
+>>> 
+
+>>> list(zip([1, 2, 3, 4, 5], ["a", "b", "c", "d", "e"]))
+[(1, 'a'), (2, 'b'), (3, 'c'), (4, 'd'), (5, 'e')]
+>>> 
+
+>>> g = zip([1, 2, 3, 4, 5], ["a", "b", "c", "d", "e"])
+>>> g
+<zip object at 0xb6747e8c>
+>>> next(g)
+(1, 'a')
+>>> next(g)
+(2, 'b')
+>>> next(g)
+(3, 'c')
+>>> next(g)
+(4, 'd')
+>>> next(g)
+(5, 'e')
+>>> next(g)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+StopIteration
+>>> 
+
+>>> g = zip([1, 2, 3, 4, 5], ["a", "b", "c", "d", "e"], range(1, 1000000000))
+>>> g
+<zip object at 0xb6747f2c>
+>>> list(g)
+[(1, 'a', 1), (2, 'b', 2), (3, 'c', 3), (4, 'd', 4), (5, 'e', 5)]
+>>> list(g)
+[]
+>>> 
+
+>>> for x, y in zip([1, 2, 3, 4, 5], ["a", "b", "c", "d", "e"]):
+...    print ("x = ", x, "y = ", y)
+... 
+x =  1 y =  a
+x =  2 y =  b
+x =  3 y =  c
+x =  4 y =  d
+x =  5 y =  e
+```
+
+#### Zip in Scheme<a id="sec-1-10-4-4" name="sec-1-10-4-4"></a>
+
+It can be defined as:
+
+```scheme
+(define (zip . lists)
+   (apply map  vector lists))
+
+> (zip '(1 2 3 4) '("a" "b" "c" "d"))       
+(#(1 "a") #(2 "b") #(3 "c") #(4 "d"))
+> 
+
+;; Or 
+
+(define (zip . lists)
+   (apply map  list lists))
+
+> (zip '(1 2 3 4) '("a" "b" "c" "d"))
+((1 "a") (2 "b") (3 "c") (4 "d"))
+> 
+
+> (zip '(1 2 3 4) '("a" "b" "c" "d") '(89 199 100 43))
+((1 "a" 89) (2 "b" 199) (3 "c" 100) (4 "d" 43))
+>
+```
+
+#### Zip in Clojure<a id="sec-1-10-4-5" name="sec-1-10-4-5"></a>
+
+```clojure
+;; Zip returning list
+;;
+(defn zip [& seqs] 
+  (apply map list seqs))
+
+user=> (zip '(1 2 3 4 5) '(x y z w k m n))
+((1 x) (2 y) (3 z) (4 w) (5 k))
+
+user=> (zip '(1 2 3 4 5) '(x y z w k m n) (range 10 1000000))
+((1 x 10) (2 y 11) (3 z 12) (4 w 13) (5 k 14))
+
+user=> (zip '[1 2 3 4 5] '(x y z w k m n) (range 10 1000000))
+((1 x 10) (2 y 11) (3 z 12) (4 w 13) (5 k 14))
+
+user=> (zip '[1 2 3 4 5] '(x y z w k m n) {:key_x "hello" :key_y "world" :key_z "clojure"})
+((1 x [:key_x "hello"]) (2 y [:key_y "world"]) (3 z [:key_z "clojure"]))
+user=> 
+
+
+;; Zip returning vector 
+;;
+(defn zipv [& seqs] 
+  (apply mapv vector seqs))
+
+user=> (zipv '(1 2 3 4 5) '(x y z w k m n))
+[[1 x] [2 y] [3 z] [4 w] [5 k]]
+user=> 
+
+user=>  (zipv '[1 2 3 4 5] '(x y z w k m n) (range 10 1000000))
+[[1 x 10] [2 y 11] [3 z 12] [4 w 13] [5 k 14]]
+user=>
+```
 
 ## Function Composition<a id="sec-1-11" name="sec-1-11"></a>
 
@@ -4403,7 +4431,7 @@ The composition law can be generalized to:
 
 fmap (f1 . f2 . f3 &#x2026; fn) = fmap f1 . fmap f2 . fmap f3 &#x2026; fmap fn 
 
-### List all Functor instances<a id="sec-1-12-2" name="sec-1-12-2"></a>
+### Show all Functor instances<a id="sec-1-12-2" name="sec-1-12-2"></a>
 
 ```haskell
 > :info Functor 
@@ -4446,476 +4474,476 @@ instance Alternative Maybe -- Defined in `Control.Applicative'
 >
 ```
 
-### Functors Implementations<a id="sec-1-12-3" name="sec-1-12-3"></a>
+### Functor Implementations<a id="sec-1-12-3" name="sec-1-12-3"></a>
 
-1.  Identity
+#### Identity<a id="sec-1-12-3-1" name="sec-1-12-3-1"></a>
 
-    ```haskell
-    -- File: identity.hs 
-    --
-    data Id a = Id a  deriving (Show, Eq)
-    
-    instance Functor Id where
-      fmap f (Id a) = Id (f a)
-    
-     -- Specialized version of fmap 
-     --
-    fmap_id :: (a -> b) -> (Id a -> Id b)
-    fmap_id f = fmap f 
-    
-    -- -- End of file identity.hs ------
-    ------------------------------------
-    
-    > :load /tmp/identity.hs
-    
-    > Id 10
-    Id 10
-    
-    > fmap (\x -> x + 3) (Id 30)
-    Id 33
-    > 
-    
-    > let plus5 =  \x -> x + 5
-    > :t plus5
-    plus5 :: Integer -> Integer
-    > 
-    
-    > plus5 10
-    15
-    > 
-    
-    > fmap plus5 (Id 30)
-    Id 35
-    > 
-    
-    > let fmap_plus5 = fmap plus5
-    
-    <interactive>:68:18:
-        No instance for (Functor f0) arising from a use of `fmap'
-        The type variable `f0' is ambiguous
-     
-     -- Solution:
-     
-     
-    > let fmap_plus5 = fmap plus5 :: Id Integer -> Id Integer 
-    > :t fmap_plus5
-    fmap_plus5 :: Id Integer -> Id Integer
-    > 
-    
-    > fmap_plus5 (Id 30)
-    Id 35
-    > 
-    
-    
-    > :t fmap_id
-    fmap_id :: (a -> b) -> Id a -> Id b
-    > 
-    
-    > fmap_id sqrt (Id 100.0)
-    Id 10.0
-    > 
-     
-    > let sqrt_id = fmap_id sqrt
-    > :t sqrt_id
-    sqrt_id :: Id Double -> Id Double
-    > 
-    
-    > sqrt_id (Id 100.0)
-    Id 10.0
-    >
-    ```
+```haskell
+-- File: identity.hs 
+--
+data Id a = Id a  deriving (Show, Eq)
 
-2.  List
+instance Functor Id where
+  fmap f (Id a) = Id (f a)
 
-    For lists the function fmap is equal to map. 
-    
-    ```haskell
-    instance Functor [] where
-      fmap = map
-    
-    > map (\x -> x + 3) [1, 2, 3]
-    [4,5,6]
-    > fmap (\x -> x + 3) [1, 2, 3]
-    [4,5,6]
-    > 
-    
-    > let f = fmap (\x -> x + 3) :: [Int] -> [Int]
-    > :t f
-    f :: [Int] -> [Int]
-    
-    > f [1, 2, 3, 4]
-    [4,5,6,7]
-    >
-    ```
-    
-    Alternative Implementation of list functor:
-    
-    ```haskell
-    -- File: list_functor.hs 
-    --
-    
-    data List a  = Cons a (List a)  | Nil 
-      deriving (Show, Eq)
-    
-               
-    instance Functor List where
-      
-      fmap f xss = case xss of
-                   Nil          -> Nil
-                   Cons x xs    -> Cons (f x) (fmap f xs)
-    
-    
-    -- End of file -------------
-    ---------------------------
-    
-    > :load /tmp/list_functor.hs
-    
-    > Cons 10 (Cons 20 (Cons 30 Nil))
-    Cons 10 (Cons 20 (Cons 30 Nil))
-    > 
-    
-    > let xs = Cons 10 (Cons 20 (Cons 30 Nil))
-    > xs
-    Cons 10 (Cons 20 (Cons 30 Nil))
-    > :t xs
-    xs :: List Integer
-    > 
-    
-    > fmap (\x -> x + 5) xs 
-    Cons 15 (Cons 25 (Cons 35 Nil))
-    > 
-    
-    > let fm = fmap (\x -> x + 5) :: List Integer -> List Integer
-    
-    > fm  xs
-    Cons 15 (Cons 25 (Cons 35 Nil))
-    >
-    ```
+ -- Specialized version of fmap 
+ --
+fmap_id :: (a -> b) -> (Id a -> Id b)
+fmap_id f = fmap f 
 
-3.  Maybe / Option
+-- -- End of file identity.hs ------
+------------------------------------
 
-    ```haskell
-    data Maybe a = Just a | Nothing deriving (Eq, Show)
-    
-    instance Functor Maybe where  
-        fmap f (Just x) = Just (f x)  
-        fmap f Nothing = Nothing
-    ```
-    
-    Example: 
-    
-    ```haskell
-    > fmap (\x -> x + 10) (Just 5)
-    Just 15
-    > 
-    > fmap (\x -> x + 10) Nothing
-    Nothing
-    > 
-    
-    > let f = \x -> x + 10
-    > :t f
-    f :: Integer -> Integer
-    > 
-    
-    > let fmap_f = fmap f :: Maybe Integer -> Maybe Integer
-    > fmap_f (Just 20)
-    Just 30
-    > 
-    
-    > fmap_f Nothing
-    Nothing
-    > 
-    
-    > import Text.Read (readMaybe)
-    
-    
-    > readMaybe "100" :: Maybe Integer
-    Just 100
-    > 
-    > readMaybe "asd100" :: Maybe Integer
-    Nothing
-    > 
-    
-    > let parseInteger str = readMaybe str :: Maybe Integer
-    > 
-    > :t parseInteger 
-    parseInteger :: String -> Maybe Integer
-    > 
-    
-    > parseInteger "100" 
-    Just 100
-    > 
-    > parseInteger "Not a number" 
-    Nothing
-    >
-    
-    > fmap (\x -> x + 10) (parseInteger "200")
-    Just 210
-    > 
-    > fmap (\x -> x + 10) (parseInteger "2sadas00")
-    Nothing
-    > 
-    
-     -- Specialized version of fmap 
-     -- 
-    fmap_maybe :: (a -> b) -> (Maybe a -> Maybe b)
-    fmap_maybe func = fmap func 
-    
-    > fmap_maybe (\x -> x + 10) (Just 10)
-    Just 20
-    > 
-    
-    > fmap_maybe (\x -> x + 10) Nothing
-    Nothing
-    >
-    ```
+> :load /tmp/identity.hs
 
-4.  Either
+> Id 10
+Id 10
 
-    The type constructor Either is similar to Maybe and it can short
-    circuit a computation in the similar way to Maybe, however it allows
-    to attach an error message. 
-    
-    ```haskell
-    data Either a b = Left a | Right b 
-    
-    instance Functor (Either a) where  
-        fmap f (Right x) = Right (f x)  
-        fmap f (Left x) = Left x
-    ```
-    
-    Example:
-    
-    ```haskell
-    --
-    -- File: either_functor.hs 
-    -------------------------
-    
-     
-     --  Specialized version of fmap to Either type 
-     --  constructor like map is specialized for lists.
-     --
-    fmap_either :: (a -> b) -> (Either s a -> Either s b)
-    fmap_either f = fmap f
-    
-    import Text.Read (readMaybe)
-    
-    data ErrorCode = 
-            ParserError 
-          | InvalidInput 
-          deriving (Eq, Show)
-    
-    describeErrorCode ParserError  = "The parser failed." 
-    describeErrorCode InvalidInput = "Input out function domain."
-    
-    describeError (Right x)    = Right x 
-    describeError (Left  code) = Left (describeErrorCode code)
-    
-    parseDouble :: String -> Either String Double 
-    parseDouble  str = 
-        case (readMaybe str :: Maybe Double) of
-        Just x  ->  Right x 
-        Nothing ->  Left  "Error: Not a Double" 
-    
-    sqrt_safe :: Double -> Either String Double 
-    sqrt_safe x = 
-        if x >= 0 
-        then (Right x)
-        else (Left "Error: Square root of negative number")
-    
-    
-    parseDouble2 :: String -> Either ErrorCode Double 
-    parseDouble2  str = 
-        case (readMaybe str :: Maybe Double) of
-        Just x  ->  Right x 
-        Nothing ->  Left  ParserError
-    
-    sqrt_safe2 :: Double -> Either ErrorCode Double 
-    sqrt_safe2 x = 
-        if x >= 0 
-        then (Right x)
-        else (Left InvalidInput)
-    
-    ---------------------------------------
-    --             End of file            -
-    ---------------------------------------
-    
-    > :load /tmp/either_functor.hs  
-    
-    > sqrt_safe 100
-    Right 100.0
-    > 
-    > sqrt_safe (-100)
-    Left "Error: Square root of negative number"
-    > 
-    
-    > sqrt_safe2 100
-    Right 100.0
-    > 
-    > sqrt_safe2 (-100)
-    Left InvalidInput
-    > 
-    
-    
-    > parseDouble "100.25e3"
-    Right 100250.0
-    > 
-    
-    > parseDouble "not a double"
-    Left "Error: Not a Double"
-    > 
-    
-    > parseDouble2 "-200.3"
-    Right (-200.3)
-    > 
-    
-    > parseDouble2 "Not a double"
-    Left ParserError
-    > 
-    
-    > fmap sqrt (Right 100.0)
-    Right 10.0
-    > 
-    > fmap sqrt (Left "Error not found")
-    Left "Error not found"
-    >
-    
-    > let fmap_sqrt = fmap sqrt :: Either String Double -> Either String Double
-    > fmap_sqrt (parseDouble "400.0")
-    Right 20.0
-    > 
-    > fmap_sqrt (parseDouble "4adsfdas00.0")
-    Left "Error: Not a Double"
-    > 
-    
-    
-    > describeError (sqrt_safe2 100)
-    Right 100.0
-    > 
-    > describeError (sqrt_safe2 (-100))
-    Left "Input out function domain."
-    > 
-    
-    > describeError (parseDouble2 "200.23")
-    Right 200.23
-    > 
-    
-    > describeError (parseDouble2 "2dsfsd00.23")
-    Left "The parser failed."
-    >
-    
-    > fmap_either (\x -> x + 10) (Right 200)
-    Right 210
-    > 
-    
-    > let sqrt_either = fmap_either sqrt
-    >
-    > :t sqrt_either 
-    sqrt_either :: Either s Double -> Either s Double
-    >
-    
-    > sqrt_either (Right 100.0)
-    Right 10.0
-    > 
-    > sqrt_either (Left "Failed to fetch data")
-    Left "Failed to fetch data"
-    >
-    ```
+> fmap (\x -> x + 3) (Id 30)
+Id 33
+> 
 
-5.  IO
+> let plus5 =  \x -> x + 5
+> :t plus5
+plus5 :: Integer -> Integer
+> 
 
-    Source: Book [learnyouahaskell](http://learnyouahaskell.com/functors-applicative-functors-and-monoids) 
-    
-    ```haskell
-    instance Functor IO where  
-        fmap f action = do  
-            result <- action  
-            return (f result)
-    ```
-    
-    ```haskell
-    -- File: fmap_io.hs 
-    --
-    
-    fmap_io :: (a -> b) -> (IO a -> IO b)
-    fmap_io f = fmap f 
-    
-    --
-    ------------------
-    
-    > :load /tmp/fmap_io.hs 
-    
-    > import System.Directory (getDirectoryContents)
-    > 
-    
-    > :t getDirectoryContents "/etc/R"
-    getDirectoryContents "/etc/R" :: IO [FilePath]
-    > 
-    
-    > getDirectoryContents "/etc/R"
-    ["Renviron",".","ldpaths","..","repositories","Makeconf","Renviron.site","Rprofile.site"]
-    > 
-    
-     -- It will fail because the data is inside an IO container 
-     -- and can only be extracted inside another IO container 
-     -- or IO Monad. 
-     -- 
-    > length (getDirectoryContents "/etc/R")
-    
-    <interactive>:165:9:
-        Couldn't match expected type `[a0]'
-                    with actual type `IO [FilePath]'
-        In the return type of a call of `getDirectoryContents'
-        In the first argument of `length', namely
-          `(getDirectoryContents "/etc/R")'
-        In the expression: length (getDirectoryContents "/etc/R")
-    
-    
-    > fmap length (getDirectoryContents "/etc/R")
-    8
-    > :t fmap length (getDirectoryContents "/etc/R")
-    fmap length (getDirectoryContents "/etc/R") :: IO Int
-    > 
-    
-    
-    > fmap_io length (getDirectoryContents "/etc/R")
-    8
-    > 
-    
-    > :t length
-    length :: [a] -> Int
-    > 
-    
-    > let length_io = fmap_io length
-    > 
-    
-    > :t length_io 
-    length_io :: IO [a] -> IO Int
-    >
-    
-    > fmap_io length (getDirectoryContents "/etc/R")
-    8
-    
-    
-    -- In the REPL is possible to extract the data wrapped inside an IO 
-    -- type constructor.
-    --
-    
-    > dirlist <- getDirectoryContents "/etc/R"
-    > :t dirlist
-    dirlist :: [FilePath]
-    > 
-    > dirlist
-    ["Renviron",".","ldpaths","..","repositories","Makeconf","Renviron.site","Rprofile.site"]
-    > 
-    > length dirlist
-    8
-    >
-    
-    > :t length dirlist
-    length dirlist :: Int
-    >
-    ```
+> plus5 10
+15
+> 
+
+> fmap plus5 (Id 30)
+Id 35
+> 
+
+> let fmap_plus5 = fmap plus5
+
+<interactive>:68:18:
+    No instance for (Functor f0) arising from a use of `fmap'
+    The type variable `f0' is ambiguous
+ 
+ -- Solution:
+ 
+ 
+> let fmap_plus5 = fmap plus5 :: Id Integer -> Id Integer 
+> :t fmap_plus5
+fmap_plus5 :: Id Integer -> Id Integer
+> 
+
+> fmap_plus5 (Id 30)
+Id 35
+> 
+
+
+> :t fmap_id
+fmap_id :: (a -> b) -> Id a -> Id b
+> 
+
+> fmap_id sqrt (Id 100.0)
+Id 10.0
+> 
+ 
+> let sqrt_id = fmap_id sqrt
+> :t sqrt_id
+sqrt_id :: Id Double -> Id Double
+> 
+
+> sqrt_id (Id 100.0)
+Id 10.0
+>
+```
+
+#### List<a id="sec-1-12-3-2" name="sec-1-12-3-2"></a>
+
+For lists the function fmap is equal to map. 
+
+```haskell
+instance Functor [] where
+  fmap = map
+
+> map (\x -> x + 3) [1, 2, 3]
+[4,5,6]
+> fmap (\x -> x + 3) [1, 2, 3]
+[4,5,6]
+> 
+
+> let f = fmap (\x -> x + 3) :: [Int] -> [Int]
+> :t f
+f :: [Int] -> [Int]
+
+> f [1, 2, 3, 4]
+[4,5,6,7]
+>
+```
+
+Alternative Implementation of list functor:
+
+```haskell
+-- File: list_functor.hs 
+--
+
+data List a  = Cons a (List a)  | Nil 
+  deriving (Show, Eq)
+
+           
+instance Functor List where
+  
+  fmap f xss = case xss of
+               Nil          -> Nil
+               Cons x xs    -> Cons (f x) (fmap f xs)
+
+
+-- End of file -------------
+---------------------------
+
+> :load /tmp/list_functor.hs
+
+> Cons 10 (Cons 20 (Cons 30 Nil))
+Cons 10 (Cons 20 (Cons 30 Nil))
+> 
+
+> let xs = Cons 10 (Cons 20 (Cons 30 Nil))
+> xs
+Cons 10 (Cons 20 (Cons 30 Nil))
+> :t xs
+xs :: List Integer
+> 
+
+> fmap (\x -> x + 5) xs 
+Cons 15 (Cons 25 (Cons 35 Nil))
+> 
+
+> let fm = fmap (\x -> x + 5) :: List Integer -> List Integer
+
+> fm  xs
+Cons 15 (Cons 25 (Cons 35 Nil))
+>
+```
+
+#### Maybe / Option<a id="sec-1-12-3-3" name="sec-1-12-3-3"></a>
+
+```haskell
+data Maybe a = Just a | Nothing deriving (Eq, Show)
+
+instance Functor Maybe where  
+    fmap f (Just x) = Just (f x)  
+    fmap f Nothing = Nothing
+```
+
+Example: 
+
+```haskell
+> fmap (\x -> x + 10) (Just 5)
+Just 15
+> 
+> fmap (\x -> x + 10) Nothing
+Nothing
+> 
+
+> let f = \x -> x + 10
+> :t f
+f :: Integer -> Integer
+> 
+
+> let fmap_f = fmap f :: Maybe Integer -> Maybe Integer
+> fmap_f (Just 20)
+Just 30
+> 
+
+> fmap_f Nothing
+Nothing
+> 
+
+> import Text.Read (readMaybe)
+
+
+> readMaybe "100" :: Maybe Integer
+Just 100
+> 
+> readMaybe "asd100" :: Maybe Integer
+Nothing
+> 
+
+> let parseInteger str = readMaybe str :: Maybe Integer
+> 
+> :t parseInteger 
+parseInteger :: String -> Maybe Integer
+> 
+
+> parseInteger "100" 
+Just 100
+> 
+> parseInteger "Not a number" 
+Nothing
+>
+
+> fmap (\x -> x + 10) (parseInteger "200")
+Just 210
+> 
+> fmap (\x -> x + 10) (parseInteger "2sadas00")
+Nothing
+> 
+
+ -- Specialized version of fmap 
+ -- 
+fmap_maybe :: (a -> b) -> (Maybe a -> Maybe b)
+fmap_maybe func = fmap func 
+
+> fmap_maybe (\x -> x + 10) (Just 10)
+Just 20
+> 
+
+> fmap_maybe (\x -> x + 10) Nothing
+Nothing
+>
+```
+
+#### Either<a id="sec-1-12-3-4" name="sec-1-12-3-4"></a>
+
+The type constructor Either is similar to Maybe and it can short
+circuit a computation in the similar way to Maybe, however it allows
+to attach an error value. 
+
+```haskell
+data Either a b = Left a | Right b 
+
+instance Functor (Either a) where  
+    fmap f (Right x) = Right (f x)  
+    fmap f (Left x) = Left x
+```
+
+Example:
+
+```haskell
+--
+-- File: either_functor.hs 
+-------------------------
+
+ 
+ --  Specialized version of fmap to Either type 
+ --  constructor like map is specialized for lists.
+ --
+fmap_either :: (a -> b) -> (Either s a -> Either s b)
+fmap_either f = fmap f
+
+import Text.Read (readMaybe)
+
+data ErrorCode = 
+        ParserError 
+      | InvalidInput 
+      deriving (Eq, Show)
+
+describeErrorCode ParserError  = "The parser failed." 
+describeErrorCode InvalidInput = "Input out function domain."
+
+describeError (Right x)    = Right x 
+describeError (Left  code) = Left (describeErrorCode code)
+
+parseDouble :: String -> Either String Double 
+parseDouble  str = 
+    case (readMaybe str :: Maybe Double) of
+    Just x  ->  Right x 
+    Nothing ->  Left  "Error: Not a Double" 
+
+sqrt_safe :: Double -> Either String Double 
+sqrt_safe x = 
+    if x >= 0 
+    then (Right x)
+    else (Left "Error: Square root of negative number")
+
+
+parseDouble2 :: String -> Either ErrorCode Double 
+parseDouble2  str = 
+    case (readMaybe str :: Maybe Double) of
+    Just x  ->  Right x 
+    Nothing ->  Left  ParserError
+
+sqrt_safe2 :: Double -> Either ErrorCode Double 
+sqrt_safe2 x = 
+    if x >= 0 
+    then (Right x)
+    else (Left InvalidInput)
+
+---------------------------------------
+--             End of file            -
+---------------------------------------
+
+> :load /tmp/either_functor.hs  
+
+> sqrt_safe 100
+Right 100.0
+> 
+> sqrt_safe (-100)
+Left "Error: Square root of negative number"
+> 
+
+> sqrt_safe2 100
+Right 100.0
+> 
+> sqrt_safe2 (-100)
+Left InvalidInput
+> 
+
+
+> parseDouble "100.25e3"
+Right 100250.0
+> 
+
+> parseDouble "not a double"
+Left "Error: Not a Double"
+> 
+
+> parseDouble2 "-200.3"
+Right (-200.3)
+> 
+
+> parseDouble2 "Not a double"
+Left ParserError
+> 
+
+> fmap sqrt (Right 100.0)
+Right 10.0
+> 
+> fmap sqrt (Left "Error not found")
+Left "Error not found"
+>
+
+> let fmap_sqrt = fmap sqrt :: Either String Double -> Either String Double
+> fmap_sqrt (parseDouble "400.0")
+Right 20.0
+> 
+> fmap_sqrt (parseDouble "4adsfdas00.0")
+Left "Error: Not a Double"
+> 
+
+
+> describeError (sqrt_safe2 100)
+Right 100.0
+> 
+> describeError (sqrt_safe2 (-100))
+Left "Input out function domain."
+> 
+
+> describeError (parseDouble2 "200.23")
+Right 200.23
+> 
+
+> describeError (parseDouble2 "2dsfsd00.23")
+Left "The parser failed."
+>
+
+> fmap_either (\x -> x + 10) (Right 200)
+Right 210
+> 
+
+> let sqrt_either = fmap_either sqrt
+>
+> :t sqrt_either 
+sqrt_either :: Either s Double -> Either s Double
+>
+
+> sqrt_either (Right 100.0)
+Right 10.0
+> 
+> sqrt_either (Left "Failed to fetch data")
+Left "Failed to fetch data"
+>
+```
+
+#### IO<a id="sec-1-12-3-5" name="sec-1-12-3-5"></a>
+
+Source: Book [learnyouahaskell](http://learnyouahaskell.com/functors-applicative-functors-and-monoids) 
+
+```haskell
+instance Functor IO where  
+    fmap f action = do  
+        result <- action  
+        return (f result)
+```
+
+```haskell
+-- File: fmap_io.hs 
+--
+
+fmap_io :: (a -> b) -> (IO a -> IO b)
+fmap_io f = fmap f 
+
+--
+------------------
+
+> :load /tmp/fmap_io.hs 
+
+> import System.Directory (getDirectoryContents)
+> 
+
+> :t getDirectoryContents "/etc/R"
+getDirectoryContents "/etc/R" :: IO [FilePath]
+> 
+
+> getDirectoryContents "/etc/R"
+["Renviron",".","ldpaths","..","repositories","Makeconf","Renviron.site","Rprofile.site"]
+> 
+
+ -- It will fail because the data is inside an IO container 
+ -- and can only be extracted inside another IO container 
+ -- or IO Monad. 
+ -- 
+> length (getDirectoryContents "/etc/R")
+
+<interactive>:165:9:
+    Couldn't match expected type `[a0]'
+                with actual type `IO [FilePath]'
+    In the return type of a call of `getDirectoryContents'
+    In the first argument of `length', namely
+      `(getDirectoryContents "/etc/R")'
+    In the expression: length (getDirectoryContents "/etc/R")
+
+
+> fmap length (getDirectoryContents "/etc/R")
+8
+> :t fmap length (getDirectoryContents "/etc/R")
+fmap length (getDirectoryContents "/etc/R") :: IO Int
+> 
+
+
+> fmap_io length (getDirectoryContents "/etc/R")
+8
+> 
+
+> :t length
+length :: [a] -> Int
+> 
+
+> let length_io = fmap_io length
+> 
+
+> :t length_io 
+length_io :: IO [a] -> IO Int
+>
+
+> fmap_io length (getDirectoryContents "/etc/R")
+8
+
+
+-- In the REPL is possible to extract the data wrapped inside an IO 
+-- type constructor.
+--
+
+> dirlist <- getDirectoryContents "/etc/R"
+> :t dirlist
+dirlist :: [FilePath]
+> 
+> dirlist
+["Renviron",".","ldpaths","..","repositories","Makeconf","Renviron.site","Rprofile.site"]
+> 
+> length dirlist
+8
+>
+
+> :t length dirlist
+length dirlist :: Int
+>
+```
 
 ## Monads<a id="sec-1-13" name="sec-1-13"></a>
 
@@ -4959,1089 +4987,1722 @@ class Monad m where
 
 ### List Monad<a id="sec-1-13-2" name="sec-1-13-2"></a>
 
-1.  List Monad in Haskell
+#### List Monad in Haskell<a id="sec-1-13-2-1" name="sec-1-13-2-1"></a>
 
-    The list Monad is used for non-deterministic computations where there
-    is a unknown number of results. It is useful for constraint solving:
-    solve a problem by trying all possibilities by brute force.
-    
-    In Haskell it is defined as an instance of Monad type class:
-    
-    ```haskell
-    instance  Monad []  where
-        m >>= k          = concat (map k m)
-        return x         = [x]
-        fail s           = []
-    ```
-    
-    Examples: 
-    
-    -   return wraps a value into a list
-    
-    ```haskell
-    > :t return
-    return :: Monad m => a -> m a
-    > 
-     -- Wraps a value into a list 
-     -- 
-    > return 10 :: [Int]
-    [10]
-    >
-    ```
-    
-    Bind operator for list monad: 
-    
-    ```haskell
-    > :t (>>=)
-    (>>=) :: Monad m => m a -> (a -> m b) -> m b
-    > 
-    
-     
-    
-    >  [10,20,30] >>= \x -> [2*x, x+5] 
-    [20,15,40,25,60,35]
-    > 
-    
-    -- It is equivalent to: 
-    --
-    --  
-    
-    > map ( \x -> [2*x, x+5] ) [10, 20, 30]
-    [[20,15],[40,25],[60,35]]
-    > 
-    > concat (map ( \x -> [2*x, x+5] ) [10, 20, 30])
-    [20,15,40,25,60,35]
-    >
-    ```
-    
-    Do notation:
-    
-    ```
-      The do notation is a syntax sugar to -> 
-     
-    Do Notation:                   Do Notation Dessugarized: 
-    
-    cartesianProduct  = do         cartesianProduct = 
-       x <- [1, 2, 3, 4]             [1, 2, 3, 4] >>= \x ->
-       y <- ["a", "b"]               ["a", "b"]   >>= \y ->
-       return (x, y)                 return (x, y) 
-    
-                                   Or 
-    
-                                   cartesianProduct = 
-                                     bind [1 2, 3, 4]  (\x -> 
-                                     bind ["a", "b"]   (\y -> 
-                                     unit (x, y)))
-    ```
-    
-    Do notation examples for List monad: 
-    
-    ```haskell
-    -- file cartesian.hs 
-    --
-    -- Run in the repl:  
-    --                  :load cartesian.hs  
-    --                  
-    
-    cartesianProduct = do 
-        x <- [1, 2, 3, 4] 
-        y <- ["a", "b"]
-        return (x, y)
-    
-    --  End of file: cartesian.hs 
-    -- -----------------
-    
-    > cartesianProduct 
-    [(1,"a"),(1,"b"),(2,"a"),(2,"b"),(3,"a"),(3,"b"),(4,"a"),(4,"b")]
-    > 
-    
-     -- Or it can be typed in the repl directly:
-     --
-    
-     
-    > :set +m  -- Enable multiline paste 
-    > 
-     
-    --  Or copy the following code in the repl 
-    --  by typing :set +m to enable multiline paste 
-    --
-     
-    let cartesianProduct = do 
-        x <- [1, 2, 3, 4] 
-        y <- ["a", "b"]
-        return (x, y)
-    
-    > :set +m  -- paste 
-    > 
-    > let cartesianProduct = do 
-    *Main Control.Exception E Text.Read|     x <- [1, 2, 3, 4] 
-    *Main Control.Exception E Text.Read|     y <- ["a", "b"]
-    *Main Control.Exception E Text.Read|     return (x, y)
-    *Main Control.Exception E Text.Read| 
-    > 
-    
-     -- 
-     -- Or: Dessugarizing 
-    
-    > [1, 2, 3, 4] >>= \x -> ["a", "b"] >>= \y -> return (x, y)
-    [(1,"a"),(1,"b"),(2,"a"),(2,"b"),(3,"a"),(3,"b"),(4,"a"),(4,"b")]
-    > 
-      
-    cartesian :: [a] -> [b] -> [(a, b)]
-    cartesian xs ys = do
-        x <- xs 
-        y <- ys 
-        return (x, y)
-    
-    > cartesian [1, 2, 3, 4] ["a", "b"]
-    [(1,"a"),(1,"b"),(2,"a"),(2,"b"),(3,"a"),(3,"b"),(4,"a"),(4,"b")]
-    > 
-    
-    
-    -- Returns all possible combinations between a, b and c
-    --
-    --
-    triples :: [a] -> [b] -> [c] -> [(a, b, c)]
-    triples  xs ys zs = do 
-      x <- xs 
-      y <- ys 
-      z <- zs 
-      return (x, y, z)
-    
-    --   The triples have 24 results 
-    --
-    --   x -> 2 possibilities
-    --   y -> 3 possibilities
-    --   z -> 4 possibilities 
-    --
-    --  Total of possibilities:  2 * 3 * 4 = 24
-    --  the computation will return 24 results 
-    -- 
-    --
-    > triples [1, 2] ["a", "b", "c"] ["x", "y", "z", "w"]
-    [(1,"a","x"),(1,"a","y"),(1,"a","z"),(1,"a","w"),(1,"b","x"),
-    (1,"b","y"),(1,"b","z"),(1,"b","w"),(1,"c","x"),(1,"c","y"),
-    (1,"c","z"),(1,"c","w"),(2,"a","x"),(2,"a","y"),(2,"a","z"),
-    (2,"a","w"),(2,"b","x"),(2,"b","y"),(2,"b","z"),(2,"b","w"),
-    (2,"c","x"),(2,"c","y"),(2,"c","z"),(2,"c","w")]
-    
-    > length ( triples [1, 2] ["a", "b", "c"] ["x", "y", "z", "w"] )
-    24
-    > 
-    
-    --
-    --  Find all numbers for which a ^ 2 + b ^ 2 = c ^ 2 
-    --  up to 100:
-    --
-    --  There is 100 x 100 x 100 = 1,000,000 of combinations 
-    --  to be tested:
-    --
-    pthytriples = do 
-        a <- [1 .. 100]
-        b <- [1 .. 100]
-        c <- [1 .. 100]
-    
-        if (a ^ 2 + b ^ 2 == c ^ 2)
-          then (return (Just (a, b, c)))
-          else (return Nothing)
-    
-    > import Data.Maybe (catMaybes)
-    
-    > take 10 (catMaybes pthytriples)
-    [(3,4,5),(4,3,5),(5,12,13),(6,8,10),(7,24,25),(8,6,10),(8,15,17),(9,12,15),(9,40,41),(10,24,26)]
-    > 
-    
-    -- Example: Find all possible values of a functions applied 
-    --          to all combinations possible of 3 lists:
-    --
-    applyComb3 = do 
-       x <- [1, 2, 3]
-       y <- [9, 8]
-       z <- [3, 8, 7, 4]
-       return ([x, y, z], 100 * x + 10 *  y + z)
-    
-    > applyComb3 
-    [([1,9,3],193),([1,9,8],198),([1,9,7],197),([1,9,4],194) ...]
-    
-    
-    -- Example: Crack a 4 letter password using brute force 
-    --
-    --
-    
-    
-    import Data.List (find)
-    import Data.Maybe (isJust)
-    
-    alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-    
-    make_password :: String -> String -> Bool 
-    make_password password input = password == input 
-    
-    -- It will try 62 combinations for each letter
-    -- wich means it will try up to 62 x 62 x 62 x 62 = 14,776,336 
-    -- (=~ 15 millions) combinations at the worst case.
-    --
-    -- 
-    crack_4pass  pass_function = do
-        ch0 <- alphabet 
-        ch1 <- alphabet 
-        ch2 <- alphabet 
-        ch3 <- alphabet 
-        let trial = [ch0, ch1, ch2, ch3] in
-          if   pass_function trial
-          then return (Just trial)
-          else return Nothing 
-        
-    crackpass pass_function = 
-       find isJust (crack_4pass pass_function)
-    
-    passwd1 = make_password "fX87" 
-    
-    
-    > :set +s
-    
-    > crackpass passwd1 
-    Just (Just "fX87")
-    (2.00 secs, 434045068 bytes)
-    > 
-    
-    > crackpass (make_password "2f8z")
-    Just (Just "2f8z")
-    (18.19 secs, 4038359812 bytes)
-    >
-    ```
+The list Monad is used for non-deterministic computations where there
+is a unknown number of results. It is useful for constraint solving:
+solve a problem by trying all possibilities by brute force.
 
-2.  List Monad in OCaml
+In Haskell it is defined as an instance of Monad type class:
 
-    ```ocaml
-    module ListM =
-      struct 
-      let bind ma f = List.concat (List.map f ma)
-    
-      let (>>=) = bind 
-    
-      (* return  *)
-      let unit a  = [a]
-    
-    end
-    ;;
-    
-    
-    module ListM :
-      sig
-        val bind : 'a list -> ('a -> 'b list) -> 'b list
-        val ( >>= ) : 'a list -> ('a -> 'b list) -> 'b list
-        val unit : 'a -> 'a list
-      end
-    
-    (*
-     Haskel Code:
-    
-     cartesian :: [a] -> [b] -> [(a, b)]              cartesian :: [a] -> [b] -> [(a, b)]   
-     cartesian xs ys = do                             carteasian xs ys = 
-        x <- xs                              ==>>        xs >>= \x ->    
-        y <- ys                                          ys >>= \y -> 
-        return (x, y)                                    return (x, y)
-    
-    
-     cartesian :: [a] -> [b] -> [(a, b)] 
-     carteasian xs ys = 
-       bind xs (\x -> 
-       bind ys (\y -> 
-       return (x, y)))
-    
-    *)
-    
-    
-    let cartesian xs ys = 
-        let open ListM in 
-        xs >>= fun x -> 
-        ys >>= fun y ->
-        unit (x, y)
-    ;;
-    
-    val cartesian : 'a list -> 'b list -> ('a * 'b) list = <fun>
-    
-    
-    >   cartesian [1; 2; 3; 4; ] ["a"; "b"; "c"]  ;;
-    - : (int * string) list =
-    [(1, "a"); (1, "b"); (1, "c"); (2, "a"); (2, "b"); (2, "c"); (3, "a");
-     (3, "b"); (3, "c"); (4, "a"); (4, "b"); (4, "c")]
-    
-    
-    (*
-    
-    Haskel Code                               Do-natation Dessugarized
-                                                           
-    triples :: [a] [b] [c] -> [(a, b, c)]     triples :: [a] [b] [c] -> [(a, b, c)]
-    triples xs ys zs = do                     tripes xs ys zs = 
-        x <- xs                                   xs >>= \x ->
-        y <- ys                     ==>           ys >>= \y ->
-        z <- zs                                   zs >>= \z ->
-        return (x, y, z)                          return (x, y, z)  
-    
-    *)
-    
-    let triples (xs: 'a list) (ys: 'b list) (zs: 'c list) : ('a * 'b * 'c) list =
-        let open ListM in 
-        xs >>= fun x ->
-        ys >>= fun y ->
-        zs >>= fun z -> 
-        unit (x, y, z)
-    ;;
-    
-    val triples : 'a list -> 'b list -> 'c list -> ('a * 'b * 'c) list = <fun>
-    
-    
-    >  triples ["x"; "z"; "w"]  [Some 10; None] [1; 2; 3; 4; 5] ;;
-    - : (string * int option * int) list =
-    [("x", Some 10, 1); ("x", Some 10, 2); ("x", Some 10, 3); ("x", Some 10, 4);
-     ("x", Some 10, 5); ("x", None, 1); ("x", None, 2); ("x", None, 3);
-     ("x", None, 4); ("x", None, 5); ("z", Some 10, 1); ("z", Some 10, 2);
-     ("z", Some 10, 3); ("z", Some 10, 4); ("z", Some 10, 5); ("z", None, 1);
-     ("z", None, 2); ("z", None, 3); ("z", None, 4); ("z", None, 5);
-     ("w", Some 10, 1); ("w", Some 10, 2); ("w", Some 10, 3); ("w", Some 10, 4);
-     ("w", Some 10, 5); ("w", None, 1); ("w", None, 2); ("w", None, 3);
-     ("w", None, 4); ("w", None, 5)]
-    ```
+```haskell
+instance  Monad []  where
+    m >>= k          = concat (map k m)
+    return x         = [x]
+    fail s           = []
+```
 
-3.  List Monad in F#
+Examples: 
 
-    Example without syntax sugar: 
-    
-    ```fsharp
-    module ListM =
-    
-      let bind ma f = List.concat (List.map f ma)
-    
-      let (>>=) = bind 
-    
-      (* return  *)
-      let unit a  = [a]
-    ;;
-    
-    
-    module ListM = begin
-      val bind : ma:'a list -> f:('a -> 'b list) -> 'b list
-      val ( >>= ) : ('a list -> ('a -> 'b list) -> 'b list)
-      val unit : a:'a -> 'a list
-    end
-    
-    
-    (*  Example:
-    
-    cartesian :: [a] -> [b] -> [(a, b)]
-    cartesian xs ys = do
-        x <- xs 
-        y <- ys 
-        return (x, y)
-    
-    > cartesian [1, 2, 3, 4] ["a", "b", "c"]
-    *)
-    
-    
-    let cartesian xs ys =  
-        let (>>=) = ListM.(>>=) in 
-        let unit  = ListM.unit in 
-       
-        xs >>= fun x ->
-        ys >>= fun y ->
-        unit (x, y) 
-    ;;
-    
-    val cartesian : 'a list -> 'b list -> ('a * 'b) list = <fun>                                                           > 
-    
-    
-    > 
-    > cartesian [1; 2; 3; 4; ] ["a"; "b"; "c"]  ;;
-    val it : (int * string) list =
-      [(1, "a"); (1, "b"); (1, "c"); 
-       (2, "a"); (2, "b"); (2, "c"); 
-       (3, "a"); (3, "b"); (3, "c"); 
-       (4, "a"); (4, "b"); (4, "c")]
-    > 
-    
-    
-    (*  
-    
-    F# List type is eager evaluated so the it will
-    really loop over 100 * 100 * 100 = 100,000,000
-    of combinations:  
-    
-    pthytriples = do 
-        a <- [1 .. 100]
-        b <- [1 .. 100]
-        c <- [1 .. 100]
-    
-        if (a ^ 2 + b ^ 2 == c ^ 2)
-          then (return (Just (a, b, c)))
-          else (return Nothing)
-    
-    
-    *)
-      
-    
-    (* Tail recursive function 
-    
-    *)
-    let range start stop step  =
-    
-        let rec range_aux start acc = 
-            if start >= stop 
-            then  List.rev acc 
-            else  range_aux (start + step)  (start::acc)
-    
-        in range_aux start []
-      ;;
-    
-    val range : start:int -> stop:int -> step:int -> int list
-    
-    >  range 1 11 1 ;;
-    - : int list = [1; 2; 3; 4; 5; 6; 7; 8; 9; 10]
-     
-    
-    let pthytriples () = 
-        let (>>=) = ListM.(>>=) in 
-        let unit  = ListM.unit in 
-    
-        range 1 101 1 >>= fun a ->
-        range 1 101 1 >>= fun b ->
-        range 1 101 1 >>= fun c ->
-        if (a * a + b * b = c * c)
-        then unit (Some (a, b, c))
-        else unit None
-    ;;
-    
-    val pthytriples : unit -> (int * int * int) option list
-    
-    
-    let option_to_list opt_list = 
-        List.foldBack                     (* Fold right *)
-          (fun x acc -> match x with
-                        | Some a -> a::acc
-                        | None   -> acc
-          )
-          opt_list
-          []
-    ;;      
-                 
-    
-    - option_to_list (pthytriples ()) ;;
-    
-    val it : (int * int * int) list =
-      [(3, 4, 5); (4, 3, 5); (5, 12, 13); (6, 8, 10); (7, 24, 25); (8, 6, 10);
-       (8, 15, 17); (9, 12, 15); (9, 40, 41); (10, 24, 26); (11, 60, 61);
-       (12, 5, 13); (12, 9, 15); (12, 16, 20); (12, 35, 37); (13, 84, 85);
-       (14, 48, 50); (15, 8, 17); (15, 20, 25); (15, 36, 39); (16, 12, 20);
-       (16, 30, 34); (16, 63, 65); (18, 24, 30); (18, 80, 82); (20, 15, 25);
-       (20, 21, 29); (20, 48, 52); (21, 20, 29); (21, 28, 35); (21, 72, 75);
-       (24, 7, 25); (24, 10, 26); (24, 18, 30); (24, 32, 40); (24, 45, 51);
-       (24, 70, 74); (25, 60, 65); (27, 36, 45); (28, 21, 35); (28, 45, 53);
-       (28, 96, 100); (30, 16, 34); (30, 40, 50); (30, 72, 78); (32, 24, 40);
-       (32, 60, 68); (33, 44, 55); (33, 56, 65); (35, 12, 37); (35, 84, 91);
-       (36, 15, 39); (36, 27, 45); (36, 48, 60); (36, 77, 85); (39, 52, 65);
-       (39, 80, 89); (40, 9, 41); (40, 30, 50); (40, 42, 58); (40, 75, 85);
-       (42, 40, 58); (42, 56, 70); (44, 33, 55); (45, 24, 51); (45, 28, 53);
-       (45, 60, 75); (48, 14, 50); (48, 20, 52); (48, 36, 60); (48, 55, 73);
-       (48, 64, 80); (51, 68, 85); (52, 39, 65); (54, 72, 90); (55, 48, 73);
-       (56, 33, 65); (56, 42, 70); (57, 76, 95); (60, 11, 61); (60, 25, 65);
-       (60, 32, 68); (60, 45, 75); (60, 63, 87); (60, 80, 100); (63, 16, 65);
-       (63, 60, 87); (64, 48, 80); (65, 72, 97); (68, 51, 85); (70, 24, 74);
-       (72, 21, 75); (72, 30, 78); (72, 54, 90); (72, 65, 97); (75, 40, 85);
-       (76, 57, 95); (77, 36, 85); (80, 18, 82); (80, 39, 89); ...]
-    >
-    ```
-    
-    Example with F# "workflow" or "computation expression" syntax:
-    
-    ```ocaml
-    - List.concat [[1]; []; [2; 3; 4; 5]; [10; 20]] ;;
-    val it : int list = [1; 2; 3; 4; 5; 10; 20]
-    > 
-    
-    (* The F# workflow works like Haskell do-noation  
-    
-    *)
-    type ListBuilder () =    
-        member this.Bind(xs, f) = List.concat (List.map f xs)
-    
-        member this.Return(x) = [x]
-    ;;
-    
-    
-    type ListBuilder =
-      class
-        new : unit -> ListBuilder
-        member Bind : xs:'b list * f:('b -> 'c list) -> 'c list
-        member Return : x:'a -> 'a list
-      end
-    
-    let listDo = ListBuilder () ;;
-    
-    val listDo : ListBuilder
-    
-    (*
-    cartesian :: [a] -> [b] -> [(a, b)]
-    cartesian xs ys = do
-        x <- xs 
-        y <- ys 
-        return (x, y)
-    *)
-    
-    let cartesian xs ys = 
-        listDo {
-          let! x = xs 
-          let! y = ys 
-          return (x, y)
-       }
-    ;;
-    
-    val cartesian : xs:'a list -> ys:'b list -> ('a * 'b) list
-    
-    >  cartesian [1; 2; 3; 4; ] ["a"; "b"; "c"] ;;
-    val it : (int * string) list =
-      [(1, "a"); (1, "b"); (1, "c"); 
-       (2, "a"); (2, "b"); (2, "c"); 
-       (3, "a"); (3, "b"); (3, "c"); 
-       (4, "a"); (4, "b"); (4, "c")]
-    >
-    ```
+-   return wraps a value into a list
 
-4.  List Monad in Python
+```haskell
+> :t return
+return :: Monad m => a -> m a
+> 
+ -- Wraps a value into a list 
+ -- 
+> return 10 :: [Int]
+[10]
+>
+```
 
-    ```python
-    from functools import reduce
+Bind operator for list monad: 
+
+```haskell
+> :t (>>=)
+(>>=) :: Monad m => m a -> (a -> m b) -> m b
+> 
+
+ 
+
+>  [10,20,30] >>= \x -> [2*x, x+5] 
+[20,15,40,25,60,35]
+> 
+
+-- It is equivalent to: 
+--
+--  
+
+> map ( \x -> [2*x, x+5] ) [10, 20, 30]
+[[20,15],[40,25],[60,35]]
+> 
+> concat (map ( \x -> [2*x, x+5] ) [10, 20, 30])
+[20,15,40,25,60,35]
+>
+```
+
+Do notation:
+
+```
+  The do notation is a syntax sugar to -> 
+ 
+Do Notation:                   Do Notation Dessugarized: 
+
+cartesianProduct  = do         cartesianProduct = 
+   x <- [1, 2, 3, 4]             [1, 2, 3, 4] >>= \x ->
+   y <- ["a", "b"]               ["a", "b"]   >>= \y ->
+   return (x, y)                 return (x, y) 
+
+                               Or 
+
+                               cartesianProduct = 
+                                 bind [1 2, 3, 4]  (\x -> 
+                                 bind ["a", "b"]   (\y -> 
+                                 unit (x, y)))
+```
+
+Do notation examples for List monad: 
+
+```haskell
+-- file cartesian.hs 
+--
+-- Run in the repl:  
+--                  :load cartesian.hs  
+--                  
+
+cartesianProduct = do 
+    x <- [1, 2, 3, 4] 
+    y <- ["a", "b"]
+    return (x, y)
+
+--  End of file: cartesian.hs 
+-- -----------------
+
+> cartesianProduct 
+[(1,"a"),(1,"b"),(2,"a"),(2,"b"),(3,"a"),(3,"b"),(4,"a"),(4,"b")]
+> 
+
+ -- Or it can be typed in the repl directly:
+ --
+
+ 
+> :set +m  -- Enable multiline paste 
+> 
+ 
+--  Or copy the following code in the repl 
+--  by typing :set +m to enable multiline paste 
+--
+ 
+let cartesianProduct = do 
+    x <- [1, 2, 3, 4] 
+    y <- ["a", "b"]
+    return (x, y)
+
+> :set +m  -- paste 
+> 
+> let cartesianProduct = do 
+*Main Control.Exception E Text.Read|     x <- [1, 2, 3, 4] 
+*Main Control.Exception E Text.Read|     y <- ["a", "b"]
+*Main Control.Exception E Text.Read|     return (x, y)
+*Main Control.Exception E Text.Read| 
+> 
+
+ -- 
+ -- Or: Dessugarizing 
+
+> [1, 2, 3, 4] >>= \x -> ["a", "b"] >>= \y -> return (x, y)
+[(1,"a"),(1,"b"),(2,"a"),(2,"b"),(3,"a"),(3,"b"),(4,"a"),(4,"b")]
+> 
+  
+cartesian :: [a] -> [b] -> [(a, b)]
+cartesian xs ys = do
+    x <- xs 
+    y <- ys 
+    return (x, y)
+
+> cartesian [1, 2, 3, 4] ["a", "b"]
+[(1,"a"),(1,"b"),(2,"a"),(2,"b"),(3,"a"),(3,"b"),(4,"a"),(4,"b")]
+> 
+
+
+-- Returns all possible combinations between a, b and c
+--
+--
+triples :: [a] -> [b] -> [c] -> [(a, b, c)]
+triples  xs ys zs = do 
+  x <- xs 
+  y <- ys 
+  z <- zs 
+  return (x, y, z)
+
+--   The triples have 24 results 
+--
+--   x -> 2 possibilities
+--   y -> 3 possibilities
+--   z -> 4 possibilities 
+--
+--  Total of possibilities:  2 * 3 * 4 = 24
+--  the computation will return 24 results 
+-- 
+--
+> triples [1, 2] ["a", "b", "c"] ["x", "y", "z", "w"]
+[(1,"a","x"),(1,"a","y"),(1,"a","z"),(1,"a","w"),(1,"b","x"),
+(1,"b","y"),(1,"b","z"),(1,"b","w"),(1,"c","x"),(1,"c","y"),
+(1,"c","z"),(1,"c","w"),(2,"a","x"),(2,"a","y"),(2,"a","z"),
+(2,"a","w"),(2,"b","x"),(2,"b","y"),(2,"b","z"),(2,"b","w"),
+(2,"c","x"),(2,"c","y"),(2,"c","z"),(2,"c","w")]
+
+> length ( triples [1, 2] ["a", "b", "c"] ["x", "y", "z", "w"] )
+24
+> 
+
+--
+--  Find all numbers for which a ^ 2 + b ^ 2 = c ^ 2 
+--  up to 100:
+--
+--  There is 100 x 100 x 100 = 1,000,000 of combinations 
+--  to be tested:
+--
+pthytriples = do 
+    a <- [1 .. 100]
+    b <- [1 .. 100]
+    c <- [1 .. 100]
+
+    if (a ^ 2 + b ^ 2 == c ^ 2)
+      then (return (Just (a, b, c)))
+      else (return Nothing)
+
+> import Data.Maybe (catMaybes)
+
+> take 10 (catMaybes pthytriples)
+[(3,4,5),(4,3,5),(5,12,13),(6,8,10),(7,24,25),(8,6,10),(8,15,17),(9,12,15),(9,40,41),(10,24,26)]
+> 
+
+-- Example: Find all possible values of a functions applied 
+--          to all combinations possible of 3 lists:
+--
+applyComb3 = do 
+   x <- [1, 2, 3]
+   y <- [9, 8]
+   z <- [3, 8, 7, 4]
+   return ([x, y, z], 100 * x + 10 *  y + z)
+
+> applyComb3 
+[([1,9,3],193),([1,9,8],198),([1,9,7],197),([1,9,4],194) ...]
+
+
+-- Example: Crack a 4 letter password using brute force 
+--
+--
+
+
+import Data.List (find)
+import Data.Maybe (isJust)
+
+alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+make_password :: String -> String -> Bool 
+make_password password input = password == input 
+
+-- It will try 62 combinations for each letter
+-- wich means it will try up to 62 x 62 x 62 x 62 = 14,776,336 
+-- (=~ 15 millions) combinations at the worst case.
+--
+-- 
+crack_4pass  pass_function = do
+    ch0 <- alphabet 
+    ch1 <- alphabet 
+    ch2 <- alphabet 
+    ch3 <- alphabet 
+    let trial = [ch0, ch1, ch2, ch3] in
+      if   pass_function trial
+      then return (Just trial)
+      else return Nothing 
     
-    def concat(xss):
-        "concat :: [[a]] -> [a]"
-        return  reduce(lambda acc, x: acc + x, xss, [])
+crackpass pass_function = 
+   find isJust (crack_4pass pass_function)
+
+passwd1 = make_password "fX87" 
+
+
+> :set +s
+
+> crackpass passwd1 
+Just (Just "fX87")
+(2.00 secs, 434045068 bytes)
+> 
+
+> crackpass (make_password "2f8z")
+Just (Just "2f8z")
+(18.19 secs, 4038359812 bytes)
+>
+```
+
+#### List Monad in OCaml<a id="sec-1-13-2-2" name="sec-1-13-2-2"></a>
+
+```ocaml
+module ListM =
+  struct 
+  let bind ma f = List.concat (List.map f ma)
+
+  let (>>=) = bind 
+
+  (* return  *)
+  let unit a  = [a]
+
+end
+;;
+
+
+module ListM :
+  sig
+    val bind : 'a list -> ('a -> 'b list) -> 'b list
+    val ( >>= ) : 'a list -> ('a -> 'b list) -> 'b list
+    val unit : 'a -> 'a list
+  end
+
+(*
+ Haskel Code:
+
+ cartesian :: [a] -> [b] -> [(a, b)]              cartesian :: [a] -> [b] -> [(a, b)]   
+ cartesian xs ys = do                             carteasian xs ys = 
+    x <- xs                              ==>>        xs >>= \x ->    
+    y <- ys                                          ys >>= \y -> 
+    return (x, y)                                    return (x, y)
+
+
+ cartesian :: [a] -> [b] -> [(a, b)] 
+ carteasian xs ys = 
+   bind xs (\x -> 
+   bind ys (\y -> 
+   return (x, y)))
+
+*)
+
+
+let cartesian xs ys = 
+    let open ListM in 
+    xs >>= fun x -> 
+    ys >>= fun y ->
+    unit (x, y)
+;;
+
+val cartesian : 'a list -> 'b list -> ('a * 'b) list = <fun>
+
+
+>   cartesian [1; 2; 3; 4; ] ["a"; "b"; "c"]  ;;
+- : (int * string) list =
+[(1, "a"); (1, "b"); (1, "c"); (2, "a"); (2, "b"); (2, "c"); (3, "a");
+ (3, "b"); (3, "c"); (4, "a"); (4, "b"); (4, "c")]
+
+
+(*
+
+Haskel Code                               Do-natation Dessugarized
+                                                       
+triples :: [a] [b] [c] -> [(a, b, c)]     triples :: [a] [b] [c] -> [(a, b, c)]
+triples xs ys zs = do                     tripes xs ys zs = 
+    x <- xs                                   xs >>= \x ->
+    y <- ys                     ==>           ys >>= \y ->
+    z <- zs                                   zs >>= \z ->
+    return (x, y, z)                          return (x, y, z)  
+
+*)
+
+let triples (xs: 'a list) (ys: 'b list) (zs: 'c list) : ('a * 'b * 'c) list =
+    let open ListM in 
+    xs >>= fun x ->
+    ys >>= fun y ->
+    zs >>= fun z -> 
+    unit (x, y, z)
+;;
+
+val triples : 'a list -> 'b list -> 'c list -> ('a * 'b * 'c) list = <fun>
+
+
+>  triples ["x"; "z"; "w"]  [Some 10; None] [1; 2; 3; 4; 5] ;;
+- : (string * int option * int) list =
+[("x", Some 10, 1); ("x", Some 10, 2); ("x", Some 10, 3); ("x", Some 10, 4);
+ ("x", Some 10, 5); ("x", None, 1); ("x", None, 2); ("x", None, 3);
+ ("x", None, 4); ("x", None, 5); ("z", Some 10, 1); ("z", Some 10, 2);
+ ("z", Some 10, 3); ("z", Some 10, 4); ("z", Some 10, 5); ("z", None, 1);
+ ("z", None, 2); ("z", None, 3); ("z", None, 4); ("z", None, 5);
+ ("w", Some 10, 1); ("w", Some 10, 2); ("w", Some 10, 3); ("w", Some 10, 4);
+ ("w", Some 10, 5); ("w", None, 1); ("w", None, 2); ("w", None, 3);
+ ("w", None, 4); ("w", None, 5)]
+```
+
+#### List Monad in F#<a id="sec-1-13-2-3" name="sec-1-13-2-3"></a>
+
+Example without syntax sugar: 
+
+```fsharp
+module ListM =
+
+  let bind ma f = List.concat (List.map f ma)
+
+  let (>>=) = bind 
+
+  (* return  *)
+  let unit a  = [a]
+;;
+
+
+module ListM = begin
+  val bind : ma:'a list -> f:('a -> 'b list) -> 'b list
+  val ( >>= ) : ('a list -> ('a -> 'b list) -> 'b list)
+  val unit : a:'a -> 'a list
+end
+
+
+(*  Example:
+
+cartesian :: [a] -> [b] -> [(a, b)]
+cartesian xs ys = do
+    x <- xs 
+    y <- ys 
+    return (x, y)
+
+> cartesian [1, 2, 3, 4] ["a", "b", "c"]
+*)
+
+
+let cartesian xs ys =  
+    let (>>=) = ListM.(>>=) in 
+    let unit  = ListM.unit in 
+   
+    xs >>= fun x ->
+    ys >>= fun y ->
+    unit (x, y) 
+;;
+
+val cartesian : 'a list -> 'b list -> ('a * 'b) list = <fun>                                                           > 
+
+
+> 
+> cartesian [1; 2; 3; 4; ] ["a"; "b"; "c"]  ;;
+val it : (int * string) list =
+  [(1, "a"); (1, "b"); (1, "c"); 
+   (2, "a"); (2, "b"); (2, "c"); 
+   (3, "a"); (3, "b"); (3, "c"); 
+   (4, "a"); (4, "b"); (4, "c")]
+> 
+
+
+(*  
+
+F# List type is eager evaluated so the it will
+really loop over 100 * 100 * 100 = 100,000,000
+of combinations:  
+
+pthytriples = do 
+    a <- [1 .. 100]
+    b <- [1 .. 100]
+    c <- [1 .. 100]
+
+    if (a ^ 2 + b ^ 2 == c ^ 2)
+      then (return (Just (a, b, c)))
+      else (return Nothing)
+
+
+*)
+  
+
+(* Tail recursive function 
+
+*)
+let range start stop step  =
+
+    let rec range_aux start acc = 
+        if start >= stop 
+        then  List.rev acc 
+        else  range_aux (start + step)  (start::acc)
+
+    in range_aux start []
+  ;;
+
+val range : start:int -> stop:int -> step:int -> int list
+
+>  range 1 11 1 ;;
+- : int list = [1; 2; 3; 4; 5; 6; 7; 8; 9; 10]
+ 
+
+let pthytriples () = 
+    let (>>=) = ListM.(>>=) in 
+    let unit  = ListM.unit in 
+
+    range 1 101 1 >>= fun a ->
+    range 1 101 1 >>= fun b ->
+    range 1 101 1 >>= fun c ->
+    if (a * a + b * b = c * c)
+    then unit (Some (a, b, c))
+    else unit None
+;;
+
+val pthytriples : unit -> (int * int * int) option list
+
+
+let option_to_list opt_list = 
+    List.foldBack                     (* Fold right *)
+      (fun x acc -> match x with
+                    | Some a -> a::acc
+                    | None   -> acc
+      )
+      opt_list
+      []
+;;      
+             
+
+- option_to_list (pthytriples ()) ;;
+
+val it : (int * int * int) list =
+  [(3, 4, 5); (4, 3, 5); (5, 12, 13); (6, 8, 10); (7, 24, 25); (8, 6, 10);
+   (8, 15, 17); (9, 12, 15); (9, 40, 41); (10, 24, 26); (11, 60, 61);
+   (12, 5, 13); (12, 9, 15); (12, 16, 20); (12, 35, 37); (13, 84, 85);
+   (14, 48, 50); (15, 8, 17); (15, 20, 25); (15, 36, 39); (16, 12, 20);
+   (16, 30, 34); (16, 63, 65); (18, 24, 30); (18, 80, 82); (20, 15, 25);
+   (20, 21, 29); (20, 48, 52); (21, 20, 29); (21, 28, 35); (21, 72, 75);
+   (24, 7, 25); (24, 10, 26); (24, 18, 30); (24, 32, 40); (24, 45, 51);
+   (24, 70, 74); (25, 60, 65); (27, 36, 45); (28, 21, 35); (28, 45, 53);
+   (28, 96, 100); (30, 16, 34); (30, 40, 50); (30, 72, 78); (32, 24, 40);
+   (32, 60, 68); (33, 44, 55); (33, 56, 65); (35, 12, 37); (35, 84, 91);
+   (36, 15, 39); (36, 27, 45); (36, 48, 60); (36, 77, 85); (39, 52, 65);
+   (39, 80, 89); (40, 9, 41); (40, 30, 50); (40, 42, 58); (40, 75, 85);
+   (42, 40, 58); (42, 56, 70); (44, 33, 55); (45, 24, 51); (45, 28, 53);
+   (45, 60, 75); (48, 14, 50); (48, 20, 52); (48, 36, 60); (48, 55, 73);
+   (48, 64, 80); (51, 68, 85); (52, 39, 65); (54, 72, 90); (55, 48, 73);
+   (56, 33, 65); (56, 42, 70); (57, 76, 95); (60, 11, 61); (60, 25, 65);
+   (60, 32, 68); (60, 45, 75); (60, 63, 87); (60, 80, 100); (63, 16, 65);
+   (63, 60, 87); (64, 48, 80); (65, 72, 97); (68, 51, 85); (70, 24, 74);
+   (72, 21, 75); (72, 30, 78); (72, 54, 90); (72, 65, 97); (75, 40, 85);
+   (76, 57, 95); (77, 36, 85); (80, 18, 82); (80, 39, 89); ...]
+>
+```
+
+Example with F# "workflow" or "computation expression" syntax:
+
+```ocaml
+- List.concat [[1]; []; [2; 3; 4; 5]; [10; 20]] ;;
+val it : int list = [1; 2; 3; 4; 5; 10; 20]
+> 
+
+(* The F# workflow works like Haskell do-noation  
+
+*)
+type ListBuilder () =    
+    member this.Bind(xs, f) = List.concat (List.map f xs)
+
+    member this.Return(x) = [x]
+;;
+
+
+type ListBuilder =
+  class
+    new : unit -> ListBuilder
+    member Bind : xs:'b list * f:('b -> 'c list) -> 'c list
+    member Return : x:'a -> 'a list
+  end
+
+let listDo = ListBuilder () ;;
+
+val listDo : ListBuilder
+
+(*
+cartesian :: [a] -> [b] -> [(a, b)]
+cartesian xs ys = do
+    x <- xs 
+    y <- ys 
+    return (x, y)
+*)
+
+let cartesian xs ys = 
+    listDo {
+      let! x = xs 
+      let! y = ys 
+      return (x, y)
+   }
+;;
+
+val cartesian : xs:'a list -> ys:'b list -> ('a * 'b) list
+
+>  cartesian [1; 2; 3; 4; ] ["a"; "b"; "c"] ;;
+val it : (int * string) list =
+  [(1, "a"); (1, "b"); (1, "c"); 
+   (2, "a"); (2, "b"); (2, "c"); 
+   (3, "a"); (3, "b"); (3, "c"); 
+   (4, "a"); (4, "b"); (4, "c")]
+>
+```
+
+#### List Monad in Python<a id="sec-1-13-2-4" name="sec-1-13-2-4"></a>
+
+```python
+from functools import reduce
+
+def concat(xss):
+    "concat :: [[a]] -> [a]"
+    return  reduce(lambda acc, x: acc + x, xss, [])
+
+
+def listUnit (x):
+    "listUnit :: x -> [x]"
+    return [x]
+
+def listBind (xss, f):
+    "listBind :: [a] -> (a -> [b]) -> [b] "
+    return concat(map(f, xss))
+
+# Haskel Code:
+#
+# cartesian :: [a] -> [b] -> [(a, b)]              cartesian :: [a] -> [b] -> [(a, b)]   
+# cartesian xs ys = do                             carteasian xs ys = 
+#    x <- xs                              ==>>        xs >>= \x ->    
+#    y <- ys                                          ys >>= \y -> 
+#    return (x, y)                                    return (x, y)
+#
+#
+# cartesian :: [a] -> [b] -> [(a, b)] 
+# carteasian xs ys = 
+#   bind xs (\x -> 
+#   bind ys (\y -> 
+#   return (x, y)))
+#
+def cartesian(xs, ys):
     
-    
-    def listUnit (x):
-        "listUnit :: x -> [x]"
-        return [x]
-    
-    def listBind (xss, f):
-        "listBind :: [a] -> (a -> [b]) -> [b] "
+    return listBind(xs,
+                    lambda x: listBind(ys,
+                    lambda y: listUnit ((x, y))))
+
+
+def triples(xs, ys, zs):
+
+    return listBind(xs,
+                    lambda x: listBind(ys,
+                    lambda y: listBind(zs,
+                    lambda z: listUnit((x, y, z)))))
+
+>>> cartesian([1, 2, 3, 4], ["a", "b", "c"])
+[(1, 'a'), (1, 'b'), (1, 'c'), 
+(2, 'a'), (2, 'b'), (2, 'c'), 
+(3, 'a'), (3, 'b'), (3, 'c'), 
+(4, 'a'), (4, 'b'), (4, 'c')]
+>>> 
+
+>>> triples([1, 2], ["a", "b", "c"], ["x", "y", "z"])
+[(1, 'a', 'x'), 
+(1, 'a', 'y'), 
+(1, 'a', 'z'), 
+(1, 'b', 'x'), 
+(1, 'b', 'y'), 
+(1, 'b', 'z'), 
+(1, 'c', 'x'), 
+...
+>>> 
+
+
+ # Emulate ML module 
+ #
+class ListM ():
+
+    @classmethod
+    def bind(cls, xss, f):
         return concat(map(f, xss))
-    
-    # Haskel Code:
-    #
-    # cartesian :: [a] -> [b] -> [(a, b)]              cartesian :: [a] -> [b] -> [(a, b)]   
-    # cartesian xs ys = do                             carteasian xs ys = 
-    #    x <- xs                              ==>>        xs >>= \x ->    
-    #    y <- ys                                          ys >>= \y -> 
-    #    return (x, y)                                    return (x, y)
-    #
-    #
-    # cartesian :: [a] -> [b] -> [(a, b)] 
-    # carteasian xs ys = 
-    #   bind xs (\x -> 
-    #   bind ys (\y -> 
-    #   return (x, y)))
-    #
-    def cartesian(xs, ys):
-        
-        return listBind(xs,
-                        lambda x: listBind(ys,
-                        lambda y: listUnit ((x, y))))
-    
-    
-    def triples(xs, ys, zs):
-    
-        return listBind(xs,
-                        lambda x: listBind(ys,
-                        lambda y: listBind(zs,
-                        lambda z: listUnit((x, y, z)))))
-    
-    >>> cartesian([1, 2, 3, 4], ["a", "b", "c"])
-    [(1, 'a'), (1, 'b'), (1, 'c'), 
-    (2, 'a'), (2, 'b'), (2, 'c'), 
-    (3, 'a'), (3, 'b'), (3, 'c'), 
-    (4, 'a'), (4, 'b'), (4, 'c')]
-    >>> 
-    
-    >>> triples([1, 2], ["a", "b", "c"], ["x", "y", "z"])
-    [(1, 'a', 'x'), 
-    (1, 'a', 'y'), 
-    (1, 'a', 'z'), 
-    (1, 'b', 'x'), 
-    (1, 'b', 'y'), 
-    (1, 'b', 'z'), 
-    (1, 'c', 'x'), 
-    ...
-    >>> 
-    
-    
-     # Emulate ML module 
-     #
-    class ListM ():
-    
-        @classmethod
-        def bind(cls, xss, f):
-            return concat(map(f, xss))
-    
-        @classmethod
-        def unit(cls, x):
-            return [x]
-    
-    def cartesian (xs, ys):
-        return ListM.bind( xs, lambda x:
-               ListM.bind( ys, lambda y:
-               ListM.unit ((x, y))))
-    
-    >>> cartesian([1, 2, 3, 4], ["a", "b", "c"])
-    
-    [(1, 'a'), (1, 'b'), (1, 'c'), 
-    (2, 'a'), (2, 'b'), (2, 'c'), 
-    (3, 'a'), (3, 'b'), (3, 'c'), 
-    (4, 'a'), (4, 'b'), (4, 'c')]
-    >>>
-    ```
+
+    @classmethod
+    def unit(cls, x):
+        return [x]
+
+def cartesian (xs, ys):
+    return ListM.bind( xs, lambda x:
+           ListM.bind( ys, lambda y:
+           ListM.unit ((x, y))))
+
+>>> cartesian([1, 2, 3, 4], ["a", "b", "c"])
+
+[(1, 'a'), (1, 'b'), (1, 'c'), 
+(2, 'a'), (2, 'b'), (2, 'c'), 
+(3, 'a'), (3, 'b'), (3, 'c'), 
+(4, 'a'), (4, 'b'), (4, 'c')]
+>>>
+```
 
 ### Maybe / Option Monad<a id="sec-1-13-3" name="sec-1-13-3"></a>
 
-1.  Overview
+#### Overview<a id="sec-1-13-3-1" name="sec-1-13-3-1"></a>
 
-    The Maybe type (Haskell) or Option type (ML, F# and OCaml) is used to
-    indicate that a function might return nothing, the value might not
-    exists or that a computation maight fail. This is helpful to remove
-    nested null checks, avoid null pointer or null object exceptions.
-    
-    Some functions are a natural candidates to return a <span class="underline">maybe</span> or
-    <span class="underline">option</span> type like parser function, user input validation, lookup functions
-    that search an input in data structure or database and functions with
-    invalid input.
+The Maybe type (Haskell) or Option type (ML, F# and OCaml) is used to
+indicate that a function might return nothing, the value might not
+exists or that a computation maight fail. This is helpful to remove
+nested null checks, avoid null pointer or null object exceptions.
 
-2.  Maybe Monad in Haskell
+Some functions are a natural candidates to return a <span class="underline">maybe</span> or
+<span class="underline">option</span> type like parser function, user input validation, lookup functions
+that search an input in data structure or database and functions with
+invalid input.
 
-    The Maybe monad ends the computation if any step fails. The module
-    [Data.Maybe](https://hackage.haskell.org/package/base-4.8.2.0/docs/Data-Maybe.html) has useful function to deal with Maybe type.
-    
-    ```haskell
-    data Maybe a = Just a | Nothing
-    
-    instance Monad Maybe where
-      (Just x) >>= k = k x
-      Nothing  >>= k = Nothing
-    
-      return = Just
-    ```
-    
-    Example: The function below parses two numbers and adds them. 
-    
-    ```haskell
-    --- File: test.hs 
-    --
-    import Data.List (lookup)
-    import Text.Read (readMaybe)
-    
-    
-      -- Parser functions 
-    
-    parseInt :: String -> Maybe Int 
-    parseInt x = readMaybe x :: Maybe Int 
-    
-    parseDouble :: String -> Maybe Double
-    parseDouble x = readMaybe x :: Maybe Double
-    
-     -- Function with invalid input 
-    
-    sqrtSafe :: Double -> Maybe Double 
-    sqrtSafe x = if x > 0
-                 then Just (sqrt x)
-                 else Nothing
-    
-    addSafe :: Maybe Double -> Maybe Double -> Maybe Double 
-    addSafe some_x some_y = do
-      x <- some_x 
-      y <- some_y 
-      return (x + y)
-    
-    
-    addOneSafe :: Maybe Double -> Double -> Maybe Double 
-    addOneSafe a b = do
-      sa <- a
-      let c =  3.0 * (b + sa)
-      return (sa + c)
-      
-    
-     -- s - stands for Some  
-     --
-    addSqrtSafe :: Double -> Double -> Maybe Double 
-    addSqrtSafe x y = do
-      sx <- sqrtSafe x   
-      sy <- sqrtSafe y   
-      return (sx + sy)
-    
-    -- addSqrtSafe desugarized 
-    --
-    addSqrtSafe2 x y = 
-       sqrtSafe x >>= \sx ->
-       sqrtSafe y >>= \sy ->
-       return (sx +  sy)
-    
-    
-     -- End of test file 
-     --------------------------------
-    
-    > :load /tmp/test.hs 
-    
-    > :t readMaybe
-    readMaybe :: Read a => String -> Maybe a
-    > 
-    
-    > parseInt "100" 
-    Just 100
-    
-    
-     -- Returns nothing if computation fails 
-     -- instead of perform an exception 
-     --
-    > parseInt "not an int." 
-    Nothing
-    > 
-    
-    > parseDouble "1200" 
-    Just 1200.0
-    > parseDouble "1200.232" 
-    Just 1200.232
-    > parseDouble "12e3" 
-    Just 12000.0
-    > parseDouble "not a valid number" 
-    Nothing
-    > 
-    
-    
-    -- This haskell function is safe, however in another language 
-    -- it would yield a exception. 
-    --
-    > sqrt (-100.0)
-    NaN
-    > 
-    
-    > sqrtSafe (-1000.0)
-    Nothing
-    > 
-    
-    > sqrtSafe 100.0
-    Just 10.0
-    > 
-    
-    -- Thea function fmap is a generalization of map and applies a function 
-    -- to the value wrapped in the monad. 
-    --
-    
-    > :t fmap
-    fmap :: Functor f => (a -> b) -> f a -> f b
-    > 
-    
-    > fmap (\x -> x + 1.0) (Just 10.0)
-    Just 11.0
-    > fmap (\x -> x + 1.0) Nothing 
-    Nothing
-    >
-    > fmap (\x -> x + 1.0) (parseDouble "10.233") 
-    Just 11.233
-    > fmap (\x -> x + 1.0) (parseDouble "ase10.2x3") 
-    Nothing
-    > 
-    
-    --   return function 
-    -- 
-    
-    > :t return
-    return :: Monad m => a -> m a
-    > 
-    
-     return 10 :: Maybe Int
-    Just 10
-    > 
-    
-    > return "hello world" :: Maybe String
-    Just "hello world"
-    > 
-    
-    
-    -- Bind function 
-    --
-    -- The bind operator or funciton short circuits the computation if 
-    -- it fails at any point 
-    -- 
-    --
-    
-    > :t (>>=)
-    (>>=) :: Monad m => m a -> (a -> m b) -> m b
-    > 
-    
-    > Just "100.0" >>= parseDouble >>= sqrtSafe
-    Just 10.0
-    > 
-    > Nothing  >>= parseDouble >>= sqrtSafe
-    Nothing
-    > 
-    
-    > return "100.0" >>= parseDouble >>= sqrtSafe
-    Just 10.0
-    > 
-    > return "-100.0" >>= parseDouble >>= sqrtSafe
-    Nothing
-    > 
-    
-    
-    -- Do noation 
-    --
-    --
-    -- addSafe some_x some_y = do         addSafe = do 
-    --   x <- some_x                        some_x >>= \x ->
-    --   y <- some_y                 ==>    some_y >>= \y ->
-    --   return (x + y)                           return (x + y)
-    --
-    --
-    --
-    --
-    --
-    > :t addSafe
-    addSafe :: Maybe Double -> Maybe Double -> Maybe Double
-    > 
-    
-    
-    
-    > addSafe (Just 100.0) (Just 20.0)
-    Just 120.0
-    > 
-    
-    > addSafe (Just 100.0) Nothing
-    Nothing
-    > 
-    
-    > addSafe Nothing (Just 100.0)
-    Nothing
-    > 
-    
-    > addSafe Nothing Nothing
-    Nothing
-    > 
-    
-    > addSafe (parseDouble "100.0") (sqrtSafe 400.0)
-    Just 120.0
-    > 
-    
-    > addSafe (Just 100.0) (sqrtSafe (-20.0))
-    Nothing
-    > 
-    
-    > addSafe (parseDouble "asd100.0") (sqrtSafe 400.0)
-    Nothing
-    > 
-    
-    
-    > :t addSqrtSafe 
-    addSqrtSafe :: Double -> Double -> Maybe Double
-    > 
-    
-    > addSqrtSafe 100.0 400.0
-    Just 30.0
-    > 
-    
-    > addSqrtSafe (-100.0) 400.0
-    Nothing
-    > 
-    
-    > addSqrtSafe2 (-100.0) 400.0
-    Nothing
-    > addSqrtSafe2 100.0 400.0
-    Just 30.0
-    > 
-    
-    > addOneSafe (Just 10.0) 20.0 
-    Just 100.0
-    > 
-    > addOneSafe Nothing 20.0 
-    Nothing
-    > 
-    
-    > addOneSafe (parseDouble "100.0") 20.0 
-    Just 460.0
-    >
-    
-    > addOneSafe (parseDouble "1dfd00.0") 20.0 
-    Nothing
-    >
-    ```
+#### Maybe Monad in Haskell<a id="sec-1-13-3-2" name="sec-1-13-3-2"></a>
 
-3.  Maybe / Option Monad in Ocaml
+The Maybe monad ends the computation if any step fails. The module
+[Data.Maybe](https://hackage.haskell.org/package/base-4.8.2.0/docs/Data-Maybe.html) has useful function to deal with Maybe type.
 
-    The maybe type is called Option in Ocaml and F#.
-    
-    ```ocaml
-    -> Some 100 ;;
-    - : int option = Some 100
+```haskell
+data Maybe a = Just a | Nothing
+
+instance Monad Maybe where
+  (Just x) >>= k = k x
+  Nothing  >>= k = Nothing
+
+  return = Just
+```
+
+Example: The function below parses two numbers and adds them. 
+
+```haskell
+--- File: test.hs 
+--
+import Data.List (lookup)
+import Text.Read (readMaybe)
+
+
+  -- Parser functions 
+
+parseInt :: String -> Maybe Int 
+parseInt x = readMaybe x :: Maybe Int 
+
+parseDouble :: String -> Maybe Double
+parseDouble x = readMaybe x :: Maybe Double
+
+ -- Function with invalid input 
+
+sqrtSafe :: Double -> Maybe Double 
+sqrtSafe x = if x > 0
+             then Just (sqrt x)
+             else Nothing
+
+addSafe :: Maybe Double -> Maybe Double -> Maybe Double 
+addSafe some_x some_y = do
+  x <- some_x 
+  y <- some_y 
+  return (x + y)
+
+
+addOneSafe :: Maybe Double -> Double -> Maybe Double 
+addOneSafe a b = do
+  sa <- a
+  let c =  3.0 * (b + sa)
+  return (sa + c)
+  
+
+ -- s - stands for Some  
+ --
+addSqrtSafe :: Double -> Double -> Maybe Double 
+addSqrtSafe x y = do
+  sx <- sqrtSafe x   
+  sy <- sqrtSafe y   
+  return (sx + sy)
+
+-- addSqrtSafe desugarized 
+--
+addSqrtSafe2 x y = 
+   sqrtSafe x >>= \sx ->
+   sqrtSafe y >>= \sy ->
+   return (sx +  sy)
+
+
+ -- End of test file 
+ --------------------------------
+
+> :load /tmp/test.hs 
+
+> :t readMaybe
+readMaybe :: Read a => String -> Maybe a
+> 
+
+> parseInt "100" 
+Just 100
+
+
+ -- Returns nothing if computation fails 
+ -- instead of perform an exception 
+ --
+> parseInt "not an int." 
+Nothing
+> 
+
+> parseDouble "1200" 
+Just 1200.0
+> parseDouble "1200.232" 
+Just 1200.232
+> parseDouble "12e3" 
+Just 12000.0
+> parseDouble "not a valid number" 
+Nothing
+> 
+
+
+-- This haskell function is safe, however in another language 
+-- it would yield a exception. 
+--
+> sqrt (-100.0)
+NaN
+> 
+
+> sqrtSafe (-1000.0)
+Nothing
+> 
+
+> sqrtSafe 100.0
+Just 10.0
+> 
+
+-- Thea function fmap is a generalization of map and applies a function 
+-- to the value wrapped in the monad. 
+--
+
+> :t fmap
+fmap :: Functor f => (a -> b) -> f a -> f b
+> 
+
+> fmap (\x -> x + 1.0) (Just 10.0)
+Just 11.0
+> fmap (\x -> x + 1.0) Nothing 
+Nothing
+>
+> fmap (\x -> x + 1.0) (parseDouble "10.233") 
+Just 11.233
+> fmap (\x -> x + 1.0) (parseDouble "ase10.2x3") 
+Nothing
+> 
+
+--   return function 
+-- 
+
+> :t return
+return :: Monad m => a -> m a
+> 
+
+ return 10 :: Maybe Int
+Just 10
+> 
+
+> return "hello world" :: Maybe String
+Just "hello world"
+> 
+
+
+-- Bind function 
+--
+-- The bind operator or funciton short circuits the computation if 
+-- it fails at any point 
+-- 
+--
+
+> :t (>>=)
+(>>=) :: Monad m => m a -> (a -> m b) -> m b
+> 
+
+> Just "100.0" >>= parseDouble >>= sqrtSafe
+Just 10.0
+> 
+> Nothing  >>= parseDouble >>= sqrtSafe
+Nothing
+> 
+
+> return "100.0" >>= parseDouble >>= sqrtSafe
+Just 10.0
+> 
+> return "-100.0" >>= parseDouble >>= sqrtSafe
+Nothing
+> 
+
+
+
+-- Do noation 
+--
+--
+-- addSafe some_x some_y = do         addSafe = do 
+--   x <- some_x                        some_x >>= \x ->
+--   y <- some_y                 ==>    some_y >>= \y ->
+--   return (x + y)                           return (x + y)
+--
+--
+--
+--
+--
+> :t addSafe
+addSafe :: Maybe Double -> Maybe Double -> Maybe Double
+> 
+
+
+
+> addSafe (Just 100.0) (Just 20.0)
+Just 120.0
+> 
+
+> addSafe (Just 100.0) Nothing
+Nothing
+> 
+
+> addSafe Nothing (Just 100.0)
+Nothing
+> 
+
+> addSafe Nothing Nothing
+Nothing
+> 
+
+> addSafe (parseDouble "100.0") (sqrtSafe 400.0)
+Just 120.0
+> 
+
+> addSafe (Just 100.0) (sqrtSafe (-20.0))
+Nothing
+> 
+
+> addSafe (parseDouble "asd100.0") (sqrtSafe 400.0)
+Nothing
+> 
+
+
+> :t addSqrtSafe 
+addSqrtSafe :: Double -> Double -> Maybe Double
+> 
+
+> addSqrtSafe 100.0 400.0
+Just 30.0
+> 
+
+> addSqrtSafe (-100.0) 400.0
+Nothing
+> 
+
+> addSqrtSafe2 (-100.0) 400.0
+Nothing
+> addSqrtSafe2 100.0 400.0
+Just 30.0
+> 
+
+> addOneSafe (Just 10.0) 20.0 
+Just 100.0
+> 
+> addOneSafe Nothing 20.0 
+Nothing
+> 
+
+> addOneSafe (parseDouble "100.0") 20.0 
+Just 460.0
+>
+
+> addOneSafe (parseDouble "1dfd00.0") 20.0 
+Nothing
+>
+```
+
+#### Maybe / Option Monad in Ocaml<a id="sec-1-13-3-3" name="sec-1-13-3-3"></a>
+
+The maybe type is called Option in Ocaml and F#.
+
+```ocaml
+-> Some 100 ;;
+- : int option = Some 100
+ 
+
+-> None ;;
+- : 'a option = None
+ 
+module OptM =
+  struct 
+
+    let unit x = Some x
+
+    let bind ma f =
+      match ma with
+      | Some x  ->  f x
+      | None    ->  None 
+
+    let (>>=) = bind 
+
+    (* Haskell fmap *)
+    let map f ma =
+      match ma with
+      | Some x -> Some (f x)
+      | None   -> None   
      
-    
-    -> None ;;
-    - : 'a option = None
-     
-    module OptM =
-      struct 
-    
-        let unit x = Some x
-    
-        let bind ma f =
-          match ma with
-          | Some x  ->  f x
-          | None    ->  None 
-    
-        let (>>=) = bind 
-    
-        (* Haskell fmap *)
-        let map f ma =
-          match ma with
-          | Some x -> Some (f x)
-          | None   -> None   
-         
-      end
-    
-    
-    module OptM :
-      sig
-        val unit : 'a -> 'a option
-        val bind : 'a option -> ('a -> 'b option) -> 'b option
-        val ( >>= ) : 'a option -> ('a -> 'b option) -> 'b option
-        val map : ('a -> 'b) -> 'a option -> 'b option
-      end
-    
-    
-    #  OptM.unit ;;
-    - : 'a -> 'a option = <fun>
-    
-    # OptM.bind ;;
-    - : 'a option -> ('a -> 'b option) -> 'b option = <fun>
-    # 
-    
-    # OptM.map ;;
-    - : ('a -> 'b) -> 'a option -> 'b option = <fun>
-    # 
-        
-    # OptM.map (fun x -> x + 3) (Some 10) ;;
-    - : int option = Some 13
-    
-    #  OptM.map (fun x -> x + 3) None ;;
-    - : int option = None
-    
-    #  float_of_string "100.23" ;;
-    - : float = 100.23
-    # float_of_string "a100.23" ;;
-    Exception: Failure "float_of_string".
-    
-    let parseFloat x = 
-      try Some (float_of_string x)
-      with _ -> None
-    ;;               
-    
-    #  parseFloat "100.00" ;;
-    - : float option = Some 100.
-    # 
-    #  parseFloat "asds100.00" ;;
-    - : float option = None
-    # 
-    
-    (*
-    
-    addSafe :: Maybe Double -> Maybe Double -> Maybe Double 
-    addSafe some_x some_y = do
-      x <- some_x 
-      y <- some_y 
-      return (x + y) 
-    
-    addSafe some_x some_y = 
-      some_x >>= \x ->
-      some_y >>= \y ->
-      return (x + y)
-    
-    *)
-    
-    let addSafe sx sy = 
-        let open OptM in 
-        sx >>= fun x ->
-        sy >>= fun y ->
-        unit (x +. y)
-    ;;
-    
-    val addSafe : float option -> float option -> float option = <fun>
-    
-    # addSafe (Some 10.0) (Some 20.0) ;;
-    - : float option = Some 30.
-    # addSafe None (Some 20.0) ;;
-    - : float option = None
-    # addSafe None None ;;
-    - : float option = None
-    # 
-    
-    
-    (*
-    
-    If Haskell functions were impure it would work:
-    
-    addInputsSafe () = do
-      x <- parseDouble (readLine ())
-      y <- parseDouble (readLine ())
-      z <- parseDouble (readLine ())
-      return (x + y + z)
-    
-    addInputsSafe some_x some_y = 
-       readLine () >>= \x ->
-       readLine () >>= \y ->
-       readLine () >>= \x -> 
-       return (x + y + z)
-    *)
-    
-    
-    let prompt  message = 
-        print_string message ;
-        parseFloat (read_line())
-    ;;
-    
-    val prompt : string -> float option = <fun>
-    
-    let addInputsSafe () = 
-        let open OptM in 
-        prompt "Enter x: "  >>= fun x ->
-        prompt "Enter y: "  >>= fun y ->
-        prompt "Enter z: "  >>= fun z ->
-        unit (print_float  (x +. y +. z))
-    ;;
-    
-    val addInputsSafe : unit -> unit option = <fun>
-    
-    (* It will stop the computation if any input is invalid *)
-    
-    # addInputsSafe () ;;
-    Enter x: 10.0
-    Enter y: 20.0
-    Enter z: 30.0
-    60.- : unit option = Some ()
-    # 
-    
-    # addInputsSafe () ;;
-    Enter x: 20.0
-    Enter y: dsfd
-    - : unit option = None
-    # 
-    
-    - :  addInputsSafe () ;;
-    Enter x: 20.0
-    Enter y: 30.0
-    Enter z: a20afdf
-    - : unit option = None
-    
-    # addInputsSafe () ;;
-    Enter x: erew34
-    - : unit option = None
-    #
-    ```
+  end
 
-### See also<a id="sec-1-13-4" name="sec-1-13-4"></a>
+
+module OptM :
+  sig
+    val unit : 'a -> 'a option
+    val bind : 'a option -> ('a -> 'b option) -> 'b option
+    val ( >>= ) : 'a option -> ('a -> 'b option) -> 'b option
+    val map : ('a -> 'b) -> 'a option -> 'b option
+  end
+
+
+#  OptM.unit ;;
+- : 'a -> 'a option = <fun>
+
+# OptM.bind ;;
+- : 'a option -> ('a -> 'b option) -> 'b option = <fun>
+# 
+
+# OptM.map ;;
+- : ('a -> 'b) -> 'a option -> 'b option = <fun>
+# 
+    
+# OptM.map (fun x -> x + 3) (Some 10) ;;
+- : int option = Some 13
+
+#  OptM.map (fun x -> x + 3) None ;;
+- : int option = None
+
+#  float_of_string "100.23" ;;
+- : float = 100.23
+# float_of_string "a100.23" ;;
+Exception: Failure "float_of_string".
+
+let parseFloat x = 
+  try Some (float_of_string x)
+  with _ -> None
+;;               
+
+#  parseFloat "100.00" ;;
+- : float option = Some 100.
+# 
+#  parseFloat "asds100.00" ;;
+- : float option = None
+# 
+
+(*
+
+addSafe :: Maybe Double -> Maybe Double -> Maybe Double 
+addSafe some_x some_y = do
+  x <- some_x 
+  y <- some_y 
+  return (x + y) 
+
+addSafe some_x some_y = 
+  some_x >>= \x ->
+  some_y >>= \y ->
+  return (x + y)
+
+*)
+
+let addSafe sx sy = 
+    let open OptM in 
+    sx >>= fun x ->
+    sy >>= fun y ->
+    unit (x +. y)
+;;
+
+val addSafe : float option -> float option -> float option = <fun>
+
+# addSafe (Some 10.0) (Some 20.0) ;;
+- : float option = Some 30.
+# addSafe None (Some 20.0) ;;
+- : float option = None
+# addSafe None None ;;
+- : float option = None
+# 
+
+
+(*
+
+If Haskell functions were impure it would work:
+
+addInputsSafe () = do
+  x <- parseDouble (readLine ())
+  y <- parseDouble (readLine ())
+  z <- parseDouble (readLine ())
+  return (x + y + z)
+
+addInputsSafe some_x some_y = 
+   readLine () >>= \x ->
+   readLine () >>= \y ->
+   readLine () >>= \x -> 
+   return (x + y + z)
+*)
+
+
+let prompt  message = 
+    print_string message ;
+    parseFloat (read_line())
+;;
+
+val prompt : string -> float option = <fun>
+
+let addInputsSafe () = 
+    let open OptM in 
+    prompt "Enter x: "  >>= fun x ->
+    prompt "Enter y: "  >>= fun y ->
+    prompt "Enter z: "  >>= fun z ->
+    unit (print_float  (x +. y +. z))
+;;
+
+val addInputsSafe : unit -> unit option = <fun>
+
+(* It will stop the computation if any input is invalid *)
+
+# addInputsSafe () ;;
+Enter x: 10.0
+Enter y: 20.0
+Enter z: 30.0
+60.- : unit option = Some ()
+# 
+
+# addInputsSafe () ;;
+Enter x: 20.0
+Enter y: dsfd
+- : unit option = None
+# 
+
+- :  addInputsSafe () ;;
+Enter x: 20.0
+Enter y: 30.0
+Enter z: a20afdf
+- : unit option = None
+
+# addInputsSafe () ;;
+Enter x: erew34
+- : unit option = None
+#
+```
+
+### Either Monad<a id="sec-1-13-4" name="sec-1-13-4"></a>
+
+#### Overview<a id="sec-1-13-4-1" name="sec-1-13-4-1"></a>
+
+The Either type is an extension of Maybe, it end a computation if any
+step fails. Unlike Maybe it can indicate the source of the error. It
+represents two values Right that holds a correct value (mneumonic
+"right" meaning correct) and the constructor Left that holds an error value.
+
+The module [Data.Either](https://downloads.haskell.org/~ghc/6.12.2/docs/html/libraries/base-4.2.0.1/Data-Either.html) has combinators to manipulate the Either type.
+
+From: [src/Control/Monad/Either.hs](https://hackage.haskell.org/package/category-extras-0.53.4/docs/src/Control-Monad-Either.html)
+
+```haskell
+data Either a b = Left a | Right b deriving (Eq, Show)
+
+instance Monad (Either e) where
+        return = Right
+        Right m >>= k = k m
+        Left e  >>= _ = Left e
+```
+
+#### Example<a id="sec-1-13-4-2" name="sec-1-13-4-2"></a>
+
+file: either\_monad.hs 
+
+```haskell
+--  File: either_monad.hs
+------------------------------
+
+import Text.Read (readMaybe)
+
+data ErrorCode = 
+        ParserError 
+      | InvalidInput 
+      deriving (Eq, Show)
+
+describeErrorCode ParserError  = "The parser failed." 
+describeErrorCode InvalidInput = "Input out function domain."
+
+describeError (Right x)    = Right x 
+describeError (Left  code) = Left (describeErrorCode code)
+
+parseDouble2 :: String -> Either ErrorCode Double 
+parseDouble2  str = 
+    case (readMaybe str :: Maybe Double) of
+    Just x  ->  Right x 
+    Nothing ->  Left  ParserError
+
+
+sqrt_safe2 :: Double -> Either ErrorCode Double 
+sqrt_safe2 x = 
+    if x >= 0 
+    then (Right x)
+    else (Left InvalidInput)
+
+
+addSafe1 :: Either err Double -> Either err Double -> Either err Double 
+addSafe1 ex ey = do
+  x <- ex
+  y <- ey 
+  return $ x + y 
+
+addSafe2 :: Either err Double -> Either err Double -> Either err Double
+addSafe2 ex ey = 
+ ex >>= \x -> 
+ ey >>= \y ->
+ return (x + y)
+
+test1 input = do
+   x <- parseDouble2 input 
+   y <- sqrt_safe2 x 
+   return (x + y)
+
+test2 input = 
+  parseDouble2 input >>= \x ->
+  sqrt_safe2 x       >>= \y ->
+  return (x + y)
+  
+
+-- ----- End of File  --------------------
+------------------------------------------
+```
+
+Repl:
+
+```haskell
+> :load /tmp/either_monad.hs
+
+ -- Playing with Return 
+ --
+> return 10 :: Either a Double
+Right 10.0
+> 
+
+> let returnEither x = Right x 
+> 
+> returnEither 10
+Right 10
+
+> returnEither 10.0
+Right 10.0
+
+> :t returnEither 10.0
+returnEither 10.0 :: Fractional b => Either a b
+> 
+
+> :t returnEither (10.0 :: Double)
+returnEither (10.0 :: Double) :: Either a Double
+>
+
+ ---  Playing with bind operator  
+ ---
+
+> Right 10 >>= \x -> Right (x + 5)
+Right 15
+> 
+
+> return 10 >>= \x -> Right (x + 5)
+Right 15
+> 
+
+
+> Right 10 >>= \x -> Left "It always will fail"
+Left "It always will fail"
+> 
+
+> Left "Computation failed" >>= \x -> Right (x + 5)
+Left "Computation failed"
+> 
+
+> return 5 >>= \x -> if x < 20 then Right (x + 5) else Left "Number out of range greater than 20"
+Right 10
+> 
+> return 30 >>= \x -> if x < 20 then Right (x + 5) else Left "Number out of range greater than 20"
+Left "Number out of range greater than 20"
+> 
+
+
+> return "100.23" >>= \x -> parseDouble2 x
+Right 100.23
+> 
+> return "1dsf00.23" >>= \x -> parseDouble2 x
+Left ParserError
+> 
+ 
+ 
+> test1 "100.0"
+Right 200.0
+>
+> 
+> test1 "asd100.0"
+Left ParserError
+> 
+>
+> test1 "-100"
+Left InvalidInput
+> 
+
+> test2 "100"
+Right 200.0
+>
+> test2 "asdd10sd0"
+Left ParserError
+>
+> test2 "-200"
+Left InvalidInput
+> 
+
+
+> :t addSafe1 
+addSafe1
+  :: Either err Double -> Either err Double -> Either err Double
+> 
+
+> addSafe1 (Right 100) (Right 200)
+Right 300.0
+> 
+
+> addSafe1 (Right 100) (Left "Error: second argument not a number")
+Left "Error: second argument not a number"
+> 
+
+> addSafe1 (Left "Error: first argument not a number") (Right 100)
+Left "Error: first argument not a number"
+>
+
+> addSafe1 (parseDouble2 "200.0") (sqrt_safe2 100.0)
+Right 300.0
+> 
+
+> addSafe1 (parseDouble2 "200.0") (sqrt_safe2 (-100.0))
+Left InvalidInput
+> 
+
+> addSafe1 (parseDouble2 "2sdfs00.0") (sqrt_safe2 (-100.0))
+Left ParserError
+> 
+
+> addSafe2 (parseDouble2 "200.0") (sqrt_safe2 100.0)
+Right 300.0
+>
+
+> describeError $ addSafe2 (parseDouble2 "20asdas0.0") (sqrt_safe2 100.0)
+Left "The parser failed."
+> 
+
+> describeError $ addSafe2 (parseDouble2 "2000.0") (sqrt_safe2 (-100.0))
+Left "Input out function domain."
+> 
+
+> import qualified Data.Either as E
+
+-- Extracts from a list of Either all the Left elements All the Left
+--   elements are extracted in order.
+--
+> E.lefts [Left "Error 1", Right 10, Left "Error 2", Right 200]
+["Error 1","Error 2"]
+> 
+
+-- Extracts from a list of Either all the Right elements All the Right
+-- elements are extracted in order.
+--
+> E.rights  [Left "Error 1", Right 10, Left "Error 2", Right 200]
+[10,200]
+>
+
+
+> E.partitionEithers  [Left "Error 1", Right 10, Left "Error 2", Right 200]
+(["Error 1","Error 2"],[10,200])
+> 
+
+--   Case analysis for the Either type. If the value is Left a, apply
+--   the first function to a; if it is Right b, apply the second
+--   function to b.
+-- 
+
+> :t E.either
+E.either :: (a -> c) -> (b -> c) -> Either a b -> c
+> 
+
+> E.either (\left -> left + 10) (\right -> right * 3) (Right 10)
+30
+> 
+
+> E.either (\left -> left + 10) (\right -> right * 3) (Left 10)
+20
+> 
+
+> let f = E.either (\left -> left + 10) (\right -> right * 3) 
+> :t f
+f :: Either Integer Integer -> Integer
+> 
+
+> f (Right 10)
+30
+> f (Left 10)
+20
+>
+```
+
+### IO Monad<a id="sec-1-13-5" name="sec-1-13-5"></a>
+
+#### Overview<a id="sec-1-13-5-1" name="sec-1-13-5-1"></a>
+
+The type IO indicates an action that when evaluated may perform some
+IO. The function `putChar :: Char -> IO ()` takes a char and returns
+an <span class="underline">IO action</span> that prints a char, no character is printed on the
+screen and no side-effect is performed. This IO action can be passed
+as a ordinary values to another IO actions and combined with another
+IO actions. This IO action only will be executed when called from the
+function `main :: IO ()`, the entry-point of Haskell programs, or
+called from another IO actions called from main.
+
+The values wrapped in an IO type like `getChar :: IO Char` can only be
+extracted inside an IO action. 
+
+Summary: 
+
+-   The Haskell's IO is pure and lazy.
+-   There is no way to extract a value of an IO outside an IO.
+-   Only IO actions perform IO actions.
+-   The entry point of a Haskell program is the function <span class="underline">main</span>. Only
+    the IO functions called from main will be run.
+-   Haskell IO functions can be executed in the REPL ghci.
+
+Example: 
+
+file: haskell\_io1.hs
+
+```haskell
+import System.IO (hFlush, stdout)
+
+action1 :: IO ()
+action1 = putStrLn "Say action 1 dummy"
+
+-- action2 :: IO ()
+action2 = putStrLn "Action2 won't be executed"
+
+action3 :: IO ()
+action3 = putStrLn "Action3 won't be executed"
+
+newline :: IO ()
+newline = putStrLn ""
+
+-- prompt :: String -> IO String
+prompt message = do
+  putStr message
+  hFlush stdout 
+  line <- getLine  
+  newline
+  newline
+  return line 
+
+askQuestion :: IO String 
+askQuestion = prompt "> Enter a line: "
+
+main :: IO ()
+main = do
+  putStrLn "Hello world"
+  action1
+  line <- askQuestion
+  putStrLn ("You entered the line: " ++ line)
+```
+
+Compiling and running:
+
+```sh
+# Compiling 
+
+$ ghc haskell_test.hs
+[1 of 1] Compiling Main             ( haskell_test.hs, haskell_test.o )
+Linking haskell_test ...
+
+# Running the executable
+#
+$ ./haskell_test 
+Hello world
+Say action 1 dummy
+> Enter a line: Hola mundo. Muchas gracias Haskell!
+
+
+You entered the line: Hola mundo. Muchas gracias Haskell!
+
+
+# Executing in batch mode (script) 
+#
+$ runghc haskell_test.hs
+Hello world
+Say action 1 dummy
+> Enter a line: Hola mundo Haskell.
+
+
+You entered the line: Hola mundo Haskell.
+```
+
+It is noticeable that: 
+
+-   action2 neither action3 are executed and they don't print anything.
+-   Only the IO actions called from main are executed.
+-   The string returned by the function askQuestion can only be
+    extracted inside an IO action.
+
+The application of the function `putStrLn :: String -> IO ()` to a
+string `{putStrLn "Hello world"}` is equivalent to the code below in
+OCaml. 
+
+```ocaml
+> let putStrLn message = fun () -> print_string message ; 
+                                   print_string "\n" ;;
+
+val putStrLn : string -> unit -> unit = <fun>
+
+
+>  putStrLn "Hello world" ;;
+- : unit -> unit = <fun>
+
+(* Nothing is printed. It is created an action that prints 
+    hello world
+*)
+> let action = putStrLn "hello world" ;;
+
+> let action = putStrLn "hello world" ;;
+val action : unit -> unit = <fun>
+
+
+(* Not executed  *)
+- action ;; 
+val it : (unit -> unit) 
+> 
+
+>  action () ;;
+hello world
+- : unit = ()
+```
+
+Bind and Return: 
+
+```
+(>>=) :: IO a -> a -> IO b -> IO b 
+(>>) :: IO () -> IO () -> IO ()
+return :: a -> IO a
+```
+
+#### Example<a id="sec-1-13-5-2" name="sec-1-13-5-2"></a>
+
+Examples with IO Monad:
+
+```haskell
+ -- Wrapping a value into IO
+ -- 
+
+> return "Hello world" :: IO String
+"Hello world"
+> 
+> return 100 :: IO Integer
+100
+> :t return 100 :: IO Integer
+return 100 :: IO Integer :: IO Integer
+> 
+
+
+-- The repl forces the evaluation of an IO action. 
+--
+> return "Hello world" >>= putStrLn 
+Hello world
+>
+
+> :t return "Hello world" >>= putStrLn 
+return "Hello world" >>= putStrLn :: IO ()
+> 
+
+-- This is not executed, unless forced. 
+-- 
+> let action0 = return "Hello world" >>= putStrLn 
+> 
+> :t action0 
+action0 :: IO ()
+> 
+
+> action0
+Hello world
+> 
+
+> let action = putStrLn "Line1" >> putStrLn "Line2" >> putStrLn "Line3"
+> :t action 
+action :: IO ()
+
+> action 
+Line1
+Line2
+Line3
+>
+```
+
+File: haskelldo.hs 
+
+```haskell
+sumTwoNumbers = do 
+   putStr "Enter the first number: "
+   line1 <- getLine 
+   putStr "Enter the second number: "
+   line2 <- getLine 
+   let  x1 = read line1 :: Integer
+   let  x2 = read line2  :: Integer 
+   let sum = x1 + x2 
+   putStrLn ("The sum is " ++ show sum)
+   return sum
+
+
+-- SumTwonumbers dessugarized 
+--
+sumTwoNumbers_v2 = 
+  putStr "Enter the first number: "     >>= \_      ->
+  getLine                               >>= \line1  ->
+  putStr "Enter the second number: "    >>= \_      ->
+  getLine                               >>=  \line2 -> 
+  let x1 = read line1 :: Integer in 
+  let x2 = read line2 :: Integer in 
+  let sum = x1 + x2 in 
+  putStrLn  ("The sum is " ++ show sum) >>= \_ -> 
+  return sum
+
+showResult :: IO Integer ->  IO ()
+showResult inputAction = do
+  x <- inputAction 
+  putStrLn ( "The result is " ++ show x)
+```
+
+Running in the REPL:
+
+```haskell
+> :load haskelldo.hs
+
+
+> sumTwoNumbers 
+Enter the first number: 100
+Enter the second number: 200
+The sum is 300
+300
+> 
+> :t sumTwoNumbers 
+sumTwoNumbers :: IO Integer
+> 
+
+
+> sumTwoNumbers_v2
+Enter the first number: 100
+Enter the second number: 200
+The sum is 300
+300
+> 
+
+> :t sumTwoNumbers_v2
+sumTwoNumbers_v2 :: IO Integer
+> 
+
+> :t showResult 
+showResult :: IO Integer -> IO ()
+> 
+
+
+ -- It creates a new IO action. 
+ --
+> let action = showResult sumTwoNumbers
+> 
+> action 
+Enter the first number: 100
+Enter the second number: 200
+The sum is 300
+The result is 300
+> 
+
+> :t action
+action :: IO ()
+>
+
+-- The IO actions can be manipulated like values:
+--
+-------------------------------------------------
+> :t mapM_
+mapM_ :: Monad m => (a -> m b) -> [a] -> m ()
+> 
+
+> mapM_ putStrLn ["line 0", "line 1", "line2", "line 3"] 
+line 0
+line 1
+line2
+line 3
+> 
+
+> let forEachPrint = mapM_ putStrLn 
+> 
+> :t forEachPrint 
+forEachPrint :: [String] -> IO ()
+> 
+> forEachPrint put
+putChar   putStr    putStrLn
+> forEachPrint ["line 0", "line 1", "line2", "line 3"]
+line 0
+line 1
+line2
+line 3
+> 
+
+> :t replicateM
+replicateM :: Monad m => Int -> m a -> m [a]
+> 
+
+> let askTwoTimes = replicateM 2 sumTwoNumbers
+>
+
+> askTwoTimes 
+Enter the first number: 100
+Enter the second number: 200
+The sum is 300
+Enter the first number: 300
+Enter the second number: 90
+The sum is 390
+[300,390]
+>
+```
+
+Some IO Primitives: 
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Console Output Functions</th>
+<th scope="col" class="left">Console Input Functions</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">putChar  :: Char -> IO ()</td>
+<td class="left">getChar :: Char -> IO ()</td>
+</tr>
+
+
+<tr>
+<td class="left">putStr   :: String -> IO ()</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+
+<tr>
+<td class="left">putStrLn :: String -> IO ()</td>
+<td class="left">getLine :: IO String</td>
+</tr>
+
+
+<tr>
+<td class="left">print    :: Show a => a -> IO ()</td>
+<td class="left">readLn :: Read a => IO a</td>
+</tr>
+
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+### See also<a id="sec-1-13-6" name="sec-1-13-6"></a>
 
 **Monads**
 
@@ -6100,6 +6761,37 @@ class Monad m where
 -   [A Monad in Practicality: First-Class Failures - Quils in Space](http://robotlolita.me/2013/12/08/a-monad-in-practicality-first-class-failures.html)
 
 -   [Option Monad in Scala | Patrick Oscar Boykin's Personal Weblog](https://boykin.wordpress.com/2011/09/11/option-monad-in-scala/)
+
+**IO Monad**
+
+-   <https://wiki.haskell.org/IO_inside>
+
+-   [Input and Output - Learn You a Haskell for Great Good!](http://learnyouahaskell.com/input-and-output)
+
+-   [A Gentle Introduction to Haskell: IO](https://www.haskell.org/tutorial/io.html)
+
+-   [Haskell/Understanding monads/IO - Wikibooks, open books for an open world](https://en.wikibooks.org/wiki/Haskell/Understanding_monads/IO)
+
+**Papers**
+
+-   Philip Wadler, How to declare an imperative, ACM Computing
+    Surveys, 29(3):240&#x2013;263, September 1997. Available at
+    <http://homepages.inf.ed.ac.uk/wadler/papers/monadsdeclare/monadsdeclare.ps>
+
+-   Philip Wadler, The essence of functional programming. Invited
+    talk, 19'th Symposium on Principles of Programming Languages, ACM
+    Press, Albuquerque, January 1992. Available at
+    <http://homepages.inf.ed.ac.uk/wadler/papers/essence/essence.ps>
+
+-   Philip Wadler, Monads for functional programming. Available at
+    <http://homepages.inf.ed.ac.uk/wadler/papers/marktoberdorf/baastad.pdf>
+
+-   Peyton Jones, Simon L., and Philip Wadler. "Imperative functional
+    programming." Proceedings of the 20th ACM SIGPLAN-SIGACT symposium
+    on Principles of programming languages. ACM, 1993. Available at
+    <http://www.cs.tufts.edu/~nr/cs257/archive/simon-peyton-jones/imperative.pdf>
+
+-   [Kiselyov O. - IO monad in 1965](http://okmij.org/ftp/Computation/IO-monad-history.html#Peyton-Jones-2000)
 
 # Functional Languages<a id="sec-2" name="sec-2"></a>
 
@@ -6424,7 +7116,10 @@ A selection of people who influenced functional programming:
 
 -   [Haskell Curry](https://en.wikipedia.org/wiki/Haskell_Curry), Mathematician -> Concept of currying
 
--   [Robin Milner](https://en.wikipedia.org/wiki/Robin_Milner), Computer Scientist -> Type inference, [Hindley–Milner type system](https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system), [ML language](https://en.wikipedia.org/wiki/ML_(programming_language)
+-   [Robin Milner](https://en.wikipedia.org/wiki/Robin_Milner), Computer Scientist -> Type inference
+    -   [Hindley–Milner type system](https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system)
+    
+    -   [ML language](https://en.wikipedia.org/wiki/ML_(programming_language)
 
 -   [John McCarthy](https://en.wikipedia.org/wiki/John_McCarthy_(computer_scientist),  Computer Scientist -> Creator of [Lisp](https://en.wikipedia.org/wiki/Lisp_(programming_language) and the
     father of Artificial intelligence research.
@@ -6451,11 +7146,11 @@ A selection of people who influenced functional programming:
     
     -   [Simon Peyton Jones - Microsoft Research](http://research.microsoft.com/en-us/people/simonpj/)
 
--   [John Hughes](https://en.wikipedia.org/wiki/John_Hughes_(computer_scientist)), Computer Scientist -> One of the most influentials
+-   [John Hughes](https://en.wikipedia.org/wiki/John_Hughes_(computer_scientist), Computer Scientist -> One of the most influentials
     papers in FP field: Why functional programing matters.
 
 -   [Gerald Jay Sussman](https://en.wikipedia.org/wiki/Gerald_Jay_Sussman), Mathematician and Computer Scientist
-    -   [Scheme Lisp](https://en.wikipedia.org/wiki/Scheme_(programming_language)) Language
+    -   [Scheme Lisp](https://en.wikipedia.org/wiki/Scheme_(programming_language) Language
     -   Book: [Structure and Interpretation of Computer Programs](https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Computer_Programs)
     -   Book: [Structure and Interpretation of Classical Mechanics](https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Classical_Mechanics)
     
@@ -6676,7 +7371,7 @@ Recursion:
 
 **Python**
 
--   Python Libraries Useful for functional programming:
+-   Useful Python libraries for functional programming:
     -   [functools — Higher-order functions and operations on callable objects](https://docs.python.org/3/library/functools.html)
     
     -   [itertools — Functions creating iterators for efficient looping](https://docs.python.org/3/library/itertools.html)
