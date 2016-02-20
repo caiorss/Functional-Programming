@@ -6340,9 +6340,9 @@ IO. The function `putChar :: Char -> IO ()` takes a char and returns
 an <span class="underline">IO action</span> that prints a char, no character is printed on the
 screen and no side-effect is performed. This IO action can be passed
 as a ordinary values to another IO actions and combined with another
-IO actions. This IO action only will be executed when called from the
-function `main :: IO ()`, the entry-point of Haskell programs, or
-called from another IO actions called from main.
+IO actions. IO actions only will be executed when called from the
+function `main :: IO ()` or called from another IO actions called from
+main.
 
 The values wrapped in an IO type like `getChar :: IO Char` can only be
 extracted inside an IO action. 
@@ -6354,7 +6354,6 @@ Summary:
 -   Only IO actions perform IO actions.
 -   The entry point of a Haskell program is the function <span class="underline">main</span>. Only
     the IO functions called from main will be run.
--   Haskell IO functions can be executed in the REPL ghci.
 
 Example: 
 
@@ -6790,6 +6789,10 @@ Some IO Primitives:
     programming." Proceedings of the 20th ACM SIGPLAN-SIGACT symposium
     on Principles of programming languages. ACM, 1993. Available at
     <http://www.cs.tufts.edu/~nr/cs257/archive/simon-peyton-jones/imperative.pdf>
+
+-   Pyton Jones, Simon. Tackling the awkward squad: monadic input/output, concurrency,
+    exceptions, and foreign-language calls in Haskell (2001) Available
+    at <http://research.microsoft.com/en-us/um/people/simonpj/papers/marktoberdorf/mark.pdf>
 
 -   [Kiselyov O. - IO monad in 1965](http://okmij.org/ftp/Computation/IO-monad-history.html#Peyton-Jones-2000)
 
