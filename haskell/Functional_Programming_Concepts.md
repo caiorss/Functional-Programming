@@ -65,7 +65,8 @@
     - [Maybe / Option Monad](#maybe-/-option-monad)
       - [Overview](#overview)
       - [Maybe Monad in Haskell](#maybe-monad-in-haskell)
-      - [Maybe / Option Monad in Ocaml](#maybe-/-option-monad-in-ocaml)
+      - [Maybe Monad in Ocaml](#maybe-monad-in-ocaml)
+      - [Maybe Monad in Python](#maybe-monad-in-python)
     - [Either Monad](#either-monad)
       - [Overview](#overview)
       - [Example](#example)
@@ -5899,7 +5900,7 @@ Nothing
 >
 ```
 
-#### Maybe / Option Monad in Ocaml<a id="sec-1-13-3-3" name="sec-1-13-3-3"></a>
+#### Maybe Monad in Ocaml<a id="sec-1-13-3-3" name="sec-1-13-3-3"></a>
 
 The maybe type is called Option in Ocaml and F#.
 
@@ -6068,6 +6069,170 @@ Enter z: a20afdf
 Enter x: erew34
 - : unit option = None
 #
+```
+
+#### Maybe Monad in Python<a id="sec-1-13-3-4" name="sec-1-13-3-4"></a>
+
+```python
+import collections 
+
+Option = collections.namedtuple("Option", ["value"])
+
+# Nothing 
+none = Option(None)
+
+# Just 
+some = Option
+
+# Haskell's return statement 
+#
+unit_option = some 
+
+def isOption(obj):
+    return isinstance(obj, Option)
+
+def isOptionException(obj):
+    if isinstance (obj, Option):
+        return obj
+    else:
+        raise ValueError ("Expected an instance of Option")
+        
+# isJust 
+def isSome (opt):
+    return not (isOptionException(opt).value == None)
+    
+# isNothing 
+def isNone (opt):
+    return not(isSome (opt))
+
+def fmap_option(fn, opt):
+    if isSome(opt):
+        return some(fn(opt.value))
+    else:
+        return none 
+        
+def bind_option(opt, fn):
+    if isSome(opt):
+        return fn(opt.value)
+    else:
+        return none
+
+def parseFloat (x):
+    "parseFloat :: string -> Option float"
+    try:
+        return some(float(x))
+    except ValueError:
+        return none
+
+   
+def addSafe(opt_x, opt_y):
+    "
+    addSafe :: option float -> option float -> option float
+ 
+ 
+    The same as Haskell 
+
+    addSafe Maybe Double -> Maybe Double -> Maybe Double 
+    addSafe opt_x opt_y = do
+      x <- opt_x 
+      y <- opt_y 
+      return (x + y)
+
+   addSafe opt_x opt_y =
+     opt_x >>= \x ->
+     opt_y >>= \y -> 
+     return (x + y) 
+  
+
+    "
+    return bind_option(opt_x, lambda x:
+           bind_option(opt_y, lambda y:
+                       unit_option (x + y)))
+
+
+def prompt(message):
+    
+    "prompt :: string -> Option float"
+    
+    print (message)
+    return parseFloat(input ())
+
+def addInputsSafe ():
+    return bind_option(prompt("Enter x:"), lambda x:
+           bind_option(prompt("Enter y:"), lambda y:
+           bind_option(prompt("Enter z:"), lambda z:
+                       unit_option (x + y + z))))
+
+>>> some(100)
+Option(value=100)
+>>> none
+Option(value=None)
+>>>       
+
+>>> fmap_option(lambda x: x * 5, some(10))
+Option(value=50)
+>>> 
+>>> fmap_option(lambda x: x * 5, none)
+Option(value=None)
+>>> 
+
+>>> addSafe(some(100), none)
+Option(value=None)
+>>> addSafe(some(100), some(200))
+Option(value=300)
+>>> addSafe(none, none)
+Option(value=None)
+>>> 
+
+>>> float("10asdas023")
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ValueError: could not convert string to float: '10asdas023'
+>>> 
+
+>>> parseFloat("100.0")
+Option(value=100.0)
+>>> parseFloat("10asda0.0")
+Option(value=None)
+>>> 
+                
+>>> addSafe(parseFloat("100"), parseFloat("200"))
+Option(value=300.0)
+>>> 
+>>> addSafe(parseFloat("100"), parseFloat("2dsfsd00"))
+Option(value=None)
+>>> 
+>>>    
+    
+>>> addSafe(parseFloat("asdas"), parseFloat("2dsfsd00"))
+Option(value=None)
+>>>
+
+#
+#  Computation is stopped if any step go wrong 
+#
+>>> 
+>>> addInputsSafe ()
+Enter x:
+100
+Enter y:
+200
+Enter z:
+300
+Option(value=600.0)
+>>> 
+>>> addInputsSafe ()
+Enter x:
+asdsa
+Option(value=None)
+>>> 
+>>> addInputsSafe ()
+Enter x:
+100
+Enter y:
+sadas
+Option(value=None)
+>>>
 ```
 
 ### Either Monad<a id="sec-1-13-4" name="sec-1-13-4"></a>
@@ -6433,7 +6598,7 @@ It is noticeable that:
     extracted inside an IO action.
 
 The application of the function `putStrLn :: String -> IO ()` to a
-string `{putStrLn "Hello world"}` is equivalent to the code below in
+string =putStrLn "Hello world"= is equivalent to the code below in
 OCaml. 
 
 ```ocaml
@@ -6793,6 +6958,11 @@ Some IO Primitives:
 -   Pyton Jones, Simon. Tackling the awkward squad: monadic input/output, concurrency,
     exceptions, and foreign-language calls in Haskell (2001) Available
     at <http://research.microsoft.com/en-us/um/people/simonpj/papers/marktoberdorf/mark.pdf>
+
+-   Jones, Mark P. "Functional programming with overloading and
+    higher-order polymorphism." Advanced Functional
+    Programming. Springer Berlin Heidelberg, 1995. 97-136. Available
+    at: <http://web.cecs.pdx.edu/~mpj/pubs/springschool95.pdf>
 
 -   [Kiselyov O. - IO monad in 1965](http://okmij.org/ftp/Computation/IO-monad-history.html#Peyton-Jones-2000)
 
