@@ -6129,6 +6129,8 @@ Enter x: erew34
 
 **** Maybe Monad in Python 
 
+*Implementation with Functions*
+
 #+BEGIN_SRC python 
 import collections 
 
@@ -6291,6 +6293,123 @@ Option(value=None)
 >>> 
 
 
+#+END_SRC
+
+*Implementation with Class*
+
+#+BEGIN_SRC python 
+
+class Option():
+
+    def __init__(self, value):
+        self.value = value
+
+    def __str__(self):
+        if self.isSome():
+            return "some {}".format(self.value)
+        else:
+            return "none"
+
+    def __repr__(self):
+        return self.__str__()
+
+    def isSome (self):
+        return (self.value != None)
+
+    def isNone (self):
+        return (self.value == None)
+
+    # fmap 
+    def map(self, fn):
+        if self.isSome():
+            return Option(fn(self.value))
+        else:
+            return Option(None)
+
+    def bind(self, fn):
+        if self.isSome():
+            return fn(self.value)
+        else:
+            return Option(None)
+        
+some = Option
+none = Option(None)
+
+def parseFloat (x):
+    "parseFloat :: string -> Option float"
+    try:
+        return some(float(x))
+    except ValueError:
+        return none
+
+
+>>> parseFloat("100.23")
+Option(value=100.23)
+
+>>> parseFloat("100asdas.23")
+Option(value=None)
+>>> 
+
+>>> parseFloat("10.5").map(lambda x: x * 3)
+some 31.5
+>>> parseFloat("1sdfsd0.5").map(lambda x: x * 3)
+none
+>>> 
+
+>>> 
+(parseFloat("10.5")
+ .map(lambda x: x * 3)
+ .map(lambda x: x + 4)
+ .map(lambda x: x * x)
+ )
+>>> ... ... ... ... some 1260.25
+>>> 
+
+>>> 
+(parseFloat("10asdas.5")
+ .map(lambda x: x * 3)
+ .map(lambda x: x + 4)
+ .map(lambda x: x * x)
+ )
+>>> ... ... ... ... none
+>>> 
+
+>>> some("10.5").bind(parseFloat)
+some 10.5
+>>> 
+
+>>> some("1sdf0.5").bind(parseFloat)
+none
+>>> 
+
+>>> some("10.5").bind(parseFloat).map(lambda x: x + 10)
+some 20.5
+>>> some("10sdf.5").bind(parseFloat).map(lambda x: x + 10)
+none
+>>> 
+
+def addSafe(opt_x, opt_y):
+    return opt_x.bind(lambda x:
+           opt_y.bind(lambda y:
+                      Option(x + y)))
+
+>>> 
+>>> addSafe(some(10), some(20))
+some 30
+>>> addSafe(some(10), none)
+none
+>>> addSafe(none, none)
+none
+>>> addSafe(none, some(30))
+none
+>>> addSafe(parseFloat("10"), parseFloat("15"))
+some 25.0
+>>> 
+>>> addSafe(parseFloat("10"), parseFloat("1asd5"))
+none
+>>> addSafe(parseFloat("1asd0"), parseFloat("1asd5"))
+none
+>>> 
 #+END_SRC
 
 *** Either Monad 
