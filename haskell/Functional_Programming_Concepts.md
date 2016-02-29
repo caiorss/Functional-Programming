@@ -82,6 +82,11 @@
     - [Concepts Examples](#concepts-examples)
     - [Languages](#languages)
   - [Libraries and Frameworks](#libraries-and-frameworks)
+- [Reading](#reading)
+  - [Monads](#monads)
+  - [Applicative Functor](#applicative-functor)
+  - [Category Theory](#category-theory)
+  - [Books about Haskell](#books-about-haskell)
 
 
 # Concepts<a id="sec-1" name="sec-1"></a>
@@ -2914,6 +2919,35 @@ e5h
 f6k
 ```
 
+**Haskell**
+
+```haskell
+> import qualified Control.Monad as M
+
+
+> :t M.mapM_
+M.mapM_ :: Monad m => (a -> m b) -> [a] -> m ()
+> 
+
+> :t putStrLn
+putStrLn :: String -> IO ()
+> 
+
+> M.mapM_ putStrLn ["string 0", "string 1", "string 2", "string 3"]
+string 0
+string 1
+string 2
+string 3
+> 
+
+> M.mapM_ (\ x -> putStrLn (show x))  [1, 2, 3, 4, 5]
+1
+2
+3
+4
+5
+```
+
 **Common Lisp**
 
 ```lisp
@@ -4392,11 +4426,15 @@ val it : float = 5757.0723
 ### Overview<a id="sec-1-12-1" name="sec-1-12-1"></a>
 
 Functors are type constructors that can be mapped over like lists are
-mapped with <span class="underline">map</span> function. Its concept comes from category theory and like many mathematical concepts
-it is defined by the laws that it satisfies: Functor's laws. 
+mapped with <span class="underline">map</span> function. Its concept comes from category theory and
+like many mathematical concepts it is defined by the laws that it
+satisfies: Functor's laws.
 
 In Haskell functors are instances of the type class Functor that must
 implement the function fmap for each functor implementation.
+
+Note: Haskell functors must not be confused with C++ functor and
+ML-module functor. 
 
 ```haskell
 class  Functor f  where
@@ -6329,10 +6367,12 @@ some 20.5
 none
 >>> 
 
-def addSafe(opt_x, opt_y):
-    return opt_x.bind(lambda x:
-           opt_y.bind(lambda y:
-                      Option(x + y)))
+                                        # Haskell's code 
+                                        # 
+def addSafe(opt_x, opt_y):              # addSafe opt_x opt_y =          addSafe opt_x opt_y =
+    return opt_x.bind(lambda x:         #         opt_x >>= \x ->                bind opt_x (\x ->
+           opt_y.bind(lambda y:         #         opt_y >>= \y ->    ==>         bind opt_y (\y ->
+                      Option(x + y)))   #         return (x + y)                 return (x + y)))
 
 >>> 
 >>> addSafe(some(10), some(20))
@@ -6371,6 +6411,7 @@ data Either a b = Left a | Right b deriving (Eq, Show)
 
 instance Monad (Either e) where
         return = Right
+
         Right m >>= k = k m
         Left e  >>= _ = Left e
 ```
@@ -7054,36 +7095,6 @@ Some IO Primitives:
 
 -   [Haskell/Understanding monads/IO - Wikibooks, open books for an open world](https://en.wikibooks.org/wiki/Haskell/Understanding_monads/IO)
 
-**Papers**
-
--   Philip Wadler, How to declare an imperative, ACM Computing
-    Surveys, 29(3):240&#x2013;263, September 1997. Available at
-    <http://homepages.inf.ed.ac.uk/wadler/papers/monadsdeclare/monadsdeclare.ps>
-
--   Philip Wadler, The essence of functional programming. Invited
-    talk, 19'th Symposium on Principles of Programming Languages, ACM
-    Press, Albuquerque, January 1992. Available at
-    <http://homepages.inf.ed.ac.uk/wadler/papers/essence/essence.ps>
-
--   Philip Wadler, Monads for functional programming. Available at
-    <http://homepages.inf.ed.ac.uk/wadler/papers/marktoberdorf/baastad.pdf>
-
--   Peyton Jones, Simon L., and Philip Wadler. "Imperative functional
-    programming." Proceedings of the 20th ACM SIGPLAN-SIGACT symposium
-    on Principles of programming languages. ACM, 1993. Available at
-    <http://www.cs.tufts.edu/~nr/cs257/archive/simon-peyton-jones/imperative.pdf>
-
--   Pyton Jones, Simon. Tackling the awkward squad: monadic input/output, concurrency,
-    exceptions, and foreign-language calls in Haskell (2001) Available
-    at <http://research.microsoft.com/en-us/um/people/simonpj/papers/marktoberdorf/mark.pdf>
-
--   Jones, Mark P. "Functional programming with overloading and
-    higher-order polymorphism." Advanced Functional
-    Programming. Springer Berlin Heidelberg, 1995. 97-136. Available
-    at: <http://web.cecs.pdx.edu/~mpj/pubs/springschool95.pdf>
-
--   [Kiselyov O. - IO monad in 1965](http://okmij.org/ftp/Computation/IO-monad-history.html#Peyton-Jones-2000)
-
 # Functional Languages<a id="sec-2" name="sec-2"></a>
 
 Note: There is no consensus about what really is a functional
@@ -7676,3 +7687,94 @@ Recursion:
 -   [Underscore.js](http://underscorejs.org/): "Underscore is a JavaScript library that provides a
     whole mess of useful functional programming helpers without
     extending any built-in objects."
+
+# Reading<a id="sec-5" name="sec-5"></a>
+
+## Monads<a id="sec-5-1" name="sec-5-1"></a>
+
+-   Moggi E. **Notions of computation and monads. Information and
+    computation.** 1991 Jul 1;93(1):55-92.
+
+-   Philip Wadler, **How to declare an imperative**, ACM Computing
+    Surveys, 29(3):240&#x2013;263, September 1997. Available at
+    <http://homepages.inf.ed.ac.uk/wadler/papers/monadsdeclare/monadsdeclare.ps>
+    
+    Note: Explains how IO monads works.
+
+-   Philip Wadler, **The essence of functional programming.** Invited
+    talk, 19'th Symposium on Principles of Programming Languages, ACM
+    Press, Albuquerque, January 1992. Available at
+    <http://homepages.inf.ed.ac.uk/wadler/papers/essence/essence.ps>
+
+-   Philip Wadler, **Monads for functional programming.** Available at
+    <http://homepages.inf.ed.ac.uk/wadler/papers/marktoberdorf/baastad.pdf>
+
+-   Wadler, Philip. **Comprehending monads.** Mathematical structures in
+    computer science 2.04 (1992): 461-493.
+
+-   Peyton Jones, Simon L., and Philip Wadler. **Imperative functional
+    programming.** Proceedings of the 20th ACM SIGPLAN-SIGACT symposium
+    on Principles of programming languages. ACM, 1993. Available at
+    <http://www.cs.tufts.edu/~nr/cs257/archive/simon-peyton-jones/imperative.pdf>
+
+-   Pyton Jones, Simon. **Tackling the awkward squad: monadic
+    input/output, concurrency, exceptions, and foreign-language calls**
+    **in Haskell** (2001) Available at
+    <http://research.microsoft.com/en-us/um/people/simonpj/papers/marktoberdorf/mark.pdf>
+
+-   Jones, Mark P. "Functional programming with overloading and
+    higher-order polymorphism." Advanced Functional
+    Programming. Springer Berlin Heidelberg, 1995. 97-136. Available
+    at: <http://web.cecs.pdx.edu/~mpj/pubs/springschool95.pdf>
+    
+    Note: Explains about type classes.
+
+-   [Kiselyov O. - IO monad in 1965](http://okmij.org/ftp/Computation/IO-monad-history.html#Peyton-Jones-2000)
+
+-   Davidson, A. [Monads and Side Effects in Haskell](https://www.cs.hmc.edu/~adavidso/monads.pdf), 2013
+
+-   Newbern, Jeff. "All about monads, 2003." URL
+    <https://wiki.haskell.org/All_About_Monads>
+
+## Applicative Functor<a id="sec-5-2" name="sec-5-2"></a>
+
+-   McBride, Conor, and Ross Paterson. **Functional pearl: Applicative
+    programming with effects.** Journal of functional programming 18.1
+    (2008): 1-13.
+    
+    Notes: Popularized Applicative Functor and applicative style.
+
+-   Paterson, R. A. (2012). Constructing applicative functors. Paper
+     presented at the 11th International Conference, Mathematics of
+     Program Construction, 25 - 27 Jun 2012, Madrid, Spain. 
+    <http://openaccess.city.ac.uk/1141/1/Constructors.pdf>
+
+-   Ruegg, Michael. **Applicative Functors in Haskell**. Seminar Program
+    Analysis and Transformation University of Applied Sciences Rapperswil, 2010
+
+## Category Theory<a id="sec-5-3" name="sec-5-3"></a>
+
+-   Andrea Asperti and Giuseppe Longo. **Categories, types, and
+    structures: an introduction to category theory for the working**
+    computer scientist. MIT Press, Cambridge, MA, USA, 1991
+
+-   HaskellWiki. **Category theory**. World Wide Web,
+    <http://en.wikibooks.org/wiki/Haskell/Category_theory>, 2010.
+
+-   Knighten, Robert L. "Notes on category theory." (2011).
+
+-   [Typeclassopedia - HaskellWiki](https://wiki.haskell.org/Typeclassopedia#Laws_2)
+
+-   Typeclassopedia - Brent Yorgey (in TheMonadReader 13)
+
+## Books about Haskell<a id="sec-5-4" name="sec-5-4"></a>
+
+-   Lipovaca, Miran. **Learn You a Haskell for Great Good!: A Beginner's
+    Guide.** no starch press, 2011. <<http://LearnYouAHaskell.com>>
+
+-   O'Sullivan, Bryan, John Goerzen, and Donald Bruce Stewart. **Real
+    world haskell: Code you can believe in.** " O'Reilly Media,
+    Inc.", 2008.
+
+-   Hudak, Paul, and Joseph H. Fasel. **A gentle introduction to
+    Haskell.** ACM Sigplan Notices 27.5 (1992): 1-52.

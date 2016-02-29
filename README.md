@@ -3,6 +3,7 @@
 
 # Functional Programming by Example<a id="sec-1" name="sec-1"></a>
 
+![img](haskell/images/haskellLogo.png)
 
 The purpose of this tutorial is to illustrate functional programming
 concepts in many functional languages by providing reusable and
@@ -10,7 +11,7 @@ useful snippets of code, examples, case studies and applications.
 
 Author:   [Caio Rodrigues](https://www.linkedin.com/in/caiorodrigues) / <caiorss.rodrigue@gmail.com> 
 
-Note: This still a work in progress.
+Note: This still a work in progress and a long term project.
 
 You can access this page from:
 
@@ -38,6 +39,15 @@ This repository is dedicated to public domain.
 -   [Applications](haskell/Applications.md)
 -   [Miscellaneous](haskell/Miscellaneous.md)
 -   [Documentation and Learning Materials](haskell/Documentation_and_Learning_Materials.md)
+
+-   Modules
+    -   [Contro.Monad](haskell/control_monad.md)      - Monad Combinators
+    
+    -   [Data.Text](haskell/package_Data_Text.md)         - String processing combinators.
+    
+    -   [System IO Modules](haskell/system_io_modules.md) - Basic System IO Modules
+    
+    -   [Control.Exception](haskell/control_exception.md) - Exception Handling
 
 **Functional Programming in OCaml**
 
