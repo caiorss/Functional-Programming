@@ -14,19 +14,21 @@
   - [IO and IO Monad](#io-and-io-monad)
     - [Main action](#main-action)
     - [Read and Show](#read-and-show)
-    - [Operator >> (then)](#operator->>-(then))
-    - [Basic I/O Operations](#basic-i/o-operations)
-    - [Do Notation](#do-notation)
+  - [Operator >> (then)](#operator->>-(then))
+  - [Basic I/O Operations](#basic-i/o-operations)
+  - [Do Notation](#do-notation)
     - [IO Examples](#io-examples)
-    - [State Monad](#state-monad)
+  - [State Monad](#state-monad)
 
 # Functors, Monads, Applicatives and Monoids<a id="sec-1" name="sec-1"></a>
 
-The concepts of functors, monads and applicative comes from [category theory](http://en.wikipedia.org/wiki/Category_theory).
+The concepts of functors, monads and applicative comes from [category
+theory](http://en.wikipedia.org/wiki/Category_theory).
 
 ## Functors<a id="sec-1-1" name="sec-1-1"></a>
 
-Functors is a prelude class for types which the function fmap is defined. The function fmap is a generalization of map function.
+Functors is a prelude class for types which the function fmap is
+defined. The function fmap is a generalization of map function.
 
 ```haskell
 class  Functor f  where
@@ -49,7 +51,9 @@ fmap (f . g) = fmap f . fmap g  -- Composition law
 fmap id = id                    -- Identity law
 ```
 
-The following functors defined in Haskell standard library prelude.hs. The function fmap is defined for each of the functor types.
+The following functors defined in Haskell standard library
+prelude.hs. The function fmap is defined for each of the functor
+types.
 
 **List**
 
@@ -211,7 +215,8 @@ References:
 
 ### Overview<a id="sec-1-2-1" name="sec-1-2-1"></a>
 
-Monads in Haskell are used to perform IO, State, Parallelism, Exception Handling, parallelism, continuations and coroutines.
+Monads in Haskell are used to perform IO, State, Parallelism,
+Exception Handling, parallelism, continuations and coroutines.
 
 Most common applications of monads include:
 
@@ -229,12 +234,15 @@ A monad is defined by three things:
 
 -   A monadic function is a function which returns a Monad (a -> m b)
 
--   **Return/unit:     return:** Monad m => a -> m a
--   **Bind:            (>>=) :** (Monad m) => m a -> (a -> m b) -> m b
+A type class is an interface which is a set of functions and type
+signatures. Each type derived from a type class must implement the
+functions described with the same type signatures and same name as
+described in the interface/type class. It is similar to a Java
+interface.
 
-A type class is an interface which is a set of functions and type signatures. Each type derived from a type class must implement the functions described with the same type signatures and same name as described in the interface/type class. It is similar to a Java interface.
-
-In Haskell, the Monad type class is used to implement monads. It is provided by the Control.Monad module which is included in the Prelude. The class has the following methods:
+In Haskell, the Monad type class is used to implement monads. It is
+provided by the Control.Monad module which is included in the
+Prelude. The class has the following methods:
 
 ```haskell
 class Monad m where
@@ -368,7 +376,9 @@ return :: a -> IO b
 
 ### Return - Type constructor<a id="sec-1-2-5" name="sec-1-2-5"></a>
 
-Return is polymorphic type constructor. This name return is misleading, it has nothing to do with the return from a function in a imperative language.
+Return is polymorphic type constructor. This name return is
+misleading, it has nothing to do with the return from a function in a
+imperative language.
 
 Examples:
 
@@ -464,7 +474,9 @@ data  Ordering    =  LT | EQ | GT deriving
 
 ## Maybe Monad<a id="sec-1-3" name="sec-1-3"></a>
 
-Using the Maybe type is possible to indicate that a function might or not return value. It is also useful to avoid many boilerplate null checkings.
+Using the Maybe type is possible to indicate that a function might or
+not return value. It is also useful to avoid many boilerplate null
+checkings.
 
 ```
 data Maybe x = Nothing | Just x
@@ -776,7 +788,10 @@ For a list, fmap is equivalent to map
 
 ## IO and IO Monad<a id="sec-1-5" name="sec-1-5"></a>
 
-Haskell separates pure functions from computations where side effects must be considered by encoding those side effects as values of a particular type. Specifically, a value of type (IO a) is an action, which if executed would produce a value of type a.  [[<https://wiki.haskell.org/Introduction_to_IO][[1>]]]
+Haskell separates pure functions from computations where side effects
+must be considered by encoding those side effects as values of a
+particular type. Specifically, a value of type (IO a) is an action,
+which if executed would produce a value of type a.( [Haskell Wiki](https://wiki.haskell.org/Introduction_to_IO) )
 
 Actions are either atomic, as defined in system primitives, or are a sequential composition of other actions. The I/O monad contains primitives which build composite actions, a process similar to joining statements in sequential order using \`;' in other languages. Thus the monad serves as the glue which binds together the actions in a program. [[<https://www.haskell.org/tutorial/io.html][[2>]]]
 
@@ -822,7 +837,8 @@ readFile      ::  FilePath                      -> IO String
 
 ### Main action<a id="sec-1-5-1" name="sec-1-5-1"></a>
 
-The only IO action which can really be said to run in a compiled Haskell program is main. 
+The only IO action which can really be said to run in a compiled
+Haskell program is main.
 
 HelloWorld.hs
 
@@ -883,9 +899,10 @@ x :: Double
 >
 ```
 
-### Operator >> (then)<a id="sec-1-5-3" name="sec-1-5-3"></a>
+## Operator >> (then)<a id="sec-1-6" name="sec-1-6"></a>
 
-The “then” combinator (>>) does sequencing when there is no value to pass:
+The “then” combinator (>>) does sequencing when there is no value to
+pass:
 
 ```haskell
 (>>)    ::  IO a -> IO b -> IO b
@@ -913,9 +930,10 @@ echoDup = do
     putChar c
 ```
 
-### Basic I/O Operations<a id="sec-1-5-4" name="sec-1-5-4"></a>
+## Basic I/O Operations<a id="sec-1-7" name="sec-1-7"></a>
 
-Every IO action returns a value. The returned value is tagged with IO type.
+Every IO action returns a value. The returned value is tagged with IO
+type.
 
 Examples:
 
@@ -969,9 +987,13 @@ Equivalent code in a imperative language, Python.
 x
 ```
 
-### Do Notation<a id="sec-1-5-5" name="sec-1-5-5"></a>
+## Do Notation<a id="sec-1-8" name="sec-1-8"></a>
 
-The statements in the do-notation are executed in a sequential order. It is syntactic sugar for the bind (>>=) operator. The values of local statements are defined using let and result of an action uses the (<-) operator. The “do” notation adds syntactic sugar to make monadic code easier to read.
+The statements in the do-notation are executed in a sequential
+order. It is syntactic sugar for the bind (>>=) operator. The values
+of local statements are defined using let and result of an action uses
+the (<-) operator. The “do” notation adds syntactic sugar to make
+monadic code easier to read.
 
 The do notation 
 
@@ -1258,7 +1280,7 @@ getTwoCharsDo = do
 
 6.  Control Structures
 
-    \###### For Loops
+    For Loops
     
     ```haskell
     > :t forM_
@@ -1296,7 +1318,8 @@ getTwoCharsDo = do
 
 7.  mapM and mapM\_
 
-    Map a monadic function, a function that returns a monad, to a list. It is similar to forM and formM\_.
+    Map a monadic function, a function that returns a monad, to a list. It
+    is similar to forM and formM\_.
     
     ```haskell
     > :t mapM
@@ -1327,7 +1350,7 @@ getTwoCharsDo = do
     10
     ```
 
-### IO Examples<a id="sec-1-5-6" name="sec-1-5-6"></a>
+### IO Examples<a id="sec-1-8-1" name="sec-1-8-1"></a>
 
 **Example 1**
 
@@ -1470,11 +1493,19 @@ liftM (map $ uncurry (+)) readSquareFile :: IO [Int]
     -   <http://learnyouahaskell.com/functors-applicative-functors-and-monoids>
     -   <http://squing.blogspot.com.br/2008/01/unmonad-tutorial-io-in-haskell-for-non.html>
 
-### State Monad<a id="sec-1-5-7" name="sec-1-5-7"></a>
+## State Monad<a id="sec-1-9" name="sec-1-9"></a>
 
-A stateless function or pure function is a function that only relies on its input. State monad allows to simulate aspects of imperative language in pure a functional language. 
+A stateless function or pure function is a function that only relies
+on its input. State monad allows to simulate aspects of imperative
+language in pure a functional language.
 
-Many Haskell tutorials and examples about State Monad won't run or compile because the Control.Monad.State has changed and State was deprecated in favor of StateT, unfortunately it makes many tutorials about State Monads be outdated and it might frustrate newcomers trying to understand it for the first time. To solve this problem this tutorial will use the old implementation of State Monad which the source code is provided here: OldState. 
+Many Haskell tutorials and examples about State Monad won't run or
+compile because the Control.Monad.State has changed and State was
+deprecated in favor of StateT, unfortunately it makes many tutorials
+about State Monads be outdated and it might frustrate newcomers trying
+to understand it for the first time. To solve this problem this
+tutorial will use the old implementation of State Monad which the
+source code is provided here: [OldState](src/OldState.hs).
 
 Some StackOverflow threads describing the problem:
 
@@ -1484,7 +1515,8 @@ Some StackOverflow threads describing the problem:
 
 Reproducing the bug:
 
-The example from [Learn You a Haskell's guide on the state monad](http://learnyouahaskell.com/for-a-few-monads-more) will fail when trying to run or compile it.
+The example from [Learn You a Haskell's guide on the state monad](http://learnyouahaskell.com/for-a-few-monads-more) will
+fail when trying to run or compile it.
 
 File: stack.hs
 
@@ -1502,7 +1534,7 @@ push a = State $ \xs -> ((),a:xs)
 
 Running:
 
-```
+```haskell
 tux@tux  /tmp
 $ ghci
 
@@ -1520,7 +1552,8 @@ Failed, modules loaded: none.
 >
 ```
 
-Solutions: Use the old Control.Monad.State implementation. That it is available in the file: OldState.hs
+Solutions: Use the old Control.Monad.State implementation. That it is
+available in the file: OldState.hs
 
 File: stack.hs
 
@@ -1575,7 +1608,9 @@ Ok, modules loaded: Main.
 >
 ```
 
-The type (State s a) wraps function that takes an state a and returns a tuple containing a return value a and new state: \s -> (a, s). Where (s) is the state type and (a) is the return value.
+The type (State s a) wraps function that takes an state a and returns
+a tuple containing a return value a and new state: \s -> (a, s). Where
+(s) is the state type and (a) is the return value.
 
 ```haskell
 newtype State s a = State { runState :: s -> (a, s) }
@@ -1680,7 +1715,8 @@ This function postincrement is the same as:
 postincrement x = (x, x+1)
 ```
 
-where x is the return value of the stateful computation and x + 1 is the new state.
+where x is the return value of the stateful computation and x + 1 is
+the new state.
 
 ```haskell
 postincrement = do 
@@ -1819,7 +1855,10 @@ test4 :: State Int Int
 >
 ```
 
-The combinators  evalStateNtimes, runStateNtimes, execStateNtimes, evalStateLoop, runStateLoop and execStateLoop defined in OldState.hs, although they are not defined in the old Control.State.Monad library, they make easier to compute successive executions of state function.
+The combinators evalStateNtimes, runStateNtimes, execStateNtimes,
+evalStateLoop, runStateLoop and execStateLoop defined in OldState.hs,
+although they are not defined in the old Control.State.Monad library,
+they make easier to compute successive executions of state function.
 
 ```haskell
 import OldState
@@ -1938,7 +1977,9 @@ test3 = do
 
 from [For a Few Monads More / Learn You a Haskell book](http://learnyouahaskell.com/for-a-few-monads-more)
 
-threeCoins is a state function (State s a = \s -> (a, s) which the state type is StdGen and the return type is a tuple of Bools (Bool,Bool,Bool)  
+threeCoins is a state function (State s a = \s -> (a, s) which the
+state type is StdGen and the return type is a tuple of Bools
+(Bool,Bool,Bool)
 
 file: randomst.hs
 
@@ -2020,7 +2061,8 @@ a[n+2] = a[n+1] + a[n]
                             ...
 ```
 
-It is obvious that the function needs to keep track of the last two values.
+It is obvious that the function needs to keep track of the last two
+values.
 
 ```haskell
 > :l OldState
@@ -2101,7 +2143,8 @@ Algorithm:
     x[n+2] =  x[n] - y[n]*(x[n+1] - x[n])/(y[n+1] - y[n])
 ```
 
-Example: Solve the equation  x<sup>2</sup> - 2.0 = 0 whic the solution is sqrt(2) by the secant method.
+Example: Solve the equation x<sup>2</sup> - 2.0 = 0 whic the solution is sqrt(2)
+by the secant method.
 
 ```haskell
 import OldState

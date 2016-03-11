@@ -10,8 +10,6 @@ A time and space-efficient implementation of Unicode text. Suitable
 for performance critical use, both in terms of large data quantities
 and high speed.
 
-This package can be installed with `$ cabal install text`
-
 ```haskell
  -- Convert String to Text 
 
@@ -67,8 +65,6 @@ text :: T.Text
 > :t str
 str :: String
 > 
-
-
 
 --
 -- Apply a a function from T.Text to a String 

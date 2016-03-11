@@ -1,6 +1,7 @@
 #+TITLE: Functional Programming by Example
 #+AUTHOR: Caio Rodrigues Soares Silva
 #+EMAIL: <caiorss.rodrigues@gmail.com>
+#+DESCRIPTION: Functional programming examples, theory, 
 #+URL:   https://github.com/caiorss/Functional-Programming
 
 * Functional Programming by Example
@@ -8,8 +9,8 @@
 file:haskell/images/haskellLogo.png
 
 The purpose of this tutorial is to illustrate functional programming
-concepts in many functional languages by providing reusable and
-useful snippets of code, examples, case studies and applications. 
+concepts in many languages by providing reusable and useful snippets
+of code, examples, case studies and applications.
 
 
 Author:   [[https://www.linkedin.com/in/caiorodrigues][Caio Rodrigues]] / <caiorss.rodrigue@gmail.com> 
@@ -44,6 +45,8 @@ This repository is dedicated to public domain.
  - [[file:haskell/Miscellaneous.org][Miscellaneous]]
  - [[file:haskell/Documentation_and_Learning_Materials.org][Documentation and Learning Materials]]
 
+ - [[file:haskell/Real_World_Haskell.org][Codes and Examples of the book Real World Haskell]]
+
  - Modules
 
    - [[file:haskell/control_monad.org][Contro.Monad]]      - Monad Combinators 
@@ -51,6 +54,8 @@ This repository is dedicated to public domain.
    - [[file:haskell/package_Data_Text.org][Data.Text]]         - String processing combinators.
 
    - [[file:haskell/system_io_modules.org][System IO Modules]] - Basic System IO Modules
+
+   - [[file:haskell/system_filepath.org][System.FilePath]]   - File path manipuation on all platforms. 
 
    - [[file:haskell/control_exception.org][Control.Exception]] - Exception Handling 
 

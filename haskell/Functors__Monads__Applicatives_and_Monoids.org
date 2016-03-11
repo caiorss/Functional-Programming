@@ -1,6 +1,7 @@
 * Functors, Monads, Applicatives and Monoids
 
-The concepts of functors, monads and applicative comes from [[http://en.wikipedia.org/wiki/Category_theory][category theory]].
+The concepts of functors, monads and applicative comes from [[http://en.wikipedia.org/wiki/Category_theory][category
+theory]].
 
 ** Functors
 
@@ -360,7 +361,9 @@ return :: a -> IO b
 
 *** Return - Type constructor
 
-Return is polymorphic type constructor. This name return is misleading, it has nothing to do with the return from a function in a imperative language.
+Return is polymorphic type constructor. This name return is
+misleading, it has nothing to do with the return from a function in a
+imperative language.
 
 Examples:
 
@@ -785,7 +788,10 @@ http://learnyouahaskell.com/a-fistful-of-monads
 
 ** IO and IO Monad
 
-Haskell separates pure functions from computations where side effects must be considered by encoding those side effects as values of a particular type. Specifically, a value of type (IO a) is an action, which if executed would produce a value of type a.  [[https://wiki.haskell.org/Introduction_to_IO][[1]]]
+Haskell separates pure functions from computations where side effects
+must be considered by encoding those side effects as values of a
+particular type. Specifically, a value of type (IO a) is an action,
+which if executed would produce a value of type a.( [[https://wiki.haskell.org/Introduction_to_IO][Haskell Wiki]] )
 
 Actions are either atomic, as defined in system primitives, or are a sequential composition of other actions. The I/O monad contains primitives which build composite actions, a process similar to joining statements in sequential order using `;' in other languages. Thus the monad serves as the glue which binds together the actions in a program. [[https://www.haskell.org/tutorial/io.html][[2]]]
 
@@ -800,6 +806,7 @@ Haskell uses the data type IO (IO monad) for actions.
 *Intput Functions*
 
 Stdin - Standard Input
+
 #+BEGIN_SRC haskell
 getChar             :: IO Char
 getLine             :: IO String
@@ -813,6 +820,7 @@ readLine            :: Read a => IO a
 *Output Functions*
 
 Stdout - Standard Output
+
 #+BEGIN_SRC haskell
 print               :: Show a => a -> IO ()
 putStrLn            :: String -> IO ()
@@ -830,9 +838,11 @@ readFile      ::  FilePath                      -> IO String
 
 *** Main action
 
-The only IO action which can really be said to run in a compiled Haskell program is main. 
+The only IO action which can really be said to run in a compiled
+Haskell program is main.
 
 HelloWorld.hs
+
 #+BEGIN_SRC
 main :: IO ()
 main = putStrLn "Hello, World!"
@@ -891,9 +901,10 @@ x :: Double
 
 #+END_SRC
 
-*** Operator >> (then)
+** Operator >> (then)
 
-The “then” combinator (>>) does sequencing when there is no value to pass:
+The “then” combinator (>>) does sequencing when there is no value to
+pass:
 
 #+BEGIN_SRC haskell
 (>>)    ::  IO a -> IO b -> IO b
@@ -922,9 +933,10 @@ echoDup = do
     putChar c
 #+END_SRC
 
-*** Basic I/O Operations
+** Basic I/O Operations
 
-Every IO action returns a value. The returned value is tagged with IO type.
+Every IO action returns a value. The returned value is tagged with IO
+type.
 
 Examples:
 
@@ -979,9 +991,13 @@ x
 
 #+END_SRC
 
-*** Do Notation
+** Do Notation
 
-The statements in the do-notation are executed in a sequential order. It is syntactic sugar for the bind (>>=) operator. The values of local statements are defined using let and result of an action uses the (<-) operator. The “do” notation adds syntactic sugar to make monadic code easier to read.
+The statements in the do-notation are executed in a sequential
+order. It is syntactic sugar for the bind (>>=) operator. The values
+of local statements are defined using let and result of an action uses
+the (<-) operator. The “do” notation adds syntactic sugar to make
+monadic code easier to read.
 
 The do notation 
 
@@ -1159,7 +1175,6 @@ True
 > 
 #+END_SRC
 
-
 **** Combining functions and I/O actions
 
 #+BEGIN_SRC haskell
@@ -1267,7 +1282,7 @@ putStr s                =  sequence_ (map putChar s)
 
 **** Control Structures 
 
-###### For Loops
+For Loops
 
 #+BEGIN_SRC haskell
 > :t forM_
@@ -1305,7 +1320,8 @@ Example:
 
 **** mapM and mapM_
 
-Map a monadic function, a function that returns a monad, to a list. It is similar to forM and formM_.
+Map a monadic function, a function that returns a monad, to a list. It
+is similar to forM and formM_.
 
 #+BEGIN_SRC haskell
 > :t mapM
@@ -1481,11 +1497,19 @@ liftM (map $ uncurry (+)) readSquareFile :: IO [Int]
  - http://learnyouahaskell.com/functors-applicative-functors-and-monoids
  - http://squing.blogspot.com.br/2008/01/unmonad-tutorial-io-in-haskell-for-non.html
 
-*** State Monad
+** State Monad
 
-A stateless function or pure function is a function that only relies on its input. State monad allows to simulate aspects of imperative language in pure a functional language. 
+A stateless function or pure function is a function that only relies
+on its input. State monad allows to simulate aspects of imperative
+language in pure a functional language.
 
-Many Haskell tutorials and examples about State Monad won't run or compile because the Control.Monad.State has changed and State was deprecated in favor of StateT, unfortunately it makes many tutorials about State Monads be outdated and it might frustrate newcomers trying to understand it for the first time. To solve this problem this tutorial will use the old implementation of State Monad which the source code is provided here: [[src/OldState.hs][OldState]]. 
+Many Haskell tutorials and examples about State Monad won't run or
+compile because the Control.Monad.State has changed and State was
+deprecated in favor of StateT, unfortunately it makes many tutorials
+about State Monads be outdated and it might frustrate newcomers trying
+to understand it for the first time. To solve this problem this
+tutorial will use the old implementation of State Monad which the
+source code is provided here: [[file:src/OldState.hs][OldState]].
 
 
 Some StackOverflow threads describing the problem:
@@ -1496,7 +1520,8 @@ Some StackOverflow threads describing the problem:
 
 Reproducing the bug:
 
-The example from [[http://learnyouahaskell.com/for-a-few-monads-more][Learn You a Haskell's guide on the state monad]] will fail when trying to run or compile it.
+The example from [[http://learnyouahaskell.com/for-a-few-monads-more][Learn You a Haskell's guide on the state monad]] will
+fail when trying to run or compile it.
 
 File: stack.hs
 
@@ -1514,7 +1539,7 @@ push a = State $ \xs -> ((),a:xs)
 
 Running:
 
-#+BEGIN_SRC
+#+BEGIN_SRC haskell 
 tux@tux  /tmp
 $ ghci
 
@@ -1533,7 +1558,8 @@ Failed, modules loaded: none.
 
 #+END_SRC
 
-Solutions: Use the old Control.Monad.State implementation. That it is available in the file: [[src/OldState.hs][OldState.hs]]
+Solutions: Use the old Control.Monad.State implementation. That it is
+available in the file: [[src/OldState.hs][OldState.hs]]
 
 File: [[src/stack.hs][stack.hs]]
 
@@ -1588,7 +1614,9 @@ Ok, modules loaded: Main.
 > 
 #+END_SRC
 
-The type (State s a) wraps function that takes an state a and returns a tuple containing a return value a and new state: \s -> (a, s). Where (s) is the state type and (a) is the return value.
+The type (State s a) wraps function that takes an state a and returns
+a tuple containing a return value a and new state: \s -> (a, s). Where
+(s) is the state type and (a) is the return value.
 
 #+BEGIN_SRC haskell
 newtype State s a = State { runState :: s -> (a, s) }
@@ -1694,7 +1722,8 @@ This function postincrement is the same as:
 postincrement x = (x, x+1) 
 #+END_SRC
 
-where x is the return value of the stateful computation and x + 1 is the new state.
+where x is the return value of the stateful computation and x + 1 is
+the new state.
 
 
 #+BEGIN_SRC haskell
@@ -1834,7 +1863,10 @@ test4 :: State Int Int
 > 
 #+END_SRC
 
-The combinators  evalStateNtimes, runStateNtimes, execStateNtimes, evalStateLoop, runStateLoop and execStateLoop defined in [[src/OldState.hs][OldState.hs]], although they are not defined in the old Control.State.Monad library, they make easier to compute successive executions of state function.
+The combinators evalStateNtimes, runStateNtimes, execStateNtimes,
+evalStateLoop, runStateLoop and execStateLoop defined in [[src/OldState.hs][OldState.hs]],
+although they are not defined in the old Control.State.Monad library,
+they make easier to compute successive executions of state function.
 
 #+BEGIN_SRC haskell
 import OldState
@@ -1954,7 +1986,9 @@ test3 = do
 
 from [[http://learnyouahaskell.com/for-a-few-monads-more][For a Few Monads More / Learn You a Haskell book]]
 
-threeCoins is a state function (State s a = \s -> (a, s) which the state type is StdGen and the return type is a tuple of Bools (Bool,Bool,Bool)  
+threeCoins is a state function (State s a = \s -> (a, s) which the
+state type is StdGen and the return type is a tuple of Bools
+(Bool,Bool,Bool)
 
 file: [[src/randomst.hs][randomst.hs]]
 
@@ -1971,6 +2005,7 @@ threeCoins = do
 #+END_SRC
 
 Running:
+
 #+BEGIN_SRC haskell
 > :l randomst.hs 
 [1 of 2] Compiling OldState         ( OldState.hs, interpreted )
@@ -2035,7 +2070,8 @@ a[n+2] = a[n+1] + a[n]
                             ...
 #+END_SRC
 
-It is obvious that the function needs to keep track of the last two values.
+It is obvious that the function needs to keep track of the last two
+values.
 
 #+BEGIN_SRC haskell
 > :l OldState
@@ -2112,11 +2148,13 @@ fibstate2 :: State Fib Integer
 See: [[http://en.wikipedia.org/wiki/Secant_method][Secant Method]]
 
 Algorithm:
+
 #+BEGIN_SRC
     x[n+2] =  x[n] - y[n]*(x[n+1] - x[n])/(y[n+1] - y[n])
 #+END_SRC
 
-Example: Solve the equation  x^2 - 2.0 = 0 whic the solution is sqrt(2) by the secant method.
+Example: Solve the equation x^2 - 2.0 = 0 whic the solution is sqrt(2)
+by the secant method.
 
 #+BEGIN_SRC haskell
 import OldState
@@ -2191,6 +2229,7 @@ Output("Method failed.") # max number of steps exceeded
 #+END_SRC
 
 File: [[src/bisection_state.hs][bisection_state.hs]]
+
 #+BEGIN_SRC haskell
 import OldState
 

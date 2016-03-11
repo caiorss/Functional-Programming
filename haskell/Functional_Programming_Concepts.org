@@ -4498,6 +4498,7 @@ The composition law can be generalized to:
 
 fmap (f1 . f2 . f3 ... fn) = fmap f1 . fmap f2 . fmap f3 ... fmap fn 
 
+
 *** Show all Functor instances 
 
 #+BEGIN_SRC haskell 
@@ -7610,9 +7611,14 @@ Recursion:
    world haskell: Code you can believe in.* " O'Reilly Media,
    Inc.", 2008.
 
+   - Note: Which parts of Real World Haskell are now obsolete or
+     considered bad practice? ( [[http://stackoverflow.com/questions/23727768/which-parts-of-real-world-haskell-are-now-obsolete-or-considered-bad-practice][Stack Overflow]] )
+
+   - [[https://github.com/afroisalreadyinu/real-world-haskell-chapter-10][A walk-through of Real World Haskell 10th Chapter]]
 
  - Hudak, Paul, and Joseph H. Fasel. *A gentle introduction to
    Haskell.* ACM Sigplan Notices 27.5 (1992): 1-52.
+
 * Footnotes
 
 [fn:Schwaighofer-2009]  Schwaighofer A. *Tail Call Optimization in the

@@ -6,8 +6,8 @@
 ![img](haskell/images/haskellLogo.png)
 
 The purpose of this tutorial is to illustrate functional programming
-concepts in many functional languages by providing reusable and
-useful snippets of code, examples, case studies and applications. 
+concepts in many languages by providing reusable and useful snippets
+of code, examples, case studies and applications.
 
 Author:   [Caio Rodrigues](https://www.linkedin.com/in/caiorodrigues) / <caiorss.rodrigue@gmail.com> 
 
@@ -40,12 +40,16 @@ This repository is dedicated to public domain.
 -   [Miscellaneous](haskell/Miscellaneous.md)
 -   [Documentation and Learning Materials](haskell/Documentation_and_Learning_Materials.md)
 
+-   [Codes and Examples of the book Real World Haskell](haskell/Real_World_Haskell.md)
+
 -   Modules
     -   [Contro.Monad](haskell/control_monad.md)      - Monad Combinators
     
     -   [Data.Text](haskell/package_Data_Text.md)         - String processing combinators.
     
     -   [System IO Modules](haskell/system_io_modules.md) - Basic System IO Modules
+    
+    -   [System.FilePath](haskell/system_filepath.md)   - File path manipuation on all platforms.
     
     -   [Control.Exception](haskell/control_exception.md) - Exception Handling
 

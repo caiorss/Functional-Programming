@@ -1,7 +1,7 @@
 {-
    Old Control.Monad.State implementation that is curently outdated, 
 however it provides backward compatibility to compile and run many State
-Monad tutorials available in the internet.
+Monad tutorials available on the internet and old books.
 
 
 -}
@@ -13,6 +13,7 @@ newtype State s a = State { runState :: s -> (a, s) }
 
 instance Monad (State s) where
   return a        = State $ \s -> (a,s)
+  
   (State x) >>= f = State $ \s ->
     let (v,s') = x s
     in runState (f v) s'
@@ -59,8 +60,11 @@ execState act = snd . runState act
 {-
     State Sequence Combinators:
     
-    The functions below are not defined in the old Control.State.Monad library. 
-    They make easier to compute the sucessive executions of the state function.
+The functions below are not defined in the old Control.State.Monad
+library.
+
+They make easier to compute the sucessive executions of the state
+function.
 -}
 
 evalStateNtimes stateFunc state n =
