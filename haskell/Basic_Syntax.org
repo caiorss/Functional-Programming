@@ -21,9 +21,11 @@ x**y    for y any kind of number (Float for example)
 
 *** Application Operator - $
 
+
 The application operator =$= makes code more readable and cleaner
 since substitutes parenthesis.  It is also useful in higher-order
-situations, such as =map ($ 0) xs=, or =zipWith ($) fs xs=.
+situations, such as =map ($ 0) xs=, or =zipWith ($) fs xs= .
+
 
 #+BEGIN_SRC haskell
 > f $ g $ h x = f (g (h x))
