@@ -1,15 +1,135 @@
-#+TITLE: Real World Haskell Walk 
 #+INCLUDE: ../theme/style.org
+#+TITLE: Real World Haskell Walk 
 
-* Real World Haskell Codes
+* Real World Haskell 
 ** Overview 
+   :PROPERTIES:
+   :ID:       3d6223a7-bd77-48a5-a89a-3d211c5c84b3
+   :END:
 
-It this section is provided Real World Haskell (RWH) files, testing
-and running examples in Haskell v7.10.2. 
+At the time the book *Real World Haskell* was written (2008) the current
+_Haskell version was 6.8_ and many ~libraries~, modules and
+/implementations have changed/ what makes some codes incompatible with
+new Haskell versions. In order to solve this problem this section
+provides modified codes from the book and the ghci repl sessions in
+Haskell v7.10.2.
+
+
+Reference: 
+
+ - O'Sullivan, Bryan, John Goerzen, and Donald Bruce Stewart. Real
+   world haskell: Code you can believe in. " O'Reilly Media,
+   Inc.", 2008. Available at:
+   <http://book.realworldhaskell.org/read/>.
+
+The Haskell version used in this section is v7.10.2. running in Linux
+64 bits.
+
+The development environment used in this section can be reproduced
+using the [[https://nixos.org/nix/][Nix Package manager]] which is a functional package manager
+that doesn't mess with the system packages and allows multiple
+versions of Haskell to be installed avoiding dependency hell. 
+
+When nix run the file shell.nix it will load a shell that has Haskell
+of version 7.10.2 in the current PATH variable. If the Haskell tool
+chain is not installed in the system it will be downloaded and
+installed in /nix/store/ directory.
+
+File: file:rwh/shell.nix 
+
+#+BEGIN_SRC nix :tangle rwh/shell.nix 
+# It will install the libraries: 
+# 
+#  - mtl       - Monad transformers 
+#  - conduit  - 
+#  - turtle  
+#  - aeson 
+#  - regex-posix 
+#  - network 
+#  - random 
+#
+{ nixpkgs ? import <nixpkgs> {}, compiler ? "ghc7102" }:
+let
+  inherit (nixpkgs) pkgs;
+  ghc = pkgs.haskell.packages.${compiler}.ghcWithPackages (ps: with ps; [
+          mtl conduit turtle aeson regex-posix network random 
+        ]);
+in
+pkgs.stdenv.mkDerivation {
+  name = "haskell-learn";
+  buildInputs = [ ghc ];
+  shellHook = "eval $(egrep ^export ${ghc}/bin/ghc)";
+}
+#+END_SRC
+
+
+Once the package manager is installed you can run: 
+
+#+BEGIN_SRC sh
+$ cd rwh
+
+$ ls
+ch03/  ch05/  ch07/  ch10/  ch14/  ch16/  ch18/  shell.nix
+ch04/  ch06/  ch08/  ch13/  ch15/  ch17/  ch27/
+
+# Load the shell.nix definitions 
+#
+$ nix-shell 
+
+# Where is ghci ??
+[nix-shell:~/org/wiki/rwh]$ which ghci
+/nix/store/j1335blff9jllh1mvpin5vjl42pvrapv-ghc-7.10.2/bin/ghci
+
+# Where is ghc ??
+[nix-shell:~/org/wiki/rwh]$ which ghc
+/nix/store/j1335blff9jllh1mvpin5vjl42pvrapv-ghc-7.10.2/bin/ghc
+
+GHCi, version 7.10.2: http://www.haskell.org/ghc/  :? for help
+>>> 
+>>> 
+#+END_SRC
+
+Haskell can also be invoked from nix.shell file in batch mode:
+
+#+BEGIN_SRC 
+$ ghci
+bash: ghci: command not foun
+
+$ nix-shell ~/org/wiki/rwh/shell.nix 
+
+[nix-shell:~/org/wiki]$ which ghci
+/nix/store/j1335blff9jllh1mvpin5vjl42pvrapv-ghc-7.10.2/bin/ghci
+
+
+$ nix-shell ~/org/wiki/rwh/shell.nix --command "ghci"
+GHCi, version 7.10.2: http://www.haskell.org/ghc/  :? for help
+>>> 
+
+
+$ nix-shell ~/org/wiki/rwh/shell.nix --command "ghci --version"
+The Glorious Glasgow Haskell Compilation System, version 7.10.2
+
+$ nix-shell ~/org/wiki/rwh/shell.nix --command "ghc --version"
+The Glorious Glasgow Haskell Compilation System, version 7.10.2
+
+$ nix-shell ~/org/wiki/rwh/shell.nix --command "which ghc"
+/nix/store/j1335blff9jllh1mvpin5vjl42pvrapv-ghc-7.10.2/bin/ghc
+
+#+END_SRC
 
 ** Chapter 3  - Defining Types, Streamlining Functions 
-*** BookStore.hs 
+*** Location 
 
+ - [[http://book.realworldhaskell.org/read/defining-types-streamlining-functions.html][Chapter 3. Defining Types, Streamlining Functions]]
+
+*** BookStore.hs 
+    :PROPERTIES:
+    :ID:       fede652f-105d-4313-9779-6b5cb083a8cf
+    :END:
+**** Code 
+     :PROPERTIES:
+     :ID:       25d6e8a5-ee6b-443b-a1b5-77913f931aaf
+     :END:
 
  - file:rwh/ch03/BookStore.hs
 
@@ -39,7 +159,7 @@ myInfo = Book 9780135072455 "Algebra of Programming"
 
 #+END_SRC
 
-Running:
+**** Running
 
 #+BEGIN_SRC haskell 
 >>> :load "rwh/ch03/BookStore.hs"
@@ -69,7 +189,13 @@ Book 173 "Use of Weapons" ["Iain M. Banks"]
 #+END_SRC
 
 *** BookStore2.hs 
-
+    :PROPERTIES:
+    :ID:       8526ff6c-bd8a-4279-9827-c61fe5359787
+    :END:
+**** Code
+     :PROPERTIES:
+     :ID:       455912c3-56e1-458c-a7ed-0d3bf02270b5
+     :END:
  file:rwh/ch03/BookStore2.hs 
 
 #+BEGIN_SRC haskell :tangle rwh/ch03/BookStore2.hs
@@ -84,7 +210,7 @@ data BillingInfo = CreditCard CardNumber CardHolder Address
                    deriving (Show)
 #+END_SRC
 
-Loading 
+**** Running 
 
 #+BEGIN_SRC haskell 
 >>> CreditCard "2901650221064486" "Thomas Gradgrind" ["Dickens", "England"]
@@ -106,6 +232,13 @@ CashOnDelivery
 #+END_SRC
 
 *** AlgebraicVector.hs
+    :PROPERTIES:
+    :ID:       c6cc6bc3-09f6-46bd-89db-5010416c51aa
+    :END:
+**** Code 
+     :PROPERTIES:
+     :ID:       34e3fe37-ae62-4833-88bc-2362a19600f2
+     :END:
 
  file:rwh/ch03/AlgebraicVector.hs
 
@@ -121,8 +254,7 @@ data Polar2D = Polar2D Double Double
 
 #+END_SRC
 
-
-Running 
+**** Running 
 
 #+BEGIN_SRC haskell 
 >>> Cartesian2D (sqrt 2) (sqrt 2)
@@ -147,25 +279,33 @@ Polar2D 0.7853981633974483 2.0
 #+END_SRC  
 *** ShapeUnion.hs 
 
+
  - file:rwh/ShapeUnion.hs 
 
 #+BEGIN_SRC haskell 
 
 type Vector = (Double, Double)
 
-data = Shape = Circle Vector Double 
+data  Shape = Circle Vector Double 
               | Poly [Vector] 
 
 #+END_SRC 
 
 *** add.hs 
+    :PROPERTIES:
+    :ID:       a55caa62-6954-40d8-9d85-b801aba8109d
+    :END:
+**** Code 
+     :PROPERTIES:
+     :ID:       dc6ec096-d117-4a0e-8f61-58a94102386b
+     :END:
 
 #+BEGIN_SRC haskell :tangle rwh/ch03/add.hs
 sumList (x:xs) = x + sumList xs 
 sumList []     = 0 
 #+END_SRC
 
-Loading 
+**** Running
 
 #+BEGIN_SRC haskell 
 >>> :load "rwh/ch03/add.hs"
@@ -180,6 +320,13 @@ Ok, modules loaded: Main.
 >>> 
 #+END_SRC
 *** BookStore3.hs 
+    :PROPERTIES:
+    :ID:       fb640cfa-ca4c-457a-9253-25b41a31cc65
+    :END:
+**** Code 
+     :PROPERTIES:
+     :ID:       d793907a-b4a4-451c-a4c9-1b4c43f14531
+     :END:
 
  - file:rwh/ch03/BookStore3.hs
 
@@ -212,7 +359,7 @@ myInfo = Book 9780135072455 "Algebra of Programming"
 
 #+END_SRC
 
-Running:
+**** Running
 
 #+BEGIN_SRC haskell 
 >>> :load "rwh/ch03/BookStore3.hs"
@@ -236,6 +383,13 @@ bookAuthors :: BookInfo -> [String]
 >>> 
 #+END_SRC
 *** BookStore4.hs
+    :PROPERTIES:
+    :ID:       698235ad-1c82-4061-b689-e5b11f1adfc9
+    :END:
+**** Code
+     :PROPERTIES:
+     :ID:       b3a8441b-98b1-4c7c-b742-e28e431f9ad3
+     :END:
 
  - file:rwh/ch03/BookStore4.hs 
 
@@ -287,8 +441,7 @@ customer2 = Customer {
             }
 #+END_SRC
 
-
-Running:
+**** Running
 
 #+BEGIN_SRC haskell 
 >>> :load "rwh/ch03/BookStore4.hs"
@@ -323,7 +476,18 @@ customerID :: Customer -> CustomerID
 >>> 
 #+END_SRC
 ** Chapter 4  - Functional Programming  
+*** Location
+
+ - [[http://book.realworldhaskell.org/read/functional-programming.html][Chapter 4. Functional programming]]
+ 
 *** InteractWith.hs 
+    :PROPERTIES:
+    :ID:       2803ae95-b2dc-41bb-a649-cd4035196e37
+    :END:
+**** Code 
+     :PROPERTIES:
+     :ID:       ec5cabe1-5d75-480a-a5bb-8493042df332
+     :END:
 
 Page 71: file:rwh/ch04/InteractWith.hs
 
@@ -345,7 +509,7 @@ main = mainWith myFunction
         myFunction = id
 #+END_SRC
 
-Running:
+**** Running
 
 #+BEGIN_SRC 
 $ ghc --make InteractWith 
@@ -361,9 +525,14 @@ $ cat /tmp/issue.out
 Arch Linux \r (\l)
 #+END_SRC
 *** FixLines.hs 
-
+    :PROPERTIES:
+    :ID:       03823902-66d2-4136-9793-c2b9946e1d2c
+    :END:
+**** Code
+     :PROPERTIES:
+     :ID:       d9d2025e-d203-4424-8c69-2308dbe44679
+     :END:
 Page 73: file:rwh/ch04/FixLines.hs 
-
 
 #+BEGIN_SRC haskell :tangle rwh/ch04/FixLines.hs
 import System.Environment (getArgs)
@@ -398,6 +567,7 @@ main = mainWith myFunction
         myFunction = fixLines
 #+END_SRC
 
+**** Running
 
 Running Interactive:
 
@@ -452,6 +622,13 @@ $ file gpl-3.0.unix.txt
 gpl-3.0.unix.txt: ASCII text
 #+END_SRC
 *** ch4.exercises.hs 
+    :PROPERTIES:
+    :ID:       a618ec21-39db-4d03-8320-039ec50221c7
+    :END:
+**** Code 
+     :PROPERTIES:
+     :ID:       b85730e5-1c51-4242-9124-b4393283d54d
+     :END:
 
 1. Write your own “safe” definitions of the standard partial list
 functions, but make sure they never fail. As a hint, you might want to
@@ -506,7 +683,7 @@ splitWith_aux fnp (x:xs) acc  = if fnp x
 -}
 #+END_SRC
 
-Running:
+**** Running
 
 #+BEGIN_SRC haskell 
 >>> :load "rwh/ch04/ch04.exercises.hs"
@@ -546,6 +723,13 @@ Just []
 #+END_SRC
 
 *** IntParser.hs 
+    :PROPERTIES:
+    :ID:       4654f267-034e-42b7-94bc-542e6dc38798
+    :END:
+**** Code 
+     :PROPERTIES:
+     :ID:       b2ca74d6-83e1-4f2f-8945-454cb90d82c0
+     :END:
 
 Page 86: file:rwh/ch04/IntParse.hs 
 
@@ -562,7 +746,7 @@ loop acc (x:xs) = let acc' = acc * 10 + digitToInt x
                   in loop acc' xs
 #+END_SRC 
 
-Running:
+**** Running
 
 #+BEGIN_SRC haskell 
 
@@ -595,8 +779,18 @@ asInt :: String -> Int
 #+END_SRC
 
 ** Chapter 5  - Writing a Library: Working with JSON Data 
-*** SimpleJson1.hs 
+*** Location 
 
+ - [[http://book.realworldhaskell.org/read/writing-a-library-working-with-json-data.html][Chapter 5. Writing a library: working with JSON data]]
+
+*** SimpleJson1.hs 
+    :PROPERTIES:
+    :ID:       0b1fe766-54e3-40d6-b078-18c6762b3eea
+    :END:
+**** Code
+     :PROPERTIES:
+     :ID:       6bb61c3b-15b8-4a61-a744-c8af5dd948b7
+     :END:
  Page: 112 file:rwh/ch05/SimpleJSON1.hs
 
 #+BEGIN_SRC haskell :tangle rwh/ch05/SimpleJSON1.hs 
@@ -637,7 +831,7 @@ isNull JNull = True
 isNull _     = False 
 #+END_SRC
 
-Running:
+**** Running
 
 #+BEGIN_SRC haskell 
 >>> :load "rwh/ch05/SimpleJSON1.hs"
@@ -690,6 +884,13 @@ False
 #+END_SRC
 
 *** SimpleJSon2.hs 
+    :PROPERTIES:
+    :ID:       855fd9fb-3e76-4777-a89a-e9e9c78c02ba
+    :END:
+**** Code
+     :PROPERTIES:
+     :ID:       2bb053fe-7cd6-42de-be5b-1e325f81efdb
+     :END:
 
  Page: 112 - File: file:rwh/ch05/SimpleJSON2.hs
 
@@ -758,6 +959,8 @@ import SimpleJSON2
 main = print (JObject [("foo", JNumber 1), ("bar", JBool False)])
 #+END_SRC
 
+**** Running 
+
 Compile the module:
 
 #+BEGIN_SRC sh
@@ -805,6 +1008,13 @@ JObject [("foo",JNumber 1.0),("bar",JBool False)]
 #+END_SRC
 
 *** PutJSON.hs 
+    :PROPERTIES:
+    :ID:       95abb342-c395-40b3-a061-92b6dde2f783
+    :END:
+**** Code
+     :PROPERTIES:
+     :ID:       e32b6296-e10f-4c35-9961-3aba317e4e41
+     :END:
 
  Page: 116 file:rwh/ch05/PutJson.hs
 
@@ -837,13 +1047,16 @@ putJValue :: JValue -> IO ()
 putJValue v = putStrLn (renderJValue v)
 #+END_SRC
 
-Running:
+**** Running
 
 #+BEGIN_SRC haskell 
 
 #+END_SRC
 
 *** PrettyJSON.hs 
+    :PROPERTIES:
+    :ID:       ebf5a7e1-6f1c-4961-b13c-b8972c6ef08f
+    :END:
 
  Page: 119 file:rwh/ch05/PrettyJSON.hs 
 
@@ -856,13 +1069,581 @@ renderJValue (JNumber num) = double num
 renderJValue (JString str) = string str
 #+END_SRC
 
+** Chapter 7  - Classic I/O in Haskell 
+   :PROPERTIES:
+   :ID:       e95f98c1-fc9d-42aa-8e72-b816e998aadd
+   :END:
+*** Location
+ 
+ - [[http://book.realworldhaskell.org/read/io.html][Chapter 7. I/O]]
+
+*** basicio.hs
+    :PROPERTIES:
+    :ID:       e295abfd-86e6-43a7-8389-cdae891857ef
+    :END:
+**** Code 
+     :PROPERTIES:
+     :ID:       de73cecd-a3d5-44df-a1f8-a952abcb6ff5
+     :END:
+
+ Page: 112   file:rwh/ch07/basicio.hs
+
+#+BEGIN_SRC haskell :tangle rwh/ch07/basicio.hs
+-- file: ch07/basicio.hs
+main = do
+  putStrLn "Greetings! What is your name?"
+  inpStr <- getLine
+  putStrLn $ "Welcome to Haskell, " ++ inpStr ++ "!"
+
+#+END_SRC
+
+**** Running
+
+#+BEGIN_SRC 
+[nix-shell:~/org/wiki/rwh/ch07]$ runhaskell basicio.hs 
+Greetings! What is your name?
+Julius Caesar
+Welcome to Haskell, Julius Caesar!
+#+END_SRC
+*** callingpure.hs
+    :PROPERTIES:
+    :ID:       1d5e0d92-8afc-4380-accb-b857cda4da3c
+    :END:
+**** Code 
+     :PROPERTIES:
+     :ID:       9a594b9b-b320-4f10-93af-d1a2f6c50d83
+     :END:
+
+#+BEGIN_SRC haskell :tangle rwh/ch07/callingpure.hs
+-- file: ch07/callingpure.hs
+name2reply :: String -> String
+name2reply name =
+  "Pleased to meet you, " ++ name ++ ".\n" ++
+  "Your name contains " ++ charcount ++ " characters."
+  where charcount = show (length name)
+
+main :: IO ()
+main = do
+  putStrLn "Greetings once again. What is your name?"
+  inpStr <- getLine
+  let outStr = name2reply inpStr
+  putStrLn outStr
+#+END_SRC
+
+**** Running
+
+#+BEGIN_SRC haskell
+[nix-shell:~/org/wiki/rwh/ch07]$ ghci
+GHCi, version 7.10.2: http://www.haskell.org/ghc/  :? for help
+>>> 
+>>> :load 
+basicio.hs      callingpure.hs
+>>> :load callingpure.hs 
+[1 of 1] Compiling Main             ( callingpure.hs, interpreted )
+Ok, modules loaded: Main.
+>>> 
+>>> name2reply "john"
+"Pleased to meet you, john.\nYour name contains 4 characters."
+>>> name2reply "julius caesar"
+"Pleased to meet you, julius caesar.\nYour name contains 13 characters."
+>>> 
+
+>>> putStrLn (name2reply "Julis Caesar")
+Pleased to meet you, Julis Caesar.
+Your name contains 12 characters.
+>>> 
+
+>>> :t putStrLn (name2reply "Julis Caesar")
+putStrLn (name2reply "Julis Caesar") :: IO (
+#+END_SRC
+
+*** toupper-imp.hs
+    :PROPERTIES:
+    :ID:       abde9266-157e-4bf3-8d94-d759b43ed4a4
+    :END:
+**** Code 
+     :PROPERTIES:
+     :ID:       95522f15-85dd-402d-94f4-aa823f19ca4d
+     :END:
+
+#+BEGIN_SRC haskell :tangle rwh/ch07/toupper-imp.hs
+-- file: ch07/toupper-imp.hs
+import System.IO
+import Data.Char(toUpper)
+
+main :: IO ()
+main = do
+  inh <- openFile "/etc/issue" ReadMode
+  outh <- openFile "/tmp/issue.out" WriteMode
+  mainloop inh outh
+  hClose inh
+  hClose outh
+
+mainloop :: Handle -> Handle -> IO ()
+mainloop inh outh =
+  do ineof <- hIsEOF inh
+     if ineof
+       then return ()
+       else do inpStr <- hGetLine inh
+               hPutStrLn outh (map toUpper inpStr)
+               mainloop inh outh
+               
+#+END_SRC
+
+**** Running
+
+#+BEGIN_SRC 
+[nix-shell:~/org/wiki/rwh/ch07]$ runhaskell toupper-imp.hs 
+
+[nix-shell:~/org/wiki/rwh/ch07]$ cat /etc/issue 
+Arch Linux \r (\l)
+
+[nix-shell:~/org/wiki/rwh/ch07]$ cat /tmp/issue.out 
+ARCH LINUX \R (\L)
+#+END_SRC
+
+*** tempfile.hs 
+    :PROPERTIES:
+    :ID:       dcd3f3aa-1762-4d25-abdc-f57ea8680e4b
+    :END:
+**** Code 
+     :PROPERTIES:
+     :ID:       c930f726-39ae-41ea-abb0-5e406d6044f3
+     :END:
+
+ Page 175 file:rwh/ch07/tempfile.hs
+
+The code tempfile.hs failed to run and had to be changed to run in
+Haskell 7.10.2.
+
+#+BEGIN_SRC haskell :tangle rwh/ch07/tempfile.hs
+-- file: ch07/tempfile.hs
+import System.IO
+import System.Directory    (getTemporaryDirectory, removeFile)
+
+--import System.IO.Error     (catch)
+import Control.Exception   (catch, finally, IOException)
+
+-- The main entry point.  Work with a temp file in myAction.
+main :: IO ()
+main = withTempFile "mytemp.txt" myAction
+
+{- The guts of the program.  Called with the path and handle of a temporary
+   file.  When this function exits, that file will be closed and deleted
+   because myAction was called from withTempFile. -}
+myAction :: FilePath -> Handle -> IO ()
+myAction tempname temph = 
+    do -- Start by displaying a greeting on the terminal
+       putStrLn "Welcome to tempfile.hs"
+       putStrLn $ "I have a temporary file at " ++ tempname
+
+       -- Let's see what the initial position is
+       pos <- hTell temph
+       putStrLn $ "My initial position is " ++ show pos
+
+       -- Now, write some data to the temporary file
+       let tempdata = show [1..10]
+       putStrLn $ "Writing one line containing " ++ 
+                  show (length tempdata) ++ " bytes: " ++
+                  tempdata
+       hPutStrLn temph tempdata
+
+       -- Get our new position.  This doesn't actually modify pos
+       -- in memory, but makes the name "pos" correspond to a different 
+       -- value for the remainder of the "do" block.
+       pos <- hTell temph
+       putStrLn $ "After writing, my new position is " ++ show pos
+
+       -- Seek to the beginning of the file and display it
+       putStrLn $ "The file content is: "
+       hSeek temph AbsoluteSeek 0
+
+       -- hGetContents performs a lazy read of the entire file
+       c <- hGetContents temph
+
+       -- Copy the file byte-for-byte to stdout, followed by \n
+       putStrLn c
+
+       -- Let's also display it as a Haskell literal
+       putStrLn $ "Which could be expressed as this Haskell literal:"
+       print c
+
+
+getTempdir :: IO String 
+getTempdir =   catch getTemporaryDirectory handler
+  where
+    handler :: IOException -> IO String
+    handler = \ _ -> return "." 
+
+
+{- This function takes two parameters: a filename pattern and another
+   function.  It will create a temporary file, and pass the name and Handle
+   of that file to the given function.
+
+   The temporary file is created with openTempFile.  The directory is the one
+   indicated by getTemporaryDirectory, or, if the system has no notion of
+   a temporary directory, "." is used.  The given pattern is passed to
+   openTempFile.
+
+   After the given function terminates, even if it terminates due to an
+   exception, the Handle is closed and the file is deleted. -}
+withTempFile :: String -> (FilePath -> Handle -> IO a) -> IO a
+withTempFile pattern func =
+    do -- The library ref says that getTemporaryDirectory may raise on
+       -- exception on systems that have no notion of a temporary directory.
+       -- So, we run getTemporaryDirectory under catch.  catch takes
+       -- two functions: one to run, and a different one to run if the
+       -- first raised an exception.  If getTemporaryDirectory raised an
+       -- exception, just use "." (the current working directory).
+
+       {- Note: It doesn't work anymore in Haskell 7.10.2 -}
+       {- tempdir <- catch (getTemporaryDirectory) (\_ -> return ".") -}
+       
+       tempdir <- getTempdir
+       (tempfile, temph) <- openTempFile tempdir pattern 
+
+       -- Call (func tempfile temph) to perform the action on the temporary
+       -- file.  finally takes two actions.  The first is the action to run.
+       -- The second is an action to run after the first, regardless of
+       -- whether the first action raised an exception.  This way, we ensure
+       -- the temporary file is always deleted.  The return value from finally
+       -- is the first action's return value.
+       finally (func tempfile temph) 
+               (do hClose temph
+                   removeFile tempfile)
+#+END_SRC
+
+**** Running
+
+#+BEGIN_SRC  
+$ > runhaskell tempfile.hs 
+Welcome to tempfile.hs
+I have a temporary file at /run/user/1000/mytemp1804289383846930886.txt
+My initial position is 0
+Writing one line containing 22 bytes: [1,2,3,4,5,6,7,8,9,10]
+After writing, my new position is 23
+The file content is: 
+[1,2,3,4,5,6,7,8,9,10]
+
+Which could be expressed as this Haskell literal:
+"[1,2,3,4,5,6,7,8,9,10]\n"
+
+#+END_SRC
+
+*** actions.hs
+    :PROPERTIES:
+    :ID:       58fdaf3b-b6b1-4547-a218-13e4af64a44c
+    :END:
+**** Code
+     :PROPERTIES:
+     :ID:       6e385cf3-66dc-4e36-bd09-88a646210a43
+     :END:
+
+IO actions can be passed as values, stored in data structures and
+passed to another IO actions. They won't do anything until invoked
+(called from the action main).
+
+#+BEGIN_SRC haskell :tangle rwh/ch07/actions.hs
+-- file: ch07/actions.hs
+str2action :: String -> IO ()
+str2action input = putStrLn ("Data: " ++ input)
+
+list2actions :: [String] -> [IO ()]
+list2actions = map str2action
+
+numbers :: [Int]
+numbers = [1..10]
+
+strings :: [String]
+strings = map show numbers
+
+actions :: [IO ()]
+actions = list2actions strings
+
+printitall :: IO ()
+printitall = runall actions
+
+-- Take a list of actions, and execute each of them in turn.
+runall :: [IO ()] -> IO ()
+runall [] = return ()
+runall (firstelem:remainingelems) =
+  do firstelem
+     runall remainingelems
+     
+main = do str2action "Start of the program"
+          printitall
+          str2action "Done!"
+#+END_SRC
+
+**** Running
+
+#+BEGIN_SRC  
+$ > runhaskell actions.hs 
+Data: Start of the program
+Data: 1
+Data: 2
+Data: 3
+Data: 4
+Data: 5
+Data: 6
+Data: 7
+Data: 8
+Data: 9
+Data: 10
+Data: Done!
+$ > 
+
+#+END_SRC
+
+*** actions2.hs
+    :PROPERTIES:
+    :ID:       6093929a-53dc-4b3e-b396-2c368a655172
+    :END:
+**** Code 
+     :PROPERTIES:
+     :ID:       9ff8fe0a-fa42-477d-bdcd-205bdda26654
+     :END:
+
+#+BEGIN_SRC haskell :tangle rwh/ch07/actions2.hs
+-- file: ch07/actions2.hs
+str2message :: String -> String
+str2message input = "Data: " ++ input
+
+str2action :: String -> IO ()
+str2action = putStrLn . str2message
+
+numbers :: [Int]
+numbers = [1..10]
+
+main = do str2action "Start of the program"
+          mapM_ (str2action . show) numbers
+          str2action "Done!"
+          
+#+END_SRC
+
+**** Running
+
+#+BEGIN_SRC 
+$ > runhaskell actions2.hs 
+Data: Start of the program
+Data: 1
+Data: 2
+Data: 3
+Data: 4
+Data: 5
+Data: 6
+Data: 7
+Data: 8
+Data: 9
+Data: 10
+Data: Done!
+
+#+END_SRC
+
+*** basicio-nodo.hs 
+    :PROPERTIES:
+    :ID:       5244cd2c-6749-416f-b5c8-2f46d121c275
+    :END:
+
+**** Code
+     :PROPERTIES:
+     :ID:       7092de8f-71d1-4446-8ae7-05534a5815c2
+     :END:
+
+Page 187 file:rwh/ch07/basicio-nodo.hs 
+
+#+BEGIN_SRC haskell :tangle rwh/ch07/basicio-nodo.hs
+-- file: ch07/basicio-nodo.hs
+main =
+  putStrLn "Greetings! What is your name?" >>
+  getLine >>=
+  (\inpStr -> putStrLn $ "Welcome to Haskell, " ++ inpStr ++ "!")  
+#+END_SRC
+
+**** Running
+
+#+BEGIN_SRC 
+$ > runhaskell basicio-nodo.hs 
+Greetings! What is your name?
+Julius Caesar
+Welcome to Haskell, Julius Caesar!
+#+END_SRC
+
+*** return1.hs 
+    :PROPERTIES:
+    :ID:       71c33d47-a99e-4005-8d2e-2be91d7b98d3
+    :END:
+**** Code
+     :PROPERTIES:
+     :ID:       4242f960-313f-4388-8564-55a12f9de692
+     :END:
+
+ Page: 187 file:rwh/ch07/return1.hs 
+
+#+BEGIN_SRC haskell :tangle rwh/ch07/return1.hs 
+-- file: ch07/return1.hs
+import Data.Char(toUpper)
+
+isGreen :: IO Bool
+isGreen =
+  do putStrLn "Is green your favorite color?"
+     inpStr <- getLine
+     return ((toUpper . head $ inpStr) == 'Y')
+#+END_SRC
+
+**** Running
+
+#+BEGIN_SRC haskell
+$ > ghci
+GHCi, version 7.10.2: http://www.haskell.org/ghc/  :? for help
+>>> 
+>>> :load return1.hs 
+[1 of 1] Compiling Main             ( return1.hs, interpreted )
+Ok, modules loaded: Main.
+>>> 
+>>> :t isGreen 
+isGreen :: IO Bool
+>>> 
+>>> isGreen 
+Is green your favorite color?
+Y
+True
+>>> isGreen 
+Is green your favorite color?
+N
+False
+>>> 
+
+#+END_SRC
+
+*** return2.hs 
+    :PROPERTIES:
+    :ID:       2ab104bc-0c84-4af9-88b5-053a316e9248
+    :END:
+**** Code
+     :PROPERTIES:
+     :ID:       adc082c2-311a-46a2-85cd-33cdda2f003c
+     :END:
+
+ Page: 187 file:rwh/ch07/return2.hs 
+
+
+#+BEGIN_SRC haskell :tangle rwh/ch07/return2.hs 
+-- file: ch07/return2.hs
+import Data.Char(toUpper)
+
+isYes :: String -> Bool
+isYes inpStr = (toUpper . head $ inpStr) == 'Y'
+
+isGreen :: IO Bool
+isGreen =
+  do putStrLn "Is green your favorite color?"
+     inpStr <- getLine
+     return (isYes inpStr)
+#+END_SRC
+
+**** Running
+
+#+BEGIN_SRC haskell 
+>>> :load return2.hs 
+[1 of 1] Compiling Main             ( return2.hs, interpreted )
+Ok, modules loaded: Main.
+>>> 
+>>> isGreen 
+Is green your favorite color?
+Y
+True
+>>> isGreen 
+Is green your favorite color?
+N
+False
+>>> 
+
+#+END_SRC
+
+*** return3.hs
+    :PROPERTIES:
+    :ID:       2007f6ab-07e6-40f8-9d6b-00460ef04a67
+    :END:
+**** Code
+     :PROPERTIES:
+     :ID:       d0a71105-e292-4bd0-9c36-6c5c82b81d3c
+     :END:
+
+ Page: 187 file:rwh/ch07/return3.hs 
+
+
+#+BEGIN_SRC haskell :tangle rwh/ch07/return3.hs 
+-- file: ch07/return3.hs
+returnTest :: IO ()
+returnTest =
+  do one <- return 1
+     let two = 2
+     putStrLn $ show (one + two)
+
+main :: IO ()  
+main = returnTest 
+#+END_SRC
+
+**** Running
+
+Running in batch mode:
+
+#+BEGIN_SRC 
+> runhaskell return3.hs 
+3
+> 
+#+END_SRC
+
+Running in ghci:
+
+#+BEGIN_SRC haskell
+$ > ghci
+GHCi, version 7.10.2: http://www.haskell.org/ghc/  :? for help
+>>> 
+>>> :load return3.hs 
+[1 of 1] Compiling Main             ( return3.hs, interpreted )
+Ok, modules loaded: Main.
+>>> 
+>>> :t returnTest 
+returnTest :: IO ()
+>>> 
+>>> return
+return      returnTest
+>>> returnTest 
+3
+>>> :t returnTest 
+returnTest :: IO ()
+>>> 
+
+#+END_SRC
+
 ** Chapter 8  - Efficient File Processing, Regular Expressions, and Filename Matching
+*** Location 
+
+ - [[http://book.realworldhaskell.org/read/efficient-file-processing-regular-expressions-and-file-name-matching.html][Chapter 8. Efficient file processing, regular expressions, and file name matching]]
+
 *** ElfMagic.hs 
+    :PROPERTIES:
+    :ID:       d160ca41-6b1a-47b7-acc6-9a4407e0b84b
+    :END:
+**** Code
+     :PROPERTIES:
+     :ID:       10c62716-029b-4c4e-aa88-69dfe85e1b7b
+     :END:
 
  Page 194. file:rwh/ch08/ElfMagic.hs  
 
 This function tests if the file is a Unix ELF executable that are
-recognized by its magic number. 
+recognized by its magic number which is a initial unique set of bytes
+that identify the file. Unlike Windows, Unix like OS recognizes the
+file formats by its magic number.
+
+See also:
+
+ - [[https://en.wikipedia.org/wiki/Magic_number_(programming)][Magic number (programming) - Wikipedia, the free encyclopedia]]
+
+ - [[https://en.wikipedia.org/wiki/Executable_and_Linkable_Format][Executable and Linkable Format - Wikipedia, the free encyclopedia]]
 
 #+BEGIN_SRC haskell :tangle rwh/ch08/ElfMagic.hs  
 import qualified Data.ByteString.Lazy as L
@@ -877,7 +1658,7 @@ isElfFile path = do
   return (hasElfMagic content)
 #+END_SRC
 
-Running 
+**** Running 
 
 #+BEGIN_SRC haskell 
 GHCi, version 7.10.2: http://www.haskell.org/ghc/  :? for help
@@ -995,6 +1776,14 @@ lircd
 #+END_SRC
 
 *** HighestClose.hs 
+    :PROPERTIES:
+    :ID:       44f4e009-e4dd-441a-86f0-51d80358efba
+    :END:
+
+**** Code
+     :PROPERTIES:
+     :ID:       4271f1de-f939-415b-bf5a-77aaa5298a73
+     :END:
 
  Page 196. file:rwh/ch08/HighestClose.hs 
 
@@ -1023,7 +1812,6 @@ highestCloseFrom path = do
 
 #+END_SRC
 
-
   File: file:rwh/ch08/prices.csv 
 
 #+NAME: prices.csv 
@@ -1036,7 +1824,8 @@ Date,Open,High,Low,Close,Volume,Adj Close
 #+END_SRC
 
 
-Running:
+**** Running
+
 
 #+BEGIN_SRC haskell 
 >>> :load "rwh/ch08/HighestClose.hs" 
@@ -1164,9 +1953,19 @@ Just [19.8,20.66,26.76,27.41]
 
 >>> 
 #+END_SRC
-
 ** Chapter 10 - Code Case Study: Parsing a Binary Data Format
+*** Location 
+
+ - [[http://book.realworldhaskell.org/read/code-case-study-parsing-a-binary-data-format.html][Chapter 10. Code case study: parsing a binary data format]]
+
 *** PNM.hs 
+    :PROPERTIES:
+    :ID:       628a2e2d-5ae0-4fa6-ba66-1a0f2190d428
+    :END:
+**** Code 
+     :PROPERTIES:
+     :ID:       4db16ed3-7abf-4e71-ae19-24ea303822ea
+     :END:
 
  Page 246 - File: file:rwh/ch10/PNM.hs 
 
@@ -1236,7 +2035,7 @@ getBytes n str = let count           = fromIntegral n
 
 #+END_SRC
 
-Running:
+**** Running
 
 #+BEGIN_SRC haskell 
 >>> :load "rwh/ch10/PNM.hs"
@@ -1263,6 +2062,13 @@ Test files:
  file:rwh/ch10/bird.png 
 
 *** Parse.hs 
+    :PROPERTIES:
+    :ID:       2d8ec97b-199b-4f73-a873-ec93d7418cbf
+    :END:
+**** Code
+     :PROPERTIES:
+     :ID:       c2c782b2-2e2b-4460-8ce7-8ca8af11d1ea
+     :END:
 
  Page 240; 250 - File: file:rwh/ch10/Parse.hs
 
@@ -1404,7 +2210,7 @@ parseBytes n =
        identity h
 #+END_SRC
 
-Running:
+**** Running
 
 #+BEGIN_SRC haskell 
 >>> :load "rwh/ch10/Parse.hs"
@@ -1526,6 +2332,13 @@ Left "byte offset 0: no more input"
 #+END_SRC
 
 *** TreeMap.sh 
+    :PROPERTIES:
+    :ID:       5aaef142-aec5-4f9e-bc01-b5e5e6b78611
+    :END:
+**** Code
+     :PROPERTIES:
+     :ID:       2b500650-5e07-479b-a85b-f317cf57039b
+     :END:
 
  Page: 244 - File: file:rwh/ch10/TreeMap.hs
 
@@ -1557,8 +2370,7 @@ Node (Leaf "a") (Leaf "b")
 >>> 
 #+END_SRC
 
-
-Running: 
+**** Running
 
 #+BEGIN_SRC haskell 
 >>> :load "rwh/ch10/TreeMap.hs"
@@ -1585,505 +2397,16 @@ Node (Leaf True) (Node (Leaf True) (Leaf False))
 >>> 
 
 #+END_SRC
-
 ** Chapter 13 - Data Structures 
-*** passwd-al.hs
-
- Page 300 - File: file:rwh/ch13/passwd-al.hs
-
-#+BEGIN_SRC haskell :tangle rwh/ch13/passwd-al.hs
--- file: ch13/passwd-al.hs
-import Data.List
-import System.IO
-import Control.Monad(when)
-import System.Exit
-import System.Environment(getArgs)
-
-main = do
-
-    -- Load the command-line arguments
-    args <- getArgs
-
-    -- If we don't have the right amount of args, give an error and abort
-    when (length args /= 2) $ do
-        putStrLn "Syntax: passwd-al filename uid"
-        exitFailure
-
-    -- Read the file lazily
-    content <- readFile (args !! 0)
-
-    -- Compute the username in pure code
-    let username = findByUID content (read (args !! 1))
-
-    -- Display the result
-    case username of 
-         Just x -> putStrLn x
-         Nothing -> putStrLn "Could not find that UID"
-
--- Given the entire input and a UID, see if we can find a username.
-findByUID :: String -> Integer -> Maybe String
-findByUID content uid =
-    let al = map parseline . lines $ content
-        in lookup uid al
-
--- Convert a colon-separated line into fields
-parseline :: String -> (Integer, String)
-parseline input =
-    let fields = split ':' input
-        in (read (fields !! 2), fields !! 0)
-
-{- | Takes a delimiter and a list. Break up the list based on the
--  delimiter. -}
-split :: Eq a => a -> [a] -> [[a]]
-
--- If the input is empty, the result is a list of empty lists.
-split _ [] = [[]]
-split delim str =
-    let -- Find the part of the list before delim and put it in "before".
-        -- The rest of the list, including the leading delim, goes
-        -- in "remainder".
-        (before, remainder) = span (/= delim) str
-        in
-        before : case remainder of
-                      [] -> []
-                      x -> -- If there is more data to process,
-                           -- call split recursively to process it
-                           split delim (tail x)
-#+END_SRC
-
- File: file:/rwh/ch13/passwd.txt 
-
-#+BEGIN_SRC txt :tangle rwh/ch13/passwd.txt 
-root:x:0:0:root:/root:/bin/bash
-daemon:x:1:1:daemon:/usr/sbin:/bin/sh
-bin:x:2:2:bin:/bin:/bin/sh
-sys:x:3:3:sys:/dev:/bin/sh
-sync:x:4:65534:sync:/bin:/bin/sync
-games:x:5:60:games:/usr/games:/bin/sh
-man:x:6:12:man:/var/cache/man:/bin/sh
-lp:x:7:7:lp:/var/spool/lpd:/bin/sh
-mail:x:8:8:mail:/var/mail:/bin/sh
-news:x:9:9:news:/var/spool/news:/bin/sh
-jgoerzen:x:1000:1000:John Goerzen,,,:/home/jgoerzen:/bin/bash
-#+END_SRC
-
-
-Running:
-
-#+BEGIN_SRC
-$ runhaskell ch13/passwd-al.hs
-Syntax: passwd-al filename uid
-
-$ runhaskell ch13/passwd-al.hs  /etc/passwd 0
-root
-
-$ runhaskell ch13/passwd-al.hs  /etc/passwd 1000
-archmaster
-
-$ runhaskell ch13/passwd-al.hs  /etc/passwd 81
-dbus
-
-$ runhaskell ch13/passwd-al.hs  ch13/passwd.txt 0
-passwd-al.hs: Prelude.!!: index too large
-
-$ runhaskell ch13/passwd-al.hs  ch13/passwd.txt 12
-passwd-al.hs: Prelude.!!: index too large
-
-#+END_SRC
-
-*** buildmap.hs 
-
- Page 302 - File: file:rwh/ch13/buildmap.hs 
-
-
-#+BEGIN_SRC haskell :tangle rwh/ch13/buildmap.hs
--- file: ch13/buildmap.hs
-import qualified Data.Map as Map
-
--- Functions to generate a Map that represents an association list
--- as a map
-
-al = [(1, "one"), (2, "two"), (3, "three"), (4, "four")]
-
-{- | Create a map representation of 'al' by converting the association
--  list using Map.fromList -}
-mapFromAL =
-    Map.fromList al
-
-{- | Create a map representation of 'al' by doing a fold -}
-mapFold =
-    foldl (\map (k, v) -> Map.insert k v map) Map.empty al
-
-{- | Manually create a map with the elements of 'al' in it -}
-mapManual =
-    Map.insert 2 "two" . 
-    Map.insert 4 "four" .
-    Map.insert 1 "one" .
-    Map.insert 3 "three" $ Map.empty
-#+END_SRC
-
-
-Running:
-
-#+BEGIN_SRC haskell 
-$ ghci
-GHCi, version 7.10.2: http://www.haskell.org/ghc/  :? for help
->>> 
->>> :load ch13/buildmap.hs 
-[1 of 1] Compiling Main             ( ch13/buildmap.hs, interpreted )
-Ok, modules loaded: Main.
->>> 
->>> al
-[(1,"one"),(2,"two"),(3,"three"),(4,"four")]
->>> 
->>> mapFromAL
-fromList [(1,"one"),(2,"two"),(3,"three"),(4,"four")]
->>> 
->>> mapFold
-fromList [(1,"one"),(2,"two"),(3,"three"),(4,"four")]
->>> 
->>> mapManual
-fromList [(1,"one"),(2,"two"),(3,"three"),(4,"four")]
->>> 
-#+END_SRC
-
-*** funcrecs.hs 
-
-Function as data. 
-
- Page 303 - File: file:rwh/ch13/funcrecs.hs 
-
-#+BEGIN_SRC haskell :tangle rwh/ch13/funcrecs.hs
-{- | Our usual CustomColor type to play with -}
-data CustomColor =
-  CustomColor {red :: Int,
-               green :: Int,
-               blue :: Int}
-  deriving (Eq, Show, Read)
-
-{- | A new type that stores a name and a function.
-The function takes an Int, applies some computation to it, and returns
-an Int along with a CustomColor -}
-data FuncRec =
-    FuncRec {name :: String,
-             colorCalc :: Int -> (CustomColor, Int)}
-
-
-plus5func color x = (color, x + 5)
-purple = CustomColor 255 0 255
-plus5 = FuncRec {name = "plus5", colorCalc = plus5func purple}
-always0 = FuncRec {name = "always0", colorCalc = \_ -> (purple, 0)}
-#+END_SRC
-
-Running:
-
-#+BEGIN_SRC haskell 
->>> :load ch13/funcrecs.hs 
-[1 of 1] Compiling Main             ( ch13/funcrecs.hs, interpreted )
-Ok, modules loaded: Main.
->>> 
->>> :info CustomColor
-data CustomColor
-  = CustomColor {red :: Int, green :: Int, blue :: Int}
-  	-- Defined at ch13/funcrecs.hs:3:1
-instance Eq CustomColor -- Defined at ch13/funcrecs.hs:7:13
-instance Read CustomColor -- Defined at ch13/funcrecs.hs:7:23
-instance Show CustomColor -- Defined at ch13/funcrecs.hs:7:17
->>> 
->>> :info FuncRec
-data FuncRec
-  = FuncRec {name :: String, colorCalc :: Int -> (CustomColor, Int)}
-  	-- Defined at ch13/funcrecs.hs:12:1
->>> 
->>> :t plus5
-plus5 :: FuncRec
->>> 
->>> name plus5
-"plus5"
->>> :t colorCalc plus5
-colorCalc plus5 :: Int -> (CustomColor, Int)
->>> 
->>> (colorCalc plus5) 7
-(CustomColor {red = 255, green = 0, blue = 255},12)
->>> 
->>> :t colorCalc always0
-colorCalc always0 :: Int -> (CustomColor, Int)
->>> 
->>> (colorCalc always0) 7
-(CustomColor {red = 255, green = 0, blue = 255},0)
->>> 
-
-#+END_SRC
-
-*** funcrecs2.hs 
-
- Page 304 - File: file:rwh/ch13/funcrecs2.hs 
-
-#+BEGIN_SRC haskell :tangle rwh/ch13/funcrecs2.hs
--- file: ch13/funcrecs2.hs
-data FuncRec =
-    FuncRec {name :: String,
-             calc :: Int -> Int,
-             namedCalc :: Int -> (String, Int)}
-
-mkFuncRec :: String -> (Int -> Int) -> FuncRec
-mkFuncRec name calcfunc =
-    FuncRec {name = name,
-             calc = calcfunc,
-             namedCalc = \x -> (name, calcfunc x)}
-
-plus5 = mkFuncRec "plus5" (+ 5)
-always0 = mkFuncRec "always0" (\_ -> 0)
-#+END_SRC
-
-Running:
-
-#+BEGIN_SRC haskell 
->>> :load ch13/funcrecs2.hs 
-[1 of 1] Compiling Main             ( ch13/funcrecs2.hs, interpreted )
-Ok, modules loaded: Main.
->>> 
->>> :t plus5
-plus5 :: FuncRec
->>> 
->>> name plus5
-"plus5"
->>> 
->>> :t name
-name :: FuncRec -> String
->>>
->>> 
->>> :t namedCalc
-namedCalc :: FuncRec -> Int -> (String, Int)
->>> 
->>> :t calc
-calc :: FuncRec -> Int -> Int
->>> 
->>> (calc plus5) 5
-10
->>> let plus5a = plus5 {name = "PLUS5A"}
- *Main System.Directory System.Process| 
->>> 
->>> :t plus5a
-plus5a :: FuncRec
->>> 
->>> (namedCalc plus5a) 5
-("plus5",10)
->>> 
-
-#+END_SRC
-
-*** passwdmap.hs 
-
- Page: 305 - File: file:rwh/ch13/passwdmap.hs
-
-#+BEGIN_SRC haskell :tangle rwh/ch13/passwdmap.hs
--- file: ch13/passwdmap.hs
-import Data.List
-import qualified Data.Map as Map
-import System.IO
-import Text.Printf(printf)
-import System.Environment(getArgs)
-import System.Exit
-import Control.Monad(when)
-
-
-{- | The primary piece of data this program will store.
-   It represents the fields in a POSIX /etc/passwd file -}
-data PasswdEntry = PasswdEntry {
-    userName :: String,
-    password :: String,
-    uid :: Integer,
-    gid :: Integer,
-    gecos :: String,
-    homeDir :: String,
-    shell :: String}
-    deriving (Eq, Ord)
-
-{- | Define how we get data to a 'PasswdEntry'. -}
-instance Show PasswdEntry where
-    show pe = printf "%s:%s:%d:%d:%s:%s:%s" 
-                (userName pe) (password pe) (uid pe) (gid pe)
-                (gecos pe) (homeDir pe) (shell pe)
-
-{- | Converting data back out of a 'PasswdEntry'. -}
-instance Read PasswdEntry where
-    readsPrec _ value =
-        case split ':' value of
-             [f1, f2, f3, f4, f5, f6, f7] ->
-                 -- Generate a 'PasswdEntry' the shorthand way:
-                 -- using the positional fields.  We use 'read' to convert
-                 -- the numeric fields to Integers.
-                 [(PasswdEntry f1 f2 (read f3) (read f4) f5 f6 f7, [])]
-             x -> error $ "Invalid number of fields in input: " ++ show x
-        where 
-        {- | Takes a delimiter and a list.  Break up the list based on the
-        -  delimiter. -}
-        split :: Eq a => a -> [a] -> [[a]]
-        -- If the input is empty, the result is a list of empty lists.
-        split _ [] = [[]]
-        split delim str =
-            let -- Find the part of the list before delim and put it in
-                -- "before".  The rest of the list, including the leading 
-                -- delim, goes in "remainder".
-                (before, remainder) = span (/= delim) str
-                in
-                before : case remainder of
-                              [] -> []
-                              x -> -- If there is more data to process,
-                                   -- call split recursively to process it
-                                   split delim (tail x)
-
-
--- Convenience aliases; we'll have two maps: one from UID to entries
--- and the other from username to entries
-type UIDMap = Map.Map Integer PasswdEntry
-type UserMap = Map.Map String PasswdEntry
-
-{- | Converts input data to maps.  Returns UID and User maps. -}
-inputToMaps :: String -> (UIDMap, UserMap)
-inputToMaps inp =
-    (uidmap, usermap)
-    where
-    -- fromList converts a [(key, value)] list into a Map
-    uidmap = Map.fromList . map (\pe -> (uid pe, pe)) $ entries
-    usermap = Map.fromList . 
-              map (\pe -> (userName pe, pe)) $ entries
-    -- Convert the input String to [PasswdEntry]
-    entries = map read (lines inp)
-
-
-main = do
-    -- Load the command-line arguments
-    args <- getArgs
-    -- If we don't have the right number of args,
-    -- give an error and abort
-    when (length args /= 1) $ do
-        putStrLn "Syntax: passwdmap filename"
-        exitFailure
-    -- Read the file lazily
-    content <- readFile (head args)
-    let maps = inputToMaps content
-    mainMenu maps
-
-mainMenu maps@(uidmap, usermap) = do
-    putStr optionText
-    hFlush stdout
-    sel <- getLine
-    -- See what they want to do.  For every option except 4,
-    -- return them to the main menu afterwards by calling
-    -- mainMenu recursively
-    case sel of
-         "1" -> lookupUserName >> mainMenu maps
-         "2" -> lookupUID >> mainMenu maps
-         "3" -> displayFile >> mainMenu maps
-         "4" -> return ()
-         _ -> putStrLn "Invalid selection" >> mainMenu maps
-    where 
-    lookupUserName = do
-        putStrLn "Username: "
-        username <- getLine
-        case Map.lookup username usermap of
-             Nothing -> putStrLn "Not found."
-             Just x -> print x
-   
-    lookupUID = do
-        putStrLn "UID: "
-        uidstring <- getLine
-        case Map.lookup (read uidstring) uidmap of
-             Nothing -> putStrLn "Not found."
-             Just x -> print x
-
-    displayFile = 
-        putStr . unlines . map (show . snd) . Map.toList $ uidmap
-
-    optionText = 
-          "\npasswdmap options:\n\
-           \\n\
-           \1   Look up a user name\n\
-           \2   Look up a UID\n\
-           \3   Display entire file\n\
-           \4   Quit\n\n\
-           \Your selection: "
-#+END_SRC
-
-Running:
-
-#+BEGIN_SRC 
-$ runhaskell ch13/passwdmap.hs 
-Syntax: passwdmap filename
-
-$ runhaskell ch13/passwdmap.hs /etc/passwd
-
-passwdmap options:
-
-1   Look up a user name
-2   Look up a UID
-3   Display entire file
-4   Quit
-
-Your selection: 1
-Username: 
-archmaster
-archmaster:x:1000:1000::/home/archmaster:/bin/bash
-
-passwdmap options:
-
-1   Look up a user name
-2   Look up a UID
-3   Display entire file
-4   Quit
-
-Your selection: 2
-UID: 
-1000
-archmaster:x:1000:1000::/home/archmaster:/bin/bash
-
-passwdmap options:
-
-1   Look up a user name
-2   Look up a UID
-3   Display entire file
-4   Quit
-
-Your selection: 3
-root:x:0:0:root:/root:/bin/bash
-bin:x:1:1:bin:/bin:/usr/bin/nologin
-daemon:x:2:2:daemon:/:/usr/bin/nologin
-mail:x:8:12:mail:/var/spool/mail:/usr/bin/nologin
-ftp:x:14:11:ftp:/srv/ftp:/usr/bin/nologin
-http:x:33:33:http:/srv/http:/usr/bin/nologin
-uuidd:x:68:68:uuidd:/:/usr/bin/nologin
-dbus:x:81:81:dbus:/:/usr/bin/nologin
-avahi:x:84:84:avahi:/:/bin/nologin
-ntp:x:87:87:Network Time Protocol:/var/lib/ntp:/bin/false
-nobody:x:99:99:nobody:/:/usr/bin/nologin
-polkitd:x:102:102:Policy Kit Daemon:/:/usr/bin/nologin
-colord:x:124:124::/var/lib/colord:/bin/false
-systemd-journal-gateway:x:191:191:systemd-journal-gateway:/:/usr/bin/nologin
-systemd-timesync:x:192:192:systemd-timesync:/:/usr/bin/nologin
-systemd-network:x:193:193:systemd-network:/:/usr/bin/nologin
-systemd-bus-proxy:x:194:194:systemd-bus-proxy:/:/usr/bin/nologin
-systemd-resolve:x:195:195:systemd-resolve:/:/usr/bin/nologin
-git:x:996:996:git daemon user:/:/bin/bash
-systemd-journal-upload:x:997:997:systemd Journal Upload:/:/sbin/nologin
-systemd-coredump:x:998:998:systemd Core Dumper:/:/sbin/nologin
-systemd-journal-remote:x:999:999:systemd Journal Remote:/:/sbin/nologin
-archmaster:x:1000:1000::/home/archmaster:/bin/bash
-
-passwdmap options:
-
-1   Look up a user name
-2   Look up a UID
-3   Display entire file
-4   Quit
-
-Your selection: 4
-
-#+END_SRC
-
 ** Chapter 14 - Monads 
+*** Location 
+
+ - [[http://book.realworldhaskell.org/read/monads.html][Chapter 14. Monads]]
+
 *** Maybe.hs 
+    :PROPERTIES:
+    :ID:       59a268ba-7f65-4091-b109-9e8878a8b3ed
+    :END:
 
  Page 367 - File: file:rwh/ch14/Maybe.hs
 
@@ -2127,6 +2450,14 @@ maybe _ f (Just x) = f x
 #+END_SRC
 
 *** MultiplyTo.hs 
+    :PROPERTIES:
+    :ID:       df84c4d5-4eba-4a4d-aad2-a30b2f8a4398
+    :END:
+
+**** Code 
+     :PROPERTIES:
+     :ID:       1272d371-6693-40de-aeeb-fbe0a92eeabb
+     :END:
 
  Page: 343. File: file:rwh/ch14/MultiplyTo.hs
 
@@ -2145,7 +2476,7 @@ multiplyTo n = do
 
 #+END_SRC
 
-Running:
+**** Running
 
 #+BEGIN_SRC haskell 
 >>> :load ch14/MultiplyTo.hs 
@@ -2170,6 +2501,14 @@ multiplyTo :: Int -> [(Int, Int)]
 #+END_SRC
 
 *** SimpleState.hs 
+    :PROPERTIES:
+    :ID:       47972b40-8b89-4151-9e0e-7b4d9c5af4e7
+    :END:
+
+**** Code 
+     :PROPERTIES:
+     :ID:       0a52baf0-f7db-44a3-aaa4-92ba0454acf7
+     :END:
  
  Page: 347 - File: file:rwh/ch14/SimpleState.hs 
 
@@ -2238,8 +2577,7 @@ putSt s = \_ -> ((), s)
 
 #+END_SRC
 
-
-Running:
+**** Running
 
 #+BEGIN_SRC haskell 
 >>> :load ch14/SimpleState.hs 
@@ -2263,7 +2601,7 @@ Ok, modules loaded: Main.
             |                   |                 |                | 
             |                   |                 |                |
            \ /                 \ /               \ /              \ /
-           output = 3          output = 4       output = 6        output = 8
+           output = 2          output = 4       output = 6        output = 8
 -}
 
 
@@ -2323,6 +2661,13 @@ returnSt 10 :: Num a => SimpleState s a
 #+END_SRC
 
 *** State.hs 
+    :PROPERTIES:
+    :ID:       ee2209d0-76cb-4681-a725-0d4e99374cd3
+    :END:
+**** Code 
+     :PROPERTIES:
+     :ID:       b79e9e77-d696-413a-8c53-6d77413b09e2
+     :END:
  
  Page: 349 - File: file:rwh/ch14/State.hs 
 
@@ -2441,8 +2786,7 @@ instance Monad (State s) where
                              
 #+END_SRC
 
-
-Running: 
+**** Running
 
 #+BEGIN_SRC haskell 
 >>> :load ch14/State.hs 
@@ -2573,14 +2917,24 @@ let stateFn3 :: State Int Int
 >>> 
 
 #+END_SRC
-
 ** Chapter 27 - Sockets and Syslog 
+*** Location 
+ 
+ - [[http://book.realworldhaskell.org/read/sockets-and-syslog.html][Chapter 27. Sockets and Syslog]]
+ 
 *** Requirements 
 
- -  [[https://hackage.haskell.org/package/network-2.6.2.1][Network Package]]
+  -  [[https://hackage.haskell.org/package/network-2.6.2.1][Network Package]]
 
 *** UDP Syslog Server and Client 
-
+    :PROPERTIES:
+    :ID:       5b049d04-463e-46bb-b980-2fefa3c51f95
+    :END:
+**** Code 
+***** syslogclient.hs
+      :PROPERTIES:
+      :ID:       fe703668-ccfe-4b2d-8e58-124673efddcf
+      :END:
 
  Page 611 - File: file:rwh/ch27/syslogclient.hs 
 
@@ -2646,6 +3000,10 @@ makeCode fac pri =
           
 #+END_SRC
 
+***** SystlogTypes.hs 
+      :PROPERTIES:
+      :ID:       5f003735-f112-4a0d-83f2-5056f15972f8
+      :END:
 
  File: file:rwh/ch27/SyslogTypes.hs 
 
@@ -2731,6 +3089,11 @@ facOfCode f = case lookup f codeToFac of
 
 #+END_SRC
 
+***** syslogserver.hs 
+      :PROPERTIES:
+      :ID:       978d03df-fb09-4e9b-b191-1f049b24aa35
+      :END:
+
  File: file:rwh/ch27/syslogserver.hs 
 
 #+BEGIN_SRC haskell :tangle rwh/ch27/syslogserver.hs 
@@ -2774,13 +3137,22 @@ plainHandler addr msg =
     putStrLn $ "From " ++ show addr ++ ": " ++ msg
 #+END_SRC
 
-Running:
+**** Running:
 
 This app loaded in GHCI without any errors, however it didn't work the
 server printed nothing. It was tested in GHC/GHCI Version 7.10.2, Arch
 Linux 64 bits, Linux version 4.4.3-1-ARCH.
 
 *** TCP Syslog Server and Client 
+    :PROPERTIES:
+    :ID:       9a184320-586d-4bd4-84b5-5f65c06b801a
+    :END:
+**** Code
+
+***** syslogtcpserver.hs
+      :PROPERTIES:
+      :ID:       ea0bc382-3629-421b-9041-2f4c0eab5843
+      :END:
 
  Page 617 - File: file:rwh/ch27/syslogtcpserver.hs 
 
@@ -2854,6 +3226,10 @@ plainHandler addr msg =
 
  File: file:rwh/ch27/syslogtcpserver.hs 
 
+***** sylogtcpclient.hs
+      :PROPERTIES:
+      :ID:       142c7b93-72b0-413b-b6f6-7ac793951794
+      :END:
 
 #+BEGIN_SRC haskell :tangle rwh/ch27/sylogtcpclient.hs
 -- file: ch27/syslogtcpclient.hs
@@ -2928,6 +3304,8 @@ makeCode fac pri =
 #+END_SRC
 
 
+**** Running
+
 Running: syslogtcpserver with telnet as client:
 
 #+BEGIN_SRC haskell 
@@ -2984,5 +3362,4 @@ Ok, modules loaded: SyslogTypes, Main.
 >>> 
 
 #+END_SRC
-
 
