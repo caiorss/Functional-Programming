@@ -1,9 +1,9 @@
-#+INFOJS_OPT: view:overview toc:t ltoc:t ftoc:nil mouse:underline button:nil path:/Functional-Programming/theme/org-info.js
+#+INFOJS_OPT: view:showall toc:t ltoc:t ftoc:nil mouse:underline button:nil path:/Functional-Programming/theme/org-info.js
 #+HTML_HEAD: <link href="/Functional-Programming/theme/style.css" rel="stylesheet"> 
 #+AUTHOR: Caio Rodrigues
 #+EMAIL:  <caiorss.rodrigues@gmail.com>
-#+LINK_HOME: ../README.html
-#+LINK_UO:   ../README.html 
+#+LINK_HOME: /Functional-Programming/index.html
+#+LINK_UO:   /Functional-Programming/index.html
 #+LANGUAGE: en
 #+OPTIONS:   H:4
 
