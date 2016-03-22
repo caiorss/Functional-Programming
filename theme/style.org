@@ -1,5 +1,5 @@
-#+INFOJS_OPT: view:overview toc:t ltoc:t ftoc:nil mouse:underline button:nil path:/theme/org-info.js
-#+HTML_HEAD: <link href="/theme/style.css" rel="stylesheet"> 
+#+INFOJS_OPT: view:overview toc:t ltoc:t ftoc:nil mouse:underline button:nil path:/Functional-Programming/theme/org-info.js
+#+HTML_HEAD: <link href="/Functional-Programming/theme/style.css" rel="stylesheet"> 
 #+AUTHOR: Caio Rodrigues
 #+EMAIL:  <caiorss.rodrigues@gmail.com>
 #+LINK_HOME: ../README.html
