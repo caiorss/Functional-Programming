@@ -8,14 +8,38 @@ html {
 }
 
 body {
-    margin-left: 5%;
-    margin-right: 10%;
+    margin-left:  10%;
+    margin-right: 20%;
+    font-size: 14pt;
+    font-family: serif;
 }
 
 p {
-    font-fize: 12pt;
+    font-fize: 14pt;
 }
 
+
+ul li { padding: 5px 0px; }
+
+
+a:visited{
+  color:blue;
+}
+
+a:hover{
+  color:red;
+}
+
+div.wrapper {
+  width: 500px;
+  height: 500px;
+  overflow: auto;
+}
+
+table {
+        display: block;
+        overflow-x: auto;
+    }
 
 #table-of-contents {
     float: right;
@@ -80,25 +104,25 @@ p {
 
 
 h1 {
-	font-size:30px
+	font-size:30pt;
     padding-bottom: 0.3em;
     line-height: 1.2;
     border-bottom: 1px solid #eee;                  
    }
 h2 {
-	font-size:21px
+	font-size:20pt;
 }
 h3 {
-	font-size:16px
+	font-size:16pt;
 }
 h4 {
-	font-size:14px
+	font-size:14pt;
 }
 h5 {
-	font-size:12px
+	font-size:12pt;
 }
 h6 {
-	font-size:11px
+	font-size:11pt;
 }
 
 

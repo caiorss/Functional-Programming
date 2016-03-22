@@ -1,4 +1,8 @@
 #+INCLUDE: ../theme/style.org
+
+# #+HTML_HEAD: <link href="/theme/style.css" rel="stylesheet">
+# #+INFOJS_OPT: view:showall toc:t ltoc:t ftoc:nil mouse:underline button:nil path:/theme/org-info.js
+
 #+TITLE:  Functional Programming Concepts
 #+DESCRIPTION: Functional programming concepts, examples, algorithms and ideas.
 
