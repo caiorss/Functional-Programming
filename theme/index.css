@@ -1,0 +1,21 @@
+
+body {
+    margin-left:  10%;
+    margin-right: 20%;
+    font-size:    14pt;
+}
+
+
+h1 { font-size: 30pt;;}
+
+ul li { padding: 5px 0px; }
+
+p {font-size: 14pt;}
+
+a:visited{
+  color:blue;
+}
+
+a:hover{
+  color:red;
+}

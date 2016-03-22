@@ -3,7 +3,7 @@
 #+EMAIL: <caiorss.rodrigues@gmail.com>
 #+DESCRIPTION: Functional programming examples, theory, 
 #+URL:   https://github.com/caiorss/Functional-Programming
-#+HTML_HEAD: <link href="/theme/index.css" rel="stylesheet">
+#+HTML_HEAD: <link href="/Functional-Programming/theme/index.css" rel="stylesheet">
 
 # * Functional Programming by Example
 
