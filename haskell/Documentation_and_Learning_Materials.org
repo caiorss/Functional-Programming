@@ -1,5 +1,8 @@
-* Documentation and Learning Materials
+#+INCLUDE: ../theme/style.org
+#+TITLE: Documentation and Learning Materials
 
+
+* Documentation and Learning Materials
 ** Code Search Engine
 
 Haskell API search engine, which allows you to search many 

@@ -1,3 +1,6 @@
+#+TITLE: Real World Haskell Walk 
+#+INCLUDE: ../theme/style.org
+
 * Real World Haskell Codes
 ** Overview 
 

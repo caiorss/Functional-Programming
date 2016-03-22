@@ -1,6 +1,5 @@
+#+INCLUDE: ../theme/style.org
 #+TITLE: Clojure 
-#+AUTHOR: Caio Rodrigues Soares Silva
-#+EMAIL: <caiorss.rodrigues@gmail.com>
 
 * Clojure
 ** Overview

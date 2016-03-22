@@ -175,7 +175,7 @@ Reference:
 <tr>
 <td class="left">Int</td>
 <td class="left">1, 2, 3, 4</td>
-<td class="left">Integers in a finite range.  -2<sup>29</sup> to (2<sup>29</sup> - 1)</td>
+<td class="left">Integers in a finite range.  -2^29 to (2^29 - 1)</td>
 </tr>
 
 
@@ -247,7 +247,7 @@ Reference:
 
 <tr>
 <td class="left">Int</td>
-<td class="left">Fixed-precision signed integer; minimum range [-2<sup>29</sup>..2<sup>29</sup>-1]. Commonly used.</td>
+<td class="left">Fixed-precision signed integer; minimum range [-2^29..2^29-1]. Commonly used.</td>
 </tr>
 
 
@@ -850,7 +850,7 @@ False
 ```
 
 Find out whether any list element passes a given test. 
--   any my<sub>test</sub> xs
+-   any my\_test xs
 
 ```haskell
 > any (>3) [1, 2, 3, 4, 5]
@@ -867,7 +867,7 @@ False
 ```
 
 Check whether all list elements pass a given test. 
--   all my<sub>test</sub> xs
+-   all my\_test xs
 
 ```haskell
 > all (>3) [1, 2, 3, 4, 5]

@@ -1,5 +1,6 @@
 - [Control.Exception](#control.exception)
 
+
 # Control.Exception<a id="sec-1" name="sec-1"></a>
 
 [Module Documentation](https://hackage.haskell.org/package/base-4.8.2.0/docs/Control-Exception.html)

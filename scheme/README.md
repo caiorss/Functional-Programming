@@ -192,8 +192,26 @@ Products that use lisp:
 
 
 <tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+
+<tr>
 <td class="left">[Scsh](http://scsh.net/)</td>
-<td class="left">Scsh is an open-source Unix shell embedded within Scheme, running on all major Unix platforms including AIX, Cygwin, Linux, FreeBSD, GNU Hurd, HP-UX, Irix, Mac OS X, Solaris, and some others</td>
+<td class="left">Scsh is an open-source Unix shell embedded within Scheme, running on all</td>
+</tr>
+
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">major Unix platforms including AIX, Cygwin, Linux, FreeBSD, GNU Hurd, HP-UX,</td>
+</tr>
+
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">Irix, Mac OS X, Solaris, and some others</td>
 </tr>
 </tbody>
 </table>
@@ -2363,7 +2381,7 @@ $4 = d
 # Higher Order Functions<a id="sec-3" name="sec-3"></a>
 
 All the functions defined are in the file:
-hof<sub>functions</sub>.scm that can be loaded in
+hof\_functions.scm that can be loaded in
 scheme by typing:
 
 ```
@@ -4923,14 +4941,19 @@ Notes about SCIP
 The examples bellow are in GNU Guile.
 
 Non tail recursive functions:
+
 -   Uses a growing amount of stack frames, for a big number of iterations it can cause a stack overflow.
 
 Tail recursive functions:
 
--   A function is said to be **tail recursive** when the recursive call is the last function executed in the body of the function.
--   It uses a fixed amount stack frame, therefore there is no risk of stack overflow.
+-   A function is said to be **tail recursive** when the recursive call
+    is the last function executed in the body of the function.
+-   It uses a fixed amount stack frame, therefore there is no risk of
+    stack overflow.
 -   It can be turned into loops
--   Sometimes non tail recursive functions can be changed to tail recursive by adding a new function with extra parameters (accumulators) to store partial results (state).
+-   Sometimes non tail recursive functions can be changed to tail
+    recursive by adding a new function with extra parameters
+    (accumulators) to store partial results (state).
 
 Example1: Factorial
 
@@ -4944,7 +4967,7 @@ Example1: Factorial
 $1 = 3628800
 > 
 
-;;  For a very big number of iteration, non tail recursive functions
+;;  For a very big number of iterations, non tail recursive functions
 ;;  will cause a stack overflow.
 ;;
 > (factorial 20000000)
@@ -6680,7 +6703,7 @@ Int the REPL:
     #|kawa:24|#
 ```
 
-In the file: java<sub>swing</sub><sub>gui1</sub>.scm
+In the file: java\_swing\_gui1.scm
 
 ```scheme
 ;; Creates Java GUI

@@ -1,3 +1,6 @@
+#+INCLUDE: ../theme/style.org
+#+TITLE: Module: System.FilePath 
+
 * System.FilePath 
 
 A library for FilePath manipulations, using Posix style paths on all

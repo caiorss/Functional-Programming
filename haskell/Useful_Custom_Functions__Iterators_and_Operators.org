@@ -1,3 +1,6 @@
+#+INCLUDE: ../theme/style.org
+#+TITLE: Useful Custom Functions/ Iterators and Operators
+
 * Useful Custom Functions/ Iterators and Operators
 
 This is a collection of useful short code snippets. 

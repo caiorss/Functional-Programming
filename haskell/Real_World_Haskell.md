@@ -41,6 +41,7 @@
     - [UDP Syslog Server and Client](#udp-syslog-server-and-client)
     - [TCP Syslog Server and Client](#tcp-syslog-server-and-client)
 
+
 # Real World Haskell Codes<a id="sec-1" name="sec-1"></a>
 
 ## Overview<a id="sec-1-1" name="sec-1-1"></a>

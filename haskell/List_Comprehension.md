@@ -4,6 +4,7 @@
   - [Function Inside List Comprehension](#function-inside-list-comprehension)
   - [Comprehension with Guards](#comprehension-with-guards)
 
+
 # List Comprehension<a id="sec-1" name="sec-1"></a>
 
 ## Simple List Comprehension<a id="sec-1-1" name="sec-1-1"></a>

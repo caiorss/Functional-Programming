@@ -7775,6 +7775,10 @@ Recursion:
 -   O'Sullivan, Bryan, John Goerzen, and Donald Bruce Stewart. **Real
     world haskell: Code you can believe in.** " O'Reilly Media,
     Inc.", 2008.
+    -   Note: Which parts of Real World Haskell are now obsolete or
+        considered bad practice? ( [Stack Overflow](http://stackoverflow.com/questions/23727768/which-parts-of-real-world-haskell-are-now-obsolete-or-considered-bad-practice) )
+    
+    -   [A walk-through of Real World Haskell 10th Chapter](https://github.com/afroisalreadyinu/real-world-haskell-chapter-10)
 
 -   Hudak, Paul, and Joseph H. Fasel. **A gentle introduction to
     Haskell.** ACM Sigplan Notices 27.5 (1992): 1-52.

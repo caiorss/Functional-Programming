@@ -17,8 +17,17 @@
   - [Operator >> (then)](#operator->>-(then))
   - [Basic I/O Operations](#basic-i/o-operations)
   - [Do Notation](#do-notation)
+      - [Basic Do Notation](#basic-do-notation)
+      - [Do Notation and Let keyword](#do-notation-and-let-keyword)
+      - [Do Notation returning a value](#do-notation-returning-a-value)
+      - [Combining functions and I/O actions](#combining-functions-and-i/o-actions)
+      - [Executing a list of actions](#executing-a-list-of-actions)
+      - [Control Structures](#control-structures)
+      - [mapM and mapM\_](#mapm-and-mapm\_)
     - [IO Examples](#io-examples)
+      - [Sources](#sources)
   - [State Monad](#state-monad)
+
 
 # Functors, Monads, Applicatives and Monoids<a id="sec-1" name="sec-1"></a>
 
@@ -1035,320 +1044,320 @@ getTwoCharsDo = do
     return (c1,c2)
 ```
 
-1.  Basic Do Notation
+#### Basic Do Notation<a id="sec-1-8-0-1" name="sec-1-8-0-1"></a>
 
-    File: do<sub>notation1</sub>.hs
-    
-    ```haskell
-    do1test = do
-        c <- getChar 
-        putChar 'x'
-        putChar c
-        putChar '\n'
-    ```
-    
-    In the shell ghci
-    
-    ```haskell
-    > :l do_notation1.hs 
-    [1 of 1] Compiling Main             ( do_notation1.hs, interpreted )
-    Ok, modules loaded: Main.
-    > 
-    
-    > :t do1test 
-    do1test :: IO ()
-    > 
-    
-    > do1test -- User types character 'a'
-    axa
-    > do1test -- User types character 'x'
-    txt
-    > do1test -- User types character 'p'
-    pxp
-    >
-    ```
+File: do\_notation1.hs
 
-2.  Do Notation and Let keyword
+```haskell
+do1test = do
+    c <- getChar 
+    putChar 'x'
+    putChar c
+    putChar '\n'
+```
 
-    File: do<sub>notation2</sub>.hs
-    
-    ```haskell
-    make_string :: Char -> String
-    make_string achar = "\nThe character is : " ++ [achar]
-    
-    do2test = do
-        let mychar = 'U'
-        c <- getChar     
-        putStrLn (make_string c)
-        putChar mychar
-        putChar '\n'
-        
-    do3test = do   
-        c <- getChar     
-        let phrase = make_string c
-        putStrLn phrase   
-        putChar '\n'
-    ```
-    
-    In the shell ghci
-    
-    ```haskell
-    > :l do_notation2.hs 
-    [1 of 1] Compiling Main             ( do_notation1.hs, interpreted )
-    Ok, modules loaded: Main.
-    > 
-    
-    > :t make_string 
-    make_string :: Char -> String
-    >
-    
-    > :t do2test 
-    do2test :: IO ()
-    
-    > make_string 'q'
-    "\nThe character is : q"
-    > make_string 'a'
-    "\nThe character is : a"
-    > 
-    
-    > do2test 
-    a
-    The character is : a
-    U
-    
-    > do2test 
-    p
-    The character is : p
-    U
-    
-    > do3test 
-    a
-    The character is : a
-    
-    > do3test 
-    b
-    The character is : b
-    ```
+In the shell ghci
 
-3.  Do Notation returning a value
+```haskell
+> :l do_notation1.hs 
+[1 of 1] Compiling Main             ( do_notation1.hs, interpreted )
+Ok, modules loaded: Main.
+> 
 
-    File: do<sub>return</sub>.hs
-    
-    ```haskell
-    doReturn = do
-        c <- getChar
-        let test = c == 'y'
-        return test
-    ```
-    
-    In ghci shell
-    
-    ```haskell
-    > :t doReturn 
-    doReturn :: IO Bool
-    > 
-    
-    > doReturn 
-    aFalse
-    > doReturn 
-    bFalse
-    > doReturn 
-    cFalse
-    > doReturn 
-    yTrue
-    > 
-    
-    > x <- doReturn 
-    r> 
-    > x
-    False
-    > 
-    > x <- doReturn 
-    m> 
-    > x
-    False
-    > x <- doReturn 
-    y> 
-    > x
-    True
-    >
-    ```
+> :t do1test 
+do1test :: IO ()
+> 
 
-4.  Combining functions and I/O actions
+> do1test -- User types character 'a'
+axa
+> do1test -- User types character 'x'
+txt
+> do1test -- User types character 'p'
+pxp
+>
+```
 
-    ```haskell
-    > import Data.Char (toUpper)
-    > 
-    > let shout = map toUpper 
-    > :t shout
-    shout :: [Char] -> [Char]
-    > 
-    
-    {- Fmap is Equivalent to liftM , those functions
-    apply a function to the value wraped in the monad and returns a new monad of 
-    same type with the return value wraped
-    
-    -}
-    
-    > :t liftM
-    liftM :: Monad m => (a1 -> r) -> m a1 -> m r
-    > :t fmap
-    fmap :: Functor f => (a -> b) -> f a -> f b
-    > 
-    
-    
-    > shout "hola estados unidos"
-    "HOLA ESTADOS UNIDOS"
-    
-    > liftM shout getLine
-    Hello world
-    "HELLO WORLD"
-    
-    
-    > fmap shout getLine
-    heloo
-    "HELOO"
-    > 
-    
-    > let upperLine = putStrLn "Enter a line" >> liftM shout getLine
-    
-    > upperLine 
-    Enter a line
-    hola estados Unidos
-    "HOLA ESTADOS UNIDOS"
-    > 
-    
-    > upperLine 
-    Enter a line
-    air lift
-    "AIR LIFT"
-    >
-    ```
+#### Do Notation and Let keyword<a id="sec-1-8-0-2" name="sec-1-8-0-2"></a>
 
-5.  Executing a list of actions
+File: do\_notation2.hs
 
-    The list myTodoList doesn't execute any action, it holds them. To join those actions the function sequence\_ must be used.
-    
-    ```haskell
-    > 
-    > let myTodoList = [putChar '1', putChar '2', putChar '3', putChar '4']
-    
-    > :t myTodoList 
-    myTodoList :: [IO ()]
-    > 
-    
-    > :t sequence_
-    sequence_ :: Monad m => [m a] -> m ()
-    >
-    > sequence_ myTodoList 
-    1234> 
-    > 
-    
-    > 
-    > let newAction = sequence_ myTodoList 
-    > :t newAction 
-    newAction :: IO ()
-    > 
-    > newAction 
-    1234> 
-    > 
-    >
-    ```
-    
-    The function sequence\_ is defined as:
-    
-    ```haskell
-    sequence_        :: [IO ()] -> IO ()
-    sequence_ []     =  return ()
-    sequence_ (a:as) =  do a
-                           sequence_ as
-    ```
-    
-    Or defined as:
-    
-    ```haskell
-    sequence_        :: [IO ()] -> IO ()
-    sequence_        =  foldr (>>) (return ())
-    ```
-    
-    The sequence\_ function can be used to construct putStr from putChar:
-    
-    ```
-    putStr                  :: String -> IO ()
-    putStr s                =  sequence_ (map putChar s)
-    ```
+```haskell
+make_string :: Char -> String
+make_string achar = "\nThe character is : " ++ [achar]
 
-6.  Control Structures
+do2test = do
+    let mychar = 'U'
+    c <- getChar     
+    putStrLn (make_string c)
+    putChar mychar
+    putChar '\n'
+    
+do3test = do   
+    c <- getChar     
+    let phrase = make_string c
+    putStrLn phrase   
+    putChar '\n'
+```
 
-    For Loops
-    
-    ```haskell
-    > :t forM_
-    forM_ :: Monad m => [a] -> (a -> m b) -> m ()
-    
-    > :t forM
-    forM :: Monad m => [a] -> (a -> m b) -> m [b]
-    >
-    ```
-    
-    Example:
-    
-    ```haskell
-    > :t (putStrLn . show)
-    (putStrLn . show) :: Show a => a -> IO (
-    
-    > (putStrLn . show) 10
-    10
-    > (putStrLn . show) 200
-    200
-    >
-    
-    > forM_ [1..10] (putStrLn . show)
-    1
-    2
-    3
-    4
-    5
-    6
-    7
-    8
-    9
-    10
-    ```
+In the shell ghci
 
-7.  mapM and mapM\_
+```haskell
+> :l do_notation2.hs 
+[1 of 1] Compiling Main             ( do_notation1.hs, interpreted )
+Ok, modules loaded: Main.
+> 
 
-    Map a monadic function, a function that returns a monad, to a list. It
-    is similar to forM and formM\_.
-    
-    ```haskell
-    > :t mapM
-    mapM :: Monad m => (a -> m b) -> [a] -> m [b]
-    > 
-    > :t mapM_
-    mapM_ :: Monad m => (a -> m b) -> [a] -> m ()
-    > 
-    >
-    ```
-    
-    Example:
-    
-    ```haskell
-    > :t (putStrLn . show)
-    (putStrLn . show) :: Show a => a -> IO (
-    
-    > mapM_ (putStrLn . show) [1..10]
-    1
-    2
-    3
-    4
-    5
-    6
-    7
-    8
-    9
-    10
-    ```
+> :t make_string 
+make_string :: Char -> String
+>
+
+> :t do2test 
+do2test :: IO ()
+
+> make_string 'q'
+"\nThe character is : q"
+> make_string 'a'
+"\nThe character is : a"
+> 
+
+> do2test 
+a
+The character is : a
+U
+
+> do2test 
+p
+The character is : p
+U
+
+> do3test 
+a
+The character is : a
+
+> do3test 
+b
+The character is : b
+```
+
+#### Do Notation returning a value<a id="sec-1-8-0-3" name="sec-1-8-0-3"></a>
+
+File: do\_return.hs
+
+```haskell
+doReturn = do
+    c <- getChar
+    let test = c == 'y'
+    return test
+```
+
+In ghci shell
+
+```haskell
+> :t doReturn 
+doReturn :: IO Bool
+> 
+
+> doReturn 
+aFalse
+> doReturn 
+bFalse
+> doReturn 
+cFalse
+> doReturn 
+yTrue
+> 
+
+> x <- doReturn 
+r> 
+> x
+False
+> 
+> x <- doReturn 
+m> 
+> x
+False
+> x <- doReturn 
+y> 
+> x
+True
+>
+```
+
+#### Combining functions and I/O actions<a id="sec-1-8-0-4" name="sec-1-8-0-4"></a>
+
+```haskell
+> import Data.Char (toUpper)
+> 
+> let shout = map toUpper 
+> :t shout
+shout :: [Char] -> [Char]
+> 
+
+{- Fmap is Equivalent to liftM , those functions
+apply a function to the value wraped in the monad and returns a new monad of 
+same type with the return value wraped
+
+-}
+
+> :t liftM
+liftM :: Monad m => (a1 -> r) -> m a1 -> m r
+> :t fmap
+fmap :: Functor f => (a -> b) -> f a -> f b
+> 
+
+
+> shout "hola estados unidos"
+"HOLA ESTADOS UNIDOS"
+
+> liftM shout getLine
+Hello world
+"HELLO WORLD"
+
+
+> fmap shout getLine
+heloo
+"HELOO"
+> 
+
+> let upperLine = putStrLn "Enter a line" >> liftM shout getLine
+
+> upperLine 
+Enter a line
+hola estados Unidos
+"HOLA ESTADOS UNIDOS"
+> 
+
+> upperLine 
+Enter a line
+air lift
+"AIR LIFT"
+>
+```
+
+#### Executing a list of actions<a id="sec-1-8-0-5" name="sec-1-8-0-5"></a>
+
+The list myTodoList doesn't execute any action, it holds them. To join those actions the function sequence\_ must be used.
+
+```haskell
+> 
+> let myTodoList = [putChar '1', putChar '2', putChar '3', putChar '4']
+
+> :t myTodoList 
+myTodoList :: [IO ()]
+> 
+
+> :t sequence_
+sequence_ :: Monad m => [m a] -> m ()
+>
+> sequence_ myTodoList 
+1234> 
+> 
+
+> 
+> let newAction = sequence_ myTodoList 
+> :t newAction 
+newAction :: IO ()
+> 
+> newAction 
+1234> 
+> 
+>
+```
+
+The function sequence\_ is defined as:
+
+```haskell
+sequence_        :: [IO ()] -> IO ()
+sequence_ []     =  return ()
+sequence_ (a:as) =  do a
+                       sequence_ as
+```
+
+Or defined as:
+
+```haskell
+sequence_        :: [IO ()] -> IO ()
+sequence_        =  foldr (>>) (return ())
+```
+
+The sequence\_ function can be used to construct putStr from putChar:
+
+```
+putStr                  :: String -> IO ()
+putStr s                =  sequence_ (map putChar s)
+```
+
+#### Control Structures<a id="sec-1-8-0-6" name="sec-1-8-0-6"></a>
+
+For Loops
+
+```haskell
+> :t forM_
+forM_ :: Monad m => [a] -> (a -> m b) -> m ()
+
+> :t forM
+forM :: Monad m => [a] -> (a -> m b) -> m [b]
+>
+```
+
+Example:
+
+```haskell
+> :t (putStrLn . show)
+(putStrLn . show) :: Show a => a -> IO (
+
+> (putStrLn . show) 10
+10
+> (putStrLn . show) 200
+200
+>
+
+> forM_ [1..10] (putStrLn . show)
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+```
+
+#### mapM and mapM\_<a id="sec-1-8-0-7" name="sec-1-8-0-7"></a>
+
+Map a monadic function, a function that returns a monad, to a list. It
+is similar to forM and formM\_.
+
+```haskell
+> :t mapM
+mapM :: Monad m => (a -> m b) -> [a] -> m [b]
+> 
+> :t mapM_
+mapM_ :: Monad m => (a -> m b) -> [a] -> m ()
+> 
+>
+```
+
+Example:
+
+```haskell
+> :t (putStrLn . show)
+(putStrLn . show) :: Show a => a -> IO (
+
+> mapM_ (putStrLn . show) [1..10]
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+```
 
 ### IO Examples<a id="sec-1-8-1" name="sec-1-8-1"></a>
 
@@ -1483,15 +1492,15 @@ liftM (map $ uncurry (+)) readSquareFile :: IO [Int]
 >
 ```
 
-1.  Sources
+#### Sources<a id="sec-1-8-1-1" name="sec-1-8-1-1"></a>
 
-    -   [Introduction to IO](https://wiki.haskell.org/Introduction_to_IO)
-    -   [A Gentle Introduction to Haskell, Version 98 -  Input/Output](https://www.haskell.org/tutorial/io.html)
-    
-    -   <http://en.wikibooks.org/wiki/Haskell/Understanding_monads>
-    -   <http://shuklan.com/haskell/lec09.html#/>
-    -   <http://learnyouahaskell.com/functors-applicative-functors-and-monoids>
-    -   <http://squing.blogspot.com.br/2008/01/unmonad-tutorial-io-in-haskell-for-non.html>
+-   [Introduction to IO](https://wiki.haskell.org/Introduction_to_IO)
+-   [A Gentle Introduction to Haskell, Version 98 -  Input/Output](https://www.haskell.org/tutorial/io.html)
+
+-   <http://en.wikibooks.org/wiki/Haskell/Understanding_monads>
+-   <http://shuklan.com/haskell/lec09.html#/>
+-   <http://learnyouahaskell.com/functors-applicative-functors-and-monoids>
+-   <http://squing.blogspot.com.br/2008/01/unmonad-tutorial-io-in-haskell-for-non.html>
 
 ## State Monad<a id="sec-1-9" name="sec-1-9"></a>
 
@@ -2143,7 +2152,7 @@ Algorithm:
     x[n+2] =  x[n] - y[n]*(x[n+1] - x[n])/(y[n+1] - y[n])
 ```
 
-Example: Solve the equation x<sup>2</sup> - 2.0 = 0 whic the solution is sqrt(2)
+Example: Solve the equation x^2 - 2.0 = 0 whic the solution is sqrt(2)
 by the secant method.
 
 ```haskell
@@ -2215,7 +2224,7 @@ EndWhile
 Output("Method failed.") # max number of steps exceeded
 ```
 
-File: bisection<sub>state</sub>.hs
+File: bisection\_state.hs
 
 ```haskell
 import OldState

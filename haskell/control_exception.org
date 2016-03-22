@@ -1,3 +1,6 @@
+#+INCLUDE: ../theme/style.org
+#+TITLE: Module: Control.Exception 
+
 * Control.Exception 
 
  [[https://hackage.haskell.org/package/base-4.8.2.0/docs/Control-Exception.html][Module Documentation]]

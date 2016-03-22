@@ -1,3 +1,6 @@
+#+INCLUDE: ../theme/style.org
+#+TITLE: Algebraic Data Types 
+
 * Algebraic Data Types
 
 [Under Construction]

@@ -1,3 +1,5 @@
+#+INCLUDE: ../theme/style.org
+#+TITLE: Module: Data.Text 
 * Data.Text 
 
 

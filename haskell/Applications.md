@@ -12,6 +12,8 @@
   - [Vectors](#vectors)
   - [Tax Brackets](#tax-brackets)
   - [Small DSL Domain Specific Language](#small-dsl-domain-specific-language)
+      - [String Processing](#string-processing)
+
 
 # Applications<a id="sec-1" name="sec-1"></a>
 
@@ -440,14 +442,14 @@ from_pct lst = map (/100.0)  lsd {- from Percent to Decimal -}
 ```
 
 Lagged Difference of a time serie
--   lagddif [xi] = [x<sub>i</sub>+1 - x<sub>i]</sub>
+-   lagddif [xi] = [x\_i+1 - x\_i]
 
 ```haskell
 lagdiff lst = zipWith (-) (tail lst) lst
 ```
 
 Growth of a Time Series
--   growth [xi] = [(x<sub>i</sub>+1 - x<sub>i</sub>)/xi]
+-   growth [xi] = [(x\_i+1 - x\_i)/xi]
 
 ```haskell
 growth lst = zipWith (/) (lagdiff lst) lst
@@ -640,7 +642,7 @@ The %erro is : 2.4399999999996647e-2
 
 **Norm of a Vector**
 
--   norm = sqrt( Σxi<sup>2</sup>)
+-   norm = sqrt( Σxi^2)
 
 ```haskell
 > let norm vector = (sqrt . sum) (map (\x -> x^2) vector)
@@ -863,7 +865,7 @@ Sources:
 Simple DSL for describing cups of Starbucks coffee and computing prices (in dollars). 
 Example taken from: <http://www.fssnip.net/9w> 
 
-starbuck<sub>dsl</sub>.hs
+starbuck\_dsl.hs
 
 ```haskell
 data Size  = Tall | Grande | Venti
@@ -969,4 +971,4 @@ Cup {cupDrink = Americano, cupSize = Venti, cupExtra = [Shot,Syrup]}]
 >
 ```
 
-1.  String Processing
+#### String Processing<a id="sec-1-7-0-1" name="sec-1-7-0-1"></a>

@@ -1,3 +1,6 @@
+#+INCLUDE: ../theme/style.org
+#+TITLE: Pattern Matching 
+
 * Pattern Matching
 
 Tuple Constructor

@@ -1,6 +1,7 @@
-#+TITLE:  Functional Programming in Scheme
-#+AUTHOR: Caio Rodrigues Soares Silva
-#+EMAIL:  <caiorss.rodrigues@gmail.com>
+#+INCLUDE: ../theme/style.org
+#+TITLE:  Scheme
+
+* Scheme 
 
 ** Overview
 *** Why Lisp
@@ -27,18 +28,21 @@ Products that use lisp:
 
 *** Scheme Implementations
 
-| Implementation           | Feature                                                                                                                                                                                        |
-|--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [[http://www.gnu.org/software/mit-scheme][MIT Scheme]]               | Classical Scheme Implementation  used by [[https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Computer_Programs][SCIP]]                                                                                                                                                  |
-| [[http://www.gnu.org/software/kawa/][Kawa]]                     | Scheme for the JVM - Java API access. Compiles to the JVM                                                                                                                                      |
-| [[https://ironscheme.codeplex.com/][Iron Scheme]]              | Scheme for .NET platform - .NET API Acess                                                                                                                                                      |
-| [[http://www.gnu.org/software/guile/gnu-guile-projects.html#Applications][GNU Guile]]                | Used as embedded extension language for many apps like GIMP, [[http://wiki.gnucash.org/wiki/Custom_Reports][GNUCash]], GEDA                                                                                                                     |
-| [[http://www.call-cc.org/][Chicken]]                  | Compiles to Native Code, produces portable C code, package manager                                                                                                                             |
-| [[http://www.lambdanative.org/][Gambit-C + Lambda Native]] | Compiles to IOS, Android, Linux, Windows ...                                                                                                                                                   |
-| [[https://github.com/ashinn/chibi-scheme][Chibi Scheme]]             | Minimal Scheme Implementation for use as an Extension Language                                                                                                                                 |
-| [[http://www.biwascheme.org/][BiwaScheme]]               | Scheme implemented in Javascript. It can run in the browser, client side.                                                                                                                      |
-| [[http://racket-lang.org/][Racket]]                   | IDE Dr Scheme. and Debugger. Superset of scheme, not fully compatible.                                                                                                                         |
-| [[http://scsh.net/][Scsh]]                     | Scsh is an open-source Unix shell embedded within Scheme, running on all major Unix platforms including AIX, Cygwin, Linux, FreeBSD, GNU Hurd, HP-UX, Irix, Mac OS X, Solaris, and some others |
+| Implementation           | Feature                                                                      |
+|--------------------------+------------------------------------------------------------------------------|
+| [[http://www.gnu.org/software/mit-scheme][MIT Scheme]]               | Classical Scheme Implementation  used by [[https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Computer_Programs][SCIP]]                                |
+| [[http://www.gnu.org/software/kawa/][Kawa]]                     | Scheme for the JVM - Java API access. Compiles to the JVM                    |
+| [[https://ironscheme.codeplex.com/][Iron Scheme]]              | Scheme for .NET platform - .NET API Acess                                    |
+| [[http://www.gnu.org/software/guile/gnu-guile-projects.html#Applications][GNU Guile]]                | Used as embedded extension language for many apps like GIMP, [[http://wiki.gnucash.org/wiki/Custom_Reports][GNUCash]], GEDA   |
+| [[http://www.call-cc.org/][Chicken]]                  | Compiles to Native Code, produces portable C code, package manager           |
+| [[http://www.lambdanative.org/][Gambit-C + Lambda Native]] | Compiles to IOS, Android, Linux, Windows ...                                 |
+| [[https://github.com/ashinn/chibi-scheme][Chibi Scheme]]             | Minimal Scheme Implementation for use as an Extension Language               |
+| [[http://www.biwascheme.org/][BiwaScheme]]               | Scheme implemented in Javascript. It can run in the browser, client side.    |
+| [[http://racket-lang.org/][Racket]]                   | IDE Dr Scheme. and Debugger. Superset of scheme, not fully compatible.       |
+|                          |                                                                              |
+| [[http://scsh.net/][Scsh]]                     | Scsh is an open-source Unix shell embedded within Scheme, running on all     |
+|                          | major Unix platforms including AIX, Cygwin, Linux, FreeBSD, GNU Hurd, HP-UX, |
+|                          | Irix, Mac OS X, Solaris, and some others                                     |
 
 
 See also: 

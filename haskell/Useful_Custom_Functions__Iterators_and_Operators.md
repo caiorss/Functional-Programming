@@ -10,6 +10,7 @@
     - [Applying a tuple of functions to a same argument.](#applying-a-tuple-of-functions-to-a-same-argument.)
     - [Control Flow Functions](#control-flow-functions)
 
+
 # Useful Custom Functions/ Iterators and Operators<a id="sec-1" name="sec-1"></a>
 
 This is a collection of useful short code snippets. 

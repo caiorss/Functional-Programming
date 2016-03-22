@@ -1297,7 +1297,7 @@ val id : 'a -> 'a = <fun>
 -   Float -  IEEE.754 - 64 bits double precision float point numbers.
 
 -   [Num](http://caml.inria.fr/pub/docs/manual-ocaml/libref/Num.html) - Arbitrary Precision Integer
--   [Big<sub>Int</sub>](http://caml.inria.fr/pub/docs/manual-ocaml/libref/Big_int.html) - Arbitrary Precision Integer
+-   [Big\_Int](http://caml.inria.fr/pub/docs/manual-ocaml/libref/Big_int.html) - Arbitrary Precision Integer
 
 ```ocaml
 (* 31 bits signed int, since this machine has 32 bits word lenght*)
@@ -6545,7 +6545,7 @@ $ ocaml curl.ml http://httpbin.org/xml
 
 **Compiling to bytecode**
 
-To compile the file the toplevel directives #use, #mod<sub>use</sub>, #load must be removed
+To compile the file the toplevel directives #use, #mod\_use, #load must be removed
 
 ```
 $ ocamlfind ocamlc -o curl.byte curl.ml -package lwt,cohttp -linkpkg 
@@ -9473,7 +9473,7 @@ Generated Files
     
     -   [LibreS3: design, challenges, and steps toward reusable libraries](https://ocaml.org/meetings/ocaml/2014/ocaml2014_13.pdf)
     
-    -   [NYC OCaml Meetup: Js<sub>of</sub><sub>ocaml</sub>](http://files.meetup.com/1887771/2013-07-11%20Js_of_ocaml%20The%20OCaml%20to%20Javascript%20Compiler.pdf)
+    -   [NYC OCaml Meetup: Js\_of\_ocaml](http://files.meetup.com/1887771/2013-07-11%20Js_of_ocaml%20The%20OCaml%20to%20Javascript%20Compiler.pdf)
     
     -   [Managing and Analyzing Big-Data in Genomics](http://ashishagarwal.org/wp-content/uploads/2012/06/IBM_PL_Day_2012.pdf)
     
@@ -9599,7 +9599,7 @@ Generated Files
     
     -   [[<http://stackoverflow.com/questions/16150173/what-does-mean-in-ocaml][What> does \`[< >]\` mean in OCaml?]]
     
-    -   [What is the purpose of OCaml's Lazy.lazy<sub>from</sub><sub>val</sub>?](http://stackoverflow.com/questions/9760580/what-is-the-purpose-of-ocamls-lazy-lazy-from-val)
+    -   [What is the purpose of OCaml's Lazy.lazy\_from\_val?](http://stackoverflow.com/questions/9760580/what-is-the-purpose-of-ocamls-lazy-lazy-from-val)
     
     -   [converting ocaml function to stream](http://stackoverflow.com/questions/16027627/converting-ocaml-function-to-stream)
     

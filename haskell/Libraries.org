@@ -1,12 +1,8 @@
+#+INCLUDE: ../theme/style.org
+#+TITLE: Libraries 
 
-
-*Table of Contents*  *generated with [[https://github.com/thlorenz/doctoc][DocToc]]*
-
-
-
-** Libraries
-
-*** System Programming in Haskell
+* Libraries
+** System Programming in Haskell
 
 *Directory*
 
@@ -119,11 +115,11 @@ figure1.png
 
 #+END_SRC
 
-*** Data.Time
+** Data.Time
 
-**** System 
+*** System 
 
-**** Get current year / month / day in Haskell
+*** Get current year / month / day in Haskell
 
 UTC time:
 
@@ -141,7 +137,7 @@ main = do
     putStrLn $ "Day: " ++ show day
 #+END_SRC
 
-**** Get Current Time
+*** Get Current Time
 
 Local time:
 
@@ -178,9 +174,9 @@ main = do
     putStrLn $ "Second: " ++ show second
 #+END_SRC
 
-**** Documentation By Examples - GHCI shell
+*** Documentation By Examples - GHCI shell
 
-***** Date Time Manipulation
+**** Date Time Manipulation
 
 #+BEGIN_SRC haskell
 import Data.Time
@@ -248,7 +244,7 @@ The current date is 2015 03 04
 
 #+END_SRC
 
-***** Difference between two dates
+**** Difference between two dates
 
 #+BEGIN_SRC haskell
 
@@ -292,7 +288,7 @@ bree' :: UTCTime
 > 
 #+END_SRC
 
-***** Day in a Week/Month/Year or Week Number
+**** Day in a Week/Month/Year or Week Number
 
 #+BEGIN_SRC haskell
 
@@ -339,7 +335,7 @@ TimeLocale {wDays = [("Sunday","Sun"),("Monday","Mon"),("Tuesday","Tue"),("Wedne
 > 
 #+END_SRC
 
-***** Parsing Dates and Times from Strings
+**** Parsing Dates and Times from Strings
 
 #+BEGIN_SRC haskell
 > import Data.Time
@@ -355,7 +351,7 @@ TimeLocale {wDays = [("Sunday","Sun"),("Monday","Mon"),("Tuesday","Tue"),("Wedne
 
 #+END_SRC
 
-***** Printing a Date
+**** Printing a Date
 
 #+BEGIN_SRC haskell
 > import Data.Time
@@ -386,10 +382,9 @@ Credits:
  - http://techoverflow.net/blog/2014/08/24/get-current-hour-minute-second-in-haskell/
  - http://pleac.sourceforge.net/pleac_haskell/datesandtimes.html
 
+** Bytestring
 
-*** Bytestring
-
-**** Overview
+*** Overview
 
 Bytestring is a built in library for fast and efficient string and binary data processing. ByteStrings are not designed for Unicode. For Unicode strings the Text type must be used from the text package. 
 
@@ -417,7 +412,7 @@ import qualified Data.ByteString.Lazy as BL
 import qualified Data.ByteString.Lazy.Char8 as BLC
 #+END_SRC
 
-**** Example
+*** Example
 
 #+BEGIN_SRC haskell
 
@@ -734,7 +729,7 @@ import qualified Data.ByteString.Lazy.Char8 as BLC
  - [[http://tenminutetutor.com/base64-encoding][Ten Minute Tutor - Base64 encoding]]
 
 
-**** Documentation in Hackage
+*** Documentation in Hackage
 
 *ByteString*
 
@@ -779,7 +774,7 @@ import qualified Data.ByteString.Lazy.Char8 as BLC
 
 [[http://hackage.haskell.org/package/base-4.8.0.0/docs/Data-Char.html][Data.Char]]
 
-*** Parse Binary Files
+** Parse Binary Files
 
 To decode a binary file it is necessary to know:
 
@@ -787,7 +782,7 @@ To decode a binary file it is necessary to know:
  - File Signature that comes in the file header.
  - Data Size (8 bits signed, 8 bits unsigned, ....)
  - Byte Endianess or Byte order (Little Endian or Big Endian)
-* 
+ 
 
 This section will show how to parse the windows executable, PE32 executable.
 
@@ -894,8 +889,7 @@ COFF Header
  }
 #+END_SRC
 
-
-*** GnuPlot
+** GnuPlot
 
 Installation:
 

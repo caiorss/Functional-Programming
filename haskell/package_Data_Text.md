@@ -1,5 +1,6 @@
 - [Data.Text](#data.text)
 
+
 # Data.Text<a id="sec-1" name="sec-1"></a>
 
 Package: [text: An efficient packed Unicode text type. | Hackage](https://hackage.haskell.org/package/text-1.2.2.0)

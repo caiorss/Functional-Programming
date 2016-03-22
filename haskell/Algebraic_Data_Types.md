@@ -5,6 +5,7 @@
   - [Record Syntax](#record-syntax)
   - [Recursive Data Types](#recursive-data-types)
 
+
 # Algebraic Data Types<a id="sec-1" name="sec-1"></a>
 
 [Under Construction]
@@ -390,7 +391,7 @@ Person {firstName = "Nikola", lastName = "Tesla", age = 30}
 
 **Exmple: Custom List Implementation**
 
-File: list<sub>cons</sub>.hs
+File: list\_cons.hs
 
 ```haskell
 data List a = Nil | Cons a (List a) deriving (Show)

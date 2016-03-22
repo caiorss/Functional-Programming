@@ -1,9 +1,7 @@
+#+INCLUDE: ../theme/style.org
 #+TITLE:  Functional Programming Concepts
-#+AUTHOR: Caio Rodrigues Soares Silva
-#+EMAIL: <caiorss.rodrigues@gmail.com>
 #+DESCRIPTION: Functional programming concepts, examples, algorithms and ideas.
-#+OPTIONS: ^:nil
-#+OPTIONS:   H:4
+
 
 * Concepts
 ** Overview

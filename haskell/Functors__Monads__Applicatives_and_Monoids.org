@@ -1,3 +1,6 @@
+#+INCLUDE: ../theme/style.org
+#+TITLE: Functors, Monads, Applicatives and Monoids
+
 * Functors, Monads, Applicatives and Monoids
 
 The concepts of functors, monads and applicative comes from [[http://en.wikipedia.org/wiki/Category_theory][category

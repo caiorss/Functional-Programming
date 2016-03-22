@@ -1,7 +1,5 @@
+#+INCLUDE: ../theme/style.org
 #+TITLE: Functional Programming by Example
-#+AUTHOR: Caio Rodrigues Soares Silva
-#+EMAIL: <caiorss.rodrigues@gmail.com>
-
 
 * Haskell
 

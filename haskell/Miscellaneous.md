@@ -4,6 +4,7 @@
   - [Troubleshooting](#troubleshooting)
     - [Importing Ambigous Modules in GHCi](#importing-ambigous-modules-in-ghci)
 
+
 # Miscellaneous<a id="sec-1" name="sec-1"></a>
 
 ## Haskell IDEs and Text Editors<a id="sec-1-1" name="sec-1-1"></a>
