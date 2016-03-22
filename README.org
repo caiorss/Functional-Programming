@@ -4,7 +4,7 @@
 #+DESCRIPTION: Functional programming examples, theory, 
 #+URL:   https://github.com/caiorss/Functional-Programming
 
-* Functional Programming by Example
+# * Functional Programming by Example
 
 file:haskell/images/haskellLogo.png
 
