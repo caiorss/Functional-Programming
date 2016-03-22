@@ -1,6 +1,4 @@
-#+TITLE: Haskell Basic Syntax 
-#+AUTHOR: Caio Rodrigues Soares Silva
-#+EMAIL: <caiorss.rodrigues@gmail.com>
+#+INCLUDE: ../theme/style.org
 
 * Basic Syntax
 ** Operators
@@ -22,8 +20,9 @@ x**y    for y any kind of number (Float for example)
 
 *** Application Operator - $
 
-The application operator '$' makes code more readable and cleaner since substitutes parenthesis.
-It is also useful in higher-order situations, such as map ($ 0) xs, or zipWith ($) fs xs. 
+The application operator '$' makes code more readable and cleaner
+since substitutes parenthesis.  It is also useful in higher-order
+situations, such as map ($ 0) xs, or zipWith ($) fs xs.
 
 #+BEGIN_SRC haskell
 > f $ g $ h x = f (g (h x))
@@ -591,6 +590,7 @@ concat :: [[a]] -> [a]
 *** Chekings Lists
 
 Check if a list is empty. 
+
  - null xs
 
 #+BEGIN_SRC haskell
