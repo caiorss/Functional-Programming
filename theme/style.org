@@ -9,7 +9,7 @@
 
 #+BEGIN_HTML
 <lu> 
-  <li><a href="/README.html">Index</a></li>
-  <li><a href="">Repository</a></li>
+  <li><a href="/Functional-Programming/README.html">Index</a></li>
+  <li><a href="https://github.com/caiorss/Functional-Programming">Repository</a></li>
 </lu>
 #+END_HTML
