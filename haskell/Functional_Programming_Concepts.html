@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Functional Programming Concepts</title>
-<!-- 2016-03-22 Tue 06:02 -->
+<!-- 2016-03-24 Thu 05:54 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues" />
@@ -231,112 +231,113 @@ for the JavaScript code in this tag.
 </li>
 <li><a href="#sec-1-3">1.3. First-Class Function</a></li>
 <li><a href="#sec-1-4">1.4. Pure Functions</a></li>
-<li><a href="#sec-1-5">1.5. Closure</a></li>
-<li><a href="#sec-1-6">1.6. Currying and Partial Application</a>
+<li><a href="#sec-1-5">1.5. Referential Transparency</a></li>
+<li><a href="#sec-1-6">1.6. Closure</a></li>
+<li><a href="#sec-1-7">1.7. Currying and Partial Application</a>
 <ul>
-<li><a href="#sec-1-6-1">1.6.1. Currying</a></li>
-<li><a href="#sec-1-6-2">1.6.2. Partial Application</a></li>
+<li><a href="#sec-1-7-1">1.7.1. Currying</a></li>
+<li><a href="#sec-1-7-2">1.7.2. Partial Application</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-7">1.7. Lazy Evaluation</a></li>
-<li><a href="#sec-1-8">1.8. Tail Call Optimization and Tail Recursive Functions</a>
+<li><a href="#sec-1-8">1.8. Lazy Evaluation</a></li>
+<li><a href="#sec-1-9">1.9. Tail Call Optimization and Tail Recursive Functions</a>
 <ul>
-<li><a href="#sec-1-8-1">1.8.1. Tail Call</a></li>
-<li><a href="#sec-1-8-2">1.8.2. Tail Call Optimization</a></li>
-<li><a href="#sec-1-8-3">1.8.3. Summary</a></li>
-<li><a href="#sec-1-8-4">1.8.4. Examples</a></li>
-<li><a href="#sec-1-8-5">1.8.5. See also</a></li>
+<li><a href="#sec-1-9-1">1.9.1. Tail Call</a></li>
+<li><a href="#sec-1-9-2">1.9.2. Tail Call Optimization</a></li>
+<li><a href="#sec-1-9-3">1.9.3. Summary</a></li>
+<li><a href="#sec-1-9-4">1.9.4. Examples</a></li>
+<li><a href="#sec-1-9-5">1.9.5. See also</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-9">1.9. Fundamental Higher Order Functions</a>
+<li><a href="#sec-1-10">1.10. Fundamental Higher Order Functions</a>
 <ul>
-<li><a href="#sec-1-9-1">1.9.1. Overview</a></li>
-<li><a href="#sec-1-9-2">1.9.2. Map</a></li>
-<li><a href="#sec-1-9-3">1.9.3. Filter</a></li>
-<li><a href="#sec-1-9-4">1.9.4. Reduce or Fold</a>
-<ul>
-<li><a href="#sec-1-9-4-1">1.9.4.1. Overview</a></li>
-<li><a href="#sec-1-9-4-2">1.9.4.2. Haskell</a></li>
-<li><a href="#sec-1-9-4-3">1.9.4.3. Python</a></li>
-<li><a href="#sec-1-9-4-4">1.9.4.4. Clojure</a></li>
-<li><a href="#sec-1-9-4-5">1.9.4.5. Fsharp</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-9-5">1.9.5. For Each, Impure map</a></li>
-<li><a href="#sec-1-9-6">1.9.6. Apply</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-10">1.10. Special Functions</a>
-<ul>
-<li><a href="#sec-1-10-1">1.10.1. Identity Function</a></li>
-<li><a href="#sec-1-10-2">1.10.2. Constant Function</a></li>
-<li><a href="#sec-1-10-3">1.10.3. List Constructor (Cons)</a></li>
-<li><a href="#sec-1-10-4">1.10.4. Zip</a>
+<li><a href="#sec-1-10-1">1.10.1. Overview</a></li>
+<li><a href="#sec-1-10-2">1.10.2. Map</a></li>
+<li><a href="#sec-1-10-3">1.10.3. Filter</a></li>
+<li><a href="#sec-1-10-4">1.10.4. Reduce or Fold</a>
 <ul>
 <li><a href="#sec-1-10-4-1">1.10.4.1. Overview</a></li>
-<li><a href="#sec-1-10-4-2">1.10.4.2. Zip in Haskell</a></li>
-<li><a href="#sec-1-10-4-3">1.10.4.3. Zip in Python</a></li>
-<li><a href="#sec-1-10-4-4">1.10.4.4. Zip in Scheme</a></li>
-<li><a href="#sec-1-10-4-5">1.10.4.5. Zip in Clojure</a></li>
+<li><a href="#sec-1-10-4-2">1.10.4.2. Haskell</a></li>
+<li><a href="#sec-1-10-4-3">1.10.4.3. Python</a></li>
+<li><a href="#sec-1-10-4-4">1.10.4.4. Clojure</a></li>
+<li><a href="#sec-1-10-4-5">1.10.4.5. Fsharp</a></li>
 </ul>
 </li>
+<li><a href="#sec-1-10-5">1.10.5. For Each, Impure map</a></li>
+<li><a href="#sec-1-10-6">1.10.6. Apply</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-11">1.11. Function Composition</a>
+<li><a href="#sec-1-11">1.11. Special Functions</a>
 <ul>
-<li><a href="#sec-1-11-1">1.11.1. Overview</a></li>
-<li><a href="#sec-1-11-2">1.11.2. Function Composition in Haskell</a></li>
-<li><a href="#sec-1-11-3">1.11.3. Function Composition in Python</a></li>
-<li><a href="#sec-1-11-4">1.11.4. Function Composition in F#</a></li>
+<li><a href="#sec-1-11-1">1.11.1. Identity Function</a></li>
+<li><a href="#sec-1-11-2">1.11.2. Constant Function</a></li>
+<li><a href="#sec-1-11-3">1.11.3. List Constructor (Cons)</a></li>
+<li><a href="#sec-1-11-4">1.11.4. Zip</a>
+<ul>
+<li><a href="#sec-1-11-4-1">1.11.4.1. Overview</a></li>
+<li><a href="#sec-1-11-4-2">1.11.4.2. Zip in Haskell</a></li>
+<li><a href="#sec-1-11-4-3">1.11.4.3. Zip in Python</a></li>
+<li><a href="#sec-1-11-4-4">1.11.4.4. Zip in Scheme</a></li>
+<li><a href="#sec-1-11-4-5">1.11.4.5. Zip in Clojure</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-12">1.12. Functors</a>
+</ul>
+</li>
+<li><a href="#sec-1-12">1.12. Function Composition</a>
 <ul>
 <li><a href="#sec-1-12-1">1.12.1. Overview</a></li>
-<li><a href="#sec-1-12-2">1.12.2. Show all Functor instances</a></li>
-<li><a href="#sec-1-12-3">1.12.3. Functor Implementations</a>
-<ul>
-<li><a href="#sec-1-12-3-1">1.12.3.1. Identity</a></li>
-<li><a href="#sec-1-12-3-2">1.12.3.2. List</a></li>
-<li><a href="#sec-1-12-3-3">1.12.3.3. Maybe / Option</a></li>
-<li><a href="#sec-1-12-3-4">1.12.3.4. Either</a></li>
-<li><a href="#sec-1-12-3-5">1.12.3.5. IO</a></li>
+<li><a href="#sec-1-12-2">1.12.2. Function Composition in Haskell</a></li>
+<li><a href="#sec-1-12-3">1.12.3. Function Composition in Python</a></li>
+<li><a href="#sec-1-12-4">1.12.4. Function Composition in F#</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li><a href="#sec-1-13">1.13. Monads</a>
+<li><a href="#sec-1-13">1.13. Functors</a>
 <ul>
 <li><a href="#sec-1-13-1">1.13.1. Overview</a></li>
-<li><a href="#sec-1-13-2">1.13.2. List Monad</a>
+<li><a href="#sec-1-13-2">1.13.2. Show all Functor instances</a></li>
+<li><a href="#sec-1-13-3">1.13.3. Functor Implementations</a>
 <ul>
-<li><a href="#sec-1-13-2-1">1.13.2.1. List Monad in Haskell</a></li>
-<li><a href="#sec-1-13-2-2">1.13.2.2. List Monad in OCaml</a></li>
-<li><a href="#sec-1-13-2-3">1.13.2.3. List Monad in F#</a></li>
-<li><a href="#sec-1-13-2-4">1.13.2.4. List Monad in Python</a></li>
+<li><a href="#sec-1-13-3-1">1.13.3.1. Identity</a></li>
+<li><a href="#sec-1-13-3-2">1.13.3.2. List</a></li>
+<li><a href="#sec-1-13-3-3">1.13.3.3. Maybe / Option</a></li>
+<li><a href="#sec-1-13-3-4">1.13.3.4. Either</a></li>
+<li><a href="#sec-1-13-3-5">1.13.3.5. IO</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-13-3">1.13.3. Maybe / Option Monad</a>
-<ul>
-<li><a href="#sec-1-13-3-1">1.13.3.1. Overview</a></li>
-<li><a href="#sec-1-13-3-2">1.13.3.2. Maybe Monad in Haskell</a></li>
-<li><a href="#sec-1-13-3-3">1.13.3.3. Maybe Monad in Ocaml</a></li>
-<li><a href="#sec-1-13-3-4">1.13.3.4. Maybe Monad in Python</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-13-4">1.13.4. Either Monad</a>
+<li><a href="#sec-1-14">1.14. Monads</a>
 <ul>
-<li><a href="#sec-1-13-4-1">1.13.4.1. Overview</a></li>
-<li><a href="#sec-1-13-4-2">1.13.4.2. Example</a></li>
+<li><a href="#sec-1-14-1">1.14.1. Overview</a></li>
+<li><a href="#sec-1-14-2">1.14.2. List Monad</a>
+<ul>
+<li><a href="#sec-1-14-2-1">1.14.2.1. List Monad in Haskell</a></li>
+<li><a href="#sec-1-14-2-2">1.14.2.2. List Monad in OCaml</a></li>
+<li><a href="#sec-1-14-2-3">1.14.2.3. List Monad in F#</a></li>
+<li><a href="#sec-1-14-2-4">1.14.2.4. List Monad in Python</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-13-5">1.13.5. IO Monad</a>
+<li><a href="#sec-1-14-3">1.14.3. Maybe / Option Monad</a>
 <ul>
-<li><a href="#sec-1-13-5-1">1.13.5.1. Overview</a></li>
-<li><a href="#sec-1-13-5-2">1.13.5.2. Example</a></li>
+<li><a href="#sec-1-14-3-1">1.14.3.1. Overview</a></li>
+<li><a href="#sec-1-14-3-2">1.14.3.2. Maybe Monad in Haskell</a></li>
+<li><a href="#sec-1-14-3-3">1.14.3.3. Maybe Monad in Ocaml</a></li>
+<li><a href="#sec-1-14-3-4">1.14.3.4. Maybe Monad in Python</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-13-6">1.13.6. See also</a></li>
+<li><a href="#sec-1-14-4">1.14.4. Either Monad</a>
+<ul>
+<li><a href="#sec-1-14-4-1">1.14.4.1. Overview</a></li>
+<li><a href="#sec-1-14-4-2">1.14.4.2. Example</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-14-5">1.14.5. IO Monad</a>
+<ul>
+<li><a href="#sec-1-14-5-1">1.14.5.1. Overview</a></li>
+<li><a href="#sec-1-14-5-2">1.14.5.2. Example</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-14-6">1.14.6. See also</a></li>
 </ul>
 </li>
 </ul>
@@ -963,8 +964,211 @@ Reverse list function purified:
 </div>
 
 <div id="outline-container-sec-1-5" class="outline-3">
-<h3 id="sec-1-5"><span class="section-number-3">1.5</span> Closure</h3>
+<h3 id="sec-1-5"><span class="section-number-3">1.5</span> Referential Transparency</h3>
 <div class="outline-text-3" id="text-1-5">
+<p>
+Referential Transparency means that any sub-expression can be replaced
+by its value within an expression at any time without changing the
+evaluation of the whole expression. This property is a characteristic 
+of mathematical expressions that allows program transformation,
+program manipulation and equational reasoning. It can be basically be
+stated as "replace equals by equals".  
+</p>
+
+<p>
+If there is referential transparency the expression below is valid:
+</p>
+
+<p>
+<code>f(x) + f(x) = 2 * f(x)</code>
+</p>
+
+<p>
+The function f is <span class="underline">referentially transparent</span> only if it is a pure
+function. The application of the function can be replaced by its value
+without change the meaning of the expression and it yields always the
+same result for the same input.
+</p>
+
+<p>
+Referential transparency is only possible in the absence of
+side-effects. Haskell is one the few language which is referencially
+transparent owing to the fact that it enforces purity. 
+</p>
+
+<p>
+Benefits:
+</p>
+
+<ul class="org-ul">
+<li>Program transformation
+</li>
+
+<li>Equational reasoning
+</li>
+
+<li>Every expression can replaced by its value. 
+</li>
+
+<li>Reasoning about the result of a function can be done by replacing
+its definition at the place of the application regardless of the
+context.
+</li>
+
+<li>Evaluation order doesn't matter. 
+</li>
+
+<li>More opportunities for compiler optimization
+</li>
+
+<li>Computations can be safely distributed over multiple
+processors/threads.
+</li>
+
+<li>Previous evaluated expressions can be memoized. 
+</li>
+
+<li>Programs with referential transparency can be easier to reason
+about its behavior due to the reader does not have to think about
+the side-effects like global states, internal states and IO.
+</li>
+
+<li>Help change the code without breaking it, easier refactoring. 
+</li>
+</ul>
+
+
+<p>
+Example: referential transparency in Python. Note: Python as ML
+variants and Scheme doesn't enforce it.  
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-python">&gt;&gt;&gt; <span class="org-keyword">def</span> <span class="org-function-name">square</span> (x):
+...   <span class="org-keyword">return</span> x * x
+... 
+&gt;&gt;&gt; 
+&gt;&gt;&gt; square (3) + square (3) 
+18
+&gt;&gt;&gt; 2 * square (3)
+18
+&gt;&gt;&gt; square (3) + square (3) == 2 * square (3)
+<span class="org-constant">True</span>
+&gt;&gt;&gt; 
+&gt;&gt;&gt; <span class="org-variable-name">x</span>  = square (3)
+&gt;&gt;&gt; x
+9
+&gt;&gt;&gt; x + x  == 2 * square (3)
+<span class="org-constant">True</span>
+</pre>
+</div>
+
+<p>
+Example:violation of referential transparency or referential
+opacity due to global state side-effect in Python.
+</p>
+
+
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">state</span> = 1
+
+<span class="org-keyword">def</span> <span class="org-function-name">f</span>(x):
+  <span class="org-keyword">global</span> state 
+  <span class="org-variable-name">state</span> = state + 1 
+  <span class="org-keyword">return</span> x + state 
+
+&gt;&gt;&gt; f(2) 
+4
+&gt;&gt;&gt; f(2) 
+5
+&gt;&gt;&gt; 2 * f(2)
+12
+&gt;&gt;&gt;
+
+ <span class="org-comment-delimiter"># </span><span class="org-comment">Resetting the world:</span>
+ <span class="org-comment-delimiter"># </span>
+&gt;&gt;&gt; <span class="org-variable-name">state</span> = 1 
+&gt;&gt;&gt; 
+&gt;&gt;&gt; f(2) + f(2) == 2 * f(2)
+<span class="org-constant">False</span>
+&gt;&gt;&gt; 
+
+&gt;&gt;&gt; <span class="org-keyword">import</span> random
+&gt;&gt;&gt; 
+&gt;&gt;&gt; random.random() + random.random () ==  2 * random.random()
+<span class="org-constant">False</span>
+&gt;&gt;&gt; 
+
+&gt;&gt;&gt; <span class="org-variable-name">state</span> = 0 
+
+&gt;&gt;&gt; <span class="org-keyword">def</span> <span class="org-function-name">counter</span> ():
+...    <span class="org-keyword">global</span> state
+...    <span class="org-variable-name">state</span> = state + 1
+...    <span class="org-keyword">return</span> state
+... 
+&gt;&gt;&gt; counter () + counter () == 2 * counter ()
+<span class="org-constant">False</span>
+&gt;&gt;&gt; counter ()
+4
+&gt;&gt;&gt; counter ()
+5
+&gt;&gt;&gt;
+</pre>
+</div>
+
+
+<p>
+References:
+</p>
+
+<ul class="org-ul">
+<li><a href="https://books.google.ca/books?id=NJ_xBwAAQBAJ&pg=PA232&lpg=PA232&dq=referential+transparency+equals+by+equals&source=bl&ots=1EDj-63h7P&sig=8H9rgzK1FvTlGsG6NDdwrB0LzaE&hl=en&sa=X&ved=0ahUKEwipkL3lndjLAhXE-g4KHXDeAaIQ6AEIQDAG#v=onepage&q=referential%20transparency%20equals%20by%20equals&f=false">Arrays, Functional Languages, and Parallel Systems - Google Books</a>
+</li>
+
+<li>Hudak P. <b>Evolution, and Application of Functional Programming
+Languages.</b> Available at
+<a href="http://www.utdallas.edu/~kXh060100/cs6301fa15/p359-hudak.pdf">http://www.utdallas.edu/~kXh060100/cs6301fa15/p359-hudak.pdf</a>
+</li>
+
+<li><b>Input/Output in Functional. Languages. Using Algebraic Union
+Types.</b>. Available at
+<a href="http://essay-test.utsp.utwente.nl/57287/1/scriptie_Rorije.pdf">http://essay-test.utsp.utwente.nl/57287/1/scriptie_Rorije.pdf</a>
+</li>
+
+<li><a href="http://www2.sys-con.com/itsg/virtualcd/java/archives/0404/callahan/index.html">Clarify Your Code in the Functional Style</a>
+</li>
+
+<li><a href="http://mccarthy.cs.iit.edu/cs440/videos/state-4up.pdf">http://mccarthy.cs.iit.edu/cs440/videos/state-4up.pdf</a>
+</li>
+
+<li><a href="http://www.macs.hw.ac.uk/~hwloidl/Courses/F21DP/gph_milan15_handout.pdf">http://www.macs.hw.ac.uk/~hwloidl/Courses/F21DP/gph_milan15_handout.pdf</a>
+</li>
+
+<li><a href="https://wiki.haskell.org/Referential_transparency">Referential transparency - HaskellWiki</a>
+</li>
+
+<li><a href="http://faculty.ycp.edu/~dhovemey/fall2012/cs340/lecture/lecture18.html">CS 340 - Lecture 18: Functional Programming in Scala</a>
+</li>
+
+<li><a href="http://www.cs.unc.edu/~block/comp524/Lectures/files2/Lecture14.pdf">Lecture 14: ML, Deep/Shallow Access, Referential Transparency</a>
+</li>
+
+<li><a href="http://programmers.stackexchange.com/questions/254304/what-is-referential-transparency">functional programming - What is referential transparency? -
+Programmers Stack Exchange</a>
+</li>
+
+<li><a href="http://www.slideshare.net/AdrianGzz2112/functional-programming-ruby-mty">Functional programming ruby mty</a>
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-sec-1-6" class="outline-3">
+<h3 id="sec-1-6"><span class="section-number-3">1.6</span> Closure</h3>
+<div class="outline-text-3" id="text-1-6">
 <p>
 Closure is a function that remembers the environment at which it was created.
 </p>
@@ -1153,12 +1357,12 @@ Example of closure in F# (F sharp):
 </div>
 </div>
 
-<div id="outline-container-sec-1-6" class="outline-3">
-<h3 id="sec-1-6"><span class="section-number-3">1.6</span> Currying and Partial Application</h3>
-<div class="outline-text-3" id="text-1-6">
-</div><div id="outline-container-sec-1-6-1" class="outline-4">
-<h4 id="sec-1-6-1"><span class="section-number-4">1.6.1</span> Currying</h4>
-<div class="outline-text-4" id="text-1-6-1">
+<div id="outline-container-sec-1-7" class="outline-3">
+<h3 id="sec-1-7"><span class="section-number-3">1.7</span> Currying and Partial Application</h3>
+<div class="outline-text-3" id="text-1-7">
+</div><div id="outline-container-sec-1-7-1" class="outline-4">
+<h4 id="sec-1-7-1"><span class="section-number-4">1.7.1</span> Currying</h4>
+<div class="outline-text-4" id="text-1-7-1">
 <p>
 Currying is the decomposition of a function of multiples arguments in
 a chained sequence of functions of a single argument. The name
@@ -1470,9 +1674,9 @@ Ex2
 </div>
 </div>
 
-<div id="outline-container-sec-1-6-2" class="outline-4">
-<h4 id="sec-1-6-2"><span class="section-number-4">1.6.2</span> Partial Application</h4>
-<div class="outline-text-4" id="text-1-6-2">
+<div id="outline-container-sec-1-7-2" class="outline-4">
+<h4 id="sec-1-7-2"><span class="section-number-4">1.7.2</span> Partial Application</h4>
+<div class="outline-text-4" id="text-1-7-2">
 <p>
 A function of multiple arguments is converted into a new function that
 takes fewer arguments, some arguments are supplied and returns
@@ -1568,9 +1772,9 @@ See also:
 </div>
 </div>
 
-<div id="outline-container-sec-1-7" class="outline-3">
-<h3 id="sec-1-7"><span class="section-number-3">1.7</span> Lazy Evaluation</h3>
-<div class="outline-text-3" id="text-1-7">
+<div id="outline-container-sec-1-8" class="outline-3">
+<h3 id="sec-1-8"><span class="section-number-3">1.8</span> Lazy Evaluation</h3>
+<div class="outline-text-3" id="text-1-8">
 <p>
 "Lazy evaluation" means that data structures are computed
 incrementally, as they are needed (so the trees never exist in memory
@@ -1657,12 +1861,12 @@ Example in Python:
 </div>
 </div>
 
-<div id="outline-container-sec-1-8" class="outline-3">
-<h3 id="sec-1-8"><span class="section-number-3">1.8</span> Tail Call Optimization and Tail Recursive Functions</h3>
-<div class="outline-text-3" id="text-1-8">
-</div><div id="outline-container-sec-1-8-1" class="outline-4">
-<h4 id="sec-1-8-1"><span class="section-number-4">1.8.1</span> Tail Call</h4>
-<div class="outline-text-4" id="text-1-8-1">
+<div id="outline-container-sec-1-9" class="outline-3">
+<h3 id="sec-1-9"><span class="section-number-3">1.9</span> Tail Call Optimization and Tail Recursive Functions</h3>
+<div class="outline-text-3" id="text-1-9">
+</div><div id="outline-container-sec-1-9-1" class="outline-4">
+<h4 id="sec-1-9-1"><span class="section-number-4">1.9.1</span> Tail Call</h4>
+<div class="outline-text-4" id="text-1-9-1">
 <p>
 A tail call is a function call which is the last action performed by
 a function.
@@ -1685,7 +1889,7 @@ Example 1: Tail call
 
 
 <p>
-Example 2: Tail recusive call or tail recursive function. 
+Example 2: Tail recursive call or tail recursive function. 
 </p>
 
 <div class="org-src-container">
@@ -1712,9 +1916,9 @@ Example 3: Non tail call
 </div>
 </div>
 
-<div id="outline-container-sec-1-8-2" class="outline-4">
-<h4 id="sec-1-8-2"><span class="section-number-4">1.8.2</span> Tail Call Optimization</h4>
-<div class="outline-text-4" id="text-1-8-2">
+<div id="outline-container-sec-1-9-2" class="outline-4">
+<h4 id="sec-1-9-2"><span class="section-number-4">1.9.2</span> Tail Call Optimization</h4>
+<div class="outline-text-4" id="text-1-9-2">
 <p>
 Tail call optimization - TCO. (aka. tail call elimination - TCE or
 tail recursion elimination - TRE) is a optimization that replaces
@@ -1734,7 +1938,7 @@ optimization. <a href="http://www.ssw.uni-linz.ac.at/Research/Papers/Schwaighofe
 <p>
 If the language doesn't support TCO it is not possible to perform
 recursion safely. A big number of calls will lead to a stack overflow
-exception and the program will crash unexpectedly .
+exception and the program will crash unexpectedly.
 </p>
 
 <p>
@@ -1789,9 +1993,9 @@ Languages without TCO support:
 </div>
 </div>
 
-<div id="outline-container-sec-1-8-3" class="outline-4">
-<h4 id="sec-1-8-3"><span class="section-number-4">1.8.3</span> Summary</h4>
-<div class="outline-text-4" id="text-1-8-3">
+<div id="outline-container-sec-1-9-3" class="outline-4">
+<h4 id="sec-1-9-3"><span class="section-number-4">1.9.3</span> Summary</h4>
+<div class="outline-text-4" id="text-1-9-3">
 <ol class="org-ol">
 <li>To perform recursion safely a language must support TCO - Tail Call
 Optimization.
@@ -1812,9 +2016,9 @@ doesn't support TCO.
 </div>
 </div>
 
-<div id="outline-container-sec-1-8-4" class="outline-4">
-<h4 id="sec-1-8-4"><span class="section-number-4">1.8.4</span> Examples</h4>
-<div class="outline-text-4" id="text-1-8-4">
+<div id="outline-container-sec-1-9-4" class="outline-4">
+<h4 id="sec-1-9-4"><span class="section-number-4">1.9.4</span> Examples</h4>
+<div class="outline-text-4" id="text-1-9-4">
 <p>
 Example of non tail recursive function in Scheme (GNU Guile): 
 </p>
@@ -2355,9 +2559,9 @@ Example: Tail recursive filter function.
 </div>
 </div>
 
-<div id="outline-container-sec-1-8-5" class="outline-4">
-<h4 id="sec-1-8-5"><span class="section-number-4">1.8.5</span> See also</h4>
-<div class="outline-text-4" id="text-1-8-5">
+<div id="outline-container-sec-1-9-5" class="outline-4">
+<h4 id="sec-1-9-5"><span class="section-number-4">1.9.5</span> See also</h4>
+<div class="outline-text-4" id="text-1-9-5">
 <ul class="org-ul">
 <li><a href="https://en.wikipedia.org/wiki/Tail_call">Tail call - Wikipedia, the free encyclopedia</a>
 </li>
@@ -2392,12 +2596,12 @@ Example: Tail recursive filter function.
 </div>
 </div>
 </div>
-<div id="outline-container-sec-1-9" class="outline-3">
-<h3 id="sec-1-9"><span class="section-number-3">1.9</span> Fundamental Higher Order Functions</h3>
-<div class="outline-text-3" id="text-1-9">
-</div><div id="outline-container-sec-1-9-1" class="outline-4">
-<h4 id="sec-1-9-1"><span class="section-number-4">1.9.1</span> Overview</h4>
-<div class="outline-text-4" id="text-1-9-1">
+<div id="outline-container-sec-1-10" class="outline-3">
+<h3 id="sec-1-10"><span class="section-number-3">1.10</span> Fundamental Higher Order Functions</h3>
+<div class="outline-text-3" id="text-1-10">
+</div><div id="outline-container-sec-1-10-1" class="outline-4">
+<h4 id="sec-1-10-1"><span class="section-number-4">1.10.1</span> Overview</h4>
+<div class="outline-text-4" id="text-1-10-1">
 <p>
 The functions map, filter and reduce (fold left) are ubiquitous in
 many programming languages and also the most used higher order
@@ -2405,16 +2609,16 @@ functions.
 </p>
 
 <p>
-They can be stricted evaluated like in Scheme and Javascript or lazy
+They can be strict evaluated like in Scheme and JavaScript or lazy
 evaluated like in Python and Haskell.
 </p>
 </div>
 </div>
 
-<div id="outline-container-sec-1-9-2" class="outline-4">
-<h4 id="sec-1-9-2"><span class="section-number-4">1.9.2</span> Map</h4>
-<div class="outline-text-4" id="text-1-9-2">
-</div><ol class="org-ol"><li><a id="sec-1-9-2-0-1" name="sec-1-9-2-0-1"></a>Overview<br  /><div class="outline-text-6" id="text-1-9-2-0-1">
+<div id="outline-container-sec-1-10-2" class="outline-4">
+<h4 id="sec-1-10-2"><span class="section-number-4">1.10.2</span> Map</h4>
+<div class="outline-text-4" id="text-1-10-2">
+</div><ol class="org-ol"><li><a id="sec-1-10-2-0-1" name="sec-1-10-2-0-1"></a>Overview<br  /><div class="outline-text-6" id="text-1-10-2-0-1">
 <p>
 The function map applies a function to each element of a sequence:
 list, vector, hash map or dictionary and trees. 
@@ -2438,7 +2642,7 @@ list, vector, hash map or dictionary and trees.
 </div>
 </li>
 
-<li><a id="sec-1-9-2-0-2" name="sec-1-9-2-0-2"></a>Map in Haskell<br  /><div class="outline-text-6" id="text-1-9-2-0-2">
+<li><a id="sec-1-10-2-0-2" name="sec-1-10-2-0-2"></a>Map in Haskell<br  /><div class="outline-text-6" id="text-1-10-2-0-2">
 <p>
 The function map is lazy evaluated.
 </p>
@@ -2511,7 +2715,7 @@ The function map is lazy evaluated.
 </div>
 </li>
 
-<li><a id="sec-1-9-2-0-3" name="sec-1-9-2-0-3"></a>Map in Python<br  /><div class="outline-text-6" id="text-1-9-2-0-3">
+<li><a id="sec-1-10-2-0-3" name="sec-1-10-2-0-3"></a>Map in Python<br  /><div class="outline-text-6" id="text-1-10-2-0-3">
 <p>
 In Python 3 map and filter are lazy evaluated, they return a
 generator. 
@@ -2556,9 +2760,10 @@ Traceback (most recent call last):
 [9, 12, 15]
 &gt;&gt;&gt; 
 
- <span class="org-comment-delimiter"># </span><span class="org-comment">Due to python doesn't have tail call optimization</span>
- <span class="org-comment-delimiter"># </span><span class="org-comment">recusion must be avoided, a higher number of iterations</span>
- <span class="org-comment-delimiter"># </span><span class="org-comment">can lead to a stack overflow.</span>
+ <span class="org-comment-delimiter"># </span><span class="org-comment">As python doesn't have tail call optimization  </span>
+ <span class="org-comment-delimiter"># </span><span class="org-comment">therefore recursion must be avoided because </span>
+ <span class="org-comment-delimiter"># </span><span class="org-comment">a big number of function calls </span>
+ <span class="org-comment-delimiter"># </span><span class="org-comment">can lead to stack overflow.</span>
  
 <span class="org-keyword">def</span> <span class="org-function-name">strict_map</span> (f, xs):
     <span class="org-keyword">return</span> [f (x) <span class="org-keyword">for</span> x <span class="org-keyword">in</span> xs]
@@ -2594,8 +2799,8 @@ Traceback (most recent call last):
 &gt;&gt;&gt;           
 
  <span class="org-comment-delimiter">#</span>
- <span class="org-comment-delimiter"># </span><span class="org-comment">To the map function work like in Haskell and ML </span>
- <span class="org-comment-delimiter"># </span><span class="org-comment">it is need to be curried.   </span>
+ <span class="org-comment-delimiter"># </span><span class="org-comment">In order for the map function work in the same way </span>
+ <span class="org-comment-delimiter"># </span><span class="org-comment">as Haskell and ML it is must be curried.   </span>
  <span class="org-comment-delimiter">#</span>
 
 <span class="org-variable-name">curry2</span> = <span class="org-keyword">lambda</span> f: <span class="org-keyword">lambda</span> x: <span class="org-keyword">lambda</span> y: f(x, y)
@@ -2620,7 +2825,7 @@ Traceback (most recent call last):
 </div>
 </li>
 
-<li><a id="sec-1-9-2-0-4" name="sec-1-9-2-0-4"></a>Map in Dynamic Typed Languages<br  /><div class="outline-text-6" id="text-1-9-2-0-4">
+<li><a id="sec-1-10-2-0-4" name="sec-1-10-2-0-4"></a>Map in Dynamic Typed Languages<br  /><div class="outline-text-6" id="text-1-10-2-0-4">
 <p>
 In dynamic typed languages like Python, Clojure and Scheme the function map
 can take multiple arguments. In typed languages the function 
@@ -2673,7 +2878,7 @@ user=&gt; <span class="org-rainbow-delimiters-depth-1">(</span>map <span class="
 user=&gt; 
 
 <span class="org-comment-delimiter">;;</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">The clojure map is Polymorphic it can be applied to any collection </span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">The Clojure map is Polymorphic it can be applied to any collection </span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">of seq abstraction like lists, vectors and hash maps.</span>
 <span class="org-comment-delimiter">;;</span>
 
@@ -2702,7 +2907,7 @@ user=&gt; <span class="org-rainbow-delimiters-depth-1">(</span>mapv identity <sp
 user=&gt; 
 
 
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Clojure also have destructuring </span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Clojure also has destructuring </span>
 <span class="org-comment-delimiter">;;</span>
 user=&gt; <span class="org-rainbow-delimiters-depth-1">(</span>map <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">fn</span> <span class="org-rainbow-delimiters-depth-3">[</span><span class="org-rainbow-delimiters-depth-4">[</span><span class="org-rainbow-delimiters-depth-5">[</span>a b<span class="org-rainbow-delimiters-depth-5">]</span> c<span class="org-rainbow-delimiters-depth-4">]</span><span class="org-rainbow-delimiters-depth-3">]</span> <span class="org-rainbow-delimiters-depth-3">(</span>+ <span class="org-rainbow-delimiters-depth-4">(</span>* 100 a <span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-rainbow-delimiters-depth-4">(</span>* 10 b<span class="org-rainbow-delimiters-depth-4">)</span> c<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>  <span class="org-rainbow-delimiters-depth-2">[</span><span class="org-rainbow-delimiters-depth-3">[</span><span class="org-rainbow-delimiters-depth-4">[</span>1 2<span class="org-rainbow-delimiters-depth-4">]</span> 3<span class="org-rainbow-delimiters-depth-3">]</span> <span class="org-rainbow-delimiters-depth-3">[</span><span class="org-rainbow-delimiters-depth-4">[</span>3 4<span class="org-rainbow-delimiters-depth-4">]</span> 5<span class="org-rainbow-delimiters-depth-3">]</span> <span class="org-rainbow-delimiters-depth-3">[</span><span class="org-rainbow-delimiters-depth-4">[</span>1 2<span class="org-rainbow-delimiters-depth-4">]</span> 4<span class="org-rainbow-delimiters-depth-3">]</span><span class="org-rainbow-delimiters-depth-2">]</span><span class="org-rainbow-delimiters-depth-1">)</span>
 <span class="org-rainbow-delimiters-depth-1">(</span>123 345 124<span class="org-rainbow-delimiters-depth-1">)</span>
@@ -2713,9 +2918,9 @@ user=&gt;
 </li></ol>
 </div>
 
-<div id="outline-container-sec-1-9-3" class="outline-4">
-<h4 id="sec-1-9-3"><span class="section-number-4">1.9.3</span> Filter</h4>
-<div class="outline-text-4" id="text-1-9-3">
+<div id="outline-container-sec-1-10-3" class="outline-4">
+<h4 id="sec-1-10-3"><span class="section-number-4">1.10.3</span> Filter</h4>
+<div class="outline-text-4" id="text-1-10-3">
 <p>
 <b>Python</b>
 </p>
@@ -2734,7 +2939,7 @@ user=&gt;
 [20, 40, 14]
 &gt;&gt;&gt; 
 
-  <span class="org-comment-delimiter"># </span><span class="org-comment">Stritct Version of filter function</span>
+  <span class="org-comment-delimiter"># </span><span class="org-comment">Strict Version of the filter function</span>
   <span class="org-comment-delimiter">#</span>
 &gt;&gt;&gt; <span class="org-variable-name">_filter</span> = <span class="org-keyword">lambda</span> f, xs: <span class="org-builtin">list</span>(<span class="org-builtin">filter</span>(f, xs))
 &gt;&gt;&gt; 
@@ -2786,12 +2991,12 @@ Traceback (most recent call last):
 </div>
 </div>
 
-<div id="outline-container-sec-1-9-4" class="outline-4">
-<h4 id="sec-1-9-4"><span class="section-number-4">1.9.4</span> Reduce or Fold</h4>
-<div class="outline-text-4" id="text-1-9-4">
-</div><div id="outline-container-sec-1-9-4-1" class="outline-5">
-<h5 id="sec-1-9-4-1"><span class="section-number-5">1.9.4.1</span> Overview</h5>
-<div class="outline-text-5" id="text-1-9-4-1">
+<div id="outline-container-sec-1-10-4" class="outline-4">
+<h4 id="sec-1-10-4"><span class="section-number-4">1.10.4</span> Reduce or Fold</h4>
+<div class="outline-text-4" id="text-1-10-4">
+</div><div id="outline-container-sec-1-10-4-1" class="outline-5">
+<h5 id="sec-1-10-4-1"><span class="section-number-5">1.10.4.1</span> Overview</h5>
+<div class="outline-text-5" id="text-1-10-4-1">
 <p>
 <b>Fold Left</b>
 </p>
@@ -2844,9 +3049,9 @@ Sn   = f x0   Sn-1   = f x0 (f x1 ... (f xn-2 (f xn-1 S0)))
 </div>
 </div>
 
-<div id="outline-container-sec-1-9-4-2" class="outline-5">
-<h5 id="sec-1-9-4-2"><span class="section-number-5">1.9.4.2</span> Haskell</h5>
-<div class="outline-text-5" id="text-1-9-4-2">
+<div id="outline-container-sec-1-10-4-2" class="outline-5">
+<h5 id="sec-1-10-4-2"><span class="section-number-5">1.10.4.2</span> Haskell</h5>
+<div class="outline-text-5" id="text-1-10-4-2">
 <p>
 See also: 
 </p>
@@ -3013,9 +3218,9 @@ S5   = f x0 S4     = f 1  5432 = 10 * 5432 + 1 = 54321
 </div>
 </div>
 
-<div id="outline-container-sec-1-9-4-3" class="outline-5">
-<h5 id="sec-1-9-4-3"><span class="section-number-5">1.9.4.3</span> Python</h5>
-<div class="outline-text-5" id="text-1-9-4-3">
+<div id="outline-container-sec-1-10-4-3" class="outline-5">
+<h5 id="sec-1-10-4-3"><span class="section-number-5">1.10.4.3</span> Python</h5>
+<div class="outline-text-5" id="text-1-10-4-3">
 <p>
 In Python 3 the function reduce is not default anymore, however it can
 be found in the native library functools, that has a lot of built-in
@@ -3239,9 +3444,9 @@ In the paper was used fold right, here was used fold left.
 </div>
 </div>
 
-<div id="outline-container-sec-1-9-4-4" class="outline-5">
-<h5 id="sec-1-9-4-4"><span class="section-number-5">1.9.4.4</span> Clojure</h5>
-<div class="outline-text-5" id="text-1-9-4-4">
+<div id="outline-container-sec-1-10-4-4" class="outline-5">
+<h5 id="sec-1-10-4-4"><span class="section-number-5">1.10.4.4</span> Clojure</h5>
+<div class="outline-text-5" id="text-1-10-4-4">
 <p>
 The function reduce is similar to Haskell <span class="underline">fold left</span> and Python
 reduce. This function is Polymorphic. It works on any collection of
@@ -3343,9 +3548,9 @@ user=&gt;
 </div>
 </div>
 
-<div id="outline-container-sec-1-9-4-5" class="outline-5">
-<h5 id="sec-1-9-4-5"><span class="section-number-5">1.9.4.5</span> Fsharp</h5>
-<div class="outline-text-5" id="text-1-9-4-5">
+<div id="outline-container-sec-1-10-4-5" class="outline-5">
+<h5 id="sec-1-10-4-5"><span class="section-number-5">1.10.4.5</span> Fsharp</h5>
+<div class="outline-text-5" id="text-1-10-4-5">
 <div class="org-src-container">
 
 <pre class="src src-fsharp"><span class="org-comment-delimiter">// </span><span class="org-comment">Fold left for Lists </span>
@@ -3665,9 +3870,9 @@ x = 6
 </div>
 </div>
 
-<div id="outline-container-sec-1-9-5" class="outline-4">
-<h4 id="sec-1-9-5"><span class="section-number-4">1.9.5</span> For Each, Impure map</h4>
-<div class="outline-text-4" id="text-1-9-5">
+<div id="outline-container-sec-1-10-5" class="outline-4">
+<h4 id="sec-1-10-5"><span class="section-number-4">1.10.5</span> For Each, Impure map</h4>
+<div class="outline-text-4" id="text-1-10-5">
 <p>
 For each is an <span class="underline">impure higher order function</span> which performs
 side-effect on each element of a list, array or sequence. Unlike map
@@ -3909,9 +4114,9 @@ user=&gt;
 </div>
 </div>
 
-<div id="outline-container-sec-1-9-6" class="outline-4">
-<h4 id="sec-1-9-6"><span class="section-number-4">1.9.6</span> Apply</h4>
-<div class="outline-text-4" id="text-1-9-6">
+<div id="outline-container-sec-1-10-6" class="outline-4">
+<h4 id="sec-1-10-6"><span class="section-number-4">1.10.6</span> Apply</h4>
+<div class="outline-text-4" id="text-1-10-6">
 <p>
 The function <span class="underline">apply</span> applies a function to a list or array of
 arguments. It is common in dynamic languages like Lisp, Scheme,
@@ -4069,12 +4274,12 @@ user=&gt;
 </div>
 </div>
 </div>
-<div id="outline-container-sec-1-10" class="outline-3">
-<h3 id="sec-1-10"><span class="section-number-3">1.10</span> Special Functions</h3>
-<div class="outline-text-3" id="text-1-10">
-</div><div id="outline-container-sec-1-10-1" class="outline-4">
-<h4 id="sec-1-10-1"><span class="section-number-4">1.10.1</span> Identity Function</h4>
-<div class="outline-text-4" id="text-1-10-1">
+<div id="outline-container-sec-1-11" class="outline-3">
+<h3 id="sec-1-11"><span class="section-number-3">1.11</span> Special Functions</h3>
+<div class="outline-text-3" id="text-1-11">
+</div><div id="outline-container-sec-1-11-1" class="outline-4">
+<h4 id="sec-1-11-1"><span class="section-number-4">1.11.1</span> Identity Function</h4>
+<div class="outline-text-4" id="text-1-11-1">
 <p>
 The identity function is a polymorphic function which returns the
 value of its argument.
@@ -4101,9 +4306,9 @@ value of its argument.
 </div>
 </div>
 
-<div id="outline-container-sec-1-10-2" class="outline-4">
-<h4 id="sec-1-10-2"><span class="section-number-4">1.10.2</span> Constant Function</h4>
-<div class="outline-text-4" id="text-1-10-2">
+<div id="outline-container-sec-1-11-2" class="outline-4">
+<h4 id="sec-1-11-2"><span class="section-number-4">1.11.2</span> Constant Function</h4>
+<div class="outline-text-4" id="text-1-11-2">
 <p>
 The constant function returns the value of the first argument (the
 constant) regardless of the value of second argument.
@@ -4146,9 +4351,9 @@ Python Implementation:
 </div>
 </div>
 
-<div id="outline-container-sec-1-10-3" class="outline-4">
-<h4 id="sec-1-10-3"><span class="section-number-4">1.10.3</span> List Constructor (Cons)</h4>
-<div class="outline-text-4" id="text-1-10-3">
+<div id="outline-container-sec-1-11-3" class="outline-4">
+<h4 id="sec-1-11-3"><span class="section-number-4">1.11.3</span> List Constructor (Cons)</h4>
+<div class="outline-text-4" id="text-1-11-3">
 <p>
 The cons operator is widely used in list recursive functions and
 higher order functions that operates on lists. 
@@ -4217,12 +4422,12 @@ cons 1 <span class="org-tuareg-font-lock-operator">(</span>cons 2 <span class="o
 </div>
 </div>
 
-<div id="outline-container-sec-1-10-4" class="outline-4">
-<h4 id="sec-1-10-4"><span class="section-number-4">1.10.4</span> Zip</h4>
-<div class="outline-text-4" id="text-1-10-4">
-</div><div id="outline-container-sec-1-10-4-1" class="outline-5">
-<h5 id="sec-1-10-4-1"><span class="section-number-5">1.10.4.1</span> Overview</h5>
-<div class="outline-text-5" id="text-1-10-4-1">
+<div id="outline-container-sec-1-11-4" class="outline-4">
+<h4 id="sec-1-11-4"><span class="section-number-4">1.11.4</span> Zip</h4>
+<div class="outline-text-4" id="text-1-11-4">
+</div><div id="outline-container-sec-1-11-4-1" class="outline-5">
+<h5 id="sec-1-11-4-1"><span class="section-number-5">1.11.4.1</span> Overview</h5>
+<div class="outline-text-5" id="text-1-11-4-1">
 <p>
 The function zip and its variants combine two or more sequence into one sequence.
 </p>
@@ -4233,9 +4438,9 @@ See also: <a href="https://en.wikipedia.org/wiki/Convolution_(computer_science)"
 </div>
 </div>
 
-<div id="outline-container-sec-1-10-4-2" class="outline-5">
-<h5 id="sec-1-10-4-2"><span class="section-number-5">1.10.4.2</span> Zip in Haskell</h5>
-<div class="outline-text-5" id="text-1-10-4-2">
+<div id="outline-container-sec-1-11-4-2" class="outline-5">
+<h5 id="sec-1-11-4-2"><span class="section-number-5">1.11.4.2</span> Zip in Haskell</h5>
+<div class="outline-text-5" id="text-1-11-4-2">
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t zip
@@ -4285,9 +4490,9 @@ See also: <a href="https://en.wikipedia.org/wiki/Convolution_(computer_science)"
 </div>
 </div>
 
-<div id="outline-container-sec-1-10-4-3" class="outline-5">
-<h5 id="sec-1-10-4-3"><span class="section-number-5">1.10.4.3</span> Zip in Python</h5>
-<div class="outline-text-5" id="text-1-10-4-3">
+<div id="outline-container-sec-1-11-4-3" class="outline-5">
+<h5 id="sec-1-11-4-3"><span class="section-number-5">1.11.4.3</span> Zip in Python</h5>
+<div class="outline-text-5" id="text-1-11-4-3">
 <p>
 The Python zip function is inspired by Haskell. The Python zip
 functions can take a variable number of arguments.
@@ -4378,9 +4583,9 @@ Traceback (most recent call last):
 </div>
 </div>
 
-<div id="outline-container-sec-1-10-4-4" class="outline-5">
-<h5 id="sec-1-10-4-4"><span class="section-number-5">1.10.4.4</span> Zip in Scheme</h5>
-<div class="outline-text-5" id="text-1-10-4-4">
+<div id="outline-container-sec-1-11-4-4" class="outline-5">
+<h5 id="sec-1-11-4-4"><span class="section-number-5">1.11.4.4</span> Zip in Scheme</h5>
+<div class="outline-text-5" id="text-1-11-4-4">
 <p>
 It can be defined as:
 </p>
@@ -4411,9 +4616,9 @@ It can be defined as:
 </div>
 </div>
 
-<div id="outline-container-sec-1-10-4-5" class="outline-5">
-<h5 id="sec-1-10-4-5"><span class="section-number-5">1.10.4.5</span> Zip in Clojure</h5>
-<div class="outline-text-5" id="text-1-10-4-5">
+<div id="outline-container-sec-1-11-4-5" class="outline-5">
+<h5 id="sec-1-11-4-5"><span class="section-number-5">1.11.4.5</span> Zip in Clojure</h5>
+<div class="outline-text-5" id="text-1-11-4-5">
 <div class="org-src-container">
 
 <pre class="src src-clojure"><span class="org-comment-delimiter">;; </span><span class="org-comment">Zip returning list</span>
@@ -4454,12 +4659,12 @@ user=&gt;
 </div>
 </div>
 
-<div id="outline-container-sec-1-11" class="outline-3">
-<h3 id="sec-1-11"><span class="section-number-3">1.11</span> Function Composition</h3>
-<div class="outline-text-3" id="text-1-11">
-</div><div id="outline-container-sec-1-11-1" class="outline-4">
-<h4 id="sec-1-11-1"><span class="section-number-4">1.11.1</span> Overview</h4>
-<div class="outline-text-4" id="text-1-11-1">
+<div id="outline-container-sec-1-12" class="outline-3">
+<h3 id="sec-1-12"><span class="section-number-3">1.12</span> Function Composition</h3>
+<div class="outline-text-3" id="text-1-12">
+</div><div id="outline-container-sec-1-12-1" class="outline-4">
+<h4 id="sec-1-12-1"><span class="section-number-4">1.12.1</span> Overview</h4>
+<div class="outline-text-4" id="text-1-12-1">
 <p>
 Function composition promotes shorter code, code reuse and higher
 modularity by creating new functions from previous defined ones. They
@@ -4479,9 +4684,9 @@ See also: <a href="http://en.wikipedia.org/wiki/Function_composition_(computer_s
 </div>
 </div>
 
-<div id="outline-container-sec-1-11-2" class="outline-4">
-<h4 id="sec-1-11-2"><span class="section-number-4">1.11.2</span> Function Composition in Haskell</h4>
-<div class="outline-text-4" id="text-1-11-2">
+<div id="outline-container-sec-1-12-2" class="outline-4">
+<h4 id="sec-1-12-2"><span class="section-number-4">1.12.2</span> Function Composition in Haskell</h4>
+<div class="outline-text-4" id="text-1-12-2">
 <pre class="example">
 (.) :: (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 
@@ -4842,9 +5047,9 @@ Example:
 </div>
 </div>
 
-<div id="outline-container-sec-1-11-3" class="outline-4">
-<h4 id="sec-1-11-3"><span class="section-number-4">1.11.3</span> Function Composition in Python</h4>
-<div class="outline-text-4" id="text-1-11-3">
+<div id="outline-container-sec-1-12-3" class="outline-4">
+<h4 id="sec-1-12-3"><span class="section-number-4">1.12.3</span> Function Composition in Python</h4>
+<div class="outline-text-4" id="text-1-12-3">
 <div class="org-src-container">
 
 <pre class="src src-python"><span class="org-keyword">def</span> <span class="org-function-name">compose</span>(funclist):   
@@ -5052,9 +5257,9 @@ Example:
 </div>
 </div>
 </div>
-<div id="outline-container-sec-1-11-4" class="outline-4">
-<h4 id="sec-1-11-4"><span class="section-number-4">1.11.4</span> Function Composition in F#</h4>
-<div class="outline-text-4" id="text-1-11-4">
+<div id="outline-container-sec-1-12-4" class="outline-4">
+<h4 id="sec-1-12-4"><span class="section-number-4">1.12.4</span> Function Composition in F#</h4>
+<div class="outline-text-4" id="text-1-12-4">
 <p>
 F# uses the operator (&lt;&lt;) for composition which is similar to Haskell
 composition operator (.) dot. It also uses the operator (&gt;&gt;) for forward
@@ -5395,17 +5600,17 @@ text
 </div>
 </div>
 
-<div id="outline-container-sec-1-12" class="outline-3">
-<h3 id="sec-1-12"><span class="section-number-3">1.12</span> Functors</h3>
-<div class="outline-text-3" id="text-1-12">
-</div><div id="outline-container-sec-1-12-1" class="outline-4">
-<h4 id="sec-1-12-1"><span class="section-number-4">1.12.1</span> Overview</h4>
-<div class="outline-text-4" id="text-1-12-1">
+<div id="outline-container-sec-1-13" class="outline-3">
+<h3 id="sec-1-13"><span class="section-number-3">1.13</span> Functors</h3>
+<div class="outline-text-3" id="text-1-13">
+</div><div id="outline-container-sec-1-13-1" class="outline-4">
+<h4 id="sec-1-13-1"><span class="section-number-4">1.13.1</span> Overview</h4>
+<div class="outline-text-4" id="text-1-13-1">
 <p>
 Functors are type constructors that can be mapped over like lists are
-mapped with <span class="underline">map</span> function. Its concept comes from category theory and
-like many mathematical concepts it is defined by the laws that it
-satisfies: Functor's laws.
+mapped with <span class="underline">map</span> function. This concept from category theory and
+like many mathematical abstractions it is defined by the laws that it must
+satisfies, in this case Functor's laws.
 </p>
 
 <p>
@@ -5414,8 +5619,8 @@ implement the function fmap for each functor implementation.
 </p>
 
 <p>
-Note: Haskell functors must not be confused with C++ functor and
-ML-module functor. 
+Note: Haskell functors must not be confused with <span class="underline">C++ functor</span> and
+<span class="underline">ML-module functor (Higher order module)</span>. 
 </p>
 
 <div class="org-src-container">
@@ -5475,9 +5680,9 @@ fmap (f1 . f2 . f3 &#x2026; fn) = fmap f1 . fmap f2 . fmap f3 &#x2026; fmap fn
 </div>
 
 
-<div id="outline-container-sec-1-12-2" class="outline-4">
-<h4 id="sec-1-12-2"><span class="section-number-4">1.12.2</span> Show all Functor instances</h4>
-<div class="outline-text-4" id="text-1-12-2">
+<div id="outline-container-sec-1-13-2" class="outline-4">
+<h4 id="sec-1-13-2"><span class="section-number-4">1.13.2</span> Show all Functor instances</h4>
+<div class="outline-text-4" id="text-1-13-2">
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>info <span class="org-haskell-constructor">Functor</span> 
@@ -5523,12 +5728,12 @@ fmap (f1 . f2 . f3 &#x2026; fn) = fmap f1 . fmap f2 . fmap f3 &#x2026; fmap fn
 </div>
 </div>
 
-<div id="outline-container-sec-1-12-3" class="outline-4">
-<h4 id="sec-1-12-3"><span class="section-number-4">1.12.3</span> Functor Implementations</h4>
-<div class="outline-text-4" id="text-1-12-3">
-</div><div id="outline-container-sec-1-12-3-1" class="outline-5">
-<h5 id="sec-1-12-3-1"><span class="section-number-5">1.12.3.1</span> Identity</h5>
-<div class="outline-text-5" id="text-1-12-3-1">
+<div id="outline-container-sec-1-13-3" class="outline-4">
+<h4 id="sec-1-13-3"><span class="section-number-4">1.13.3</span> Functor Implementations</h4>
+<div class="outline-text-4" id="text-1-13-3">
+</div><div id="outline-container-sec-1-13-3-1" class="outline-5">
+<h5 id="sec-1-13-3-1"><span class="section-number-5">1.13.3.1</span> Identity</h5>
+<div class="outline-text-5" id="text-1-13-3-1">
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-comment-delimiter">-- </span><span class="org-comment">File: identity.hs </span>
@@ -5608,9 +5813,9 @@ fmap (f1 . f2 . f3 &#x2026; fn) = fmap f1 . fmap f2 . fmap f3 &#x2026; fmap fn
 </div>
 </div>
 
-<div id="outline-container-sec-1-12-3-2" class="outline-5">
-<h5 id="sec-1-12-3-2"><span class="section-number-5">1.12.3.2</span> List</h5>
-<div class="outline-text-5" id="text-1-12-3-2">
+<div id="outline-container-sec-1-13-3-2" class="outline-5">
+<h5 id="sec-1-13-3-2"><span class="section-number-5">1.13.3.2</span> List</h5>
+<div class="outline-text-5" id="text-1-13-3-2">
 <p>
 For lists the function fmap is equal to map. 
 </p>
@@ -5687,9 +5892,9 @@ Alternative Implementation of list functor:
 </div>
 </div>
 
-<div id="outline-container-sec-1-12-3-3" class="outline-5">
-<h5 id="sec-1-12-3-3"><span class="section-number-5">1.12.3.3</span> Maybe / Option</h5>
-<div class="outline-text-5" id="text-1-12-3-3">
+<div id="outline-container-sec-1-13-3-3" class="outline-5">
+<h5 id="sec-1-13-3-3"><span class="section-number-5">1.13.3.3</span> Maybe / Option</h5>
+<div class="outline-text-5" id="text-1-13-3-3">
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-keyword">data</span> <span class="org-haskell-constructor">Maybe</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Just</span> a <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Nothing</span> <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Show</span>)
@@ -5774,9 +5979,9 @@ Example:
 </div>
 </div>
 
-<div id="outline-container-sec-1-12-3-4" class="outline-5">
-<h5 id="sec-1-12-3-4"><span class="section-number-5">1.12.3.4</span> Either</h5>
-<div class="outline-text-5" id="text-1-12-3-4">
+<div id="outline-container-sec-1-13-3-4" class="outline-5">
+<h5 id="sec-1-13-3-4"><span class="section-number-5">1.13.3.4</span> Either</h5>
+<div class="outline-text-5" id="text-1-13-3-4">
 <p>
 The type constructor Either is similar to Maybe and it can short
 circuit a computation in the similar way to Maybe, however it allows
@@ -5937,9 +6142,9 @@ Example:
 </div>
 </div>
 
-<div id="outline-container-sec-1-12-3-5" class="outline-5">
-<h5 id="sec-1-12-3-5"><span class="section-number-5">1.12.3.5</span> IO</h5>
-<div class="outline-text-5" id="text-1-12-3-5">
+<div id="outline-container-sec-1-13-3-5" class="outline-5">
+<h5 id="sec-1-13-3-5"><span class="section-number-5">1.13.3.5</span> IO</h5>
+<div class="outline-text-5" id="text-1-13-3-5">
 <p>
 Source: Book <a href="http://learnyouahaskell.com/functors-applicative-functors-and-monoids">learnyouahaskell</a> 
 </p>
@@ -6043,12 +6248,12 @@ Source: Book <a href="http://learnyouahaskell.com/functors-applicative-functors-
 </div>
 </div>
 
-<div id="outline-container-sec-1-13" class="outline-3">
-<h3 id="sec-1-13"><span class="section-number-3">1.13</span> Monads</h3>
-<div class="outline-text-3" id="text-1-13">
-</div><div id="outline-container-sec-1-13-1" class="outline-4">
-<h4 id="sec-1-13-1"><span class="section-number-4">1.13.1</span> Overview</h4>
-<div class="outline-text-4" id="text-1-13-1">
+<div id="outline-container-sec-1-14" class="outline-3">
+<h3 id="sec-1-14"><span class="section-number-3">1.14</span> Monads</h3>
+<div class="outline-text-3" id="text-1-14">
+</div><div id="outline-container-sec-1-14-1" class="outline-4">
+<h4 id="sec-1-14-1"><span class="section-number-4">1.14.1</span> Overview</h4>
+<div class="outline-text-4" id="text-1-14-1">
 <p>
 A monad is a concept from <span class="underline">Category Theory</span>, which is defined by three
 things:
@@ -6099,12 +6304,12 @@ that matches the Monad type class.
 </div>
 </div>
 
-<div id="outline-container-sec-1-13-2" class="outline-4">
-<h4 id="sec-1-13-2"><span class="section-number-4">1.13.2</span> List Monad</h4>
-<div class="outline-text-4" id="text-1-13-2">
-</div><div id="outline-container-sec-1-13-2-1" class="outline-5">
-<h5 id="sec-1-13-2-1"><span class="section-number-5">1.13.2.1</span> List Monad in Haskell</h5>
-<div class="outline-text-5" id="text-1-13-2-1">
+<div id="outline-container-sec-1-14-2" class="outline-4">
+<h4 id="sec-1-14-2"><span class="section-number-4">1.14.2</span> List Monad</h4>
+<div class="outline-text-4" id="text-1-14-2">
+</div><div id="outline-container-sec-1-14-2-1" class="outline-5">
+<h5 id="sec-1-14-2-1"><span class="section-number-5">1.14.2.1</span> List Monad in Haskell</h5>
+<div class="outline-text-5" id="text-1-14-2-1">
 <p>
 The list Monad is used for non-deterministic computations where there
 is a unknown number of results. It is useful for constraint solving:
@@ -6382,9 +6587,9 @@ Do notation examples for List monad:
 </div>
 </div>
 
-<div id="outline-container-sec-1-13-2-2" class="outline-5">
-<h5 id="sec-1-13-2-2"><span class="section-number-5">1.13.2.2</span> List Monad in OCaml</h5>
-<div class="outline-text-5" id="text-1-13-2-2">
+<div id="outline-container-sec-1-14-2-2" class="outline-5">
+<h5 id="sec-1-14-2-2"><span class="section-number-5">1.14.2.2</span> List Monad in OCaml</h5>
+<div class="outline-text-5" id="text-1-14-2-2">
 <div class="org-src-container">
 
 <pre class="src src-ocaml"><span class="org-tuareg-font-lock-governing">module</span> <span class="org-tuareg-font-lock-module">ListM</span> <span class="org-tuareg-font-lock-operator">=</span>
@@ -6481,9 +6686,9 @@ Do notation examples for List monad:
 </div>
 </div>
 
-<div id="outline-container-sec-1-13-2-3" class="outline-5">
-<h5 id="sec-1-13-2-3"><span class="section-number-5">1.13.2.3</span> List Monad in F#</h5>
-<div class="outline-text-5" id="text-1-13-2-3">
+<div id="outline-container-sec-1-14-2-3" class="outline-5">
+<h5 id="sec-1-14-2-3"><span class="section-number-5">1.14.2.3</span> List Monad in F#</h5>
+<div class="outline-text-5" id="text-1-14-2-3">
 <p>
 Example without syntax sugar: 
 </p>
@@ -6694,9 +6899,9 @@ Example with F# "workflow" or "computation expression" syntax:
 </div>
 </div>
 
-<div id="outline-container-sec-1-13-2-4" class="outline-5">
-<h5 id="sec-1-13-2-4"><span class="section-number-5">1.13.2.4</span> List Monad in Python</h5>
-<div class="outline-text-5" id="text-1-13-2-4">
+<div id="outline-container-sec-1-14-2-4" class="outline-5">
+<h5 id="sec-1-14-2-4"><span class="section-number-5">1.14.2.4</span> List Monad in Python</h5>
+<div class="outline-text-5" id="text-1-14-2-4">
 <div class="org-src-container">
 
 <pre class="src src-python"><span class="org-keyword">from</span> functools <span class="org-keyword">import</span> <span class="org-builtin">reduce</span>
@@ -6792,12 +6997,12 @@ Example with F# "workflow" or "computation expression" syntax:
 </div>
 </div>
 
-<div id="outline-container-sec-1-13-3" class="outline-4">
-<h4 id="sec-1-13-3"><span class="section-number-4">1.13.3</span> Maybe / Option Monad</h4>
-<div class="outline-text-4" id="text-1-13-3">
-</div><div id="outline-container-sec-1-13-3-1" class="outline-5">
-<h5 id="sec-1-13-3-1"><span class="section-number-5">1.13.3.1</span> Overview</h5>
-<div class="outline-text-5" id="text-1-13-3-1">
+<div id="outline-container-sec-1-14-3" class="outline-4">
+<h4 id="sec-1-14-3"><span class="section-number-4">1.14.3</span> Maybe / Option Monad</h4>
+<div class="outline-text-4" id="text-1-14-3">
+</div><div id="outline-container-sec-1-14-3-1" class="outline-5">
+<h5 id="sec-1-14-3-1"><span class="section-number-5">1.14.3.1</span> Overview</h5>
+<div class="outline-text-5" id="text-1-14-3-1">
 <p>
 The Maybe type (Haskell) or Option type (ML, F# and OCaml) is used to
 indicate that a function might return nothing, the value might not
@@ -6814,9 +7019,9 @@ invalid input.
 </div>
 </div>
 
-<div id="outline-container-sec-1-13-3-2" class="outline-5">
-<h5 id="sec-1-13-3-2"><span class="section-number-5">1.13.3.2</span> Maybe Monad in Haskell</h5>
-<div class="outline-text-5" id="text-1-13-3-2">
+<div id="outline-container-sec-1-14-3-2" class="outline-5">
+<h5 id="sec-1-14-3-2"><span class="section-number-5">1.14.3.2</span> Maybe Monad in Haskell</h5>
+<div class="outline-text-5" id="text-1-14-3-2">
 <p>
 The Maybe monad ends the computation if any step fails. The module
 <a href="https://hackage.haskell.org/package/base-4.8.2.0/docs/Data-Maybe.html">Data.Maybe</a> has useful function to deal with Maybe type.
@@ -7084,9 +7289,9 @@ Example: The function below parses two numbers and adds them.
 </div>
 </div>
 
-<div id="outline-container-sec-1-13-3-3" class="outline-5">
-<h5 id="sec-1-13-3-3"><span class="section-number-5">1.13.3.3</span> Maybe Monad in Ocaml</h5>
-<div class="outline-text-5" id="text-1-13-3-3">
+<div id="outline-container-sec-1-14-3-3" class="outline-5">
+<h5 id="sec-1-14-3-3"><span class="section-number-5">1.14.3.3</span> Maybe Monad in Ocaml</h5>
+<div class="outline-text-5" id="text-1-14-3-3">
 <p>
 The maybe type is called Option in Ocaml and F#.
 </p>
@@ -7262,9 +7467,9 @@ The maybe type is called Option in Ocaml and F#.
 </div>
 </div>
 
-<div id="outline-container-sec-1-13-3-4" class="outline-5">
-<h5 id="sec-1-13-3-4"><span class="section-number-5">1.13.3.4</span> Maybe Monad in Python</h5>
-<div class="outline-text-5" id="text-1-13-3-4">
+<div id="outline-container-sec-1-14-3-4" class="outline-5">
+<h5 id="sec-1-14-3-4"><span class="section-number-5">1.14.3.4</span> Maybe Monad in Python</h5>
+<div class="outline-text-5" id="text-1-14-3-4">
 <p>
 <b>Implementation with Functions</b>
 </p>
@@ -7558,12 +7763,12 @@ none
 </div>
 </div>
 
-<div id="outline-container-sec-1-13-4" class="outline-4">
-<h4 id="sec-1-13-4"><span class="section-number-4">1.13.4</span> Either Monad</h4>
-<div class="outline-text-4" id="text-1-13-4">
-</div><div id="outline-container-sec-1-13-4-1" class="outline-5">
-<h5 id="sec-1-13-4-1"><span class="section-number-5">1.13.4.1</span> Overview</h5>
-<div class="outline-text-5" id="text-1-13-4-1">
+<div id="outline-container-sec-1-14-4" class="outline-4">
+<h4 id="sec-1-14-4"><span class="section-number-4">1.14.4</span> Either Monad</h4>
+<div class="outline-text-4" id="text-1-14-4">
+</div><div id="outline-container-sec-1-14-4-1" class="outline-5">
+<h5 id="sec-1-14-4-1"><span class="section-number-5">1.14.4.1</span> Overview</h5>
+<div class="outline-text-5" id="text-1-14-4-1">
 <p>
 The Either type is an extension of Maybe, it end a computation if any
 step fails. Unlike Maybe it can indicate the source of the error. It
@@ -7594,9 +7799,9 @@ From: <a href="https://hackage.haskell.org/package/category-extras-0.53.4/docs/s
 </div>
 </div>
 
-<div id="outline-container-sec-1-13-4-2" class="outline-5">
-<h5 id="sec-1-13-4-2"><span class="section-number-5">1.13.4.2</span> Example</h5>
-<div class="outline-text-5" id="text-1-13-4-2">
+<div id="outline-container-sec-1-14-4-2" class="outline-5">
+<h5 id="sec-1-14-4-2"><span class="section-number-5">1.14.4.2</span> Example</h5>
+<div class="outline-text-5" id="text-1-14-4-2">
 <p>
 file: either_monad.hs 
 </p>
@@ -7845,12 +8050,12 @@ Repl:
 </div>
 </div>
 
-<div id="outline-container-sec-1-13-5" class="outline-4">
-<h4 id="sec-1-13-5"><span class="section-number-4">1.13.5</span> IO Monad</h4>
-<div class="outline-text-4" id="text-1-13-5">
-</div><div id="outline-container-sec-1-13-5-1" class="outline-5">
-<h5 id="sec-1-13-5-1"><span class="section-number-5">1.13.5.1</span> Overview</h5>
-<div class="outline-text-5" id="text-1-13-5-1">
+<div id="outline-container-sec-1-14-5" class="outline-4">
+<h4 id="sec-1-14-5"><span class="section-number-4">1.14.5</span> IO Monad</h4>
+<div class="outline-text-4" id="text-1-14-5">
+</div><div id="outline-container-sec-1-14-5-1" class="outline-5">
+<h5 id="sec-1-14-5-1"><span class="section-number-5">1.14.5.1</span> Overview</h5>
+<div class="outline-text-5" id="text-1-14-5-1">
 <p>
 The type IO indicates an action that when evaluated may perform some
 IO. The function <code>putChar :: Char -&gt; IO ()</code> takes a char and returns
@@ -8027,9 +8232,9 @@ return :: a -&gt; IO a
 </div>
 </div>
 
-<div id="outline-container-sec-1-13-5-2" class="outline-5">
-<h5 id="sec-1-13-5-2"><span class="section-number-5">1.13.5.2</span> Example</h5>
-<div class="outline-text-5" id="text-1-13-5-2">
+<div id="outline-container-sec-1-14-5-2" class="outline-5">
+<h5 id="sec-1-14-5-2"><span class="section-number-5">1.14.5.2</span> Example</h5>
+<div class="outline-text-5" id="text-1-14-5-2">
 <p>
 Examples with IO Monad:
 </p>
@@ -8272,9 +8477,9 @@ Some IO Primitives:
 </div>
 </div>
 
-<div id="outline-container-sec-1-13-6" class="outline-4">
-<h4 id="sec-1-13-6"><span class="section-number-4">1.13.6</span> See also</h4>
-<div class="outline-text-4" id="text-1-13-6">
+<div id="outline-container-sec-1-14-6" class="outline-4">
+<h4 id="sec-1-14-6"><span class="section-number-4">1.14.6</span> See also</h4>
+<div class="outline-text-4" id="text-1-14-6">
 <p>
 <b>Monads</b>
 </p>
@@ -9536,7 +9741,7 @@ Java HotSpot™ VM.</b> Available at:  <a href="http://www.ssw.uni-linz.ac.at/Re
 </div></div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2016-03-22 Tue 06:02</p>
+<p class="date">Created: 2016-03-24 Thu 05:54</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

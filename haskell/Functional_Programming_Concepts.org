@@ -1,8 +1,4 @@
 #+INCLUDE: ../theme/style.org
-
-# #+HTML_HEAD: <link href="/theme/style.css" rel="stylesheet">
-# #+INFOJS_OPT: view:showall toc:t ltoc:t ftoc:nil mouse:underline button:nil path:/theme/org-info.js
-
 #+TITLE:  Functional Programming Concepts
 #+DESCRIPTION: Functional programming concepts, examples, algorithms and ideas.
 
@@ -430,6 +426,162 @@ Reverse list function purified:
 [1, 2, 3, 4]
 
 #+END_SRC
+
+** Referential Transparency 
+
+Referential Transparency means that any sub-expression can be replaced
+by its value within an expression at any time without changing the
+evaluation of the whole expression. This property is a characteristic 
+of mathematical expressions that allows program transformation,
+program manipulation and equational reasoning. It can be basically be
+stated as "replace equals by equals".  
+
+If there is referential transparency the expression below is valid:
+
+ =f(x) + f(x) = 2 * f(x)=
+
+The function f is _referentially transparent_ only if it is a pure
+function. The application of the function can be replaced by its value
+without change the meaning of the expression and it yields always the
+same result for the same input.
+
+Referential transparency is only possible in the absence of
+side-effects. Haskell is one the few language which is referencially
+transparent owing to the fact that it enforces purity. 
+
+Benefits:
+
+ - Program transformation
+
+ - Equational reasoning
+
+ - Every expression can replaced by its value. 
+
+ - Reasoning about the result of a function can be done by replacing
+   its definition at the place of the application regardless of the
+   context.
+
+ - Evaluation order doesn't matter. 
+ 
+ - More opportunities for compiler optimization
+
+ - Computations can be safely distributed over multiple
+   processors/threads.
+
+ - Previous evaluated expressions can be memoized. 
+
+ - Programs with referential transparency can be easier to reason
+   about its behavior due to the reader does not have to think about
+   the side-effects like global states, internal states and IO.
+
+ - Help change the code without breaking it, easier refactoring. 
+
+
+Example: referential transparency in Python. Note: Python as ML
+variants and Scheme doesn't enforce it.  
+
+#+BEGIN_SRC python  
+>>> def square (x):
+...   return x * x
+... 
+>>> 
+>>> square (3) + square (3) 
+18
+>>> 2 * square (3)
+18
+>>> square (3) + square (3) == 2 * square (3)
+True
+>>> 
+>>> x  = square (3)
+>>> x
+9
+>>> x + x  == 2 * square (3)
+True
+
+#+END_SRC
+
+Example:violation of referential transparency or referential
+opacity due to global state side-effect in Python.
+
+
+#+BEGIN_SRC python 
+
+state = 1
+
+def f(x):
+  global state 
+  state = state + 1 
+  return x + state 
+
+>>> f(2) 
+4
+>>> f(2) 
+5
+>>> 2 * f(2)
+12
+>>>
+
+ # Resetting the world:
+ # 
+>>> state = 1 
+>>> 
+>>> f(2) + f(2) == 2 * f(2)
+False
+>>> 
+
+>>> import random
+>>> 
+>>> random.random() + random.random () ==  2 * random.random()
+False
+>>> 
+
+>>> state = 0 
+
+>>> def counter ():
+...    global state
+...    state = state + 1
+...    return state
+... 
+>>> counter () + counter () == 2 * counter ()
+False
+>>> counter ()
+4
+>>> counter ()
+5
+>>> 
+
+#+END_SRC
+ 
+
+References:
+
+ - [[https://books.google.ca/books?id=NJ_xBwAAQBAJ&pg=PA232&lpg=PA232&dq=referential+transparency+equals+by+equals&source=bl&ots=1EDj-63h7P&sig=8H9rgzK1FvTlGsG6NDdwrB0LzaE&hl=en&sa=X&ved=0ahUKEwipkL3lndjLAhXE-g4KHXDeAaIQ6AEIQDAG#v=onepage&q=referential%20transparency%20equals%20by%20equals&f=false][Arrays, Functional Languages, and Parallel Systems - Google Books]]
+
+ - Hudak P. *Evolution, and Application of Functional Programming
+   Languages.* Available at
+   <http://www.utdallas.edu/~kXh060100/cs6301fa15/p359-hudak.pdf>
+
+ - *Input/Output in Functional. Languages. Using Algebraic Union
+   Types.*. Available at
+   <http://essay-test.utsp.utwente.nl/57287/1/scriptie_Rorije.pdf>
+
+ - [[http://www2.sys-con.com/itsg/virtualcd/java/archives/0404/callahan/index.html][Clarify Your Code in the Functional Style]]
+
+ - http://mccarthy.cs.iit.edu/cs440/videos/state-4up.pdf
+
+ - http://www.macs.hw.ac.uk/~hwloidl/Courses/F21DP/gph_milan15_handout.pdf
+
+ - [[https://wiki.haskell.org/Referential_transparency][Referential transparency - HaskellWiki]]
+
+ - [[http://faculty.ycp.edu/~dhovemey/fall2012/cs340/lecture/lecture18.html][CS 340 - Lecture 18: Functional Programming in Scala]]
+
+ - [[http://www.cs.unc.edu/~block/comp524/Lectures/files2/Lecture14.pdf][Lecture 14: ML, Deep/Shallow Access, Referential Transparency]]
+
+ - [[http://programmers.stackexchange.com/questions/254304/what-is-referential-transparency][functional programming - What is referential transparency? -
+   Programmers Stack Exchange]]
+
+ - [[http://www.slideshare.net/AdrianGzz2112/functional-programming-ruby-mty][Functional programming ruby mty]]
+
 
 ** Closure
 
@@ -1083,7 +1235,7 @@ def func1(x):
 #+END_SRC
 
 
-Example 2: Tail recusive call or tail recursive function. 
+Example 2: Tail recursive call or tail recursive function. 
 
 #+BEGIN_SRC python 
 def tail_recursive_call (n, acc);
@@ -1117,7 +1269,7 @@ optimization. [[http://www.ssw.uni-linz.ac.at/Research/Papers/Schwaighofer09Mast
 
 If the language doesn't support TCO it is not possible to perform
 recursion safely. A big number of calls will lead to a stack overflow
-exception and the program will crash unexpectedly .
+exception and the program will crash unexpectedly.
 
 Sometimes non tail recursive functions can be changed to tail
 recursive by adding a new function with extra parameters
@@ -1708,7 +1860,7 @@ The functions map, filter and reduce (fold left) are ubiquitous in
 many programming languages and also the most used higher order
 functions.
 
-They can be stricted evaluated like in Scheme and Javascript or lazy
+They can be strict evaluated like in Scheme and JavaScript or lazy
 evaluated like in Python and Haskell.
 
 *** Map
@@ -1846,9 +1998,10 @@ def s_map (f, xs):
 [9, 12, 15]
 >>> 
 
- # Due to python doesn't have tail call optimization
- # recusion must be avoided, a higher number of iterations
- # can lead to a stack overflow.
+ # As python doesn't have tail call optimization  
+ # therefore recursion must be avoided because 
+ # a big number of function calls 
+ # can lead to stack overflow.
  
 def strict_map (f, xs):
     return [f (x) for x in xs]
@@ -1884,8 +2037,8 @@ StopIteration
 >>>           
 
  #
- # To the map function work like in Haskell and ML 
- # it is need to be curried.   
+ # In order for the map function work in the same way 
+ # as Haskell and ML it is must be curried.   
  #
 
 curry2 = lambda f: lambda x: lambda y: f(x, y)
@@ -1951,7 +2104,7 @@ user=> (map (fn [a b c] (+ (* 100 a) (* 10 b) c)) [1 2 3 4 5] [8 9 10 11 12] [3 
 user=> 
 
 ;;
-;; The clojure map is Polymorphic it can be applied to any collection 
+;; The Clojure map is Polymorphic it can be applied to any collection 
 ;; of seq abstraction like lists, vectors and hash maps.
 ;;
 
@@ -1980,7 +2133,7 @@ user=> (mapv identity {:a 10 :b 20 :c "hello world"})
 user=> 
 
 
-;; Clojure also have destructuring 
+;; Clojure also has destructuring 
 ;;
 user=> (map (fn [[[a b] c]] (+ (* 100 a ) (* 10 b) c))  [[[1 2] 3] [[3 4] 5] [[1 2] 4]])
 (123 345 124)
@@ -2007,7 +2160,7 @@ user=>
 [20, 40, 14]
 >>> 
 
-  # Stritct Version of filter function
+  # Strict Version of the filter function
   #
 >>> _filter = lambda f, xs: list(filter(f, xs))
 >>> 
@@ -4455,15 +4608,15 @@ val it : float = 5757.0723
 *** Overview
 
 Functors are type constructors that can be mapped over like lists are
-mapped with _map_ function. Its concept comes from category theory and
-like many mathematical concepts it is defined by the laws that it
-satisfies: Functor's laws.
+mapped with _map_ function. This concept from category theory and
+like many mathematical abstractions it is defined by the laws that it must
+satisfies, in this case Functor's laws.
 
 In Haskell functors are instances of the type class Functor that must
 implement the function fmap for each functor implementation.
 
-Note: Haskell functors must not be confused with C++ functor and
-ML-module functor. 
+Note: Haskell functors must not be confused with _C++ functor_ and
+_ML-module functor (Higher order module)_. 
 
 #+BEGIN_SRC haskell
 class  Functor f  where

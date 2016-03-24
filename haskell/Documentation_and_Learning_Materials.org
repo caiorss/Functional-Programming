@@ -5,8 +5,9 @@
 * Documentation and Learning Materials
 ** Code Search Engine
 
-Haskell API search engine, which allows you to search many 
-standard Haskell libraries by either function name, or by approximate type signature. 
+Haskell API search engine, which allows you to search many standard
+Haskell libraries by either function name, or by approximate type
+signature.
 
 file:https://www.haskell.org/hoogle/res/hoogle.png
 
@@ -204,7 +205,7 @@ Creating complete programs in Haskell from the ground up.
 
 *Learn you a haskell by Michał Drozd (Youtube)*
 
- - [[https://www.youtube.com/playlist?list=PLPqPwGvHPSZB-urE6QFjKYt6AGXcZqJUh][Learn you a haskell by Michal Drozd]]
+ - [[https://www.youtube.com/playlist?list%3DPLPqPwGvHPSZB-urE6QFjKYt6AGXcZqJUh][Learn you a Haskell by Michal Drozd]]
 
 
 *Loop School*
@@ -275,7 +276,7 @@ Good video lectures about Category theory and Haskell programing language.
 
  - [[https://news.ycombinator.com/item?id=2924971][Why Haskell is Kinda Cool (github.com)]]
 
-*Problemns*
+*Problems*
 
  - [[https://news.ycombinator.com/item?id=8909126][I think I've solved the Haskell records problem (nikita-volkov.github.io)]]
  - [[https://news.ycombinator.com/item?id=8970733][Use Haskell for shell scripting (haskellforall.com)]]

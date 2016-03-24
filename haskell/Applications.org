@@ -627,7 +627,7 @@ The %erro is : 2.4399999999996647e-2
 
 ** Vectors
 
-*Dot Product of Two Vectors / Escalar Product*
+*Dot Product of Two Vectors / Scalar Product*
 
  - v1.v2 = (x1, y1, z1) . (x2, y2, z2) = x1.y1 + y1.y2 + z2.z1
  - v1.v2 = Σai.bi

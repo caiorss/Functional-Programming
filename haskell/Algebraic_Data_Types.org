@@ -13,6 +13,7 @@ types. Note: Algebraic data types must not be confused with [[http://en.wikipedi
 data types]].
 
  - Applications of Algebraic Data Types
+
     * Build Embedded Domain specific languages - EDSL
     * Build Interpreters
     * Self Documenting code
@@ -31,7 +32,7 @@ data types]].
  - [[http://en.wikipedia.org/wiki/Option_type][Option Type]]
 
 Option type is useful in functional programming to avoid boilerplate
-null checking bug on non-deterministics computations.
+null checking bug on non-deterministic computations.
 
 | Language     | Syntax                                                              |            |
 |--------------+---------------------------------------------------------------------+------------|
@@ -357,7 +358,7 @@ Person {firstName = "Nikola", lastName = "Tesla", age = 30}
 
 ** Recursive Data Types
 
-*Exmple: Custom List Implementation*
+*Example: Custom List Implementation*
 
 
 File: list_cons.hs
@@ -425,7 +426,7 @@ filterl  f (Cons h t)  =
 {- Empty List [] -}
 list0 = Nil
 
-{- Sigle element list -}
+{- Single element list -}
 list1 = Cons 10 Nil
 list2 = Cons "Haskell" Nil
 
@@ -434,6 +435,8 @@ list4 = Cons 1.25 (Cons 0.65 (Cons 8.123 ( Cons 9.434 Nil)))
 #+END_SRC
 
 Running in ghci
+
+
 #+BEGIN_SRC haskell
 
 > :l list_cons.hs 

@@ -206,7 +206,7 @@ Standard Typeclasses:
  - Show: Representable as String
  - Enum: Enumerable in a list
  - Num:  Usable as a number
- - Ord:  Used for thing with total order
+ - Ord:  Used for things with a total order
 
 
 *** Standard Haskell Types

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Algebraic Data Types</title>
-<!-- 2016-03-22 Tue 06:01 -->
+<!-- 2016-03-24 Thu 05:53 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues" />
@@ -252,6 +252,7 @@ data types</a>.
 
 <ul class="org-ul">
 <li>Applications of Algebraic Data Types
+
 <ul class="org-ul">
 <li>Build Embedded Domain specific languages - EDSL
 </li>
@@ -292,7 +293,7 @@ data types</a>.
 
 <p>
 Option type is useful in functional programming to avoid boilerplate
-null checking bug on non-deterministics computations.
+null checking bug on non-deterministic computations.
 </p>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
@@ -700,7 +701,7 @@ Enumerated sets is type which can only have a limited number of values.
 <h3 id="sec-1-5"><span class="section-number-3">1.5</span> Recursive Data Types</h3>
 <div class="outline-text-3" id="text-1-5">
 <p>
-<b>Exmple: Custom List Implementation</b>
+<b>Example: Custom List Implementation</b>
 </p>
 
 
@@ -772,7 +773,7 @@ File: list_cons.hs
 <span class="org-comment-delimiter">{- </span><span class="org-comment">Empty List [] -}</span>
 <span class="org-haskell-definition">list0</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nil</span>
 
-<span class="org-comment-delimiter">{- </span><span class="org-comment">Sigle element list -}</span>
+<span class="org-comment-delimiter">{- </span><span class="org-comment">Single element list -}</span>
 <span class="org-haskell-definition">list1</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Cons</span> 10 <span class="org-haskell-constructor">Nil</span>
 <span class="org-haskell-definition">list2</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Cons</span> <span class="org-string">"Haskell"</span> <span class="org-haskell-constructor">Nil</span>
 
@@ -784,6 +785,8 @@ File: list_cons.hs
 <p>
 Running in ghci
 </p>
+
+
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>l list_cons<span class="org-haskell-operator">.</span>hs 
@@ -1190,7 +1193,7 @@ Reference:
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2016-03-22 Tue 06:01</p>
+<p class="date">Created: 2016-03-24 Thu 05:53</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
