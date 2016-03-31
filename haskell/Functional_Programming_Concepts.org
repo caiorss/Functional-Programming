@@ -2,7 +2,6 @@
 #+TITLE:  Functional Programming Concepts
 #+DESCRIPTION: Functional programming concepts, examples, algorithms and ideas.
 
-
 * Concepts
 ** Overview
 
@@ -183,12 +182,36 @@ are passed to the function. They are only evaluated when needed.
 add_xy :: Num a => a -> a -> t -> a
 >
 
+
+>>> div 10 2
+5
+>>> div 10 0
+ ,*** Exception: divide by zero
+>>> 
+
+
 -- The parameter z: (3 / 0) is not evaluated 
 -- because it is not needed.
 -- 
 > add_xy 3 4 (3 / 0)
 7
 > 
+
+>>> add_xy 3 4 (div 10 0)
+7
+>>> 
+
+-- sum [1 ..] is not evaluated. 
+-- If it were evaluated the computer would hang 
+-- or trow an arithmetic overflow exception
+--
+>>> add_xy 3 4 (sum [1 ..])
+7
+>>> 
+
+>>> add_xy 3 4 (div (sum [1 ..]) 0)
+7
+>>> 
 
 -- The infinite list is not fully evaluated 
 --
@@ -581,7 +604,6 @@ References:
    Programmers Stack Exchange]]
 
  - [[http://www.slideshare.net/AdrianGzz2112/functional-programming-ruby-mty][Functional programming ruby mty]]
-
 
 ** Closure
 
@@ -4461,7 +4483,7 @@ val it : int = 19
 > 
 #+END_SRC
 
-Example of a non numeric function composition:
+Example of a non-trivial function composition.
 
 #+BEGIN_SRC fsharp
 
@@ -4471,6 +4493,7 @@ let text = "
  3563.23,100.23,45.23
 
 "
+;;
 
 // Negate predicate. Invert a predicate function. 
 //
@@ -4602,6 +4625,42 @@ val it : float list = [934.6923; 1113.69; 3708.69]
 val it : float = 5757.0723
 > 
 
+// This function can also be written in point-free style. 
+// It means only with function forward-composition.
+//
+let parse_csv4 =
+       split_lines 
+    >> List.filter (neg is_string_empty) 
+    >> List.map (trim_string
+                 >> (split_string ",")
+                 >> (List.map float)) 
+;;
+
+val parse_csv4 : (string -> float list list)
+
+
+> parse_csv4 text ;;
+val it : float list list =
+  [[12.23; 30.23; 892.2323]; [23.23; 90.23; 1000.23]; [3563.23; 100.23; 45.23]]
+> 
+
+// With math composition (<<) or Haskell composition order.
+//
+let parse_csv5 =
+    List.map ((List.map float) << (split_string ",") << trim_string) 
+    <<  List.filter (neg is_string_empty)
+    <<  split_lines    
+;;
+
+val parse_csv5 : (string -> float list list)
+
+> parse_csv5 text ;;                                                       
+val it : float list list =
+  [[12.23; 30.23; 892.2323]; [23.23; 90.23; 1000.23]; [3563.23; 100.23; 45.23]]
+> 
+
+                  
+
 #+END_SRC
 
 ** Functors 
@@ -4652,7 +4711,6 @@ fmap (f . g) == fmap f . fmap g
 The composition law can be generalized to:
 
 fmap (f1 . f2 . f3 ... fn) = fmap f1 . fmap f2 . fmap f3 ... fmap fn 
-
 
 *** Show all Functor instances 
 
@@ -5215,12 +5273,223 @@ class Monad m where
     fail   :: String -> m a       
 #+END_SRC
 
+*** Identity Monad 
+
+# @TODO: Identity monad 
+
+The identity monad is the simplest monad. 
+
+#+BEGIN_SRC haskell 
+newtype Identity a = Identity { runIdentity :: a }
+    deriving (Eq, Ord, Data, Traversable, Generic, Generic1)
+
+
+instance Monad Identity where
+    return   = Identity
+    m >>= k  = k (runIdentity m)
+
+instance Functor Identity where
+    fmap     = coerce
+
+instance Applicative Identity where
+    pure     = Identity
+    (<*>)    = coerce
+#+END_SRC
+
+Example: 
+
+#+BEGIN_SRC haskell 
+
+
+>>> :info Identity
+newtype Identity a = Identity {runIdentity :: a}
+  	-- Defined in ‘Data.Functor.Identity’
+instance Eq a => Eq (Identity a)
+  -- Defined in ‘Data.Functor.Identity’
+instance Monad Identity -- Defined in ‘Data.Functor.Identity’
+instance Functor Identity -- Defined in ‘Data.Functor.Identity’
+instance Ord a => Ord (Identity a)
+  -- Defined in ‘Data.Functor.Identity’
+instance Read a => Read (Identity a)
+  -- Defined in ‘Data.Functor.Identity’
+instance Show a => Show (Identity a)
+  -- Defined in ‘Data.Functor.Identity’
+instance MonadFix Identity -- Defined in ‘Data.Functor.Identity’
+instance Applicative Identity -- Defined in ‘Data.Functor.Identity’
+instance Foldable Identity -- Defined in ‘Data.Functor.Identity’
+instance Traversable Identity -- Defined in ‘Data.Functor.Identity’
+>>> 
+
+>>> :t Identity
+Identity :: a -> Identity a
+>>> 
+
+>>> Identity 10
+Identity 10
+>>> :t Identity 10
+Identity 10 :: Num a => Identity a
+>>> 
+
+>>> :t runIdentity 
+runIdentity :: Identity a -> a
+>>> 
+
+>>> runIdentity $ Identity 10
+10
+>>> runIdentity $ Identity 20
+20
+>>> 
+
+
+>>> return 10 :: Identity Int
+Identity 10
+>>> 
+
+>>> runIdentity $ (return 10 :: Identity Int)
+10
+
+
+>>> return [1, 2, 3, 4] :: Identity [Int]
+Identity [1,2,3,4]
+>>> 
+
+>>> fmap (\x -> x + 5) $ Identity 10
+Identity 15
+>>> 
+
+>>> fmap (\x -> x * 4) $ fmap (\x -> x + 5) $ Identity 10
+Identity 60
+>>> 
+
+>>> fmap  ((\x -> x * 4) . (\x -> x + 5)) $ Identity 10
+Identity 60
+>>>
+
+
+>>> (return 10 :: Identity Int) >>= \x -> return $ x * 4 
+Identity 40
+>>> 
+
+>>> Identity 10 >>= \x -> return (x * 4)  >>= \a -> return ( a + 5)
+Identity 45
+>>> 
+
+testidentityDO :: Identity Int -> Identity Int -> Identity Int 
+testIdentityDO ma mb = do
+  a <- ma
+  b <- mb
+  return $ a * b 
+
+
+{- Repl friendly version -}
+
+:set +m
+
+:{
+
+let testIdentityDO :: Identity Int -> Identity Int -> Identity Int 
+    testIdentityDO ma mb = do
+      a <- ma
+      b <- mb
+      return $ a * b 
+:}
+
+>>> testIdentityDO (Identity 10) (Identity 20)
+Identity 200
+>>> testIdentityDO (Identity 4) (Identity 5)
+Identity 20
+>>>
+
+{- It show how fmap can be derived from a monad. -}
+:{
+let fmapIdentity :: (a -> b) -> Identity a -> Identity b
+    fmapIdentity fn ma = do
+      a <- ma
+      return $ fn a           
+:}
+
+>>> :t fmapIdentity 
+fmapIdentity :: (a -> b) -> Identity a -> Identity b
+>>> 
+
+>>> fmapIdentity (\x -> x + 5) (Identity 10)
+Identity 15
+>>>
+
+:{
+let fmapIdentity2 :: (a -> b) -> Identity a -> Identity b
+    fmapIdentity2 fn ma =
+      ma >>= \a ->
+        return $ fn a           
+:}
+
+>>> :t fmapIdentity2
+fmapIdentity2 :: (a -> b) -> Identity a -> Identity b
+>>>
+
+>>> fmapIdentity2 (\x -> x + 5) (Identity 10)
+Identity 15
+>>> 
+
+>>> import Control.Monad (liftM2, liftM3, mapM)
+>>>
+
+>>> import Control.Monad (liftM2, liftM3, mapM)
+>>> 
+>>> :t liftM2
+liftM2 :: Monad m => (a1 -> a2 -> r) -> m a1 -> m a2 -> m r
+>>>
+
+>>> liftM2 (+)  (Identity 10) (Identity 30)
+Identity 40
+>>> 
+
+>>> let addIdentity = liftM2 (+)
+
+>>> addIdentity (Identity 10) (Identity 20)
+Identity 30
+>>> 
+
+>> :t liftM3
+liftM3
+  :: Monad m => (a1 -> a2 -> a3 -> r) -> m a1 -> m a2 -> m a3 -> m r
+>>>
+
+>>> let cubeVolume a b c = a * b * c
+
+>>> liftM3 cubeVolume  (Identity 2) (Identity 4) (Identity 5)
+Identity 40
+>>>
+
+>>> let idCubeVolume = liftM3 cubeVolume
+
+>>> idCubeVolume (Identity 2) (Identity 4) (Identity 5)
+Identity 40
+>>> 
+
+>>> :t mapM
+mapM :: (Monad m, Traversable t) => (a -> m b) -> t a -> m (t b)
+>>>
+
+>>> mapM (\x -> Identity $ x + 4) [1, 2, 3, 4, 5]
+Identity [5,6,7,8,9]
+>>>
+#+END_SRC
+
+
+Documentation: 
+
+ - [[https://hackage.haskell.org/package/base-4.8.0.0/docs/Data-Functor-Identity.html#t:Identity][Module - Data.Functor.Identity]]
+
+ - [[https://hackage.haskell.org/package/mtl-2.2.1/docs/Control-Monad-Identity.html][Module - Control.Monad.Identity]]
+
 *** List Monad
 **** List Monad in Haskell 
 
 The list Monad is used for non-deterministic computations where there
 is a unknown number of results. It is useful for constraint solving:
-solve a problem by trying all possibilities by brute force.
+solve a problem by trying all possibilities by brute force. It is
+equivalent to List comprehension. 
 
 In Haskell it is defined as an instance of Monad type class:
 
@@ -5326,11 +5595,14 @@ cartesianProduct = do
 --  Or copy the following code in the repl 
 --  by typing :set +m to enable multiline paste 
 --
- 
+:{
+
 let cartesianProduct = do 
     x <- [1, 2, 3, 4] 
     y <- ["a", "b"]
     return (x, y)
+:}
+
 
 > :set +m  -- paste 
 > 
@@ -5358,6 +5630,12 @@ cartesian xs ys = do
 [(1,"a"),(1,"b"),(2,"a"),(2,"b"),(3,"a"),(3,"b"),(4,"a"),(4,"b")]
 > 
 
+>>> let cartesian2 xs ys = [(x, y) | x <- xs, y <- ys]
+
+>>> cartesian2 [1, 2, 3, 4] ["a", "b"]
+[(1,"a"),(1,"b"),(2,"a"),(2,"b"),(3,"a"),(3,"b"),(4,"a"),(4,"b")]
+>>> 
+
 
 -- Returns all possible combinations between a, b and c
 --
@@ -5368,6 +5646,7 @@ triples  xs ys zs = do
   y <- ys 
   z <- zs 
   return (x, y, z)
+
 
 --   The triples have 24 results 
 --
@@ -5389,6 +5668,14 @@ triples  xs ys zs = do
 > length ( triples [1, 2] ["a", "b", "c"] ["x", "y", "z", "w"] )
 24
 > 
+
+>>> let triples2 xs ys zs = [(x, y, z) | x <- xs, y <- ys, z <- zs]
+>>> :t triples2 
+triples2 :: [t] -> [t1] -> [t2] -> [(t, t1, t2)]
+>>> 
+>>> take 3 $ triples2 [1, 2] ["a", "b", "c"] ["x", "y", "z", "w"]
+[(1,"a","x"),(1,"a","y"),(1,"a","z")]
+>>> 
 
 --
 --  Find all numbers for which a ^ 2 + b ^ 2 = c ^ 2 
@@ -5425,7 +5712,7 @@ applyComb3 = do
 [([1,9,3],193),([1,9,8],198),([1,9,7],197),([1,9,4],194) ...]
 
 
--- Example: Crack a 4 letter password using brute force 
+-- Example: Break a 4 letter password using brute force 
 --
 --
 
@@ -7215,6 +7502,1256 @@ Some IO Primitives:
 | print    :: Show a => a -> IO () | readLn :: Read a => IO a |
 |                                  |                          |
 
+*** State Monad 
+**** Overview 
+
+# @TODO: Add link to documentation 
+
+The state monad represents stateful in purely
+functional way. 
+
+**** State monad in Haskell 
+
+The state monad in Haskell 2010 standard is not implemented in a
+simple way like in Haskell 98 which breaks legacy codes from papers
+and old books based on the 98 standards. Now it is implemented as a
+combination of StateT monad transformer and Identity monad. Despite
+the implementation changes the behavior of State monad is the same as
+in the old one.
+
+
+
+#+BEGIN_SRC haskell 
+type State s = StateT s Data.Functor.Identity.Identity
+  	-- Defined in ‘Control.Monad.Trans.State.Lazy’
+
+--- Old Implementation: 
+---
+newtype State s a = State { runState :: s -> (a, s)  }
+#+END_SRC
+
+It is equivalent to: 
+
+=type State s a = s -> (a, s)=
+
+#+BEGIN_SRC ditaa :file images/state_transformer1.png
+                        State tranformer function 
+                       |    
+                   ----+------
+  type State s a = s -> (a, s)
+                   |     |  |
+                   |     |  +---> Next State 
+                   |     |
+                   |     +------> Current Output   
+                   |
+                   +------------> Current State               
+
+  state transformer = s -> (a, s)
+
+#+END_SRC
+
+#+RESULTS:
+[[file:images/state_transformer1.png]]
+
+
+State transformer:
+
+#+BEGIN_SRC ditaa :file state_diagrams2.png 
+
+  stateTransformer :: current state ->  (output, next state)
+
+         
+current  +---------------+  
+state    |  State        |    Next State 
+    ---> +               +-------->
+         |  Transformer  |
+         +---------+-----+  
+                   | 
+                   |
+                  \ /  
+                    State output    
+
+
+ StateFn :: State s a ==> s -> (a, s)
+
+      +---------+      +-----------+      +----------+       +----------+
+S0    |         |   S1 |           |   S2 |          |    S3 |          |  S4 ...
+ ---->+ StateFn +----->+  StateFn  +----->+ StateFn  +------>+ StateFn  +----->
+      |         |      |           |      |          |       |          |  
+      +---+-----+      +-----+-----+      +----+-----+       +----+-----+
+          |  (a1, s1)        |     (a2, s2)    |    (a3, s3)      |
+          |                  |                 |                  |  
+         \ /                \ /               \ /                \ /
+          a1                 a2                a3                a4
+
+ 
+ (a1, s1) = runState StateFn s0
+ (a2, s2) = runState StateFn s1 
+ (a3, s3) = runState StateFn s2 
+ ... 
+
+#+END_SRC
+
+*state* 
+
+Wraps a state transformer function of type =s -> (a, s)= into a State
+type constructor. 
+
+#+BEGIN_SRC haskell
+state :: MonadState s m => (s -> (a, s)) -> m a
+
+>>> import Control.Monad.State
+
+>>> let fnSt = (state $ \s -> (s * 3, s + 2) ) :: State Int Int
+
+>>> :t fnSt 
+fnSt :: State Int Int
+>>> 
+
+>>> runState fnSt 1
+(3,3)
+>>> runState fnSt 0
+(0,2)
+>>> runState fnSt 2
+(6,4)
+
+{-
+  In the old implementation it was: 
+
+  let fnSt = (State $ \s -> (s * 3, s + 2)) :: State Int Int 
+
+ It doesn't work anymore. 
+-} 
+
+>>> let fnSt = (State $ \s -> (s * 3, s + 2) ) :: State Int Int
+Prelude System.Directory System.Process Control.Monad.State| 
+
+<interactive>:223:13:
+    Not in scope: data constructor ‘State’
+    Perhaps you meant one of these:
+      ‘StateT’ (imported from Control.Monad.State),
+      variable ‘state’ (imported from Control.Monad.State)
+>>> 
+
+
+#+END_SRC
+
+*runState*
+
+Applies a state transformer type (State s a) to a current state and
+returns a new state and an output. 
+
+#+BEGIN_SRC haskell 
+runState :: State s a -> s -> (a, s)
+#+END_SRC
+
+
+*evalState*
+
+Similar to runState, but returns only the output. 
+
+#+BEGIN_SRC haskell 
+evalState :: State s a -> s -> a
+evalState = fst . runState 
+#+END_SRC
+
+*execState*
+
+Similar to runState, but returns only the next state. 
+
+#+BEGIN_SRC haskell 
+execState :: State s a -> s -> s
+execState = snd . runState 
+#+END_SRC
+
+*return* 
+
+Sets the output regardless of the current state:
+
+#+BEGIN_SRC haskell 
+return a = State $ \s ->  (a, s)
+
+>>> let st = return 10 :: State Int Int
+>>> runState st 0
+(10,0)
+>>> runState st 1
+(10,1)
+>>> runState st 2
+(10,2)
+>>> 
+
+>>> runState (return 10) 0
+(10,0)
+>>> runState (return 10) 1
+(10,1)
+>>> runState (return 10) 2
+(10,2)
+>>> runState (return 10) 3
+(10,3)
+>>> runState (return 10) 4
+
+#+END_SRC
+
+*bind*
+
+Note: This is the old implementation with meaningful names. But with
+the same behavior as the new implementation. 
+
+#+BEGIN_SRC haskell 
+(>>=) :: State s a -> (a -> State s b) -> State s b 
+stateFn >>= stateMaker  =
+  State $ \oldState -> let (result, newState) = runState stateFn oldState
+                       in  runState (stateMaker result) newState
+#+END_SRC
+
+*put*
+
+Set a state ignoring the output. 
+
+#+BEGIN_SRC haskell 
+put :: MonadState s m => s -> m ()
+
+-- Old implementation: 
+--
+put :: s -> State s ()
+put s = State (\ _ -> ((), s))
+
+>>> runState (put 10) 0
+((),10)
+>>> runState (put 10) 1
+((),10)
+>>> runState (put 10) 2
+((),10)
+>>> runState (put 10) 3
+((),10)
+
+>>> execState (put 10) 0
+10
+>>> execState (put 10) 1
+10
+>>> execState (put 10) 2
+10
+>>> execState (put 10) 3
+10
+>>>
+#+END_SRC
+
+*get*
+
+Get the current state. 
+
+#+BEGIN_SRC haskell 
+get :: MonadState s m => m s
+
+-- Old implementation: 
+-- 
+get :: State s s
+get = State (\s -> (s, s))
+
+>>> runState get 0
+(0,0)
+>>> runState get 1
+(1,1)
+>>> runState get 2
+(2,2)
+>>> runState get 3
+(3,3)
+
+#+END_SRC
+
+
+*withstate*
+
+withState f m executes action m on a state modified by applying
+f. (Documentation)
+
+#+BEGIN_SRC haskell 
+withState :: (s -> s) -> State s a -> State s a
+withState f m = modify f >> m
+#+END_SRC
+
+
+*fmap* 
+
+Returns a new state transformer applying a function to the output of
+the old state transformer.
+
+Note: This the old implementation without StateT. However it still
+works in the same way and still describes what the State functor does.
+
+#+BEGIN_SRC haskell 
+instance Functor (State s) where
+  
+  -- Applies a function to the state output. 
+  --
+  -- fmap :: (a -> b) -> F a -> F b 
+  --
+  -- fmap :: (a -> b) -> State s a -> State s b
+  fmap f fns =
+    State $ \oldState -> let (output, newState) = runState fns oldState
+                         in (f output, newState)
+#+END_SRC
+
+
+Example:
+
+#+BEGIN_SRC haskell 
+>>> import Control.Monad.State 
+>>> 
+
+>>> :show language
+base language is: Haskell2010
+with the following modifiers:
+  -XNoDatatypeContexts
+  -XNondecreasingIndentation
+>>>
+
+>>> :info State
+type State s = StateT s Data.Functor.Identity.Identity
+  	-- Defined in ‘Control.Monad.Trans.State.Lazy’
+
+-- Check type signature 
+-- 
+>>> :t state
+state :: MonadState s m => (s -> (a, s)) -> m a
+>>> 
+
+>>> :t evalState
+evalState :: State s a -> s -> a
+>>> 
+
+>>> :t evalState
+evalState :: State s a -> s -> a
+>>> 
+
+>>> :t runState
+runState :: State s a -> s -> (a, s)
+>>>
+
+>>> :t put
+put :: MonadState s m => s -> m ()
+>>> 
+>>> :t get
+get :: MonadState s m => m s
+>>> 
+
+-- Code block to paste in the GHCI repl 
+-- 
+--
+
+>>> let postincrement = do { x <- get; put (x+1); return x }
+
+>>> runState postincrement 1
+(1,2)
+>>> runState postincrement 2
+(2,3)
+>>> runState postincrement 3
+(3,4)
+>>> 
+
+:set +m  
+
+:{
+  
+let stFn :: Int -> (Int, Int)
+    stFn = \ currentState ->
+      let output = 2 * currentState in
+      let nextState = currentState + 1 in
+      (output, nextState)
+:}      
+      
+>>> :t stFn
+stFn :: Int -> (Int, Int)
+>>>
+
+>>> stFn 1   -- S0 = 1 --> S1 = 2, output = 2  
+(2,2)
+>>> stFn 2   -- S1 = 1 --> S2 = 3, output = 4 
+(4,3)
+>>> stFn 3   -- S2 = 3 --> S3 = 4, output = 6 
+(6,4)
+>>> stFn 4
+(8,5)
+>>> stFn 5
+(10,6)
+>>>
+
+ 
+{- Now let's wrap inside the State type -}
+
+:{
+let stateFn1 ::  State Int Int
+    stateFn1 = state $ \ st -> (2 * st, st + 1)
+:}      
+
+>>> :t stateFn1
+stateFn1 :: State Int Int
+>>> 
+
+
+>>> runState stateFn1 1
+(2,2)
+>>> runState stateFn1 2
+(4,3)
+>>> runState stateFn1 3
+(6,4)
+>>> runState stateFn1 4
+(8,5)
+>>> runState stateFn1 5
+(10,6)
+>>>
+
+>>> execState stateFn1 5 ---  snd (10, 6)
+6
+>>> evalState stateFn1 5 ---- fst (10, 6)
+10
+>>>
+
+>>> runState (withState (\s -> s + 3) stateFn1) 1
+(8,5)
+>>> runState (withState (\s -> s + 3) stateFn1) 2
+(10,6)
+>>> runState (withState (\s -> s + 3) stateFn1) 3
+(12,7)
+>>> runState (withState (\s -> s + 3) stateFn1) 4
+(14,8)
+>>> runState (withState (\s -> s + 3) stateFn1) 5
+(16,9)
+>>> 
+
+
+
+type StState = Int
+type StOutput = Int 
+
+:{
+let stateFn2 :: State StState StOutput
+    stateFn2 =  state $ \ st -> (2 * st, st + 1)
+
+:}
+
+>>> :t stateFn2
+stateFn2 :: State StState StOutput
+>>>
+
+>>> runState stateFn2 0
+(0,1)
+>>> runState stateFn2 1
+(2,2)
+>>> runState stateFn2 2
+(4,3)
+>>> runState stateFn2 3
+(6,4)
+>>> runState stateFn2 4
+(8,5)
+
+>>> :t stateFn2
+stateFn2 :: State StState StOutput
+>>> 
+
+>>> :t runState stateFn2 4
+runState stateFn2 4 :: (StOutput, StState)
+>>> 
+
+:{
+
+let stateFn3 :: State Int Int
+    stateFn3 = do
+      currentState <- get
+      put (currentState + 1)  --- put $ currentState +  1
+      return (2 * currentState)
+:}      
+
+>>> :t stateFn3
+stateFn3 :: State Int Int
+>>> 
+
+>>> runState stateFn3 0
+(0,1)
+>>> runState stateFn3 1
+(2,2)
+>>> runState stateFn3 2
+(4,3)
+>>> runState stateFn3 3
+(6,4)
+>>> runState stateFn3 4
+(8,5)
+>>> runState stateFn3 5
+(10,6)
+>>> 
+
+
+{- Do-notation dessugarized 
+
+  cs : Stands for current state. 
+-} 
+
+:{
+let stateFn4 :: State Int Int
+    stateFn4 =
+      get          >>= \  cs ->
+      put (cs + 1) >>= \  _  ->
+      return (2 * cs)     
+:}
+
+>>> runState stateFn4 0
+(0,1)
+>>> runState stateFn4 1
+(2,2)
+>>> runState stateFn4 2
+(4,3)
+>>> runState stateFn4 3
+(6,4)
+>>> runState stateFn4 4
+(8,5)
+>>> runState stateFn4 5
+(10,6)
+>>> 
+
+>>> runState (fmap (\x -> x + 3) stateFn4) 0 -- 3 = (\x -> x + 3) 0 
+(3,1)
+>>> runState (fmap (\x -> x + 3) stateFn4) 1 -- 5 = (\x -> x + 3) 2 
+(5,2)
+>>> runState (fmap (\x -> x + 3) stateFn4) 2 -- 7 = (\x -> x + 4)
+(7,3)
+>>> runState (fmap (\x -> x + 3) stateFn4) 3
+(9,4)
+>>> runState (fmap (\x -> x + 3) stateFn4) 4
+(11,5)
+>>> runState (fmap (\x -> x + 3) stateFn4) 5
+(13,6)
+
+
+>>> :t fmap
+fmap :: Functor f => (a -> b) -> f a -> f b
+>>> 
+
+>>> let stateFnMap = fmap (\x -> x + 3) stateFn3
+>>> :t stateFnMap 
+stateFnMap :: StateT Int Data.Functor.Identity.Identity Int
+>>> 
+
+>>> runState stateFnMap 0
+(3,1)
+>>> runState stateFnMap 1
+(5,2)
+>>> runState stateFnMap 2
+(7,3)
+>>> runState stateFnMap 3
+(9,4)
+>>> runState stateFnMap 4
+(11,5)
+>>> 
+#+END_SRC
+
+Example from the book Learn You a Haskell: 
+
+Simulating a stack:
+
+#+BEGIN_SRC haskell 
+import Control.Monad.State  
+
+type Stack = [Int] 
+
+-- Each code block must be pasted into the repl (ghci)
+--
+:set +m
+
+:{
+
+let pop :: State Stack Int  
+    pop = state $ \(x:xs) -> (x, xs)
+    -- pop = State $ \(x:xs) -> (x,xs)    (It doesn't work anymore in this way).
+:}
+
+>>> :t pop
+pop :: State Stack Int
+>>> 
+
+:{
+      
+let push :: Int -> State Stack ()  
+    push a = state $ \xs -> ((), a:xs)
+
+:}
+
+>>> :t push
+push :: Int -> State Stack ()
+>>>
+
+:{
+let stackManip = do  
+      push 3  
+      a <- pop  
+      pop 
+:}
+
+>>> :t stackManip 
+stackManip :: StateT Stack Data.Functor.Identity.Identity Int
+>>> 
+
+
+>>> runState pop [1, 2, 3, 4]
+(1,[2,3,4])
+>>> runState pop [2, 3, 4]
+(2,[3,4])
+>>> runState pop [3, 4]
+(3,[4])
+>>> runState pop [4]
+(4,[])
+>>> runState pop []
+ ,*** Exception: <interactive>:20:19-36: Non-exhaustive patterns in lambda
+
+
+>>> evalState pop [1, 2, 3, 4]
+1
+>>> evalState pop [2, 3, 4]
+2
+
+>>> execState pop [1, 2, 3, 4]
+[2,3,4]
+>>> execState pop [2, 3, 4]
+[3,4]
+>>> 
+
+>>> runState (push 3) [4, 5, 6]
+((),[3,4,5,6])
+>>> runState (push 10) [1, 4, 5, 6]
+((),[10,1,4,5,6])
+>>> 
+
+>>> runState stackManip [5,8,2,1]
+(5,[8,2,1])
+>>>
+
+
+{-
+
+    stackStuff :: State Stack ()  
+    stackStuff = do  
+        a <- pop  
+        if a == 5  
+            then push 5  
+            else do  
+                push 3  
+                push 8  
+
+-}
+
+:{
+
+let stackStuff :: State Stack ()  
+    stackStuff = do  
+      a <- pop  
+      if a == 5  
+        then push 5  
+        else do  
+          push 3  
+          push 8    
+
+:}  
+
+>>> :t stackStuff 
+stackStuff :: State Stack ()
+>>>
+
+>>> runState stackStuff [9,0,2,1,0]  
+((),[8,3,0,2,1,0])
+>>>
+
+-- push a = State $ \xs -> ((),a:xs)  
+#+END_SRC
+
+Random numbers:
+
+#+BEGIN_SRC haskell 
+>>> import Control.Monad.State
+>>> import System.Random
+>>> 
+
+{-
+   randomSt :: (RandomGen g, Random a) => State g a  
+   randomSt = State random
+-}
+>>> let randomSt = state random 
+>>> 
+>>> :t randomSt 
+randomSt :: (MonadState s m, RandomGen s, Random a) => m a
+>>> 
+
+>>> :t randomSt 
+randomSt :: (MonadState s m, RandomGen s, Random a) => m a
+>>> 
+
+{-
+
+threeCoins :: State StdGen (Bool,Bool,Bool)  
+threeCoins = do  
+    a <- randomSt  
+    b <- randomSt  
+    c <- randomSt  
+    return (a,b,c)
+-}
+
+:{
+
+let threeCoins :: State StdGen (Bool,Bool,Bool)  
+    threeCoins = do  
+      a <- randomSt  
+      b <- randomSt  
+      c <- randomSt  
+      return (a,b,c)
+:}
+
+>>> :t threeCoins 
+threeCoins :: State StdGen (Bool, Bool, Bool)
+>>> 
+
+>>> runState threeCoins (mkStdGen 33)
+((True,False,True),680029187 2103410263)
+>>> 
+>>> runState threeCoins (mkStdGen 33)
+((True,False,True),680029187 2103410263)
+>>> 
+
+
+>>> import Data.List (unfoldr)
+>>> 
+>>> :t unfoldr
+unfoldr :: (b -> Maybe (a, b)) -> b -> [a]
+>>> 
+
+
+{- Generates an infinite sequence of state output   -}
+
+:{
+  
+let stateSeqOutput stateFn state0 =
+      unfoldr
+      ( \s -> let (out, ns) = runState stateFn s
+                        in Just (out, ns))
+      state0
+      
+:}      
+      
+      
+>>> :t stateSeqOutput 
+stateSeqOutput :: State b a -> b -> [a]
+>>>
+
+>>> take 4 $ stateSeqOutput threeCoins (mkStdGen 33)
+[(True,False,True),(True,True,True),(False,False,False),(True,False,True)]
+>>> 
+
+>>> mapM_ print  $  take 10 $ stateSeqOutput threeCoins (mkStdGen 33) 
+(True,False,True)
+(True,True,True)
+(False,False,False)
+(True,False,True)
+(True,False,True)
+(True,True,False)
+(False,False,True)
+(False,False,False)
+(True,True,False)
+(True,True,True)
+>>> 
+ 
+
+#+END_SRC
+
+
+Example: Fibonacci Sequence
+
+The Fibonacci sequence is defined by the rule.
+
+#+BEGIN_SRC
+a[n+2] = a[n+1] + a[n]
+
+    0 
+        1
+            1 = 1 + 0
+               2  = 1 + 1
+                 3  = 2 + 1
+                    5 = 3 + 2
+                        8 = 5 + 3 
+                            ...
+
+         +-----+             +----+           +----+
+ S0   -->+ fn  +-----------> | fn +---------->| fn |------>  ....
+(0, 1)   +--+--+ S1          +-+--+ S2        +-+--+ S3 (2, 3)
+            |  (1, 0 + 1)      |  (1, 2)        | 
+            |  (1, 1)          |                | 
+           \ /                \ /              \ /
+            output = 0 + 1     output = 1 + 1   output = 1 + 2
+                   = 1                = 2              = 3
+
+#+END_SRC
+
+It needs to keep track of the two last numbers. 
+
+#+BEGIN_SRC  haskell 
+import Control.Monad.State 
+
+-- Load from a file 
+--
+fibgen :: State (Int, Int) Int 
+fibgen = do
+       a, b <- get 
+       let c  = a + b
+       put (b, c)      -- set the new state 
+       return c
+
+-- Repl friendly version 
+--
+:{
+let fibgen :: State (Int, Int) Int
+    fibgen = do
+       (a, b) <- get 
+       let c  = a + b
+       put (b, c)      -- set the new state 
+       return c
+:}
+
+
+>>> :t fibgen 
+fibgen :: State (Int, Int) Int
+>>> 
+
+>>> runState fibgen (0, 1)
+(1,(1,1))
+>>> runState fibgen (1, 1)
+(2,(1,2))
+>>> runState fibgen (1, 2)
+(3,(2,3))
+>>> runState fibgen (2, 3)
+(5,(3,5))
+>>> runState fibgen (3, 5)
+(8,(5,8))
+>>> runState fibgen (5, 8)
+(13,(8,13))
+>>>
+
+>>> evalState fibgen (5, 8)
+13
+>>> execState fibgen (5, 8)
+(8,13)
+>>> 
+
+
+:{
+let fibgen2 :: State (Int, Int) Int 
+    fibgen2 = state $ \ (a, b) -> let c = a + b in (c, (b, c))
+                                
+:}
+
+>>> runState fibgen2 (0, 1)
+(1,(1,1))
+>>> runState fibgen2 (1, 1)
+(2,(1,2))
+>>> runState fibgen2 (1, 2)
+(3,(2,3))
+>>> runState fibgen2 (2, 3)
+(5,(3,5))
+>>> runState fibgen2 (3, 5)
+(8,(5,8))
+>>> runState fibgen2 (5, 8)
+(13,(8,13))
+>>> 
+
+{- Generating the state sequence  
+
+-}
+
+>>> import Data.List (unfoldr)
+>>> 
+>>> :t unfoldr
+unfoldr :: (b -> Maybe (a, b)) -> b -> [a]
+>>> 
+
+
+:{
+let fibseq = 
+      unfoldr (\s -> let (out, ns) = runState fibgen s 
+                     in Just (out, ns)) (0, 1)
+:}
+
+
+>>> :t fibseq 
+fibseq :: [Int]
+>>> 
+
+>>> take 20 fibseq 
+[1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765,10946]
+>>> 
+
+
+#+END_SRC
+
+*** Writer Monad 
+
+The writer monad makes possible to compose functions which returns
+values and a log string. 
+
+The writer monad in no longer implemented in a simple way like in
+Haskell 98. It is now implemented as special case of the WriterT monad
+transformer. 
+
+New implementation of type constructor Writer: 
+
+#+BEGIN_SRC haskell 
+>>> import Control.Monad.Writer
+>>>
+
+>>> :info Writer
+type Writer w = WriterT w Identity
+  	-- Defined in ‘Control.Monad.Trans.Writer.Lazy’
+>>> 
+#+END_SRC
+
+Old implementation of type constructor Writer: (Book: Learn You a Haskell)
+
+#+BEGIN_SRC haskell 
+newtype Writer w a = Writer { runWriter :: (a, w) }  
+
+instance (Monoid w) => Monad (Writer w) where  
+    return x = Writer (x, mempty)  
+    (Writer (x,v)) >>= f = let (Writer (y, v')) = f x in Writer (y, v `mappend` v') 
+#+END_SRC
+
+
+ Documentation: [[https://hackage.haskell.org/package/mtl-2.2.1/docs/Control-Monad-Writer-Lazy.html][Control.Monad.Writer]]
+
+
+Example: 
+
+#+BEGIN_SRC haskell 
+-- Haskell v7.10.2
+--
+>>> import Control.Monad.Writer
+>>>
+
+>>> :t writer
+writer :: MonadWriter w m => (a, w) -> m a
+>>> 
+>>> :t runWriter
+runWriter :: Writer w a -> (a, w)
+>>> 
+>>> :t execWriter
+execWriter :: Writer w a -> w
+>>> 
+>>> :t tell
+tell :: MonadWriter w m => w -> m ()
+>>> 
+
+
+>>> writer (10, "The value is " ++ show 10) :: Writer String Int
+WriterT (Identity (10,"The value is 10"))
+>>>
+
+>>> let w = writer (10, "The value is " ++ show 10) :: Writer String Int
+>>> w
+WriterT (Identity (10,"The value is 10"))
+>>>
+
+>>> runWriter w
+(10,"The value is 10")
+>>>
+
+>>> execWriter w
+"The value is 10"
+>>> 
+
+>>> :t tell
+tell :: MonadWriter w m => w -> m ()
+>>>
+
+>>> :t writer
+writer :: MonadWriter w m => (a, w) -> m a
+
+
+:set +m 
+
+:{
+let fn1 :: Int -> Writer String Int  
+    fn1 x = writer (2 * x, "The value of x is : " ++ show x) 
+:}
+
+>>> :t fn1
+fn1 :: Int -> Writer String Int
+>>>
+
+>>> fn1 2
+WriterT (Identity (4,"The value of x is : 2"))
+>>> 
+>>> fn1 3
+WriterT (Identity (6,"The value of x is : 3"))
+>>> 
+
+>>> runWriter $ fn1 2
+(4,"The value of x is : 2")
+>>> runWriter $ fn1 3
+(6,"The value of x is : 3")
+>>> 
+
+>>> fst . runWriter $ fn1 2
+4
+>>> fst . runWriter $ fn1 3
+6
+>>> 
+
+>>> snd . runWriter $ fn1 2
+"The value of x is : 2"
+>>> snd . runWriter $ fn1 3
+"The value of x is : 3"
+>>> 
+
+>>> execWriter $ fn1 3
+"The value of x is : 3"
+>>> execWriter $ fn1 2
+"The value of x is : 2"
+>>> 
+
+>>> return 1 :: Writer String Integer
+WriterT (Identity (1,""))
+>>> 
+>>> return 100 :: Writer String Integer
+WriterT (Identity (100,""))
+>>> 
+
+>>> return (Just 100) :: Writer String (Maybe Integer)
+WriterT (Identity (Just 100,""))
+>>> 
+
+>>> runWriter (return 100 :: Writer String Integer)
+(100,"")
+>>>
+
+--  
+-- This version must be loaded from a file. 
+--
+fn2 :: Int -> Writer String Int  
+fn2 x = do --writer (2 * x, "The value of x is : " ++ show x)
+  tell ( "The value of x is : " ++ show x )
+  return ( 2 * x )
+
+---
+--- This version can be pasted in the repl
+---
+:{ 
+let fn2 :: Int -> Writer String Int  
+    fn2 x = do --writer (2 * x, "The value of x is : " ++ show x)
+      tell ( "The value of x is : " ++ show x )
+      return ( 2 * x )
+:}
+      
+
+>>> :t fn2
+fn2 :: Int -> Writer String Int
+>>>
+
+>>> fn2 2
+WriterT (Identity (4,"The value of x is : 2"))
+>>> fn2 3
+WriterT (Identity (6,"The value of x is : 3"))
+>>> 
+
+{- Example from Learn You a Haskell 
+  
+   - http://learnyouahaskell.com/for-a-few-monads-more
+
+logNumber :: Int -> Writer [String] Int  
+logNumber x = Writer (x, ["Got number: " ++ show x])  
+-}
+:{
+
+let logNumber :: Int -> Writer [String] Int  
+    logNumber x = writer (x, ["Got number: " ++ show x]) 
+:}
+
+>>> :t logNumber 
+logNumber :: Int -> Writer [String] Int
+>>> 
+
+>>> logNumber 1
+WriterT (Identity (1,["Got number: 1"]))
+>>> 
+>>> logNumber 2
+WriterT (Identity (2,["Got number: 2"]))
+>>> 
+
+>>> runWriter $ logNumber 1
+(1,["Got number: 1"])
+>>> 
+
+-
+multWithLog :: Writer [String] Int  
+multWithLog = do  
+    a <- logNumber 3  
+    b <- logNumber 5  
+    return (a*b)
+
+:{
+let multWithLog :: Writer [String] Int  
+    multWithLog = do  
+      a <- logNumber 3  
+      b <- logNumber 5  
+      return (a*b)
+:}
+
+>>> :t multWithLog 
+multWithLog :: Writer [String] Int
+>>>
+
+>>> multWithLog 
+WriterT (Identity (15,["Got number: 3","Got number: 5"]))
+>>> 
+
+>>> runWriter multWithLog 
+(15,["Got number: 3","Got number: 5"])
+>>> 
+
+>>> execWriter multWithLog 
+["Got number: 3","Got number: 5"]
+>>> 
+
+
+multWithLog :: Writer [String] Int  
+multWithLog = do  
+    a <- logNumber 3  
+    b <- logNumber 5  
+    tell ["Gonna multiply these two"]  
+    return (a*b) 
+
+:{
+let multWithLog :: Writer [String] Int  
+    multWithLog = do  
+      a <- logNumber 3  
+      b <- logNumber 5  
+      tell ["Gonna multiply these two"]  
+      return (a*b) 
+:}
+
+>>> multWithLog 
+WriterT (Identity (15,["Got number: 3","Got number: 5","Gonna multiply these two"]))
+>>> 
+
+>>> runWriter multWithLog 
+(15,["Got number: 3","Got number: 5","Gonna multiply these two"])
+>>>
+
+
+:{
+let multWithLog2 :: Writer [String] Int  
+    multWithLog2 =   
+      logNumber 3                       >>= \a ->
+      logNumber 5                       >>= \b ->
+      tell ["Gonna multiply these two"] >>= \_ -> 
+      return (a*b) 
+:}
+
+>>> :t multWithLog2
+multWithLog2 :: Writer [String] Int
+>>> 
+>>> runWriter multWithLog2
+(15,["Got number: 3","Got number: 5","Gonna multiply these two"])
+>>> 
+
+
+
+gcd' :: Int -> Int -> Writer [String] Int  
+gcd' a b  
+    | b == 0 = do  
+        tell ["Finished with " ++ show a]  
+        return a  
+    | otherwise = do  
+        tell [show a ++ " mod " ++ show b ++ " = " ++ show (a `mod` b)]  
+        gcd' b (a `mod` b)
+
+:{
+
+let gcd' :: Int -> Int -> Writer [String] Int  
+    gcd' a b  
+      | b == 0 = do  
+          tell ["Finished with " ++ show a]  
+          return a  
+      | otherwise = do  
+          tell [show a ++ " mod " ++ show b ++ " = " ++ show (a `mod` b)]  
+          gcd' b (a `mod` b)
+
+:}
+
+
+>>> :t gcd'
+gcd' :: Int -> Int -> Writer [String] Int
+>>> 
+
+>>> gcd' 100 40
+WriterT (Identity (20,["100 mod 40 = 20","40 mod 20 = 0","Finished with 20"]))
+>>> 
+
+>>> runWriter $ gcd' 100 40
+(20,["100 mod 40 = 20","40 mod 20 = 0","Finished with 20"])
+>>> 
+
+>>> import Control.Monad (mapM_)
+>>> 
+
+>>> import Control.Monad (mapM_)
+>>> 
+>>> mapM_ putStrLn $ snd $ runWriter $ gcd' 8 3
+8 mod 3 = 2
+3 mod 2 = 1
+2 mod 1 = 0
+Finished with 1
+>>>
+
+>>> mapM_ putStrLn $ snd $ runWriter $ gcd' 100 68
+100 mod 68 = 32
+68 mod 32 = 4
+32 mod 4 = 0
+Finished with 4
+>>>
+
+gcdReverse :: Int -> Int -> Writer [String] Int  
+gcdReverse a b  
+    | b == 0 = do  
+        tell ["Finished with " ++ show a]  
+        return a  
+    | otherwise = do  
+        result <- gcdReverse b (a `mod` b)  
+        tell [show a ++ " mod " ++ show b ++ " = " ++ show (a `mod` b)]  
+        return result
+
+
+:{
+let gcdReverse :: Int -> Int -> Writer [String] Int  
+    gcdReverse a b  
+      | b == 0 = do  
+          tell ["Finished with " ++ show a]  
+          return a  
+      | otherwise = do  
+          result <- gcdReverse b (a `mod` b)  
+          tell [show a ++ " mod " ++ show b ++ " = " ++ show (a `mod` b)]  
+          return result 
+
+:}
+
+>>> :t gcdReverse 
+gcdReverse :: Int -> Int -> Writer [String] Int
+>>>
+
+>>> mapM_ putStrLn $ snd . runWriter $ gcdReverse 39 106
+Finished with 1
+5 mod 1 = 0
+6 mod 5 = 1
+11 mod 6 = 5
+28 mod 11 = 6
+39 mod 28 = 11
+106 mod 39 = 28
+39 mod 106 = 39
+>>> 
+#+END_SRC
+
 *** See also 
 
 *Monads*
@@ -7702,12 +9239,18 @@ Recursion:
     <http://research.microsoft.com/en-us/um/people/simonpj/papers/marktoberdorf/mark.pdf>
 
 
-  - Jones, Mark P. "Functional programming with overloading and
-    higher-order polymorphism." Advanced Functional
+  - Jones, Mark P. *Functional programming with overloading and
+    higher-order polymorphism.* Advanced Functional
     Programming. Springer Berlin Heidelberg, 1995. 97-136. Available
     at: <http://web.cecs.pdx.edu/~mpj/pubs/springschool95.pdf>
 
-    Note: Explains about type classes. 
+    Note: Explains about type classes.
+
+  - Launchbury, John, and Simon L. Peyton Jones. *State in haskell.*
+    Lisp and Symbolic Computation 8.4 (1995): 293-341. Available at:
+    <http://research.microsoft.com/en-us/um/people/simonpj/Papers/state-lasc.pdf>
+
+  - Note: Introduces State monad and shows how it works. 
 
 
   - [[http://okmij.org/ftp/Computation/IO-monad-history.html#Peyton-Jones-2000][Kiselyov O. - IO monad in 1965]] 

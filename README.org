@@ -55,6 +55,10 @@ This repository is dedicated to public domain.
 
  - Modules
 
+   - [[https://www.haskell.org/onlinereport/haskell2010/][Haskell 2010 Language Report]]
+
+   - [[https://downloads.haskell.org/~ghc/latest/docs/html/libraries/][Haskell Hierarchical Libraries]] - Built-in Haskell libraries.
+
    - [[file:haskell/control_monad.org][Contro.Monad]]      - Monad Combinators 
     
    - [[file:haskell/package_Data_Text.org][Data.Text]]         - String processing combinators.
@@ -63,7 +67,9 @@ This repository is dedicated to public domain.
 
    - [[file:haskell/system_filepath.org][System.FilePath]]   - File path manipulation on all platforms. 
 
-   - [[file:haskell/control_exception.org][Control.Exception]] - Exception Handling 
+   - [[file:haskell/control_exception.org][Control.Exception]] - Exception Handling
+
+   - [[file:haskell/data_map.org][Data.Map]]          - Immutable hash map. Implemented with balanced trees.
 
 *Functional Programming in OCaml*
 
