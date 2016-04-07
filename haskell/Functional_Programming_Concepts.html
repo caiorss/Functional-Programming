@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Functional Programming Concepts</title>
-<!-- 2016-03-31 Thu 06:53 -->
+<!-- 2016-04-07 Thu 13:16 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues" />
@@ -322,7 +322,7 @@ for the JavaScript code in this tag.
 <ul>
 <li><a href="#sec-1-14-4-1">1.14.4.1. Overview</a></li>
 <li><a href="#sec-1-14-4-2">1.14.4.2. Maybe Monad in Haskell</a></li>
-<li><a href="#sec-1-14-4-3">1.14.4.3. Maybe Monad in Ocaml</a></li>
+<li><a href="#sec-1-14-4-3">1.14.4.3. Maybe Monad in OCaml</a></li>
 <li><a href="#sec-1-14-4-4">1.14.4.4. Maybe Monad in Python</a></li>
 </ul>
 </li>
@@ -336,12 +336,14 @@ for the JavaScript code in this tag.
 <ul>
 <li><a href="#sec-1-14-6-1">1.14.6.1. Overview</a></li>
 <li><a href="#sec-1-14-6-2">1.14.6.2. Example</a></li>
+<li><a href="#sec-1-14-6-3">1.14.6.3. IO Monad in OCaml</a></li>
 </ul>
 </li>
 <li><a href="#sec-1-14-7">1.14.7. State Monad</a>
 <ul>
 <li><a href="#sec-1-14-7-1">1.14.7.1. Overview</a></li>
 <li><a href="#sec-1-14-7-2">1.14.7.2. State monad in Haskell</a></li>
+<li><a href="#sec-1-14-7-3">1.14.7.3. State monad in OCaml</a></li>
 </ul>
 </li>
 <li><a href="#sec-1-14-8">1.14.8. Writer Monad</a></li>
@@ -7596,7 +7598,7 @@ Example: The function below parses two numbers and adds them.
 </div>
 
 <div id="outline-container-sec-1-14-4-3" class="outline-5">
-<h5 id="sec-1-14-4-3"><span class="section-number-5">1.14.4.3</span> Maybe Monad in Ocaml</h5>
+<h5 id="sec-1-14-4-3"><span class="section-number-5">1.14.4.3</span> Maybe Monad in OCaml</h5>
 <div class="outline-text-5" id="text-1-14-4-3">
 <p>
 The maybe type is called Option in Ocaml and F#.
@@ -8379,18 +8381,26 @@ extracted inside an IO action.
 </p>
 
 <p>
-Summary: 
+Remarks: 
 </p>
 
 <ul class="org-ul">
 <li>The Haskell's IO is pure and lazy.
 </li>
-<li>There is no way to extract a value of an IO outside an IO. 
+<li>There is no way to extract a value of an IO action outside an IO
+action.
 </li>
 <li>Only IO actions perform IO actions.  
 </li>
 <li>The entry point of a Haskell program is the function <span class="underline">main</span>. Only
-the IO functions called from main will be run.
+the IO functions called from main will be executed.
+</li>
+<li>IO Actions are commands. <code>_putSTrln "str"_</code> doesn't print a
+string. It actually creates a command to print a string that can be
+manipulated like a value, repeated, stored in data structures and
+passed to another IO actions. 
+</li>
+<li>By typing an action action in the REPL (ghci) forces its execution.
 </li>
 </ul>
 
@@ -8491,7 +8501,7 @@ extracted inside an IO action.
 
 <p>
 The application of the function <code>putStrLn :: String -&gt; IO ()</code> to a
-string =putStrLn "Hello world"= is equivalent to the code below in
+string <code>_putStrLn "Hello world"_</code> is equivalent to the code below in
 OCaml. 
 </p>
 
@@ -8506,21 +8516,38 @@ OCaml.
 <span class="org-tuareg-font-lock-operator">&gt;</span>  putStrLn <span class="org-string">"Hello world"</span> <span class="org-tuareg-font-lock-operator">;;</span>
 <span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-operator">-&gt;</span> unit <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
 
-<span class="org-comment-delimiter">(* </span><span class="org-comment">Nothing is printed. It is created an action that prints </span>
-<span class="org-comment">    hello world</span>
+<span class="org-comment-delimiter">(* </span><span class="org-comment">Nothing is printed. It is created an action or command </span>
+<span class="org-comment">   that prints hello world</span>
 <span class="org-comment-delimiter">*)</span>
-<span class="org-tuareg-font-lock-operator">&gt;</span> <span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">action</span> <span class="org-tuareg-font-lock-operator">=</span> putStrLn <span class="org-string">"hello world"</span> <span class="org-tuareg-font-lock-operator">;;</span>
-
 <span class="org-tuareg-font-lock-operator">&gt;</span> <span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">action</span> <span class="org-tuareg-font-lock-operator">=</span> putStrLn <span class="org-string">"hello world"</span> <span class="org-tuareg-font-lock-operator">;;</span>
 <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">action</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-operator">-&gt;</span> unit <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
 
+<span class="org-comment-delimiter">(* </span><span class="org-comment">Forces the evaluation of IO action. </span>
+<span class="org-comment-delimiter">*)</span>
+<span class="org-tuareg-font-lock-operator">&gt;</span> <span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">runIO</span><span class="org-variable-name"> ioAction</span> <span class="org-tuareg-font-lock-operator">=</span> ioAction <span class="org-tuareg-font-lock-operator">()</span> <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">runIO</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>unit <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+ 
 
 <span class="org-comment-delimiter">(* </span><span class="org-comment">Not executed  </span><span class="org-comment-delimiter">*)</span>
 <span class="org-tuareg-font-lock-operator">-</span> action <span class="org-tuareg-font-lock-operator">;;</span> 
 <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">it</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>unit <span class="org-tuareg-font-lock-operator">-&gt;</span> unit<span class="org-tuareg-font-lock-operator">)</span> 
 <span class="org-tuareg-font-lock-operator">&gt;</span> 
 
-<span class="org-tuareg-font-lock-operator">&gt;</span>  action <span class="org-tuareg-font-lock-operator">()</span> <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-tuareg-font-lock-operator">&gt;</span>  runIO action <span class="org-tuareg-font-lock-operator">;;</span>
+hello world
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">()</span>
+ 
+<span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">do3times</span><span class="org-variable-name"> action</span> <span class="org-tuareg-font-lock-operator">=</span>
+  runIO action <span class="org-tuareg-font-lock-operator">;</span>
+  runIO action <span class="org-tuareg-font-lock-operator">;</span>
+  runIO action
+<span class="org-tuareg-font-lock-operator">;;</span>        
+<span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">do3times</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>unit <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+
+
+<span class="org-tuareg-font-lock-operator">&gt;</span>  do3times action <span class="org-tuareg-font-lock-operator">;;</span>
+hello world
+hello world
 hello world
 <span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">()</span>
 </pre>
@@ -8781,6 +8808,406 @@ Some IO Primitives:
 </table>
 </div>
 </div>
+
+<div id="outline-container-sec-1-14-6-3" class="outline-5">
+<h5 id="sec-1-14-6-3"><span class="section-number-5">1.14.6.3</span> IO Monad in OCaml</h5>
+<div class="outline-text-5" id="text-1-14-6-3">
+<p>
+The IO monad cannot be implemented in Haskell. However by implementing
+it in OCaml is possible to understand how it works and get some
+intuition about IO actions and also understand how the monad
+combinators like (&gt;&gt;), sequence, sequence_ works. This implementation
+was designed to by as simple as possible to understand. 
+</p>
+
+
+<p>
+It is based on the paper: Waddler, Philip. <b>How to Declare an
+Imperative</b> Language. Page 27. Available at
+<a href="http://homepages.inf.ed.ac.uk/wadler/papers/monadsdeclare/monadsdeclare.ps">http://homepages.inf.ed.ac.uk/wadler/papers/monadsdeclare/monadsdeclare.ps</a>
+</p>
+
+
+<div class="org-src-container">
+
+<pre class="src src-ocaml"><span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">replicate</span><span class="org-variable-name"> n x</span> <span class="org-tuareg-font-lock-operator">=</span>
+  <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-governing">rec</span> <span class="org-function-name">aux</span><span class="org-variable-name"> count acc</span> <span class="org-tuareg-font-lock-operator">=</span>
+    <span class="org-keyword">if</span> count <span class="org-tuareg-font-lock-operator">=</span> 0
+    <span class="org-keyword">then</span> acc
+    <span class="org-keyword">else</span> aux <span class="org-tuareg-font-lock-operator">(</span>count <span class="org-tuareg-font-lock-operator">-</span> 1<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">(</span>x<span class="org-tuareg-font-lock-operator">::</span><span class="org-type">acc</span><span class="org-tuareg-font-lock-operator">)</span>
+             
+  <span class="org-tuareg-font-lock-governing">in</span> aux n <span class="org-tuareg-font-lock-operator">[]</span>
+<span class="org-tuareg-font-lock-operator">;;</span>
+         
+<span class="org-tuareg-font-lock-governing">module</span> <span class="org-tuareg-font-lock-module">IO</span> <span class="org-tuareg-font-lock-operator">=</span>
+  <span class="org-tuareg-font-lock-governing">struct</span>
+
+    <span class="org-comment-delimiter">(* </span><span class="org-comment">Wraps an imperative function like </span>
+<span class="org-comment">       print_string into a thunk </span>
+<span class="org-comment">    </span><span class="org-comment-delimiter">*)</span>
+    <span class="org-tuareg-font-lock-governing">type</span> <span class="org-type">'a io</span> <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-constructor">IO</span> <span class="org-keyword">of</span> <span class="org-tuareg-font-lock-operator">(</span>unit <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a<span class="org-tuareg-font-lock-operator">)</span>
+
+    <span class="org-comment-delimiter">(* </span><span class="org-comment">Forces the evaluation of an IO action </span><span class="org-comment-delimiter">*)</span>                     
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">run</span><span class="org-tuareg-font-lock-operator">:</span> <span class="org-type">'a io </span><span class="org-tuareg-font-lock-operator">-&gt;</span><span class="org-type"> 'a </span><span class="org-tuareg-font-lock-operator">=</span>
+      <span class="org-keyword">fun</span> <span class="org-tuareg-font-lock-operator">(</span><span class="org-tuareg-font-lock-constructor">IO</span><span class="org-variable-name"> thunk</span><span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> thunk <span class="org-tuareg-font-lock-operator">()</span>
+
+    <span class="org-comment-delimiter">(* </span><span class="org-comment">The same as Haskell return :: a -&gt; m a </span><span class="org-comment-delimiter">*)</span>                         
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">unit</span><span class="org-tuareg-font-lock-operator">:</span> <span class="org-type">'a </span><span class="org-tuareg-font-lock-operator">-&gt;</span><span class="org-type"> 'a io  </span><span class="org-tuareg-font-lock-operator">=</span>
+      <span class="org-keyword">fun</span> <span class="org-variable-name">a</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-constructor">IO</span> <span class="org-tuareg-font-lock-operator">(</span> <span class="org-keyword">fun</span> <span class="org-tuareg-font-lock-operator">()</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> a<span class="org-tuareg-font-lock-operator">)</span>
+
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">bind</span><span class="org-tuareg-font-lock-operator">:</span> <span class="org-type">'a io </span><span class="org-tuareg-font-lock-operator">-&gt;</span><span class="org-type"> </span><span class="org-tuareg-font-lock-operator">(</span><span class="org-type">'a </span><span class="org-tuareg-font-lock-operator">-&gt;</span><span class="org-type"> 'b io</span><span class="org-tuareg-font-lock-operator">)</span><span class="org-type"> </span><span class="org-tuareg-font-lock-operator">-&gt;</span><span class="org-type"> 'b io </span><span class="org-tuareg-font-lock-operator">=</span>      
+      <span class="org-keyword">fun</span> <span class="org-variable-name">io_a fn_io</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+           <span class="org-tuareg-font-lock-constructor">IO</span> <span class="org-tuareg-font-lock-operator">(</span><span class="org-keyword">fun</span> <span class="org-tuareg-font-lock-operator">()</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">a</span> <span class="org-tuareg-font-lock-operator">=</span> run io_a <span class="org-tuareg-font-lock-governing">in</span>
+                         run <span class="org-tuareg-font-lock-operator">(</span>fn_io a<span class="org-tuareg-font-lock-operator">))</span>
+
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-operator">(&gt;&gt;=)</span> <span class="org-tuareg-font-lock-operator">=</span> bind
+
+    <span class="org-comment-delimiter">(* </span><span class="org-comment">(&gt;&gt;) :: m a -&gt; m b -&gt; m b </span>
+<span class="org-comment">       (&gt;&gt;) ma mb = </span>
+<span class="org-comment">            ma &gt;&gt;= \_ -&gt; mb </span>
+<span class="org-comment">     </span><span class="org-comment-delimiter">*)</span>              
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-operator">(&gt;&gt;)</span> ma mb <span class="org-tuareg-font-lock-operator">=</span>
+      ma <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">_</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> mb
+
+
+    <span class="org-comment-delimiter">(* </span><span class="org-comment">Converts an output function into a </span>
+<span class="org-comment">       monadic output function </span>
+<span class="org-comment">     </span><span class="org-comment-delimiter">*)</span>       
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">lift_output</span><span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span><span class="org-type">'a </span><span class="org-tuareg-font-lock-operator">-&gt;</span><span class="org-type"> unit</span><span class="org-tuareg-font-lock-operator">)</span><span class="org-type"> </span><span class="org-tuareg-font-lock-operator">-&gt;</span><span class="org-type"> </span><span class="org-tuareg-font-lock-operator">(</span><span class="org-type">'a </span><span class="org-tuareg-font-lock-operator">-&gt;</span><span class="org-type"> unit io</span><span class="org-tuareg-font-lock-operator">)</span><span class="org-type"> </span><span class="org-tuareg-font-lock-operator">=</span>
+      <span class="org-keyword">fun</span> <span class="org-variable-name">output_fn a</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-constructor">IO</span> <span class="org-tuareg-font-lock-operator">(</span><span class="org-keyword">fun</span> <span class="org-tuareg-font-lock-operator">()</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> output_fn a<span class="org-tuareg-font-lock-operator">)</span>
+
+    <span class="org-comment-delimiter">(* </span><span class="org-comment">Converts an input function into a </span>
+<span class="org-comment">       monadic input function </span>
+<span class="org-comment">     </span><span class="org-comment-delimiter">*)</span>                        
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">lift_input</span><span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span><span class="org-type">unit </span><span class="org-tuareg-font-lock-operator">-&gt;</span><span class="org-type"> 'a</span><span class="org-tuareg-font-lock-operator">)</span><span class="org-type"> </span><span class="org-tuareg-font-lock-operator">-&gt;</span><span class="org-type"> 'a io </span><span class="org-tuareg-font-lock-operator">=</span>
+      <span class="org-keyword">fun</span> <span class="org-variable-name">fn_input</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-constructor">IO</span> fn_input 
+                    
+    <span class="org-comment-delimiter">(*  </span><span class="org-comment">fmap derived from IO Monad</span>
+<span class="org-comment">    </span>
+<span class="org-comment">       fmap :: (a -&gt; b) -&gt; IO a -&gt; IO b </span>
+<span class="org-comment">       fmap fn ma = do </span>
+<span class="org-comment">          a &lt;- ma </span>
+<span class="org-comment">          return (fn a)</span>
+
+<span class="org-comment">     </span><span class="org-comment-delimiter">*)</span>        
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">map</span><span class="org-variable-name"> fn ma</span> <span class="org-tuareg-font-lock-operator">=</span>
+      ma   <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">a</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+      unit <span class="org-tuareg-font-lock-operator">(</span>fn a<span class="org-tuareg-font-lock-operator">)</span>
+
+    <span class="org-comment-delimiter">(* </span><span class="org-comment">from: Contro.Monad </span>
+
+<span class="org-comment">      sequence :: Monad m =&gt; [m a] -&gt; m [a]</span>
+<span class="org-comment">      sequence = foldr mcons (return [])</span>
+<span class="org-comment">          where </span>
+<span class="org-comment">             mcons p q = </span>
+<span class="org-comment">                p &gt;&gt;= \x -&gt; </span>
+<span class="org-comment">                q &gt;&gt;= \y -&gt; </span>
+<span class="org-comment">                 return (x:y)         </span>
+<span class="org-comment">    </span><span class="org-comment-delimiter">*)</span>          
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">sequence</span><span class="org-variable-name"> mlist</span> <span class="org-tuareg-font-lock-operator">=</span>
+      <span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">mcons</span><span class="org-variable-name"> p q</span> <span class="org-tuareg-font-lock-operator">=</span>
+        p <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">x</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+        q <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">y</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+        unit <span class="org-tuareg-font-lock-operator">(</span>x<span class="org-tuareg-font-lock-operator">::</span><span class="org-type">y</span><span class="org-tuareg-font-lock-operator">)</span>
+
+      <span class="org-tuareg-font-lock-governing">in</span> <span class="org-tuareg-font-lock-module">List.</span>fold_right mcons mlist <span class="org-tuareg-font-lock-operator">(</span>unit <span class="org-tuareg-font-lock-operator">[])</span>
+
+    <span class="org-comment-delimiter">(* </span><span class="org-comment">from: Control.Monad </span><span class="org-comment-delimiter">*)</span>
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">sequence_</span><span class="org-variable-name"> mlist</span> <span class="org-tuareg-font-lock-operator">=</span>
+      <span class="org-tuareg-font-lock-module">List.</span>fold_right <span class="org-tuareg-font-lock-operator">(&gt;&gt;)</span> mlist <span class="org-tuareg-font-lock-operator">(</span>unit <span class="org-tuareg-font-lock-operator">())</span>
+
+    <span class="org-comment-delimiter">(* </span><span class="org-comment">from: Control.Monad </span><span class="org-comment-delimiter">*)</span>
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">replicateM_</span><span class="org-variable-name"> n ma</span> <span class="org-tuareg-font-lock-operator">=</span>
+      sequence_ <span class="org-tuareg-font-lock-operator">(</span>replicate n ma<span class="org-tuareg-font-lock-operator">)</span>
+
+    <span class="org-comment-delimiter">(* </span><span class="org-comment">from: Control.Monad </span><span class="org-comment-delimiter">*)</span> 
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">replicateM</span><span class="org-variable-name"> n ma</span> <span class="org-tuareg-font-lock-operator">=</span>
+      sequence <span class="org-tuareg-font-lock-operator">(</span>replicate n ma<span class="org-tuareg-font-lock-operator">)</span>
+
+    <span class="org-comment-delimiter">(*  </span><span class="org-comment">from: Control.Monad </span>
+
+<span class="org-comment">       forever :: IO () -&gt; IO </span><span class="org-comment-delimiter">*)</span>           
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-governing">rec</span> <span class="org-function-name">forever</span><span class="org-variable-name"> </span><span class="org-tuareg-font-lock-operator">(</span><span class="org-variable-name">ma</span><span class="org-tuareg-font-lock-operator">:</span><span class="org-type"> unit io</span><span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">=</span>
+      <span class="org-comment-delimiter">(* </span><span class="org-comment">let open IO in </span><span class="org-comment-delimiter">*)</span>
+      <span class="org-tuareg-font-lock-constructor">IO</span> <span class="org-tuareg-font-lock-operator">(</span> <span class="org-keyword">fun</span> <span class="org-tuareg-font-lock-operator">()</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> run  ma <span class="org-tuareg-font-lock-operator">;</span>
+                     <span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">_</span> <span class="org-tuareg-font-lock-operator">=</span> run <span class="org-tuareg-font-lock-operator">(</span>forever ma<span class="org-tuareg-font-lock-operator">)</span>
+                     <span class="org-tuareg-font-lock-governing">in</span> <span class="org-tuareg-font-lock-operator">()</span>           
+         <span class="org-tuareg-font-lock-operator">)</span>
+         
+    <span class="org-comment-delimiter">(* </span><span class="org-comment">from: Control.Monad </span><span class="org-comment-delimiter">*)</span>
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">mapM</span><span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span><span class="org-type">'a </span><span class="org-tuareg-font-lock-operator">-&gt;</span><span class="org-type"> 'b io</span><span class="org-tuareg-font-lock-operator">)</span><span class="org-type"> </span><span class="org-tuareg-font-lock-operator">-&gt;</span><span class="org-type"> 'a list </span><span class="org-tuareg-font-lock-operator">-&gt;</span><span class="org-type"> </span><span class="org-tuareg-font-lock-operator">(</span><span class="org-type">'b list</span><span class="org-tuareg-font-lock-operator">)</span><span class="org-type"> io </span><span class="org-tuareg-font-lock-operator">=</span>
+      <span class="org-keyword">fun</span> <span class="org-variable-name">fn alst</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>  sequence <span class="org-tuareg-font-lock-operator">(</span><span class="org-tuareg-font-lock-module">List.</span>map fn alst<span class="org-tuareg-font-lock-operator">)</span>
+
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">mapM_</span><span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span><span class="org-type">'a </span><span class="org-tuareg-font-lock-operator">-&gt;</span><span class="org-type"> unit io</span><span class="org-tuareg-font-lock-operator">)</span><span class="org-type"> </span><span class="org-tuareg-font-lock-operator">-&gt;</span><span class="org-type"> 'a list </span><span class="org-tuareg-font-lock-operator">-&gt;</span><span class="org-type"> unit io </span><span class="org-tuareg-font-lock-operator">=</span>
+      <span class="org-keyword">fun</span> <span class="org-variable-name">fn alst</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> sequence_ <span class="org-tuareg-font-lock-operator">(</span><span class="org-tuareg-font-lock-module">List.</span>map fn alst<span class="org-tuareg-font-lock-operator">)</span>
+
+
+    <span class="org-comment-delimiter">(* </span><span class="org-comment">----- Primitive IO Functions --------- </span><span class="org-comment-delimiter">*)</span>
+                               
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">print_string</span> <span class="org-tuareg-font-lock-operator">=</span> lift_output <span class="org-tuareg-font-lock-module">Pervasives.</span>print_string 
+           
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">print_char</span> <span class="org-tuareg-font-lock-operator">=</span> lift_output <span class="org-tuareg-font-lock-module">Pervasives.</span>print_char   
+ 
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">read_char</span> <span class="org-tuareg-font-lock-operator">=</span> lift_input <span class="org-tuareg-font-lock-operator">(</span><span class="org-keyword">fun</span> <span class="org-variable-name">ch</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> 
+                                <span class="org-tuareg-font-lock-module">Pervasives.</span>input_char  stdin<span class="org-tuareg-font-lock-operator">)</span>
+
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">read_line</span> <span class="org-tuareg-font-lock-operator">=</span> lift_input <span class="org-tuareg-font-lock-module">Pervasives.</span>read_line 
+                                   
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">read_int</span> <span class="org-tuareg-font-lock-operator">=</span> lift_input <span class="org-tuareg-font-lock-module">Pervasives.</span>read_int
+
+                              
+  <span class="org-tuareg-font-lock-governing">end</span>
+<span class="org-tuareg-font-lock-operator">;;</span>    
+
+
+<span class="org-tuareg-font-lock-governing">module</span> <span class="org-tuareg-font-lock-module">IO</span> <span class="org-tuareg-font-lock-operator">:</span>
+  <span class="org-tuareg-font-lock-governing">sig</span>
+    <span class="org-tuareg-font-lock-governing">type</span> <span class="org-type">'a io</span> <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-constructor">IO</span> <span class="org-keyword">of</span> <span class="org-tuareg-font-lock-operator">(</span>unit <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a<span class="org-tuareg-font-lock-operator">)</span>
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">run</span> <span class="org-tuareg-font-lock-operator">:</span> 'a io <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">unit</span> <span class="org-tuareg-font-lock-operator">:</span> 'a <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a io
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">bind</span> <span class="org-tuareg-font-lock-operator">:</span> 'a io <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'a <span class="org-tuareg-font-lock-operator">-&gt;</span> 'b io<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> 'b io
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-tuareg-font-lock-operator">(</span> <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">:</span> 'a io <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'a <span class="org-tuareg-font-lock-operator">-&gt;</span> 'b io<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> 'b io
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-tuareg-font-lock-operator">(</span> <span class="org-tuareg-font-lock-operator">&gt;&gt;</span> <span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">:</span> 'a io <span class="org-tuareg-font-lock-operator">-&gt;</span> 'b io <span class="org-tuareg-font-lock-operator">-&gt;</span> 'b io
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">lift_output</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>'a <span class="org-tuareg-font-lock-operator">-&gt;</span> unit<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a <span class="org-tuareg-font-lock-operator">-&gt;</span> unit io
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">lift_input</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>unit <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a io
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">map</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>'a <span class="org-tuareg-font-lock-operator">-&gt;</span> 'b<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a io <span class="org-tuareg-font-lock-operator">-&gt;</span> 'b io
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">sequence</span> <span class="org-tuareg-font-lock-operator">:</span> 'a io list <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a list io
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">sequence_</span> <span class="org-tuareg-font-lock-operator">:</span> 'a io list <span class="org-tuareg-font-lock-operator">-&gt;</span> unit io
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">replicateM_</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a io <span class="org-tuareg-font-lock-operator">-&gt;</span> unit io
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">replicateM</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a io <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a list io
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">forever</span> <span class="org-tuareg-font-lock-operator">:</span> unit io <span class="org-tuareg-font-lock-operator">-&gt;</span> unit io
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">mapM</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>'a <span class="org-tuareg-font-lock-operator">-&gt;</span> 'b io<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a list <span class="org-tuareg-font-lock-operator">-&gt;</span> 'b list io
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">mapM_</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>'a <span class="org-tuareg-font-lock-operator">-&gt;</span> unit io<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a list <span class="org-tuareg-font-lock-operator">-&gt;</span> unit io
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">print_string</span> <span class="org-tuareg-font-lock-operator">:</span> string <span class="org-tuareg-font-lock-operator">-&gt;</span> unit io
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">print_char</span> <span class="org-tuareg-font-lock-operator">:</span> char <span class="org-tuareg-font-lock-operator">-&gt;</span> unit io
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">read_char</span> <span class="org-tuareg-font-lock-operator">:</span> char io
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">read_line</span> <span class="org-tuareg-font-lock-operator">:</span> string io
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">read_int</span> <span class="org-tuareg-font-lock-operator">:</span> int io
+  <span class="org-tuareg-font-lock-governing">end</span>
+</pre>
+</div>
+
+<p>
+Tests:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ocaml"><span class="org-tuareg-font-lock-operator">&gt;</span>  <span class="org-tuareg-font-lock-module">IO.</span>print_string <span class="org-string">"\nHello world\n"</span> <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-module">IO.</span>io <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">IO.</span><span class="org-tuareg-font-lock-constructor">IO</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+ 
+
+<span class="org-tuareg-font-lock-operator">&gt;</span> <span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">action</span> <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">IO.</span>print_string <span class="org-string">"\nHello world\n"</span> <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">action</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-module">IO.</span>io <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">IO.</span><span class="org-tuareg-font-lock-constructor">IO</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+
+<span class="org-tuareg-font-lock-operator">&gt;</span>  action <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-module">IO.</span>io <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">IO.</span><span class="org-tuareg-font-lock-constructor">IO</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+
+<span class="org-tuareg-font-lock-operator">&gt;</span>  <span class="org-tuareg-font-lock-module">IO.</span>run action <span class="org-tuareg-font-lock-operator">;;</span>
+
+<span class="org-tuareg-font-lock-constructor">Hello</span> world
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">()</span>
+ 
+
+<span class="org-tuareg-font-lock-operator">&gt;</span> <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-governing">open </span><span class="org-tuareg-font-lock-module">IO</span> <span class="org-tuareg-font-lock-governing">in</span> print_string <span class="org-string">"Hello world"</span> <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-module">IO.</span>io <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">IO.</span><span class="org-tuareg-font-lock-constructor">IO</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+ 
+
+<span class="org-tuareg-font-lock-operator">&gt;</span> <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-governing">open </span><span class="org-tuareg-font-lock-module">IO</span> <span class="org-tuareg-font-lock-governing">in</span> run <span class="org-tuareg-font-lock-operator">(</span>print_string <span class="org-string">"Hello world"</span><span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-tuareg-font-lock-constructor">Hello</span> world<span class="org-tuareg-font-lock-operator">-</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">()</span>
+
+
+<span class="org-comment-delimiter">(*</span>
+<span class="org-comment">echoDup = do </span>
+<span class="org-comment"> c &lt;- getChar </span>
+<span class="org-comment"> putChar c </span>
+<span class="org-comment"> putChar c </span>
+
+<span class="org-comment">echoDup = do                echoDup = do </span>
+<span class="org-comment">  getChar     &gt;&gt;= \c -&gt;       getChar    &gt;&gt;= \c -&gt;</span>
+<span class="org-comment">  putChar   c &gt;&gt;= \_ -&gt;       putChar c  &gt;&gt;     </span>
+<span class="org-comment">  putChar c                   putChar c </span>
+
+<span class="org-comment"> </span><span class="org-comment-delimiter">*)</span>
+<span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">echoDup</span> <span class="org-tuareg-font-lock-operator">=</span>
+  <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-governing">open </span><span class="org-tuareg-font-lock-module">IO</span> <span class="org-tuareg-font-lock-governing">in</span>
+  read_char     <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">c</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+  print_char c  <span class="org-tuareg-font-lock-operator">&gt;&gt;</span>
+  print_char c
+<span class="org-tuareg-font-lock-operator">;;</span>                  
+
+<span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">echoDup</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-module">IO.</span>io <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">IO.</span><span class="org-tuareg-font-lock-constructor">IO</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+
+<span class="org-tuareg-font-lock-operator">#</span>  echoDup <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-module">IO.</span>io <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">IO.</span><span class="org-tuareg-font-lock-constructor">IO</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+
+<span class="org-tuareg-font-lock-operator">#</span>  <span class="org-tuareg-font-lock-module">IO.</span>run echoDup <span class="org-tuareg-font-lock-operator">;;</span>
+a
+<span class="org-function-name">aa-</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">()</span>
+
+<span class="org-tuareg-font-lock-operator">#</span>   <span class="org-tuareg-font-lock-module">IO.</span>run echoDup <span class="org-tuareg-font-lock-operator">;;</span>
+b
+<span class="org-function-name">bb-</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">()</span>
+<span class="org-tuareg-font-lock-operator">#</span>                              
+                                       
+<span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">make_prompt1</span><span class="org-variable-name"> prompt</span> <span class="org-tuareg-font-lock-operator">=</span>
+  <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-governing">open </span><span class="org-tuareg-font-lock-module">IO</span> <span class="org-tuareg-font-lock-governing">in</span> 
+  print_string prompt            <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">_</span>    <span class="org-tuareg-font-lock-operator">-&gt;</span>
+  read_line                      <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">line</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+  print_string <span class="org-string">"The line is :\n"</span> <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">_</span>    <span class="org-tuareg-font-lock-operator">-&gt;</span>
+  print_string line              <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">_</span>    <span class="org-tuareg-font-lock-operator">-&gt;</span> 
+  unit <span class="org-tuareg-font-lock-operator">(</span><span class="org-tuareg-font-lock-module">String.</span>length line<span class="org-tuareg-font-lock-operator">)</span>
+  <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">make_prompt1</span> <span class="org-tuareg-font-lock-operator">:</span> string <span class="org-tuareg-font-lock-operator">-&gt;</span> int <span class="org-tuareg-font-lock-module">IO.</span>io <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+<span class="org-tuareg-font-lock-operator">#</span> 
+
+<span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">make_prompt2</span><span class="org-variable-name"> prompt</span> <span class="org-tuareg-font-lock-operator">=</span>
+  <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-governing">open </span><span class="org-tuareg-font-lock-module">IO</span> <span class="org-tuareg-font-lock-governing">in</span> 
+  print_string prompt            <span class="org-tuareg-font-lock-operator">&gt;&gt;</span>
+  read_line                      <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">line</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+  print_string <span class="org-string">"The line is :\n"</span> <span class="org-tuareg-font-lock-operator">&gt;&gt;</span>
+  print_string line              <span class="org-tuareg-font-lock-operator">&gt;&gt;</span> 
+  unit <span class="org-tuareg-font-lock-operator">(</span><span class="org-tuareg-font-lock-module">String.</span>length line<span class="org-tuareg-font-lock-operator">)</span>
+  <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">make_prompt2</span> <span class="org-tuareg-font-lock-operator">:</span> string <span class="org-tuareg-font-lock-operator">-&gt;</span> int <span class="org-tuareg-font-lock-module">IO.</span>io <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+ 
+<span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">do3Times</span><span class="org-variable-name"> action</span> <span class="org-tuareg-font-lock-operator">=</span>
+  <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-governing">open </span><span class="org-tuareg-font-lock-module">IO</span> <span class="org-tuareg-font-lock-governing">in</span>
+  action    <span class="org-tuareg-font-lock-operator">&gt;&gt;</span>
+  action    <span class="org-tuareg-font-lock-operator">&gt;&gt;</span>
+  action
+  <span class="org-tuareg-font-lock-operator">;;</span>      
+<span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">do3Times</span> <span class="org-tuareg-font-lock-operator">:</span> 'a <span class="org-tuareg-font-lock-module">IO.</span>io <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a <span class="org-tuareg-font-lock-module">IO.</span>io <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">act</span> <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">IO.</span>print_string <span class="org-string">"\nHello world"</span> <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">act</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-module">IO.</span>io <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">IO.</span><span class="org-tuareg-font-lock-constructor">IO</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">IO.</span>run act <span class="org-tuareg-font-lock-operator">;;</span>
+
+<span class="org-tuareg-font-lock-constructor">Hello</span> world<span class="org-tuareg-font-lock-operator">-</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">()</span>
+                                   
+
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">act3times</span> <span class="org-tuareg-font-lock-operator">=</span> do3Times act <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">act3times</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-module">IO.</span>io <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">IO.</span><span class="org-tuareg-font-lock-constructor">IO</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+
+<span class="org-tuareg-font-lock-operator">#</span>  <span class="org-tuareg-font-lock-module">IO.</span>run act3times <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-tuareg-font-lock-constructor">Hello</span> world
+<span class="org-tuareg-font-lock-constructor">Hello</span> world
+<span class="org-tuareg-font-lock-constructor">Hello</span> world<span class="org-tuareg-font-lock-operator">-</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">()</span>
+<span class="org-tuareg-font-lock-operator">#</span> 
+
+                                         
+<span class="org-tuareg-font-lock-operator">#</span>  <span class="org-tuareg-font-lock-module">IO.</span>run action1 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-tuareg-font-lock-constructor">Tell</span> your name <span class="org-tuareg-font-lock-operator">:</span><span class="org-tuareg-font-lock-constructor">My</span> name is <span class="org-tuareg-font-lock-constructor">Jack</span>
+<span class="org-tuareg-font-lock-constructor">The</span> line is <span class="org-tuareg-font-lock-operator">:</span>
+<span class="org-tuareg-font-lock-constructor">My</span> name is <span class="org-tuareg-font-lock-constructor">Jack</span><span class="org-tuareg-font-lock-operator">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">=</span> 15
+
+
+<span class="org-tuareg-font-lock-operator">&gt;</span>  <span class="org-tuareg-font-lock-module">IO.</span>run <span class="org-tuareg-font-lock-operator">(</span>do3Times action1<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-tuareg-font-lock-constructor">Tell</span> your name <span class="org-tuareg-font-lock-operator">:</span><span class="org-tuareg-font-lock-constructor">Jack</span>
+<span class="org-tuareg-font-lock-constructor">The</span> line is <span class="org-tuareg-font-lock-operator">:</span>
+<span class="org-tuareg-font-lock-constructor">JackTell</span> your name <span class="org-tuareg-font-lock-operator">:</span><span class="org-tuareg-font-lock-constructor">John</span>
+<span class="org-tuareg-font-lock-constructor">The</span> line is <span class="org-tuareg-font-lock-operator">:</span>
+<span class="org-tuareg-font-lock-constructor">JohnTell</span> your name <span class="org-tuareg-font-lock-operator">:</span><span class="org-tuareg-font-lock-constructor">Caesar</span>
+<span class="org-tuareg-font-lock-constructor">The</span> line is <span class="org-tuareg-font-lock-operator">:</span>
+<span class="org-function-name">Caesar-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">=</span> 6
+<span class="org-tuareg-font-lock-operator">#</span> 
+
+<span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">readTwoNumbers</span> <span class="org-tuareg-font-lock-operator">=</span>
+  <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-governing">open </span><span class="org-tuareg-font-lock-module">IO</span> <span class="org-tuareg-font-lock-governing">in</span>
+  read_int  <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">a</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+  read_int  <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">b</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+  unit <span class="org-tuareg-font-lock-operator">(</span>2 <span class="org-tuareg-font-lock-operator">*</span>a <span class="org-tuareg-font-lock-operator">+</span> b<span class="org-tuareg-font-lock-operator">)</span>
+<span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">readTwoNumbers</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-module">IO.</span>io <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">IO.</span><span class="org-tuareg-font-lock-constructor">IO</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+                                             
+
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">IO.</span>replicateM_  5 <span class="org-tuareg-font-lock-operator">(</span><span class="org-tuareg-font-lock-module">IO.</span>print_string <span class="org-string">"\nHello World\n"</span><span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-module">IO.</span>io <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">IO.</span><span class="org-tuareg-font-lock-constructor">IO</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+<span class="org-tuareg-font-lock-operator">#</span> 
+  <span class="org-tuareg-font-lock-module">IO.</span>run <span class="org-tuareg-font-lock-operator">(</span><span class="org-tuareg-font-lock-module">IO.</span>replicateM_  5 <span class="org-tuareg-font-lock-operator">(</span><span class="org-tuareg-font-lock-module">IO.</span>print_string <span class="org-string">"\nHello World\n"</span><span class="org-tuareg-font-lock-operator">))</span> <span class="org-tuareg-font-lock-operator">;;</span>
+
+<span class="org-tuareg-font-lock-constructor">Hello</span> <span class="org-tuareg-font-lock-constructor">World</span>
+
+<span class="org-tuareg-font-lock-constructor">Hello</span> <span class="org-tuareg-font-lock-constructor">World</span>
+
+<span class="org-tuareg-font-lock-constructor">Hello</span> <span class="org-tuareg-font-lock-constructor">World</span>
+
+<span class="org-tuareg-font-lock-constructor">Hello</span> <span class="org-tuareg-font-lock-constructor">World</span>
+
+<span class="org-tuareg-font-lock-constructor">Hello</span> <span class="org-tuareg-font-lock-constructor">World</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">()</span>
+<span class="org-tuareg-font-lock-operator">#</span> 
+
+<span class="org-tuareg-font-lock-operator">#</span>  <span class="org-tuareg-font-lock-module">IO.</span>run <span class="org-tuareg-font-lock-module">IO.</span>read_int <span class="org-tuareg-font-lock-operator">;;</span>
+232
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">=</span> 232
+ 
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">IO.</span>replicateM 4 <span class="org-tuareg-font-lock-module">IO.</span>read_int <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int list <span class="org-tuareg-font-lock-module">IO.</span>io <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">IO.</span><span class="org-tuareg-font-lock-constructor">IO</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+ 
+<span class="org-tuareg-font-lock-operator">#</span>  <span class="org-tuareg-font-lock-module">IO.</span>run <span class="org-tuareg-font-lock-operator">(</span><span class="org-tuareg-font-lock-module">IO.</span>replicateM 4 <span class="org-tuareg-font-lock-module">IO.</span>read_int<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">;;</span>
+2
+43
+34
+100
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-governing">in</span>
+
+
+<span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">echoLine</span> <span class="org-tuareg-font-lock-operator">=</span>
+  <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-governing">open </span><span class="org-tuareg-font-lock-module">IO</span> <span class="org-tuareg-font-lock-governing">in</span>
+  read_line         <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">line</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+  print_string line
+<span class="org-tuareg-font-lock-operator">;;</span>               
+
+<span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">echoLine</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-module">IO.</span>io <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">IO.</span><span class="org-tuareg-font-lock-constructor">IO</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+
+
+<span class="org-tuareg-font-lock-operator">#</span>  <span class="org-tuareg-font-lock-module">IO.</span>run echoLine <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-tuareg-font-lock-constructor">Hello</span> world
+<span class="org-tuareg-font-lock-constructor">Hello</span> world<span class="org-tuareg-font-lock-operator">-</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">()</span>
+<span class="org-tuareg-font-lock-operator">#</span>
+
+<span class="org-tuareg-font-lock-operator">#</span>  <span class="org-tuareg-font-lock-module">IO.</span>forever echoLine <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-module">IO.</span>io <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">IO.</span><span class="org-tuareg-font-lock-constructor">IO</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">echoLoop</span> <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">IO.</span>forever echoLine <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">echoLoop</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-module">IO.</span>io <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">IO.</span><span class="org-tuareg-font-lock-constructor">IO</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+ 
+<span class="org-tuareg-font-lock-operator">#</span>  <span class="org-tuareg-font-lock-module">IO.</span>run echoLoop <span class="org-tuareg-font-lock-operator">;;</span>
+line1
+line1
+line2
+line2
+line3
+line3   <span class="org-comment-delimiter">(* </span><span class="org-comment">Hit Ctrl + D </span><span class="org-comment-delimiter">*)</span>
+<span class="org-function-name">Exception</span><span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-module">End_of_file.</span>
+
+
+<span class="org-tuareg-font-lock-operator">#</span>  <span class="org-tuareg-font-lock-module">IO.</span>mapM <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>'a <span class="org-tuareg-font-lock-operator">-&gt;</span> 'b <span class="org-tuareg-font-lock-module">IO.</span>io<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a list <span class="org-tuareg-font-lock-operator">-&gt;</span> 'b list <span class="org-tuareg-font-lock-module">IO.</span>io <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+ 
+<span class="org-tuareg-font-lock-operator">#</span>  <span class="org-tuareg-font-lock-module">IO.</span>mapM <span class="org-tuareg-font-lock-module">IO.</span>print_string <span class="org-tuareg-font-lock-operator">[</span><span class="org-string">"a"</span><span class="org-tuareg-font-lock-operator">;</span> <span class="org-string">"b"</span><span class="org-tuareg-font-lock-operator">;</span> <span class="org-string">"c"</span><span class="org-tuareg-font-lock-operator">;</span> <span class="org-string">"d"</span><span class="org-tuareg-font-lock-operator">]</span> <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> unit list <span class="org-tuareg-font-lock-module">IO.</span>io <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">IO.</span><span class="org-tuareg-font-lock-constructor">IO</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+<span class="org-tuareg-font-lock-operator">#</span> 
+
+<span class="org-tuareg-font-lock-operator">#</span>  <span class="org-tuareg-font-lock-module">IO.</span>run <span class="org-tuareg-font-lock-operator">(</span><span class="org-tuareg-font-lock-module">IO.</span>mapM_ <span class="org-tuareg-font-lock-module">IO.</span>print_string <span class="org-tuareg-font-lock-operator">[</span><span class="org-string">"a"</span><span class="org-tuareg-font-lock-operator">;</span> <span class="org-string">"b"</span><span class="org-tuareg-font-lock-operator">;</span> <span class="org-string">"c"</span><span class="org-tuareg-font-lock-operator">;</span> <span class="org-string">"d"</span><span class="org-tuareg-font-lock-operator">]</span> <span class="org-tuareg-font-lock-operator">);;</span>
+<span class="org-function-name">abcd-</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">()</span>                       
+              
+
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-governing">open </span><span class="org-tuareg-font-lock-module">IO</span> <span class="org-tuareg-font-lock-governing">in</span> replicateM_ 6 <span class="org-tuareg-font-lock-operator">(</span>print_string <span class="org-string">"\ntest"</span><span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">|&gt;</span> run <span class="org-tuareg-font-lock-operator">;;</span>
+
+test
+test
+test
+test
+test
+<span class="org-function-name">test-</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">()</span>
+<span class="org-tuareg-font-lock-operator">#</span>
+</pre>
+</div>
+</div>
+</div>
 </div>
 
 <div id="outline-container-sec-1-14-7" class="outline-4">
@@ -8828,13 +9255,6 @@ It is equivalent to:
 <p>
 <code>type State s a = s -&gt; (a, s)</code>
 </p>
-
-
-<div class="figure">
-<p><img src="images/state_transformer1.png" alt="state_transformer1.png" />
-</p>
-</div>
-
 
 <p>
 State transformer:
@@ -9184,6 +9604,7 @@ Example:
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> stFn 5
 (10<span class="org-haskell-operator">,</span>6)
 <span class="org-haskell-operator">&gt;&gt;&gt;</span>
+
 
  
 <span class="org-comment-delimiter">{- </span><span class="org-comment">Now let's wrap inside the State type -}</span>
@@ -9711,7 +10132,366 @@ It needs to keep track of the two last numbers.
 </div>
 </div>
 </div>
+
+<div id="outline-container-sec-1-14-7-3" class="outline-5">
+<h5 id="sec-1-14-7-3"><span class="section-number-5">1.14.7.3</span> State monad in OCaml</h5>
+<div class="outline-text-5" id="text-1-14-7-3">
+<p>
+Implementation: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ocaml"><span class="org-comment-delimiter">(* </span><span class="org-comment">stfn - Stands for state transformer </span><span class="org-comment-delimiter">*)</span> 
+
+<span class="org-tuareg-font-lock-governing">module</span> <span class="org-tuareg-font-lock-module">State</span> <span class="org-tuareg-font-lock-operator">=</span>
+  <span class="org-tuareg-font-lock-governing">struct</span>
+
+    <span class="org-tuareg-font-lock-governing">type</span> <span class="org-tuareg-font-lock-operator">(</span><span class="org-type">'s</span><span class="org-tuareg-font-lock-operator">,</span><span class="org-type"> 'a</span><span class="org-tuareg-font-lock-operator">)</span><span class="org-type"> state</span> <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-constructor">ST</span> <span class="org-keyword">of</span> <span class="org-tuareg-font-lock-operator">(</span>'s <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a <span class="org-tuareg-font-lock-operator">*</span> 's<span class="org-tuareg-font-lock-operator">)</span>
+
+   <span class="org-comment-delimiter">(* </span><span class="org-comment">Runs  the state transformer  </span>
+<span class="org-comment">    </span>
+<span class="org-comment">     runState </span>
+<span class="org-comment">    </span><span class="org-comment-delimiter">*)</span>                                 
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">run</span><span class="org-variable-name"> </span><span class="org-tuareg-font-lock-operator">(</span><span class="org-tuareg-font-lock-constructor">ST</span><span class="org-variable-name"> stfnt</span><span class="org-tuareg-font-lock-operator">)</span><span class="org-variable-name"> s</span> <span class="org-tuareg-font-lock-operator">=</span> stfnt s
+
+    <span class="org-comment-delimiter">(* </span><span class="org-comment">Gets only the result and discards the </span>
+<span class="org-comment">       the next state. </span>
+<span class="org-comment">       </span>
+<span class="org-comment">      evalState </span>
+<span class="org-comment">     </span><span class="org-comment-delimiter">*)</span>                           
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">eval</span><span class="org-variable-name"> stfn s</span> <span class="org-tuareg-font-lock-operator">=</span> fst <span class="org-tuareg-font-lock-operator">(</span>run stfn s<span class="org-tuareg-font-lock-operator">)</span>
+
+    <span class="org-comment-delimiter">(* </span><span class="org-comment">Gets only the next state and drops the </span>
+<span class="org-comment">       result </span>
+
+<span class="org-comment">      execState </span>
+<span class="org-comment">     </span><span class="org-comment-delimiter">*)</span>
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">exec</span><span class="org-variable-name"> stfn s</span> <span class="org-tuareg-font-lock-operator">=</span> snd <span class="org-tuareg-font-lock-operator">(</span>run stfn s<span class="org-tuareg-font-lock-operator">)</span>
+
+
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">put</span><span class="org-variable-name"> s</span> <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-constructor">ST</span> <span class="org-tuareg-font-lock-operator">(</span><span class="org-keyword">fun</span> <span class="org-variable-name">_</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">((),</span> s<span class="org-tuareg-font-lock-operator">))</span>
+
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">get</span> <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-constructor">ST</span> <span class="org-tuareg-font-lock-operator">(</span><span class="org-keyword">fun</span> <span class="org-variable-name">s</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>s<span class="org-tuareg-font-lock-operator">,</span> s<span class="org-tuareg-font-lock-operator">))</span>
+
+    <span class="org-comment-delimiter">(* </span><span class="org-comment">return a = State $ \s -&gt; (a, s) </span><span class="org-comment-delimiter">*)</span>             
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">unit</span><span class="org-variable-name"> a</span> <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-constructor">ST</span> <span class="org-tuareg-font-lock-operator">(</span><span class="org-keyword">fun</span> <span class="org-variable-name">s</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>a<span class="org-tuareg-font-lock-operator">,</span> s<span class="org-tuareg-font-lock-operator">))</span>
+
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">bind</span><span class="org-variable-name"> stfn stfnMaker</span> <span class="org-tuareg-font-lock-operator">=</span>
+      <span class="org-tuareg-font-lock-constructor">ST</span> <span class="org-tuareg-font-lock-operator">(</span> <span class="org-keyword">fun</span> <span class="org-variable-name">currentState</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+           <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-operator">(</span><span class="org-variable-name">result</span><span class="org-tuareg-font-lock-operator">,</span><span class="org-variable-name"> newState</span><span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">=</span> run stfn currentState
+           <span class="org-tuareg-font-lock-governing">in</span> run <span class="org-tuareg-font-lock-operator">(</span>stfnMaker result<span class="org-tuareg-font-lock-operator">)</span> newState 
+         <span class="org-tuareg-font-lock-operator">)</span>
+         
+    <span class="org-comment-delimiter">(* </span><span class="org-comment">fmap </span><span class="org-comment-delimiter">*)</span>
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">map</span><span class="org-variable-name"> fn stfn</span> <span class="org-tuareg-font-lock-operator">=</span>
+      <span class="org-tuareg-font-lock-constructor">ST</span> <span class="org-tuareg-font-lock-operator">(</span><span class="org-keyword">fun</span> <span class="org-variable-name">currentState</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+          <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-operator">(</span><span class="org-variable-name">result</span><span class="org-tuareg-font-lock-operator">,</span><span class="org-variable-name"> newState</span><span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">=</span> run stfn currentState 
+          <span class="org-tuareg-font-lock-governing">in</span> <span class="org-tuareg-font-lock-operator">(</span>fn result<span class="org-tuareg-font-lock-operator">,</span> newState<span class="org-tuareg-font-lock-operator">)</span>
+         <span class="org-tuareg-font-lock-operator">)</span>
+
+         
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-operator">(&gt;&gt;=)</span> <span class="org-tuareg-font-lock-operator">=</span> bind
+
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-operator">(&lt;</span><span class="org-variable-name">$</span><span class="org-tuareg-font-lock-operator">&gt;)</span> <span class="org-tuareg-font-lock-operator">=</span> map
+                             
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-operator">(&gt;&gt;)</span> ma mb <span class="org-tuareg-font-lock-operator">=</span>
+      ma <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">_</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> mb
+
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">sequence</span><span class="org-variable-name"> mlist</span> <span class="org-tuareg-font-lock-operator">=</span>
+      <span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">mcons</span><span class="org-variable-name"> p q</span> <span class="org-tuareg-font-lock-operator">=</span>
+        p <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">x</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+        q <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">y</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+        unit <span class="org-tuareg-font-lock-operator">(</span>x<span class="org-tuareg-font-lock-operator">::</span><span class="org-type">y</span><span class="org-tuareg-font-lock-operator">)</span>
+      <span class="org-tuareg-font-lock-governing">in</span> <span class="org-tuareg-font-lock-module">List.</span>fold_right mcons mlist <span class="org-tuareg-font-lock-operator">(</span>unit <span class="org-tuareg-font-lock-operator">[])</span>
+
+
+    <span class="org-comment-delimiter">(* </span><span class="org-comment">Applicative Functor - Haskell &lt;$&gt;  </span><span class="org-comment-delimiter">*)</span>             
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-operator">(&lt;*&gt;)</span> m_fn ma <span class="org-tuareg-font-lock-operator">=</span>
+      m_fn     <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">fn</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+      ma       <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">a</span>  <span class="org-tuareg-font-lock-operator">-&gt;</span>
+      unit <span class="org-tuareg-font-lock-operator">(</span>fn a<span class="org-tuareg-font-lock-operator">)</span>
+
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">liftM2</span><span class="org-variable-name"> fn ma mb</span> <span class="org-tuareg-font-lock-operator">=</span>
+      ma      <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">a</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+      mb      <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">b</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+      unit <span class="org-tuareg-font-lock-operator">(</span>fn a b<span class="org-tuareg-font-lock-operator">)</span>
+
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">liftM3</span><span class="org-variable-name"> fn ma mb mc</span> <span class="org-tuareg-font-lock-operator">=</span> 
+      ma     <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">a</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+      mb     <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">b</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+      mc     <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">c</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+      unit <span class="org-tuareg-font-lock-operator">(</span>fn a b c<span class="org-tuareg-font-lock-operator">)</span>
+                         
+    <span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">mapM</span><span class="org-variable-name"> fn alst</span> <span class="org-tuareg-font-lock-operator">=</span>
+      sequence <span class="org-tuareg-font-lock-operator">(</span><span class="org-tuareg-font-lock-module">List.</span>map fn alst<span class="org-tuareg-font-lock-operator">)</span>
+                         
+  <span class="org-tuareg-font-lock-governing">end</span> 
+<span class="org-tuareg-font-lock-operator">;;</span>
+
+<span class="org-tuareg-font-lock-governing">module</span> <span class="org-tuareg-font-lock-module">State</span> <span class="org-tuareg-font-lock-operator">:</span>
+  <span class="org-tuareg-font-lock-governing">sig</span>
+    <span class="org-tuareg-font-lock-governing">type</span> <span class="org-tuareg-font-lock-operator">(</span><span class="org-type">'s</span><span class="org-tuareg-font-lock-operator">,</span><span class="org-type"> 'a</span><span class="org-tuareg-font-lock-operator">)</span><span class="org-type"> state</span> <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-constructor">ST</span> <span class="org-keyword">of</span> <span class="org-tuareg-font-lock-operator">(</span>'s <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a <span class="org-tuareg-font-lock-operator">*</span> 's<span class="org-tuareg-font-lock-operator">)</span>
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">run</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>'a<span class="org-tuareg-font-lock-operator">,</span> 'b<span class="org-tuareg-font-lock-operator">)</span> state <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a <span class="org-tuareg-font-lock-operator">-&gt;</span> 'b <span class="org-tuareg-font-lock-operator">*</span> 'a
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">eval</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>'a<span class="org-tuareg-font-lock-operator">,</span> 'b<span class="org-tuareg-font-lock-operator">)</span> state <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a <span class="org-tuareg-font-lock-operator">-&gt;</span> 'b
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">exec</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>'a<span class="org-tuareg-font-lock-operator">,</span> 'b<span class="org-tuareg-font-lock-operator">)</span> state <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">put</span> <span class="org-tuareg-font-lock-operator">:</span> 'a <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'a<span class="org-tuareg-font-lock-operator">,</span> unit<span class="org-tuareg-font-lock-operator">)</span> state
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">get</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>'a<span class="org-tuareg-font-lock-operator">,</span> 'a<span class="org-tuareg-font-lock-operator">)</span> state
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">unit</span> <span class="org-tuareg-font-lock-operator">:</span> 'a <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'b<span class="org-tuareg-font-lock-operator">,</span> 'a<span class="org-tuareg-font-lock-operator">)</span> state
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">bind</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>'a<span class="org-tuareg-font-lock-operator">,</span> 'b<span class="org-tuareg-font-lock-operator">)</span> state <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'b <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'a<span class="org-tuareg-font-lock-operator">,</span> 'c<span class="org-tuareg-font-lock-operator">)</span> state<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'a<span class="org-tuareg-font-lock-operator">,</span> 'c<span class="org-tuareg-font-lock-operator">)</span> state
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">map</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>'a <span class="org-tuareg-font-lock-operator">-&gt;</span> 'b<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'c<span class="org-tuareg-font-lock-operator">,</span> 'a<span class="org-tuareg-font-lock-operator">)</span> state <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'c<span class="org-tuareg-font-lock-operator">,</span> 'b<span class="org-tuareg-font-lock-operator">)</span> state
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-tuareg-font-lock-operator">(</span> <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>'a<span class="org-tuareg-font-lock-operator">,</span> 'b<span class="org-tuareg-font-lock-operator">)</span> state <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'b <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'a<span class="org-tuareg-font-lock-operator">,</span> 'c<span class="org-tuareg-font-lock-operator">)</span> state<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'a<span class="org-tuareg-font-lock-operator">,</span> 'c<span class="org-tuareg-font-lock-operator">)</span> state
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-tuareg-font-lock-operator">(</span> <span class="org-tuareg-font-lock-operator">&lt;</span>$<span class="org-tuareg-font-lock-operator">&gt;</span> <span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>'a <span class="org-tuareg-font-lock-operator">-&gt;</span> 'b<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'c<span class="org-tuareg-font-lock-operator">,</span> 'a<span class="org-tuareg-font-lock-operator">)</span> state <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'c<span class="org-tuareg-font-lock-operator">,</span> 'b<span class="org-tuareg-font-lock-operator">)</span> state
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-tuareg-font-lock-operator">(</span> <span class="org-tuareg-font-lock-operator">&gt;&gt;</span> <span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>'a<span class="org-tuareg-font-lock-operator">,</span> 'b<span class="org-tuareg-font-lock-operator">)</span> state <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'a<span class="org-tuareg-font-lock-operator">,</span> 'c<span class="org-tuareg-font-lock-operator">)</span> state <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'a<span class="org-tuareg-font-lock-operator">,</span> 'c<span class="org-tuareg-font-lock-operator">)</span> state
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">sequence</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>'a<span class="org-tuareg-font-lock-operator">,</span> 'b<span class="org-tuareg-font-lock-operator">)</span> state list <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'a<span class="org-tuareg-font-lock-operator">,</span> 'b list<span class="org-tuareg-font-lock-operator">)</span> state
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-tuareg-font-lock-operator">(</span> <span class="org-tuareg-font-lock-operator">&lt;*&gt;</span> <span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>'a<span class="org-tuareg-font-lock-operator">,</span> 'b <span class="org-tuareg-font-lock-operator">-&gt;</span> 'c<span class="org-tuareg-font-lock-operator">)</span> state <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'a<span class="org-tuareg-font-lock-operator">,</span> 'b<span class="org-tuareg-font-lock-operator">)</span> state <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'a<span class="org-tuareg-font-lock-operator">,</span> 'c<span class="org-tuareg-font-lock-operator">)</span> state
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">liftM2</span> <span class="org-tuareg-font-lock-operator">:</span>
+      <span class="org-tuareg-font-lock-operator">(</span>'a <span class="org-tuareg-font-lock-operator">-&gt;</span> 'b <span class="org-tuareg-font-lock-operator">-&gt;</span> 'c<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'d<span class="org-tuareg-font-lock-operator">,</span> 'a<span class="org-tuareg-font-lock-operator">)</span> state <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'d<span class="org-tuareg-font-lock-operator">,</span> 'b<span class="org-tuareg-font-lock-operator">)</span> state <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'d<span class="org-tuareg-font-lock-operator">,</span> 'c<span class="org-tuareg-font-lock-operator">)</span> state
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">liftM3</span> <span class="org-tuareg-font-lock-operator">:</span>
+      <span class="org-tuareg-font-lock-operator">(</span>'a <span class="org-tuareg-font-lock-operator">-&gt;</span> 'b <span class="org-tuareg-font-lock-operator">-&gt;</span> 'c <span class="org-tuareg-font-lock-operator">-&gt;</span> 'd<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+      <span class="org-tuareg-font-lock-operator">(</span>'e<span class="org-tuareg-font-lock-operator">,</span> 'a<span class="org-tuareg-font-lock-operator">)</span> state <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'e<span class="org-tuareg-font-lock-operator">,</span> 'b<span class="org-tuareg-font-lock-operator">)</span> state <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'e<span class="org-tuareg-font-lock-operator">,</span> 'c<span class="org-tuareg-font-lock-operator">)</span> state <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'e<span class="org-tuareg-font-lock-operator">,</span> 'd<span class="org-tuareg-font-lock-operator">)</span> state
+    <span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">mapM</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>'a <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'b<span class="org-tuareg-font-lock-operator">,</span> 'c<span class="org-tuareg-font-lock-operator">)</span> state<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> 'a list <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>'b<span class="org-tuareg-font-lock-operator">,</span> 'c list<span class="org-tuareg-font-lock-operator">)</span> state
+  <span class="org-tuareg-font-lock-governing">end</span>
+<span class="org-tuareg-font-lock-operator">#</span>
+</pre>
 </div>
+
+<p>
+Tests:
+</p>
+
+
+<p>
+Basic Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ocaml"><span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">stFn</span> <span class="org-tuareg-font-lock-operator">=</span> 
+   <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-governing">open </span><span class="org-tuareg-font-lock-module">State</span> <span class="org-tuareg-font-lock-governing">in</span> 
+   <span class="org-tuareg-font-lock-constructor">ST</span> <span class="org-tuareg-font-lock-operator">(</span><span class="org-keyword">fun</span> <span class="org-variable-name">s</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>2 <span class="org-tuareg-font-lock-operator">*</span> s<span class="org-tuareg-font-lock-operator">,</span> s <span class="org-tuareg-font-lock-operator">+</span> 1<span class="org-tuareg-font-lock-operator">))</span> 
+<span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">stFn</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>int<span class="org-tuareg-font-lock-operator">,</span> int<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-module">State.</span>state <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">State.</span><span class="org-tuareg-font-lock-constructor">ST</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+
+<span class="org-tuareg-font-lock-operator">#</span>  <span class="org-tuareg-font-lock-module">State.</span>run stFn 1 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>2<span class="org-tuareg-font-lock-operator">,</span> 2<span class="org-tuareg-font-lock-operator">)</span>
+<span class="org-tuareg-font-lock-operator">#</span> 
+  <span class="org-tuareg-font-lock-module">State.</span>run stFn 2 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>4<span class="org-tuareg-font-lock-operator">,</span> 3<span class="org-tuareg-font-lock-operator">)</span>
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>run stFn 3 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>6<span class="org-tuareg-font-lock-operator">,</span> 4<span class="org-tuareg-font-lock-operator">)</span>
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>run stFn 4 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>8<span class="org-tuareg-font-lock-operator">,</span> 5<span class="org-tuareg-font-lock-operator">)</span>
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>run stFn 5 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>10<span class="org-tuareg-font-lock-operator">,</span> 6<span class="org-tuareg-font-lock-operator">)</span>
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>run stFn 6 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>12<span class="org-tuareg-font-lock-operator">,</span> 7<span class="org-tuareg-font-lock-operator">)</span>
+<span class="org-tuareg-font-lock-operator">#</span> 
+
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>eval stFn 6 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">=</span> 12
+<span class="org-tuareg-font-lock-operator">#</span> 
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>exec stFn 6 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">=</span> 7
+<span class="org-tuareg-font-lock-operator">#</span> 
+
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">stFn2</span> <span class="org-tuareg-font-lock-operator">=</span> 
+      <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-governing">open </span><span class="org-tuareg-font-lock-module">State</span> <span class="org-tuareg-font-lock-governing">in</span> 
+      map <span class="org-tuareg-font-lock-operator">(</span><span class="org-keyword">fun</span> <span class="org-variable-name">x</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> x <span class="org-tuareg-font-lock-operator">+</span> 3<span class="org-tuareg-font-lock-operator">)</span> stFn 
+  <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">stFn2</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>int<span class="org-tuareg-font-lock-operator">,</span> int<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-module">State.</span>state <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">State.</span><span class="org-tuareg-font-lock-constructor">ST</span> <span class="org-tuareg-font-lock-operator">&lt;</span>fu
+
+
+<span class="org-tuareg-font-lock-operator">#</span>  <span class="org-tuareg-font-lock-module">State.</span>run stFn2 1 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>5<span class="org-tuareg-font-lock-operator">,</span> 2<span class="org-tuareg-font-lock-operator">)</span>
+
+<span class="org-tuareg-font-lock-operator">#</span>  <span class="org-tuareg-font-lock-module">State.</span>run stFn2 2 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>7<span class="org-tuareg-font-lock-operator">,</span> 3<span class="org-tuareg-font-lock-operator">)</span>
+
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>run stFn2 3 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>9<span class="org-tuareg-font-lock-operator">,</span> 4<span class="org-tuareg-font-lock-operator">)</span>
+
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>run stFn2 4 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>11<span class="org-tuareg-font-lock-operator">,</span> 5<span class="org-tuareg-font-lock-operator">)</span>
+
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>run stFn2 5 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>13<span class="org-tuareg-font-lock-operator">,</span> 6<span class="org-tuareg-font-lock-operator">)</span>
+
+
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-governing">let</span> <span class="org-function-name">fn</span><span class="org-variable-name"> x</span> <span class="org-tuareg-font-lock-operator">=</span> x <span class="org-tuareg-font-lock-operator">+</span> 3 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">fn</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">-&gt;</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>run <span class="org-tuareg-font-lock-operator">(</span><span class="org-tuareg-font-lock-module">State.</span>map fn stFn<span class="org-tuareg-font-lock-operator">)</span> 1 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>5<span class="org-tuareg-font-lock-operator">,</span> 2<span class="org-tuareg-font-lock-operator">)</span>
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>run <span class="org-tuareg-font-lock-operator">(</span><span class="org-tuareg-font-lock-module">State.</span>map fn stFn<span class="org-tuareg-font-lock-operator">)</span> 2 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>7<span class="org-tuareg-font-lock-operator">,</span> 3<span class="org-tuareg-font-lock-operator">)</span>
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>run <span class="org-tuareg-font-lock-operator">(</span><span class="org-tuareg-font-lock-module">State.</span>map fn stFn<span class="org-tuareg-font-lock-operator">)</span> 3 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>9<span class="org-tuareg-font-lock-operator">,</span> 4<span class="org-tuareg-font-lock-operator">)</span>
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>run <span class="org-tuareg-font-lock-operator">(</span><span class="org-tuareg-font-lock-module">State.</span>map fn stFn<span class="org-tuareg-font-lock-operator">)</span> 4 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>11<span class="org-tuareg-font-lock-operator">,</span> 5<span class="org-tuareg-font-lock-operator">)</span>
+<span class="org-tuareg-font-lock-operator">#</span>
+
+
+<span class="org-comment-delimiter">(* </span><span class="org-comment">Haskell Code:  </span>
+<span class="org-comment">    </span>
+<span class="org-comment">   :{</span>
+<span class="org-comment">   </span>
+<span class="org-comment">   let stateFn3 :: State Int Int</span>
+<span class="org-comment">       stateFn3 = do</span>
+<span class="org-comment">         currentState &lt;- get</span>
+<span class="org-comment">         put (currentState + 1)  --- put $ currentState +  1</span>
+<span class="org-comment">         return (2 * currentState)</span>
+<span class="org-comment">   :}      </span>
+<span class="org-comment"> </span>
+<span class="org-comment"> ----------------------------------------      </span>
+
+<span class="org-comment"> </span><span class="org-comment-delimiter">*)</span>
+
+<span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">stFn3</span> <span class="org-tuareg-font-lock-operator">=</span>
+  <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-governing">open </span><span class="org-tuareg-font-lock-module">State</span> <span class="org-tuareg-font-lock-governing">in</span> 
+  get          <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span>  <span class="org-keyword">fun</span> <span class="org-variable-name">cs</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+  put <span class="org-tuareg-font-lock-operator">(</span>cs <span class="org-tuareg-font-lock-operator">+</span> 1<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span>  <span class="org-keyword">fun</span> <span class="org-variable-name">_</span>  <span class="org-tuareg-font-lock-operator">-&gt;</span>
+  unit <span class="org-tuareg-font-lock-operator">(</span>2 <span class="org-tuareg-font-lock-operator">*</span> cs<span class="org-tuareg-font-lock-operator">)</span>
+<span class="org-tuareg-font-lock-operator">;;</span>       
+
+<span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">stFn3</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>int<span class="org-tuareg-font-lock-operator">,</span> int<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-module">State.</span>state <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">State.</span><span class="org-tuareg-font-lock-constructor">ST</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+
+  
+<span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">stFn4</span> <span class="org-tuareg-font-lock-operator">=</span>
+  <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-governing">open </span><span class="org-tuareg-font-lock-module">State</span> <span class="org-tuareg-font-lock-governing">in</span> 
+  get          <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span>  <span class="org-keyword">fun</span> <span class="org-variable-name">cs</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+  put <span class="org-tuareg-font-lock-operator">(</span>cs <span class="org-tuareg-font-lock-operator">+</span> 1<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">&gt;&gt;</span>
+  unit <span class="org-tuareg-font-lock-operator">(</span>2 <span class="org-tuareg-font-lock-operator">*</span> cs<span class="org-tuareg-font-lock-operator">)</span>
+<span class="org-tuareg-font-lock-operator">;;</span>       
+
+<span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">stFn4</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>int<span class="org-tuareg-font-lock-operator">,</span> int<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-module">State.</span>state <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">State.</span><span class="org-tuareg-font-lock-constructor">ST</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>  
+
+
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>run stFn3 1 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>2<span class="org-tuareg-font-lock-operator">,</span> 2<span class="org-tuareg-font-lock-operator">)</span>
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>run stFn3 2 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>4<span class="org-tuareg-font-lock-operator">,</span> 3<span class="org-tuareg-font-lock-operator">)</span>
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>run stFn3 3 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>6<span class="org-tuareg-font-lock-operator">,</span> 4<span class="org-tuareg-font-lock-operator">)</span>
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>run stFn3 4 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>8<span class="org-tuareg-font-lock-operator">,</span> 5<span class="org-tuareg-font-lock-operator">)</span>
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>run stFn3 5 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>10<span class="org-tuareg-font-lock-operator">,</span> 6<span class="org-tuareg-font-lock-operator">)</span>
+                  <span class="org-tuareg-font-lock-operator">#</span>
+
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>run stFn4 1 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>2<span class="org-tuareg-font-lock-operator">,</span> 2<span class="org-tuareg-font-lock-operator">)</span>
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>run stFn4 2 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>4<span class="org-tuareg-font-lock-operator">,</span> 3<span class="org-tuareg-font-lock-operator">)</span>
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>run stFn4 3 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>6<span class="org-tuareg-font-lock-operator">,</span> 4<span class="org-tuareg-font-lock-operator">)</span>
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>run stFn4 4 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>8<span class="org-tuareg-font-lock-operator">,</span> 5<span class="org-tuareg-font-lock-operator">)</span>
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>run stFn4 5 <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>10<span class="org-tuareg-font-lock-operator">,</span> 6<span class="org-tuareg-font-lock-operator">)</span>
+<span class="org-tuareg-font-lock-operator">#</span>
+</pre>
+</div>
+
+
+<p>
+Simulating a Stack:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ocaml"><span class="org-comment-delimiter">(* </span><span class="org-comment">type Stack = [Int]  </span><span class="org-comment-delimiter">*)</span>
+
+<span class="org-tuareg-font-lock-governing">type</span> <span class="org-type">stack</span> <span class="org-tuareg-font-lock-operator">=</span> int list 
+
+<span class="org-comment-delimiter">(* </span><span class="org-comment">With type signature </span><span class="org-comment-delimiter">*)</span>                 
+<span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">pop</span><span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span><span class="org-type">stack</span><span class="org-tuareg-font-lock-operator">,</span><span class="org-type"> int</span><span class="org-tuareg-font-lock-operator">)</span><span class="org-type"> </span><span class="org-tuareg-font-lock-module">State.</span><span class="org-type">state </span><span class="org-tuareg-font-lock-operator">=</span>
+  <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-governing">open </span><span class="org-tuareg-font-lock-module">State</span> <span class="org-tuareg-font-lock-governing">in</span>
+  <span class="org-tuareg-font-lock-constructor">ST</span> <span class="org-tuareg-font-lock-operator">(</span> <span class="org-keyword">fun</span> <span class="org-tuareg-font-lock-operator">(</span><span class="org-variable-name">x</span><span class="org-tuareg-font-lock-operator">::</span><span class="org-type">xs</span><span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>x<span class="org-tuareg-font-lock-operator">,</span> xs<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">)</span>
+  
+<span class="org-tuareg-font-lock-operator">;;</span>  
+<span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">pop</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>stack<span class="org-tuareg-font-lock-operator">,</span> int<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-module">State.</span>state <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">State.</span><span class="org-tuareg-font-lock-constructor">ST</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+  
+<span class="org-comment-delimiter">(* </span><span class="org-comment">Without type signature </span><span class="org-comment-delimiter">*)</span>
+  
+<span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">pop</span> <span class="org-tuareg-font-lock-operator">=</span>
+  <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-governing">open </span><span class="org-tuareg-font-lock-module">State</span> <span class="org-tuareg-font-lock-governing">in</span>
+  <span class="org-tuareg-font-lock-constructor">ST</span> <span class="org-tuareg-font-lock-operator">(</span><span class="org-keyword">fun</span> <span class="org-tuareg-font-lock-operator">(</span><span class="org-variable-name">x</span><span class="org-tuareg-font-lock-operator">::</span><span class="org-type">xs</span><span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>x<span class="org-tuareg-font-lock-operator">,</span> xs<span class="org-tuareg-font-lock-operator">))</span>
+<span class="org-tuareg-font-lock-operator">;;</span>
+  
+     
+<span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">push</span><span class="org-tuareg-font-lock-operator">:</span> <span class="org-type">int </span><span class="org-tuareg-font-lock-operator">-&gt;</span><span class="org-type"> </span><span class="org-tuareg-font-lock-operator">(</span><span class="org-type">stack</span><span class="org-tuareg-font-lock-operator">,</span><span class="org-type"> unit</span><span class="org-tuareg-font-lock-operator">)</span><span class="org-type"> </span><span class="org-tuareg-font-lock-module">State.</span><span class="org-type">state </span><span class="org-tuareg-font-lock-operator">=</span>
+  <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-governing">open </span><span class="org-tuareg-font-lock-module">State</span> <span class="org-tuareg-font-lock-governing">in</span> 
+  <span class="org-keyword">fun</span> <span class="org-variable-name">a</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-constructor">ST</span> <span class="org-tuareg-font-lock-operator">(</span> <span class="org-keyword">fun</span>  <span class="org-variable-name">xs</span> <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">((),</span> a<span class="org-tuareg-font-lock-operator">::</span><span class="org-type">xs</span><span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-operator">)</span>
+<span class="org-tuareg-font-lock-operator">;;</span>
+
+<span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">push</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">-&gt;</span> <span class="org-tuareg-font-lock-operator">(</span>stack<span class="org-tuareg-font-lock-operator">,</span> unit<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-module">State.</span>state <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span> 
+  
+<span class="org-comment-delimiter">(*</span>
+<span class="org-comment">:{</span>
+<span class="org-comment">let stackManip = do  </span>
+<span class="org-comment">      push 3  </span>
+<span class="org-comment">      a &lt;- pop  </span>
+<span class="org-comment">      pop </span>
+<span class="org-comment">:}</span>
+<span class="org-comment"> </span><span class="org-comment-delimiter">*)</span>
+
+<span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">stackManip</span> <span class="org-tuareg-font-lock-operator">=</span>
+  <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-governing">open </span><span class="org-tuareg-font-lock-module">State</span> <span class="org-tuareg-font-lock-governing">in</span>
+  push 3   <span class="org-tuareg-font-lock-operator">&gt;&gt;</span>
+  pop      <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">a</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+  pop   
+<span class="org-tuareg-font-lock-operator">;;</span>
+
+<span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">stackManip</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>stack<span class="org-tuareg-font-lock-operator">,</span> int<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-module">State.</span>state <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">State.</span><span class="org-tuareg-font-lock-constructor">ST</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>  
+  
+
+
+<span class="org-tuareg-font-lock-operator">#</span>  <span class="org-tuareg-font-lock-module">State.</span>run pop <span class="org-tuareg-font-lock-operator">[</span>1<span class="org-tuareg-font-lock-operator">;</span> 2<span class="org-tuareg-font-lock-operator">;</span> 3<span class="org-tuareg-font-lock-operator">;</span> 4<span class="org-tuareg-font-lock-operator">]</span> <span class="org-tuareg-font-lock-operator">;;</span>
+ <span class="org-tuareg-font-lock-operator">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int list <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>1<span class="org-tuareg-font-lock-operator">,</span> <span class="org-tuareg-font-lock-operator">[</span>2<span class="org-tuareg-font-lock-operator">;</span> 3<span class="org-tuareg-font-lock-operator">;</span> 4<span class="org-tuareg-font-lock-operator">])</span>
+
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>run pop <span class="org-tuareg-font-lock-operator">[</span>2<span class="org-tuareg-font-lock-operator">;</span> 3<span class="org-tuareg-font-lock-operator">;</span> 4<span class="org-tuareg-font-lock-operator">]</span> <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> int <span class="org-tuareg-font-lock-operator">*</span> int list <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">(</span>2<span class="org-tuareg-font-lock-operator">,</span> <span class="org-tuareg-font-lock-operator">[</span>3<span class="org-tuareg-font-lock-operator">;</span> 4<span class="org-tuareg-font-lock-operator">])</span>
+
+<span class="org-comment-delimiter">(*</span>
+
+<span class="org-comment">:{</span>
+
+<span class="org-comment">let stackStuff :: State Stack ()  </span>
+<span class="org-comment">    stackStuff = do  </span>
+<span class="org-comment">      a &lt;- pop  </span>
+<span class="org-comment">      if a == 5  </span>
+<span class="org-comment">        then push 5  </span>
+<span class="org-comment">        else do  </span>
+<span class="org-comment">          push 3  </span>
+<span class="org-comment">          push 8    </span>
+<span class="org-comment">:}  </span>
+
+<span class="org-comment-delimiter">*)</span>
+
+<span class="org-tuareg-font-lock-governing">let</span> <span class="org-variable-name">stackStuff</span> <span class="org-tuareg-font-lock-operator">=</span>
+  <span class="org-tuareg-font-lock-governing">let</span> <span class="org-tuareg-font-lock-governing">open </span><span class="org-tuareg-font-lock-module">State</span> <span class="org-tuareg-font-lock-governing">in</span> 
+  pop         <span class="org-tuareg-font-lock-operator">&gt;&gt;=</span> <span class="org-keyword">fun</span> <span class="org-variable-name">a</span> <span class="org-tuareg-font-lock-operator">-&gt;</span>
+  <span class="org-keyword">if</span> a <span class="org-tuareg-font-lock-operator">=</span> 5
+  <span class="org-keyword">then</span> push 5
+  <span class="org-keyword">else</span> <span class="org-tuareg-font-lock-operator">(</span>
+      push 3  <span class="org-tuareg-font-lock-operator">&gt;&gt;</span>
+      push 8
+  <span class="org-tuareg-font-lock-operator">)</span>
+<span class="org-tuareg-font-lock-operator">;;</span>
+
+<span class="org-tuareg-font-lock-governing">val</span> <span class="org-function-name">stackStuff</span> <span class="org-tuareg-font-lock-operator">:</span> <span class="org-tuareg-font-lock-operator">(</span>stack<span class="org-tuareg-font-lock-operator">,</span> unit<span class="org-tuareg-font-lock-operator">)</span> <span class="org-tuareg-font-lock-module">State.</span>state <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-module">State.</span><span class="org-tuareg-font-lock-constructor">ST</span> <span class="org-tuareg-font-lock-operator">&lt;</span><span class="org-keyword">fun</span><span class="org-tuareg-font-lock-operator">&gt;</span>
+  
+<span class="org-tuareg-font-lock-operator">#</span> <span class="org-tuareg-font-lock-module">State.</span>run stackStuff <span class="org-tuareg-font-lock-operator">[</span>9<span class="org-tuareg-font-lock-operator">;</span> 0<span class="org-tuareg-font-lock-operator">;</span> 2<span class="org-tuareg-font-lock-operator">;</span> 1<span class="org-tuareg-font-lock-operator">;</span> 0<span class="org-tuareg-font-lock-operator">]</span> <span class="org-tuareg-font-lock-operator">;;</span>
+<span class="org-function-name">-</span> <span class="org-tuareg-font-lock-operator">:</span> unit <span class="org-tuareg-font-lock-operator">*</span> stack <span class="org-tuareg-font-lock-operator">=</span> <span class="org-tuareg-font-lock-operator">((),</span> <span class="org-tuareg-font-lock-operator">[</span>8<span class="org-tuareg-font-lock-operator">;</span> 3<span class="org-tuareg-font-lock-operator">;</span> 0<span class="org-tuareg-font-lock-operator">;</span> 2<span class="org-tuareg-font-lock-operator">;</span> 1<span class="org-tuareg-font-lock-operator">;</span> 0<span class="org-tuareg-font-lock-operator">])</span>
+<span class="org-tuareg-font-lock-operator">#</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
 
 <div id="outline-container-sec-1-14-8" class="outline-4">
 <h4 id="sec-1-14-8"><span class="section-number-4">1.14.8</span> Writer Monad</h4>
@@ -10361,10 +11141,10 @@ Some Functional programming languages:
 
 <tr>
 <td class="left">Clojure</td>
-<td class="left">Strict + Lazy</td>
+<td class="left">Strict</td>
 <td class="left">Dynamic</td>
 <td class="left">No</td>
-<td class="left">Destructuring and macros</td>
+<td class="left">Yes. Destructuring and macros</td>
 <td class="left">Yes/ Macros</td>
 <td class="left">No</td>
 <td class="left">No</td>
@@ -10401,13 +11181,47 @@ Some Functional programming languages:
 <td class="left">Yes</td>
 <td class="left">Yes</td>
 <td class="left">No</td>
-<td class="left">No</td>
+<td class="left">Yes</td>
 <td class="left">?</td>
 <td class="left">?</td>
 <td class="left">VM/Bytecode</td>
 <td class="left">&#xa0;</td>
 <td class="left">?</td>
 <td class="left">Telecommunications, Servers, Concurrency</td>
+</tr>
+
+<tr>
+<td class="left">Elixir</td>
+<td class="left">Strict</td>
+<td class="left">Dynamic</td>
+<td class="left">?</td>
+<td class="left">Yes</td>
+<td class="left">Yes</td>
+<td class="left">No</td>
+<td class="left">Yes</td>
+<td class="left">?</td>
+<td class="left">?</td>
+<td class="left">Erlang VM</td>
+<td class="left">-</td>
+<td class="left">?</td>
+<td class="left">Erlang VM + macros</td>
+</tr>
+
+<tr>
+<td class="left">Python</td>
+<td class="left">Strict</td>
+<td class="left">Dynamic</td>
+<td class="left">No</td>
+<td class="left">No</td>
+<td class="left">No</td>
+<td class="left">Yes</td>
+<td class="left">No</td>
+<td class="left">Yes</td>
+<td class="left">No</td>
+<td class="left">VM/Bytecode</td>
+<td class="left">-</td>
+<td class="left">No</td>
+<td class="left">Libraries and easier to use.</td>
 </tr>
 
 <tr>
@@ -10434,7 +11248,7 @@ Some Functional programming languages:
 <td class="left">No</td>
 <td class="left">No</td>
 <td class="left">No</td>
-<td class="left">**</td>
+<td class="left">?*</td>
 <td class="left">No</td>
 <td class="left">Yes</td>
 <td class="left">No</td>
@@ -10458,7 +11272,7 @@ Some Functional programming languages:
 <td class="left">VM/Bytecode</td>
 <td class="left">*Lisp/ Scheme</td>
 <td class="left">No</td>
-<td class="left">DSL - Statics</td>
+<td class="left">DSL - Statistics</td>
 </tr>
 
 <tr>
@@ -10477,9 +11291,25 @@ Some Functional programming languages:
 <td class="left">No</td>
 <td class="left">DSL - Computer Algebraic System</td>
 </tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
 </tbody>
 </table>
-
 
 
 <p>
@@ -11371,7 +12201,7 @@ Java HotSpot™ VM.</b> Available at:  <a href="http://www.ssw.uni-linz.ac.at/Re
 </div></div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2016-03-31 Thu 06:53</p>
+<p class="date">Created: 2016-04-07 Thu 13:16</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

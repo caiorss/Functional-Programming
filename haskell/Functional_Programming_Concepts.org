@@ -6431,7 +6431,7 @@ Nothing
 
 #+END_SRC
 
-**** Maybe Monad in Ocaml 
+**** Maybe Monad in OCaml 
 
 The maybe type is called Option in Ocaml and F#.
 
@@ -7171,13 +7171,19 @@ main.
 The values wrapped in an IO type like =getChar :: IO Char= can only be
 extracted inside an IO action. 
 
-Summary: 
+Remarks: 
 
  - The Haskell's IO is pure and lazy.
- - There is no way to extract a value of an IO outside an IO. 
+ - There is no way to extract a value of an IO action outside an IO
+   action.
  - Only IO actions perform IO actions.  
  - The entry point of a Haskell program is the function _main_. Only
-   the IO functions called from main will be run.
+   the IO functions called from main will be executed.
+ - IO Actions are commands. =_putSTrln "str"_= doesn't print a
+   string. It actually creates a command to print a string that can be
+   manipulated like a value, repeated, stored in data structures and
+   passed to another IO actions. 
+ - By typing an action action in the REPL (ghci) forces its execution.
 
 
 Example: 
@@ -7251,8 +7257,6 @@ Say action 1 dummy
 
 You entered the line: Hola mundo Haskell.
 
-
-
 #+END_SRC
 
 It is noticeable that: 
@@ -7263,7 +7267,7 @@ It is noticeable that:
    extracted inside an IO action.
 
 The application of the function =putStrLn :: String -> IO ()= to a
-string =putStrLn "Hello world"= is equivalent to the code below in
+string =_putStrLn "Hello world"_= is equivalent to the code below in
 OCaml. 
 
 #+BEGIN_SRC ocaml
@@ -7276,24 +7280,40 @@ val putStrLn : string -> unit -> unit = <fun>
 >  putStrLn "Hello world" ;;
 - : unit -> unit = <fun>
 
-(* Nothing is printed. It is created an action that prints 
-    hello world
-*)
-> let action = putStrLn "hello world" ;;
-
+(* Nothing is printed. It is created an action or command 
+   that prints hello world
+,*)
 > let action = putStrLn "hello world" ;;
 val action : unit -> unit = <fun>
 
+(* Forces the evaluation of IO action. 
+,*)
+> let runIO ioAction = ioAction () ;;
+val runIO : (unit -> 'a) -> 'a = <fun>
+ 
 
 (* Not executed  *)
 - action ;; 
 val it : (unit -> unit) 
 > 
 
->  action () ;;
+>  runIO action ;;
 hello world
 - : unit = ()
+ 
+let do3times action =
+  runIO action ;
+  runIO action ;
+  runIO action
+;;        
+val do3times : (unit -> 'a) -> 'a = <fun>
 
+
+>  do3times action ;;
+hello world
+hello world
+hello world
+- : unit = ()
 
 #+END_SRC
 
@@ -7502,6 +7522,397 @@ Some IO Primitives:
 | print    :: Show a => a -> IO () | readLn :: Read a => IO a |
 |                                  |                          |
 
+**** IO Monad in OCaml 
+
+The IO monad cannot be implemented in Haskell. However by implementing
+it in OCaml is possible to understand how it works and get some
+intuition about IO actions and also understand how the monad
+combinators like (>>), sequence, sequence_ works. This implementation
+was designed to by as simple as possible to understand. 
+
+
+It is based on the paper: Waddler, Philip. *How to Declare an
+Imperative* Language. Page 27. Available at
+<http://homepages.inf.ed.ac.uk/wadler/papers/monadsdeclare/monadsdeclare.ps>
+
+
+#+BEGIN_SRC ocaml 
+let replicate n x =
+  let rec aux count acc =
+    if count = 0
+    then acc
+    else aux (count - 1) (x::acc)
+             
+  in aux n []
+;;
+         
+module IO =
+  struct
+
+    (* Wraps an imperative function like 
+       print_string into a thunk 
+    ,*)
+    type 'a io = IO of (unit -> 'a)
+
+    (* Forces the evaluation of an IO action *)                     
+    let run: 'a io -> 'a =
+      fun (IO thunk) -> thunk ()
+
+    (* The same as Haskell return :: a -> m a *)                         
+    let unit: 'a -> 'a io  =
+      fun a -> IO ( fun () -> a)
+
+    let bind: 'a io -> ('a -> 'b io) -> 'b io =      
+      fun io_a fn_io ->
+           IO (fun () -> let a = run io_a in
+                         run (fn_io a))
+
+    let (>>=) = bind
+
+    (* (>>) :: m a -> m b -> m b 
+       (>>) ma mb = 
+            ma >>= \_ -> mb 
+     ,*)              
+    let (>>) ma mb =
+      ma >>= fun _ -> mb
+
+
+    (* Converts an output function into a 
+       monadic output function 
+     ,*)       
+    let lift_output: ('a -> unit) -> ('a -> unit io) =
+      fun output_fn a -> IO (fun () -> output_fn a)
+
+    (* Converts an input function into a 
+       monadic input function 
+     ,*)                        
+    let lift_input: (unit -> 'a) -> 'a io =
+      fun fn_input -> IO fn_input 
+                    
+    (*  fmap derived from IO Monad
+    
+       fmap :: (a -> b) -> IO a -> IO b 
+       fmap fn ma = do 
+          a <- ma 
+          return (fn a)
+
+     ,*)        
+    let map fn ma =
+      ma   >>= fun a ->
+      unit (fn a)
+
+    (* from: Contro.Monad 
+
+      sequence :: Monad m => [m a] -> m [a]
+      sequence = foldr mcons (return [])
+          where 
+             mcons p q = 
+                p >>= \x -> 
+                q >>= \y -> 
+                 return (x:y)         
+    ,*)          
+    let sequence mlist =
+      let mcons p q =
+        p >>= fun x ->
+        q >>= fun y ->
+        unit (x::y)
+
+      in List.fold_right mcons mlist (unit [])
+
+    (* from: Control.Monad *)
+    let sequence_ mlist =
+      List.fold_right (>>) mlist (unit ())
+
+    (* from: Control.Monad *)
+    let replicateM_ n ma =
+      sequence_ (replicate n ma)
+
+    (* from: Control.Monad *) 
+    let replicateM n ma =
+      sequence (replicate n ma)
+
+    (*  from: Control.Monad 
+
+       forever :: IO () -> IO *)           
+    let rec forever (ma: unit io) =
+      (* let open IO in *)
+      IO ( fun () -> run  ma ;
+                     let _ = run (forever ma)
+                     in ()           
+         )
+         
+    (* from: Control.Monad *)
+    let mapM: ('a -> 'b io) -> 'a list -> ('b list) io =
+      fun fn alst ->  sequence (List.map fn alst)
+
+    let mapM_: ('a -> unit io) -> 'a list -> unit io =
+      fun fn alst -> sequence_ (List.map fn alst)
+
+
+    (* ----- Primitive IO Functions --------- *)
+                               
+    let print_string = lift_output Pervasives.print_string 
+           
+    let print_char = lift_output Pervasives.print_char   
+ 
+    let read_char = lift_input (fun ch -> 
+                                Pervasives.input_char  stdin)
+
+    let read_line = lift_input Pervasives.read_line 
+                                   
+    let read_int = lift_input Pervasives.read_int
+
+                              
+  end
+;;    
+
+
+module IO :
+  sig
+    type 'a io = IO of (unit -> 'a)
+    val run : 'a io -> 'a
+    val unit : 'a -> 'a io
+    val bind : 'a io -> ('a -> 'b io) -> 'b io
+    val ( >>= ) : 'a io -> ('a -> 'b io) -> 'b io
+    val ( >> ) : 'a io -> 'b io -> 'b io
+    val lift_output : ('a -> unit) -> 'a -> unit io
+    val lift_input : (unit -> 'a) -> 'a io
+    val map : ('a -> 'b) -> 'a io -> 'b io
+    val sequence : 'a io list -> 'a list io
+    val sequence_ : 'a io list -> unit io
+    val replicateM_ : int -> 'a io -> unit io
+    val replicateM : int -> 'a io -> 'a list io
+    val forever : unit io -> unit io
+    val mapM : ('a -> 'b io) -> 'a list -> 'b list io
+    val mapM_ : ('a -> unit io) -> 'a list -> unit io
+    val print_string : string -> unit io
+    val print_char : char -> unit io
+    val read_char : char io
+    val read_line : string io
+    val read_int : int io
+  end
+ 
+                                              
+#+END_SRC
+
+Tests:
+
+#+BEGIN_SRC ocaml 
+
+>  IO.print_string "\nHello world\n" ;;
+- : unit IO.io = IO.IO <fun>
+ 
+
+> let action = IO.print_string "\nHello world\n" ;;
+val action : unit IO.io = IO.IO <fun>
+
+>  action ;;
+- : unit IO.io = IO.IO <fun>
+
+>  IO.run action ;;
+
+Hello world
+- : unit = ()
+ 
+
+> let open IO in print_string "Hello world" ;;
+- : unit IO.io = IO.IO <fun>
+ 
+
+> let open IO in run (print_string "Hello world") ;;
+Hello world- : unit = ()
+
+
+(*
+echoDup = do 
+ c <- getChar 
+ putChar c 
+ putChar c 
+
+echoDup = do                echoDup = do 
+  getChar     >>= \c ->       getChar    >>= \c ->
+  putChar   c >>= \_ ->       putChar c  >>     
+  putChar c                   putChar c 
+
+ ,*)
+let echoDup =
+  let open IO in
+  read_char     >>= fun c ->
+  print_char c  >>
+  print_char c
+;;                  
+
+val echoDup : unit IO.io = IO.IO <fun>
+
+#  echoDup ;;
+- : unit IO.io = IO.IO <fun>
+
+#  IO.run echoDup ;;
+a
+aa- : unit = ()
+
+#   IO.run echoDup ;;
+b
+bb- : unit = ()
+#                              
+                                       
+let make_prompt1 prompt =
+  let open IO in 
+  print_string prompt            >>= fun _    ->
+  read_line                      >>= fun line ->
+  print_string "The line is :\n" >>= fun _    ->
+  print_string line              >>= fun _    -> 
+  unit (String.length line)
+  ;;
+val make_prompt1 : string -> int IO.io = <fun>
+# 
+
+let make_prompt2 prompt =
+  let open IO in 
+  print_string prompt            >>
+  read_line                      >>= fun line ->
+  print_string "The line is :\n" >>
+  print_string line              >> 
+  unit (String.length line)
+  ;;
+val make_prompt2 : string -> int IO.io = <fun>
+ 
+let do3Times action =
+  let open IO in
+  action    >>
+  action    >>
+  action
+  ;;      
+val do3Times : 'a IO.io -> 'a IO.io = <fun>
+
+# let act = IO.print_string "\nHello world" ;;
+val act : unit IO.io = IO.IO <fun>
+
+# IO.run act ;;
+
+Hello world- : unit = ()
+                                   
+
+# let act3times = do3Times act ;;
+val act3times : unit IO.io = IO.IO <fun>
+
+#  IO.run act3times ;;
+Hello world
+Hello world
+Hello world- : unit = ()
+# 
+
+                                         
+#  IO.run action1 ;;
+Tell your name :My name is Jack
+The line is :
+My name is Jack- : int = 15
+
+
+>  IO.run (do3Times action1) ;;
+Tell your name :Jack
+The line is :
+JackTell your name :John
+The line is :
+JohnTell your name :Caesar
+The line is :
+Caesar- : int = 6
+# 
+
+let readTwoNumbers =
+  let open IO in
+  read_int  >>= fun a ->
+  read_int  >>= fun b ->
+  unit (2 *a + b)
+;;
+val readTwoNumbers : int IO.io = IO.IO <fun>
+                                             
+
+# IO.replicateM_  5 (IO.print_string "\nHello World\n") ;;
+- : unit IO.io = IO.IO <fun>
+# 
+  IO.run (IO.replicateM_  5 (IO.print_string "\nHello World\n")) ;;
+
+Hello World
+
+Hello World
+
+Hello World
+
+Hello World
+
+Hello World
+- : unit = ()
+# 
+
+#  IO.run IO.read_int ;;
+232
+- : int = 232
+ 
+# IO.replicateM 4 IO.read_int ;;
+- : int list IO.io = IO.IO <fun>
+ 
+#  IO.run (IO.replicateM 4 IO.read_int) ;;
+2
+43
+34
+100
+- : in
+
+
+let echoLine =
+  let open IO in
+  read_line         >>= fun line ->
+  print_string line
+;;               
+
+val echoLine : unit IO.io = IO.IO <fun>
+
+
+#  IO.run echoLine ;;
+Hello world
+Hello world- : unit = ()
+#
+
+#  IO.forever echoLine ;;
+- : unit IO.io = IO.IO <fun>
+
+# let echoLoop = IO.forever echoLine ;;
+val echoLoop : unit IO.io = IO.IO <fun>
+ 
+#  IO.run echoLoop ;;
+line1
+line1
+line2
+line2
+line3
+line3   (* Hit Ctrl + D *)
+Exception: End_of_file.
+
+
+#  IO.mapM ;;
+- : ('a -> 'b IO.io) -> 'a list -> 'b list IO.io = <fun>
+ 
+#  IO.mapM IO.print_string ["a"; "b"; "c"; "d"] ;;
+- : unit list IO.io = IO.IO <fun>
+# 
+
+#  IO.run (IO.mapM_ IO.print_string ["a"; "b"; "c"; "d"] );;
+abcd- : unit = ()                       
+              
+
+# let open IO in replicateM_ 6 (print_string "\ntest") |> run ;;
+
+test
+test
+test
+test
+test
+test- : unit = ()
+# 
+                          
+#+END_SRC
+
 *** State Monad 
 **** Overview 
 
@@ -7534,7 +7945,7 @@ It is equivalent to:
 
 =type State s a = s -> (a, s)=
 
-#+BEGIN_SRC ditaa :file images/state_transformer1.png
+#+BEGIN_SRC ditaa 
                         State tranformer function 
                        |    
                    ----+------
@@ -7550,13 +7961,10 @@ It is equivalent to:
 
 #+END_SRC
 
-#+RESULTS:
-[[file:images/state_transformer1.png]]
-
 
 State transformer:
 
-#+BEGIN_SRC ditaa :file state_diagrams2.png 
+#+BEGIN_SRC ditaa 
 
   stateTransformer :: current state ->  (output, next state)
 
@@ -7591,6 +7999,7 @@ S0    |         |   S1 |           |   S2 |          |    S3 |          |  S4 ..
  ... 
 
 #+END_SRC
+
 
 *state* 
 
@@ -7875,6 +8284,7 @@ stFn :: Int -> (Int, Int)
 >>> stFn 5
 (10,6)
 >>>
+
 
  
 {- Now let's wrap inside the State type -}
@@ -8387,6 +8797,353 @@ fibseq :: [Int]
 
 #+END_SRC
 
+**** State monad in OCaml 
+
+Implementation: 
+   
+#+BEGIN_SRC ocaml 
+
+(* stfn - Stands for state transformer *) 
+
+module State =
+  struct
+
+    type ('s, 'a) state = ST of ('s -> 'a * 's)
+
+   (* Runs  the state transformer  
+    
+     runState 
+    *)                                 
+    let run (ST stfnt) s = stfnt s
+
+    (* Gets only the result and discards the 
+       the next state. 
+       
+      evalState 
+     *)                           
+    let eval stfn s = fst (run stfn s)
+
+    (* Gets only the next state and drops the 
+       result 
+
+      execState 
+     *)
+    let exec stfn s = snd (run stfn s)
+
+
+    let put s = ST (fun _ -> ((), s))
+
+    let get = ST (fun s -> (s, s))
+
+    (* return a = State $ \s -> (a, s) *)             
+    let unit a = ST (fun s -> (a, s))
+
+    let bind stfn stfnMaker =
+      ST ( fun currentState ->
+           let (result, newState) = run stfn currentState
+           in run (stfnMaker result) newState 
+         )
+         
+    (* fmap *)
+    let map fn stfn =
+      ST (fun currentState ->
+          let (result, newState) = run stfn currentState 
+          in (fn result, newState)
+         )
+
+         
+    let (>>=) = bind
+
+    let (<$>) = map
+                             
+    let (>>) ma mb =
+      ma >>= fun _ -> mb
+
+    let sequence mlist =
+      let mcons p q =
+        p >>= fun x ->
+        q >>= fun y ->
+        unit (x::y)
+      in List.fold_right mcons mlist (unit [])
+
+
+    (* Applicative Functor - Haskell <$>  *)             
+    let (<*>) m_fn ma =
+      m_fn     >>= fun fn ->
+      ma       >>= fun a  ->
+      unit (fn a)
+
+    let liftM2 fn ma mb =
+      ma      >>= fun a ->
+      mb      >>= fun b ->
+      unit (fn a b)
+
+    let liftM3 fn ma mb mc = 
+      ma     >>= fun a ->
+      mb     >>= fun b ->
+      mc     >>= fun c ->
+      unit (fn a b c)
+                         
+    let mapM fn alst =
+      sequence (List.map fn alst)
+                         
+  end 
+;;
+
+module State :
+  sig
+    type ('s, 'a) state = ST of ('s -> 'a * 's)
+    val run : ('a, 'b) state -> 'a -> 'b * 'a
+    val eval : ('a, 'b) state -> 'a -> 'b
+    val exec : ('a, 'b) state -> 'a -> 'a
+    val put : 'a -> ('a, unit) state
+    val get : ('a, 'a) state
+    val unit : 'a -> ('b, 'a) state
+    val bind : ('a, 'b) state -> ('b -> ('a, 'c) state) -> ('a, 'c) state
+    val map : ('a -> 'b) -> ('c, 'a) state -> ('c, 'b) state
+    val ( >>= ) : ('a, 'b) state -> ('b -> ('a, 'c) state) -> ('a, 'c) state
+    val ( <$> ) : ('a -> 'b) -> ('c, 'a) state -> ('c, 'b) state
+    val ( >> ) : ('a, 'b) state -> ('a, 'c) state -> ('a, 'c) state
+    val sequence : ('a, 'b) state list -> ('a, 'b list) state
+    val ( <*> ) : ('a, 'b -> 'c) state -> ('a, 'b) state -> ('a, 'c) state
+    val liftM2 :
+      ('a -> 'b -> 'c) -> ('d, 'a) state -> ('d, 'b) state -> ('d, 'c) state
+    val liftM3 :
+      ('a -> 'b -> 'c -> 'd) ->
+      ('e, 'a) state -> ('e, 'b) state -> ('e, 'c) state -> ('e, 'd) state
+    val mapM : ('a -> ('b, 'c) state) -> 'a list -> ('b, 'c list) state
+  end
+# 
+
+
+#+END_SRC
+
+Tests:
+
+
+Basic Example:
+
+#+BEGIN_SRC ocaml 
+
+let stFn = 
+   let open State in 
+   ST (fun s -> (2 * s, s + 1)) 
+;;
+val stFn : (int, int) State.state = State.ST <fun>
+
+#  State.run stFn 1 ;;
+- : int * int = (2, 2)
+# 
+  State.run stFn 2 ;;
+- : int * int = (4, 3)
+# State.run stFn 3 ;;
+- : int * int = (6, 4)
+# State.run stFn 4 ;;
+- : int * int = (8, 5)
+# State.run stFn 5 ;;
+- : int * int = (10, 6)
+# State.run stFn 6 ;;
+- : int * int = (12, 7)
+# 
+
+# State.eval stFn 6 ;;
+- : int = 12
+# 
+# State.exec stFn 6 ;;
+- : int = 7
+# 
+
+# let stFn2 = 
+      let open State in 
+      map (fun x -> x + 3) stFn 
+  ;;
+val stFn2 : (int, int) State.state = State.ST <fu
+
+
+#  State.run stFn2 1 ;;
+- : int * int = (5, 2)
+
+#  State.run stFn2 2 ;;
+- : int * int = (7, 3)
+
+# State.run stFn2 3 ;;
+- : int * int = (9, 4)
+
+# State.run stFn2 4 ;;
+- : int * int = (11, 5)
+
+# State.run stFn2 5 ;;
+- : int * int = (13, 6)
+
+
+# let fn x = x + 3 ;;
+val fn : int -> int = <fun>
+
+# State.run (State.map fn stFn) 1 ;;
+- : int * int = (5, 2)
+# State.run (State.map fn stFn) 2 ;;
+- : int * int = (7, 3)
+# State.run (State.map fn stFn) 3 ;;
+- : int * int = (9, 4)
+# State.run (State.map fn stFn) 4 ;;
+- : int * int = (11, 5)
+#
+
+
+(* Haskell Code:  
+    
+   :{
+   
+   let stateFn3 :: State Int Int
+       stateFn3 = do
+         currentState <- get
+         put (currentState + 1)  --- put $ currentState +  1
+         return (2 * currentState)
+   :}      
+ 
+ ----------------------------------------      
+
+ ,*)
+
+let stFn3 =
+  let open State in 
+  get          >>=  fun cs ->
+  put (cs + 1) >>=  fun _  ->
+  unit (2 * cs)
+;;       
+
+val stFn3 : (int, int) State.state = State.ST <fun>
+
+  
+let stFn4 =
+  let open State in 
+  get          >>=  fun cs ->
+  put (cs + 1) >>
+  unit (2 * cs)
+;;       
+
+val stFn4 : (int, int) State.state = State.ST <fun>  
+
+
+# State.run stFn3 1 ;;
+- : int * int = (2, 2)
+# State.run stFn3 2 ;;
+- : int * int = (4, 3)
+# State.run stFn3 3 ;;
+- : int * int = (6, 4)
+# State.run stFn3 4 ;;
+- : int * int = (8, 5)
+# State.run stFn3 5 ;;
+- : int * int = (10, 6)
+                  #
+
+# State.run stFn4 1 ;;
+- : int * int = (2, 2)
+# State.run stFn4 2 ;;
+- : int * int = (4, 3)
+# State.run stFn4 3 ;;
+- : int * int = (6, 4)
+# State.run stFn4 4 ;;
+- : int * int = (8, 5)
+# State.run stFn4 5 ;;
+- : int * int = (10, 6)
+#                   
+#+END_SRC
+
+
+Simulating a Stack:
+
+#+BEGIN_SRC ocaml 
+
+(* type Stack = [Int]  *)
+
+type stack = int list 
+
+(* With type signature *)                 
+let pop: (stack, int) State.state =
+  let open State in
+  ST ( fun (x::xs) -> (x, xs) )
+  
+;;  
+val pop : (stack, int) State.state = State.ST <fun>
+  
+(* Without type signature *)
+  
+let pop =
+  let open State in
+  ST (fun (x::xs) -> (x, xs))
+;;
+  
+     
+let push: int -> (stack, unit) State.state =
+  let open State in 
+  fun a -> ST ( fun  xs -> ((), a::xs) )
+;;
+
+val push : int -> (stack, unit) State.state = <fun> 
+  
+(*
+:{
+let stackManip = do  
+      push 3  
+      a <- pop  
+      pop 
+:}
+ ,*)
+
+let stackManip =
+  let open State in
+  push 3   >>
+  pop      >>= fun a ->
+  pop   
+;;
+
+val stackManip : (stack, int) State.state = State.ST <fun>  
+  
+
+
+#  State.run pop [1; 2; 3; 4] ;;
+ - : int * int list = (1, [2; 3; 4])
+
+# State.run pop [2; 3; 4] ;;
+- : int * int list = (2, [3; 4])
+
+(*
+
+:{
+
+let stackStuff :: State Stack ()  
+    stackStuff = do  
+      a <- pop  
+      if a == 5  
+        then push 5  
+        else do  
+          push 3  
+          push 8    
+:}  
+
+,*)
+
+let stackStuff =
+  let open State in 
+  pop         >>= fun a ->
+  if a = 5
+  then push 5
+  else (
+      push 3  >>
+      push 8
+  )
+;;
+
+val stackStuff : (stack, unit) State.state = State.ST <fun>
+  
+# State.run stackStuff [9; 0; 2; 1; 0] ;;
+- : unit * stack = ((), [8; 3; 0; 2; 1; 0])
+#   
+#+END_SRC
+
+
+
 *** Writer Monad 
 
 The writer monad makes possible to compose functions which returns
@@ -8831,20 +9588,22 @@ be programmed in functional-style or favors this style.
 
 Some Functional programming languages:
 
-| Language     | Evaluation    | Typing  | Type Inference | Pattern Matching         | Syntax Sugars | GIL | TCO | OO  | AGDT | Platform       | Family        | Currying | Feature                                          |
-|--------------+---------------+---------+----------------+--------------------------+---------------+-----+-----+-----+------+----------------+---------------+----------+--------------------------------------------------|
-| Haskell      | Lazy          | Static  | Yes            | Yes                      | Yes           | No  | Yes | No  | Yes  | NAT            | ML/SML        | Yes      | Concurrency, Parallelism and Purity            |
-| Ocaml        | Strict        | Static  | Yes            | Yes                      | Yes           | Yes | Yes | Yes | Yes  | NAT/BC         | ML/SML        | Yes      |                                                  |
-| F# (F sharp) | Strict        | Static  | Yes            | Yes                      | Yes           | No  | Yes | Yes | Yes  | .NET           | ML/SML        | Yes      | .NET Integration                                 |
-| Scheme       | Strict        | Dynamic | No             | No                       | Yes/ Macros   | *   | Yes | No  | No   | -              | Lisp          | No       | Minimalist Educational                           |
-| Clojure      | Strict + Lazy | Dynamic | No             | Destructuring and macros | Yes/ Macros   | No  | No  | No  | No   | JVM            | Lisp          | No       | Java integration + Macros                        |
-| Scala        | Strict        | Static  | Yes            | Yes                      | Yes           | No  | Yes | Yes | Yes  | JVM            |               | Yes      | Java integration + Type safety                   |
-| Erlang       | Strict        | Dynamic | ?              | Yes                      | Yes           | No  | No  | ?   | ?    | VM/Bytecode    |               | ?        | Telecommunications, Servers, Concurrency         |
-|              |               |         |                |                          |               |     |     |     |      |                |               |          |                                                  |
-| JavaScript   | Strict        | Dynamic | No             | No                       | No            | **  | No  | Yes | No   | VM/Interpreted | *Lisp/ Scheme | No       | The only language allowed to run in the browser. |
-| R            | Strict        | Dynamic | No             | No                       | No            | ?   | No  | Yes | -    | VM/Bytecode    | *Lisp/ Scheme | No       | DSL - Statics                                    |
-| Mathematica  | Strict        | Dynamic | Yes            | ?                        | ?             | ?   | ??  | ?   | ?    | ?              |               | No       | DSL - Computer Algebraic System                  |
-
+| Language     | Evaluation | Typing  | Type Inference | Pattern Matching              | Syntax Sugars | GIL | TCO | OO  | AGDT | Platform       | Family        | Currying | Feature                                          |
+|--------------+------------+---------+----------------+-------------------------------+---------------+-----+-----+-----+------+----------------+---------------+----------+--------------------------------------------------|
+| Haskell      | Lazy       | Static  | Yes            | Yes                           | Yes           | No  | Yes | No  | Yes  | NAT            | ML/SML        | Yes      | Concurrency, Parallelism and Purity              |
+| Ocaml        | Strict     | Static  | Yes            | Yes                           | Yes           | Yes | Yes | Yes | Yes  | NAT/BC         | ML/SML        | Yes      |                                                  |
+| F# (F sharp) | Strict     | Static  | Yes            | Yes                           | Yes           | No  | Yes | Yes | Yes  | .NET           | ML/SML        | Yes      | .NET Integration                                 |
+| Scheme       | Strict     | Dynamic | No             | No                            | Yes/ Macros   | *   | Yes | No  | No   | -              | Lisp          | No       | Minimalist Educational                           |
+| Clojure      | Strict     | Dynamic | No             | Yes. Destructuring and macros | Yes/ Macros   | No  | No  | No  | No   | JVM            | Lisp          | No       | Java integration + Macros                        |
+| Scala        | Strict     | Static  | Yes            | Yes                           | Yes           | No  | Yes | Yes | Yes  | JVM            |               | Yes      | Java integration + Type safety                   |
+| Erlang       | Strict     | Dynamic | ?              | Yes                           | Yes           | No  | Yes | ?   | ?    | VM/Bytecode    |               | ?        | Telecommunications, Servers, Concurrency         |
+| Elixir       | Strict     | Dynamic | ?              | Yes                           | Yes           | No  | Yes | ?   | ?    | Erlang VM      | -             | ?        | Erlang VM + macros                               |
+| Python       | Strict     | Dynamic | No             | No                            | No            | Yes | No  | Yes | No   | VM/Bytecode    | -             | No       | Libraries and easier to use.                     |
+|              |            |         |                |                               |               |     |     |     |      |                |               |          |                                                  |
+| JavaScript   | Strict     | Dynamic | No             | No                            | No            | ?*  | No  | Yes | No   | VM/Interpreted | *Lisp/ Scheme | No       | The only language allowed to run in the browser. |
+| R            | Strict     | Dynamic | No             | No                            | No            | ?   | No  | Yes | -    | VM/Bytecode    | *Lisp/ Scheme | No       | DSL - Statistics                                 |
+| Mathematica  | Strict     | Dynamic | Yes            | ?                             | ?             | ?   | ??  | ?   | ?    | ?              |               | No       | DSL - Computer Algebraic System                  |
+|              |            |         |                |                               |               |     |     |     |      |                |               |          |                                                  |
 
 
 Notes:
