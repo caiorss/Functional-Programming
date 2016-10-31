@@ -11,7 +11,7 @@ like Linux and OSX.
 
 Example: ~/.ghci
 
-#+BEGIN_SRC
+#+BEGIN_SRC haskell 
 import System.Directory ( getCurrentDirectory)
 import System.Process (readProcess)
 

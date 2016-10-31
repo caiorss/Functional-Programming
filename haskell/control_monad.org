@@ -3,6 +3,8 @@
 
 * Control.Monad - Monad Combinators 
 
+This module provides functions to manipulate monads. 
+
  [[https://hackage.haskell.org/package/base-4.8.2.0/docs/Control-Monad.html][Module Documentation]] 
 
 ** join
@@ -24,6 +26,8 @@ join mma =
 Example:
 
 #+BEGIN_SRC haskell 
+> import Control.Monad
+
 > :t join
 join :: Monad m => m (m a) -> m a
 > 
@@ -84,6 +88,7 @@ liftM  f ma  = do
 #+END_SRC
 
 #+BEGIN_SRC haskell
+> import Control.Monad
 
 > fmap (+1) [1, 2, 3, 4]
 [2,3,4,5]
@@ -151,6 +156,8 @@ liftM2 f ma mb =
 Examples:
 
 #+BEGIN_SRC haskell
+> import Control.Monad
+
 > liftM2 (+) (Just 3) (Just 4)
 Just 7
 > liftM2 (+) (Just 3) Nothing
@@ -205,6 +212,7 @@ mapM f ts = sequence (fmap f ts)
 Example:
 
 #+BEGIN_SRC haskell 
+> import Control.Monad
 
 > import qualified Data.Maybe as M
 > import qualified System.Environment as E
@@ -285,6 +293,8 @@ matM_ fn ta =  sequence_ $ fmap fn ta
 Example: 
 
 #+BEGIN_SRC haskell 
+> import Control.Monad
+
 > mapM_ putStrLn ["line 1", "line 3", "line 4"]
 line 1
 line 3
@@ -331,7 +341,7 @@ forM = flip mapM
 Example:
 
 #+BEGIN_SRC haskell 
-
+> import Control.Monad
 
 > forM  ["HOME", "LANGUAGE", "LC_TIME", "dummy"] E.lookupEnv  
 [Just "/home/tux",Just "en_US",Just "pt_BR.UTF-8",Nothing]
@@ -371,6 +381,7 @@ Left "Fatal kernel error! System shutdown!!"
 ** forM_
 
 #+BEGIN_SRC haskell 
+> import Control.Monad
 
 -- Haskell 7.6.3 
 --
@@ -425,6 +436,8 @@ replicateM n x    = sequence (replicate n x)
 Example:
 
 #+BEGIN_SRC haskell
+> import Control.Monad
+
 > replicateM 4 (Just 3)
 Just [3,3,3,3]
 > 
@@ -484,6 +497,8 @@ replicateM_ n x   = sequence_ (replicate n x)
 Example:
 
 #+BEGIN_SRC haskell
+> import Control.Monad
+
 > replicateM_ 3 (putStrLn "hello world")
 hello world
 hello world
@@ -519,6 +534,7 @@ sequence = foldr mcons (return [])
 Example:
 
 #+BEGIN_SRC haskell 
+> import Control.Monad
 
 -- Haskell 7.6.3 
 --
@@ -645,6 +661,7 @@ sequence_ :: (Monad m, Foldable t) => t (m a) -> m ()
 Examples:
 
 #+BEGIN_SRC haskell 
+> import Control.Monad
 
 (>>) :: Monad m => m a -> m b -> m b
 (>>) ma mb = 
@@ -710,6 +727,8 @@ foldM f acc0  [x0, x1, x2, ... xn] = do  acc1 <- f acc0 x0
 Example:
 
 #+BEGIN_SRC haskell
+> import Control.Monad
+
 > import Control.Identity.Monad
 
 > foldM (\acc x -> Identity (10 * acc + x)) 0 [1, 2, 3, 4, 5]

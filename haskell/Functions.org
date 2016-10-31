@@ -2,7 +2,6 @@
 #+TITLE: Functions 
 
 * Functions
-
 ** Creating functions
 
 In the GHCI Shell
@@ -120,7 +119,6 @@ Sources:
 
  - [[http://www.mathopenref.com/heronsformula.html][Heron Formula]]
  
-
 ** Anonymous Functions or Lambda Functions
 
 
@@ -991,6 +989,7 @@ const :: a -> b -> a
 #+END_SRC
 
 ** Higher Order Functions
+*** Overview 
 
 Higher Order functions are functions that takes functions as arguments.
 

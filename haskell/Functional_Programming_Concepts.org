@@ -7578,17 +7578,19 @@ module IO =
 
 
     (* Converts an output function into a 
-       monadic output function 
+       monadic output IO action 
      ,*)       
     let lift_output: ('a -> unit) -> ('a -> unit io) =
       fun output_fn a -> IO (fun () -> output_fn a)
 
     (* Converts an input function into a 
-       monadic input function 
+       monadic input IO action 
      ,*)                        
     let lift_input: (unit -> 'a) -> 'a io =
-      fun fn_input -> IO fn_input 
-                    
+      fun fn_input -> IO fn_input
+
+
+                   
     (*  fmap derived from IO Monad
     
        fmap :: (a -> b) -> IO a -> IO b 
@@ -7640,6 +7642,7 @@ module IO =
                      let _ = run (forever ma)
                      in ()           
          )
+  
          
     (* from: Control.Monad *)
     let mapM: ('a -> 'b io) -> 'a list -> ('b list) io =
@@ -7662,10 +7665,22 @@ module IO =
                                    
     let read_int = lift_input Pervasives.read_int
 
-                              
+   (* val input_line : in_channel -> string *)
+
+
+    let input_line chan =
+      IO (fun () -> Pervasives.input_line chan)
+
+    let input_char chan =
+      IO (fun () -> Pervasives.input_char chan)
+
+    let open_in filename =
+      IO (fun () -> Pervasives.open_in filename)
+         
+    let close_in chan =
+      IO (fun () -> Pervasives.close_in chan)
   end
 ;;    
-
 
 module IO :
   sig
@@ -7690,6 +7705,10 @@ module IO :
     val read_char : char io
     val read_line : string io
     val read_int : int io
+    val input_line : in_channel -> string io
+    val input_char : in_channel -> char io
+    val open_in : string -> in_channel io
+    val close_in : in_channel -> unit io
   end
  
                                               
@@ -9141,7 +9160,6 @@ val stackStuff : (stack, unit) State.state = State.ST <fun>
 - : unit * stack = ((), [8; 3; 0; 2; 1; 0])
 #   
 #+END_SRC
-
 
 
 *** Writer Monad 

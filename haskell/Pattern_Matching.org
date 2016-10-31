@@ -2,8 +2,7 @@
 #+TITLE: Pattern Matching 
 
 * Pattern Matching
-
-Tuple Constructor
+*** Tuple Constructor
 
 #+BEGIN_SRC haskell
 
@@ -50,7 +49,7 @@ third  (_, _, z) = z
 (33,112,263)
 #+END_SRC
 
-*Guarded Equations*
+*** Guarded Equations
 
 Absolute Value
 
