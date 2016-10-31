@@ -1,31 +1,31 @@
 #+INCLUDE: ../theme/style.org
-#+TITLE: Algebraic Data Types 
+#+TITLE: Algebraic Data Types
 
 * Algebraic Data Types
 
 [Under Construction]
 
-** Overview 
+** Overview
 
 [[http://en.wikipedia.org/wiki/Algebraic_data_type][Algebraic data type]] is a type formed by combining types. It can be
-used to implement Records, Enumerated Sets, option type and Recursive
+used to implement Records, Enumerated Sets, option types and Recursive
 types. Note: Algebraic data types must not be confused with [[http://en.wikipedia.org/wiki/Abstract_data_type][Abstract
 data types]].
 
  - Applications of Algebraic Data Types
 
-    * Build Embedded Domain specific languages - EDSL
+    * Build Embedded Domain specific languages - EDSLs
     * Build Interpreters
     * Self Documenting code
-    * Avoid Null checking error/ Null reference bug
+    * Avoid Null checking error / Null reference bug
 
 
  - Product Types
     * Tuples of types   - (Int, Float)
     * Records
-    
+
  - Sum Types
-    *  Tagged or disjoint unions or variant types
+    * Tagged or disjoint unions or variant types
 
  - Enumerated types
 
@@ -42,7 +42,7 @@ null checking bug on non-deterministic computations.
 | Java 8       | the option type is defined as parameterized final class Optional<T> |            |
 
 
-See also: 
+See also:
 
  - [[http://fsharpforfunandprofit.com/series/designing-with-types.html][The "Designing with types" series - F# for fun and for profiting]]
  - [[http://en.wikibooks.org/wiki/F_Sharp_Programming/Option_Types][F# : Option Types]]
@@ -65,7 +65,7 @@ See also:
 
 *Example: Days of Week*
 
-Enumerated sets is type which can only have a limited number of values. 
+Enumerated sets is type which can only have a limited number of values.
 
 
 #+BEGIN_SRC haskell
@@ -83,38 +83,38 @@ fromDay :: Weekday -> Int
 fromDay = fromEnum
 
 toDay :: Int -> Weekday
-toDay = toEnum   
+toDay = toEnum
 
-> map (Monday<) [ Tuesday, Friday, Sunday]
+> map (Monday<) [Tuesday, Friday, Sunday]
 [True,True,True]
 
 > map (Thursday<) [Monday, Tuesday, Friday, Sunday]
 [False,False,True,True]
 
-> 
+>
 > Monday == Tuesday
 False
 > Tuesday == Tuesday
 True
->  
+>
 
-> 
-> fromDay Saturday 
+>
+> fromDay Saturday
 5
 
-> 1 + fromDay Monday 
+> 1 + fromDay Monday
 1
-> 1 + fromDay Saturday 
+> 1 + fromDay Saturday
 6
-> Saturday 
+> Saturday
 Saturday
-> 
+>
 > toDay 0
 Monday
 > toDay 6
 Sunday
-> 
-> 
+>
+>
 
 
 #+END_SRC
@@ -144,15 +144,15 @@ colorToRGB Purple = (255,0,255)
 colorToRGB White = (255,255,255)
 colorToRGB Black = (0,0,0)
 colorToRGB (CustomColor r g b) = (r,g,b)   -- this one is new
- 
-    
-> 
+
+
+>
 > Red == White
 False
-> 
+>
 > Red == Red
 True
-> 
+>
 
 > let b = CustomColor 120 240 100
 > colorToRGB b
@@ -160,7 +160,7 @@ True
 
 > map colorToRGB [ Blue, White, Yellow ]
 [(0,0,255),(255,255,255),(255,255,0)]
-> 
+>
 
 
 #+END_SRC
@@ -169,12 +169,12 @@ True
 
 #+BEGIN_SRC haskell
 
-data Shape = Circle  Float 
-            | Rect   Float Float 
-            deriving Show
+data Shape = Circle  Float
+           | Rect    Float Float
+    deriving Show
 
 square   :: Float -> Shape
-square n =  Rect n n 
+square n =  Rect n n
 
 area            :: Shape -> Float
 area (Circle r)  = pi * r^2
@@ -186,7 +186,7 @@ is_circle _           = False
 is_rect   (Rect _ _)  = True
 is_rect   _           = False
 
-describe (Circle radius) = putStrLn $ "Circle of radius : " ++ show(radius) 
+describe (Circle radius) = putStrLn $ "Circle of radius : " ++ show(radius)
 describe (Rect h w)      = putStrLn $ "Rectangle of " ++ show(h) ++ " x " ++ show(w)
 
 > area $  Rect 20 30
@@ -195,19 +195,19 @@ describe (Rect h w)      = putStrLn $ "Rectangle of " ++ show(h) ++ " x " ++ sho
 1256.6371
 > area $ square 20
 400.0
-> 
+>
 > [Rect 20.0 30.0, Rect 10.0 30.0, Circle 3.0, Circle 4.0]
 [Rect 20.0 30.0,Rect 10.0 30.0,Circle 3.0,Circle 4.0]
-> 
+>
 > map area [Rect 20.0 30.0, Rect 10.0 30.0, Circle 3.0, Circle 4.0]
 [600.0,300.0,28.274334,50.265484]
-> 
+>
 
-> :t is_rect 
+> :t is_rect
 is_rect :: Shape -> Bool
-> :t is_circle 
+> :t is_circle
 is_circle :: Shape -> Bool
-> 
+>
 
 > filter is_rect [Rect 20.0 30.0, Rect 10.0 30.0, Circle 3.0, Circle 4.0]
 [Rect 20.0 30.0,Rect 10.0 30.0]
@@ -215,32 +215,32 @@ is_circle :: Shape -> Bool
 > filter is_circle [Rect 20.0 30.0, Rect 10.0 30.0, Circle 3.0, Circle 4.0]
 [Circle 3.0,Circle 4.0]
 
-> :t describe 
+> :t describe
 describe :: Shape -> IO ()
-> 
+>
 
 > describe (Rect 20 30)
 Rectangle of 20.0 x 30.0
 
 > describe (Circle 3.60)
 Circle of radius : 3.6
-> 
+>
 
 > mapM_ describe [Rect 20.0 30.0, Rect 10.0 30.0, Circle 3.0, Circle 4.0]
 Rectangle of 20.0 x 30.0
 Rectangle of 10.0 x 30.0
 Circle of radius : 3.0
 Circle of radius : 4.0
-> 
+>
 
-> let describe_list = mapM_ describe 
-> 
+> let describe_list = mapM_ describe
+>
 > describe_list [Rect 20.0 30.0, Rect 10.0 30.0, Circle 3.0, Circle 4.0]
 Rectangle of 20.0 x 30.0
 Rectangle of 10.0 x 30.0
 Circle of radius : 3.0
 Circle of radius : 4.0
-> 
+>
 
 #+END_SRC
 
@@ -250,7 +250,7 @@ Circle of radius : 4.0
 
 #+BEGIN_SRC haskell
 
-data Student = USU String Float 
+data Student = USU String Float
              deriving (Show)
 
 get_gpa :: Student -> Float
@@ -260,23 +260,23 @@ get_name :: Student -> String
 get_name (USU name _ ) = name
 
 class_gpa :: [Student] -> Float
-class_gpa myclass = (sum c) / fromIntegral  (length c)
-                  where 
+class_gpa myclass = (sum c) / fromIntegral (length c)
+                  where
                   c = map get_gpa myclass
 
 
 > let myke = USU "Mike" 4.0
->  
+>
 >  get_name myke
 "Mike"
 >  get_gpa myke
 4.0
->  
+>
 
 >  let myclass = [USU "Mike" 3.7, USU "Steve" 3.9, USU "Fred" 2.9, USU "Joe" 1.5]
->  
+>
 
->  class_gpa myclass 
+>  class_gpa myclass
 3.0
 #+END_SRC
 
@@ -286,9 +286,9 @@ class_gpa myclass = (sum c) / fromIntegral  (length c)
 
 #+BEGIN_SRC haskell
 
-data Person = Person { firstName :: String, 
-                       lastName :: String, 
-                       age :: Int 
+data Person = Person { firstName :: String,
+                       lastName :: String,
+                       age :: Int
                      }
                      deriving (Eq, Show, Read)
 
@@ -303,15 +303,15 @@ getPerson n = people !! n
 
 {- Show Person -}
 showPerson :: Person -> String
-showPerson person  = "Name: " ++ show(firstName person) ++ " - Last Name: " ++ show(lastName person) ++ " - Age " ++ show(age person) 
+showPerson person  = "Name: " ++ show(firstName person) ++ " - Last Name: " ++ show(lastName person) ++ " - Age " ++ show(age person)
 
 > people
 [Person {firstName = "Ayn", lastName = "Rand", age = 50},Person {firstName = "John", lastName = "Galt", age = 28},Person {firstName = "Adam", lastName = "Smith", age = 70}]
-> 
+>
 
 > map firstName people
 ["Ayn","John","Adam"]
-> 
+>
 
 > map (\el ->  fst el ++ " " ++  snd el) $ zip (map firstName people) (map lastName people)
 >  ["Ayn Rand","John Galt","Adam Smith"]
@@ -321,11 +321,11 @@ showPerson person  = "Name: " ++ show(firstName person) ++ " - Last Name: " ++ s
 Person {firstName = "John", lastName = "Galt", age = 28}
 > people !! 2
 Person {firstName = "Adam", lastName = "Smith", age = 70}
-> 
+>
 
 > "person 0 is " ++ show (people !! 0)
 "person 0 is Person {firstName = \"Ayn\", lastName = \"Rand\", age = 50}"
-> 
+>
 > "person 1 is " ++ show (people !! 1)
 "person 1 is Person {firstName = \"John\", lastName = \"Galt\", age = 28}"
 >
@@ -334,25 +334,25 @@ Person {firstName = "Adam", lastName = "Smith", age = 70}
 > let person = read "Person {firstName =\"Elmo\", lastName =\"NA\", age = 0}" :: Person
 > person
 Person {firstName = "Elmo", lastName = "NA", age = 0}
-> 
-> firstName person 
+>
+> firstName person
 "Elmo"
 > last
 last      lastName
-> lastName person 
+> lastName person
 "NA"
 > age person
 0
-> 
+>
 
 > let tesla = Person { firstName = "Nikola", lastName = "Tesla", age =30}
 > tesla
 Person {firstName = "Nikola", lastName = "Tesla", age = 30}
-> 
+>
 
 > showPerson tesla
 "Name: \"Nikola\" - Last Name: \"Tesla\" - Age 30"
-> 
+>
 
 #+END_SRC
 
@@ -370,21 +370,21 @@ is_empty :: List t -> Bool
 is_empty Nil =  True
 is_empty _   =  False
 
-is_empty2  lst = case lst of 
+is_empty2  lst = case lst of
                     Nil -> True
                     _   -> False
 
 count :: List t -> Int
-count lst = 
-    case lst of 
+count lst =
+    case lst of
         Nil             -> 0
         Cons a next_lst -> 1 + count next_lst
 
-suml lst = 
+suml lst =
     case lst of
         Nil             -> 0
         Cons a next_lst -> a + suml next_lst
-        
+
 headl (Cons a _) = a
 headl Nil        = error "Empty List"
 
@@ -407,19 +407,19 @@ takel n lst =
     (k, Cons h  t)  -> Cons h (takel (n-1) t)
 
 
-nth lst n = 
+nth lst n =
     case (n, lst) of
     (_, Nil)       -> error "Index too large"
     (0, Cons a _)  -> a
-    (k, Cons h t)  -> nth t (n-1) 
+    (k, Cons h t)  -> nth t (n-1)
 
 
 mapl f Nil          = Nil
 mapl f (Cons h t)   = Cons (f h) (mapl f t)
 
 filterl  f  Nil        = Nil
-filterl  f (Cons h t)  = 
-    if f h 
+filterl  f (Cons h t)  =
+    if f h
         then  Cons h (filterl f t)
         else  filterl f t
 
@@ -439,13 +439,13 @@ Running in ghci
 
 #+BEGIN_SRC haskell
 
-> :l list_cons.hs 
+> :l list_cons.hs
 [1 of 1] Compiling Main             ( list_cons.hs, interpreted )
 Ok, modules loaded: Main.
 
 > :t is_empty
 is_empty :: List t -> Bool
-> :t count 
+> :t count
 count :: List t -> Int
 
 
@@ -473,13 +473,13 @@ list4 :: List Double
 
 > Cons 10.23 list0
 Cons 10.23 Nil
-> 
+>
 > Cons 30 list1
 Cons 30 (Cons 10 Nil)
 >
 > Cons 40 list3
 Cons 40 (Cons 10 (Cons 20 (Cons 30 Nil)))
-> 
+>
 > Cons 50 (Cons 40 list3)
 Cons 50 (Cons 40 (Cons 10 (Cons 20 (Cons 30 Nil))))
 
@@ -492,7 +492,7 @@ False
 False
 > is_empty list3
 False
-> 
+>
 
 > is_empty2 list0
 True
@@ -500,7 +500,7 @@ True
 False
 > is_empty2 list3
 False
-> 
+>
 
 
 > count list0
@@ -527,21 +527,21 @@ is_empty :: List t -> Bool
 is_empty Nil =  True
 is_empty _   =  False
 
-is_empty2  lst = case lst of 
+is_empty2  lst = case lst of
                     Nil -> True
                     _   -> False
 
 count :: List t -> Int
-count lst = 
-    case lst of 
+count lst =
+    case lst of
         Nil             -> 0
         Cons a next_lst -> 1 + count next_lst
 
-suml lst = 
+suml lst =
     case lst of
         Nil             -> 0
         Cons a next_lst -> a + suml next_lst
-        
+
 headl (Cons a _) = a
 headl Nil        = error "Empty List"
 
@@ -564,19 +564,19 @@ takel n lst =
     (k, Cons h  t)  -> Cons h (takel (n-1) t)
 
 
-nth lst n = 
+nth lst n =
     case (n, lst) of
     (_, Nil)       -> error "Index too large"
     (0, Cons a _)  -> a
-    (k, Cons h t)  -> nth t (n-1) 
+    (k, Cons h t)  -> nth t (n-1)
 
 
 mapl f Nil          = Nil
 mapl f (Cons h t)   = Cons (f h) (mapl f t)
 
 filterl  f  Nil        = Nil
-filterl  f (Cons h t)  = 
-    if f h 
+filterl  f (Cons h t)  =
+    if f h
         then  Cons h (filterl f t)
         else  filterl f t
 
@@ -594,13 +594,13 @@ list4 = Cons 1.25 (Cons 0.65 (Cons 8.123 ( Cons 9.434 Nil)))
 Running in ghci
 ```haskell
 
-> :l list_cons.hs 
+> :l list_cons.hs
 [1 of 1] Compiling Main             ( list_cons.hs, interpreted )
 Ok, modules loaded: Main.
 
 > :t is_empty
 is_empty :: List t -> Bool
-> :t count 
+> :t count
 count :: List t -> Int
 
 
@@ -628,13 +628,13 @@ list4 :: List Double
 
 > Cons 10.23 list0
 Cons 10.23 Nil
-> 
+>
 > Cons 30 list1
 Cons 30 (Cons 10 Nil)
 >
 > Cons 40 list3
 Cons 40 (Cons 10 (Cons 20 (Cons 30 Nil)))
-> 
+>
 > Cons 50 (Cons 40 list3)
 Cons 50 (Cons 40 (Cons 10 (Cons 20 (Cons 30 Nil))))
 
@@ -647,7 +647,7 @@ False
 False
 > is_empty list3
 False
-> 
+>
 
 > is_empty2 list0
 True
@@ -655,7 +655,7 @@ True
 False
 > is_empty2 list3
 False
-> 
+>
 
 
 > count list0
@@ -679,7 +679,7 @@ False
 10
 > headl list4
 1.25
-> 
+>
 
 {- Safe version of headl -}
 > safe_headl list0
@@ -692,10 +692,10 @@ Just "Haskell"
 Just 10
 > safe_headl list4
 Just 1.25
-> 
-> :t safe_headl 
+>
+> :t safe_headl
 safe_headl :: List a -> Maybe a
-> 
+>
 
 {- Getting the last element -}
 > lastl list0
@@ -710,7 +710,7 @@ safe_headl :: List a -> Maybe a
 30
 > lastl list4
 9.434
-> 
+>
 
 {- Converting to Standard Haskell List -}
 > to_list list0
@@ -724,7 +724,7 @@ safe_headl :: List a -> Maybe a
 > to_list list4
 [1.25,0.65,8.123,9.434]
 
-> :t to_list 
+> :t to_list
 to_list :: List a -> [a]
 
 > takel 0 Nil
@@ -748,8 +748,8 @@ Cons 1.25 (Cons 0.65 (Cons 8.123 (Cons 9.434 Nil)))
 > takel 26 list4
 Cons 1.25 (Cons 0.65 (Cons 8.123 (Cons 9.434 Nil)))
 
-{-     
-    Infinite List 
+{-
+    Infinite List
 -}
 
 > let ones = Cons 1 ones
@@ -775,7 +775,7 @@ Cons 8 (Cons 9 (Cons 10 (Cons 11 (Cons 12 (Cons 13 (Cons 14 (Cons 15 (Cons 16 (C
 > let from_step start step = Cons start (from_step (start+step) step)
 > takel 3 (from_step 1 3)
 Cons 1 (Cons 4 (Cons 7 Nil))
-> 
+>
 > takel 6 (from_step 2 4)
 Cons 2 (Cons 6 (Cons 10 (Cons 14 (Cons 18 (Cons 22 Nil)))))
 
@@ -794,11 +794,11 @@ Cons 0 (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Cons 5 (Cons 6 (Cons 7 Nil)))))))
 22
 > nth (from_step 0 1) 60
 60
-> 
+>
 >
 > :t nth
 nth :: (Eq t, Num t) => List t1 -> t -> t1
-> 
+>
 
 
 > mapl (\x -> 3*x + 5) list0
@@ -812,7 +812,7 @@ Cons 8.75 (Cons 6.95 (Cons 29.369 (Cons 33.302 Nil)))
 mapl :: (t -> a) -> List t -> List a
 
 
-> 
+>
 > list4
 Cons 1.25 (Cons 0.65 (Cons 8.123 (Cons 9.434 Nil)))
 >
@@ -821,7 +821,7 @@ Cons 8.123 (Cons 9.434 Nil)
 >
 > filterl (\x -> x > 8) list4
 Cons 8.123 (Cons 9.434 Nil)
-> 
+>
 > :t filterl
 filterl :: (a -> Bool) -> List a -> List a
 
@@ -829,7 +829,6 @@ filterl :: (a -> Bool) -> List a -> List a
 
 
 
-Reference: 
+Reference:
 
   * http://learnyouahaskell.com/making-our-own-types-and-typeclasses
-
