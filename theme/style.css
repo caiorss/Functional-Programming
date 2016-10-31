@@ -1,0 +1,175 @@
+/* Set the colors in <pre> blocks from the Leuven theme */
+
+html {
+    font-family: serif;
+    font-size: 12pt;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body {
+    margin-left:  10%;
+    margin-right: 20%;
+    font-size: 14pt;
+    font-family: serif;
+}
+
+p {
+    font-fize: 14pt;
+}
+
+
+ul li { padding: 5px 0px; }
+
+
+a:visited{
+  color:blue;
+}
+
+a:hover{
+  color:red;
+}
+
+div.wrapper {
+  width: 500px;
+  height: 500px;
+  overflow: auto;
+}
+
+table {
+        display: block;
+        overflow-x: auto;
+    }
+
+#table-of-contents {
+    float: right;
+    border: 1px solid #CCC;
+    max-width: 50%;
+    overflow: auto;
+}
+
+#table-of-contents {
+    /* font-size: 9pt; */
+    display: none;
+    visibility: hidden;
+    position: fixed;
+    right: 0em;
+    top: 0em;
+    background: white;
+    /* -webkit-box-shadow: 0 0 1em #777777; */
+    /* -moz-box-shadow: 0 0 1em #777777; */
+    /* -webkit-border-bottom-left-radius: 5px; */
+    /* -moz-border-radius-bottomleft: 5px; */
+    /* text-align: right; */
+    max-height: 80%;
+    overflow: auto;
+    z-index: 200;
+}
+
+#table-of-contents ul {
+    margin-left: 14pt; 
+    margin-bottom: 10pt;
+    padding: 0
+}
+
+#table-of-contents li {
+    padding: 0;
+    margin: 1px;
+    list-style: none;
+}
+
+
+#text-table-of-contents {
+    display: none;
+    visibility: hidden;
+    text-align: left;
+}
+
+/* #table-of-contents:hover #text-table-of-contents { */
+/*     display: block; */
+/*     margin-top: -1.5em; */
+/*     padding: 0.5em; */
+/* } */
+
+
+
+#org-info-js-window
+{
+    position:absolute;
+    top:140px;
+    /* margin-left:10%; */
+    margin-right: 10%;
+}
+
+
+
+h1 {
+	font-size:30pt;
+    padding-bottom: 0.3em;
+    line-height: 1.2;
+    border-bottom: 1px solid #eee;                  
+   }
+h2 {
+	font-size:20pt;
+}
+h3 {
+	font-size:16pt;
+}
+h4 {
+	font-size:14pt;
+}
+h5 {
+	font-size:12pt;
+}
+h6 {
+	font-size:11pt;
+}
+
+
+/* pre                                      {background-color:#f3f5f7;} */
+
+
+pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    
+    font-family: monospace,monospace;
+    margin: 1.2em;
+    overflow: auto;
+    padding: 8pt;
+    background-color:#f3f5f7;
+    font-size: medium;
+}
+
+pre span.org-builtin                     {color:#006FE0;font-weight:bold;}
+pre span.org-string                      {color:#008000;}
+pre span.org-keyword                     {color:#0000FF;}
+pre span.org-variable-name               {color:#BA36A5;}
+pre span.org-function-name               {color:#006699;}
+pre span.org-type                        {color:#6434A3;}
+pre span.org-preprocessor                {color:#808080;font-weight:bold;}
+pre span.org-constant                    {color:#D0372D;}
+pre span.org-comment-delimiter           {color:#8D8D84;}
+pre span.org-comment                     {color:darkgreen;font-style:italic}
+pre span.org-outshine-level-1            {color:#8D8D84;font-style:italic}
+pre span.org-outshine-level-2            {color:#8D8D84;font-style:italic}
+pre span.org-outshine-level-3            {color:#8D8D84;font-style:italic}
+pre span.org-outshine-level-4            {color:#8D8D84;font-style:italic}
+pre span.org-outshine-level-5            {color:#8D8D84;font-style:italic}
+pre span.org-outshine-level-6            {color:#8D8D84;font-style:italic}
+pre span.org-outshine-level-7            {color:#8D8D84;font-style:italic}
+pre span.org-outshine-level-8            {color:#8D8D84;font-style:italic}
+pre span.org-outshine-level-9            {color:#8D8D84;font-style:italic}
+pre span.org-rainbow-delimiters-depth-1  {color:#707183;}
+pre span.org-rainbow-delimiters-depth-2  {color:#7388d6;}
+pre span.org-rainbow-delimiters-depth-3  {color:#909183;}
+pre span.org-rainbow-delimiters-depth-4  {color:#709870;}
+pre span.org-rainbow-delimiters-depth-5  {color:#907373;}
+pre span.org-rainbow-delimiters-depth-6  {color:#6276ba;}
+pre span.org-rainbow-delimiters-depth-7  {color:#858580;}
+pre span.org-rainbow-delimiters-depth-8  {color:#80a880;}
+pre span.org-rainbow-delimiters-depth-9  {color:#887070;}
+pre span.org-sh-quoted-exec              {color:#FF1493;}
+
+
+

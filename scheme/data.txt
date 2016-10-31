@@ -1,0 +1,17 @@
+(
+    (task
+        (:id 0)
+        (:name "Study the rules of the game")
+        (:deadline (date 2014 07 01))
+        (:description "Study About Business games")
+        (:location "home")
+    )
+    (task
+        (:id 1)
+        (:name "Deliver the presentation")
+        (:deadline (from (date 2014 07 01) (date 2014 07 12)))
+        (:description "Deliver the presentation to the boss")
+        (:location "work")
+    )
+
+)

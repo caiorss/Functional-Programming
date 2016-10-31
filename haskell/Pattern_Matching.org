@@ -1,0 +1,154 @@
+#+INCLUDE: ../theme/style.org
+#+TITLE: Pattern Matching 
+
+* Pattern Matching
+*** Tuple Constructor
+
+#+BEGIN_SRC haskell
+
+> let norm3D (x, y, z) = sqrt(x^2 + y^2 + z^2)
+> 
+> norm3D (33, 11, 3)
+34.91418050019218
+> 
+> norm3D (33, 1, 3)
+33.15116890850155
+> 
+#+END_SRC
+
+#+BEGIN_SRC haskell
+
+addVectors :: (Num a) => (a, a) -> (a, a) -> (a, a)
+addVectors a b = (fst a + fst b, snd a + snd b)
+
+> addVectors (8, 9)(-10, 12)
+(-2,21)
+> 
+> addv1 = addVectors (1, 3)
+> 
+> let addv1 = addVectors (1, 3)
+> 
+> map addv1 [(12, 23), (45, 23), (6, 14)]
+[(13,26),(46,26),(7,17)]
+#+END_SRC
+
+#+BEGIN_SRC haskell
+
+add3Dvectors (x1, y1, z1) (x2, y2, z2) = (x1+x2, y1+y2, z1+z
+first  (x, _, _) = x
+second (_, y, _) = y
+third  (_, _, z) = z
+
+> first (1, 2, 3)
+1
+> second  (1, 2, 3)
+2
+> third (1, 2, 3)
+3   
+> add3Dvectors (23, 12, 233) (10, 100, 30)
+(33,112,263)
+#+END_SRC
+
+*** Guarded Equations
+
+Absolute Value
+
+#+BEGIN_SRC haskell
+abs n | n >=0 = n
+      | otherwise = -n
+#+END_SRC
+
+Signum/Sign Function
+
+#+BEGIN_SRC haskell
+
+-- Without Pattern Matching
+sign n = if n < 0 then - 1 else if n == 0 then 0 else 1
+
+
+sign x | x >  0 =  1
+       | x == 0 =  0 
+       | x <  0 = -1
+
+----------- OR -----
+
+
+sign n | n <  0    = -1
+       | n == 0    = 0
+       | otherwise = 1
+
+
+--------------------
+
+> let sign x | x > 0 = 1 | x == 0 = 0 | x < 0 = -1
+
+
+> map sign [-4..4]
+[-1,-1,-1,-1,0,1,1,1,1]
+
+#+END_SRC
+
+#+BEGIN_SRC haskell
+f x y | y > z  = x^^2 - 10.5
+      | y == z = x+10*y
+      | y < z  = x/z + y
+      where z = x^2 - 5*y
+
+#+END_SRC
+
+#+BEGIN_SRC haskell
+
+units angle sym | sym == "deg" = angle*pi/180.0
+                | sym == "rad" = angle
+
+> :{
+| let units angle sym | sym == "deg" = angle*pi/180.0
+|                 | sym == "rad" = angle
+| 
+| :}
+> 
+> units 180 "deg"
+3.141592653589793
+> 
+> units pi "rad"
+3.141592653589793
+> 
+> units 90 "deg" == pi/2
+True
+> 
+> sin(units 90 "deg")
+1.0
+> sin(units 1.57 "rad")
+0.9999996829318346
+> 
+#+END_SRC
+
+#+BEGIN_SRC haskell
+
+password :: (Eq a, Num a) => a -> [Char]
+password 3423 = "OK - Safe opened"
+password x    = "Error: Wrong Password pal"
+
+> password 10
+"Error: Wrong Password pal"
+> password 11
+"Error: Wrong Password pal"
+> password 3423
+"OK - Safe opened"
+> s
+#+END_SRC
+
+#+BEGIN_SRC haskell
+sayMe :: (Integral a) => a -> [Char]
+sayMe 1 = "One!"  
+sayMe 2 = "Two!"  
+sayMe 3 = "Three!"  
+sayMe 4 = "Four!"  
+sayMe 5 = "Five!"  
+sayMe x = "Not between 1 and 5" 
+
+> map sayMe [1..8]
+["One!","Two!","Three!","Four!","Five!","Not between 1 and 5", "Not between 1 and 5","Not between 1 and 5"]
+
+
+#+END_SRC
