@@ -39,19 +39,32 @@ This repository is dedicated to public domain.
 *Functional Programming in Haskell*
 
  - [[file:haskell/Haskell.org][Haskell]]
+
  - [[file:haskell/Basic_Syntax.org][Basic Syntax]]
+
  - [[file:haskell/Functions.org][Functions]]
+
  - [[file:haskell/Pattern_Matching.org][Pattern Matching]]
+
  - [[file:haskell/List_Comprehension.org][List Comprehension]]
+
  - [[file:haskell/Algebraic_Data_Types.org][Algebraic Data Type]]
- - [[file:haskell/Functors__Monads__Applicatives_and_Monoids.org][Functors, Monads, Applicatives and Monoids]]
+
+ - [[file:haskell/Functors__Monads__Applicatives_and_Monoids.org][Functors and Monads]]
+
+ - [[file:haskell/monoids.org][Monoids]]
+
  - [[file:haskell/Libraries.org][Haskell Libraries]]
+
  - [[file:haskell/Useful_Custom_Functions__Iterators_and_Operators.org][Useful Custom Functions/ Iterators and Operators]]
+
  - [[file:haskell/Applications.org][Applications]]
+
  - [[file:haskell/Miscellaneous.org][Miscellaneous]]
+
  - [[file:haskell/Documentation_and_Learning_Materials.org][Documentation and Learning Materials]]
 
- - [[file:haskell/Real_World_Haskell.org][Codes and Examples of the book Real World Haskell]]
+ - [[file:haskell/haskell_handling_exceptions.org][Exception Handling]]
 
  - Modules
 
@@ -70,6 +83,8 @@ This repository is dedicated to public domain.
    - [[file:haskell/control_exception.org][Control.Exception]] - Exception Handling
 
    - [[file:haskell/data_map.org][Data.Map]]          - Immutable hash map. Implemented with balanced trees.
+
+ - [[file:haskell/Real_World_Haskell.org][Codes and Examples from "Real World Haskell"]]
 
 *Functional Programming in OCaml*
 
