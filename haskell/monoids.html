@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Monoids</title>
-<!-- 2016-04-13 Wed 14:54 -->
+<!-- 2016-11-01 ter 01:18 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues" />
@@ -260,7 +260,7 @@ The monoid type class and monoid combinators are defined in the module
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-haskell-keyword">class</span> <span class="org-haskell-constructor">Monoid</span> m <span class="org-haskell-keyword">where</span>
+<pre class="src src-haskell"><span class="org-haskell-keyword">class</span> <span class="org-haskell-type">Monoid</span> m <span class="org-haskell-keyword">where</span>
 
     <span class="org-comment-delimiter">{- </span><span class="org-comment">Identity Element -}</span>
     mempty <span class="org-haskell-operator">::</span> m
@@ -285,7 +285,7 @@ Combine two monoids into a new one.
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">mappend</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Monoid</span> m <span class="org-haskell-operator">=&gt;</span> m <span class="org-haskell-operator">-&gt;</span> m <span class="org-haskell-operator">-&gt;</span> m
+<pre class="src src-haskell"><span class="org-function-name">mappend</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monoid</span> m <span class="org-haskell-operator">=&gt;</span> m <span class="org-haskell-operator">-&gt;</span> m <span class="org-haskell-operator">-&gt;</span> m
 </pre>
 </div>
 
@@ -299,7 +299,7 @@ Alias for Mappend.
 
 <div class="org-src-container">
 
-<pre class="src src-haskell">(<span class="org-haskell-definition">&lt;&gt;</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Monoid</span> a <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a 
+<pre class="src src-haskell">(<span class="org-haskell-definition">&lt;&gt;</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monoid</span> a <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a 
 (<span class="org-haskell-definition">&lt;&gt;</span>) <span class="org-haskell-operator">=</span> mappend
 </pre>
 </div>
@@ -314,7 +314,7 @@ Append a list of monoids into a new one.
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">moncat</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Monoid</span> m <span class="org-haskell-operator">=&gt;</span> [m] <span class="org-haskell-operator">-&gt;</span> m
+<pre class="src src-haskell"><span class="org-function-name">moncat</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monoid</span> m <span class="org-haskell-operator">=&gt;</span> [m] <span class="org-haskell-operator">-&gt;</span> m
 </pre>
 </div>
 
@@ -426,7 +426,7 @@ Append a list of monoids into a new one.
 <div class="outline-text-4" id="text-1-2-1">
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-haskell-keyword">instance</span> <span class="org-haskell-constructor">Monoid</span> [a] <span class="org-haskell-keyword">where</span>
+<pre class="src src-haskell"><span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Monoid</span> [a] <span class="org-haskell-keyword">where</span>
     mempty  <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">[]</span>
     mappend <span class="org-haskell-operator">=</span> (<span class="org-haskell-operator">++</span>)
 
@@ -448,39 +448,39 @@ Example:
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.Monoid</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t mconcat
-<span class="org-function-name">mconcat</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Monoid</span> a <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> a
+<span class="org-function-name">mconcat</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monoid</span> a <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> a
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t mempty
-<span class="org-function-name">mempty</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Monoid</span> a <span class="org-haskell-operator">=&gt;</span> a
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-type">:</span>t mempty
+<span class="org-function-name">mempty</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monoid</span> a <span class="org-haskell-operator">=&gt;</span> a
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t mappend
-<span class="org-function-name">mappend</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Monoid</span> a <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-type">:</span>t mappend
+<span class="org-function-name">mappend</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monoid</span> a <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t (<span class="org-haskell-operator">&lt;&gt;</span>)
-(<span class="org-haskell-definition">&lt;&gt;</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Monoid</span> m <span class="org-haskell-operator">=&gt;</span> m <span class="org-haskell-operator">-&gt;</span> m <span class="org-haskell-operator">-&gt;</span> m
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-type">:</span>t (<span class="org-haskell-operator">&lt;&gt;</span>)
+(<span class="org-haskell-definition">&lt;&gt;</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monoid</span> m <span class="org-haskell-operator">=&gt;</span> m <span class="org-haskell-operator">-&gt;</span> m <span class="org-haskell-operator">-&gt;</span> m
 <span class="org-haskell-operator">&gt;&gt;&gt;</span>
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> [9<span class="org-haskell-operator">,</span> 3] <span class="org-haskell-operator">&lt;&gt;</span> [1<span class="org-haskell-operator">,</span> 2<span class="org-haskell-operator">,</span> 3]
-[9<span class="org-haskell-operator">,</span>3<span class="org-haskell-operator">,</span>1<span class="org-haskell-operator">,</span>2<span class="org-haskell-operator">,</span>3]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> [9, 3] <span class="org-haskell-operator">&lt;&gt;</span> [1, 2, 3]
+[9,3,1,2,3]
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> mempty <span class="org-haskell-operator">::</span> [a]
 <span class="org-haskell-constructor">[]</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> [1<span class="org-haskell-operator">,</span> 2<span class="org-haskell-operator">,</span> 3] <span class="org-haskell-operator">&lt;&gt;</span> mempty 
-[1<span class="org-haskell-operator">,</span>2<span class="org-haskell-operator">,</span>3]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> [1, 2, 3] <span class="org-haskell-operator">&lt;&gt;</span> mempty 
+[1,2,3]
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> mempty <span class="org-haskell-operator">&lt;&gt;</span> [1<span class="org-haskell-operator">,</span> 2<span class="org-haskell-operator">,</span> 3]
-[1<span class="org-haskell-operator">,</span>2<span class="org-haskell-operator">,</span>3]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> mempty <span class="org-haskell-operator">&lt;&gt;</span> [1, 2, 3]
+[1,2,3]
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> [9<span class="org-haskell-operator">,</span> 3] <span class="org-haskell-operator">&lt;&gt;</span> [1<span class="org-haskell-operator">,</span> 2<span class="org-haskell-operator">,</span> 3] <span class="org-haskell-operator">&lt;&gt;</span> [9<span class="org-haskell-operator">,</span> 3<span class="org-haskell-operator">,</span> 10]
-[9<span class="org-haskell-operator">,</span>3<span class="org-haskell-operator">,</span>1<span class="org-haskell-operator">,</span>2<span class="org-haskell-operator">,</span>3<span class="org-haskell-operator">,</span>9<span class="org-haskell-operator">,</span>3<span class="org-haskell-operator">,</span>10]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> [9, 3] <span class="org-haskell-operator">&lt;&gt;</span> [1, 2, 3] <span class="org-haskell-operator">&lt;&gt;</span> [9, 3, 10]
+[9,3,1,2,3,9,3,10]
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> [9<span class="org-haskell-operator">,</span> 3] <span class="org-haskell-operator">`mappend`</span> [1<span class="org-haskell-operator">,</span> 2<span class="org-haskell-operator">,</span> 3] <span class="org-haskell-operator">`mappend`</span> [9<span class="org-haskell-operator">,</span> 3<span class="org-haskell-operator">,</span> 10]
-[9<span class="org-haskell-operator">,</span>3<span class="org-haskell-operator">,</span>1<span class="org-haskell-operator">,</span>2<span class="org-haskell-operator">,</span>3<span class="org-haskell-operator">,</span>9<span class="org-haskell-operator">,</span>3<span class="org-haskell-operator">,</span>10]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> [9, 3] <span class="org-haskell-operator">`mappend`</span> [1, 2, 3] <span class="org-haskell-operator">`mappend`</span> [9, 3, 10]
+[9,3,1,2,3,9,3,10]
 <span class="org-haskell-operator">&gt;&gt;&gt;</span>
 </pre>
 </div>
@@ -499,15 +499,15 @@ Strings are similar to lists and the mempty element is a empty string.
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.Monoid</span>
 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t mempty
-<span class="org-function-name">mempty</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Monoid</span> a <span class="org-haskell-operator">=&gt;</span> a
+<span class="org-function-name">mempty</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monoid</span> a <span class="org-haskell-operator">=&gt;</span> a
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> mempty <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">String</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> mempty <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span>
 <span class="org-string">""</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t mappend
-<span class="org-function-name">mappend</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Monoid</span> a <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
+<span class="org-function-name">mappend</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monoid</span> a <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-string">"Testing "</span> <span class="org-haskell-operator">`mappend`</span> <span class="org-string">" String "</span> <span class="org-haskell-operator">`mappend`</span> <span class="org-string">" monoids"</span>
@@ -519,11 +519,11 @@ Strings are similar to lists and the mempty element is a empty string.
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t mconcat
-<span class="org-function-name">mconcat</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Monoid</span> a <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> a
+<span class="org-function-name">mconcat</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monoid</span> a <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> a
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat [<span class="org-string">"Testing "</span><span class="org-haskell-operator">,</span> <span class="org-string">"String"</span><span class="org-haskell-operator">,</span> <span class="org-string">" monoids"</span>]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat [<span class="org-string">"Testing "</span>, <span class="org-string">"String"</span>, <span class="org-string">" monoids"</span>]
 <span class="org-string">"Testing String monoids"</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span>
 </pre>
@@ -537,10 +537,10 @@ Strings are similar to lists and the mempty element is a empty string.
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-doc">-- | Monoid under addition.</span>
-<span class="org-haskell-keyword">newtype</span> <span class="org-haskell-constructor">Sum</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Sum</span> { getSum <span class="org-haskell-operator">::</span> a }
-        <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Ord</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Read</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Show</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Bounded</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Generic</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Generic1</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Num</span>)
+<span class="org-haskell-keyword">newtype</span> <span class="org-haskell-type">Sum</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Sum</span> { getSum <span class="org-haskell-operator">::</span> a }
+        <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span>, <span class="org-haskell-constructor">Ord</span>, <span class="org-haskell-constructor">Read</span>, <span class="org-haskell-constructor">Show</span>, <span class="org-haskell-constructor">Bounded</span>, <span class="org-haskell-constructor">Generic</span>, <span class="org-haskell-constructor">Generic1</span>, <span class="org-haskell-constructor">Num</span>)
 
-<span class="org-haskell-keyword">instance</span> <span class="org-haskell-constructor">Num</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-constructor">Monoid</span> (<span class="org-haskell-constructor">Sum</span> a) <span class="org-haskell-keyword">where</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Monoid</span> (<span class="org-haskell-type">Sum</span> a) <span class="org-haskell-keyword">where</span>
         mempty <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Sum</span> 0
         mappend <span class="org-haskell-operator">=</span> coerce ((<span class="org-haskell-operator">+</span>) <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a)
 <span class="org-comment-delimiter">--        </span><span class="org-comment">Sum x `mappend` Sum y = Sum (x + y)</span>
@@ -559,29 +559,29 @@ Example:
 <span class="org-comment-delimiter">{- </span><span class="org-comment">Sum Monoid </span>
 <span class="org-comment"> ----------------------------------}</span>
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> mempty <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Sum</span> <span class="org-haskell-constructor">Int</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> mempty <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Sum</span> <span class="org-haskell-type">Int</span>
 <span class="org-haskell-constructor">Sum</span> {getSum <span class="org-haskell-operator">=</span> 0}
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> mempty <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Product</span> <span class="org-haskell-constructor">Int</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> mempty <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Product</span> <span class="org-haskell-type">Int</span>
 <span class="org-haskell-constructor">Product</span> {getProduct <span class="org-haskell-operator">=</span> 1}
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> getSum (mempty <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Sum</span> <span class="org-haskell-constructor">Int</span>)
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> getSum (mempty <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Sum</span> <span class="org-haskell-type">Int</span>)
 0
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> 1 <span class="org-haskell-operator">&lt;&gt;</span> mempty <span class="org-haskell-operator">&lt;&gt;</span> 2 <span class="org-haskell-operator">&lt;&gt;</span> 3 <span class="org-haskell-operator">&lt;&gt;</span> 10 <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Sum</span> <span class="org-haskell-constructor">Int</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 1 <span class="org-haskell-operator">&lt;&gt;</span> mempty <span class="org-haskell-operator">&lt;&gt;</span> 2 <span class="org-haskell-operator">&lt;&gt;</span> 3 <span class="org-haskell-operator">&lt;&gt;</span> 10 <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Sum</span> <span class="org-haskell-type">Int</span>
 <span class="org-haskell-constructor">Sum</span> {getSum <span class="org-haskell-operator">=</span> 16}
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> 1 <span class="org-haskell-operator">`mappend`</span> mempty <span class="org-haskell-operator">`mappend`</span> 2 <span class="org-haskell-operator">`mappend`</span> 3 <span class="org-haskell-operator">`mappend`</span> 10 <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Sum</span> <span class="org-haskell-constructor">Int</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 1 <span class="org-haskell-operator">`mappend`</span> mempty <span class="org-haskell-operator">`mappend`</span> 2 <span class="org-haskell-operator">`mappend`</span> 3 <span class="org-haskell-operator">`mappend`</span> 10 <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Sum</span> <span class="org-haskell-type">Int</span>
 <span class="org-haskell-constructor">Sum</span> {getSum <span class="org-haskell-operator">=</span> 16}
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat [1<span class="org-haskell-operator">,</span> mempty<span class="org-haskell-operator">,</span> 2<span class="org-haskell-operator">,</span> 3<span class="org-haskell-operator">,</span> 10] <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Sum</span> <span class="org-haskell-constructor">Int</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat [1, mempty, 2, 3, 10] <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Sum</span> <span class="org-haskell-type">Int</span>
 <span class="org-haskell-constructor">Sum</span> {getSum <span class="org-haskell-operator">=</span> 16}
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> getSum ( mconcat [1<span class="org-haskell-operator">,</span> mempty<span class="org-haskell-operator">,</span> 2<span class="org-haskell-operator">,</span> 3<span class="org-haskell-operator">,</span> 10] <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Sum</span> <span class="org-haskell-constructor">Int</span>)
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> getSum ( mconcat [1, mempty, 2, 3, 10] <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Sum</span> <span class="org-haskell-type">Int</span>)
 16
 <span class="org-haskell-operator">&gt;&gt;&gt;</span>
 </pre>
@@ -595,10 +595,10 @@ Example:
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-doc">-- | Monoid under multiplication.</span>
-<span class="org-haskell-keyword">newtype</span> <span class="org-haskell-constructor">Product</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Product</span> { getProduct <span class="org-haskell-operator">::</span> a }
-        <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Ord</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Read</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Show</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Bounded</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Generic</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Generic1</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Num</span>)
+<span class="org-haskell-keyword">newtype</span> <span class="org-haskell-type">Product</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Product</span> { getProduct <span class="org-haskell-operator">::</span> a }
+        <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span>, <span class="org-haskell-constructor">Ord</span>, <span class="org-haskell-constructor">Read</span>, <span class="org-haskell-constructor">Show</span>, <span class="org-haskell-constructor">Bounded</span>, <span class="org-haskell-constructor">Generic</span>, <span class="org-haskell-constructor">Generic1</span>, <span class="org-haskell-constructor">Num</span>)
 
-<span class="org-haskell-keyword">instance</span> <span class="org-haskell-constructor">Num</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-constructor">Monoid</span> (<span class="org-haskell-constructor">Product</span> a) <span class="org-haskell-keyword">where</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Monoid</span> (<span class="org-haskell-type">Product</span> a) <span class="org-haskell-keyword">where</span>
         mempty <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Product</span> 1
         mappend <span class="org-haskell-operator">=</span> coerce ((<span class="org-haskell-operator">*</span>) <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a)
 <span class="org-comment-delimiter">--        </span><span class="org-comment">Product x `mappend` Product y = Product (x * y)</span>
@@ -617,36 +617,36 @@ Example:
 <span class="org-comment-delimiter">{- </span><span class="org-comment">Product Monoid  </span>
 <span class="org-comment"> ---------------------------------}</span>
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> 2 <span class="org-haskell-operator">&lt;&gt;</span> mempty <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Product</span> <span class="org-haskell-constructor">Int</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 2 <span class="org-haskell-operator">&lt;&gt;</span> mempty <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Product</span> <span class="org-haskell-type">Int</span>
 <span class="org-haskell-constructor">Product</span> {getProduct <span class="org-haskell-operator">=</span> 2}
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> mempty <span class="org-haskell-operator">&lt;&gt;</span> mempty <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Product</span> <span class="org-haskell-constructor">Int</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> mempty <span class="org-haskell-operator">&lt;&gt;</span> mempty <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Product</span> <span class="org-haskell-type">Int</span>
 <span class="org-haskell-constructor">Product</span> {getProduct <span class="org-haskell-operator">=</span> 1}
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> mempty <span class="org-haskell-operator">&lt;&gt;</span> 2 <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Product</span> <span class="org-haskell-constructor">Int</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> mempty <span class="org-haskell-operator">&lt;&gt;</span> 2 <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Product</span> <span class="org-haskell-type">Int</span>
 <span class="org-haskell-constructor">Product</span> {getProduct <span class="org-haskell-operator">=</span> 2}
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> getProduct (mempty <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Product</span> <span class="org-haskell-constructor">Int</span>)
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> getProduct (mempty <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Product</span> <span class="org-haskell-type">Int</span>)
 1
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> 2 <span class="org-haskell-operator">&lt;&gt;</span> 3 <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Product</span> <span class="org-haskell-constructor">Int</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 2 <span class="org-haskell-operator">&lt;&gt;</span> 3 <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Product</span> <span class="org-haskell-type">Int</span>
 <span class="org-haskell-constructor">Product</span> {getProduct <span class="org-haskell-operator">=</span> 6}
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> getProduct (2 <span class="org-haskell-operator">&lt;&gt;</span> 3 <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Product</span> <span class="org-haskell-constructor">Int</span>)
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> getProduct (2 <span class="org-haskell-operator">&lt;&gt;</span> 3 <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Product</span> <span class="org-haskell-type">Int</span>)
 6
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat [1<span class="org-haskell-operator">,</span> 2<span class="org-haskell-operator">,</span> 3<span class="org-haskell-operator">,</span> 4<span class="org-haskell-operator">,</span> 5<span class="org-haskell-operator">,</span> mempty] <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Product</span> <span class="org-haskell-constructor">Int</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat [1, 2, 3, 4, 5, mempty] <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Product</span> <span class="org-haskell-type">Int</span>
 <span class="org-haskell-constructor">Product</span> {getProduct <span class="org-haskell-operator">=</span> 120}
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> getProduct ( mconcat [1<span class="org-haskell-operator">,</span> 2<span class="org-haskell-operator">,</span> 3<span class="org-haskell-operator">,</span> 4<span class="org-haskell-operator">,</span> 5<span class="org-haskell-operator">,</span> mempty] <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Product</span> <span class="org-haskell-constructor">Int</span>)
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> getProduct ( mconcat [1, 2, 3, 4, 5, mempty] <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Product</span> <span class="org-haskell-type">Int</span>)
 120
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
 <span class="org-haskell-constructor">:</span>{
-<span class="org-haskell-keyword">let</span> value <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Product</span> <span class="org-haskell-constructor">Int</span> 
-    value <span class="org-haskell-operator">=</span> mconcat [1<span class="org-haskell-operator">,</span> 2<span class="org-haskell-operator">,</span> 3<span class="org-haskell-operator">,</span> 4<span class="org-haskell-operator">,</span> 5<span class="org-haskell-operator">,</span> mempty]
+<span class="org-haskell-keyword">let</span> value <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Product</span> <span class="org-haskell-type">Int</span> 
+    value <span class="org-haskell-operator">=</span> mconcat [1, 2, 3, 4, 5, mempty]
 <span class="org-haskell-constructor">:</span>}
 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> value
@@ -672,7 +672,7 @@ class.
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-haskell-keyword">instance</span> <span class="org-haskell-constructor">Monoid</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-constructor">Monoid</span> (<span class="org-haskell-constructor">Maybe</span> a) <span class="org-haskell-keyword">where</span>
+<pre class="src src-haskell"><span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Monoid</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Monoid</span> (<span class="org-haskell-type">Maybe</span> a) <span class="org-haskell-keyword">where</span>
 
   mempty <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>
 
@@ -688,7 +688,7 @@ Example:
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-haskell-operator">&gt;&gt;&gt;</span> mempty <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Maybe</span> <span class="org-haskell-constructor">String</span>
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;&gt;&gt;</span> mempty <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">String</span>
 <span class="org-haskell-constructor">Nothing</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
@@ -725,15 +725,15 @@ Example:
 <span class="org-haskell-constructor">Just</span> <span class="org-string">"Hello  rocks!"</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat [<span class="org-haskell-constructor">Just</span> <span class="org-string">"Hello "</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Nothing</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Just</span> <span class="org-string">" Haskell"</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Just</span> <span class="org-string">" rocks"</span>]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat [<span class="org-haskell-constructor">Just</span> <span class="org-string">"Hello "</span>, <span class="org-haskell-constructor">Nothing</span>, <span class="org-haskell-constructor">Just</span> <span class="org-string">" Haskell"</span>, <span class="org-haskell-constructor">Just</span> <span class="org-string">" rocks"</span>]
 <span class="org-haskell-constructor">Just</span> <span class="org-string">"Hello  Haskell rocks"</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat [<span class="org-haskell-constructor">Nothing</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Nothing</span>]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat [<span class="org-haskell-constructor">Nothing</span>, <span class="org-haskell-constructor">Nothing</span>]
 <span class="org-haskell-constructor">Nothing</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat <span class="org-haskell-constructor">[]</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Maybe</span> <span class="org-haskell-constructor">String</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat <span class="org-haskell-constructor">[]</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">String</span>
 <span class="org-haskell-constructor">Nothing</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
@@ -750,15 +750,15 @@ Example:
 <span class="org-haskell-constructor">Just</span> (<span class="org-haskell-constructor">Product</span> {getProduct <span class="org-haskell-operator">=</span> 60})
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat [<span class="org-haskell-constructor">Just</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-constructor">Sum</span> 2<span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Just</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-constructor">Sum</span> 3<span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Nothing</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Just</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-constructor">Sum</span> 10<span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Nothing</span>]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat [<span class="org-haskell-constructor">Just</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-constructor">Sum</span> 2, <span class="org-haskell-constructor">Just</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-constructor">Sum</span> 3, <span class="org-haskell-constructor">Nothing</span>, <span class="org-haskell-constructor">Just</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-constructor">Sum</span> 10, <span class="org-haskell-constructor">Nothing</span>]
 <span class="org-haskell-constructor">Just</span> (<span class="org-haskell-constructor">Sum</span> {getSum <span class="org-haskell-operator">=</span> 15})
 <span class="org-haskell-operator">&gt;&gt;&gt;</span>
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> fmap getSum <span class="org-haskell-operator">$</span> mconcat [<span class="org-haskell-constructor">Just</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-constructor">Sum</span> 2<span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Just</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-constructor">Sum</span> 3<span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Nothing</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Just</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-constructor">Sum</span> 10<span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Nothing</span>]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> fmap getSum <span class="org-haskell-operator">$</span> mconcat [<span class="org-haskell-constructor">Just</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-constructor">Sum</span> 2, <span class="org-haskell-constructor">Just</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-constructor">Sum</span> 3, <span class="org-haskell-constructor">Nothing</span>, <span class="org-haskell-constructor">Just</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-constructor">Sum</span> 10, <span class="org-haskell-constructor">Nothing</span>]
 <span class="org-haskell-constructor">Just</span> 15
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> getSum <span class="org-haskell-operator">&lt;$&gt;</span> mconcat [<span class="org-haskell-constructor">Just</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-constructor">Sum</span> 2<span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Just</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-constructor">Sum</span> 3<span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Nothing</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Just</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-constructor">Sum</span> 10<span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Nothing</span>]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> getSum <span class="org-haskell-operator">&lt;$&gt;</span> mconcat [<span class="org-haskell-constructor">Just</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-constructor">Sum</span> 2, <span class="org-haskell-constructor">Just</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-constructor">Sum</span> 3, <span class="org-haskell-constructor">Nothing</span>, <span class="org-haskell-constructor">Just</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-constructor">Sum</span> 10, <span class="org-haskell-constructor">Nothing</span>]
 <span class="org-haskell-constructor">Just</span> 15
 <span class="org-haskell-operator">&gt;&gt;&gt;</span>
 </pre>
@@ -776,11 +776,11 @@ doesn't need to be a instance of Monoid type class.
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-haskell-keyword">newtype</span> <span class="org-haskell-constructor">First</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">First</span> { getFirst <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Maybe</span> a }  
-     <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Ord</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Read</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Show</span>)  
+<pre class="src src-haskell"><span class="org-haskell-keyword">newtype</span> <span class="org-haskell-type">First</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">First</span> { getFirst <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Maybe</span> a }  
+     <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span>, <span class="org-haskell-constructor">Ord</span>, <span class="org-haskell-constructor">Read</span>, <span class="org-haskell-constructor">Show</span>)  
 
 
-<span class="org-haskell-keyword">instance</span> <span class="org-haskell-constructor">Monoid</span> (<span class="org-haskell-constructor">First</span> a) <span class="org-haskell-keyword">where</span>  
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Monoid</span> (<span class="org-haskell-type">First</span> a) <span class="org-haskell-keyword">where</span>  
 
      mempty <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">First</span> <span class="org-haskell-constructor">Nothing</span>  
 
@@ -824,14 +824,14 @@ Example:
 <span class="org-haskell-constructor">First</span> {getFirst <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>}
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat [<span class="org-haskell-constructor">First</span> <span class="org-haskell-constructor">Nothing</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">First</span> (<span class="org-haskell-constructor">Just</span> 10)<span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">First</span> (<span class="org-haskell-constructor">Just</span> 2)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat [<span class="org-haskell-constructor">First</span> <span class="org-haskell-constructor">Nothing</span>, <span class="org-haskell-constructor">First</span> (<span class="org-haskell-constructor">Just</span> 10), <span class="org-haskell-constructor">First</span> (<span class="org-haskell-constructor">Just</span> 2)]
 <span class="org-haskell-constructor">First</span> {getFirst <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Just</span> 10}
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat [<span class="org-haskell-constructor">First</span> <span class="org-haskell-constructor">Nothing</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">First</span> <span class="org-haskell-constructor">Nothing</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">First</span> (<span class="org-haskell-constructor">Just</span> 2)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat [<span class="org-haskell-constructor">First</span> <span class="org-haskell-constructor">Nothing</span>, <span class="org-haskell-constructor">First</span> <span class="org-haskell-constructor">Nothing</span>, <span class="org-haskell-constructor">First</span> (<span class="org-haskell-constructor">Just</span> 2)]
 <span class="org-haskell-constructor">First</span> {getFirst <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Just</span> 2}
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat [<span class="org-haskell-constructor">First</span> <span class="org-haskell-constructor">Nothing</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">First</span> <span class="org-haskell-constructor">Nothing</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">First</span> <span class="org-haskell-constructor">Nothing</span>]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat [<span class="org-haskell-constructor">First</span> <span class="org-haskell-constructor">Nothing</span>, <span class="org-haskell-constructor">First</span> <span class="org-haskell-constructor">Nothing</span>, <span class="org-haskell-constructor">First</span> <span class="org-haskell-constructor">Nothing</span>]
 <span class="org-haskell-constructor">First</span> {getFirst <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>}
 <span class="org-haskell-operator">&gt;&gt;&gt;</span>
 </pre>
@@ -849,11 +849,11 @@ doesn't need to be a instance of Monoid.
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-haskell-keyword">newtype</span> <span class="org-haskell-constructor">Last</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Last</span> { getLast <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Maybe</span> a }
-        <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Ord</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Read</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Show</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Generic</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Generic1</span><span class="org-haskell-operator">,</span>
-                  <span class="org-haskell-constructor">Functor</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Applicative</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Monad</span>)
+<pre class="src src-haskell"><span class="org-haskell-keyword">newtype</span> <span class="org-haskell-type">Last</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Last</span> { getLast <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Maybe</span> a }
+        <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span>, <span class="org-haskell-constructor">Ord</span>, <span class="org-haskell-constructor">Read</span>, <span class="org-haskell-constructor">Show</span>, <span class="org-haskell-constructor">Generic</span>, <span class="org-haskell-constructor">Generic1</span>,
+                  <span class="org-haskell-constructor">Functor</span>, <span class="org-haskell-constructor">Applicative</span>, <span class="org-haskell-constructor">Monad</span>)
 
-<span class="org-haskell-keyword">instance</span> <span class="org-haskell-constructor">Monoid</span> (<span class="org-haskell-constructor">Last</span> a) <span class="org-haskell-keyword">where</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Monoid</span> (<span class="org-haskell-type">Last</span> a) <span class="org-haskell-keyword">where</span>
         mempty <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Last</span> <span class="org-haskell-constructor">Nothing</span>
         l <span class="org-haskell-operator">`mappend`</span> <span class="org-haskell-constructor">Last</span> <span class="org-haskell-constructor">Nothing</span> <span class="org-haskell-operator">=</span> l
         <span class="org-haskell-keyword">_</span> <span class="org-haskell-operator">`mappend`</span> r            <span class="org-haskell-operator">=</span> r
@@ -870,19 +870,19 @@ Example:
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>info <span class="org-haskell-constructor">Last</span>
-<span class="org-haskell-keyword">newtype</span> <span class="org-haskell-constructor">Last</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Last</span> {getLast <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Maybe</span> a}
-        <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;Data.Monoid&#8217;</span>
-<span class="org-haskell-keyword">instance</span> <span class="org-haskell-constructor">Eq</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-constructor">Eq</span> (<span class="org-haskell-constructor">Last</span> a) <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;Data.Monoid&#8217;</span>
-<span class="org-haskell-keyword">instance</span> <span class="org-haskell-constructor">Monad</span> <span class="org-haskell-constructor">Last</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;Data.Monoid&#8217;</span>
-<span class="org-haskell-keyword">instance</span> <span class="org-haskell-constructor">Functor</span> <span class="org-haskell-constructor">Last</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;Data.Monoid&#8217;</span>
-<span class="org-haskell-keyword">instance</span> <span class="org-haskell-constructor">Ord</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-constructor">Ord</span> (<span class="org-haskell-constructor">Last</span> a) <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;Data.Monoid&#8217;</span>
-<span class="org-haskell-keyword">instance</span> <span class="org-haskell-constructor">Read</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-constructor">Read</span> (<span class="org-haskell-constructor">Last</span> a) <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;Data.Monoid&#8217;</span>
-<span class="org-haskell-keyword">instance</span> <span class="org-haskell-constructor">Show</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-constructor">Show</span> (<span class="org-haskell-constructor">Last</span> a) <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;Data.Monoid&#8217;</span>
-<span class="org-haskell-keyword">instance</span> <span class="org-haskell-constructor">Applicative</span> <span class="org-haskell-constructor">Last</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;Data.Monoid&#8217;</span>
-<span class="org-haskell-keyword">instance</span> <span class="org-haskell-constructor">Monoid</span> (<span class="org-haskell-constructor">Last</span> a) <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;Data.Monoid&#8217;</span>
+<span class="org-haskell-keyword">newtype</span> <span class="org-haskell-type">Last</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Last</span> {getLast <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Maybe</span> a}
+    <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;Data.Monoid&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Eq</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Eq</span> (<span class="org-haskell-type">Last</span> a) <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;Data.Monoid&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Monad</span> <span class="org-haskell-type">Last</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;Data.Monoid&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Functor</span> <span class="org-haskell-type">Last</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;Data.Monoid&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Ord</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Ord</span> (<span class="org-haskell-type">Last</span> a) <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;Data.Monoid&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Read</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Read</span> (<span class="org-haskell-type">Last</span> a) <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;Data.Monoid&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Show</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Show</span> (<span class="org-haskell-type">Last</span> a) <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;Data.Monoid&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Applicative</span> <span class="org-haskell-type">Last</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;Data.Monoid&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Monoid</span> (<span class="org-haskell-type">Last</span> a) <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;Data.Monoid&#8217;</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span>
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">Last</span> <span class="org-haskell-constructor">Nothing</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-type">Last</span> <span class="org-haskell-type">Nothing</span>
 <span class="org-haskell-constructor">Last</span> {getLast <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>}
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">Last</span> (<span class="org-haskell-constructor">Just</span> 100)
 <span class="org-haskell-constructor">Last</span> {getLast <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Just</span> 100}
@@ -910,15 +910,15 @@ Example:
 <span class="org-haskell-constructor">Last</span> {getLast <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>}
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat [<span class="org-haskell-constructor">Last</span> (<span class="org-haskell-constructor">Just</span> 10)<span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Last</span> (<span class="org-haskell-constructor">Just</span> 2)<span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Last</span> <span class="org-haskell-constructor">Nothing</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Last</span> (<span class="org-haskell-constructor">Just</span> 3)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat [<span class="org-haskell-constructor">Last</span> (<span class="org-haskell-constructor">Just</span> 10), <span class="org-haskell-constructor">Last</span> (<span class="org-haskell-constructor">Just</span> 2), <span class="org-haskell-constructor">Last</span> <span class="org-haskell-constructor">Nothing</span>, <span class="org-haskell-constructor">Last</span> (<span class="org-haskell-constructor">Just</span> 3)]
 <span class="org-haskell-constructor">Last</span> {getLast <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Just</span> 3}
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat [<span class="org-haskell-constructor">Last</span> (<span class="org-haskell-constructor">Just</span> 6)<span class="org-haskell-operator">,</span>  <span class="org-haskell-constructor">Last</span> <span class="org-haskell-constructor">Nothing</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Last</span> (<span class="org-haskell-constructor">Just</span> 3)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat [<span class="org-haskell-constructor">Last</span> (<span class="org-haskell-constructor">Just</span> 6),  <span class="org-haskell-constructor">Last</span> <span class="org-haskell-constructor">Nothing</span>, <span class="org-haskell-constructor">Last</span> (<span class="org-haskell-constructor">Just</span> 3)]
 <span class="org-haskell-constructor">Last</span> {getLast <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Just</span> 3}
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat [<span class="org-haskell-constructor">Last</span> (<span class="org-haskell-constructor">Just</span> 6)<span class="org-haskell-operator">,</span>  <span class="org-haskell-constructor">Last</span> <span class="org-haskell-constructor">Nothing</span>]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> mconcat [<span class="org-haskell-constructor">Last</span> (<span class="org-haskell-constructor">Just</span> 6),  <span class="org-haskell-constructor">Last</span> <span class="org-haskell-constructor">Nothing</span>]
 <span class="org-haskell-constructor">Last</span> {getLast <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Just</span> 6}
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
@@ -956,8 +956,8 @@ Example:
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2016-04-13 Wed 14:54</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="date">Created: 2016-11-01 ter 01:18</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

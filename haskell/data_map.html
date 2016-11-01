@@ -1,0 +1,663 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Module: Data.Map</title>
+<!-- 2016-11-01 ter 01:18 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="Caio Rodrigues" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link href="/Functional-Programming/theme/style.css" rel="stylesheet">
+
+<script type="text/javascript" src="/Functional-Programming/theme/org-info.js">
+/**
+ *
+ * @source: /Functional-Programming/theme/org-info.js
+ *
+ * @licstart  The following is the entire license notice for the
+ *  JavaScript code in /Functional-Programming/theme/org-info.js.
+ *
+ * Copyright (C) 2012-2013 Free Software Foundation, Inc.
+ *
+ *
+ * The JavaScript code in this tag is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU
+ * General Public License (GNU GPL) as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option)
+ * any later version.  The code is distributed WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+ *
+ * As additional permission under GNU GPL version 3 section 7, you
+ * may distribute non-source (e.g., minimized or compacted) forms of
+ * that code without the copy of the GNU GPL normally required by
+ * section 4, provided you include this license notice and a URL
+ * through which recipients can access the Corresponding Source.
+ *
+ * @licend  The above is the entire license notice
+ * for the JavaScript code in /Functional-Programming/theme/org-info.js.
+ *
+ */
+</script>
+
+<script type="text/javascript">
+
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+
+<!--/*--><![CDATA[/*><!--*/
+org_html_manager.set("TOC_DEPTH", "4");
+org_html_manager.set("LINK_HOME", "");
+org_html_manager.set("LINK_UP", "");
+org_html_manager.set("LOCAL_TOC", "1");
+org_html_manager.set("VIEW_BUTTONS", "0");
+org_html_manager.set("MOUSE_HINT", "underline");
+org_html_manager.set("FIXED_TOC", "0");
+org_html_manager.set("TOC", "1");
+org_html_manager.set("VIEW", "showall");
+org_html_manager.setup();  // activate after the parameters are set
+/*]]>*///-->
+</script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Module: Data.Map</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Data.Map</a></li>
+</ul>
+</div>
+</div>
+<lu> 
+  <li><a href="/Functional-Programming/index.html">Index</a></li>
+  <li><a href="https://github.com/caiorss/Functional-Programming">Repository</a></li>
+</lu>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Data.Map</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+This module provides functions to manipulate dictionaries or hash maps
+in a more efficient way than association lists. 
+</p>
+
+<ul class="org-ul">
+<li><a href="https://downloads.haskell.org/~ghc/latest/docs/html/libraries/containers-0.5.6.2/Data-Map-Lazy.html">Documentation-1</a> 
+</li>
+
+<li><a href="https://downloads.haskell.org/~ghc/latest/docs/html/libraries/containers-0.5.6.2/Data-Map.html">Documentation-2</a>
+</li>
+</ul>
+
+<p>
+Note: Data.Map is the same as Data.Map.Lazy 
+</p>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;&gt;&gt;</span>  <span class="org-haskell-keyword">import</span> <span class="org-haskell-keyword">qualified</span> <span class="org-haskell-constructor">Data.Map</span> <span class="org-haskell-keyword">as</span> <span class="org-haskell-constructor">Map</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span>
+
+<span class="org-haskell-keyword">let</span> alist <span class="org-haskell-operator">=</span> [(10, <span class="org-string">"Texas"</span>), (2, <span class="org-string">"Utah"</span>), (3, <span class="org-string">"New Mexico"</span>), (14, <span class="org-string">"Ohio"</span>)]
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t Map.fromList
+<span class="org-function-name">Map.fromList</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> [(k, a)] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-type">:</span>t hmap1
+<span class="org-function-name">hmap1</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Num</span> k, <span class="org-haskell-type">Ord</span> k) <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">M.Map</span> k [<span class="org-haskell-type">Char</span>]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> hmap1
+<span class="org-haskell-definition">fromList</span> [(2,<span class="org-string">"Utah"</span>),(3,<span class="org-string">"New Mexico"</span>),(10,<span class="org-string">"Texas"</span>),(14,<span class="org-string">"Ohio"</span>)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-comment-delimiter">--  </span><span class="org-comment">member :: Ord k =&gt; k -&gt; Map k a -&gt; Bool</span>
+<span class="org-comment-delimiter">--  </span>
+<span class="org-comment-delimiter">--  </span><span class="org-comment">Test if a key is a member of the map. </span>
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t Map.member 
+<span class="org-function-name">Map.member</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> k <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.member 2 hmap1 
+<span class="org-haskell-constructor">True</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.member 20 hmap1 
+<span class="org-haskell-constructor">False</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">notMember :: Ord k =&gt; k -&gt; Map k a -&gt; Bool</span>
+<span class="org-comment-delimiter">--</span>
+<span class="org-comment-delimiter">--</span>
+<span class="org-comment-delimiter">--  </span><span class="org-comment">Test if a key is a not a member of the map. </span>
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.notMember 20 hmap1 
+<span class="org-haskell-constructor">True</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.notMember 2 hmap1 
+<span class="org-haskell-constructor">False</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-comment-delimiter">{- </span><span class="org-comment">lookup :: Ord k =&gt; k -&gt; Map k a -&gt; Maybe a </span>
+
+<span class="org-comment">   Lookup the value at a key in the map.  </span>
+
+<span class="org-comment">   The function will return the corresponding value as (Just value), or Nothing if the key</span>
+<span class="org-comment">   isn't in the map.</span>
+
+<span class="org-comment">-}</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t Map.lookup 
+<span class="org-function-name">Map.lookup</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> k <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.lookup 1 hmap1
+<span class="org-haskell-constructor">Nothing</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.lookup 14 hmap1
+<span class="org-haskell-constructor">Just</span> <span class="org-string">"Ohio"</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.lookup 10 hmap1
+<span class="org-haskell-constructor">Just</span> <span class="org-string">"Texas"</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.lookup 30 hmap1
+<span class="org-haskell-constructor">Nothing</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.keys hmap1
+[2,3,10,14]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">A insertion in the Map doesn't change it. It creates a new </span>
+<span class="org-comment-delimiter">-- </span><span class="org-comment">one updated from the the old Map. </span>
+<span class="org-comment-delimiter">--</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.insert  1 <span class="org-string">"Virginia"</span> hmap1
+<span class="org-haskell-definition">fromList</span> [(1,<span class="org-string">"Virginia"</span>),(2,<span class="org-string">"Utah"</span>),(3,<span class="org-string">"New Mexico"</span>),(10,<span class="org-string">"Texas"</span>),(14,<span class="org-string">"Ohio"</span>)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> hmap1
+<span class="org-haskell-definition">fromList</span> [(2,<span class="org-string">"Utah"</span>),(3,<span class="org-string">"New Mexico"</span>),(10,<span class="org-string">"Texas"</span>),(14,<span class="org-string">"Ohio"</span>)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-comment-delimiter">--</span><span class="org-comment">- The expression (findWithDefault def k map) returns the value at</span>
+<span class="org-comment-delimiter">--</span><span class="org-comment">-  key k or returns default value def when the key is not in the</span>
+<span class="org-comment-delimiter">--</span><span class="org-comment">-  map.</span>
+<span class="org-comment-delimiter">--</span><span class="org-comment">-</span>
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t Map.findWithDefault 
+<span class="org-function-name">Map.findWithDefault</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> k <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a <span class="org-haskell-operator">-&gt;</span> a
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.findWithDefault <span class="org-string">"Arizona"</span> 2 hmap1
+<span class="org-string">"Utah"</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.findWithDefault <span class="org-string">"Arizona"</span> 20 hmap1
+<span class="org-string">"Arizona"</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.findWithDefault <span class="org-string">"Arizona"</span> 30 hmap1
+<span class="org-string">"Arizona"</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-comment-delimiter">--</span><span class="org-comment">- Empty map </span>
+<span class="org-comment-delimiter">--</span><span class="org-comment">-</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.empty 
+<span class="org-haskell-definition">fromList</span> <span class="org-haskell-constructor">[]</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Map with single element  </span>
+<span class="org-comment-delimiter">--</span><span class="org-comment">-</span>
+<span class="org-comment-delimiter">--</span><span class="org-comment">-</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t Map.singleton 
+<span class="org-function-name">Map.singleton</span> <span class="org-haskell-operator">::</span> k <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.singleton  <span class="org-string">"Texas"</span> 30 
+<span class="org-haskell-definition">fromList</span> [(<span class="org-string">"Texas"</span>,30)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+
+
+<span class="org-comment-delimiter">{-</span>
+
+<span class="org-comment">Insert with a function, combining new value and old value. insertWith f</span>
+<span class="org-comment">key value mp will insert the pair (key, value) into mp if key does not</span>
+<span class="org-comment">exist in the map. If the key does exist, the function will insert the</span>
+<span class="org-comment">pair (key, f new_value old_value).</span>
+
+<span class="org-comment">-}</span>
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-keyword">let</span> hmap <span class="org-haskell-operator">=</span> Map.fromList [(<span class="org-string">"a"</span>, 3), (<span class="org-string">"x"</span>, 2), (<span class="org-string">"c"</span>, 10), (<span class="org-string">"m"</span>, 23)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> hmap
+<span class="org-haskell-definition">fromList</span> [(<span class="org-string">"a"</span>,3),(<span class="org-string">"c"</span>,10),(<span class="org-string">"m"</span>,23),(<span class="org-string">"x"</span>,2)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.insertWith (<span class="org-haskell-operator">\</span>new old <span class="org-haskell-operator">-&gt;</span> 10 <span class="org-haskell-operator">*</span> old <span class="org-haskell-operator">+</span> new) <span class="org-string">"c"</span> 3 hmap 
+<span class="org-haskell-definition">fromList</span> [(<span class="org-string">"a"</span>,3),(<span class="org-string">"c"</span>,103),(<span class="org-string">"m"</span>,23),(<span class="org-string">"x"</span>,2)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.insertWith (<span class="org-haskell-operator">\</span>new old <span class="org-haskell-operator">-&gt;</span> 10 <span class="org-haskell-operator">*</span> old <span class="org-haskell-operator">+</span> new) <span class="org-string">"a"</span> 5 hmap 
+<span class="org-haskell-definition">fromList</span> [(<span class="org-string">"a"</span>,35),(<span class="org-string">"c"</span>,10),(<span class="org-string">"m"</span>,23),(<span class="org-string">"x"</span>,2)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.insertWith (<span class="org-haskell-operator">\</span>new old <span class="org-haskell-operator">-&gt;</span> 10 <span class="org-haskell-operator">*</span> old <span class="org-haskell-operator">+</span> new) <span class="org-string">"sad"</span> 5 hmap 
+<span class="org-haskell-definition">fromList</span> [(<span class="org-string">"a"</span>,3),(<span class="org-string">"c"</span>,10),(<span class="org-string">"m"</span>,23),(<span class="org-string">"sad"</span>,5),(<span class="org-string">"x"</span>,2)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+
+<span class="org-comment-delimiter">{-  </span>
+<span class="org-comment">    Delete a key and its value from the map. </span>
+<span class="org-comment">    When the key is not a member of the map, the original map </span>
+<span class="org-comment">    is returned. (Non descructive update).</span>
+<span class="org-comment">-}</span>
+<span class="org-haskell-keyword">let</span> hmap <span class="org-haskell-operator">=</span> Map.fromList [(<span class="org-string">"a"</span>, 3), (<span class="org-string">"x"</span>, 2), (<span class="org-string">"c"</span>, 10), (<span class="org-string">"m"</span>, 23)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> hmap
+<span class="org-haskell-definition">fromList</span> [(<span class="org-string">"a"</span>,3),(<span class="org-string">"c"</span>,10),(<span class="org-string">"m"</span>,23),(<span class="org-string">"x"</span>,2)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t Map.delete 
+<span class="org-function-name">Map.delete</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> k <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.delete <span class="org-string">"a"</span> hmap
+<span class="org-haskell-definition">fromList</span> [(<span class="org-string">"c"</span>,10),(<span class="org-string">"m"</span>,23),(<span class="org-string">"x"</span>,2)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.delete <span class="org-string">"z"</span> hmap
+<span class="org-haskell-definition">fromList</span> [(<span class="org-string">"a"</span>,3),(<span class="org-string">"c"</span>,10),(<span class="org-string">"m"</span>,23),(<span class="org-string">"x"</span>,2)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Non destructive deletion. </span>
+<span class="org-comment-delimiter">--</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> hmap
+<span class="org-haskell-definition">fromList</span> [(<span class="org-string">"a"</span>,3),(<span class="org-string">"c"</span>,10),(<span class="org-string">"m"</span>,23),(<span class="org-string">"x"</span>,2)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.delete <span class="org-string">"x"</span> <span class="org-haskell-operator">$</span> Map.delete <span class="org-string">"m"</span> <span class="org-haskell-operator">$</span> Map.delete <span class="org-string">"c"</span> <span class="org-haskell-operator">$</span> Map.delete <span class="org-string">"a"</span> hmap
+<span class="org-haskell-definition">fromList</span> <span class="org-haskell-constructor">[]</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.delete <span class="org-string">"x"</span> <span class="org-haskell-operator">$</span> Map.empty 
+<span class="org-haskell-definition">fromList</span> <span class="org-haskell-constructor">[]</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+
+<span class="org-comment-delimiter">{-  </span><span class="org-comment">adjust :: Ord k =&gt; (a -&gt; a) -&gt; k -&gt; Map k a -&gt; Map k a </span>
+
+<span class="org-comment"> Update a value at a specific key with the result </span>
+<span class="org-comment"> of the provided function. When the key is not a </span>
+<span class="org-comment"> member of the map, the original map is returned.</span>
+
+<span class="org-comment">-}</span>
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t Map.adjust
+<span class="org-function-name">Map.adjust</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> a) <span class="org-haskell-operator">-&gt;</span> k <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> hmap
+<span class="org-haskell-definition">fromList</span> [(<span class="org-string">"a"</span>,3),(<span class="org-string">"c"</span>,10),(<span class="org-string">"m"</span>,23),(<span class="org-string">"x"</span>,2)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.adjust (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">*</span> 10)  <span class="org-string">"a"</span> hmap
+<span class="org-haskell-definition">fromList</span> [(<span class="org-string">"a"</span>,30),(<span class="org-string">"c"</span>,10),(<span class="org-string">"m"</span>,23),(<span class="org-string">"x"</span>,2)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.adjust (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> 0)  <span class="org-string">"x"</span> hmap
+<span class="org-haskell-definition">fromList</span> [(<span class="org-string">"a"</span>,3),(<span class="org-string">"c"</span>,10),(<span class="org-string">"m"</span>,23),(<span class="org-string">"x"</span>,0)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.adjust (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> 0)  <span class="org-string">"wrong"</span> hmap
+<span class="org-haskell-definition">fromList</span> [(<span class="org-string">"a"</span>,3),(<span class="org-string">"c"</span>,10),(<span class="org-string">"m"</span>,23),(<span class="org-string">"x"</span>,2)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.adjust (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> 0)  <span class="org-string">"wrong"</span> Map.empty 
+<span class="org-haskell-definition">fromList</span> <span class="org-haskell-constructor">[]</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-comment-delimiter">{-  </span><span class="org-comment">Adjust a value at a specific key. When the key is not a member of</span>
+<span class="org-comment">     the map, the original map is returned.</span>
+<span class="org-comment">-}</span>
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t Map.adjustWithKey 
+Map<span class="org-haskell-definition">.</span>adjustWithKey
+  <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> (k <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a) <span class="org-haskell-operator">-&gt;</span> k <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-keyword">let</span> hm <span class="org-haskell-operator">=</span> Map.fromList [(12, <span class="org-string">"23"</span>), (2, <span class="org-string">"c"</span>), (4, <span class="org-string">"k"</span>)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> hm
+<span class="org-haskell-definition">fromList</span> [(2,<span class="org-string">"c"</span>),(4,<span class="org-string">"k"</span>),(12,<span class="org-string">"23"</span>)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.adjustWithKey (<span class="org-haskell-operator">\</span>k a <span class="org-haskell-operator">-&gt;</span>  show <span class="org-haskell-operator">$</span> length a <span class="org-haskell-operator">+</span> k) 4 hm
+<span class="org-haskell-definition">fromList</span> [(2,<span class="org-string">"c"</span>),(4,<span class="org-string">"5"</span>),(12,<span class="org-string">"23"</span>)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.adjustWithKey (<span class="org-haskell-operator">\</span>k a <span class="org-haskell-operator">-&gt;</span>  show <span class="org-haskell-operator">$</span> length a <span class="org-haskell-operator">+</span> k) 12 hm
+<span class="org-haskell-definition">fromList</span> [(2,<span class="org-string">"c"</span>),(4,<span class="org-string">"k"</span>),(12,<span class="org-string">"14"</span>)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.adjustWithKey (<span class="org-haskell-operator">\</span>k a <span class="org-haskell-operator">-&gt;</span>  show <span class="org-haskell-operator">$</span> length a <span class="org-haskell-operator">+</span> k) 123 hm
+<span class="org-haskell-definition">fromList</span> [(2,<span class="org-string">"c"</span>),(4,<span class="org-string">"k"</span>),(12,<span class="org-string">"23"</span>)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+
+<span class="org-comment-delimiter">{-</span>
+<span class="org-comment">   The expression (update f k map) updates the value x at k (if it is</span>
+<span class="org-comment">   in the map). If (f x) is Nothing, the element is deleted. If it is</span>
+<span class="org-comment">   (Just y), the key k is bound to the new value</span>
+<span class="org-comment">-}</span>
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t Map.update
+Map<span class="org-haskell-definition">.</span>update
+  <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a) <span class="org-haskell-operator">-&gt;</span> k <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span>  <span class="org-haskell-keyword">let</span> hm <span class="org-haskell-operator">=</span> Map.fromList [(12, <span class="org-string">"23"</span>), (2, <span class="org-string">"c"</span>), (4, <span class="org-string">"k"</span>)]
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.update (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-keyword">if</span> x <span class="org-haskell-operator">==</span> <span class="org-string">"c"</span> <span class="org-haskell-keyword">then</span> <span class="org-haskell-constructor">Just</span> <span class="org-string">"f"</span> <span class="org-haskell-keyword">else</span> <span class="org-haskell-constructor">Nothing</span>) 2 hm
+<span class="org-haskell-definition">fromList</span> [(2,<span class="org-string">"f"</span>),(4,<span class="org-string">"k"</span>),(12,<span class="org-string">"23"</span>)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.update (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-keyword">if</span> x <span class="org-haskell-operator">==</span> <span class="org-string">"c"</span> <span class="org-haskell-keyword">then</span> <span class="org-haskell-constructor">Just</span> <span class="org-string">"f"</span> <span class="org-haskell-keyword">else</span> <span class="org-haskell-constructor">Nothing</span>) 20 hm
+<span class="org-haskell-definition">fromList</span> [(2,<span class="org-string">"c"</span>),(4,<span class="org-string">"k"</span>),(12,<span class="org-string">"23"</span>)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.update (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-keyword">if</span> x <span class="org-haskell-operator">==</span> <span class="org-string">"c"</span> <span class="org-haskell-keyword">then</span> <span class="org-haskell-constructor">Just</span> <span class="org-string">"f"</span> <span class="org-haskell-keyword">else</span> <span class="org-haskell-constructor">Nothing</span>) 4 hm
+<span class="org-haskell-definition">fromList</span> [(2,<span class="org-string">"c"</span>),(12,<span class="org-string">"23"</span>)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.update (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-keyword">if</span> x <span class="org-haskell-operator">==</span> <span class="org-string">"c"</span> <span class="org-haskell-keyword">then</span> <span class="org-haskell-constructor">Just</span> <span class="org-string">"f"</span> <span class="org-haskell-keyword">else</span> <span class="org-haskell-constructor">Just</span> <span class="org-string">"m"</span>) 4 hm
+<span class="org-haskell-definition">fromList</span> [(2,<span class="org-string">"c"</span>),(4,<span class="org-string">"m"</span>),(12,<span class="org-string">"23"</span>)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+
+<span class="org-comment-delimiter">{-</span>
+<span class="org-comment"> The expression (union t1 t2) takes the left-biased union of t1 and</span>
+<span class="org-comment">t2. It prefers t1 when duplicate keys are encountered, i.e. (union ==</span>
+<span class="org-comment">unionWith const). The implementation uses the efficient hedge-union</span>
+<span class="org-comment">algorithm.</span>
+
+<span class="org-comment">-}</span>
+
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.union (Map.fromList  [(5, <span class="org-string">"a"</span>), (3, <span class="org-string">"b"</span>)])  (Map.fromList [(5, <span class="org-string">"a"</span>), (7, <span class="org-string">"C"</span>), (5, <span class="org-string">"a"</span>)])
+<span class="org-haskell-definition">fromList</span> [(3,<span class="org-string">"b"</span>),(5,<span class="org-string">"a"</span>),(7,<span class="org-string">"C"</span>)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.fromList  [(5, <span class="org-string">"a"</span>), (3, <span class="org-string">"b"</span>)] <span class="org-haskell-operator">`Map.union`</span>  Map.fromList [(5, <span class="org-string">"a"</span>), (7, <span class="org-string">"C"</span>), (5, <span class="org-string">"a"</span>)]
+<span class="org-haskell-definition">fromList</span> [(3,<span class="org-string">"b"</span>),(5,<span class="org-string">"a"</span>),(7,<span class="org-string">"C"</span>)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+
+<span class="org-comment-delimiter">{-  </span><span class="org-comment">unions :: Ord k =&gt; [Map k a] -&gt; Map k a </span>
+
+<span class="org-comment">The union of a list of maps: (unions == foldl union empty).</span>
+
+<span class="org-comment">-}</span>
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t Map.unions
+<span class="org-function-name">Map.unions</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> [<span class="org-haskell-type">M.Map</span> k a] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-keyword">let</span> fromList <span class="org-haskell-operator">=</span> Map.fromList
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t fromList 
+<span class="org-function-name">fromList</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> [(k, a)] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.unions [fromList [(1, <span class="org-string">"a"</span>), (2, <span class="org-string">"c"</span>)], fromList [(2, <span class="org-string">"c"</span>), (3, <span class="org-string">"m"</span>)],  fromList [(10, <span class="org-string">"x"</span>), (3, <span class="org-string">"m"</span>), (4, <span class="org-string">"y"</span>)] ]
+<span class="org-haskell-definition">fromList</span> [(1,<span class="org-string">"a"</span>),(2,<span class="org-string">"c"</span>),(3,<span class="org-string">"m"</span>),(4,<span class="org-string">"y"</span>),(10,<span class="org-string">"x"</span>)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-comment-delimiter">{-</span>
+<span class="org-comment">Difference of two maps. Return elements of the first map not existing</span>
+<span class="org-comment">in the second map. The implementation uses an efficient hedge</span>
+<span class="org-comment">algorithm comparable with hedge-union.</span>
+
+<span class="org-comment">-}</span>
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-keyword">let</span> fromList <span class="org-haskell-operator">=</span> Map.fromList
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.difference (fromList [(5, <span class="org-string">"a"</span>), (3, <span class="org-string">"b"</span>)]) (fromList [(5, <span class="org-string">"A"</span>), (7, <span class="org-string">"C"</span>)]) 
+<span class="org-haskell-definition">fromList</span> [(3,<span class="org-string">"b"</span>)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-comment-delimiter">{-</span>
+<span class="org-comment">Intersection of two maps. Return data in the first map for the keys</span>
+<span class="org-comment">existing in both maps. (intersection m1 m2 == intersectionWith const</span>
+<span class="org-comment">m1 m2). The implementation uses an efficient hedge algorithm</span>
+<span class="org-comment">comparable with hedge-union.</span>
+
+<span class="org-comment">-}</span>
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t Map.intersection
+<span class="org-function-name">Map.intersection</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">M.Map</span> k a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k b <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a
+<span class="org-haskell-operator">&gt;&gt;&gt;</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.intersection (fromList [(5, <span class="org-string">"a"</span>), (3, <span class="org-string">"b"</span>)]) (fromList [(5, <span class="org-string">"A"</span>), (7, <span class="org-string">"C"</span>)])
+<span class="org-haskell-definition">fromList</span> [(5,<span class="org-string">"a"</span>)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> fromList [(5, <span class="org-string">"a"</span>), (3, <span class="org-string">"b"</span>)] <span class="org-haskell-operator">`Map.intersection`</span> fromList [(5, <span class="org-string">"A"</span>), (7, <span class="org-string">"C"</span>)]
+<span class="org-haskell-definition">fromList</span> [(5,<span class="org-string">"a"</span>)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+
+<span class="org-comment-delimiter">{- </span>
+<span class="org-comment">  map :: (a -&gt; b) -&gt; Map k a -&gt; Map k b</span>
+<span class="org-comment">  Source</span>
+
+<span class="org-comment">  O(n). Map a function over all values in the map.</span>
+<span class="org-comment">-}</span>
+
+
+<span class="org-haskell-keyword">let</span> hmap <span class="org-haskell-operator">=</span> Map.fromList [(<span class="org-string">"a"</span>, 3), (<span class="org-string">"x"</span>, 2), (<span class="org-string">"c"</span>, 10), (<span class="org-string">"m"</span>, 23)]
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.map (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">*</span> 10) hmap
+<span class="org-haskell-definition">fromList</span> [(<span class="org-string">"a"</span>,30),(<span class="org-string">"c"</span>,100),(<span class="org-string">"m"</span>,230),(<span class="org-string">"x"</span>,20)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+
+<span class="org-comment-delimiter">{-</span>
+<span class="org-comment">mapAccum :: (a -&gt; b -&gt; (a, c)) -&gt; a -&gt; Map k b -&gt; (a, Map k c) </span>
+
+<span class="org-comment">The function mapAccum threads an accumulating argument through the map</span>
+<span class="org-comment">in ascending order of keys.</span>
+
+<span class="org-comment">-}</span>
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t Map.mapAccum
+Map<span class="org-haskell-definition">.</span>mapAccum
+  <span class="org-haskell-operator">::</span> (a <span class="org-haskell-operator">-&gt;</span> b <span class="org-haskell-operator">-&gt;</span> (a, c)) <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k b <span class="org-haskell-operator">-&gt;</span> (a, <span class="org-haskell-type">M.Map</span> k c)
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-haskell-keyword">let</span> hmap <span class="org-haskell-operator">=</span> Map.fromList [(<span class="org-string">"a"</span>, 3), (<span class="org-string">"x"</span>, 2), (<span class="org-string">"c"</span>, 10), (<span class="org-string">"m"</span>, 23)]
+
+
+<span class="org-comment-delimiter">--  </span><span class="org-comment">acc -&gt; Initial value of accumulator </span>
+<span class="org-comment-delimiter">--  </span><span class="org-comment">val -&gt; Value of hash map at a key k </span>
+<span class="org-comment-delimiter">--  </span>
+<span class="org-comment-delimiter">--</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.mapAccum (<span class="org-haskell-operator">\</span>acc val <span class="org-haskell-operator">-&gt;</span> (acc <span class="org-haskell-operator">+</span> val, 10 <span class="org-haskell-operator">*</span> val))  0  hmap
+(38,fromList [(<span class="org-string">"a"</span>,30),(<span class="org-string">"c"</span>,100),(<span class="org-string">"m"</span>,230),(<span class="org-string">"x"</span>,20)])
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+
+<span class="org-comment-delimiter">{- </span><span class="org-comment">mapKeys :: Ord k2 =&gt; (k1 -&gt; k2) -&gt; Map k1 a -&gt; Map k2 a </span>
+<span class="org-comment">-}</span>
+
+<span class="org-haskell-keyword">let</span> hmap <span class="org-haskell-operator">=</span> Map.fromList [(<span class="org-string">"a"</span>, 3), (<span class="org-string">"x"</span>, 2), (<span class="org-string">"c"</span>, 10), (<span class="org-string">"m"</span>, 23)]
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.Char</span> (ord)
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t ord
+<span class="org-function-name">ord</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Char</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.mapKeys (map ord) hmap
+<span class="org-haskell-definition">fromList</span> [([97],3),([99],10),([109],23),([120],2)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.mapKeys (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">++</span> <span class="org-string">"-z"</span>) hmap
+<span class="org-haskell-definition">fromList</span> [(<span class="org-string">"a-z"</span>,3),(<span class="org-string">"c-z"</span>,10),(<span class="org-string">"m-z"</span>,23),(<span class="org-string">"x-z"</span>,2)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+
+<span class="org-comment-delimiter">{- </span><span class="org-comment">Ge all values  -}</span>
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.elems hmap
+[3,10,23,2]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+<span class="org-comment-delimiter">{- </span><span class="org-comment">Get all keys -}</span>
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.keys hmap
+[<span class="org-string">"a"</span>,<span class="org-string">"c"</span>,<span class="org-string">"m"</span>,<span class="org-string">"x"</span>]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> 
+
+
+<span class="org-comment-delimiter">{- </span><span class="org-comment">Convert from List -}</span>
+
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.toList hmap
+[(<span class="org-string">"a"</span>,3),(<span class="org-string">"c"</span>,10),(<span class="org-string">"m"</span>,23),(<span class="org-string">"x"</span>,2)]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Caio Rodrigues</p>
+<p class="date">Created: 2016-11-01 ter 01:18</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Useful Custom Functions/ Iterators and Operators</title>
-<!-- 2016-03-24 Thu 05:54 -->
+<!-- 2016-11-01 ter 01:19 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues" />
@@ -270,22 +270,22 @@ it can be defined by the user.
 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">take</span> 3 (reverse (filter even [1<span class="org-haskell-operator">..</span>10]))
-[10<span class="org-haskell-operator">,</span>8<span class="org-haskell-operator">,</span>6]
+[10,8,6]
 
 <span class="org-haskell-operator">&gt;</span> [1<span class="org-haskell-operator">..</span>10] <span class="org-haskell-operator">|&gt;</span> filter even <span class="org-haskell-operator">|&gt;</span> reverse <span class="org-haskell-operator">|&gt;</span> take 3
-[10<span class="org-haskell-operator">,</span>8<span class="org-haskell-operator">,</span>6]
+[10,8,6]
 <span class="org-haskell-operator">&gt;</span> 
 
 
 <span class="org-haskell-operator">&gt;</span> [1<span class="org-haskell-operator">..</span>10] <span class="org-haskell-operator">|&gt;&gt;</span> (<span class="org-haskell-operator">^</span>2) <span class="org-haskell-operator">|&gt;&gt;</span> (<span class="org-haskell-operator">/</span>10) <span class="org-haskell-operator">|&gt;&gt;</span> (<span class="org-haskell-operator">+</span>100)
-[100.1<span class="org-haskell-operator">,</span>100.4<span class="org-haskell-operator">,</span>100.9<span class="org-haskell-operator">,</span>101.6<span class="org-haskell-operator">,</span>102.5<span class="org-haskell-operator">,</span>103.6<span class="org-haskell-operator">,</span>104.9<span class="org-haskell-operator">,</span>106.4<span class="org-haskell-operator">,</span>108.1<span class="org-haskell-operator">,</span>110.0]
+[100.1,100.4,100.9,101.6,102.5,103.6,104.9,106.4,108.1,110.0]
 
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> [1<span class="org-haskell-operator">..</span>10] <span class="org-haskell-operator">?&gt;&gt;</span> even
-[2<span class="org-haskell-operator">,</span>4<span class="org-haskell-operator">,</span>6<span class="org-haskell-operator">,</span>8<span class="org-haskell-operator">,</span>10]
+[2,4,6,8,10]
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> [1<span class="org-haskell-operator">..</span>10] <span class="org-haskell-operator">?&gt;&gt;</span> even <span class="org-haskell-operator">|&gt;&gt;</span> (<span class="org-haskell-operator">+</span>1)
-[3<span class="org-haskell-operator">,</span>5<span class="org-haskell-operator">,</span>7<span class="org-haskell-operator">,</span>9<span class="org-haskell-operator">,</span>11]
+[3,5,7,9,11]
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span>
 </pre>
@@ -355,7 +355,7 @@ Example: Grouping Consecutive numbers
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> pairs alist <span class="org-haskell-operator">=</span> zip alist (tail alist)
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">pairs</span> [1<span class="org-haskell-operator">..</span>5]
-[(1<span class="org-haskell-operator">,</span>2)<span class="org-haskell-operator">,</span>(2<span class="org-haskell-operator">,</span>3)<span class="org-haskell-operator">,</span>(3<span class="org-haskell-operator">,</span>4)<span class="org-haskell-operator">,</span>(4<span class="org-haskell-operator">,</span>5)]
+[(1,2),(2,3),(3,4),(4,5)]
 </pre>
 </div>
 
@@ -379,50 +379,50 @@ Development:
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> pairs alist <span class="org-haskell-operator">=</span> zip alist (tail alist)
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t pairs
-<span class="org-function-name">pairs</span> <span class="org-haskell-operator">::</span> [b] <span class="org-haskell-operator">-&gt;</span> [(b<span class="org-haskell-operator">,</span> b)]
+<span class="org-function-name">pairs</span> <span class="org-haskell-operator">::</span> [b] <span class="org-haskell-operator">-&gt;</span> [(b, b)]
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t (<span class="org-haskell-operator">-</span>)
-(<span class="org-haskell-definition">-</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Num</span> a <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t (<span class="org-haskell-operator">-</span>)
+(<span class="org-haskell-definition">-</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t uncurry(<span class="org-haskell-operator">-</span>)
-<span class="org-haskell-definition">uncurry</span>(<span class="org-haskell-operator">-</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Num</span> c <span class="org-haskell-operator">=&gt;</span> (c<span class="org-haskell-operator">,</span> c) <span class="org-haskell-operator">-&gt;</span> c
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t uncurry(<span class="org-haskell-operator">-</span>)
+uncurry(<span class="org-haskell-operator">-</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> c <span class="org-haskell-operator">=&gt;</span> (c, c) <span class="org-haskell-operator">-&gt;</span> c
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> (<span class="org-haskell-definition">-</span>) 20 10
 10
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">uncurry</span>(<span class="org-haskell-operator">-</span>) (20<span class="org-haskell-operator">,</span> 10)
+<span class="org-haskell-operator">&gt;</span> uncurry(<span class="org-haskell-operator">-</span>) (20, 10)
 10
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">uncurry</span>(<span class="org-haskell-operator">-</span>) (10<span class="org-haskell-operator">,</span> 20)
+<span class="org-haskell-operator">&gt;</span> uncurry(<span class="org-haskell-operator">-</span>) (10, 20)
 <span class="org-haskell-operator">-</span>10
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">uncurry</span>(flip (<span class="org-haskell-operator">-</span>)) (10<span class="org-haskell-operator">,</span> 20)
+<span class="org-haskell-operator">&gt;</span> uncurry(flip (<span class="org-haskell-operator">-</span>)) (10, 20)
 10
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">pairs</span> [10.3<span class="org-haskell-operator">,</span> 20.5<span class="org-haskell-operator">,</span> 5.6<span class="org-haskell-operator">,</span> 8.23<span class="org-haskell-operator">,</span> 40.3]
-[(10.3<span class="org-haskell-operator">,</span>20.5)<span class="org-haskell-operator">,</span>(20.5<span class="org-haskell-operator">,</span>5.6)<span class="org-haskell-operator">,</span>(5.6<span class="org-haskell-operator">,</span>8.23)<span class="org-haskell-operator">,</span>(8.23<span class="org-haskell-operator">,</span>40.3)]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">pairs</span> [10.3, 20.5, 5.6, 8.23, 40.3]
+[(10.3,20.5),(20.5,5.6),(5.6,8.23),(8.23,40.3)]
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">map</span> (uncurry ( flip (<span class="org-haskell-operator">-</span>))) <span class="org-haskell-operator">$</span> pairs [10.3<span class="org-haskell-operator">,</span> 20.5<span class="org-haskell-operator">,</span> 5.6<span class="org-haskell-operator">,</span> 8.23<span class="org-haskell-operator">,</span> 40.3]
-[10.2<span class="org-haskell-operator">,-</span>14.9<span class="org-haskell-operator">,</span>2.630000000000001<span class="org-haskell-operator">,</span>32.06999999999999]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">map</span> (uncurry ( flip (<span class="org-haskell-operator">-</span>))) <span class="org-haskell-operator">$</span> pairs [10.3, 20.5, 5.6, 8.23, 40.3]
+[10.2,<span class="org-haskell-operator">-</span>14.9,2.630000000000001,32.06999999999999]
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> lagdiff series <span class="org-haskell-operator">=</span> map (uncurry ( flip (<span class="org-haskell-operator">-</span>))) <span class="org-haskell-operator">$</span> pairs series
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t lagdiff 
-<span class="org-function-name">lagdiff</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Num</span> b <span class="org-haskell-operator">=&gt;</span> [b] <span class="org-haskell-operator">-&gt;</span> [b]
+<span class="org-function-name">lagdiff</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> b <span class="org-haskell-operator">=&gt;</span> [b] <span class="org-haskell-operator">-&gt;</span> [b]
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">lagdiff</span> [10.3<span class="org-haskell-operator">,</span> 20.5<span class="org-haskell-operator">,</span> 5.6<span class="org-haskell-operator">,</span> 8.23<span class="org-haskell-operator">,</span> 40.3]
-[10.2<span class="org-haskell-operator">,-</span>14.9<span class="org-haskell-operator">,</span>2.630000000000001<span class="org-haskell-operator">,</span>32.06999999999999]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">lagdiff</span> [10.3, 20.5, 5.6, 8.23, 40.3]
+[10.2,<span class="org-haskell-operator">-</span>14.9,2.630000000000001,32.06999999999999]
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">lagdiff</span> [10<span class="org-haskell-operator">,</span> 30<span class="org-haskell-operator">,</span> 5<span class="org-haskell-operator">,</span> 8<span class="org-haskell-operator">,</span> 100]
-[20<span class="org-haskell-operator">,-</span>25<span class="org-haskell-operator">,</span>3<span class="org-haskell-operator">,</span>92]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">lagdiff</span> [10, 30, 5, 8, 100]
+[20,<span class="org-haskell-operator">-</span>25,3,92]
 <span class="org-haskell-operator">&gt;</span>
 </pre>
 </div>
@@ -436,22 +436,22 @@ Example: Distance between points on the plane.
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> pairs alist <span class="org-haskell-operator">=</span> zip alist (tail alist)
 
 <span class="org-comment-delimiter">{- </span><span class="org-comment">[(X, Y)]  coordinates of points in a plane -}</span>
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> points <span class="org-haskell-operator">=</span> [(1.0<span class="org-haskell-operator">,</span> 2.0)<span class="org-haskell-operator">,</span> (3.0<span class="org-haskell-operator">,</span> 4.0)<span class="org-haskell-operator">,</span> (<span class="org-haskell-operator">-</span>1.0<span class="org-haskell-operator">,</span> 5.0)<span class="org-haskell-operator">,</span> (6.0<span class="org-haskell-operator">,</span> 6.0)]
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> distance (x1<span class="org-haskell-operator">,</span> y1) (x2<span class="org-haskell-operator">,</span> y2) <span class="org-haskell-operator">=</span> sqrt( (x2<span class="org-haskell-operator">-</span>x1)<span class="org-haskell-operator">^</span>2 <span class="org-haskell-operator">+</span> (y2<span class="org-haskell-operator">-</span>y1)<span class="org-haskell-operator">^</span>2 )
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> points <span class="org-haskell-operator">=</span> [(1.0, 2.0), (3.0, 4.0), (<span class="org-haskell-operator">-</span>1.0, 5.0), (6.0, 6.0)]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> distance (x1, y1) (x2, y2) <span class="org-haskell-operator">=</span> sqrt( (x2<span class="org-haskell-operator">-</span>x1)<span class="org-haskell-operator">^</span>2 <span class="org-haskell-operator">+</span> (y2<span class="org-haskell-operator">-</span>y1)<span class="org-haskell-operator">^</span>2 )
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> lines <span class="org-haskell-operator">=</span> pairs points 
 <span class="org-haskell-operator">&gt;</span> lines
-[((1.0<span class="org-haskell-operator">,</span>2.0)<span class="org-haskell-operator">,</span>(3.0<span class="org-haskell-operator">,</span>4.0))<span class="org-haskell-operator">,</span>((3.0<span class="org-haskell-operator">,</span>4.0)<span class="org-haskell-operator">,</span>(<span class="org-haskell-operator">-</span>1.0<span class="org-haskell-operator">,</span>5.0))<span class="org-haskell-operator">,</span>((<span class="org-haskell-operator">-</span>1.0<span class="org-haskell-operator">,</span>5.0)<span class="org-haskell-operator">,</span>(6.0<span class="org-haskell-operator">,</span>6.0))]
+[((1.0,2.0),(3.0,4.0)),((3.0,4.0),(<span class="org-haskell-operator">-</span>1.0,5.0)),((<span class="org-haskell-operator">-</span>1.0,5.0),(6.0,6.0))]
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">distance</span> (1.0<span class="org-haskell-operator">,</span> 2.0) (3.0<span class="org-haskell-operator">,</span> 4.0)
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">distance</span> (1.0, 2.0) (3.0, 4.0)
 2.8284271247461903
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-comment-delimiter">{- </span><span class="org-comment">Calculate the length of each line segment -}</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">map</span> (uncurry(distance)) lines
-[2.8284271247461903<span class="org-haskell-operator">,</span>4.123105625617661<span class="org-haskell-operator">,</span>7.0710678118654755]
+[2.8284271247461903,4.123105625617661,7.0710678118654755]
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> sum <span class="org-haskell-definition">$</span> map (uncurry(distance)) lines
@@ -486,11 +486,11 @@ Example:
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">triples</span> [1<span class="org-haskell-operator">..</span>10]
-[(1<span class="org-haskell-operator">,</span>2<span class="org-haskell-operator">,</span>3)<span class="org-haskell-operator">,</span>(2<span class="org-haskell-operator">,</span>3<span class="org-haskell-operator">,</span>4)<span class="org-haskell-operator">,</span>(3<span class="org-haskell-operator">,</span>4<span class="org-haskell-operator">,</span>5)<span class="org-haskell-operator">,</span>(4<span class="org-haskell-operator">,</span>5<span class="org-haskell-operator">,</span>6)<span class="org-haskell-operator">,</span>(5<span class="org-haskell-operator">,</span>6<span class="org-haskell-operator">,</span>7)<span class="org-haskell-operator">,</span>(6<span class="org-haskell-operator">,</span>7<span class="org-haskell-operator">,</span>8)<span class="org-haskell-operator">,</span>(7<span class="org-haskell-operator">,</span>8<span class="org-haskell-operator">,</span>9)<span class="org-haskell-operator">,</span>(8<span class="org-haskell-operator">,</span>9<span class="org-haskell-operator">,</span>10)]
+[(1,2,3),(2,3,4),(3,4,5),(4,5,6),(5,6,7),(6,7,8),(7,8,9),(8,9,10)]
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t triples 
-<span class="org-function-name">triples</span> <span class="org-haskell-operator">::</span> [c] <span class="org-haskell-operator">-&gt;</span> [(c<span class="org-haskell-operator">,</span> c<span class="org-haskell-operator">,</span> c)]
+<span class="org-function-name">triples</span> <span class="org-haskell-operator">::</span> [c] <span class="org-haskell-operator">-&gt;</span> [(c, c, c)]
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span>
 </pre>
@@ -522,19 +522,19 @@ Example:
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span>  sliding 3 [1<span class="org-haskell-operator">..</span>10]
-[[1<span class="org-haskell-operator">,</span>2<span class="org-haskell-operator">,</span>3]<span class="org-haskell-operator">,</span>[2<span class="org-haskell-operator">,</span>3<span class="org-haskell-operator">,</span>4]<span class="org-haskell-operator">,</span>[3<span class="org-haskell-operator">,</span>4<span class="org-haskell-operator">,</span>5]<span class="org-haskell-operator">,</span>[4<span class="org-haskell-operator">,</span>5<span class="org-haskell-operator">,</span>6]<span class="org-haskell-operator">,</span>[5<span class="org-haskell-operator">,</span>6<span class="org-haskell-operator">,</span>7]<span class="org-haskell-operator">,</span>[6<span class="org-haskell-operator">,</span>7<span class="org-haskell-operator">,</span>8]<span class="org-haskell-operator">,</span>[7<span class="org-haskell-operator">,</span>8<span class="org-haskell-operator">,</span>9]<span class="org-haskell-operator">,</span>[8<span class="org-haskell-operator">,</span>9<span class="org-haskell-operator">,</span>10]]
+[[1,2,3],[2,3,4],[3,4,5],[4,5,6],[5,6,7],[6,7,8],[7,8,9],[8,9,10]]
 
 <span class="org-haskell-operator">&gt;</span>  sliding 4 [1<span class="org-haskell-operator">..</span>10]
-[[1<span class="org-haskell-operator">,</span>2<span class="org-haskell-operator">,</span>3<span class="org-haskell-operator">,</span>4]<span class="org-haskell-operator">,</span>[2<span class="org-haskell-operator">,</span>3<span class="org-haskell-operator">,</span>4<span class="org-haskell-operator">,</span>5]<span class="org-haskell-operator">,</span>[3<span class="org-haskell-operator">,</span>4<span class="org-haskell-operator">,</span>5<span class="org-haskell-operator">,</span>6]<span class="org-haskell-operator">,</span>[4<span class="org-haskell-operator">,</span>5<span class="org-haskell-operator">,</span>6<span class="org-haskell-operator">,</span>7]<span class="org-haskell-operator">,</span>[5<span class="org-haskell-operator">,</span>6<span class="org-haskell-operator">,</span>7<span class="org-haskell-operator">,</span>8]<span class="org-haskell-operator">,</span>[6<span class="org-haskell-operator">,</span>7<span class="org-haskell-operator">,</span>8<span class="org-haskell-operator">,</span>9]<span class="org-haskell-operator">,</span>[7<span class="org-haskell-operator">,</span>8<span class="org-haskell-operator">,</span>9<span class="org-haskell-operator">,</span>10]]
+[[1,2,3,4],[2,3,4,5],[3,4,5,6],[4,5,6,7],[5,6,7,8],[6,7,8,9],[7,8,9,10]]
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sliding</span> 5 [1<span class="org-haskell-operator">..</span>10]
-[[1<span class="org-haskell-operator">,</span>2<span class="org-haskell-operator">,</span>3<span class="org-haskell-operator">,</span>4<span class="org-haskell-operator">,</span>5]<span class="org-haskell-operator">,</span>[2<span class="org-haskell-operator">,</span>3<span class="org-haskell-operator">,</span>4<span class="org-haskell-operator">,</span>5<span class="org-haskell-operator">,</span>6]<span class="org-haskell-operator">,</span>[3<span class="org-haskell-operator">,</span>4<span class="org-haskell-operator">,</span>5<span class="org-haskell-operator">,</span>6<span class="org-haskell-operator">,</span>7]<span class="org-haskell-operator">,</span>[4<span class="org-haskell-operator">,</span>5<span class="org-haskell-operator">,</span>6<span class="org-haskell-operator">,</span>7<span class="org-haskell-operator">,</span>8]<span class="org-haskell-operator">,</span>[5<span class="org-haskell-operator">,</span>6<span class="org-haskell-operator">,</span>7<span class="org-haskell-operator">,</span>8<span class="org-haskell-operator">,</span>9]<span class="org-haskell-operator">,</span>[6<span class="org-haskell-operator">,</span>7<span class="org-haskell-operator">,</span>8<span class="org-haskell-operator">,</span>9<span class="org-haskell-operator">,</span>10]]
+[[1,2,3,4,5],[2,3,4,5,6],[3,4,5,6,7],[4,5,6,7,8],[5,6,7,8,9],[6,7,8,9,10]]
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sliding</span> 6 [1<span class="org-haskell-operator">..</span>10]
-[[1<span class="org-haskell-operator">,</span>2<span class="org-haskell-operator">,</span>3<span class="org-haskell-operator">,</span>4<span class="org-haskell-operator">,</span>5<span class="org-haskell-operator">,</span>6]<span class="org-haskell-operator">,</span>[2<span class="org-haskell-operator">,</span>3<span class="org-haskell-operator">,</span>4<span class="org-haskell-operator">,</span>5<span class="org-haskell-operator">,</span>6<span class="org-haskell-operator">,</span>7]<span class="org-haskell-operator">,</span>[3<span class="org-haskell-operator">,</span>4<span class="org-haskell-operator">,</span>5<span class="org-haskell-operator">,</span>6<span class="org-haskell-operator">,</span>7<span class="org-haskell-operator">,</span>8]<span class="org-haskell-operator">,</span>[4<span class="org-haskell-operator">,</span>5<span class="org-haskell-operator">,</span>6<span class="org-haskell-operator">,</span>7<span class="org-haskell-operator">,</span>8<span class="org-haskell-operator">,</span>9]<span class="org-haskell-operator">,</span>[5<span class="org-haskell-operator">,</span>6<span class="org-haskell-operator">,</span>7<span class="org-haskell-operator">,</span>8<span class="org-haskell-operator">,</span>9<span class="org-haskell-operator">,</span>10]]
+[[1,2,3,4,5,6],[2,3,4,5,6,7],[3,4,5,6,7,8],[4,5,6,7,8,9],[5,6,7,8,9,10]]
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sliding</span> 9 [1<span class="org-haskell-operator">..</span>10]
-[[1<span class="org-haskell-operator">,</span>2<span class="org-haskell-operator">,</span>3<span class="org-haskell-operator">,</span>4<span class="org-haskell-operator">,</span>5<span class="org-haskell-operator">,</span>6<span class="org-haskell-operator">,</span>7<span class="org-haskell-operator">,</span>8<span class="org-haskell-operator">,</span>9]<span class="org-haskell-operator">,</span>[2<span class="org-haskell-operator">,</span>3<span class="org-haskell-operator">,</span>4<span class="org-haskell-operator">,</span>5<span class="org-haskell-operator">,</span>6<span class="org-haskell-operator">,</span>7<span class="org-haskell-operator">,</span>8<span class="org-haskell-operator">,</span>9<span class="org-haskell-operator">,</span>10]]
+[[1,2,3,4,5,6,7,8,9],[2,3,4,5,6,7,8,9,10]]
 <span class="org-haskell-operator">&gt;</span>
 </pre>
 </div>
@@ -561,7 +561,7 @@ Definition:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">enumerate</span> <span class="org-haskell-operator">::</span> [b] <span class="org-haskell-operator">-&gt;</span> [(<span class="org-haskell-constructor">Int</span><span class="org-haskell-operator">,</span> b)]
+<pre class="src src-haskell"><span class="org-function-name">enumerate</span> <span class="org-haskell-operator">::</span> [b] <span class="org-haskell-operator">-&gt;</span> [(<span class="org-haskell-type">Int</span>, b)]
 <span class="org-haskell-definition">enumerate</span> alist <span class="org-haskell-operator">=</span> zip [0<span class="org-haskell-operator">..</span>(length(alist)<span class="org-haskell-operator">-</span>1)] alist
 </pre>
 </div>
@@ -572,11 +572,11 @@ Example:
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">enumerate</span> [<span class="org-string">'a'</span><span class="org-haskell-operator">,</span> <span class="org-string">'b'</span><span class="org-haskell-operator">,</span> <span class="org-string">'c'</span><span class="org-haskell-operator">,</span> <span class="org-string">'d'</span><span class="org-haskell-operator">,</span> <span class="org-string">'e'</span><span class="org-haskell-operator">,</span> <span class="org-string">'f'</span>]
-[(0<span class="org-haskell-operator">,</span><span class="org-string">'a'</span>)<span class="org-haskell-operator">,</span>(1<span class="org-haskell-operator">,</span><span class="org-string">'b'</span>)<span class="org-haskell-operator">,</span>(2<span class="org-haskell-operator">,</span><span class="org-string">'c'</span>)<span class="org-haskell-operator">,</span>(3<span class="org-haskell-operator">,</span><span class="org-string">'d'</span>)<span class="org-haskell-operator">,</span>(4<span class="org-haskell-operator">,</span><span class="org-string">'e'</span>)<span class="org-haskell-operator">,</span>(5<span class="org-haskell-operator">,</span><span class="org-string">'f'</span>)]
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">enumerate</span> [<span class="org-string">'a'</span>, <span class="org-string">'b'</span>, <span class="org-string">'c'</span>, <span class="org-string">'d'</span>, <span class="org-string">'e'</span>, <span class="org-string">'f'</span>]
+[(0,<span class="org-string">'a'</span>),(1,<span class="org-string">'b'</span>),(2,<span class="org-string">'c'</span>),(3,<span class="org-string">'d'</span>),(4,<span class="org-string">'e'</span>),(5,<span class="org-string">'f'</span>)]
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">take</span> 8  (enumerate [<span class="org-string">'a'</span><span class="org-haskell-operator">..</span><span class="org-string">'z'</span>])
-[(0<span class="org-haskell-operator">,</span><span class="org-string">'a'</span>)<span class="org-haskell-operator">,</span>(1<span class="org-haskell-operator">,</span><span class="org-string">'b'</span>)<span class="org-haskell-operator">,</span>(2<span class="org-haskell-operator">,</span><span class="org-string">'c'</span>)<span class="org-haskell-operator">,</span>(3<span class="org-haskell-operator">,</span><span class="org-string">'d'</span>)<span class="org-haskell-operator">,</span>(4<span class="org-haskell-operator">,</span><span class="org-string">'e'</span>)<span class="org-haskell-operator">,</span>(5<span class="org-haskell-operator">,</span><span class="org-string">'f'</span>)<span class="org-haskell-operator">,</span>(6<span class="org-haskell-operator">,</span><span class="org-string">'g'</span>)<span class="org-haskell-operator">,</span>(7<span class="org-haskell-operator">,</span><span class="org-string">'h'</span>)]
+[(0,<span class="org-string">'a'</span>),(1,<span class="org-string">'b'</span>),(2,<span class="org-string">'c'</span>),(3,<span class="org-string">'d'</span>),(4,<span class="org-string">'e'</span>),(5,<span class="org-string">'f'</span>),(6,<span class="org-string">'g'</span>),(7,<span class="org-string">'h'</span>)]
 <span class="org-haskell-operator">&gt;</span>
 </pre>
 </div>
@@ -606,16 +606,16 @@ Example:
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">groupByLen</span> 3 [1<span class="org-haskell-operator">..</span>15]
-[[1<span class="org-haskell-operator">,</span>2<span class="org-haskell-operator">,</span>3]<span class="org-haskell-operator">,</span>[4<span class="org-haskell-operator">,</span>5<span class="org-haskell-operator">,</span>6]<span class="org-haskell-operator">,</span>[7<span class="org-haskell-operator">,</span>8<span class="org-haskell-operator">,</span>9]<span class="org-haskell-operator">,</span>[10<span class="org-haskell-operator">,</span>11<span class="org-haskell-operator">,</span>12]<span class="org-haskell-operator">,</span>[13<span class="org-haskell-operator">,</span>14<span class="org-haskell-operator">,</span>15]]
+[[1,2,3],[4,5,6],[7,8,9],[10,11,12],[13,14,15]]
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">groupByLen</span> 5 [1<span class="org-haskell-operator">..</span>15]
-[[1<span class="org-haskell-operator">,</span>2<span class="org-haskell-operator">,</span>3<span class="org-haskell-operator">,</span>4<span class="org-haskell-operator">,</span>5]<span class="org-haskell-operator">,</span>[6<span class="org-haskell-operator">,</span>7<span class="org-haskell-operator">,</span>8<span class="org-haskell-operator">,</span>9<span class="org-haskell-operator">,</span>10]<span class="org-haskell-operator">,</span>[11<span class="org-haskell-operator">,</span>12<span class="org-haskell-operator">,</span>13<span class="org-haskell-operator">,</span>14<span class="org-haskell-operator">,</span>15]]
+[[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15]]
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">groupByLen</span> 6 [0<span class="org-haskell-operator">..</span>20]
-[[0<span class="org-haskell-operator">,</span>1<span class="org-haskell-operator">,</span>2<span class="org-haskell-operator">,</span>3<span class="org-haskell-operator">,</span>4<span class="org-haskell-operator">,</span>5]<span class="org-haskell-operator">,</span>[6<span class="org-haskell-operator">,</span>7<span class="org-haskell-operator">,</span>8<span class="org-haskell-operator">,</span>9<span class="org-haskell-operator">,</span>10<span class="org-haskell-operator">,</span>11]<span class="org-haskell-operator">,</span>[12<span class="org-haskell-operator">,</span>13<span class="org-haskell-operator">,</span>14<span class="org-haskell-operator">,</span>15<span class="org-haskell-operator">,</span>16<span class="org-haskell-operator">,</span>17]]
+[[0,1,2,3,4,5],[6,7,8,9,10,11],[12,13,14,15,16,17]]
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">groupByLen</span> 3 [<span class="org-string">'a'</span><span class="org-haskell-operator">..</span><span class="org-string">'z'</span>]
-[<span class="org-string">"abc"</span><span class="org-haskell-operator">,</span><span class="org-string">"def"</span><span class="org-haskell-operator">,</span><span class="org-string">"ghi"</span><span class="org-haskell-operator">,</span><span class="org-string">"jkl"</span><span class="org-haskell-operator">,</span><span class="org-string">"mno"</span><span class="org-haskell-operator">,</span><span class="org-string">"pqr"</span><span class="org-haskell-operator">,</span><span class="org-string">"stu"</span><span class="org-haskell-operator">,</span><span class="org-string">"vwx"</span>]
+[<span class="org-string">"abc"</span>,<span class="org-string">"def"</span>,<span class="org-string">"ghi"</span>,<span class="org-string">"jkl"</span>,<span class="org-string">"mno"</span>,<span class="org-string">"pqr"</span>,<span class="org-string">"stu"</span>,<span class="org-string">"vwx"</span>]
 <span class="org-haskell-operator">&gt;</span>
 </pre>
 </div>
@@ -674,10 +674,10 @@ The family of functions juxt2, juxt3, juxt4 allow apply tuples of functions to a
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-haskell-definition">juxt2</span> (f1<span class="org-haskell-operator">,</span> f2) x <span class="org-haskell-operator">=</span> (f1 x<span class="org-haskell-operator">,</span> f2 x)
-<span class="org-haskell-definition">juxt3</span> (f1<span class="org-haskell-operator">,</span> f2<span class="org-haskell-operator">,</span> f3) x <span class="org-haskell-operator">=</span> (f1 x<span class="org-haskell-operator">,</span> f2 x<span class="org-haskell-operator">,</span> f3 x)
-<span class="org-haskell-definition">juxt4</span> (f1<span class="org-haskell-operator">,</span> f2<span class="org-haskell-operator">,</span> f3<span class="org-haskell-operator">,</span> f4) x <span class="org-haskell-operator">=</span> (f1 x<span class="org-haskell-operator">,</span> f2 x<span class="org-haskell-operator">,</span> f3 x<span class="org-haskell-operator">,</span> f4 x)
-<span class="org-haskell-definition">juxt5</span> (f1<span class="org-haskell-operator">,</span> f2<span class="org-haskell-operator">,</span> f3<span class="org-haskell-operator">,</span> f4<span class="org-haskell-operator">,</span> f5) x <span class="org-haskell-operator">=</span> (f1 x<span class="org-haskell-operator">,</span> f2 x<span class="org-haskell-operator">,</span> f3 x<span class="org-haskell-operator">,</span> f4 x<span class="org-haskell-operator">,</span> f5 x)
+<pre class="src src-haskell"><span class="org-haskell-definition">juxt2</span> (f1, f2) x <span class="org-haskell-operator">=</span> (f1 x, f2 x)
+<span class="org-haskell-definition">juxt3</span> (f1, f2, f3) x <span class="org-haskell-operator">=</span> (f1 x, f2 x, f3 x)
+<span class="org-haskell-definition">juxt4</span> (f1, f2, f3, f4) x <span class="org-haskell-operator">=</span> (f1 x, f2 x, f3 x, f4 x)
+<span class="org-haskell-definition">juxt5</span> (f1, f2, f3, f4, f5) x <span class="org-haskell-operator">=</span> (f1 x, f2 x, f3 x, f4 x, f5 x)
 </pre>
 </div>
 
@@ -692,35 +692,35 @@ Example:
 <span class="org-comment">the functions don't have the same type signature </span>
 
 <span class="org-comment">-}</span>
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">juxt</span> [(<span class="org-haskell-operator">&gt;</span>100)<span class="org-haskell-operator">,</span> (<span class="org-haskell-operator">+</span>100)]  30
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">juxt</span> [(<span class="org-haskell-operator">&gt;</span>100), (<span class="org-haskell-operator">+</span>100)]  30
 
 <span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>36<span class="org-haskell-constructor">:</span>9<span class="org-haskell-constructor">:</span>
-    <span class="org-haskell-constructor">No</span> <span class="org-haskell-keyword">instance</span> for (<span class="org-haskell-constructor">Num</span> <span class="org-haskell-constructor">Bool</span>) arising from the literal `100'
-    <span class="org-haskell-constructor">Possible</span> fix<span class="org-haskell-constructor">:</span> add an <span class="org-haskell-keyword">instance</span> declaration for (<span class="org-haskell-constructor">Num</span> <span class="org-haskell-constructor">Bool</span>)
-    <span class="org-haskell-constructor">In</span> the second argument <span class="org-haskell-keyword">of</span> `(<span class="org-haskell-operator">&gt;</span>)'<span class="org-haskell-operator">,</span> namely `100'
+    <span class="org-haskell-constructor">No</span> <span class="org-haskell-keyword">instance</span> for (<span class="org-haskell-type">Num</span> <span class="org-haskell-type">Bool</span>) arising from the literal `100'
+    <span class="org-haskell-constructor">Possible</span> fix<span class="org-haskell-constructor">:</span> add an <span class="org-haskell-keyword">instance</span> declaration for (<span class="org-haskell-type">Num</span> <span class="org-haskell-type">Bool</span>)
+    <span class="org-haskell-constructor">In</span> the second argument <span class="org-haskell-keyword">of</span> `(<span class="org-haskell-operator">&gt;</span>)', namely `100'
     <span class="org-haskell-constructor">In</span> the expression<span class="org-haskell-constructor">:</span> (<span class="org-haskell-operator">&gt;</span> 100)
-    <span class="org-haskell-constructor">In</span> the first argument <span class="org-haskell-keyword">of</span> `juxt'<span class="org-haskell-operator">,</span> namely `[(<span class="org-haskell-operator">&gt;</span> 100)<span class="org-haskell-operator">,</span> (<span class="org-haskell-operator">+</span> 100)]'
+    <span class="org-haskell-constructor">In</span> the first argument <span class="org-haskell-keyword">of</span> `juxt', namely `[(<span class="org-haskell-operator">&gt;</span> 100), (<span class="org-haskell-operator">+</span> 100)]'
 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">juxt2</span> ((<span class="org-haskell-operator">&gt;</span>100)<span class="org-haskell-operator">,</span> (<span class="org-haskell-operator">+</span>100))  30
-(<span class="org-haskell-constructor">False</span><span class="org-haskell-operator">,</span>130)
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">juxt2</span> ((<span class="org-haskell-operator">&gt;</span>100), (<span class="org-haskell-operator">+</span>100))  30
+(<span class="org-haskell-constructor">False</span>,130)
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> f <span class="org-haskell-operator">=</span> juxt2 ((<span class="org-haskell-operator">&gt;</span>100)<span class="org-haskell-operator">,</span> (<span class="org-haskell-operator">+</span>100))
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> f <span class="org-haskell-operator">=</span> juxt2 ((<span class="org-haskell-operator">&gt;</span>100), (<span class="org-haskell-operator">+</span>100))
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t f
-<span class="org-function-name">f</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Integer</span> <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-constructor">Bool</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Integer</span>)
+<span class="org-function-name">f</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Integer</span> <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">Bool</span>, <span class="org-haskell-type">Integer</span>)
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">f</span> 30
-(<span class="org-haskell-constructor">False</span><span class="org-haskell-operator">,</span>130)
+(<span class="org-haskell-constructor">False</span>,130)
 <span class="org-haskell-operator">&gt;</span>
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">map</span> f [10<span class="org-haskell-operator">,</span> 20<span class="org-haskell-operator">,</span> 25<span class="org-haskell-operator">,</span> 30<span class="org-haskell-operator">,</span> 100<span class="org-haskell-operator">,</span> 150]
-[(<span class="org-haskell-constructor">False</span><span class="org-haskell-operator">,</span>110)<span class="org-haskell-operator">,</span>(<span class="org-haskell-constructor">False</span><span class="org-haskell-operator">,</span>120)<span class="org-haskell-operator">,</span>(<span class="org-haskell-constructor">False</span><span class="org-haskell-operator">,</span>125)<span class="org-haskell-operator">,</span>(<span class="org-haskell-constructor">False</span><span class="org-haskell-operator">,</span>130)<span class="org-haskell-operator">,</span>(<span class="org-haskell-constructor">False</span><span class="org-haskell-operator">,</span>200)<span class="org-haskell-operator">,</span>(<span class="org-haskell-constructor">True</span><span class="org-haskell-operator">,</span>250)]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">map</span> f [10, 20, 25, 30, 100, 150]
+[(<span class="org-haskell-constructor">False</span>,110),(<span class="org-haskell-constructor">False</span>,120),(<span class="org-haskell-constructor">False</span>,125),(<span class="org-haskell-constructor">False</span>,130),(<span class="org-haskell-constructor">False</span>,200),(<span class="org-haskell-constructor">True</span>,250)]
 <span class="org-haskell-operator">&gt;</span> 
 
 
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">juxt3</span> (length<span class="org-haskell-operator">,</span> maximum<span class="org-haskell-operator">,</span> minimum)  [100.23<span class="org-haskell-operator">,</span> 23.23<span class="org-haskell-operator">,</span> 12.33<span class="org-haskell-operator">,</span> <span class="org-haskell-operator">-</span>123.23<span class="org-haskell-operator">,</span> <span class="org-haskell-operator">-</span>1000.23<span class="org-haskell-operator">,</span> 4000.5]
-(6<span class="org-haskell-operator">,</span>4000.5<span class="org-haskell-operator">,-</span>1000.23)
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">juxt3</span> (length, maximum, minimum)  [100.23, 23.23, 12.33, <span class="org-haskell-operator">-</span>123.23, <span class="org-haskell-operator">-</span>1000.23, 4000.5]
+(6,4000.5,<span class="org-haskell-operator">-</span>1000.23)
 <span class="org-haskell-operator">&gt;</span> 
 
 
@@ -731,43 +731,43 @@ Example:
 <span class="org-comment">    function types explicit.</span>
 
 <span class="org-comment">-}</span>
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> analytics <span class="org-haskell-operator">=</span> juxt3 (length<span class="org-haskell-operator">,</span> maximum<span class="org-haskell-operator">,</span> minimum)
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> analytics <span class="org-haskell-operator">=</span> juxt3 (length, maximum, minimum)
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t analytics 
-<span class="org-function-name">analytics</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-constructor">()</span>] <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-constructor">Int</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">()</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">()</span>)
+<span class="org-function-name">analytics</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-constructor">()</span>] <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">Int</span>, <span class="org-haskell-constructor">()</span>, <span class="org-haskell-constructor">()</span>)
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">analytics</span> [100.23<span class="org-haskell-operator">,</span> 23.23<span class="org-haskell-operator">,</span> 12.33<span class="org-haskell-operator">,</span> <span class="org-haskell-operator">-</span>123.23<span class="org-haskell-operator">,</span> <span class="org-haskell-operator">-</span>1000.23<span class="org-haskell-operator">,</span> 4000.5]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">analytics</span> [100.23, 23.23, 12.33, <span class="org-haskell-operator">-</span>123.23, <span class="org-haskell-operator">-</span>1000.23, 4000.5]
 
-<span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>79<span class="org-haskell-constructor">:</span>12<span class="org-haskell-constructor">:</span>
-    <span class="org-haskell-constructor">No</span> <span class="org-haskell-keyword">instance</span> for (<span class="org-haskell-constructor">Fractional</span> <span class="org-haskell-constructor">()</span>) arising from the literal `100.23'
-    <span class="org-haskell-constructor">Possible</span> fix<span class="org-haskell-constructor">:</span> add an <span class="org-haskell-keyword">instance</span> declaration for (<span class="org-haskell-constructor">Fractional</span> <span class="org-haskell-constructor">()</span>)
+<span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>79<span class="org-haskell-type">:</span>12<span class="org-haskell-type">:</span>
+    <span class="org-haskell-type">No</span> <span class="org-haskell-keyword">instance</span> for (<span class="org-haskell-type">Fractional</span> <span class="org-haskell-constructor">()</span>) arising from the literal `100.23'
+    <span class="org-haskell-constructor">Possible</span> fix<span class="org-haskell-constructor">:</span> add an <span class="org-haskell-keyword">instance</span> declaration for (<span class="org-haskell-type">Fractional</span> <span class="org-haskell-constructor">()</span>)
     <span class="org-haskell-constructor">In</span> the expression<span class="org-haskell-constructor">:</span> 100.23
-    <span class="org-haskell-constructor">In</span> the first argument <span class="org-haskell-keyword">of</span> `analytics'<span class="org-haskell-operator">,</span> namely
-      `[100.23<span class="org-haskell-operator">,</span> 23.23<span class="org-haskell-operator">,</span> 12.33<span class="org-haskell-operator">,</span> <span class="org-haskell-operator">-</span> 123.23<span class="org-haskell-operator">,</span> <span class="org-haskell-operator">....</span>]'
-    <span class="org-haskell-constructor">In</span> the expression<span class="org-haskell-constructor">:</span> analytics [100.23<span class="org-haskell-operator">,</span> 23.23<span class="org-haskell-operator">,</span> 12.33<span class="org-haskell-operator">,</span> <span class="org-haskell-operator">-</span> 123.23<span class="org-haskell-operator">,</span> <span class="org-haskell-operator">....</span>]
+    <span class="org-haskell-constructor">In</span> the first argument <span class="org-haskell-keyword">of</span> `analytics', namely
+      `[100.23, 23.23, 12.33, <span class="org-haskell-operator">-</span> 123.23, <span class="org-haskell-operator">....</span>]'
+    <span class="org-haskell-constructor">In</span> the expression<span class="org-haskell-constructor">:</span> analytics [100.23, 23.23, 12.33, <span class="org-haskell-operator">-</span> 123.23, <span class="org-haskell-operator">....</span>]
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> analytics <span class="org-haskell-operator">::</span> [<span class="org-haskell-constructor">Double</span>] <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-constructor">Int</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Double</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Double</span>)  <span class="org-haskell-operator">;</span> analytics <span class="org-haskell-operator">=</span> juxt3 (length<span class="org-haskell-operator">,</span> maximum<span class="org-haskell-operator">,</span> minimum)
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> analytics <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">Double</span>] <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">Int</span>, <span class="org-haskell-type">Double</span>, <span class="org-haskell-type">Double</span>)  ; analytics <span class="org-haskell-operator">=</span> juxt3 (length, maximum, minimum)
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t analytics 
-<span class="org-function-name">analytics</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-constructor">Double</span>] <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-constructor">Int</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Double</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Double</span>)
+<span class="org-function-name">analytics</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">Double</span>] <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">Int</span>, <span class="org-haskell-type">Double</span>, <span class="org-haskell-type">Double</span>)
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">analytics</span> [100.23<span class="org-haskell-operator">,</span> 23.23<span class="org-haskell-operator">,</span> 12.33<span class="org-haskell-operator">,</span> <span class="org-haskell-operator">-</span>123.23<span class="org-haskell-operator">,</span> <span class="org-haskell-operator">-</span>1000.23<span class="org-haskell-operator">,</span> 4000.5]
-(6<span class="org-haskell-operator">,</span>4000.5<span class="org-haskell-operator">,-</span>1000.23)
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">analytics</span> [100.23, 23.23, 12.33, <span class="org-haskell-operator">-</span>123.23, <span class="org-haskell-operator">-</span>1000.23, 4000.5]
+(6,4000.5,<span class="org-haskell-operator">-</span>1000.23)
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.Char</span>
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> f <span class="org-haskell-operator">=</span> juxt3 (succ<span class="org-haskell-operator">,</span> pred<span class="org-haskell-operator">,</span> ord)
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> f <span class="org-haskell-operator">=</span> juxt3 (succ, pred, ord)
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t f
-<span class="org-function-name">f</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Char</span> <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-constructor">Char</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Char</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Int</span>)
+<span class="org-function-name">f</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Char</span> <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">Char</span>, <span class="org-haskell-type">Char</span>, <span class="org-haskell-type">Int</span>)
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> a <span class="org-haskell-operator">=</span> map f <span class="org-string">"haskell is fun"</span>
 <span class="org-haskell-operator">&gt;</span> a
-[(<span class="org-string">'i'</span><span class="org-haskell-operator">,</span><span class="org-string">'g'</span><span class="org-haskell-operator">,</span>104)<span class="org-haskell-operator">,</span>(<span class="org-string">'b'</span><span class="org-haskell-operator">,</span><span class="org-string">'`'</span><span class="org-haskell-operator">,</span>97)<span class="org-haskell-operator">,</span>(<span class="org-string">'t'</span><span class="org-haskell-operator">,</span><span class="org-string">'r'</span><span class="org-haskell-operator">,</span>115)<span class="org-haskell-operator">,</span>(<span class="org-string">'l'</span><span class="org-haskell-operator">,</span><span class="org-string">'j'</span><span class="org-haskell-operator">,</span>107)<span class="org-haskell-operator">,</span>(<span class="org-string">'f'</span><span class="org-haskell-operator">,</span><span class="org-string">'d'</span><span class="org-haskell-operator">,</span>101)<span class="org-haskell-operator">,</span>(<span class="org-string">'m'</span><span class="org-haskell-operator">,</span><span class="org-string">'k'</span><span class="org-haskell-operator">,</span>108)<span class="org-haskell-operator">,</span>(<span class="org-string">'m'</span><span class="org-haskell-operator">,</span><span class="org-string">'k'</span><span class="org-haskell-operator">,</span>108)<span class="org-haskell-operator">,</span>(<span class="org-string">'!'</span><span class="org-haskell-operator">,</span><span class="org-string">'\US'</span><span class="org-haskell-operator">,</span>32)<span class="org-haskell-operator">,</span>(<span class="org-string">'j'</span><span class="org-haskell-operator">,</span><span class="org-string">'h'</span><span class="org-haskell-operator">,</span>105)<span class="org-haskell-operator">,</span>(<span class="org-string">'t'</span><span class="org-haskell-operator">,</span><span class="org-string">'r'</span><span class="org-haskell-operator">,</span>115)<span class="org-haskell-operator">,</span>(<span class="org-string">'!'</span><span class="org-haskell-operator">,</span><span class="org-string">'\US'</span><span class="org-haskell-operator">,</span>32)<span class="org-haskell-operator">,</span>(<span class="org-string">'g'</span><span class="org-haskell-operator">,</span><span class="org-string">'e'</span><span class="org-haskell-operator">,</span>102)<span class="org-haskell-operator">,</span>(<span class="org-string">'v'</span><span class="org-haskell-operator">,</span><span class="org-string">'t'</span><span class="org-haskell-operator">,</span>117)<span class="org-haskell-operator">,</span>(<span class="org-string">'o'</span><span class="org-haskell-operator">,</span><span class="org-string">'m'</span><span class="org-haskell-operator">,</span>110)]
+[(<span class="org-string">'i'</span>,<span class="org-string">'g'</span>,104),(<span class="org-string">'b'</span>,<span class="org-string">'`'</span>,97),(<span class="org-string">'t'</span>,<span class="org-string">'r'</span>,115),(<span class="org-string">'l'</span>,<span class="org-string">'j'</span>,107),(<span class="org-string">'f'</span>,<span class="org-string">'d'</span>,101),(<span class="org-string">'m'</span>,<span class="org-string">'k'</span>,108),(<span class="org-string">'m'</span>,<span class="org-string">'k'</span>,108),(<span class="org-string">'!'</span>,<span class="org-string">'\US'</span>,32),(<span class="org-string">'j'</span>,<span class="org-string">'h'</span>,105),(<span class="org-string">'t'</span>,<span class="org-string">'r'</span>,115),(<span class="org-string">'!'</span>,<span class="org-string">'\US'</span>,32),(<span class="org-string">'g'</span>,<span class="org-string">'e'</span>,102),(<span class="org-string">'v'</span>,<span class="org-string">'t'</span>,117),(<span class="org-string">'o'</span>,<span class="org-string">'m'</span>,110)]
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">unzip3</span> a
-(<span class="org-string">"ibtlfmm!jt!gvo"</span><span class="org-haskell-operator">,</span><span class="org-string">"g`rjdkk\UShr\USetm"</span><span class="org-haskell-operator">,</span>[104<span class="org-haskell-operator">,</span>97<span class="org-haskell-operator">,</span>115<span class="org-haskell-operator">,</span>107<span class="org-haskell-operator">,</span>101<span class="org-haskell-operator">,</span>108<span class="org-haskell-operator">,</span>108<span class="org-haskell-operator">,</span>32<span class="org-haskell-operator">,</span>105<span class="org-haskell-operator">,</span>115<span class="org-haskell-operator">,</span>32<span class="org-haskell-operator">,</span>102<span class="org-haskell-operator">,</span>117<span class="org-haskell-operator">,</span>110])
+(<span class="org-string">"ibtlfmm!jt!gvo"</span>,<span class="org-string">"g`rjdkk\UShr\USetm"</span>,[104,97,115,107,101,108,108,32,105,115,32,102,117,110])
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span>
 </pre>
@@ -790,12 +790,12 @@ Example:
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">filter</span> (between 10 20) [23<span class="org-haskell-operator">,</span> 5<span class="org-haskell-operator">,</span> 8<span class="org-haskell-operator">,</span> 17<span class="org-haskell-operator">,</span> 24<span class="org-haskell-operator">,</span> 13<span class="org-haskell-operator">,</span> 12]
-[17<span class="org-haskell-operator">,</span>13<span class="org-haskell-operator">,</span>12]
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">filter</span> (between 10 20) [23, 5, 8, 17, 24, 13, 12]
+[17,13,12]
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">filter</span> (not <span class="org-haskell-operator">.</span> between 10 20) [23<span class="org-haskell-operator">,</span> 5<span class="org-haskell-operator">,</span> 8<span class="org-haskell-operator">,</span> 17<span class="org-haskell-operator">,</span> 24<span class="org-haskell-operator">,</span> 13<span class="org-haskell-operator">,</span> 12]
-[23<span class="org-haskell-operator">,</span>5<span class="org-haskell-operator">,</span>8<span class="org-haskell-operator">,</span>24]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">filter</span> (not <span class="org-haskell-operator">.</span> between 10 20) [23, 5, 8, 17, 24, 13, 12]
+[23,5,8,24]
 </pre>
 </div>
 
@@ -825,8 +825,8 @@ Example: Apply the list the function (if x &gt;10 then 10*x else x+5)
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span>  ifelseDo pred fa fb  x  <span class="org-haskell-operator">=</span>  <span class="org-haskell-keyword">if</span> pred x <span class="org-haskell-keyword">then</span> fa x <span class="org-haskell-keyword">else</span> fb x
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">map</span> (ifelseDo (<span class="org-haskell-operator">&gt;</span>10) (<span class="org-haskell-operator">*</span>4) (<span class="org-haskell-operator">+</span>5)) [<span class="org-haskell-operator">-</span>1<span class="org-haskell-operator">,</span> 2<span class="org-haskell-operator">,</span> 7<span class="org-haskell-operator">,</span> 8<span class="org-haskell-operator">,</span> 9<span class="org-haskell-operator">,</span> 10<span class="org-haskell-operator">,</span> 20<span class="org-haskell-operator">,</span> 30<span class="org-haskell-operator">,</span> 50]
-[4<span class="org-haskell-operator">,</span>7<span class="org-haskell-operator">,</span>12<span class="org-haskell-operator">,</span>13<span class="org-haskell-operator">,</span>14<span class="org-haskell-operator">,</span>15<span class="org-haskell-operator">,</span>80<span class="org-haskell-operator">,</span>120<span class="org-haskell-operator">,</span>200]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">map</span> (ifelseDo (<span class="org-haskell-operator">&gt;</span>10) (<span class="org-haskell-operator">*</span>4) (<span class="org-haskell-operator">+</span>5)) [<span class="org-haskell-operator">-</span>1, 2, 7, 8, 9, 10, 20, 30, 50]
+[4,7,12,13,14,15,80,120,200]
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> f <span class="org-haskell-operator">=</span> ifelseDo (<span class="org-haskell-operator">&gt;</span>10) (<span class="org-haskell-operator">*</span>4) (<span class="org-haskell-operator">+</span>5)
 
@@ -843,8 +843,8 @@ Example: Apply the list the function (if x &gt;10 then 10*x else x+5)
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">f</span> 30
 120
 
-&#955;<span class="org-haskell-definition">&gt;</span> map f [<span class="org-haskell-operator">-</span>1<span class="org-haskell-operator">,</span> 2<span class="org-haskell-operator">,</span> 7<span class="org-haskell-operator">,</span> 8<span class="org-haskell-operator">,</span> 9<span class="org-haskell-operator">,</span> 10<span class="org-haskell-operator">,</span> 20<span class="org-haskell-operator">,</span> 30<span class="org-haskell-operator">,</span> 50]
-[4<span class="org-haskell-operator">,</span>7<span class="org-haskell-operator">,</span>12<span class="org-haskell-operator">,</span>13<span class="org-haskell-operator">,</span>14<span class="org-haskell-operator">,</span>15<span class="org-haskell-operator">,</span>80<span class="org-haskell-operator">,</span>120<span class="org-haskell-operator">,</span>200]
+&#955;<span class="org-haskell-definition">&gt;</span> map f [<span class="org-haskell-operator">-</span>1, 2, 7, 8, 9, 10, 20, 30, 50]
+[4,7,12,13,14,15,80,120,200]
 </pre>
 </div>
 
@@ -888,8 +888,8 @@ If x&lt;0 set x to -1 else set to 1
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">f</span> (<span class="org-haskell-operator">-</span>10)
 <span class="org-haskell-operator">-</span>1
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">map</span> f [<span class="org-haskell-operator">-</span>1<span class="org-haskell-operator">,</span> <span class="org-haskell-operator">-</span>2<span class="org-haskell-operator">,</span> 3<span class="org-haskell-operator">,</span> 4<span class="org-haskell-operator">,</span> <span class="org-haskell-operator">-</span>5<span class="org-haskell-operator">,</span> <span class="org-haskell-operator">-</span>6<span class="org-haskell-operator">,</span> 0<span class="org-haskell-operator">,</span> 2]
-[<span class="org-haskell-operator">-</span>1<span class="org-haskell-operator">,-</span>1<span class="org-haskell-operator">,</span>1<span class="org-haskell-operator">,</span>1<span class="org-haskell-operator">,-</span>1<span class="org-haskell-operator">,-</span>1<span class="org-haskell-operator">,</span>1<span class="org-haskell-operator">,</span>1]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">map</span> f [<span class="org-haskell-operator">-</span>1, <span class="org-haskell-operator">-</span>2, 3, 4, <span class="org-haskell-operator">-</span>5, <span class="org-haskell-operator">-</span>6, 0, 2]
+[<span class="org-haskell-operator">-</span>1,<span class="org-haskell-operator">-</span>1,1,1,<span class="org-haskell-operator">-</span>1,<span class="org-haskell-operator">-</span>1,1,1]
 <span class="org-haskell-operator">&gt;</span>
 </pre>
 </div>
@@ -921,8 +921,8 @@ Example: if(x) &gt; 10 then 30 else x
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> f <span class="org-haskell-operator">=</span> ifelseEq (<span class="org-haskell-operator">&gt;</span>10) 30
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">map</span> f [1<span class="org-haskell-operator">,</span> 2<span class="org-haskell-operator">,</span> 20<span class="org-haskell-operator">,</span> 10<span class="org-haskell-operator">,</span> 9<span class="org-haskell-operator">,</span> 8<span class="org-haskell-operator">,</span> 100]
-[1<span class="org-haskell-operator">,</span>2<span class="org-haskell-operator">,</span>30<span class="org-haskell-operator">,</span>10<span class="org-haskell-operator">,</span>9<span class="org-haskell-operator">,</span>8<span class="org-haskell-operator">,</span>30]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">map</span> f [1, 2, 20, 10, 9, 8, 100]
+[1,2,30,10,9,8,30]
 <span class="org-haskell-operator">&gt;</span>
 </pre>
 </div>
@@ -933,8 +933,8 @@ Example: if(x) &gt; 10 then 30 else x
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2016-03-24 Thu 05:54</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="date">Created: 2016-11-01 ter 01:19</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

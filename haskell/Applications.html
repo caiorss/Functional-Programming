@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Applications</title>
-<!-- 2016-03-24 Thu 05:54 -->
+<!-- 2016-11-01 ter 01:37 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues" />
@@ -284,13 +284,13 @@ Example:
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">map</span> rad2deg [pi<span class="org-haskell-operator">/</span>6<span class="org-haskell-operator">,</span> pi<span class="org-haskell-operator">/</span>4<span class="org-haskell-operator">,</span> pi<span class="org-haskell-operator">/</span>3<span class="org-haskell-operator">,</span> pi<span class="org-haskell-operator">/</span>2<span class="org-haskell-operator">,</span> pi]
-[29.999999999999996<span class="org-haskell-operator">,</span>45.0<span class="org-haskell-operator">,</span>59.99999999999999<span class="org-haskell-operator">,</span>90.0<span class="org-haskell-operator">,</span>180.0]
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">map</span> rad2deg [pi<span class="org-haskell-operator">/</span>6, pi<span class="org-haskell-operator">/</span>4, pi<span class="org-haskell-operator">/</span>3, pi<span class="org-haskell-operator">/</span>2, pi]
+[29.999999999999996,45.0,59.99999999999999,90.0,180.0]
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">map</span> sind [30.0<span class="org-haskell-operator">,</span> 45.0<span class="org-haskell-operator">,</span> 60.0<span class="org-haskell-operator">,</span> 90.0<span class="org-haskell-operator">,</span> 180.0 ]
-[0.49999999999999994<span class="org-haskell-operator">,</span>0.7071067811865475<span class="org-haskell-operator">,</span>0.8660254037844386<span class="org-haskell-operator">,</span>1.0<span class="org-haskell-operator">,</span>1.2246063538223773e-16]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">map</span> sind [30.0, 45.0, 60.0, 90.0, 180.0 ]
+[0.49999999999999994,0.7071067811865475,0.8660254037844386,1.0,1.2246063538223773e-16]
 <span class="org-haskell-operator">&gt;</span>
 </pre>
 </div>
@@ -330,7 +330,7 @@ f2(x) = |  x   - 1  if 0 &lt;= x &lt; 4
 <span class="org-haskell-definition">infp</span> <span class="org-haskell-operator">=</span>    1.0e30  <span class="org-comment-delimiter">-- </span><span class="org-comment">Plus Infinite</span>
 <span class="org-haskell-definition">infm</span> <span class="org-haskell-operator">=</span> (<span class="org-haskell-operator">-</span>1.0e30)  <span class="org-comment-delimiter">-- </span><span class="org-comment">Minus Infinite</span>
 
-<span class="org-haskell-definition">inInterval</span> x (p1<span class="org-haskell-operator">,</span> p2) <span class="org-haskell-operator">=</span> (fst p1) <span class="org-haskell-operator">&lt;</span> x <span class="org-haskell-operator">&amp;&amp;</span> x <span class="org-haskell-operator">&lt;=</span> (fst p2) 
+<span class="org-haskell-definition">inInterval</span> x (p1, p2) <span class="org-haskell-operator">=</span> (fst p1) <span class="org-haskell-operator">&lt;</span> x <span class="org-haskell-operator">&amp;&amp;</span> x <span class="org-haskell-operator">&lt;=</span> (fst p2) 
 
 <span class="org-haskell-definition">piecewiseFactory</span> intervalTable x <span class="org-haskell-operator">=</span> f x
     <span class="org-haskell-keyword">where</span>
@@ -339,7 +339,7 @@ f2(x) = |  x   - 1  if 0 &lt;= x &lt; 4
         <span class="org-haskell-operator">|&gt;</span> fst 
         <span class="org-haskell-operator">|&gt;</span> snd 
 
-<span class="org-haskell-definition">arange</span> start stop step <span class="org-haskell-operator">=</span> [start<span class="org-haskell-operator">,</span>(start<span class="org-haskell-operator">+</span>step)<span class="org-haskell-operator">..</span>(stop<span class="org-haskell-operator">-</span>step)]
+<span class="org-haskell-definition">arange</span> start stop step <span class="org-haskell-operator">=</span> [start,(start<span class="org-haskell-operator">+</span>step)<span class="org-haskell-operator">..</span>(stop<span class="org-haskell-operator">-</span>step)]
 
 <span class="org-haskell-definition">plotFxs</span> f xs  <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
     <span class="org-haskell-keyword">let</span> ys <span class="org-haskell-operator">=</span> map f xs
@@ -348,20 +348,20 @@ f2(x) = |  x   - 1  if 0 &lt;= x &lt; 4
 
 <span class="org-haskell-definition">f1_table</span> <span class="org-haskell-operator">=</span> 
     [
-    (0.0<span class="org-haskell-operator">,</span>        const 0.10)<span class="org-haskell-operator">,</span>
-    (7150.0<span class="org-haskell-operator">,</span>     const 0.15)<span class="org-haskell-operator">,</span>
-    (29050.0<span class="org-haskell-operator">,</span>    const 0.25)<span class="org-haskell-operator">,</span>
-    (70350.0<span class="org-haskell-operator">,</span>    const 0.28)<span class="org-haskell-operator">,</span>
-    (146750.0<span class="org-haskell-operator">,</span>   const 0.33)<span class="org-haskell-operator">,</span>  
-    (319100.0<span class="org-haskell-operator">,</span>   const 0.35)<span class="org-haskell-operator">,</span>  
-    (1.0e30<span class="org-haskell-operator">,</span>     const 0.35)
+    (0.0,        const 0.10),
+    (7150.0,     const 0.15),
+    (29050.0,    const 0.25),
+    (70350.0,    const 0.28),
+    (146750.0,   const 0.33),  
+    (319100.0,   const 0.35),  
+    (1.0e30,     const 0.35)
     ]
 
 <span class="org-haskell-definition">f2_table</span> <span class="org-haskell-operator">=</span> [
-    (infm<span class="org-haskell-operator">,</span>  <span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> x<span class="org-haskell-operator">**</span>2 <span class="org-haskell-operator">-</span> 1)<span class="org-haskell-operator">,</span> <span class="org-comment-delimiter">--  </span><span class="org-comment">if -&#8734; &lt; x &lt;= 0  -&gt; x^2 - 1 </span>
-    (0.0<span class="org-haskell-operator">,</span>   <span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">-</span> 1.0 )<span class="org-haskell-operator">,</span> <span class="org-comment-delimiter">--  </span><span class="org-comment">if 0  &lt; x &lt;= 4  -&gt; x   - 1</span>
-    (4.0<span class="org-haskell-operator">,</span>   <span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> 3.0)<span class="org-haskell-operator">,</span>      <span class="org-comment-delimiter">--  </span><span class="org-comment">if 4  &lt; x &lt;= +&#8734; -&gt; 3.0</span>
-    (infp<span class="org-haskell-operator">,</span>  <span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> 3.0 )
+    (infm,  <span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> x<span class="org-haskell-operator">**</span>2 <span class="org-haskell-operator">-</span> 1), <span class="org-comment-delimiter">--  </span><span class="org-comment">if -&#8734; &lt; x &lt;= 0  -&gt; x^2 - 1 </span>
+    (0.0,   <span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">-</span> 1.0 ), <span class="org-comment-delimiter">--  </span><span class="org-comment">if 0  &lt; x &lt;= 4  -&gt; x   - 1</span>
+    (4.0,   <span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> 3.0),      <span class="org-comment-delimiter">--  </span><span class="org-comment">if 4  &lt; x &lt;= +&#8734; -&gt; 3.0</span>
+    (infp,  <span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> 3.0 )
     ]
 
 <span class="org-haskell-definition">f1</span> <span class="org-haskell-operator">=</span> piecewiseFactory f1_table
@@ -404,10 +404,10 @@ Polynomial evaluation by the horner method.
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">polyval</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Fractional</span> a <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
+<pre class="src src-haskell"><span class="org-function-name">polyval</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Fractional</span> a <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
 <span class="org-haskell-definition">polyval</span> coeffs x <span class="org-haskell-operator">=</span> foldr (<span class="org-haskell-operator">\</span>b c <span class="org-haskell-operator">-&gt;</span> b <span class="org-haskell-operator">+</span> x<span class="org-haskell-operator">*</span>c) 0 coeffs
 
-<span class="org-function-name">polyderv</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Fractional</span> a <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> [a] 
+<span class="org-function-name">polyderv</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Fractional</span> a <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> [a] 
 <span class="org-haskell-definition">polyderv</span> coeffs <span class="org-haskell-operator">=</span> zipWith (<span class="org-haskell-operator">*</span>) (map fromIntegral [1<span class="org-haskell-operator">..</span>n]) (tail coeffs )
     <span class="org-haskell-keyword">where</span>
     n <span class="org-haskell-operator">=</span> (length coeffs) <span class="org-haskell-operator">-</span> 1
@@ -431,13 +431,13 @@ Example: Evaluate the polynomial
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> coeffs  <span class="org-haskell-operator">=</span> [9.0<span class="org-haskell-operator">,</span> 7.0<span class="org-haskell-operator">,</span> 5.0<span class="org-haskell-operator">,</span> 3.0<span class="org-haskell-operator">,</span> 1.0] 
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> coeffs  <span class="org-haskell-operator">=</span> [9.0, 7.0, 5.0, 3.0, 1.0] 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> f  <span class="org-haskell-operator">=</span> polyval  coeffs
 
 <span class="org-haskell-keyword">let</span> df <span class="org-haskell-operator">=</span> polyval <span class="org-haskell-operator">$</span>  polyderv coeffs
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">polyderv</span> coeffs 
-[7.0<span class="org-haskell-operator">,</span>10.0<span class="org-haskell-operator">,</span>9.0<span class="org-haskell-operator">,</span>4.0]
+[7.0,10.0,9.0,4.0]
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">f</span> 2
 83.0
@@ -462,19 +462,19 @@ Example: Evaluate the polynomial
 <span class="org-haskell-definition">f</span> x <span class="org-haskell-operator">=</span> 2<span class="org-haskell-operator">*</span>x<span class="org-haskell-operator">**</span>2 <span class="org-haskell-operator">-</span> 2<span class="org-haskell-operator">*</span>x
 <span class="org-haskell-definition">df</span> <span class="org-haskell-operator">=</span> derv 1e-5 f
 
-<span class="org-haskell-operator">*</span><span class="org-haskell-constructor">Main</span><span class="org-haskell-operator">&gt;</span> map f [2<span class="org-haskell-operator">,</span> 3<span class="org-haskell-operator">,</span> 4<span class="org-haskell-operator">,</span> 5] 
-[4.0<span class="org-haskell-operator">,</span>12.0<span class="org-haskell-operator">,</span>24.0<span class="org-haskell-operator">,</span>40.0]
+<span class="org-haskell-operator">*</span><span class="org-haskell-constructor">Main</span><span class="org-haskell-operator">&gt;</span> map f [2, 3, 4, 5] 
+[4.0,12.0,24.0,40.0]
 <span class="org-haskell-operator">*</span><span class="org-haskell-constructor">Main</span><span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">*</span><span class="org-haskell-constructor">Main</span><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> df <span class="org-haskell-operator">=</span> derv 1e-5 f
 <span class="org-haskell-operator">*</span><span class="org-haskell-constructor">Main</span><span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">*</span><span class="org-haskell-constructor">Main</span><span class="org-haskell-operator">&gt;</span> map df  [2<span class="org-haskell-operator">,</span> 3<span class="org-haskell-operator">,</span> 4<span class="org-haskell-operator">,</span> 5]
-[6.000020000040961<span class="org-haskell-operator">,</span>10.000019999978349<span class="org-haskell-operator">,</span>14.000019999116374<span class="org-haskell-operator">,</span>18.000019998964945]
+<span class="org-haskell-operator">*</span><span class="org-haskell-constructor">Main</span><span class="org-haskell-operator">&gt;</span> map df  [2, 3, 4, 5]
+[6.000020000040961,10.000019999978349,14.000019999116374,18.000019998964945]
 <span class="org-haskell-operator">*</span><span class="org-haskell-constructor">Main</span><span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">*</span><span class="org-haskell-constructor">Main</span><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> dfx x <span class="org-haskell-operator">=</span> 4<span class="org-haskell-operator">*</span>x <span class="org-haskell-operator">-</span> 2
-<span class="org-haskell-operator">*</span><span class="org-haskell-constructor">Main</span><span class="org-haskell-operator">&gt;</span> map dfx [2<span class="org-haskell-operator">,</span> 3<span class="org-haskell-operator">,</span> 4<span class="org-haskell-operator">,</span> 5]
-[6<span class="org-haskell-operator">,</span>10<span class="org-haskell-operator">,</span>14<span class="org-haskell-operator">,</span>18]
+<span class="org-haskell-operator">*</span><span class="org-haskell-constructor">Main</span><span class="org-haskell-operator">&gt;</span> map dfx [2, 3, 4, 5]
+[6,10,14,18]
 </pre>
 </div>
 </div>
@@ -502,25 +502,25 @@ See also:
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">bisection_iterator</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-constructor">Floating</span> a<span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Floating</span> a1<span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Ord</span> a1) <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> a1) <span class="org-haskell-operator">-&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> [a]
+<pre class="src src-haskell"><span class="org-function-name">bisection_iterator</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Floating</span> a, <span class="org-haskell-type">Floating</span> a1, <span class="org-haskell-type">Ord</span> a1) <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> a1) <span class="org-haskell-operator">-&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> [a]
 <span class="org-haskell-definition">bisection_iterator</span> f guesslist <span class="org-haskell-operator">=</span> newguess
     <span class="org-haskell-keyword">where</span>
     a <span class="org-haskell-operator">=</span>  guesslist <span class="org-haskell-operator">!!</span> 0
     b <span class="org-haskell-operator">=</span>  guesslist <span class="org-haskell-operator">!!</span> 1
     c <span class="org-haskell-operator">=</span> (a<span class="org-haskell-operator">+</span>b)<span class="org-haskell-operator">/</span>2.0
     p <span class="org-haskell-operator">=</span> f(a)<span class="org-haskell-operator">*</span>f(c)
-    newguess <span class="org-haskell-operator">=</span> (<span class="org-haskell-operator">\</span>p <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-keyword">if</span> p <span class="org-haskell-operator">&lt;</span> 0.0 <span class="org-haskell-keyword">then</span> [a<span class="org-haskell-operator">,</span> c] <span class="org-haskell-keyword">else</span> [c<span class="org-haskell-operator">,</span> b] ) p
+    newguess <span class="org-haskell-operator">=</span> (<span class="org-haskell-operator">\</span>p <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-keyword">if</span> p <span class="org-haskell-operator">&lt;</span> 0.0 <span class="org-haskell-keyword">then</span> [a, c] <span class="org-haskell-keyword">else</span> [c, b] ) p
 
 
-<span class="org-haskell-definition">bisectionSolver</span> eps itmax f x1 x2 <span class="org-haskell-operator">=</span> (root<span class="org-haskell-operator">,</span> error<span class="org-haskell-operator">,</span> iterations) 
+<span class="org-haskell-definition">bisectionSolver</span> eps itmax f x1 x2 <span class="org-haskell-operator">=</span> (root, error, iterations) 
     <span class="org-haskell-keyword">where</span>  
-    
+
     bisection_error xlist <span class="org-haskell-operator">=</span> abs(f <span class="org-haskell-operator">$</span> xlist <span class="org-haskell-operator">!!</span> 1)
     check_error xlist <span class="org-haskell-operator">=</span> bisection_error xlist <span class="org-haskell-operator">&gt;</span> eps
 
     iterator <span class="org-haskell-operator">=</span> bisection_iterator  f
 
-    rootlist <span class="org-haskell-operator">=</span> [x1<span class="org-haskell-operator">,</span> x2] <span class="org-haskell-operator">|&gt;</span> iterate iterator <span class="org-haskell-operator">|&gt;</span> takeWhile check_error <span class="org-haskell-operator">|&gt;</span> take itmax
+    rootlist <span class="org-haskell-operator">=</span> [x1, x2] <span class="org-haskell-operator">|&gt;</span> iterate iterator <span class="org-haskell-operator">|&gt;</span> takeWhile check_error <span class="org-haskell-operator">|&gt;</span> take itmax
 
     pair <span class="org-haskell-operator">=</span> last rootlist <span class="org-haskell-operator">|&gt;</span> iterator
     root <span class="org-haskell-operator">=</span> last pair
@@ -530,7 +530,7 @@ See also:
 
 <span class="org-haskell-operator">*</span><span class="org-haskell-constructor">Main</span><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> f x  <span class="org-haskell-operator">=</span>  exp(<span class="org-haskell-operator">-</span>x) <span class="org-haskell-operator">-</span>3<span class="org-haskell-operator">*</span>log(x)
 <span class="org-haskell-operator">*</span><span class="org-haskell-constructor">Main</span><span class="org-haskell-operator">&gt;</span> bisectionSolver 1e-5 100 f 0.05 3
-(1.1154509544372555<span class="org-haskell-operator">,</span>8.86237816760671e-6<span class="org-haskell-operator">,</span>19)
+(1.1154509544372555,8.86237816760671e-6,19)
 <span class="org-haskell-operator">*</span><span class="org-haskell-constructor">Main</span><span class="org-haskell-operator">&gt;</span>
 </pre>
 </div>
@@ -552,9 +552,9 @@ See also:
 <span class="org-comment">    newtonSolver(eps, itmax, f, df, guess)</span>
 
 <span class="org-comment">    Solve equation using the Newton-Raphson Method.</span>
-<span class="org-comment">    </span>
+
 <span class="org-comment">    params:</span>
-<span class="org-comment">    </span>
+
 <span class="org-comment">        eps   :  Tolerance of the solver</span>
 <span class="org-comment">        itmax :  Maximum number of iterations</span>
 <span class="org-comment">        f     :  Function which the root will be computed</span>
@@ -566,8 +566,8 @@ See also:
 <span class="org-comment">     t -&gt; Int -&gt; (t -&gt; t) -&gt; (t -&gt; t) -&gt; t -&gt; (t, t, Int)</span>
 <span class="org-comment">-----------------------------------------------------------------------</span>
 <span class="org-comment">-}</span>
-<span class="org-function-name">newtonSolver</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-constructor">Floating</span> t<span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Ord</span> t) <span class="org-haskell-operator">=&gt;</span> t <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Int</span> <span class="org-haskell-operator">-&gt;</span> (t <span class="org-haskell-operator">-&gt;</span> t) <span class="org-haskell-operator">-&gt;</span> (t <span class="org-haskell-operator">-&gt;</span> t) <span class="org-haskell-operator">-&gt;</span> t <span class="org-haskell-operator">-&gt;</span> (t<span class="org-haskell-operator">,</span> t<span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Int</span>)
-<span class="org-haskell-definition">newtonSolver</span> eps itmax f df guess <span class="org-haskell-operator">=</span> (root<span class="org-haskell-operator">,</span> error<span class="org-haskell-operator">,</span> iterations)
+<span class="org-function-name">newtonSolver</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Floating</span> t, <span class="org-haskell-type">Ord</span> t) <span class="org-haskell-operator">=&gt;</span> t <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> (t <span class="org-haskell-operator">-&gt;</span> t) <span class="org-haskell-operator">-&gt;</span> (t <span class="org-haskell-operator">-&gt;</span> t) <span class="org-haskell-operator">-&gt;</span> t <span class="org-haskell-operator">-&gt;</span> (t, t, <span class="org-haskell-type">Int</span>)
+<span class="org-haskell-definition">newtonSolver</span> eps itmax f df guess <span class="org-haskell-operator">=</span> (root, error, iterations)
     <span class="org-haskell-keyword">where</span>
     check_root x <span class="org-haskell-operator">=</span> abs(f(x)) <span class="org-haskell-operator">&gt;</span> eps                                  
     iterator <span class="org-haskell-operator">=</span> newton_iterator f df   <span class="org-comment-delimiter">-- </span><span class="org-comment">Builds the Newton Iterator                              </span>
@@ -584,7 +584,7 @@ See also:
 
 <span class="org-comment-delimiter">{- </span>
 <span class="org-comment">    Solve f(x) = x^2 - 2 = 0 </span>
-<span class="org-comment">    </span>
+
 <span class="org-comment">    The solution is sqrt(2)</span>
 <span class="org-comment">-}</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> f x <span class="org-haskell-operator">=</span> x<span class="org-haskell-operator">^</span>2 <span class="org-haskell-operator">-</span> 2.0
@@ -594,10 +594,10 @@ See also:
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> df x <span class="org-haskell-operator">=</span> 2.0<span class="org-haskell-operator">*</span>x
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">newtonSolver</span> 1e-3 100 f df 5
-(1.414470981367771<span class="org-haskell-operator">,</span>7.281571315052027e-4<span class="org-haskell-operator">,</span>4)
+(1.414470981367771,7.281571315052027e-4,4)
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">newtonSolver</span> 1e-3 100 f df 50
-(1.4142150098491113<span class="org-haskell-operator">,</span>4.094082521888254e-6<span class="org-haskell-operator">,</span>8)
+(1.4142150098491113,4.094082521888254e-6,8)
 <span class="org-haskell-operator">&gt;</span>
 </pre>
 </div>
@@ -611,22 +611,22 @@ See also:
 <pre class="src src-haskell">(<span class="org-haskell-definition">|&gt;</span>) x f <span class="org-haskell-operator">=</span> f x
 (<span class="org-haskell-definition">|&gt;&gt;</span>) x f <span class="org-haskell-operator">=</span> map f x
 
-<span class="org-function-name">secant_iterator</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Floating</span> t <span class="org-haskell-operator">=&gt;</span> (t <span class="org-haskell-operator">-&gt;</span> t) <span class="org-haskell-operator">-&gt;</span> [t] <span class="org-haskell-operator">-&gt;</span> [t]
-<span class="org-haskell-definition">secant_iterator</span> f guesslist <span class="org-haskell-operator">=</span> [x<span class="org-haskell-operator">,</span> xnext]
+<span class="org-function-name">secant_iterator</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Floating</span> t <span class="org-haskell-operator">=&gt;</span> (t <span class="org-haskell-operator">-&gt;</span> t) <span class="org-haskell-operator">-&gt;</span> [t] <span class="org-haskell-operator">-&gt;</span> [t]
+<span class="org-haskell-definition">secant_iterator</span> f guesslist <span class="org-haskell-operator">=</span> [x, xnext]
     <span class="org-haskell-keyword">where</span>
     x <span class="org-haskell-operator">=</span>  guesslist <span class="org-haskell-operator">!!</span> 0
     x_ <span class="org-haskell-operator">=</span> guesslist <span class="org-haskell-operator">!!</span> 1
     xnext <span class="org-haskell-operator">=</span> x <span class="org-haskell-operator">-</span> f(x)<span class="org-haskell-operator">*</span>(x<span class="org-haskell-operator">-</span>x_)<span class="org-haskell-operator">/</span>(f(x) <span class="org-haskell-operator">-</span> f(x_))
 
-<span class="org-haskell-definition">secantSolver</span> eps itmax f x1 x2 <span class="org-haskell-operator">=</span> (root<span class="org-haskell-operator">,</span> error<span class="org-haskell-operator">,</span> iterations) 
+<span class="org-haskell-definition">secantSolver</span> eps itmax f x1 x2 <span class="org-haskell-operator">=</span> (root, error, iterations) 
     <span class="org-haskell-keyword">where</span>  
-    
+
     secant_error xlist <span class="org-haskell-operator">=</span> abs(f <span class="org-haskell-operator">$</span> xlist <span class="org-haskell-operator">!!</span> 1)
     check_error xlist <span class="org-haskell-operator">=</span> secant_error xlist <span class="org-haskell-operator">&gt;</span> eps
 
     iterator <span class="org-haskell-operator">=</span> secant_iterator  f
 
-    rootlist <span class="org-haskell-operator">=</span> [x1<span class="org-haskell-operator">,</span> x2] <span class="org-haskell-operator">|&gt;</span> iterate iterator <span class="org-haskell-operator">|&gt;</span> takeWhile check_error <span class="org-haskell-operator">|&gt;</span> take itmax
+    rootlist <span class="org-haskell-operator">=</span> [x1, x2] <span class="org-haskell-operator">|&gt;</span> iterate iterator <span class="org-haskell-operator">|&gt;</span> takeWhile check_error <span class="org-haskell-operator">|&gt;</span> take itmax
 
     pair <span class="org-haskell-operator">=</span> last rootlist <span class="org-haskell-operator">|&gt;</span> iterator
     root <span class="org-haskell-operator">=</span> last pair
@@ -636,11 +636,11 @@ See also:
 
 <span class="org-haskell-operator">*</span><span class="org-haskell-constructor">Main</span><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> f x <span class="org-haskell-operator">=</span> x<span class="org-haskell-operator">^</span>2 <span class="org-haskell-operator">-</span> 2.0
 <span class="org-haskell-operator">*</span><span class="org-haskell-constructor">Main</span><span class="org-haskell-operator">&gt;</span> secantSolver  1e-4 20 f 2 3
-(1.4142394822006472<span class="org-haskell-operator">,</span>7.331301515467459e-5<span class="org-haskell-operator">,</span>6)
+(1.4142394822006472,7.331301515467459e-5,6)
 <span class="org-haskell-operator">*</span><span class="org-haskell-constructor">Main</span><span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">*</span><span class="org-haskell-constructor">Main</span><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> f x <span class="org-haskell-operator">=</span> exp(x) <span class="org-haskell-operator">-</span> 3.0<span class="org-haskell-operator">*</span>x<span class="org-haskell-operator">^</span>2
 <span class="org-haskell-operator">*</span><span class="org-haskell-constructor">Main</span><span class="org-haskell-operator">&gt;</span> secantSolver 1e-5 100 f (<span class="org-haskell-operator">-</span>2.0)  3.0
-(<span class="org-haskell-operator">-</span>0.458964305393305<span class="org-haskell-operator">,</span>6.899607281729558e-6<span class="org-haskell-operator">,</span>24)
+(<span class="org-haskell-operator">-</span>0.458964305393305,6.899607281729558e-6,24)
 <span class="org-haskell-operator">*</span><span class="org-haskell-constructor">Main</span><span class="org-haskell-operator">&gt;</span>
 </pre>
 </div>
@@ -677,22 +677,22 @@ Solve differential equation by the Euler's Method.
 <pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Graphics.Gnuplot.Simple</span>
 
 
-<span class="org-haskell-definition">eulerStep</span> f step (x<span class="org-haskell-operator">,</span> y)<span class="org-haskell-operator">=</span> (xnew<span class="org-haskell-operator">,</span> ynew)
+<span class="org-haskell-definition">eulerStep</span> f step (x, y)<span class="org-haskell-operator">=</span> (xnew, ynew)
                     <span class="org-haskell-keyword">where</span>
                     xnew <span class="org-haskell-operator">=</span> x <span class="org-haskell-operator">+</span> step
-                    ynew <span class="org-haskell-operator">=</span> y <span class="org-haskell-operator">+</span> step <span class="org-haskell-operator">*</span> (f (x<span class="org-haskell-operator">,</span> y))
+                    ynew <span class="org-haskell-operator">=</span> y <span class="org-haskell-operator">+</span> step <span class="org-haskell-operator">*</span> (f (x, y))
 
-<span class="org-function-name">euler</span> <span class="org-haskell-operator">::</span> ((<span class="org-haskell-constructor">Double</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Double</span>) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Double</span>) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Double</span> <span class="org-haskell-operator">-&gt;</span> [(<span class="org-haskell-constructor">Double</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Double</span>)]
+<span class="org-function-name">euler</span> <span class="org-haskell-operator">::</span> ((<span class="org-haskell-type">Double</span>, <span class="org-haskell-type">Double</span>) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> [(<span class="org-haskell-type">Double</span>, <span class="org-haskell-type">Double</span>)]
 <span class="org-haskell-definition">euler</span> f x0 xf y0 step <span class="org-haskell-operator">=</span> xypairs
                      <span class="org-haskell-keyword">where</span>
                      iterator <span class="org-haskell-operator">=</span> iterate <span class="org-haskell-operator">$</span> eulerStep f step
-                     xypairs <span class="org-haskell-operator">=</span> takeWhile (<span class="org-haskell-operator">\</span>(x<span class="org-haskell-operator">,</span> y) <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">&lt;=</span> xf ) <span class="org-haskell-operator">$</span> iterator (x0<span class="org-haskell-operator">,</span> y0)
+                     xypairs <span class="org-haskell-operator">=</span> takeWhile (<span class="org-haskell-operator">\</span>(x, y) <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">&lt;=</span> xf ) <span class="org-haskell-operator">$</span> iterator (x0, y0)
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> dTemp k temp_r (t<span class="org-haskell-operator">,</span> temp) <span class="org-haskell-operator">=</span> <span class="org-haskell-operator">-</span>k<span class="org-haskell-operator">*</span>(temp <span class="org-haskell-operator">-</span> temp_r)
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> dTemp k temp_r (t, temp) <span class="org-haskell-operator">=</span> <span class="org-haskell-operator">-</span>k<span class="org-haskell-operator">*</span>(temp <span class="org-haskell-operator">-</span> temp_r)
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">euler</span> (dTemp 0.07 20.0) 0.0 100.0 100.0 5.0
-[(0.0<span class="org-haskell-operator">,</span>100.0)<span class="org-haskell-operator">,</span>(5.0<span class="org-haskell-operator">,</span>72.0)<span class="org-haskell-operator">,</span>(10.0<span class="org-haskell-operator">,</span>53.8)<span class="org-haskell-operator">,</span>(15.0<span class="org-haskell-operator">,</span>41.97) <span class="org-haskell-operator">\.\.\.</span>
-(100.0<span class="org-haskell-operator">,</span>20.01449963666907)]
+[(0.0,100.0),(5.0,72.0),(10.0,53.8),(15.0,41.97) <span class="org-haskell-operator">\.\.\.</span>
+(100.0,20.01449963666907)]
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-keyword">let</span> t_temp <span class="org-haskell-operator">=</span> euler (dTemp 0.07 20.0) 0.0 100.0 100.0 5.0
@@ -719,24 +719,24 @@ See also: <a href="http://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">Run
 
 <pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Graphics.Gnuplot.Simple</span>
 
-<span class="org-haskell-definition">rk4Step</span> f h (x<span class="org-haskell-operator">,</span> y) <span class="org-haskell-operator">=</span> (xnext<span class="org-haskell-operator">,</span> ynext)
+<span class="org-haskell-definition">rk4Step</span> f h (x, y) <span class="org-haskell-operator">=</span> (xnext, ynext)
                       <span class="org-haskell-keyword">where</span>
-                      
-                      k1 <span class="org-haskell-operator">=</span> f (x<span class="org-haskell-operator">,</span> y)
-                      k2 <span class="org-haskell-operator">=</span> f (x<span class="org-haskell-operator">+</span>h<span class="org-haskell-operator">/</span>2<span class="org-haskell-operator">,</span> y<span class="org-haskell-operator">+</span>h<span class="org-haskell-operator">/</span>2<span class="org-haskell-operator">*</span>k1)
-                      k3 <span class="org-haskell-operator">=</span> f (x<span class="org-haskell-operator">+</span>h<span class="org-haskell-operator">/</span>2<span class="org-haskell-operator">,</span> y<span class="org-haskell-operator">+</span>h<span class="org-haskell-operator">/</span>2<span class="org-haskell-operator">*</span>k2)
-                      k4 <span class="org-haskell-operator">=</span> f (x<span class="org-haskell-operator">+</span>h<span class="org-haskell-operator">,</span>y<span class="org-haskell-operator">+</span>h<span class="org-haskell-operator">*</span>k3)
-                      
+
+                      k1 <span class="org-haskell-operator">=</span> f (x, y)
+                      k2 <span class="org-haskell-operator">=</span> f (x<span class="org-haskell-operator">+</span>h<span class="org-haskell-operator">/</span>2, y<span class="org-haskell-operator">+</span>h<span class="org-haskell-operator">/</span>2<span class="org-haskell-operator">*</span>k1)
+                      k3 <span class="org-haskell-operator">=</span> f (x<span class="org-haskell-operator">+</span>h<span class="org-haskell-operator">/</span>2, y<span class="org-haskell-operator">+</span>h<span class="org-haskell-operator">/</span>2<span class="org-haskell-operator">*</span>k2)
+                      k4 <span class="org-haskell-operator">=</span> f (x<span class="org-haskell-operator">+</span>h,y<span class="org-haskell-operator">+</span>h<span class="org-haskell-operator">*</span>k3)
+
                       xnext <span class="org-haskell-operator">=</span> x <span class="org-haskell-operator">+</span> h
                       ynext <span class="org-haskell-operator">=</span> y <span class="org-haskell-operator">+</span> h<span class="org-haskell-operator">/</span>6<span class="org-haskell-operator">*</span>(k1<span class="org-haskell-operator">+</span>2<span class="org-haskell-operator">*</span>k2<span class="org-haskell-operator">+</span>2<span class="org-haskell-operator">*</span>k3<span class="org-haskell-operator">+</span>k4)
-                      
-<span class="org-function-name">rk4</span> <span class="org-haskell-operator">::</span> ((<span class="org-haskell-constructor">Double</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Double</span>) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Double</span>) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Double</span> <span class="org-haskell-operator">-&gt;</span> [(<span class="org-haskell-constructor">Double</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Double</span>)]
+
+<span class="org-function-name">rk4</span> <span class="org-haskell-operator">::</span> ((<span class="org-haskell-type">Double</span>, <span class="org-haskell-type">Double</span>) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> [(<span class="org-haskell-type">Double</span>, <span class="org-haskell-type">Double</span>)]
 <span class="org-haskell-definition">rk4</span> f x0 xf y0 h <span class="org-haskell-operator">=</span> xypairs
                      <span class="org-haskell-keyword">where</span>
                      iterator <span class="org-haskell-operator">=</span> iterate <span class="org-haskell-operator">$</span> rk4Step f h
-                     xypairs <span class="org-haskell-operator">=</span> takeWhile (<span class="org-haskell-operator">\</span>(x<span class="org-haskell-operator">,</span> y) <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">&lt;=</span> xf ) <span class="org-haskell-operator">$</span> iterator (x0<span class="org-haskell-operator">,</span> y0)
+                     xypairs <span class="org-haskell-operator">=</span> takeWhile (<span class="org-haskell-operator">\</span>(x, y) <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">&lt;=</span> xf ) <span class="org-haskell-operator">$</span> iterator (x0, y0)
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> dTemp k temp_r (t<span class="org-haskell-operator">,</span> temp) <span class="org-haskell-operator">=</span> <span class="org-haskell-operator">-</span>k<span class="org-haskell-operator">*</span>(temp <span class="org-haskell-operator">-</span> temp_r)
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> dTemp k temp_r (t, temp) <span class="org-haskell-operator">=</span> <span class="org-haskell-operator">-</span>k<span class="org-haskell-operator">*</span>(temp <span class="org-haskell-operator">-</span> temp_r)
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> t_temp <span class="org-haskell-operator">=</span> rk4 (dTemp 0.07 20.0) 0.0 100.0 100.0 5.0
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">plotList</span> <span class="org-haskell-constructor">[]</span> t_temp
@@ -857,13 +857,13 @@ Solution:
 <span class="org-haskell-operator">&gt;</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> cagr prices <span class="org-haskell-operator">=</span> (growthp prices <span class="org-haskell-operator">|&gt;&gt;</span> (<span class="org-haskell-operator">+</span>100) <span class="org-haskell-operator">|&gt;</span> geomean ) <span class="org-haskell-operator">-</span> 100
 <span class="org-haskell-operator">&gt;</span>
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> prices <span class="org-haskell-operator">=</span> [16.06<span class="org-haskell-operator">,</span> 23.83<span class="org-haskell-operator">,</span> 33.13<span class="org-haskell-operator">,</span> 50.26<span class="org-haskell-operator">,</span> 46.97<span class="org-haskell-operator">,</span> 39.89 ]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> prices <span class="org-haskell-operator">=</span> [16.06, 23.83, 33.13, 50.26, 46.97, 39.89 ]
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-comment-delimiter">{- </span><span class="org-comment">Percent Returns -}</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> returns <span class="org-haskell-operator">=</span> growthp prices
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> returns
-[48.38107098381071<span class="org-haskell-operator">,</span>39.02643726395302<span class="org-haskell-operator">,</span>51.705402958044054<span class="org-haskell-operator">,-</span>6.545961002785513<span class="org-haskell-operator">,-</span>15.073451139024908]
+[48.38107098381071,39.02643726395302,51.705402958044054,<span class="org-haskell-operator">-</span>6.545961002785513,<span class="org-haskell-operator">-</span>15.073451139024908]
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> annual_cagr <span class="org-haskell-operator">=</span> cagr prices 
@@ -906,34 +906,34 @@ File: coinSimulator.hs
 
 <span class="org-comment">-}</span>
 
-<span class="org-function-name">flipCoin</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">Integer</span>
-<span class="org-haskell-definition">flipCoin</span> <span class="org-haskell-operator">=</span> randomRIO (0<span class="org-haskell-operator">,</span> 1)
+<span class="org-function-name">flipCoin</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">Integer</span>
+<span class="org-haskell-definition">flipCoin</span> <span class="org-haskell-operator">=</span> randomRIO (0, 1)
 
 <span class="org-haskell-definition">flipCoinNtimes</span> n <span class="org-haskell-operator">=</span> replicateM n flipCoin
 
 <span class="org-haskell-definition">frequency</span> elem alist <span class="org-haskell-operator">=</span> length <span class="org-haskell-operator">$</span> filter (<span class="org-haskell-operator">==</span>elem) alist
 
-<span class="org-function-name">relativeFreq</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Integer</span> <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-constructor">Integer</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Double</span>
+<span class="org-function-name">relativeFreq</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Integer</span> <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">Integer</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
 <span class="org-haskell-definition">relativeFreq</span> elem alist <span class="org-haskell-operator">=</span> 
     fromIntegral (frequency elem alist) <span class="org-haskell-operator">/</span> fromIntegral (length alist)
 
 <span class="org-haskell-definition">simulateCoinToss</span> ntimes <span class="org-haskell-operator">=</span>  <span class="org-haskell-keyword">do</span>
     series <span class="org-haskell-operator">&lt;-</span> (flipCoinNtimes  ntimes)
-    <span class="org-haskell-keyword">let</span> counts <span class="org-haskell-operator">=</span> map (flip frequency series)   [0<span class="org-haskell-operator">,</span> 1]
-    <span class="org-haskell-keyword">let</span> freqs <span class="org-haskell-operator">=</span> map (flip relativeFreq series) [0<span class="org-haskell-operator">,</span> 1]
-    return (freqs<span class="org-haskell-operator">,</span> counts)
+    <span class="org-haskell-keyword">let</span> counts <span class="org-haskell-operator">=</span> map (flip frequency series)   [0, 1]
+    <span class="org-haskell-keyword">let</span> freqs <span class="org-haskell-operator">=</span> map (flip relativeFreq series) [0, 1]
+    return (freqs, counts)
 
 <span class="org-haskell-definition">showSimulation</span> ntimes <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
     result <span class="org-haskell-operator">&lt;-</span> simulateCoinToss ntimes
     <span class="org-haskell-keyword">let</span> p_tails <span class="org-haskell-operator">=</span> (fst result) <span class="org-haskell-operator">!!</span> 0
     <span class="org-haskell-keyword">let</span> p_heads <span class="org-haskell-operator">=</span> (fst result) <span class="org-haskell-operator">!!</span> 1
-    
+
     <span class="org-haskell-keyword">let</span> n_tails <span class="org-haskell-operator">=</span> (snd result) <span class="org-haskell-operator">!!</span> 0
     <span class="org-haskell-keyword">let</span> n_heads <span class="org-haskell-operator">=</span> (snd result) <span class="org-haskell-operator">!!</span> 1
-    
+
     <span class="org-haskell-keyword">let</span> tosses <span class="org-haskell-operator">=</span> n_tails <span class="org-haskell-operator">+</span> n_heads
     <span class="org-haskell-keyword">let</span> p_error <span class="org-haskell-operator">=</span> abs(p_tails <span class="org-haskell-operator">-</span> p_heads)
-    
+
     putStrLn <span class="org-haskell-operator">$</span> <span class="org-string">"Number of tosses : "</span> <span class="org-haskell-operator">++</span> show(tosses)
     putStrLn <span class="org-haskell-operator">$</span> <span class="org-string">"The number of tails is : "</span> <span class="org-haskell-operator">++</span> show(n_tails)        
     putStrLn <span class="org-haskell-operator">$</span> <span class="org-string">"The number of heads is : "</span> <span class="org-haskell-operator">++</span> show(n_heads)
@@ -1030,7 +1030,7 @@ The %erro is : 2.4399999999996647e-2
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> dotp v1 v2 <span class="org-haskell-operator">=</span> sum ( zipWith (<span class="org-haskell-operator">*</span>) v1 v2 )   <span class="org-haskell-operator">-</span> <span class="org-haskell-constructor">With</span> <span class="org-haskell-constructor">Parenthesis</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> dotp v1 v2 <span class="org-haskell-operator">=</span> sum <span class="org-haskell-operator">$</span> zipWith (<span class="org-haskell-operator">*</span>) v1 v2     <span class="org-haskell-operator">-</span> <span class="org-haskell-constructor">Without</span> <span class="org-haskell-constructor">Parenthesis</span> with <span class="org-haskell-operator">$</span> operator
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">dotp</span> [1.23<span class="org-haskell-operator">,</span> 33.44<span class="org-haskell-operator">,</span> 22.23<span class="org-haskell-operator">,</span> 40] [23<span class="org-haskell-operator">,</span> 10<span class="org-haskell-operator">,</span> 44<span class="org-haskell-operator">,</span> 12]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">dotp</span> [1.23, 33.44, 22.23, 40] [23, 10, 44, 12]
 1820.81
 </pre>
 </div>
@@ -1048,7 +1048,7 @@ The %erro is : 2.4399999999996647e-2
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> norm vector <span class="org-haskell-operator">=</span> (sqrt <span class="org-haskell-operator">.</span> sum) (map (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> x<span class="org-haskell-operator">^</span>2) vector)
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">norm</span> [1<span class="org-haskell-operator">,</span> 2<span class="org-haskell-operator">,</span> 3<span class="org-haskell-operator">,</span> 4<span class="org-haskell-operator">,</span> 5]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">norm</span> [1, 2, 3, 4, 5]
 7.416198487095663
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">Vector norm in multiple line statements in GHCI interactive shell</span>
@@ -1062,7 +1062,7 @@ The %erro is : 2.4399999999996647e-2
 <span class="org-haskell-operator">|</span>      }
 <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">:</span>}
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">norm2</span> [1<span class="org-haskell-operator">,</span> 2<span class="org-haskell-operator">,</span> 3<span class="org-haskell-operator">,</span> 4<span class="org-haskell-operator">,</span> 5]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">norm2</span> [1, 2, 3, 4, 5]
 7.416198487095663
 <span class="org-haskell-operator">&gt;</span>
 </pre>
@@ -1077,7 +1077,7 @@ The %erro is : 2.4399999999996647e-2
 <pre class="src src-haskell"><span class="org-haskell-definition">linspace</span> d1 d2 n <span class="org-haskell-operator">=</span> [d1 <span class="org-haskell-operator">+</span> i<span class="org-haskell-operator">*</span>step <span class="org-haskell-operator">|</span> i <span class="org-haskell-operator">&lt;-</span> [0<span class="org-haskell-operator">..</span>n<span class="org-haskell-operator">-</span>1] ]
     <span class="org-haskell-keyword">where</span> 
     step <span class="org-haskell-operator">=</span> (d2 <span class="org-haskell-operator">-</span> d1)<span class="org-haskell-operator">/</span>(n<span class="org-haskell-operator">-</span>1)
-        
+
 
 <span class="org-haskell-definition">range</span> start stop step <span class="org-haskell-operator">=</span>  [start <span class="org-haskell-operator">+</span> i<span class="org-haskell-operator">*</span>step <span class="org-haskell-operator">|</span> i <span class="org-haskell-operator">&lt;-</span> [0<span class="org-haskell-operator">..</span>n] ]
     <span class="org-haskell-keyword">where</span>
@@ -1118,11 +1118,11 @@ Higher  than 40,230     45%
 Here are some example answers:
 </p>
 <pre class="example">
-    5,000 –&gt; 500
-    5,800 –&gt; 609.2
-    9,000 –&gt; 1087.8
-    15,000 –&gt; 2532.9
-    50,000 –&gt; 15,068.1
+5,000 –&gt; 500
+5,800 –&gt; 609.2
+9,000 –&gt; 1087.8
+15,000 –&gt; 2532.9
+50,000 –&gt; 15,068.1
 </pre>
 
 <p>
@@ -1172,21 +1172,21 @@ Solution:
 
 <span class="org-comment-delimiter">{- </span>
 <span class="org-comment">    Tax rate function - Calculates the net tax rate in %</span>
-<span class="org-comment">    </span>
+
 <span class="org-comment">    taxrate = 100 *  tax / (gross revenue)</span>
 
 <span class="org-comment">-}</span>
 <span class="org-haskell-definition">taxrate</span> taxfunction income <span class="org-haskell-operator">=</span> 100.0<span class="org-haskell-operator">*</span>(taxfunction income)<span class="org-haskell-operator">/</span>income
 
-<span class="org-function-name">progressivetax</span> <span class="org-haskell-operator">::</span> [[<span class="org-haskell-constructor">Double</span>]] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Double</span>
+<span class="org-function-name">progressivetax</span> <span class="org-haskell-operator">::</span> [[<span class="org-haskell-type">Double</span>]] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
 <span class="org-haskell-definition">progressivetax</span> taxtable income <span class="org-haskell-operator">=</span> amount
             <span class="org-haskell-keyword">where</span> 
             rates <span class="org-haskell-operator">=</span> taxtable <span class="org-haskell-operator">|&gt;&gt;</span> (<span class="org-haskell-operator">!!</span>1) <span class="org-haskell-operator">|&gt;&gt;</span> (<span class="org-haskell-operator">/</span>100.0)  <span class="org-haskell-operator">|&gt;</span> tail
             levels <span class="org-haskell-operator">=</span> taxtable <span class="org-haskell-operator">|&gt;&gt;</span> (<span class="org-haskell-operator">!!</span>0)
             table <span class="org-haskell-operator">=</span> zip3 levels (tail levels) rates            
             amount <span class="org-haskell-operator">=</span> table <span class="org-haskell-operator">|&gt;&gt;</span> frow income <span class="org-haskell-operator">|&gt;</span> takeWhile (<span class="org-haskell-operator">&gt;</span>0) <span class="org-haskell-operator">|&gt;</span> sum
-            
-            frow x (xlow<span class="org-haskell-operator">,</span> xhigh<span class="org-haskell-operator">,</span> rate) <span class="org-haskell-operator">|</span> x <span class="org-haskell-operator">&gt;</span> xhigh <span class="org-haskell-operator">=</span> (xhigh<span class="org-haskell-operator">-</span>xlow)<span class="org-haskell-operator">*</span>rate 
+
+            frow x (xlow, xhigh, rate) <span class="org-haskell-operator">|</span> x <span class="org-haskell-operator">&gt;</span> xhigh <span class="org-haskell-operator">=</span> (xhigh<span class="org-haskell-operator">-</span>xlow)<span class="org-haskell-operator">*</span>rate 
                                        <span class="org-haskell-operator">|</span> otherwise <span class="org-haskell-operator">=</span> (x<span class="org-haskell-operator">-</span>xlow)<span class="org-haskell-operator">*</span>rate   
 <span class="org-haskell-definition">taxsearch</span> taxtable value <span class="org-haskell-operator">=</span> result        
         <span class="org-haskell-keyword">where</span>
@@ -1204,7 +1204,7 @@ Solution:
 <span class="org-comment">-}</span>
 <span class="org-haskell-definition">incometax</span> taxtable income  <span class="org-haskell-operator">=</span> amount<span class="org-comment-delimiter">--</span><span class="org-comment">(tax, aliquot, discount)</span>
                 <span class="org-haskell-keyword">where</span>
-                
+
                 row <span class="org-haskell-operator">=</span> taxsearch taxtable income                
                 aliquot <span class="org-haskell-operator">=</span> row <span class="org-haskell-operator">!!</span> 1
                 discount <span class="org-haskell-operator">=</span> row <span class="org-haskell-operator">!!</span> 2                
@@ -1212,24 +1212,24 @@ Solution:
 
 <span class="org-comment-delimiter">{- </span><span class="org-comment">Progressive Tax System -}</span>
 <span class="org-haskell-definition">israeltaxbrackets</span> <span class="org-haskell-operator">=</span> [
-    [0<span class="org-haskell-operator">,</span>          0]<span class="org-haskell-operator">,</span>
-    [ 5070.0<span class="org-haskell-operator">,</span> 10.0]<span class="org-haskell-operator">,</span>
-    [ 8660.0<span class="org-haskell-operator">,</span> 14.0]<span class="org-haskell-operator">,</span>
-    [14070.0<span class="org-haskell-operator">,</span> 23.0]<span class="org-haskell-operator">,</span>
-    [21240.0<span class="org-haskell-operator">,</span> 30.0]<span class="org-haskell-operator">,</span>
-    [40230.0<span class="org-haskell-operator">,</span> 33.0]<span class="org-haskell-operator">,</span>
-    [above  <span class="org-haskell-operator">,</span> 45.0]
+    [0,          0],
+    [ 5070.0, 10.0],
+    [ 8660.0, 14.0],
+    [14070.0, 23.0],
+    [21240.0, 30.0],
+    [40230.0, 33.0],
+    [above  , 45.0]
     ]                    
 
 <span class="org-haskell-definition">taxOfIsrael</span>     <span class="org-haskell-operator">=</span> progressivetax israeltaxbrackets
 <span class="org-haskell-definition">taxRateOfIsrael</span> <span class="org-haskell-operator">=</span> taxrate taxOfIsrael
 
 <span class="org-haskell-definition">braziltaxbrackets</span> <span class="org-haskell-operator">=</span> [
-    [1787.77<span class="org-haskell-operator">,</span>    0<span class="org-haskell-operator">,</span>   0.00]<span class="org-haskell-operator">,</span>
-    [2679.29<span class="org-haskell-operator">,</span>  7.5<span class="org-haskell-operator">,</span> 134.48]<span class="org-haskell-operator">,</span>
-    [3572.43<span class="org-haskell-operator">,</span> 15.0<span class="org-haskell-operator">,</span> 335.03]<span class="org-haskell-operator">,</span>
-    [4463.81<span class="org-haskell-operator">,</span> 22.5<span class="org-haskell-operator">,</span> 602.96]<span class="org-haskell-operator">,</span>
-    [above<span class="org-haskell-operator">,</span>    27.5<span class="org-haskell-operator">,</span> 826.15]
+    [1787.77,    0,   0.00],
+    [2679.29,  7.5, 134.48],
+    [3572.43, 15.0, 335.03],
+    [4463.81, 22.5, 602.96],
+    [above,    27.5, 826.15]
    ]
 
 
@@ -1240,20 +1240,20 @@ Solution:
 
 <span class="org-comment-delimiter">{- </span>
 <span class="org-comment">    Unit test of a function of numerical input and output.</span>
-<span class="org-comment">    </span>
+
 <span class="org-comment">    input       - Unit test case values             [t1, t2, t2, e5]</span>
 <span class="org-comment">    expected    - Expected value of each test case  [e1, e2, e3, e4]</span>
 <span class="org-comment">    tol         - Tolerance 1e-3 typical value </span>
 <span class="org-comment">    f           - Function:                         error_i = abs(e_i-t_i)</span>
-<span class="org-comment">    </span>
+
 <span class="org-comment">    Returns true if in all test cases  error_i &lt; tol</span>
 <span class="org-comment">-}</span>
-<span class="org-function-name">testCaseNumeric</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-constructor">Num</span> a<span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Ord</span> a) <span class="org-haskell-operator">=&gt;</span> [a1] <span class="org-haskell-operator">-&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> (a1 <span class="org-haskell-operator">-&gt;</span> a) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Bool</span>
+<span class="org-function-name">testCaseNumeric</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Num</span> a, <span class="org-haskell-type">Ord</span> a) <span class="org-haskell-operator">=&gt;</span> [a1] <span class="org-haskell-operator">-&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> (a1 <span class="org-haskell-operator">-&gt;</span> a) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
 <span class="org-haskell-definition">testCaseNumeric</span> input expected tol f <span class="org-haskell-operator">=</span> all (<span class="org-haskell-operator">\</span>t <span class="org-haskell-operator">-&gt;</span> t <span class="org-haskell-operator">&amp;&amp;</span> <span class="org-haskell-constructor">True</span>) ( zipWith (<span class="org-haskell-operator">\</span>x y <span class="org-haskell-operator">-&gt;</span> abs(x<span class="org-haskell-operator">-</span>y) <span class="org-haskell-operator">&lt;</span> tol) (map f input) expected )
 
 <span class="org-haskell-definition">testIsraelTaxes</span> <span class="org-haskell-operator">=</span> testCaseNumeric  
-    [5000<span class="org-haskell-operator">,</span> 5800<span class="org-haskell-operator">,</span> 9000<span class="org-haskell-operator">,</span> 15000<span class="org-haskell-operator">,</span> 50000]
-    [500.0<span class="org-haskell-operator">,</span>609.2<span class="org-haskell-operator">,</span>1087.8<span class="org-haskell-operator">,</span>2532.9<span class="org-haskell-operator">,</span>15068.1]
+    [5000, 5800, 9000, 15000, 50000]
+    [500.0,609.2,1087.8,2532.9,15068.1]
     1e-3 taxOfIsrael
 
 <span class="org-haskell-operator">&gt;</span> testIsraelTaxes 
@@ -1309,21 +1309,21 @@ starbuck_dsl.hs
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-haskell-keyword">data</span> <span class="org-haskell-constructor">Size</span>  <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Tall</span> <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Grande</span> <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Venti</span>
-            <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Enum</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Read</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Show</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Ord</span>)
- 
-<span class="org-haskell-keyword">data</span> <span class="org-haskell-constructor">Drink</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Latte</span> <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Cappuccino</span> <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Mocha</span> <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Americano</span>            
-            <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Enum</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Read</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Show</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Ord</span>)
+<pre class="src src-haskell"><span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Size</span>  <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Tall</span> <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Grande</span> <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Venti</span>
+            <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span>, <span class="org-haskell-constructor">Enum</span>, <span class="org-haskell-constructor">Read</span>, <span class="org-haskell-constructor">Show</span>, <span class="org-haskell-constructor">Ord</span>)
 
-<span class="org-haskell-keyword">data</span> <span class="org-haskell-constructor">Extra</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Shot</span> <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Syrup</span>
-            <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Enum</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Read</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Show</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Ord</span>)
+<span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Drink</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Latte</span> <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Cappuccino</span> <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Mocha</span> <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Americano</span>            
+            <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span>, <span class="org-haskell-constructor">Enum</span>, <span class="org-haskell-constructor">Read</span>, <span class="org-haskell-constructor">Show</span>, <span class="org-haskell-constructor">Ord</span>)
 
-<span class="org-haskell-keyword">data</span> <span class="org-haskell-constructor">Cup</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Cup</span> {
-                cupDrink <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Drink</span><span class="org-haskell-operator">,</span>
-                cupSize  <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Size</span><span class="org-haskell-operator">,</span>
-                cupExtra <span class="org-haskell-operator">::</span> [<span class="org-haskell-constructor">Extra</span>]         
+<span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Extra</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Shot</span> <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Syrup</span>
+            <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span>, <span class="org-haskell-constructor">Enum</span>, <span class="org-haskell-constructor">Read</span>, <span class="org-haskell-constructor">Show</span>, <span class="org-haskell-constructor">Ord</span>)
+
+<span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Cup</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Cup</span> {
+                cupDrink <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Drink</span>,
+                cupSize  <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Size</span>,
+                cupExtra <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">Extra</span>]         
                }
-               <span class="org-haskell-keyword">deriving</span>(<span class="org-haskell-constructor">Eq</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Show</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Read</span>)
+               <span class="org-haskell-keyword">deriving</span>(<span class="org-haskell-constructor">Eq</span>, <span class="org-haskell-constructor">Show</span>, <span class="org-haskell-constructor">Read</span>)
 
 <span class="org-comment-delimiter">{-</span>
 <span class="org-comment"> -                  Table in the format:</span>
@@ -1336,14 +1336,14 @@ starbuck_dsl.hs
 <span class="org-comment"> -}</span>
 
 <span class="org-haskell-definition">table</span> <span class="org-haskell-operator">=</span> [
-    [2.69<span class="org-haskell-operator">,</span> 3.19<span class="org-haskell-operator">,</span> 3.49]<span class="org-haskell-operator">,</span>
-    [2.69<span class="org-haskell-operator">,</span> 3.19<span class="org-haskell-operator">,</span> 3.49]<span class="org-haskell-operator">,</span>
-    [2.99<span class="org-haskell-operator">,</span> 3.49<span class="org-haskell-operator">,</span> 3.79]<span class="org-haskell-operator">,</span>
-    [1.89<span class="org-haskell-operator">,</span> 2.19<span class="org-haskell-operator">,</span> 2.59]
+    [2.69, 3.19, 3.49],
+    [2.69, 3.19, 3.49],
+    [2.99, 3.49, 3.79],
+    [1.89, 2.19, 2.59]
     ]    
 
 
-<span class="org-function-name">extraPrice</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Extra</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Double</span>
+<span class="org-function-name">extraPrice</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Extra</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
 <span class="org-haskell-definition">extraPrice</span> <span class="org-haskell-constructor">Syrup</span> <span class="org-haskell-operator">=</span> 0.59
 <span class="org-haskell-definition">extraPrice</span> <span class="org-haskell-constructor">Shot</span>  <span class="org-haskell-operator">=</span> 0.39
 
@@ -1352,21 +1352,21 @@ starbuck_dsl.hs
             drinkrow <span class="org-haskell-operator">=</span> table <span class="org-haskell-operator">!!</span>  fromEnum  (cupDrink cup)
             baseprice   <span class="org-haskell-operator">=</span> drinkrow <span class="org-haskell-operator">!!</span>  fromEnum  (cupSize cup)
             extraprice <span class="org-haskell-operator">=</span> sum <span class="org-haskell-operator">$</span> map extraPrice (cupExtra cup)
-            
+
 
 
 <span class="org-comment-delimiter">{- </span><span class="org-comment">Constructor of Cup -}</span>
 <span class="org-haskell-definition">cupOf</span> drink size extra <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Cup</span> { 
-                             cupSize <span class="org-haskell-operator">=</span> size<span class="org-haskell-operator">,</span> 
-                             cupDrink <span class="org-haskell-operator">=</span> drink<span class="org-haskell-operator">,</span> 
+                             cupSize <span class="org-haskell-operator">=</span> size, 
+                             cupDrink <span class="org-haskell-operator">=</span> drink, 
                              cupExtra <span class="org-haskell-operator">=</span> extra}
 
-<span class="org-haskell-definition">drink_options</span> <span class="org-haskell-operator">=</span> [ <span class="org-haskell-constructor">Latte</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Cappuccino</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Mocha</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Americano</span>]
-<span class="org-haskell-definition">size_options</span>  <span class="org-haskell-operator">=</span> [ <span class="org-haskell-constructor">Tall</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Grande</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Venti</span>]  
-<span class="org-haskell-definition">extra_options</span> <span class="org-haskell-operator">=</span> [<span class="org-haskell-constructor">[]</span><span class="org-haskell-operator">,</span> [<span class="org-haskell-constructor">Shot</span>]<span class="org-haskell-operator">,</span> [<span class="org-haskell-constructor">Syrup</span>]<span class="org-haskell-operator">,</span> [<span class="org-haskell-constructor">Shot</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Syrup</span>]]
+<span class="org-haskell-definition">drink_options</span> <span class="org-haskell-operator">=</span> [ <span class="org-haskell-constructor">Latte</span>, <span class="org-haskell-constructor">Cappuccino</span>, <span class="org-haskell-constructor">Mocha</span>, <span class="org-haskell-constructor">Americano</span>]
+<span class="org-haskell-definition">size_options</span>  <span class="org-haskell-operator">=</span> [ <span class="org-haskell-constructor">Tall</span>, <span class="org-haskell-constructor">Grande</span>, <span class="org-haskell-constructor">Venti</span>]  
+<span class="org-haskell-definition">extra_options</span> <span class="org-haskell-operator">=</span> [<span class="org-haskell-constructor">[]</span>, [<span class="org-haskell-constructor">Shot</span>], [<span class="org-haskell-constructor">Syrup</span>], [<span class="org-haskell-constructor">Shot</span>, <span class="org-haskell-constructor">Syrup</span>]]
 
 <span class="org-haskell-definition">cup_combinations</span> <span class="org-haskell-operator">=</span>  
-            [ cupOf drink size extra <span class="org-haskell-operator">|</span> drink <span class="org-haskell-operator">&lt;-</span> drink_options<span class="org-haskell-operator">,</span> size <span class="org-haskell-operator">&lt;-</span> size_options<span class="org-haskell-operator">,</span> extra <span class="org-haskell-operator">&lt;-</span> extra_options]
+            [ cupOf drink size extra <span class="org-haskell-operator">|</span> drink <span class="org-haskell-operator">&lt;-</span> drink_options, size <span class="org-haskell-operator">&lt;-</span> size_options, extra <span class="org-haskell-operator">&lt;-</span> extra_options]
 </pre>
 </div>
 
@@ -1378,42 +1378,42 @@ Example:
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>load starbucks_dsl<span class="org-haskell-operator">.</span>hs 
-[1 <span class="org-haskell-keyword">of</span> 1] <span class="org-haskell-constructor">Compiling</span> <span class="org-haskell-constructor">Main</span>             ( starbucks_dsl<span class="org-haskell-operator">.</span>hs<span class="org-haskell-operator">,</span> interpreted )
-<span class="org-haskell-constructor">Ok</span><span class="org-haskell-operator">,</span> modules loaded<span class="org-haskell-constructor">:</span> <span class="org-haskell-constructor">Main</span><span class="org-haskell-operator">.</span>
+[1 <span class="org-haskell-keyword">of</span> 1] <span class="org-haskell-constructor">Compiling</span> <span class="org-haskell-constructor">Main</span>             ( starbucks_dsl<span class="org-haskell-operator">.</span>hs, interpreted )
+<span class="org-haskell-constructor">Ok</span>, modules loaded<span class="org-haskell-constructor">:</span> Main.
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> myCup <span class="org-haskell-operator">=</span> cupOf <span class="org-haskell-constructor">Latte</span> <span class="org-haskell-constructor">Venti</span> [<span class="org-haskell-constructor">Syrup</span>]
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> price <span class="org-haskell-operator">=</span> priceOfcup myCup 
 <span class="org-haskell-operator">&gt;</span> myCup 
-<span class="org-haskell-constructor">Cup</span> {cupDrink <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Latte</span><span class="org-haskell-operator">,</span> cupSize <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Venti</span><span class="org-haskell-operator">,</span> cupExtra <span class="org-haskell-operator">=</span> [<span class="org-haskell-constructor">Syrup</span>]}
+<span class="org-haskell-constructor">Cup</span> {cupDrink <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Latte</span>, cupSize <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Venti</span>, cupExtra <span class="org-haskell-operator">=</span> [<span class="org-haskell-constructor">Syrup</span>]}
 <span class="org-haskell-operator">&gt;</span> price
 4.08
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">priceOfcup</span> (cupOf <span class="org-haskell-constructor">Cappuccino</span> <span class="org-haskell-constructor">Tall</span> [<span class="org-haskell-constructor">Syrup</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Shot</span>])
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">priceOfcup</span> (cupOf <span class="org-haskell-constructor">Cappuccino</span> <span class="org-haskell-constructor">Tall</span> [<span class="org-haskell-constructor">Syrup</span>, <span class="org-haskell-constructor">Shot</span>])
 3.67
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> cups <span class="org-haskell-operator">=</span> [ cupOf <span class="org-haskell-constructor">Americano</span> <span class="org-haskell-constructor">Venti</span> extra <span class="org-haskell-operator">|</span>  extra <span class="org-haskell-operator">&lt;-</span> extra_options]
 <span class="org-haskell-operator">&gt;</span> cups
-[<span class="org-haskell-constructor">Cup</span> {cupDrink <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Americano</span><span class="org-haskell-operator">,</span> cupSize <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Venti</span><span class="org-haskell-operator">,</span> cupExtra <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">[]</span>}<span class="org-haskell-operator">,</span>
-<span class="org-haskell-constructor">Cup</span> {cupDrink <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Americano</span><span class="org-haskell-operator">,</span> cupSize <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Venti</span><span class="org-haskell-operator">,</span> cupExtra <span class="org-haskell-operator">=</span> [<span class="org-haskell-constructor">Shot</span>]}<span class="org-haskell-operator">,</span>
-<span class="org-haskell-constructor">Cup</span> {cupDrink <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Americano</span><span class="org-haskell-operator">,</span> cupSize <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Venti</span><span class="org-haskell-operator">,</span> cupExtra <span class="org-haskell-operator">=</span> [<span class="org-haskell-constructor">Syrup</span>]}<span class="org-haskell-operator">,</span>
-<span class="org-haskell-constructor">Cup</span> {cupDrink <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Americano</span><span class="org-haskell-operator">,</span> cupSize <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Venti</span><span class="org-haskell-operator">,</span> cupExtra <span class="org-haskell-operator">=</span> [<span class="org-haskell-constructor">Shot</span><span class="org-haskell-operator">,</span><span class="org-haskell-constructor">Syrup</span>]}]
+[<span class="org-haskell-constructor">Cup</span> {cupDrink <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Americano</span>, cupSize <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Venti</span>, cupExtra <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">[]</span>},
+<span class="org-haskell-constructor">Cup</span> {cupDrink <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Americano</span>, cupSize <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Venti</span>, cupExtra <span class="org-haskell-operator">=</span> [<span class="org-haskell-constructor">Shot</span>]},
+<span class="org-haskell-constructor">Cup</span> {cupDrink <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Americano</span>, cupSize <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Venti</span>, cupExtra <span class="org-haskell-operator">=</span> [<span class="org-haskell-constructor">Syrup</span>]},
+<span class="org-haskell-constructor">Cup</span> {cupDrink <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Americano</span>, cupSize <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Venti</span>, cupExtra <span class="org-haskell-operator">=</span> [<span class="org-haskell-constructor">Shot</span>,<span class="org-haskell-constructor">Syrup</span>]}]
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> prices <span class="org-haskell-operator">=</span> map priceOfcup cups
 <span class="org-haskell-operator">&gt;</span> prices
-[2.59<span class="org-haskell-operator">,</span>2.98<span class="org-haskell-operator">,</span>3.1799999999999997<span class="org-haskell-operator">,</span>3.57]
+[2.59,2.98,3.1799999999999997,3.57]
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> cupPrices <span class="org-haskell-operator">=</span> zip cups prices
 <span class="org-haskell-operator">&gt;</span> cupPrices
-[(<span class="org-haskell-constructor">Cup</span> {cupDrink <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Americano</span><span class="org-haskell-operator">,</span> cupSize <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Venti</span><span class="org-haskell-operator">,</span> cupExtra <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">[]</span>}<span class="org-haskell-operator">,</span>2.59)<span class="org-haskell-operator">,</span>
-(<span class="org-haskell-constructor">Cup</span> {cupDrink <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Americano</span><span class="org-haskell-operator">,</span> cupSize <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Venti</span><span class="org-haskell-operator">,</span> cupExtra <span class="org-haskell-operator">=</span> [<span class="org-haskell-constructor">Shot</span>]}<span class="org-haskell-operator">,</span>2.98)<span class="org-haskell-operator">,</span>
-(<span class="org-haskell-constructor">Cup</span> {cupDrink <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Americano</span><span class="org-haskell-operator">,</span> cupSize <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Venti</span><span class="org-haskell-operator">,</span> cupExtra <span class="org-haskell-operator">=</span> [<span class="org-haskell-constructor">Syrup</span>]}<span class="org-haskell-operator">,</span>3.1799999999999997)<span class="org-haskell-operator">,</span>
-(<span class="org-haskell-constructor">Cup</span> {cupDrink <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Americano</span><span class="org-haskell-operator">,</span> cupSize <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Venti</span><span class="org-haskell-operator">,</span> cupExtra <span class="org-haskell-operator">=</span> [<span class="org-haskell-constructor">Shot</span><span class="org-haskell-operator">,</span><span class="org-haskell-constructor">Syrup</span>]}<span class="org-haskell-operator">,</span>3.57)]
+[(<span class="org-haskell-constructor">Cup</span> {cupDrink <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Americano</span>, cupSize <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Venti</span>, cupExtra <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">[]</span>},2.59),
+(<span class="org-haskell-constructor">Cup</span> {cupDrink <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Americano</span>, cupSize <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Venti</span>, cupExtra <span class="org-haskell-operator">=</span> [<span class="org-haskell-constructor">Shot</span>]},2.98),
+(<span class="org-haskell-constructor">Cup</span> {cupDrink <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Americano</span>, cupSize <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Venti</span>, cupExtra <span class="org-haskell-operator">=</span> [<span class="org-haskell-constructor">Syrup</span>]},3.1799999999999997),
+(<span class="org-haskell-constructor">Cup</span> {cupDrink <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Americano</span>, cupSize <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Venti</span>, cupExtra <span class="org-haskell-operator">=</span> [<span class="org-haskell-constructor">Shot</span>,<span class="org-haskell-constructor">Syrup</span>]},3.57)]
 <span class="org-haskell-operator">&gt;</span>
 </pre>
 </div>
@@ -1427,8 +1427,8 @@ Example:
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2016-03-24 Thu 05:54</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="date">Created: 2016-11-01 ter 01:37</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

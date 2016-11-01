@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Pattern Matching</title>
-<!-- 2016-03-24 Thu 05:53 -->
+<!-- 2016-11-01 ter 01:38 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues" />
@@ -215,7 +215,16 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">1. Pattern Matching</a></li>
+<li><a href="#sec-1">1. Pattern Matching</a>
+<ul>
+<li>
+<ul>
+<li><a href="#sec-1-0-1">1.0.1. Tuple Constructor</a></li>
+<li><a href="#sec-1-0-2">1.0.2. Guarded Equations</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -227,18 +236,17 @@ for the JavaScript code in this tag.
 <div id="outline-container-sec-1" class="outline-2">
 <h2 id="sec-1"><span class="section-number-2">1</span> Pattern Matching</h2>
 <div class="outline-text-2" id="text-1">
-<p>
-Tuple Constructor
-</p>
-
+</div><div id="outline-container-sec-1-0-1" class="outline-4">
+<h4 id="sec-1-0-1"><span class="section-number-4">1.0.1</span> Tuple Constructor</h4>
+<div class="outline-text-4" id="text-1-0-1">
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> norm3D (x<span class="org-haskell-operator">,</span> y<span class="org-haskell-operator">,</span> z) <span class="org-haskell-operator">=</span> sqrt(x<span class="org-haskell-operator">^</span>2 <span class="org-haskell-operator">+</span> y<span class="org-haskell-operator">^</span>2 <span class="org-haskell-operator">+</span> z<span class="org-haskell-operator">^</span>2)
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> norm3D (x, y, z) <span class="org-haskell-operator">=</span> sqrt(x<span class="org-haskell-operator">^</span>2 <span class="org-haskell-operator">+</span> y<span class="org-haskell-operator">^</span>2 <span class="org-haskell-operator">+</span> z<span class="org-haskell-operator">^</span>2)
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">norm3D</span> (33<span class="org-haskell-operator">,</span> 11<span class="org-haskell-operator">,</span> 3)
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">norm3D</span> (33, 11, 3)
 34.91418050019218
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">norm3D</span> (33<span class="org-haskell-operator">,</span> 1<span class="org-haskell-operator">,</span> 3)
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">norm3D</span> (33, 1, 3)
 33.15116890850155
 <span class="org-haskell-operator">&gt;</span>
 </pre>
@@ -246,43 +254,44 @@ Tuple Constructor
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">addVectors</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-constructor">Num</span> a) <span class="org-haskell-operator">=&gt;</span> (a<span class="org-haskell-operator">,</span> a) <span class="org-haskell-operator">-&gt;</span> (a<span class="org-haskell-operator">,</span> a) <span class="org-haskell-operator">-&gt;</span> (a<span class="org-haskell-operator">,</span> a)
-<span class="org-haskell-definition">addVectors</span> a b <span class="org-haskell-operator">=</span> (fst a <span class="org-haskell-operator">+</span> fst b<span class="org-haskell-operator">,</span> snd a <span class="org-haskell-operator">+</span> snd b)
+<pre class="src src-haskell"><span class="org-function-name">addVectors</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Num</span> a) <span class="org-haskell-operator">=&gt;</span> (a, a) <span class="org-haskell-operator">-&gt;</span> (a, a) <span class="org-haskell-operator">-&gt;</span> (a, a)
+<span class="org-haskell-definition">addVectors</span> a b <span class="org-haskell-operator">=</span> (fst a <span class="org-haskell-operator">+</span> fst b, snd a <span class="org-haskell-operator">+</span> snd b)
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">addVectors</span> (8<span class="org-haskell-operator">,</span> 9)(<span class="org-haskell-operator">-</span>10<span class="org-haskell-operator">,</span> 12)
-(<span class="org-haskell-operator">-</span>2<span class="org-haskell-operator">,</span>21)
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">addVectors</span> (8, 9)(<span class="org-haskell-operator">-</span>10, 12)
+(<span class="org-haskell-operator">-</span>2,21)
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">addv1</span> <span class="org-haskell-operator">=</span> addVectors (1<span class="org-haskell-operator">,</span> 3)
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">addv1</span> <span class="org-haskell-operator">=</span> addVectors (1, 3)
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> addv1 <span class="org-haskell-operator">=</span> addVectors (1<span class="org-haskell-operator">,</span> 3)
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> addv1 <span class="org-haskell-operator">=</span> addVectors (1, 3)
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">map</span> addv1 [(12<span class="org-haskell-operator">,</span> 23)<span class="org-haskell-operator">,</span> (45<span class="org-haskell-operator">,</span> 23)<span class="org-haskell-operator">,</span> (6<span class="org-haskell-operator">,</span> 14)]
-[(13<span class="org-haskell-operator">,</span>26)<span class="org-haskell-operator">,</span>(46<span class="org-haskell-operator">,</span>26)<span class="org-haskell-operator">,</span>(7<span class="org-haskell-operator">,</span>17)]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">map</span> addv1 [(12, 23), (45, 23), (6, 14)]
+[(13,26),(46,26),(7,17)]
 </pre>
 </div>
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-haskell-definition">add3Dvectors</span> (x1<span class="org-haskell-operator">,</span> y1<span class="org-haskell-operator">,</span> z1) (x2<span class="org-haskell-operator">,</span> y2<span class="org-haskell-operator">,</span> z2) <span class="org-haskell-operator">=</span> (x1<span class="org-haskell-operator">+</span>x2<span class="org-haskell-operator">,</span> y1<span class="org-haskell-operator">+</span>y2<span class="org-haskell-operator">,</span> z1<span class="org-haskell-operator">+</span>z
-<span class="org-haskell-definition">first</span>  (x<span class="org-haskell-operator">,</span> <span class="org-haskell-keyword">_</span><span class="org-haskell-operator">,</span> <span class="org-haskell-keyword">_</span>) <span class="org-haskell-operator">=</span> x
-<span class="org-haskell-definition">second</span> (<span class="org-haskell-keyword">_</span><span class="org-haskell-operator">,</span> y<span class="org-haskell-operator">,</span> <span class="org-haskell-keyword">_</span>) <span class="org-haskell-operator">=</span> y
-<span class="org-haskell-definition">third</span>  (<span class="org-haskell-keyword">_</span><span class="org-haskell-operator">,</span> <span class="org-haskell-keyword">_</span><span class="org-haskell-operator">,</span> z) <span class="org-haskell-operator">=</span> z
+<pre class="src src-haskell"><span class="org-haskell-definition">add3Dvectors</span> (x1, y1, z1) (x2, y2, z2) <span class="org-haskell-operator">=</span> (x1<span class="org-haskell-operator">+</span>x2, y1<span class="org-haskell-operator">+</span>y2, z1<span class="org-haskell-operator">+</span>z
+<span class="org-haskell-definition">first</span>  (x, <span class="org-haskell-keyword">_</span>, <span class="org-haskell-keyword">_</span>) <span class="org-haskell-operator">=</span> x
+<span class="org-haskell-definition">second</span> (<span class="org-haskell-keyword">_</span>, y, <span class="org-haskell-keyword">_</span>) <span class="org-haskell-operator">=</span> y
+<span class="org-haskell-definition">third</span>  (<span class="org-haskell-keyword">_</span>, <span class="org-haskell-keyword">_</span>, z) <span class="org-haskell-operator">=</span> z
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">first</span> (1<span class="org-haskell-operator">,</span> 2<span class="org-haskell-operator">,</span> 3)
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">first</span> (1, 2, 3)
 1
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">second</span>  (1<span class="org-haskell-operator">,</span> 2<span class="org-haskell-operator">,</span> 3)
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">second</span>  (1, 2, 3)
 2
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">third</span> (1<span class="org-haskell-operator">,</span> 2<span class="org-haskell-operator">,</span> 3)
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">third</span> (1, 2, 3)
 3   
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">add3Dvectors</span> (23<span class="org-haskell-operator">,</span> 12<span class="org-haskell-operator">,</span> 233) (10<span class="org-haskell-operator">,</span> 100<span class="org-haskell-operator">,</span> 30)
-(33<span class="org-haskell-operator">,</span>112<span class="org-haskell-operator">,</span>263)
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">add3Dvectors</span> (23, 12, 233) (10, 100, 30)
+(33,112,263)
 </pre>
 </div>
+</div>
+</div>
 
-<p>
-<b>Guarded Equations</b>
-</p>
-
+<div id="outline-container-sec-1-0-2" class="outline-4">
+<h4 id="sec-1-0-2"><span class="section-number-4">1.0.2</span> Guarded Equations</h4>
+<div class="outline-text-4" id="text-1-0-2">
 <p>
 Absolute Value
 </p>
@@ -322,7 +331,7 @@ Signum/Sign Function
 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">map</span> sign [<span class="org-haskell-operator">-</span>4<span class="org-haskell-operator">..</span>4]
-[<span class="org-haskell-operator">-</span>1<span class="org-haskell-operator">,-</span>1<span class="org-haskell-operator">,-</span>1<span class="org-haskell-operator">,-</span>1<span class="org-haskell-operator">,</span>0<span class="org-haskell-operator">,</span>1<span class="org-haskell-operator">,</span>1<span class="org-haskell-operator">,</span>1<span class="org-haskell-operator">,</span>1]
+[<span class="org-haskell-operator">-</span>1,<span class="org-haskell-operator">-</span>1,<span class="org-haskell-operator">-</span>1,<span class="org-haskell-operator">-</span>1,0,1,1,1,1]
 </pre>
 </div>
 
@@ -355,9 +364,9 @@ Signum/Sign Function
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">units</span> 90 <span class="org-string">"deg"</span> <span class="org-haskell-operator">==</span> pi<span class="org-haskell-operator">/</span>2
 <span class="org-haskell-constructor">True</span>
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sin</span>(units 90 <span class="org-string">"deg"</span>)
+<span class="org-haskell-operator">&gt;</span> sin(units 90 <span class="org-string">"deg"</span>)
 1.0
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sin</span>(units 1.57 <span class="org-string">"rad"</span>)
+<span class="org-haskell-operator">&gt;</span> sin(units 1.57 <span class="org-string">"rad"</span>)
 0.9999996829318346
 <span class="org-haskell-operator">&gt;</span>
 </pre>
@@ -365,7 +374,7 @@ Signum/Sign Function
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">password</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-constructor">Eq</span> a<span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Num</span> a) <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-constructor">Char</span>]
+<pre class="src src-haskell"><span class="org-function-name">password</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Eq</span> a, <span class="org-haskell-type">Num</span> a) <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">Char</span>]
 <span class="org-haskell-definition">password</span> 3423 <span class="org-haskell-operator">=</span> <span class="org-string">"OK - Safe opened"</span>
 <span class="org-haskell-definition">password</span> x    <span class="org-haskell-operator">=</span> <span class="org-string">"Error: Wrong Password pal"</span>
 
@@ -381,7 +390,7 @@ Signum/Sign Function
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">sayMe</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-constructor">Integral</span> a) <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-constructor">Char</span>]
+<pre class="src src-haskell"><span class="org-function-name">sayMe</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Integral</span> a) <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">Char</span>]
 <span class="org-haskell-definition">sayMe</span> 1 <span class="org-haskell-operator">=</span> <span class="org-string">"One!"</span>  
 <span class="org-haskell-definition">sayMe</span> 2 <span class="org-haskell-operator">=</span> <span class="org-string">"Two!"</span>  
 <span class="org-haskell-definition">sayMe</span> 3 <span class="org-haskell-operator">=</span> <span class="org-string">"Three!"</span>  
@@ -390,16 +399,17 @@ Signum/Sign Function
 <span class="org-haskell-definition">sayMe</span> x <span class="org-haskell-operator">=</span> <span class="org-string">"Not between 1 and 5"</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">map</span> sayMe [1<span class="org-haskell-operator">..</span>8]
-[<span class="org-string">"One!"</span><span class="org-haskell-operator">,</span><span class="org-string">"Two!"</span><span class="org-haskell-operator">,</span><span class="org-string">"Three!"</span><span class="org-haskell-operator">,</span><span class="org-string">"Four!"</span><span class="org-haskell-operator">,</span><span class="org-string">"Five!"</span><span class="org-haskell-operator">,</span><span class="org-string">"Not between 1 and 5"</span><span class="org-haskell-operator">,</span> <span class="org-string">"Not between 1 and 5"</span><span class="org-haskell-operator">,</span><span class="org-string">"Not between 1 and 5"</span>]
+[<span class="org-string">"One!"</span>,<span class="org-string">"Two!"</span>,<span class="org-string">"Three!"</span>,<span class="org-string">"Four!"</span>,<span class="org-string">"Five!"</span>,<span class="org-string">"Not between 1 and 5"</span>, <span class="org-string">"Not between 1 and 5"</span>,<span class="org-string">"Not between 1 and 5"</span>]
 </pre>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2016-03-24 Thu 05:53</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="date">Created: 2016-11-01 ter 01:38</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

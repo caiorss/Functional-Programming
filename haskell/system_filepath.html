@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Module: System.FilePath</title>
-<!-- 2016-03-24 Thu 05:53 -->
+<!-- 2016-11-01 ter 01:18 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues" />
@@ -245,75 +245,75 @@ Examples:
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-keyword">qualified</span> <span class="org-haskell-constructor">System.FilePath</span> <span class="org-haskell-keyword">as</span> <span class="org-haskell-constructor">SF</span>
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">System.FilePath</span>  ((<span class="org-haskell-operator">&lt;.&gt;</span>)<span class="org-haskell-operator">,</span> (<span class="org-haskell-operator">&lt;/&gt;</span>))
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">System.FilePath</span>  ((<span class="org-haskell-operator">&lt;.&gt;</span>), (<span class="org-haskell-operator">&lt;/&gt;</span>))
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">Type tab to complete </span>
 <span class="org-comment-delimiter">--</span>
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>
-<span class="org-haskell-constructor">SF</span><span class="org-haskell-definition">.-&lt;.&gt;</span>                       <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>hasTrailingPathSeparator   <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>replaceExtension
-<span class="org-haskell-constructor">SF</span><span class="org-haskell-definition">.&lt;.&gt;</span>                        <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>isAbsolute                 <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>replaceFileName
-<span class="org-haskell-constructor">SF</span><span class="org-haskell-definition">.&lt;/&gt;</span>                        <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>isDrive                    <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>searchPathSeparator
-<span class="org-haskell-constructor">SF</span><span class="org-haskell-definition">.</span><span class="org-haskell-constructor">FilePath</span>                   <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>isExtSeparator             <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>splitDirectories
-<span class="org-haskell-constructor">SF</span><span class="org-haskell-definition">.</span>addExtension               <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>isPathSeparator            <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>splitDrive
-<span class="org-haskell-constructor">SF</span><span class="org-haskell-definition">.</span>addTrailingPathSeparator   <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>isRelative                 <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>splitExtension
-<span class="org-haskell-constructor">SF</span><span class="org-haskell-definition">.</span>combine                    <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>isSearchPathSeparator      <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>splitExtensions
-<span class="org-haskell-constructor">SF</span><span class="org-haskell-definition">.</span>dropDrive                  <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>isValid                    <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>splitFileName
-<span class="org-haskell-constructor">SF</span><span class="org-haskell-definition">.</span>dropExtension              <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>joinDrive                  <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>splitPath
-<span class="org-haskell-constructor">SF</span><span class="org-haskell-definition">.</span>dropExtensions             <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>joinPath                   <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>splitSearchPath
-<span class="org-haskell-constructor">SF</span><span class="org-haskell-definition">.</span>dropFileName               <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>makeRelative               <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>takeBaseName
-<span class="org-haskell-constructor">SF</span><span class="org-haskell-definition">.</span>dropTrailingPathSeparator  <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>makeValid                  <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>takeDirectory
-<span class="org-haskell-constructor">SF</span><span class="org-haskell-definition">.</span>equalFilePath              <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>normalise                  <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>takeDrive
-<span class="org-haskell-constructor">SF</span><span class="org-haskell-definition">.</span>extSeparator               <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>pathSeparator              <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>takeExtension
-<span class="org-haskell-constructor">SF</span><span class="org-haskell-definition">.</span>getSearchPath              <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>pathSeparators             <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>takeExtensions
-<span class="org-haskell-constructor">SF</span><span class="org-haskell-definition">.</span>hasDrive                   <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>replaceBaseName            <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>takeFileName
-<span class="org-haskell-constructor">SF</span><span class="org-haskell-definition">.</span>hasExtension               <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>replaceDirectory
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.
+SF<span class="org-haskell-definition">.-&lt;.&gt;</span>                       SF.hasTrailingPathSeparator   SF.replaceExtension
+SF<span class="org-haskell-definition">.&lt;.&gt;</span>                        SF.isAbsolute                 SF.replaceFileName
+SF<span class="org-haskell-definition">.&lt;/&gt;</span>                        SF.isDrive                    SF.searchPathSeparator
+SF<span class="org-haskell-definition">.</span>FilePath                   SF.isExtSeparator             SF.splitDirectories
+SF<span class="org-haskell-definition">.</span>addExtension               SF.isPathSeparator            SF.splitDrive
+SF<span class="org-haskell-definition">.</span>addTrailingPathSeparator   SF.isRelative                 SF.splitExtension
+SF<span class="org-haskell-definition">.</span>combine                    SF.isSearchPathSeparator      SF.splitExtensions
+SF<span class="org-haskell-definition">.</span>dropDrive                  SF.isValid                    SF.splitFileName
+SF<span class="org-haskell-definition">.</span>dropExtension              SF.joinDrive                  SF.splitPath
+SF<span class="org-haskell-definition">.</span>dropExtensions             SF.joinPath                   SF.splitSearchPath
+SF<span class="org-haskell-definition">.</span>dropFileName               SF.makeRelative               SF.takeBaseName
+SF<span class="org-haskell-definition">.</span>dropTrailingPathSeparator  SF.makeValid                  SF.takeDirectory
+SF<span class="org-haskell-definition">.</span>equalFilePath              SF.normalise                  SF.takeDrive
+SF<span class="org-haskell-definition">.</span>extSeparator               SF.pathSeparator              SF.takeExtension
+SF<span class="org-haskell-definition">.</span>getSearchPath              SF.pathSeparators             SF.takeExtensions
+SF<span class="org-haskell-definition">.</span>hasDrive                   SF.replaceBaseName            SF.takeFileName
+SF<span class="org-haskell-definition">.</span>hasExtension               SF.replaceDirectory
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>info <span class="org-haskell-constructor">SF.FilePath</span> 
-<span class="org-haskell-keyword">type</span> <span class="org-haskell-constructor">FilePath</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">String</span>  <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.IO&#8217;</span>
+<span class="org-haskell-keyword">type</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-type">String</span>  <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.IO&#8217;</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>pathSeparator
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.pathSeparator
 <span class="org-string">'/'</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>pathSeparators
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.pathSeparators
 <span class="org-string">"/"</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>splitExtension <span class="org-string">"/boot/grub/grub.cfg"</span>
-(<span class="org-string">"/boot/grub/grub"</span><span class="org-haskell-operator">,</span><span class="org-string">".cfg"</span>)
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.splitExtension <span class="org-string">"/boot/grub/grub.cfg"</span>
+(<span class="org-string">"/boot/grub/grub"</span>,<span class="org-string">".cfg"</span>)
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>takeExtension <span class="org-string">"/boot/grub/grub.cfg"</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.takeExtension <span class="org-string">"/boot/grub/grub.cfg"</span>
 <span class="org-string">".cfg"</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>takeExtension <span class="org-string">"/boot/grub/grub"</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.takeExtension <span class="org-string">"/boot/grub/grub"</span>
 <span class="org-string">""</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>replaceExtension  <span class="org-string">"/boot/grub/grub.cfg"</span> <span class="org-string">".bin"</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.replaceExtension  <span class="org-string">"/boot/grub/grub.cfg"</span> <span class="org-string">".bin"</span>
 <span class="org-string">"/boot/grub/grub.bin"</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>replaceExtension  <span class="org-string">"/boot/grub/grub"</span> <span class="org-string">".bin"</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.replaceExtension  <span class="org-string">"/boot/grub/grub"</span> <span class="org-string">".bin"</span>
 <span class="org-string">"/boot/grub/grub.bin"</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>replaceExtension  <span class="org-string">"/boot/grub/grub.tar.gz"</span> <span class="org-string">".bin"</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.replaceExtension  <span class="org-string">"/boot/grub/grub.tar.gz"</span> <span class="org-string">".bin"</span>
 <span class="org-string">"/boot/grub/grub.tar.bin"</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>dropExtension  <span class="org-string">"/boot/grub/grub.cfg"</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.dropExtension  <span class="org-string">"/boot/grub/grub.cfg"</span> 
 <span class="org-string">"/boot/grub/grub"</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span>
 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>hasExtension  <span class="org-string">"/boot/grub/grub.cfg"</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.hasExtension  <span class="org-string">"/boot/grub/grub.cfg"</span> 
 <span class="org-haskell-constructor">True</span>
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>hasExtension  <span class="org-string">"/boot/grub/grub"</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.hasExtension  <span class="org-string">"/boot/grub/grub"</span> 
 <span class="org-haskell-constructor">False</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
@@ -325,62 +325,62 @@ Examples:
 <span class="org-string">"/etc/grub.cfg"</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>takeFileName <span class="org-string">"/boot/grub/grub.cfg"</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.takeFileName <span class="org-string">"/boot/grub/grub.cfg"</span> 
 <span class="org-string">"grub.cfg"</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>replaceFileName   <span class="org-string">"/boot/grub/grub.cfg"</span> <span class="org-string">"dummy.tar.gz"</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.replaceFileName   <span class="org-string">"/boot/grub/grub.cfg"</span> <span class="org-string">"dummy.tar.gz"</span>
 <span class="org-string">"/boot/grub/dummy.tar.gz"</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>dropFileName   <span class="org-string">"/boot/grub/grub.cfg"</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.dropFileName   <span class="org-string">"/boot/grub/grub.cfg"</span> 
 <span class="org-string">"/boot/grub/"</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>takeBaseName    <span class="org-string">"/boot/grub/grub.cfg"</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.takeBaseName    <span class="org-string">"/boot/grub/grub.cfg"</span> 
 <span class="org-string">"grub"</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">Get the directory name, move up one level.</span>
 <span class="org-comment-delimiter">--</span>
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>takeDirectory   <span class="org-string">"/boot/grub/grub.cfg"</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.takeDirectory   <span class="org-string">"/boot/grub/grub.cfg"</span> 
 <span class="org-string">"/boot/grub"</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>takeDirectory   <span class="org-string">"~"</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.takeDirectory   <span class="org-string">"~"</span> 
 <span class="org-string">"."</span>
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>takeDirectory   <span class="org-string">"/"</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.takeDirectory   <span class="org-string">"/"</span> 
 <span class="org-string">"/"</span>
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>takeDirectory   <span class="org-string">"."</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.takeDirectory   <span class="org-string">"."</span> 
 <span class="org-string">"."</span>
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>takeDirectory   <span class="org-string">".."</span> 
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.takeDirectory   <span class="org-string">".."</span> 
 <span class="org-string">"."</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
 <span class="org-comment-delimiter">--  </span><span class="org-comment">Set the directory, keeping the filename the same.</span>
 <span class="org-comment-delimiter">--</span>
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>replaceDirectory  <span class="org-string">"/boot/grub/grub.cfg"</span> <span class="org-string">"~"</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.replaceDirectory  <span class="org-string">"/boot/grub/grub.cfg"</span> <span class="org-string">"~"</span>
 <span class="org-string">"~/grub.cfg"</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">Join Path </span>
 <span class="org-comment-delimiter">--</span>
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>combine <span class="org-string">"/boot/"</span> <span class="org-string">"grub/grub.cfg"</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.combine <span class="org-string">"/boot/"</span> <span class="org-string">"grub/grub.cfg"</span>
 <span class="org-string">"/boot/grub/grub.cfg"</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>combine <span class="org-string">"/boot/"</span> <span class="org-string">"/grub/grub.cfg"</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.combine <span class="org-string">"/boot/"</span> <span class="org-string">"/grub/grub.cfg"</span>
 <span class="org-string">"/grub/grub.cfg"</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>combine <span class="org-string">"/boot"</span> <span class="org-string">"grub/grub.cfg"</span>
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.combine <span class="org-string">"/boot"</span> <span class="org-string">"grub/grub.cfg"</span>
 <span class="org-string">"/boot/grub/grub.cfg"</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">Operator to Join Path </span>
 <span class="org-comment-delimiter">--</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t (<span class="org-haskell-operator">&lt;/&gt;</span>)
-(<span class="org-haskell-definition">&lt;/&gt;</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">FilePath</span>
+(<span class="org-haskell-definition">&lt;/&gt;</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">FilePath</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-string">"/boot"</span> <span class="org-haskell-operator">&lt;/&gt;</span> <span class="org-string">"grub/grub.cfg"</span>
@@ -389,23 +389,23 @@ Examples:
 
 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>splitPath <span class="org-string">"/boot/grub/grub.cfg"</span>
-[<span class="org-string">"/"</span><span class="org-haskell-operator">,</span><span class="org-string">"boot/"</span><span class="org-haskell-operator">,</span><span class="org-string">"grub/"</span><span class="org-haskell-operator">,</span><span class="org-string">"grub.cfg"</span>]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.splitPath <span class="org-string">"/boot/grub/grub.cfg"</span>
+[<span class="org-string">"/"</span>,<span class="org-string">"boot/"</span>,<span class="org-string">"grub/"</span>,<span class="org-string">"grub.cfg"</span>]
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>joinPath [<span class="org-string">"/"</span><span class="org-haskell-operator">,</span><span class="org-string">"boot/"</span><span class="org-haskell-operator">,</span><span class="org-string">"grub/"</span><span class="org-haskell-operator">,</span><span class="org-string">"grub.cfg"</span>]
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.joinPath [<span class="org-string">"/"</span>,<span class="org-string">"boot/"</span>,<span class="org-string">"grub/"</span>,<span class="org-string">"grub.cfg"</span>]
 <span class="org-string">"/boot/grub/grub.cfg"</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
 
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>splitDrive <span class="org-string">"/boot/grub/grub.cfg"</span>
-(<span class="org-string">"/"</span><span class="org-haskell-operator">,</span><span class="org-string">"boot/grub/grub.cfg"</span>)
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.splitDrive <span class="org-string">"/boot/grub/grub.cfg"</span>
+(<span class="org-string">"/"</span>,<span class="org-string">"boot/grub/grub.cfg"</span>)
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">(Running in Linux)</span>
 <span class="org-comment-delimiter">--</span>
-<span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">SF</span><span class="org-haskell-operator">.</span>splitDrive <span class="org-string">"C:\\boot\\grub\\grub.cfg"</span>
-(<span class="org-string">""</span><span class="org-haskell-operator">,</span><span class="org-string">"C:\\boot\\grub\\grub.cfg"</span>)
+<span class="org-haskell-operator">&gt;&gt;&gt;</span> SF.splitDrive <span class="org-string">"C:\\boot\\grub\\grub.cfg"</span>
+(<span class="org-string">""</span>,<span class="org-string">"C:\\boot\\grub\\grub.cfg"</span>)
 <span class="org-haskell-operator">&gt;&gt;&gt;</span>
 </pre>
 </div>
@@ -414,8 +414,8 @@ Examples:
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2016-03-24 Thu 05:53</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="date">Created: 2016-11-01 ter 01:18</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

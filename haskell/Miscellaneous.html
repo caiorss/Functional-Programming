@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Miscellaneous</title>
-<!-- 2016-03-24 Thu 05:53 -->
+<!-- 2016-11-01 ter 01:38 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues" />
@@ -253,27 +253,29 @@ like Linux and OSX.
 Example: ~/.ghci
 </p>
 
-<pre class="example">
-import System.Directory ( getCurrentDirectory)
-import System.Process (readProcess)
+<div class="org-src-container">
 
-:set -hide-package mtl
+<pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">System.Directory</span> ( getCurrentDirectory)
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">System.Process</span> (readProcess)
 
-:set prompt "\x1b[32m&gt;\x1b[0m " -- set the shell prompt to print λ (lambda)
+<span class="org-haskell-constructor">:</span>set <span class="org-haskell-operator">-</span>hide<span class="org-haskell-operator">-</span>package mtl
 
-:def hoogle \s -&gt; return $ ":! hoogle --count=15 \"" ++ s ++ "\""
+<span class="org-haskell-constructor">:</span>set prompt <span class="org-string">"\x1b[32m&gt;\x1b[0m "</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">set the shell prompt to print &#955; (lambda)</span>
 
-let xclip_ =  readProcess "xclip" ["-o", "-selection", "clipboard"] ""
+<span class="org-haskell-constructor">:</span>def hoogle <span class="org-haskell-operator">\</span>s <span class="org-haskell-operator">-&gt;</span> return <span class="org-haskell-operator">$</span> <span class="org-string">":! hoogle --count=15 \""</span> <span class="org-haskell-operator">++</span> s <span class="org-haskell-operator">++</span> <span class="org-string">"\""</span>
 
-let __savePasted = do {  code &lt;-  readProcess "xclip" ["-o", "-selection", "clipboard"] ""  ;  putStrLn 
+<span class="org-haskell-keyword">let</span> xclip_ <span class="org-haskell-operator">=</span>  readProcess <span class="org-string">"xclip"</span> [<span class="org-string">"-o"</span>, <span class="org-string">"-selection"</span>, <span class="org-string">"clipboard"</span>] <span class="org-string">""</span>
 
-code ; writeFile "/tmp/haskTemp.hs" code}
+<span class="org-haskell-keyword">let</span> __savePasted <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span> {  code <span class="org-haskell-operator">&lt;-</span>  readProcess <span class="org-string">"xclip"</span> [<span class="org-string">"-o"</span>, <span class="org-string">"-selection"</span>, <span class="org-string">"clipboard"</span>] <span class="org-string">""</span>  ;  putStrLn 
 
-let pwd = getCurrentDirectory &gt;&gt;= putStrLn
+code ; writeFile <span class="org-string">"/tmp/haskTemp.hs"</span> code}
 
-:def paste (\_ -&gt; __savePasted &gt;&gt; return ":load /tmp/haskTemp.hs" )
-:def pwd (\_ -&gt; pwd &gt;&gt; return "")
+<span class="org-haskell-keyword">let</span> pwd <span class="org-haskell-operator">=</span> getCurrentDirectory <span class="org-haskell-operator">&gt;&gt;=</span> putStrLn
+
+<span class="org-haskell-constructor">:</span>def paste (<span class="org-haskell-operator">\</span><span class="org-haskell-keyword">_</span> <span class="org-haskell-operator">-&gt;</span> __savePasted <span class="org-haskell-operator">&gt;&gt;</span> return <span class="org-string">":load /tmp/haskTemp.hs"</span> )
+<span class="org-haskell-constructor">:</span>def pwd (<span class="org-haskell-operator">\</span><span class="org-haskell-keyword">_</span> <span class="org-haskell-operator">-&gt;</span> pwd <span class="org-haskell-operator">&gt;&gt;</span> return <span class="org-string">""</span>)
 </pre>
+</div>
 
 <p>
 It requires hoogle to be installed on Linux: (sudo apt-get install
@@ -297,12 +299,12 @@ Examples:
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>hoogle getCurrentDirectory
-<span class="org-haskell-constructor">Directory</span> getCurrentDirectory <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">FilePath</span>
-<span class="org-haskell-constructor">System</span><span class="org-haskell-definition">.</span><span class="org-haskell-constructor">Directory</span> getCurrentDirectory <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">FilePath</span>
+<span class="org-haskell-constructor">Directory</span> getCurrentDirectory <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">FilePath</span>
+System<span class="org-haskell-definition">.</span>Directory getCurrentDirectory <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">FilePath</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>paste
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>paste
 <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.Time.Clock</span>
 <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.Time.Calendar</span>
 <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.Time.LocalTime</span>
@@ -311,12 +313,12 @@ Examples:
     now <span class="org-haskell-operator">&lt;-</span> getCurrentTime
     timezone <span class="org-haskell-operator">&lt;-</span> getCurrentTimeZone
     <span class="org-haskell-keyword">let</span> zoneNow <span class="org-haskell-operator">=</span> utcToLocalTime timezone now
-    <span class="org-haskell-keyword">let</span> (year<span class="org-haskell-operator">,</span> month<span class="org-haskell-operator">,</span> day) <span class="org-haskell-operator">=</span> toGregorian <span class="org-haskell-operator">$</span> localDay zoneNow
+    <span class="org-haskell-keyword">let</span> (year, month, day) <span class="org-haskell-operator">=</span> toGregorian <span class="org-haskell-operator">$</span> localDay zoneNow
     putStrLn <span class="org-haskell-operator">$</span> <span class="org-string">"Year: "</span> <span class="org-haskell-operator">++</span> show year
     putStrLn <span class="org-haskell-operator">$</span> <span class="org-string">"Month: "</span> <span class="org-haskell-operator">++</span> show month
     putStrLn <span class="org-haskell-operator">$</span> <span class="org-string">"Day: "</span> <span class="org-haskell-operator">++</span> show day
-[1 <span class="org-haskell-keyword">of</span> 1] <span class="org-haskell-constructor">Compiling</span> <span class="org-haskell-constructor">Main</span>             ( <span class="org-haskell-operator">/</span>tmp<span class="org-haskell-operator">/</span>haskTemp<span class="org-haskell-operator">.</span>hs<span class="org-haskell-operator">,</span> interpreted )
-<span class="org-haskell-constructor">Ok</span><span class="org-haskell-operator">,</span> modules loaded<span class="org-haskell-constructor">:</span> <span class="org-haskell-constructor">Main</span><span class="org-haskell-operator">.</span>
+[1 <span class="org-haskell-keyword">of</span> 1] <span class="org-haskell-constructor">Compiling</span> <span class="org-haskell-constructor">Main</span>             ( <span class="org-haskell-operator">/</span>tmp<span class="org-haskell-operator">/</span>haskTemp<span class="org-haskell-operator">.</span>hs, interpreted )
+<span class="org-haskell-constructor">Ok</span>, modules loaded<span class="org-haskell-constructor">:</span> Main.
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> main
 <span class="org-function-name">Year</span><span class="org-haskell-definition">:</span> 2015
@@ -339,7 +341,7 @@ Examples:
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Monad.State</span>
 
 <span class="org-haskell-operator">&lt;</span>no location info<span class="org-haskell-operator">&gt;:</span>
-    <span class="org-haskell-constructor">Ambiguous</span> <span class="org-haskell-keyword">module</span> name `<span class="org-haskell-constructor">Control.Monad.State</span>'<span class="org-haskell-constructor">:</span>
+    <span class="org-haskell-constructor">Ambiguous</span> <span class="org-haskell-keyword">module</span> name `<span class="org-haskell-constructor">Control.Monad.State':</span>
       it was found <span class="org-haskell-keyword">in</span> multiple packages<span class="org-haskell-constructor">:</span> monads<span class="org-haskell-operator">-</span>tf<span class="org-haskell-operator">-</span>0.1<span class="org-haskell-operator">.</span>0.2 mtl<span class="org-haskell-operator">-</span>2.2<span class="org-haskell-operator">.</span>1
 <span class="org-haskell-operator">&gt;</span> 
 
@@ -363,8 +365,8 @@ Solution: Add the line to ~/.ghci
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2016-03-24 Thu 05:53</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="date">Created: 2016-11-01 ter 01:38</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

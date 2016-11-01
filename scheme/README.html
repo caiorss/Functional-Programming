@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Scheme</title>
-<!-- 2016-03-24 Thu 05:54 -->
+<!-- 2016-11-01 ter 01:18 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues" />
@@ -1461,7 +1461,7 @@ compiled 2015-08-04 on yves.more-magic.net <span class="org-rainbow-delimiters-d
                  <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-keyword">let</span> <span class="org-rainbow-delimiters-depth-4">(</span>
                        <span class="org-rainbow-delimiters-depth-5">(</span>z <span class="org-rainbow-delimiters-depth-6">(</span>* y x<span class="org-rainbow-delimiters-depth-6">)</span><span class="org-rainbow-delimiters-depth-5">)</span>
                        <span class="org-rainbow-delimiters-depth-5">(</span>f <span class="org-rainbow-delimiters-depth-6">(</span><span class="org-keyword">lambda</span> <span class="org-rainbow-delimiters-depth-7">(</span>a<span class="org-rainbow-delimiters-depth-7">)</span> <span class="org-rainbow-delimiters-depth-7">(</span>* a 3<span class="org-rainbow-delimiters-depth-7">)</span><span class="org-rainbow-delimiters-depth-6">)</span><span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span>
-                       
+
                        <span class="org-rainbow-delimiters-depth-4">(</span>f <span class="org-rainbow-delimiters-depth-5">(</span>+ x y z<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
     1680
     &gt; 
@@ -1478,7 +1478,7 @@ compiled 2015-08-04 on yves.more-magic.net <span class="org-rainbow-delimiters-d
         <span class="org-rainbow-delimiters-depth-2">)</span>
         <span class="org-rainbow-delimiters-depth-2">(</span>f <span class="org-rainbow-delimiters-depth-3">(</span>+ x y z<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
     <span class="org-rainbow-delimiters-depth-1">)</span>
-    
+
     1680
 </pre>
 </div>
@@ -1630,7 +1630,7 @@ words, functions are data.
 <span class="org-comment-delimiter">;</span><span class="org-comment">Value 29: (38 33 59 19)</span>
 
   <span class="org-comment-delimiter">;;; </span><span class="org-comment">OR</span>
-  
+
 1 <span class="org-rainbow-delimiters-unmatched">]</span>=&gt; <span class="org-rainbow-delimiters-unmatched">(</span><span class="org-keyword">map</span> <span class="org-rainbow-delimiters-unmatched">(</span>currify fxy<span class="org-rainbow-delimiters-unmatched">)</span>  <span class="org-rainbow-delimiters-unmatched">(</span>list '<span class="org-rainbow-delimiters-unmatched">(</span>5 6<span class="org-rainbow-delimiters-unmatched">)</span> '<span class="org-rainbow-delimiters-unmatched">(</span>3 7<span class="org-rainbow-delimiters-unmatched">)</span> '<span class="org-rainbow-delimiters-unmatched">(</span>8 9<span class="org-rainbow-delimiters-unmatched">)</span> '<span class="org-rainbow-delimiters-unmatched">(</span> 1 5<span class="org-rainbow-delimiters-unmatched">)))</span>
 
 <span class="org-comment-delimiter">;</span><span class="org-comment">Value 30: (38 33 59 19)</span>
@@ -1723,14 +1723,14 @@ $49 = -1
 $50 = 1
 1 <span class="org-rainbow-delimiters-unmatched">]</span>=&gt; <span class="org-rainbow-delimiters-unmatched">(</span>sign 0<span class="org-rainbow-delimiters-unmatched">)</span>
 $51 = 0
- 
+
 
 <span class="org-rainbow-delimiters-unmatched">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-unmatched">(</span><span class="org-function-name">absolute</span> x<span class="org-rainbow-delimiters-unmatched">)</span>
     <span class="org-rainbow-delimiters-unmatched">(</span><span class="org-keyword">cond</span> 
         <span class="org-rainbow-delimiters-unmatched">(</span><span class="org-rainbow-delimiters-depth-1">(</span>&gt;= x 0<span class="org-rainbow-delimiters-depth-1">)</span>     x<span class="org-rainbow-delimiters-unmatched">)</span>
         <span class="org-rainbow-delimiters-unmatched">(</span><span class="org-rainbow-delimiters-depth-1">(</span>&lt;  x 0<span class="org-rainbow-delimiters-depth-1">)</span> <span class="org-rainbow-delimiters-depth-1">(</span>- x<span class="org-rainbow-delimiters-depth-1">)</span><span class="org-rainbow-delimiters-unmatched">)</span>
 <span class="org-rainbow-delimiters-unmatched">))</span>
-        
+
 1 <span class="org-rainbow-delimiters-unmatched">]</span>=&gt; <span class="org-rainbow-delimiters-unmatched">(</span>absolute -10<span class="org-rainbow-delimiters-unmatched">)</span>
 $52 = 10
 1 <span class="org-rainbow-delimiters-unmatched">]</span>=&gt; <span class="org-rainbow-delimiters-unmatched">(</span>absolute 10<span class="org-rainbow-delimiters-unmatched">)</span>
@@ -1809,7 +1809,7 @@ $10 = 1346269
       <span class="org-rainbow-delimiters-depth-3">(</span>fib-aux <span class="org-rainbow-delimiters-depth-4">(</span>- n 1<span class="org-rainbow-delimiters-depth-4">)</span> b <span class="org-rainbow-delimiters-depth-4">(</span>+ a b<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">fib-fast</span> n<span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">(</span>fib-aux n 1 1<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-   
+
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span>fib-aux 30 1 1<span class="org-rainbow-delimiters-depth-1">)</span>
 $4 = 1346269
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span>fib-aux 40 1 1<span class="org-rainbow-delimiters-depth-1">)</span>
@@ -2682,8 +2682,8 @@ $90 = 10
 
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span>f-dispatch 'f3 5<span class="org-rainbow-delimiters-depth-1">)</span>
 $91 = 32
-  
-    
+
+
 <span class="org-comment-delimiter">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Lisp programs are list of symbols numbers and strings</span>
 <span class="org-comment-delimiter">;; </span>
@@ -3068,7 +3068,7 @@ Similar to map, however it used for functions with side effects.
 3
 4
 <span class="org-rainbow-delimiters-depth-1">(</span>#&lt;unspecified&gt; #&lt;unspecified&gt; #&lt;unspecified&gt; #&lt;unspecified&gt;<span class="org-rainbow-delimiters-depth-1">)</span>
- 
+
 
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">for-each</span> <span class="org-rainbow-delimiters-depth-2">[</span>lambda <span class="org-rainbow-delimiters-depth-3">(</span>x<span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-rainbow-delimiters-depth-3">(</span>display x<span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-rainbow-delimiters-depth-3">(</span>newline<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">]</span>  '<span class="org-rainbow-delimiters-depth-2">(</span>1 2 3 4<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 1
@@ -3339,21 +3339,21 @@ Returns a functions that takes a list of functions and applies it to a single va
     <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">lambda</span> <span class="org-rainbow-delimiters-depth-3">(</span>x<span class="org-rainbow-delimiters-depth-3">)</span>
         <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-keyword">lambda</span> <span class="org-rainbow-delimiters-depth-4">(</span>y<span class="org-rainbow-delimiters-depth-4">)</span>
             <span class="org-rainbow-delimiters-depth-4">(</span>f x y<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-            
+
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">curry3</span>  f<span class="org-rainbow-delimiters-depth-2">)</span>
     <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">lambda</span> <span class="org-rainbow-delimiters-depth-3">(</span>x<span class="org-rainbow-delimiters-depth-3">)</span>
         <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-keyword">lambda</span> <span class="org-rainbow-delimiters-depth-4">(</span>y<span class="org-rainbow-delimiters-depth-4">)</span>
             <span class="org-rainbow-delimiters-depth-4">(</span><span class="org-keyword">lambda</span> <span class="org-rainbow-delimiters-depth-5">(</span>z<span class="org-rainbow-delimiters-depth-5">)</span>
                 <span class="org-rainbow-delimiters-depth-5">(</span>f x y z<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 
-             
+
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">curry4</span>  f<span class="org-rainbow-delimiters-depth-2">)</span>
     <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">lambda</span> <span class="org-rainbow-delimiters-depth-3">(</span>x<span class="org-rainbow-delimiters-depth-3">)</span>
         <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-keyword">lambda</span> <span class="org-rainbow-delimiters-depth-4">(</span>y<span class="org-rainbow-delimiters-depth-4">)</span>
             <span class="org-rainbow-delimiters-depth-4">(</span><span class="org-keyword">lambda</span> <span class="org-rainbow-delimiters-depth-5">(</span>z<span class="org-rainbow-delimiters-depth-5">)</span>
                 <span class="org-rainbow-delimiters-depth-5">(</span><span class="org-keyword">lambda</span> <span class="org-rainbow-delimiters-depth-6">(</span>w<span class="org-rainbow-delimiters-depth-6">)</span>
                 <span class="org-rainbow-delimiters-depth-6">(</span>f x y z w<span class="org-rainbow-delimiters-depth-6">)</span><span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-        
+
 1 <span class="org-rainbow-delimiters-unmatched">]</span>=&gt; <span class="org-rainbow-delimiters-unmatched">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-function-name">mul</span> x y<span class="org-rainbow-delimiters-depth-1">)</span> <span class="org-rainbow-delimiters-depth-1">(</span>* x y<span class="org-rainbow-delimiters-depth-1">)</span><span class="org-rainbow-delimiters-unmatched">)</span>
 
 <span class="org-comment-delimiter">;</span><span class="org-comment">Value: mul</span>
@@ -3451,7 +3451,7 @@ $15 = <span class="org-rainbow-delimiters-unmatched">(</span>symbol symbol symbo
         <span class="org-rainbow-delimiters-depth-3">)</span>
     <span class="org-rainbow-delimiters-depth-2">)</span><span class="org-comment-delimiter">;; </span><span class="org-comment">End if</span>
 <span class="org-rainbow-delimiters-depth-1">)</span><span class="org-comment-delimiter">;; </span><span class="org-comment">End of cycle_aux</span>
-        
+
 
 
 1 <span class="org-rainbow-delimiters-unmatched">]</span>=&gt; <span class="org-rainbow-delimiters-unmatched">(</span>cycle_aux 10 '<span class="org-rainbow-delimiters-depth-1">(</span>1 2 3<span class="org-rainbow-delimiters-depth-1">)</span> '<span class="org-rainbow-delimiters-depth-1">(</span>1 2 3<span class="org-rainbow-delimiters-depth-1">)</span><span class="org-rainbow-delimiters-unmatched">)</span>
@@ -3462,7 +3462,7 @@ $17 = <span class="org-rainbow-delimiters-unmatched">(</span>1 2 3 1 2 3 1 2 3 1
 
 <span class="org-rainbow-delimiters-unmatched">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-unmatched">(</span><span class="org-function-name">cycle</span> n xs<span class="org-rainbow-delimiters-unmatched">)</span>
     <span class="org-rainbow-delimiters-unmatched">(</span>cycle_aux n xs xs<span class="org-rainbow-delimiters-unmatched">))</span>
-    
+
 1 <span class="org-rainbow-delimiters-unmatched">]</span>=&gt; <span class="org-rainbow-delimiters-unmatched">(</span>cycle 10 '<span class="org-rainbow-delimiters-unmatched">(</span>a b c<span class="org-rainbow-delimiters-unmatched">))</span>
 $18 = <span class="org-rainbow-delimiters-unmatched">(</span>a b c a b c a b<span class="org-rainbow-delimiters-unmatched">)</span>
 
@@ -3513,9 +3513,9 @@ Similar to Ocaml function mapi, map a function of index and value each index and
          <span class="org-rainbow-delimiters-depth-5">(</span>cons <span class="org-rainbow-delimiters-depth-6">(</span>func idx <span class="org-rainbow-delimiters-depth-7">(</span>car lst<span class="org-rainbow-delimiters-depth-7">)</span><span class="org-rainbow-delimiters-depth-6">)</span> acc<span class="org-rainbow-delimiters-depth-5">)</span> 
          <span class="org-rainbow-delimiters-depth-5">(</span>cdr lst<span class="org-rainbow-delimiters-depth-5">)</span>                       
          <span class="org-rainbow-delimiters-depth-5">(</span>+ idx 1 <span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
-         
+
   <span class="org-rainbow-delimiters-depth-2">(</span>reverse <span class="org-rainbow-delimiters-depth-3">(</span>mapi_acc '<span class="org-rainbow-delimiters-depth-4">()</span> lst 0<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-  
+
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">f_i_a</span> i a<span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">(</span>list i a<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span> 
 
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span>mapi f_i_a '<span class="org-rainbow-delimiters-depth-2">(</span>a b c d e f<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
@@ -3664,7 +3664,7 @@ Similar to Ocaml function mapi, map a function of index and value each index and
     <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">if</span> <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-keyword">or</span> <span class="org-rainbow-delimiters-depth-4">(</span>null? alist<span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-rainbow-delimiters-depth-4">(</span>not <span class="org-rainbow-delimiters-depth-5">(</span>predicate <span class="org-rainbow-delimiters-depth-6">(</span>car alist<span class="org-rainbow-delimiters-depth-6">)</span><span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span>
         '<span class="org-rainbow-delimiters-depth-3">()</span>
         <span class="org-rainbow-delimiters-depth-3">(</span>cons <span class="org-rainbow-delimiters-depth-4">(</span>car alist<span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-rainbow-delimiters-depth-4">(</span>take_while predicate <span class="org-rainbow-delimiters-depth-5">(</span>cdr alist<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-        
+
 1 <span class="org-rainbow-delimiters-unmatched">]</span>=&gt; <span class="org-rainbow-delimiters-unmatched">(</span>take_while <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">lambda</span> <span class="org-rainbow-delimiters-depth-2">(</span>x<span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">(</span>&lt; x 10<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span> '<span class="org-rainbow-delimiters-depth-1">(</span>1 8 7 9 10 20 5 62 2 3<span class="org-rainbow-delimiters-depth-1">)</span><span class="org-rainbow-delimiters-unmatched">)</span>
 
 <span class="org-comment-delimiter">;</span><span class="org-comment">Value 29: (1 8 7 9)</span>
@@ -3706,7 +3706,7 @@ Similar to Ocaml function mapi, map a function of index and value each index and
     <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-keyword">if</span> <span class="org-rainbow-delimiters-depth-4">(</span>predicate <span class="org-rainbow-delimiters-depth-5">(</span>car alist<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span>        
         <span class="org-rainbow-delimiters-depth-4">(</span>cons <span class="org-rainbow-delimiters-depth-5">(</span>car alist<span class="org-rainbow-delimiters-depth-5">)</span> <span class="org-rainbow-delimiters-depth-5">(</span>select predicate <span class="org-rainbow-delimiters-depth-6">(</span>cdr alist<span class="org-rainbow-delimiters-depth-6">)</span><span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span>        
         <span class="org-rainbow-delimiters-depth-4">(</span>select predicate <span class="org-rainbow-delimiters-depth-5">(</span>cdr alist<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-        
+
 
 1 <span class="org-rainbow-delimiters-unmatched">]</span>=&gt; <span class="org-rainbow-delimiters-unmatched">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-function-name">is_even</span> x<span class="org-rainbow-delimiters-depth-1">)</span> <span class="org-rainbow-delimiters-depth-1">(</span>= 0 <span class="org-rainbow-delimiters-depth-2">(</span>modulo x 2<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span><span class="org-rainbow-delimiters-unmatched">)</span>
 
@@ -3766,7 +3766,7 @@ Similar to Ocaml function mapi, map a function of index and value each index and
     <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">if</span> <span class="org-rainbow-delimiters-depth-3">(</span>null? alist<span class="org-rainbow-delimiters-depth-3">)</span>
         acc
         <span class="org-rainbow-delimiters-depth-3">(</span>f_el_acc <span class="org-rainbow-delimiters-depth-4">(</span>car alist<span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-rainbow-delimiters-depth-4">(</span>foldr f_el_acc acc <span class="org-rainbow-delimiters-depth-5">(</span>cdr alist<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-        
+
 1 <span class="org-rainbow-delimiters-unmatched">]</span>=&gt; <span class="org-rainbow-delimiters-unmatched">(</span>foldr + 0 '<span class="org-rainbow-delimiters-depth-1">(</span>1 2 3 4 5 6<span class="org-rainbow-delimiters-depth-1">)</span><span class="org-rainbow-delimiters-unmatched">)</span>
 
 <span class="org-comment-delimiter">;</span><span class="org-comment">Value: 21</span>
@@ -3775,7 +3775,7 @@ Similar to Ocaml function mapi, map a function of index and value each index and
 
 <span class="org-comment-delimiter">;</span><span class="org-comment">Value: 654321</span>
 
- 
+
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Fold Left - https://en.wikipedia.org/wiki/Fold_(higher-order_function)</span>
 <span class="org-comment-delimiter">;;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">foldl :: (b -&gt; a -&gt; b) -&gt; b -&gt; [a] -&gt; b</span>
@@ -3804,7 +3804,7 @@ Similar to Ocaml function mapi, map a function of index and value each index and
 <div class="org-src-container">
 
 <pre class="src src-scheme"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">zip2</span> list1 list2<span class="org-rainbow-delimiters-depth-2">)</span>
-    
+
     <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">if</span> <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-keyword">or</span> <span class="org-rainbow-delimiters-depth-4">(</span>null? list1<span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-rainbow-delimiters-depth-4">(</span>null? list2<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span>
         <span class="org-comment-delimiter">;; </span><span class="org-comment">Then</span>
         '<span class="org-rainbow-delimiters-depth-3">()</span>        
@@ -3904,7 +3904,7 @@ $7 = <span class="org-rainbow-delimiters-unmatched">((</span>1 a <span class="or
         <span class="org-rainbow-delimiters-depth-3">(</span>list <span class="org-rainbow-delimiters-depth-4">(</span><span class="org-keyword">map</span> car list-of-pairs<span class="org-rainbow-delimiters-depth-4">)</span>  <span class="org-rainbow-delimiters-depth-4">(</span><span class="org-keyword">map</span> <span class="org-rainbow-delimiters-depth-5">(</span><span class="org-keyword">lambda</span> <span class="org-rainbow-delimiters-depth-6">(</span>xy<span class="org-rainbow-delimiters-depth-6">)</span> <span class="org-rainbow-delimiters-depth-6">(</span>car <span class="org-rainbow-delimiters-depth-7">(</span>cdr xy<span class="org-rainbow-delimiters-depth-7">)</span><span class="org-rainbow-delimiters-depth-6">)</span><span class="org-rainbow-delimiters-depth-5">)</span>  list-of-pairs<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span>
     <span class="org-rainbow-delimiters-depth-2">)</span>
 <span class="org-rainbow-delimiters-depth-1">)</span>
-    
+
 1 <span class="org-rainbow-delimiters-unmatched">]</span>=&gt; <span class="org-rainbow-delimiters-unmatched">(</span><span class="org-keyword">define</span> <span class="org-function-name">xys</span> '<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-rainbow-delimiters-depth-2">(</span>1 a<span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">(</span>2 b<span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">(</span>3 c<span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">(</span>4 d<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span><span class="org-rainbow-delimiters-unmatched">)</span>
 
 1 <span class="org-rainbow-delimiters-unmatched">]</span>=&gt; xys
@@ -3929,7 +3929,7 @@ $11 = <span class="org-rainbow-delimiters-unmatched">((</span>1 2 3 4<span class
 
 <span class="org-rainbow-delimiters-unmatched">(</span><span class="org-keyword">define</span> <span class="org-function-name">fst</span> car<span class="org-rainbow-delimiters-unmatched">)</span>
 <span class="org-rainbow-delimiters-unmatched">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-unmatched">(</span><span class="org-function-name">snd</span> xs<span class="org-rainbow-delimiters-unmatched">)</span> <span class="org-rainbow-delimiters-unmatched">(</span>car <span class="org-rainbow-delimiters-unmatched">(</span>cdr xs<span class="org-rainbow-delimiters-unmatched">)))</span>
-        
+
 <span class="org-rainbow-delimiters-unmatched">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-unmatched">(</span><span class="org-function-name">unzip2f</span> list-of-pairs<span class="org-rainbow-delimiters-unmatched">)</span>
     <span class="org-rainbow-delimiters-unmatched">(</span><span class="org-keyword">if</span> <span class="org-rainbow-delimiters-unmatched">(</span>null? list-of-pairs<span class="org-rainbow-delimiters-unmatched">)</span>
         '<span class="org-rainbow-delimiters-unmatched">()</span>
@@ -3948,10 +3948,10 @@ $11 = <span class="org-rainbow-delimiters-unmatched">((</span>1 2 3 4<span class
 
 1 <span class="org-rainbow-delimiters-unmatched">]</span>=&gt; <span class="org-rainbow-delimiters-unmatched">(</span>unzip2f '<span class="org-rainbow-delimiters-unmatched">((</span>1 a<span class="org-rainbow-delimiters-unmatched">)</span> <span class="org-rainbow-delimiters-unmatched">(</span>2 b<span class="org-rainbow-delimiters-unmatched">)</span> <span class="org-rainbow-delimiters-unmatched">(</span>3 c<span class="org-rainbow-delimiters-unmatched">)</span> <span class="org-rainbow-delimiters-unmatched">(</span>4 d<span class="org-rainbow-delimiters-unmatched">)))</span>
 $24 = <span class="org-rainbow-delimiters-unmatched">((</span>1 2 3 4<span class="org-rainbow-delimiters-unmatched">)</span> <span class="org-rainbow-delimiters-unmatched">(</span>a b c d<span class="org-rainbow-delimiters-unmatched">))</span>
-            
+
 1 <span class="org-rainbow-delimiters-unmatched">]</span>=&gt; <span class="org-rainbow-delimiters-unmatched">(</span>unzip2f '<span class="org-rainbow-delimiters-unmatched">())</span>
 $25 = <span class="org-rainbow-delimiters-unmatched">()</span>
-    
+
 
 <span class="org-comment-delimiter">;;;;; </span><span class="org-comment">Unzip for list of multiple lists</span>
 <span class="org-comment-delimiter">;;;;;</span>
@@ -3975,7 +3975,7 @@ $25 = <span class="org-rainbow-delimiters-unmatched">()</span>
         <span class="org-comment-delimiter">;; </span><span class="org-comment">Else</span>
         <span class="org-rainbow-delimiters-unmatched">(</span>foldr 
             <span class="org-rainbow-delimiters-unmatched">(</span><span class="org-keyword">lambda</span> <span class="org-rainbow-delimiters-unmatched">(</span>t ts<span class="org-rainbow-delimiters-unmatched">)</span>
-              
+
                <span class="org-rainbow-delimiters-unmatched">(</span><span class="org-keyword">map</span>
                 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">lambda</span> <span class="org-rainbow-delimiters-depth-2">(</span>x<span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">(</span>cons <span class="org-rainbow-delimiters-depth-3">(</span>car x<span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-rainbow-delimiters-depth-3">(</span>car <span class="org-rainbow-delimiters-depth-4">(</span>cdr x<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span> 
                 <span class="org-rainbow-delimiters-depth-1">(</span>zip t ts<span class="org-rainbow-delimiters-depth-1">)</span>
@@ -3984,7 +3984,7 @@ $25 = <span class="org-rainbow-delimiters-unmatched">()</span>
 
             <span class="org-rainbow-delimiters-unmatched">(</span><span class="org-keyword">map</span> <span class="org-rainbow-delimiters-unmatched">(</span>constant '<span class="org-rainbow-delimiters-depth-1">()</span><span class="org-rainbow-delimiters-unmatched">)</span> list-of-list<span class="org-rainbow-delimiters-unmatched">)</span>
             list-of-list
-                         
+
         <span class="org-rainbow-delimiters-unmatched">)</span><span class="org-comment-delimiter">;; </span><span class="org-comment">End foldr</span>
 
     <span class="org-rainbow-delimiters-unmatched">)</span><span class="org-comment-delimiter">;; </span><span class="org-comment">End If</span>
@@ -4083,7 +4083,7 @@ Objects can be implemented with closures as can be seen in:
         <span class="org-rainbow-delimiters-depth-4">(</span><span class="org-rainbow-delimiters-depth-5">(</span>set-y!<span class="org-rainbow-delimiters-depth-5">)</span> <span class="org-rainbow-delimiters-depth-5">(</span>apply set-y! args<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span>
         <span class="org-rainbow-delimiters-depth-4">(</span><span class="org-rainbow-delimiters-depth-5">(</span>pos<span class="org-rainbow-delimiters-depth-5">)</span>    <span class="org-rainbow-delimiters-depth-5">(</span>apply pos args<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span>
         <span class="org-rainbow-delimiters-depth-4">(</span><span class="org-keyword">else</span> <span class="org-rainbow-delimiters-depth-5">(</span>error <span class="org-string">"POINT: Unknown message -&gt;"</span> message<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span>
-        
+
     <span class="org-rainbow-delimiters-depth-3">)</span>
    <span class="org-rainbow-delimiters-depth-2">)</span><span class="org-comment-delimiter">;; </span><span class="org-comment">End of self</span>
 <span class="org-rainbow-delimiters-depth-1">)</span><span class="org-comment-delimiter">;; </span><span class="org-comment">End of make-point </span>
@@ -4137,10 +4137,10 @@ $16 = <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-rain
 $47 = <span class="org-rainbow-delimiters-depth-1">(</span>100 4<span class="org-rainbow-delimiters-depth-1">)</span>
 
 
-   
+
 
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-function-name">points</span> <span class="org-rainbow-delimiters-depth-2">(</span>map-args make-point '<span class="org-rainbow-delimiters-depth-3">(</span> <span class="org-rainbow-delimiters-depth-4">(</span>2 3<span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-rainbow-delimiters-depth-4">(</span>5 4<span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-rainbow-delimiters-depth-4">(</span>8 7<span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-rainbow-delimiters-depth-4">(</span>9 10<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
- 
+
 
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">map</span> <span class="org-rainbow-delimiters-depth-2">(</span>get-attr 'get-x<span class="org-rainbow-delimiters-depth-2">)</span> points<span class="org-rainbow-delimiters-depth-1">)</span>
 $49 = <span class="org-rainbow-delimiters-depth-1">(</span>2 5 8 9<span class="org-rainbow-delimiters-depth-1">)</span>
@@ -4214,7 +4214,7 @@ $58 = 78
       <span class="org-rainbow-delimiters-depth-4">(</span><span class="org-rainbow-delimiters-depth-5">(</span>pop<span class="org-rainbow-delimiters-depth-5">)</span>     <span class="org-rainbow-delimiters-depth-5">(</span>apply pop args<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span>
       <span class="org-rainbow-delimiters-depth-4">(</span><span class="org-rainbow-delimiters-depth-5">(</span>top<span class="org-rainbow-delimiters-depth-5">)</span>     <span class="org-rainbow-delimiters-depth-5">(</span>apply top args<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span>
       <span class="org-rainbow-delimiters-depth-4">(</span><span class="org-rainbow-delimiters-depth-5">(</span>pop-all<span class="org-rainbow-delimiters-depth-5">)</span> <span class="org-rainbow-delimiters-depth-5">(</span>apply pop-all args<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-      
+
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-function-name">s</span> <span class="org-rainbow-delimiters-depth-2">(</span>make-stack<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span>s 'show<span class="org-rainbow-delimiters-depth-1">)</span>
 <span class="org-rainbow-delimiters-depth-1">()</span>
@@ -4440,7 +4440,7 @@ Examples:
 <pre class="src src-scheme"><span class="org-rainbow-delimiters-depth-1">(</span>define-syntax-rule
   <span class="org-rainbow-delimiters-depth-2">(</span>incr var<span class="org-rainbow-delimiters-depth-2">)</span>
   <span class="org-rainbow-delimiters-depth-2">(</span>set! var <span class="org-rainbow-delimiters-depth-3">(</span>+ 1 var<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-  
+
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-function-name">x</span> 10<span class="org-rainbow-delimiters-depth-1">)</span>
 &gt; x
 $1 = 10
@@ -4548,10 +4548,10 @@ $8 = <span class="org-string">"less than 10"</span>
 <pre class="src src-scheme"><span class="org-rainbow-delimiters-depth-1">(</span>define-syntax-rule
     <span class="org-rainbow-delimiters-depth-2">(</span>$n pred args ...<span class="org-rainbow-delimiters-depth-2">)</span>
     <span class="org-rainbow-delimiters-depth-2">(</span>not <span class="org-rainbow-delimiters-depth-3">(</span>pred args ...<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-    
+
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span>list? '<span class="org-rainbow-delimiters-depth-2">(</span>1 2 3 4<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 $1 = #t
-    
+
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span>$n list? '<span class="org-rainbow-delimiters-depth-2">(</span>1 2 3 4<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 $2 = #f
 
@@ -4624,7 +4624,7 @@ Change the define statement to def.
 
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span>def x 100<span class="org-rainbow-delimiters-depth-1">)</span>
 
-     
+
 &gt; ,expand <span class="org-rainbow-delimiters-depth-1">(</span>def x 100<span class="org-rainbow-delimiters-depth-1">)</span>
 $10 = <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-function-name">x</span> 100<span class="org-rainbow-delimiters-depth-1">)</span>
 
@@ -4682,13 +4682,13 @@ $7 = <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keywo
    <span class="org-rainbow-delimiters-depth-2">(</span>c 300<span class="org-rainbow-delimiters-depth-2">)</span>
    <span class="org-rainbow-delimiters-depth-2">(</span>d <span class="org-string">"something"</span><span class="org-rainbow-delimiters-depth-2">)</span>
    <span class="org-rainbow-delimiters-depth-2">(</span>e 'a-symbol<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-   
+
 &gt; a
 $13 = 10
 
 &gt; b
 $14 = 200
- 
+
 
 &gt; c
 $15 = 300
@@ -4804,13 +4804,13 @@ Example: Without Macro
    <span class="org-rainbow-delimiters-depth-3">(</span>cons 'exp exp<span class="org-rainbow-delimiters-depth-3">)</span>
    <span class="org-rainbow-delimiters-depth-3">(</span>cons 'sqrt sqrt<span class="org-rainbow-delimiters-depth-3">)</span>
    <span class="org-rainbow-delimiters-depth-3">(</span>cons 'log log<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-   
+
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">get-key</span>  key assoclist<span class="org-rainbow-delimiters-depth-2">)</span>
       <span class="org-rainbow-delimiters-depth-2">(</span>cdr <span class="org-rainbow-delimiters-depth-3">(</span>assoc key assoclist<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">has-key?</span> key assoclist<span class="org-rainbow-delimiters-depth-2">)</span>
   <span class="org-rainbow-delimiters-depth-2">(</span>member key <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-keyword">map</span> car assoclist<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-  
+
 <span class="org-rainbow-delimiters-depth-1">(</span>get-key '+ dispatch-table<span class="org-rainbow-delimiters-depth-1">)</span>
 $78 = #&lt;procedure + <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-builtin">#:optional</span> _ _ . _<span class="org-rainbow-delimiters-depth-1">)</span>&gt;
 
@@ -4836,7 +4836,7 @@ With Macro:
 
 <span class="org-rainbow-delimiters-depth-1">(</span>define-dispatch-table dispatch-table 
   <span class="org-rainbow-delimiters-depth-2">(</span>cons car cdr list + - * / expt sin cos tan exp sqrt log<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-  
+
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-rainbow-delimiters-depth-2">(</span>get-key 'exp dispatch-table<span class="org-rainbow-delimiters-depth-2">)</span> 3<span class="org-rainbow-delimiters-depth-1">)</span>
 $84 = 20.085536923187668 
 
@@ -4884,7 +4884,7 @@ $86 = <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyw
     <span class="org-rainbow-delimiters-depth-2">(</span>defn name params body ...<span class="org-rainbow-delimiters-depth-2">)</span>
     <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-function-name">name</span> . params<span class="org-rainbow-delimiters-depth-3">)</span>
       body ...<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>    
-      
+
 
 <span class="org-comment-delimiter">;;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">(fn [vars] (&lt;body&gt;)))</span>
@@ -4892,7 +4892,7 @@ $86 = <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyw
   <span class="org-rainbow-delimiters-depth-1">(</span>define-syntax-rule
     <span class="org-rainbow-delimiters-depth-2">(</span>fn params body<span class="org-rainbow-delimiters-depth-2">)</span>
     <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">lambda</span> params body<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-    
+
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span>def x 10<span class="org-rainbow-delimiters-depth-1">)</span>
 &gt; x
 $2 = 10
@@ -4948,7 +4948,7 @@ Usage:
      <span class="org-rainbow-delimiters-depth-5">(</span><span class="org-keyword">begin</span> 
       <span class="org-rainbow-delimiters-depth-6">(</span>method obj args ...<span class="org-rainbow-delimiters-depth-6">)</span> ...
       obj<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-      
+
 &gt; v
 '#<span class="org-rainbow-delimiters-depth-1">(</span>#<span class="org-rainbow-delimiters-depth-2">{</span>Unspecific<span class="org-rainbow-delimiters-depth-2">}</span> #<span class="org-rainbow-delimiters-depth-2">{</span>Unspecific<span class="org-rainbow-delimiters-depth-2">}</span><span class="org-rainbow-delimiters-depth-1">)</span>
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span>doto v 
@@ -5006,7 +5006,7 @@ $2 = <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keywo
 4
 6
 8
- 
+
 &gt; ,expand <span class="org-rainbow-delimiters-depth-1">(</span>while <span class="org-rainbow-delimiters-depth-2">(</span>&lt; x 10<span class="org-rainbow-delimiters-depth-2">)</span>    
    <span class="org-rainbow-delimiters-depth-2">(</span>display x<span class="org-rainbow-delimiters-depth-2">)</span>    
    <span class="org-rainbow-delimiters-depth-2">(</span>newline<span class="org-rainbow-delimiters-depth-2">)</span>    
@@ -5046,9 +5046,9 @@ See also: <a href="http://www.gigamonkeys.com/book/macros-standard-control-const
              <span class="org-rainbow-delimiters-depth-6">(</span><span class="org-keyword">if</span> <span class="org-rainbow-delimiters-depth-7">(</span>&lt; var value<span class="org-rainbow-delimiters-depth-7">)</span>
                  <span class="org-rainbow-delimiters-depth-7">(</span><span class="org-keyword">begin</span> body <span class="org-rainbow-delimiters-depth-8">(</span>loop <span class="org-rainbow-delimiters-depth-9">(</span>+ var 1<span class="org-rainbow-delimiters-depth-9">)</span><span class="org-rainbow-delimiters-depth-8">)</span><span class="org-rainbow-delimiters-depth-7">)</span>
                  <span class="org-rainbow-delimiters-depth-7">(</span>values<span class="org-rainbow-delimiters-depth-7">)</span><span class="org-rainbow-delimiters-depth-6">)</span><span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">]</span>
-  
+
   <span class="org-rainbow-delimiters-depth-3">(</span>loop 0<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-  
+
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span>dotimes <span class="org-rainbow-delimiters-depth-2">(</span>i 5<span class="org-rainbow-delimiters-depth-2">)</span>
        <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">begin</span> <span class="org-rainbow-delimiters-depth-3">(</span>display i<span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-rainbow-delimiters-depth-3">(</span>display <span class="org-string">"\n"</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 0
@@ -5088,7 +5088,7 @@ $7 = <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keywo
                        <span class="org-rainbow-delimiters-depth-8">(</span><span class="org-keyword">begin</span>
                          body
                          <span class="org-rainbow-delimiters-depth-9">(</span>loop <span class="org-rainbow-delimiters-depth-1">(</span>cdr xs<span class="org-rainbow-delimiters-depth-1">)</span><span class="org-rainbow-delimiters-depth-9">)</span><span class="org-rainbow-delimiters-depth-8">)</span><span class="org-rainbow-delimiters-depth-7">)</span><span class="org-rainbow-delimiters-depth-6">)</span><span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span>
-      
+
       <span class="org-rainbow-delimiters-depth-3">(</span>loop alist<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span>dolist <span class="org-rainbow-delimiters-depth-2">(</span>i '<span class="org-rainbow-delimiters-depth-3">(</span>a b c d e<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>  <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">begin</span> <span class="org-rainbow-delimiters-depth-3">(</span>display i<span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-rainbow-delimiters-depth-3">(</span>display <span class="org-string">"\n"</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
@@ -5344,7 +5344,7 @@ See also:
 
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">get-values</span> assocl<span class="org-rainbow-delimiters-depth-2">)</span>
   <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">map</span> cadr assocl<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-                
+
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">get-key</span> key assocl<span class="org-rainbow-delimiters-depth-2">)</span>
   <span class="org-rainbow-delimiters-depth-2">(</span>cadr <span class="org-rainbow-delimiters-depth-3">(</span>assoc key assocl <span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 
@@ -5423,7 +5423,7 @@ See also:
         <span class="org-rainbow-delimiters-depth-4">(</span>cons <span class="org-rainbow-delimiters-depth-5">(</span>car hd<span class="org-rainbow-delimiters-depth-5">)</span>
            <span class="org-rainbow-delimiters-depth-5">(</span>cons <span class="org-rainbow-delimiters-depth-6">(</span>cadr hd<span class="org-rainbow-delimiters-depth-6">)</span>
                  <span class="org-rainbow-delimiters-depth-6">(</span>assoc-&gt;plist tl<span class="org-rainbow-delimiters-depth-6">)</span><span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>       
-                 
+
 
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span>plist-&gt;assoc p1<span class="org-rainbow-delimiters-depth-1">)</span>
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-rainbow-delimiters-depth-2">(</span>name: <span class="org-string">"John"</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">(</span>surname: <span class="org-string">"Galt"</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">(</span>age: 25<span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">(</span>gender: male<span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">(</span>country: US<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
@@ -5508,7 +5508,7 @@ See also:
                 ISO3166code: <span class="org-string">"CA"</span>
                 currency: CAD
                 <span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-                
+
 &gt; countries
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-rainbow-delimiters-depth-2">(</span>name: <span class="org-string">"Netherlands"</span> lang: <span class="org-rainbow-delimiters-depth-3">(</span>Dutch<span class="org-rainbow-delimiters-depth-3">)</span> capital: <span class="org-string">"Amsterdam"</span> domain: <span class="org-string">".nl"</span> ISO3166code: <span class="org-string">"NL"</span> currency: EUR<span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">(</span>name: <span class="org-string">"Australia"</span> lang: <span class="org-rainbow-delimiters-depth-3">(</span>English<span class="org-rainbow-delimiters-depth-3">)</span> capital: <span class="org-string">"Camberra"</span> domain: <span class="org-string">".au"</span> ISO3166code: <span class="org-string">"AU"</span> currency: AUD<span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">(</span>name: <span class="org-string">"Canada"</span> lang: <span class="org-rainbow-delimiters-depth-3">(</span>English French<span class="org-rainbow-delimiters-depth-3">)</span> domain: <span class="org-string">".ca"</span> ISO3166code: <span class="org-string">"CA"</span> currency: CAD<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 
@@ -5820,7 +5820,7 @@ $2 = <span class="org-string">"2.0.11"</span>
     <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">if</span> <span class="org-rainbow-delimiters-depth-3">(</span>= n 1<span class="org-rainbow-delimiters-depth-3">)</span>
         1
         <span class="org-rainbow-delimiters-depth-3">(</span>* n <span class="org-rainbow-delimiters-depth-4">(</span>factorial <span class="org-rainbow-delimiters-depth-5">(</span>- n 1<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
- 
+
 
 &gt; ,trace <span class="org-rainbow-delimiters-depth-1">(</span>factorial 5<span class="org-rainbow-delimiters-depth-1">)</span>
 <span class="org-function-name">trace</span>: <span class="org-string">|  (#&lt;procedure 9a94210&gt; #(#&lt;directory (guile-user) 979b630&gt; &#8230;))</span>
@@ -5848,7 +5848,7 @@ $9 = 3628800
     <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">let</span> <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-rainbow-delimiters-depth-4">(</span>tmp x<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span>
     <span class="org-rainbow-delimiters-depth-3">(</span>set! x y<span class="org-rainbow-delimiters-depth-3">)</span>
     <span class="org-rainbow-delimiters-depth-3">(</span>set! y tmp<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-    
+
 &gt; 
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-function-name">a</span> 10<span class="org-rainbow-delimiters-depth-1">)</span>
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-function-name">b</span> 20<span class="org-rainbow-delimiters-depth-1">)</span>
@@ -5962,7 +5962,7 @@ Example1: Factorial
     <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">if</span> <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-keyword">or</span> <span class="org-rainbow-delimiters-depth-4">(</span>= n 0<span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-rainbow-delimiters-depth-4">(</span>= n 1<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span>
         1
         <span class="org-rainbow-delimiters-depth-3">(</span>* n  <span class="org-rainbow-delimiters-depth-4">(</span>factorial <span class="org-rainbow-delimiters-depth-5">(</span>- n 1<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-        
+
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span>factorial 10<span class="org-rainbow-delimiters-depth-1">)</span>
 $1 = 3628800
 &gt; 
@@ -6043,7 +6043,7 @@ Aborted <span class="org-rainbow-delimiters-depth-1">(</span>core dumped<span cl
     <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">if</span> <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-keyword">or</span> <span class="org-rainbow-delimiters-depth-4">(</span>= n 0<span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-rainbow-delimiters-depth-4">(</span>= n 1<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span>
         acc
         <span class="org-rainbow-delimiters-depth-3">(</span>factorial-aux <span class="org-rainbow-delimiters-depth-4">(</span>- n 1<span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-rainbow-delimiters-depth-4">(</span>* n acc<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-    
+
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span>factorial-aux 5 1<span class="org-rainbow-delimiters-depth-1">)</span>
 $1 = 120
 &gt; 
@@ -6097,7 +6097,7 @@ $4 = 3628800
 <span class="org-comment-delimiter">;;; </span><span class="org-comment">Assembling all pieces of code </span>
 <span class="org-comment-delimiter">;;</span>
 
-   
+
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">factorial3</span> n<span class="org-rainbow-delimiters-depth-2">)</span> 
     <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-function-name">factorial-aux</span> n acc<span class="org-rainbow-delimiters-depth-3">)</span>
         <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-keyword">if</span> <span class="org-rainbow-delimiters-depth-4">(</span><span class="org-keyword">or</span> <span class="org-rainbow-delimiters-depth-5">(</span>= n 0<span class="org-rainbow-delimiters-depth-5">)</span> <span class="org-rainbow-delimiters-depth-5">(</span>= n 1<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span>
@@ -6176,7 +6176,7 @@ $6 = 5050
     <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">if</span> <span class="org-rainbow-delimiters-depth-3">(</span>&gt; a b<span class="org-rainbow-delimiters-depth-3">)</span>
         acc
         <span class="org-rainbow-delimiters-depth-3">(</span>sum-ints-aux <span class="org-rainbow-delimiters-depth-4">(</span>+ a 1<span class="org-rainbow-delimiters-depth-4">)</span> b <span class="org-rainbow-delimiters-depth-4">(</span>+ a acc<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-    
+
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span>sum-ints-aux 1 10 0<span class="org-rainbow-delimiters-depth-1">)</span>
 $4 = 55
 &gt; 
@@ -6288,9 +6288,9 @@ Pi Sum
             0
             <span class="org-rainbow-delimiters-depth-4">(</span>+ <span class="org-rainbow-delimiters-depth-5">(</span>term a<span class="org-rainbow-delimiters-depth-5">)</span>
                <span class="org-rainbow-delimiters-depth-5">(</span>summation_ term next <span class="org-rainbow-delimiters-depth-6">(</span>next a<span class="org-rainbow-delimiters-depth-6">)</span> b<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
-           
+
     <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">lambda</span> <span class="org-rainbow-delimiters-depth-3">(</span>a b<span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-rainbow-delimiters-depth-3">(</span>summation_ term next a b<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
-    
+
 <span class="org-rainbow-delimiters-depth-1">)</span> <span class="org-comment-delimiter">;; </span><span class="org-comment">End of summation</span>
 
 
@@ -6318,7 +6318,7 @@ $2 = 55
     <span class="org-rainbow-delimiters-depth-2">(</span>summation
         <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-keyword">lambda</span> <span class="org-rainbow-delimiters-depth-4">(</span>x<span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-rainbow-delimiters-depth-4">(</span>/ 1.0 <span class="org-rainbow-delimiters-depth-5">(</span>* x <span class="org-rainbow-delimiters-depth-6">(</span>+ x 2<span class="org-rainbow-delimiters-depth-6">)</span><span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span>
         <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-keyword">lambda</span> <span class="org-rainbow-delimiters-depth-4">(</span>x<span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-rainbow-delimiters-depth-4">(</span>+ x 4<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-    
+
 scheme@<span class="org-rainbow-delimiters-depth-1">(</span>guile-user<span class="org-rainbow-delimiters-depth-1">)</span> <span class="org-rainbow-delimiters-depth-1">[</span>1<span class="org-rainbow-delimiters-depth-1">]</span>&gt; <span class="org-rainbow-delimiters-depth-1">(</span>* 8 <span class="org-rainbow-delimiters-depth-2">(</span>pi-sum 1 1000<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 $4 = 3.139592655589783
 </pre>
@@ -6401,13 +6401,13 @@ Aborted <span class="org-rainbow-delimiters-depth-1">(</span>core dumped<span cl
 
 
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">fixed-point</span> f first-guess<span class="org-rainbow-delimiters-depth-2">)</span>
-       
+
     <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-function-name">try</span> guess<span class="org-rainbow-delimiters-depth-3">)</span>
         <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-keyword">let</span> <span class="org-rainbow-delimiters-depth-4">(</span><span class="org-rainbow-delimiters-depth-5">(</span>next <span class="org-rainbow-delimiters-depth-6">(</span>f guess<span class="org-rainbow-delimiters-depth-6">)</span><span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span>
             <span class="org-rainbow-delimiters-depth-4">(</span><span class="org-keyword">if</span> <span class="org-rainbow-delimiters-depth-5">(</span>close-enough? guess next<span class="org-rainbow-delimiters-depth-5">)</span>
             next
             <span class="org-rainbow-delimiters-depth-5">(</span>try next<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
-    
+
     <span class="org-rainbow-delimiters-depth-2">(</span>try first-guess<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>           
 
 &gt;  <span class="org-rainbow-delimiters-depth-1">(</span>fixed-point cos 1.0<span class="org-rainbow-delimiters-depth-1">)</span>
@@ -6432,10 +6432,10 @@ df(x) = (f(x +dx) - f(x))/dx
 <pre class="src src-scheme"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">deriv</span> dx f<span class="org-rainbow-delimiters-depth-2">)</span> 
     <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">lambda</span> <span class="org-rainbow-delimiters-depth-3">(</span>x<span class="org-rainbow-delimiters-depth-3">)</span>
         <span class="org-rainbow-delimiters-depth-3">(</span>/  <span class="org-rainbow-delimiters-depth-4">(</span>- <span class="org-rainbow-delimiters-depth-5">(</span>f <span class="org-rainbow-delimiters-depth-6">(</span>+ x dx<span class="org-rainbow-delimiters-depth-6">)</span><span class="org-rainbow-delimiters-depth-5">)</span> <span class="org-rainbow-delimiters-depth-5">(</span>f x<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span> dx<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-        
+
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">cube</span> x<span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">(</span>* x x x<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 &gt; 
- 
+
  &gt; <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-rainbow-delimiters-depth-2">(</span>deriv 0.00001 cube<span class="org-rainbow-delimiters-depth-2">)</span> 5<span class="org-rainbow-delimiters-depth-1">)</span>
 $26 = 75.00014999664018
 &gt; 
@@ -6465,7 +6465,7 @@ f(x) = x  - g(x)/Dg(x)
 
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">newton-method</span> g guess<span class="org-rainbow-delimiters-depth-2">)</span>
     <span class="org-rainbow-delimiters-depth-2">(</span>fixed-point <span class="org-rainbow-delimiters-depth-3">(</span>newton-transform g<span class="org-rainbow-delimiters-depth-3">)</span> guess<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-    
+
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">sqrt2</span> x<span class="org-rainbow-delimiters-depth-2">)</span>
     <span class="org-rainbow-delimiters-depth-2">(</span>newton-method <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-keyword">lambda</span> <span class="org-rainbow-delimiters-depth-4">(</span>y<span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-rainbow-delimiters-depth-4">(</span>- <span class="org-rainbow-delimiters-depth-5">(</span>square x<span class="org-rainbow-delimiters-depth-5">)</span> x<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span> 1.0<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 </pre>
@@ -6586,8 +6586,8 @@ Solution:
         result
         <span class="org-rainbow-delimiters-depth-4">(</span>iter <span class="org-rainbow-delimiters-depth-5">(</span>next a<span class="org-rainbow-delimiters-depth-5">)</span> <span class="org-rainbow-delimiters-depth-5">(</span>* <span class="org-rainbow-delimiters-depth-6">(</span>term a<span class="org-rainbow-delimiters-depth-6">)</span> result<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
   <span class="org-rainbow-delimiters-depth-2">(</span>iter a 1<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-  
-  
+
+
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">id</span> n<span class="org-rainbow-delimiters-depth-2">)</span> n<span class="org-rainbow-delimiters-depth-1">)</span>
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">inc</span> n<span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">(</span>+ n 1<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 &gt; 
@@ -6699,17 +6699,17 @@ Solution:
                            <span class="org-rainbow-delimiters-depth-6">(</span>combiner <span class="org-rainbow-delimiters-depth-7">(</span>term a<span class="org-rainbow-delimiters-depth-7">)</span> result<span class="org-rainbow-delimiters-depth-6">)</span>
                            result<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
   <span class="org-rainbow-delimiters-depth-2">(</span>iter a null-value<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-  
+
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">divisor?</span> n<span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">lambda</span> <span class="org-rainbow-delimiters-depth-3">(</span>i<span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-rainbow-delimiters-depth-3">(</span>= 0 <span class="org-rainbow-delimiters-depth-4">(</span>modulo n i<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">range</span> a b step<span class="org-rainbow-delimiters-depth-2">)</span>
   <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">if</span> <span class="org-rainbow-delimiters-depth-3">(</span>&gt; a b<span class="org-rainbow-delimiters-depth-3">)</span>
       '<span class="org-rainbow-delimiters-depth-3">()</span>
       <span class="org-rainbow-delimiters-depth-3">(</span>cons a  <span class="org-rainbow-delimiters-depth-4">(</span>range <span class="org-rainbow-delimiters-depth-5">(</span>+ a step<span class="org-rainbow-delimiters-depth-5">)</span> b step<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-  
+
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">prime?</span> n<span class="org-rainbow-delimiters-depth-2">)</span>
   <span class="org-rainbow-delimiters-depth-2">(</span>null? <span class="org-rainbow-delimiters-depth-3">(</span>filter <span class="org-rainbow-delimiters-depth-4">(</span>divisor? n<span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-rainbow-delimiters-depth-4">(</span>range 2 <span class="org-rainbow-delimiters-depth-5">(</span>- n 1<span class="org-rainbow-delimiters-depth-5">)</span> 1<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-        
+
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span>filter prime? <span class="org-rainbow-delimiters-depth-2">(</span>range 1 100 1<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 $8 = <span class="org-rainbow-delimiters-depth-1">(</span>1 2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97<span class="org-rainbow-delimiters-depth-1">)</span>
 &gt; 
@@ -6749,7 +6749,7 @@ $14 = 88
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span>sum-of-square-primes2 1 100<span class="org-rainbow-delimiters-depth-1">)</span>
 $15 = 65797
 &gt; 
-    
+
 <span class="org-comment-delimiter">;;;;;;;;;   </span><span class="org-comment">letter b</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">relprime?</span> n<span class="org-rainbow-delimiters-depth-2">)</span> 
@@ -6816,7 +6816,7 @@ Task: Write an s-expression evaluator (prefix notation evaluator)  in lisp witho
 
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">func?</span> sym<span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">(</span>has-key? sym function-table<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">func-dispatch</span> sym<span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">(</span>get-key sym function-table<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-  
+
 <span class="org-comment-delimiter">;;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Evaluate s-expressions in prefix notation</span>
 <span class="org-comment-delimiter">;;</span>
@@ -6824,12 +6824,12 @@ Task: Write an s-expression evaluator (prefix notation evaluator)  in lisp witho
   <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">if</span> <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-keyword">or</span> <span class="org-rainbow-delimiters-depth-4">(</span>number? expr<span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-rainbow-delimiters-depth-4">(</span>string? expr<span class="org-rainbow-delimiters-depth-4">)</span> <span class="org-rainbow-delimiters-depth-4">(</span>null? expr<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span>
       expr
       <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-keyword">let</span>  <span class="org-rainbow-delimiters-depth-4">(</span><span class="org-rainbow-delimiters-depth-5">(</span>p <span class="org-rainbow-delimiters-depth-6">(</span>car expr<span class="org-rainbow-delimiters-depth-6">)</span><span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span>
-        
+
           <span class="org-rainbow-delimiters-depth-4">(</span><span class="org-keyword">cond</span>
            <span class="org-rainbow-delimiters-depth-5">(</span><span class="org-rainbow-delimiters-depth-6">(</span>list? p<span class="org-rainbow-delimiters-depth-6">)</span>  <span class="org-rainbow-delimiters-depth-6">(</span>eval-prefix p<span class="org-rainbow-delimiters-depth-6">)</span><span class="org-rainbow-delimiters-depth-5">)</span>
            <span class="org-rainbow-delimiters-depth-5">(</span><span class="org-rainbow-delimiters-depth-6">(</span>func? p<span class="org-rainbow-delimiters-depth-6">)(</span>apply <span class="org-rainbow-delimiters-depth-7">(</span>func-dispatch p<span class="org-rainbow-delimiters-depth-7">)</span>
                        <span class="org-rainbow-delimiters-depth-7">(</span><span class="org-keyword">map</span> eval-prefix <span class="org-rainbow-delimiters-depth-8">(</span>cdr expr<span class="org-rainbow-delimiters-depth-8">)</span><span class="org-rainbow-delimiters-depth-7">)</span><span class="org-rainbow-delimiters-depth-6">)</span><span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span>                          
-          
+
          <span class="org-rainbow-delimiters-depth-3">)</span><span class="org-comment-delimiter">;; </span><span class="org-comment">End let</span>
  <span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span><span class="org-comment-delimiter">;; </span><span class="org-comment">End of prefix-eval</span>
 
@@ -6920,14 +6920,14 @@ $77 = 9.975303377387922
         <span class="org-rainbow-delimiters-depth-3">(</span>cons 'sqrt sqrt<span class="org-rainbow-delimiters-depth-3">)</span>
         <span class="org-rainbow-delimiters-depth-3">(</span>cons 'sqr <span class="org-rainbow-delimiters-depth-4">(</span><span class="org-keyword">lambda</span> <span class="org-rainbow-delimiters-depth-5">(</span>x<span class="org-rainbow-delimiters-depth-5">)</span> <span class="org-rainbow-delimiters-depth-5">(</span>* x x<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span>
         <span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-        
+
 
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">function?</span> sym<span class="org-rainbow-delimiters-depth-2">)</span>
   <span class="org-rainbow-delimiters-depth-2">(</span>assoc sym functions-list<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">find-function</span> sym<span class="org-rainbow-delimiters-depth-2">)</span>
   <span class="org-rainbow-delimiters-depth-2">(</span>cdr <span class="org-rainbow-delimiters-depth-3">(</span>assoc sym functions-list<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-  
+
 
 
 
@@ -6952,7 +6952,7 @@ $77 = 9.975303377387922
            <span class="org-rainbow-delimiters-depth-6">(</span><span class="org-rainbow-delimiters-depth-7">(</span>number? <span class="org-rainbow-delimiters-depth-8">(</span>car expr<span class="org-rainbow-delimiters-depth-8">)</span><span class="org-rainbow-delimiters-depth-7">)</span>    <span class="org-rainbow-delimiters-depth-7">(</span>s 'push <span class="org-rainbow-delimiters-depth-8">(</span>car expr<span class="org-rainbow-delimiters-depth-8">)</span><span class="org-rainbow-delimiters-depth-7">)</span><span class="org-rainbow-delimiters-depth-6">)</span>
            <span class="org-rainbow-delimiters-depth-6">(</span><span class="org-rainbow-delimiters-depth-7">(</span>operator? <span class="org-rainbow-delimiters-depth-8">(</span>car expr<span class="org-rainbow-delimiters-depth-8">)</span><span class="org-rainbow-delimiters-depth-7">)</span>  <span class="org-rainbow-delimiters-depth-7">(</span>evaluate-operator <span class="org-rainbow-delimiters-depth-8">(</span>car expr<span class="org-rainbow-delimiters-depth-8">)</span><span class="org-rainbow-delimiters-depth-7">)</span><span class="org-rainbow-delimiters-depth-6">)</span>
            <span class="org-rainbow-delimiters-depth-6">(</span><span class="org-rainbow-delimiters-depth-7">(</span>function? <span class="org-rainbow-delimiters-depth-8">(</span>car expr<span class="org-rainbow-delimiters-depth-8">)</span><span class="org-rainbow-delimiters-depth-7">)</span>  <span class="org-rainbow-delimiters-depth-7">(</span>evaluate-function <span class="org-rainbow-delimiters-depth-8">(</span>car expr<span class="org-rainbow-delimiters-depth-8">)</span><span class="org-rainbow-delimiters-depth-7">)</span><span class="org-rainbow-delimiters-depth-6">)</span><span class="org-rainbow-delimiters-depth-5">)</span>
-          
+
           <span class="org-rainbow-delimiters-depth-5">(</span>evaluator <span class="org-rainbow-delimiters-depth-6">(</span>cdr expr<span class="org-rainbow-delimiters-depth-6">)</span><span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
 
   <span class="org-rainbow-delimiters-depth-2">(</span>evaluator expr<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
@@ -7388,16 +7388,16 @@ vector-ref: index is out of range
 
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span>point-3d 10 20 30<span class="org-rainbow-delimiters-depth-1">)</span>
  #&lt;point-3d&gt;
- 
+
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-function-name">p1</span> <span class="org-rainbow-delimiters-depth-2">(</span>point-3d 10 20 30<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
- 
+
 
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-function-name">p2</span> <span class="org-rainbow-delimiters-depth-2">(</span>apply point-3d '<span class="org-rainbow-delimiters-depth-3">(</span>20 30 40<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 &gt; p1
  #&lt;point-3d&gt;
 &gt; p2
  #&lt;point-3d&gt;
- 
+
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span>point-3d-x p1<span class="org-rainbow-delimiters-depth-1">)</span>
 10
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span>point-3d-y p1<span class="org-rainbow-delimiters-depth-1">)</span>
@@ -7468,13 +7468,13 @@ Documentation:
 <div class="org-src-container">
 
 <pre class="src src-scheme"><span class="org-rainbow-delimiters-depth-1">(</span>require racket/match<span class="org-rainbow-delimiters-depth-1">)</span>
- 
+
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-function-name">perimeter</span> picture<span class="org-rainbow-delimiters-depth-2">)</span>
     <span class="org-rainbow-delimiters-depth-2">(</span>match picture
         <span class="org-rainbow-delimiters-depth-3">[</span><span class="org-rainbow-delimiters-depth-4">(</span>list 'triangle a b c<span class="org-rainbow-delimiters-depth-4">)</span>   <span class="org-rainbow-delimiters-depth-4">(</span>+ a b c<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">]</span>
         <span class="org-rainbow-delimiters-depth-3">[</span><span class="org-rainbow-delimiters-depth-4">(</span>list 'rectangle a b<span class="org-rainbow-delimiters-depth-4">)</span>    <span class="org-rainbow-delimiters-depth-4">(</span>* 2 <span class="org-rainbow-delimiters-depth-5">(</span>+ a b<span class="org-rainbow-delimiters-depth-5">)</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">]</span>
         <span class="org-rainbow-delimiters-depth-3">[</span><span class="org-rainbow-delimiters-depth-4">(</span>list 'circle r<span class="org-rainbow-delimiters-depth-4">)</span>         <span class="org-rainbow-delimiters-depth-4">(</span>* 2 pi r<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">]</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-        
+
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span>perimeter '<span class="org-rainbow-delimiters-depth-2">(</span>triangle 3 4 5<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 12
 &gt; <span class="org-rainbow-delimiters-depth-1">(</span>perimeter '<span class="org-rainbow-delimiters-depth-2">(</span>rectangle 3 4<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
@@ -7719,25 +7719,25 @@ Features:
 <h5 id="sec-1-11-2-1"><span class="section-number-5">1.11.2.1</span> Install and Run</h5>
 <div class="outline-text-5" id="text-1-11-2-1">
 <pre class="example">
-    $ curl -O ftp://ftp.gnu.org/pub/gnu/kawa/kawa-2.0.jar
+$ curl -O ftp://ftp.gnu.org/pub/gnu/kawa/kawa-2.0.jar
 
-    $ java -jar kawa-2.0.jar 
-    #|kawa:1|# 
-    #|kawa:2|# 
+$ java -jar kawa-2.0.jar 
+#|kawa:1|# 
+#|kawa:2|# 
 
-    $ java -jar kawa-2.0.jar 
-    #|kawa:1|# 
+$ java -jar kawa-2.0.jar 
+#|kawa:1|# 
 
-    #|kawa:2|# (+ 1 2 3 4 5 6)
-    21
+#|kawa:2|# (+ 1 2 3 4 5 6)
+21
 
-    #|kawa:3|# (define (foldl f_el_acc acc alist)
-        (if (null? alist)
-            acc
-            (foldl f_el_acc (f_el_acc acc (car alist)) (cdr alist))))
-    #|kawa:7|# (foldl (lambda (el acc) (+ (* 10 el)  acc)) 0 '(1 2 3 4 5 6))
-    123456
-    #|kawa:8|#
+#|kawa:3|# (define (foldl f_el_acc acc alist)
+    (if (null? alist)
+        acc
+        (foldl f_el_acc (f_el_acc acc (car alist)) (cdr alist))))
+#|kawa:7|# (foldl (lambda (el acc) (+ (* 10 el)  acc)) 0 '(1 2 3 4 5 6))
+123456
+#|kawa:8|#
 </pre>
 </div>
 </div>
@@ -7759,176 +7759,176 @@ Apis Used:
 
 <div class="org-src-container">
 
-<pre class="src src-scheme">    $ rlwrap java -jar kawa-2.0.jar 
+<pre class="src src-scheme"> $ rlwrap java -jar kawa-2.0.jar 
 
-    <span class="org-comment">#|kawa:9|#</span> <span class="org-rainbow-delimiters-depth-1">(</span>kawa.Version:getVersion<span class="org-rainbow-delimiters-depth-1">)</span>
-    2.0
-    <span class="org-comment">#|kawa:10|#</span> 
+ <span class="org-comment">#|kawa:9|#</span> <span class="org-rainbow-delimiters-depth-1">(</span>kawa.Version:getVersion<span class="org-rainbow-delimiters-depth-1">)</span>
+ 2.0
+ <span class="org-comment">#|kawa:10|#</span> 
 
-    <span class="org-comment">#|kawa:27|#</span>  <span class="org-rainbow-delimiters-depth-1">(</span>invoke java.lang.System:out 'println <span class="org-string">"\n   Hello world\n"</span><span class="org-rainbow-delimiters-depth-1">)</span>
+ <span class="org-comment">#|kawa:27|#</span>  <span class="org-rainbow-delimiters-depth-1">(</span>invoke java.lang.System:out 'println <span class="org-string">"\n   Hello world\n"</span><span class="org-rainbow-delimiters-depth-1">)</span>
 
-       Hello world
-
-
-    <span class="org-comment">#|kawa:66|#</span> <span class="org-rainbow-delimiters-depth-1">(</span>java.lang.System:getProperties<span class="org-rainbow-delimiters-depth-1">)</span>
-    <span class="org-rainbow-delimiters-depth-1">{</span>java.runtime.name=OpenJDK Runtime Environment, sun.boot.library.path=/usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386, java.vm.version=24.79-b02, user.country.format=BR, java.vm.vendor=Oracle Corporation, java.vendor.url=http://java.oracle.com/, path.separator=:, java.vm.name=OpenJDK Server VM, file.encoding.pkg=sun.io, user.country=US, sun.java.launcher=SUN_STANDARD, sun.os.patch.level=unknown, java.vm.specification.name=Java Virtual Machine Specification, user.dir=/home/tux/PycharmProjects/scheme, java.runtime.version=1.7.0_79-b14, java.awt.graphicsenv=sun.awt.X11GraphicsEnvironment, java.endorsed.dirs=/usr/lib/jvm/java-7-openjdk-i386/jre/lib/endorsed, os.arch=i386, java.io.tmpdir=/tmp, line.separator=
+    Hello world
 
 
-    <span class="org-comment">#|kawa:69|#</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">define</span> <span class="org-function-name">p</span> <span class="org-rainbow-delimiters-depth-3">(</span>java.lang.System:getProperties<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
-    <span class="org-comment">#|kawa:70|#</span> p
-
-    <span class="org-comment">#|kawa:72|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>p:getProperty <span class="org-string">"java.version"</span><span class="org-rainbow-delimiters-depth-2">)</span>
-    /dev/stdin:72:2: warning - no known slot 'getProperty' in java.lang.Object
-    1.7.0_79
-    
-
-    <span class="org-comment">#|kawa:84|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>p:getProperty <span class="org-string">"java.home"</span><span class="org-rainbow-delimiters-depth-2">)</span>
-    /dev/stdin:84:2: warning - no known slot 'getProperty' in java.lang.Object
-    /usr/lib/jvm/java-7-openjdk-i386/jre
-    <span class="org-comment">#|kawa:85|#</span> 
-    <span class="org-comment">#|kawa:86|#</span> 
-    
-
-    <span class="org-comment">#|kawa:87|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>p:getProperty <span class="org-string">"java.class.path"</span><span class="org-rainbow-delimiters-depth-2">)</span>
-    /dev/stdin:87:2: warning - no known slot 'getProperty' in java.lang.Object
-    /opt/kawa.jar
+ <span class="org-comment">#|kawa:66|#</span> <span class="org-rainbow-delimiters-depth-1">(</span>java.lang.System:getProperties<span class="org-rainbow-delimiters-depth-1">)</span>
+ <span class="org-rainbow-delimiters-depth-1">{</span>java.runtime.name=OpenJDK Runtime Environment, sun.boot.library.path=/usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386, java.vm.version=24.79-b02, user.country.format=BR, java.vm.vendor=Oracle Corporation, java.vendor.url=http://java.oracle.com/, path.separator=:, java.vm.name=OpenJDK Server VM, file.encoding.pkg=sun.io, user.country=US, sun.java.launcher=SUN_STANDARD, sun.os.patch.level=unknown, java.vm.specification.name=Java Virtual Machine Specification, user.dir=/home/tux/PycharmProjects/scheme, java.runtime.version=1.7.0_79-b14, java.awt.graphicsenv=sun.awt.X11GraphicsEnvironment, java.endorsed.dirs=/usr/lib/jvm/java-7-openjdk-i386/jre/lib/endorsed, os.arch=i386, java.io.tmpdir=/tmp, line.separator=
 
 
-    <span class="org-comment">#|kawa:88|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>p:getProperty <span class="org-string">"java.library.path"</span><span class="org-rainbow-delimiters-depth-2">)</span>
-    /dev/stdin:88:2: warning - no known slot 'getProperty' in java.lang.Object
-    /usr/java/packages/lib/i386:/usr/lib/i386-linux-gnu/jni:/lib/i386-linux-gnu:/usr/lib/i386-linux-gnu:/usr/lib/jni:/lib:/usr/lib
+ <span class="org-comment">#|kawa:69|#</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">define</span> <span class="org-function-name">p</span> <span class="org-rainbow-delimiters-depth-3">(</span>java.lang.System:getProperties<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
+ <span class="org-comment">#|kawa:70|#</span> p
+
+ <span class="org-comment">#|kawa:72|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>p:getProperty <span class="org-string">"java.version"</span><span class="org-rainbow-delimiters-depth-2">)</span>
+ /dev/stdin:72:2: warning - no known slot 'getProperty' in java.lang.Object
+ 1.7.0_79
 
 
-    <span class="org-comment">#|kawa:91|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>p:getProperty <span class="org-string">"java.library.path"</span><span class="org-rainbow-delimiters-depth-2">)</span>
-    /dev/stdin:91:2: warning - no known slot 'getProperty' in java.lang.Object
-    /usr/java/packages/lib/i386:/usr/lib/i386-linux-gnu/jni:/lib/i386-linux-gnu:/usr/lib/i386-linux-gnu:/usr/lib/jni:/lib:/usr/lib
-
-    <span class="org-comment-delimiter">;;   </span><span class="org-comment">// this will list the current system properties</span>
-    <span class="org-comment-delimiter">;;   </span><span class="org-comment">Properties p = System.getProperties();</span>
-   <span class="org-comment-delimiter">;;    </span><span class="org-comment">p.list(System.out);</span>
-    <span class="org-comment-delimiter">;;</span>
-    <span class="org-comment">#|kawa:98|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>p:list java.lang.System:out<span class="org-rainbow-delimiters-depth-2">)</span>
-    /dev/stdin:98:2: warning - no known slot 'list' in java.lang.Object
-    -- listing properties --
-    java.runtime.name=OpenJDK Runtime Environment
-    sun.boot.library.path=/usr/lib/jvm/java-7-openjdk-i386/jre/...
-    java.vm.version=24.79-b02
-    user.country.format=BR
-    java.vm.vendor=Oracle Corporation
-    java.vendor.url=http://java.oracle.com/
-    path.separator=:
-    java.vm.name=OpenJDK Server VM
-    file.encoding.pkg=sun.io
-    user.country=US
-    sun.java.launcher=SUN_STANDARD
-    sun.os.patch.level=unknown
-    java.vm.specification.name=Java Virtual Machine Specification
-    user.dir=/home/tux/PycharmProjects/scheme
-    java.runtime.version=1.7.0_79-b14
-
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Which Java is being used openjdk-java? or  Oracle-java ??</span>
-    <span class="org-comment-delimiter">;;</span>
-    <span class="org-comment">#|kawa:101|#</span> 
-    <span class="org-comment">#|kawa:102|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>p:getProperty <span class="org-string">"java.runtime.name"</span><span class="org-rainbow-delimiters-depth-2">)</span>
-    /dev/stdin:102:2: warning - no known slot 'getProperty' in java.lang.Object
-    OpenJDK Runtime Environment
-    <span class="org-comment">#|kawa:103|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>p:getProperty <span class="org-string">"java.vm.name"</span><span class="org-rainbow-delimiters-depth-2">)</span>
-    /dev/stdin:103:2: warning - no known slot 'getProperty' in java.lang.Object
-    OpenJDK Server VM
-    <span class="org-comment">#|kawa:104|#</span> 
-
-        
-    <span class="org-comment">#|kawa:1|#</span> 
-    <span class="org-comment">#|kawa:2|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>java.lang.Math:sqrt 9.0<span class="org-rainbow-delimiters-depth-2">)</span>
-    3.0
-    <span class="org-comment">#|kawa:3|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>java.lang.Math:log10 100.0<span class="org-rainbow-delimiters-depth-2">)</span>
-    2.0
-    <span class="org-comment">#|kawa:4|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>java.lang.Math:log10 1000.0<span class="org-rainbow-delimiters-depth-2">)</span>
-    3.0
-
-    <span class="org-comment">#|kawa:9|#</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-function-name">log10</span> x <span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-rainbow-delimiters-depth-3">(</span>java.lang.Math:log10 x<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
-    <span class="org-comment">#|kawa:10|#</span> 
-    <span class="org-comment">#|kawa:11|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>log10 100<span class="org-rainbow-delimiters-depth-2">)</span>
-    2.0
-    <span class="org-comment">#|kawa:12|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>log10 1000<span class="org-rainbow-delimiters-depth-2">)</span>
-    3.0
-    <span class="org-comment">#|kawa:13|#</span> 
-
-    <span class="org-comment">#|kawa:13|#</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">map</span> log10 '<span class="org-rainbow-delimiters-depth-3">(</span>10 100 1000 1000<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
-    <span class="org-rainbow-delimiters-depth-2">(</span>1.0 2.0 3.0 3.0<span class="org-rainbow-delimiters-depth-2">)</span>
-    <span class="org-comment">#|kawa:14|#</span> 
-
-    <span class="org-comment-delimiter">;;;  </span><span class="org-comment">java.util.Date </span>
-    <span class="org-comment-delimiter">;;;</span><span class="org-comment">----------------------------</span>
-
-    <span class="org-comment">#|kawa:28|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>java.util.Date <span class="org-rainbow-delimiters-depth-2">)</span>
-    Thu Aug 20 09:44:57 BRT 2015
-    <span class="org-comment">#|kawa:29|#</span> 
-    <span class="org-comment">#|kawa:30|#</span> 
-    
-    <span class="org-comment">#|kawa:30|#</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">define</span> <span class="org-function-name">today</span> <span class="org-rainbow-delimiters-depth-3">(</span>java.util.Date<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
-    <span class="org-comment">#|kawa:31|#</span> today
-    Thu Aug 20 09:45:37 BRT 2015
-    <span class="org-comment">#|kawa:32|#</span> 
-
-    <span class="org-comment">#|kawa:38|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>today:getTime<span class="org-rainbow-delimiters-depth-2">)</span>
-    /dev/stdin:38:2: warning - no known slot 'getTime' in java.lang.Object
-    1440074737071
-    <span class="org-comment">#|kawa:39|#</span> 
-
-    <span class="org-comment">#|kawa:40|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>today:getMonth<span class="org-rainbow-delimiters-depth-2">)</span>
-    /dev/stdin:40:2: warning - no known slot 'getMonth' in java.lang.Object
-    7
-    <span class="org-comment">#|kawa:41|#</span> 
-    
-    <span class="org-comment">#|kawa:41|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>today:toString<span class="org-rainbow-delimiters-depth-2">)</span>
-    Thu Aug 20 09:45:37 BRT 2015
-    <span class="org-comment">#|kawa:42|#</span>
-
-    <span class="org-comment-delimiter">;;; </span><span class="org-comment">Java.util.Calendar</span>
-    <span class="org-comment-delimiter">;;;</span><span class="org-comment">--------------------------------------</span>
-
-    <span class="org-comment">#|kawa:2|#</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">define</span> <span class="org-function-name">Calendar</span> java.util.Calendar<span class="org-rainbow-delimiters-depth-2">)</span>
-    <span class="org-comment">#|kawa:3|#</span> 
-
-    
-    <span class="org-comment">#|kawa:5|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>Calendar:getInstance<span class="org-rainbow-delimiters-depth-2">)</span>
-    java.util.GregorianCalendar<span class="org-rainbow-delimiters-depth-2">[</span>time=1440075518905,areFieldsSet=true,areAllFieldsSet=true,lenient=true,zone=sun.util.calendar.ZoneInfo<span class="org-rainbow-delimiters-depth-3">[</span>id=<span class="org-string">"America/Recife"</span>,offset=-10800000,dstSavings=0,useDaylight=false,transitions=41,lastRule=null<span class="org-rainbow-delimiters-depth-3">]</span>,firstDayOfWeek=1,minimalDaysInFirstWeek=1,ERA=1,YEAR=2015,MONTH=7,WEEK_OF_YEAR=34,WEEK_OF_MONTH=4,DAY_OF_MONTH=20,DAY_OF_YEAR=232,DAY_OF_WEEK=5,DAY_OF_WEEK_IN_MONTH=3,AM_PM=0,HOUR=9,HOUR_OF_DAY=9,MINUTE=58,SECOND=38,MILLISECOND=905,ZONE_OFFSET=-10800000,DST_OFFSET=0<span class="org-rainbow-delimiters-depth-2">]</span>
-    <span class="org-comment">#|kawa:6|#</span> 
-   
-
-    <span class="org-comment">#|kawa:44|#</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">define</span> <span class="org-function-name">cal</span> <span class="org-rainbow-delimiters-depth-3">(</span>Calendar:getInstance<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
-    <span class="org-comment">#|kawa:45|#</span> 
-
-    <span class="org-comment">#|kawa:9|#</span> cal
-    java.util.GregorianCalendar<span class="org-rainbow-delimiters-depth-2">[</span>time=1440075574190,areFieldsSet=true,areAllFieldsSet=true,lenient=true,zone=sun.util.calendar.ZoneInfo<span class="org-rainbow-delimiters-depth-3">[</span>id=<span class="org-string">"America/Recife"</span>,offset=-10800000,dstSavings=0,useDaylight=false,transitions=41,lastRule=null<span class="org-rainbow-delimiters-depth-3">]</span>,firstDayOfWeek=1,minimalDaysInFirstWeek=1,ERA=1,YEAR=2015,MONTH=7,WEEK_OF_YEAR=34,WEEK_OF_MONTH=4,DAY_OF_MONTH=20,DAY_OF_YEAR=232,DAY_OF_WEEK=5,DAY_OF_WEEK_IN_MONTH=3,AM_PM=0,HOUR=9,HOUR_OF_DAY=9,MINUTE=59,SECOND=34,MILLISECOND=190,ZONE_OFFSET=-10800000,DST_OFFSET=0<span class="org-rainbow-delimiters-depth-2">]</span>
-    <span class="org-comment">#|kawa:10|#</span> 
+ <span class="org-comment">#|kawa:84|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>p:getProperty <span class="org-string">"java.home"</span><span class="org-rainbow-delimiters-depth-2">)</span>
+ /dev/stdin:84:2: warning - no known slot 'getProperty' in java.lang.Object
+ /usr/lib/jvm/java-7-openjdk-i386/jre
+ <span class="org-comment">#|kawa:85|#</span> 
+ <span class="org-comment">#|kawa:86|#</span> 
 
 
-    <span class="org-comment">#|kawa:16|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>cal:get Calendar:ERA<span class="org-rainbow-delimiters-depth-2">)</span>
-    /dev/stdin:16:2: warning - no known slot 'get' in java.lang.Object
-    /dev/stdin:16:10: warning - no known slot 'ERA' in java.lang.Object
-    1
-    <span class="org-comment">#|kawa:17|#</span> 
+ <span class="org-comment">#|kawa:87|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>p:getProperty <span class="org-string">"java.class.path"</span><span class="org-rainbow-delimiters-depth-2">)</span>
+ /dev/stdin:87:2: warning - no known slot 'getProperty' in java.lang.Object
+ /opt/kawa.jar
 
-    
-    <span class="org-comment">#|kawa:51|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>cal:get Calendar:DATE<span class="org-rainbow-delimiters-depth-2">)</span>
-    /dev/stdin:51:2: warning - no known slot 'get' in java.lang.Object
-    20
-    <span class="org-comment">#|kawa:52|#</span> 
-    
-    <span class="org-comment">#|kawa:14|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>cal:getTime<span class="org-rainbow-delimiters-depth-2">)</span>
-    Thu Aug 20 09:59:34 BRT 2015
-    <span class="org-comment">#|kawa:15|#</span> 
 
-    <span class="org-comment">#|kawa:17|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>cal:toString<span class="org-rainbow-delimiters-depth-2">)</span>
-    java.util.GregorianCalendar<span class="org-rainbow-delimiters-depth-2">[</span>time=1440075574190,areFieldsSet=true,areAllFieldsSet=true,lenient=true,zone=sun.util.calendar.ZoneInfo<span class="org-rainbow-delimiters-depth-3">[</span>id=<span class="org-string">"America/Recife"</span>,offset=-10800000,dstSavings=0,useDaylight=false,transitions=41,lastRule=null<span class="org-rainbow-delimiters-depth-3">]</span>,firstDayOfWeek=1,minimalDaysInFirstWeek=1,ERA=1,YEAR=2015,MONTH=7,WEEK_OF_YEAR=34,WEEK_OF_MONTH=4,DAY_OF_MONTH=20,DAY_OF_YEAR=232,DAY_OF_WEEK=5,DAY_OF_WEEK_IN_MONTH=3,AM_PM=0,HOUR=9,HOUR_OF_DAY=9,MINUTE=59,SECOND=34,MILLISECOND=190,ZONE_OFFSET=-10800000,DST_OFFSET=0<span class="org-rainbow-delimiters-depth-2">]</span>
-    <span class="org-comment">#|kawa:18|#</span> 
+ <span class="org-comment">#|kawa:88|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>p:getProperty <span class="org-string">"java.library.path"</span><span class="org-rainbow-delimiters-depth-2">)</span>
+ /dev/stdin:88:2: warning - no known slot 'getProperty' in java.lang.Object
+ /usr/java/packages/lib/i386:/usr/lib/i386-linux-gnu/jni:/lib/i386-linux-gnu:/usr/lib/i386-linux-gnu:/usr/lib/jni:/lib:/usr/lib
 
-    <span class="org-comment">#|kawa:18|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>cal:getTimeZone<span class="org-rainbow-delimiters-depth-2">)</span>
-    /dev/stdin:18:2: warning - no known slot 'getTimeZone' in java.lang.Object
-    sun.util.calendar.ZoneInfo<span class="org-rainbow-delimiters-depth-2">[</span>id=<span class="org-string">"America/Recife"</span>,offset=-10800000,dstSavings=0,useDaylight=false,transitions=41,lastRule=null<span class="org-rainbow-delimiters-depth-2">]</span>
-    <span class="org-comment">#|kawa:19|#</span>
+
+ <span class="org-comment">#|kawa:91|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>p:getProperty <span class="org-string">"java.library.path"</span><span class="org-rainbow-delimiters-depth-2">)</span>
+ /dev/stdin:91:2: warning - no known slot 'getProperty' in java.lang.Object
+ /usr/java/packages/lib/i386:/usr/lib/i386-linux-gnu/jni:/lib/i386-linux-gnu:/usr/lib/i386-linux-gnu:/usr/lib/jni:/lib:/usr/lib
+
+ <span class="org-comment-delimiter">;;   </span><span class="org-comment">// this will list the current system properties</span>
+ <span class="org-comment-delimiter">;;   </span><span class="org-comment">Properties p = System.getProperties();</span>
+<span class="org-comment-delimiter">;;    </span><span class="org-comment">p.list(System.out);</span>
+ <span class="org-comment-delimiter">;;</span>
+ <span class="org-comment">#|kawa:98|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>p:list java.lang.System:out<span class="org-rainbow-delimiters-depth-2">)</span>
+ /dev/stdin:98:2: warning - no known slot 'list' in java.lang.Object
+ -- listing properties --
+ java.runtime.name=OpenJDK Runtime Environment
+ sun.boot.library.path=/usr/lib/jvm/java-7-openjdk-i386/jre/...
+ java.vm.version=24.79-b02
+ user.country.format=BR
+ java.vm.vendor=Oracle Corporation
+ java.vendor.url=http://java.oracle.com/
+ path.separator=:
+ java.vm.name=OpenJDK Server VM
+ file.encoding.pkg=sun.io
+ user.country=US
+ sun.java.launcher=SUN_STANDARD
+ sun.os.patch.level=unknown
+ java.vm.specification.name=Java Virtual Machine Specification
+ user.dir=/home/tux/PycharmProjects/scheme
+ java.runtime.version=1.7.0_79-b14
+
+ <span class="org-comment-delimiter">;; </span><span class="org-comment">Which Java is being used openjdk-java? or  Oracle-java ??</span>
+ <span class="org-comment-delimiter">;;</span>
+ <span class="org-comment">#|kawa:101|#</span> 
+ <span class="org-comment">#|kawa:102|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>p:getProperty <span class="org-string">"java.runtime.name"</span><span class="org-rainbow-delimiters-depth-2">)</span>
+ /dev/stdin:102:2: warning - no known slot 'getProperty' in java.lang.Object
+ OpenJDK Runtime Environment
+ <span class="org-comment">#|kawa:103|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>p:getProperty <span class="org-string">"java.vm.name"</span><span class="org-rainbow-delimiters-depth-2">)</span>
+ /dev/stdin:103:2: warning - no known slot 'getProperty' in java.lang.Object
+ OpenJDK Server VM
+ <span class="org-comment">#|kawa:104|#</span> 
+
+
+ <span class="org-comment">#|kawa:1|#</span> 
+ <span class="org-comment">#|kawa:2|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>java.lang.Math:sqrt 9.0<span class="org-rainbow-delimiters-depth-2">)</span>
+ 3.0
+ <span class="org-comment">#|kawa:3|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>java.lang.Math:log10 100.0<span class="org-rainbow-delimiters-depth-2">)</span>
+ 2.0
+ <span class="org-comment">#|kawa:4|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>java.lang.Math:log10 1000.0<span class="org-rainbow-delimiters-depth-2">)</span>
+ 3.0
+
+ <span class="org-comment">#|kawa:9|#</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">define</span> <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-function-name">log10</span> x <span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-rainbow-delimiters-depth-3">(</span>java.lang.Math:log10 x<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
+ <span class="org-comment">#|kawa:10|#</span> 
+ <span class="org-comment">#|kawa:11|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>log10 100<span class="org-rainbow-delimiters-depth-2">)</span>
+ 2.0
+ <span class="org-comment">#|kawa:12|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>log10 1000<span class="org-rainbow-delimiters-depth-2">)</span>
+ 3.0
+ <span class="org-comment">#|kawa:13|#</span> 
+
+ <span class="org-comment">#|kawa:13|#</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">map</span> log10 '<span class="org-rainbow-delimiters-depth-3">(</span>10 100 1000 1000<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
+ <span class="org-rainbow-delimiters-depth-2">(</span>1.0 2.0 3.0 3.0<span class="org-rainbow-delimiters-depth-2">)</span>
+ <span class="org-comment">#|kawa:14|#</span> 
+
+ <span class="org-comment-delimiter">;;;  </span><span class="org-comment">java.util.Date </span>
+ <span class="org-comment-delimiter">;;;</span><span class="org-comment">----------------------------</span>
+
+ <span class="org-comment">#|kawa:28|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>java.util.Date <span class="org-rainbow-delimiters-depth-2">)</span>
+ Thu Aug 20 09:44:57 BRT 2015
+ <span class="org-comment">#|kawa:29|#</span> 
+ <span class="org-comment">#|kawa:30|#</span> 
+
+ <span class="org-comment">#|kawa:30|#</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">define</span> <span class="org-function-name">today</span> <span class="org-rainbow-delimiters-depth-3">(</span>java.util.Date<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
+ <span class="org-comment">#|kawa:31|#</span> today
+ Thu Aug 20 09:45:37 BRT 2015
+ <span class="org-comment">#|kawa:32|#</span> 
+
+ <span class="org-comment">#|kawa:38|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>today:getTime<span class="org-rainbow-delimiters-depth-2">)</span>
+ /dev/stdin:38:2: warning - no known slot 'getTime' in java.lang.Object
+ 1440074737071
+ <span class="org-comment">#|kawa:39|#</span> 
+
+ <span class="org-comment">#|kawa:40|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>today:getMonth<span class="org-rainbow-delimiters-depth-2">)</span>
+ /dev/stdin:40:2: warning - no known slot 'getMonth' in java.lang.Object
+ 7
+ <span class="org-comment">#|kawa:41|#</span> 
+
+ <span class="org-comment">#|kawa:41|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>today:toString<span class="org-rainbow-delimiters-depth-2">)</span>
+ Thu Aug 20 09:45:37 BRT 2015
+ <span class="org-comment">#|kawa:42|#</span>
+
+ <span class="org-comment-delimiter">;;; </span><span class="org-comment">Java.util.Calendar</span>
+ <span class="org-comment-delimiter">;;;</span><span class="org-comment">--------------------------------------</span>
+
+ <span class="org-comment">#|kawa:2|#</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">define</span> <span class="org-function-name">Calendar</span> java.util.Calendar<span class="org-rainbow-delimiters-depth-2">)</span>
+ <span class="org-comment">#|kawa:3|#</span> 
+
+
+ <span class="org-comment">#|kawa:5|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>Calendar:getInstance<span class="org-rainbow-delimiters-depth-2">)</span>
+ java.util.GregorianCalendar<span class="org-rainbow-delimiters-depth-2">[</span>time=1440075518905,areFieldsSet=true,areAllFieldsSet=true,lenient=true,zone=sun.util.calendar.ZoneInfo<span class="org-rainbow-delimiters-depth-3">[</span>id=<span class="org-string">"America/Recife"</span>,offset=-10800000,dstSavings=0,useDaylight=false,transitions=41,lastRule=null<span class="org-rainbow-delimiters-depth-3">]</span>,firstDayOfWeek=1,minimalDaysInFirstWeek=1,ERA=1,YEAR=2015,MONTH=7,WEEK_OF_YEAR=34,WEEK_OF_MONTH=4,DAY_OF_MONTH=20,DAY_OF_YEAR=232,DAY_OF_WEEK=5,DAY_OF_WEEK_IN_MONTH=3,AM_PM=0,HOUR=9,HOUR_OF_DAY=9,MINUTE=58,SECOND=38,MILLISECOND=905,ZONE_OFFSET=-10800000,DST_OFFSET=0<span class="org-rainbow-delimiters-depth-2">]</span>
+ <span class="org-comment">#|kawa:6|#</span> 
+
+
+ <span class="org-comment">#|kawa:44|#</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">define</span> <span class="org-function-name">cal</span> <span class="org-rainbow-delimiters-depth-3">(</span>Calendar:getInstance<span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>
+ <span class="org-comment">#|kawa:45|#</span> 
+
+ <span class="org-comment">#|kawa:9|#</span> cal
+ java.util.GregorianCalendar<span class="org-rainbow-delimiters-depth-2">[</span>time=1440075574190,areFieldsSet=true,areAllFieldsSet=true,lenient=true,zone=sun.util.calendar.ZoneInfo<span class="org-rainbow-delimiters-depth-3">[</span>id=<span class="org-string">"America/Recife"</span>,offset=-10800000,dstSavings=0,useDaylight=false,transitions=41,lastRule=null<span class="org-rainbow-delimiters-depth-3">]</span>,firstDayOfWeek=1,minimalDaysInFirstWeek=1,ERA=1,YEAR=2015,MONTH=7,WEEK_OF_YEAR=34,WEEK_OF_MONTH=4,DAY_OF_MONTH=20,DAY_OF_YEAR=232,DAY_OF_WEEK=5,DAY_OF_WEEK_IN_MONTH=3,AM_PM=0,HOUR=9,HOUR_OF_DAY=9,MINUTE=59,SECOND=34,MILLISECOND=190,ZONE_OFFSET=-10800000,DST_OFFSET=0<span class="org-rainbow-delimiters-depth-2">]</span>
+ <span class="org-comment">#|kawa:10|#</span> 
+
+
+ <span class="org-comment">#|kawa:16|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>cal:get Calendar:ERA<span class="org-rainbow-delimiters-depth-2">)</span>
+ /dev/stdin:16:2: warning - no known slot 'get' in java.lang.Object
+ /dev/stdin:16:10: warning - no known slot 'ERA' in java.lang.Object
+ 1
+ <span class="org-comment">#|kawa:17|#</span> 
+
+
+ <span class="org-comment">#|kawa:51|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>cal:get Calendar:DATE<span class="org-rainbow-delimiters-depth-2">)</span>
+ /dev/stdin:51:2: warning - no known slot 'get' in java.lang.Object
+ 20
+ <span class="org-comment">#|kawa:52|#</span> 
+
+ <span class="org-comment">#|kawa:14|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>cal:getTime<span class="org-rainbow-delimiters-depth-2">)</span>
+ Thu Aug 20 09:59:34 BRT 2015
+ <span class="org-comment">#|kawa:15|#</span> 
+
+ <span class="org-comment">#|kawa:17|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>cal:toString<span class="org-rainbow-delimiters-depth-2">)</span>
+ java.util.GregorianCalendar<span class="org-rainbow-delimiters-depth-2">[</span>time=1440075574190,areFieldsSet=true,areAllFieldsSet=true,lenient=true,zone=sun.util.calendar.ZoneInfo<span class="org-rainbow-delimiters-depth-3">[</span>id=<span class="org-string">"America/Recife"</span>,offset=-10800000,dstSavings=0,useDaylight=false,transitions=41,lastRule=null<span class="org-rainbow-delimiters-depth-3">]</span>,firstDayOfWeek=1,minimalDaysInFirstWeek=1,ERA=1,YEAR=2015,MONTH=7,WEEK_OF_YEAR=34,WEEK_OF_MONTH=4,DAY_OF_MONTH=20,DAY_OF_YEAR=232,DAY_OF_WEEK=5,DAY_OF_WEEK_IN_MONTH=3,AM_PM=0,HOUR=9,HOUR_OF_DAY=9,MINUTE=59,SECOND=34,MILLISECOND=190,ZONE_OFFSET=-10800000,DST_OFFSET=0<span class="org-rainbow-delimiters-depth-2">]</span>
+ <span class="org-comment">#|kawa:18|#</span> 
+
+ <span class="org-comment">#|kawa:18|#</span> <span class="org-rainbow-delimiters-depth-2">(</span>cal:getTimeZone<span class="org-rainbow-delimiters-depth-2">)</span>
+ /dev/stdin:18:2: warning - no known slot 'getTimeZone' in java.lang.Object
+ sun.util.calendar.ZoneInfo<span class="org-rainbow-delimiters-depth-2">[</span>id=<span class="org-string">"America/Recife"</span>,offset=-10800000,dstSavings=0,useDaylight=false,transitions=41,lastRule=null<span class="org-rainbow-delimiters-depth-2">]</span>
+ <span class="org-comment">#|kawa:19|#</span>
 </pre>
 </div>
 </div>
@@ -7957,38 +7957,38 @@ Int the REPL:
 
 <div class="org-src-container">
 
-<pre class="src src-scheme">    $ rlwrap java -jar kawa-2.0.jar 
-    <span class="org-comment">#|kawa:1|#</span> 
+<pre class="src src-scheme">$ rlwrap java -jar kawa-2.0.jar 
+<span class="org-comment">#|kawa:1|#</span> 
 
-    <span class="org-comment">#|kawa:4|#</span> <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-function-name">JFrame</span> javax.swing.JFrame<span class="org-rainbow-delimiters-depth-1">)</span>
-    <span class="org-comment">#|kawa:5|#</span> <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-function-name">JLabel</span> javax.swing.JLabel<span class="org-rainbow-delimiters-depth-1">)</span>
-    <span class="org-comment">#|kawa:6|#</span> 
+<span class="org-comment">#|kawa:4|#</span> <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-function-name">JFrame</span> javax.swing.JFrame<span class="org-rainbow-delimiters-depth-1">)</span>
+<span class="org-comment">#|kawa:5|#</span> <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-function-name">JLabel</span> javax.swing.JLabel<span class="org-rainbow-delimiters-depth-1">)</span>
+<span class="org-comment">#|kawa:6|#</span> 
 
-    <span class="org-comment">#|kawa:10|#</span> <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-function-name">jlbHelloWorld</span> <span class="org-rainbow-delimiters-depth-2">(</span>JLabel<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
+<span class="org-comment">#|kawa:10|#</span> <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-function-name">jlbHelloWorld</span> <span class="org-rainbow-delimiters-depth-2">(</span>JLabel<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
 
-    <span class="org-comment">#|kawa:7|#</span> <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-function-name">HelloWorldFrame</span> <span class="org-rainbow-delimiters-depth-2">(</span>JFrame<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
-    <span class="org-comment">#|kawa:8|#</span> HelloWorldFrame
-    javax.swing.JFrame<span class="org-rainbow-delimiters-depth-1">[</span>frame0,0,0,0x0,invalid,hidden,layout=java.awt.BorderLayout,title=,resizable,normal,defaultCloseOperation=HIDE_ON_CLOSE,rootPane=javax.swing.JRootPane<span class="org-rainbow-delimiters-depth-2">[</span>,0,0,0x0,invalid,layout=javax.swing.JRootPane$RootLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=16777673,maximumSize=,minimumSize=,preferredSize=<span class="org-rainbow-delimiters-depth-2">]</span>,rootPaneCheckingEnabled=true<span class="org-rainbow-delimiters-depth-1">]</span>
-    <span class="org-comment">#|kawa:9|#</span> 
+<span class="org-comment">#|kawa:7|#</span> <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-function-name">HelloWorldFrame</span> <span class="org-rainbow-delimiters-depth-2">(</span>JFrame<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
+<span class="org-comment">#|kawa:8|#</span> HelloWorldFrame
+javax.swing.JFrame<span class="org-rainbow-delimiters-depth-1">[</span>frame0,0,0,0x0,invalid,hidden,layout=java.awt.BorderLayout,title=,resizable,normal,defaultCloseOperation=HIDE_ON_CLOSE,rootPane=javax.swing.JRootPane<span class="org-rainbow-delimiters-depth-2">[</span>,0,0,0x0,invalid,layout=javax.swing.JRootPane$RootLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=16777673,maximumSize=,minimumSize=,preferredSize=<span class="org-rainbow-delimiters-depth-2">]</span>,rootPaneCheckingEnabled=true<span class="org-rainbow-delimiters-depth-1">]</span>
+<span class="org-comment">#|kawa:9|#</span> 
 
 
-    <span class="org-comment">#|kawa:13|#</span> jlbHelloWorld
-    javax.swing.JLabel<span class="org-rainbow-delimiters-depth-1">[</span>,0,0,0x0,invalid,alignmentX=0.0,alignmentY=0.0,border=,flags=8388608,maximumSize=,minimumSize=,preferredSize=,defaultIcon=,disabledIcon=,horizontalAlignment=LEADING,horizontalTextPosition=TRAILING,iconTextGap=4,labelFor=,text=,verticalAlignment=CENTER,verticalTextPosition=CENTER<span class="org-rainbow-delimiters-depth-1">]</span>
-    <span class="org-comment">#|kawa:14|#</span> 
+<span class="org-comment">#|kawa:13|#</span> jlbHelloWorld
+javax.swing.JLabel<span class="org-rainbow-delimiters-depth-1">[</span>,0,0,0x0,invalid,alignmentX=0.0,alignmentY=0.0,border=,flags=8388608,maximumSize=,minimumSize=,preferredSize=,defaultIcon=,disabledIcon=,horizontalAlignment=LEADING,horizontalTextPosition=TRAILING,iconTextGap=4,labelFor=,text=,verticalAlignment=CENTER,verticalTextPosition=CENTER<span class="org-rainbow-delimiters-depth-1">]</span>
+<span class="org-comment">#|kawa:14|#</span> 
 
-    <span class="org-comment">#|kawa:18|#</span> <span class="org-rainbow-delimiters-depth-1">(</span>HelloWorldFrame:add jlbHelloWorld<span class="org-rainbow-delimiters-depth-1">)</span>
-    /dev/stdin:18:2: warning - no known slot 'add' in java.lang.Object
-    javax.swing.JLabel<span class="org-rainbow-delimiters-depth-1">[</span>,0,0,0x0,invalid,alignmentX=0.0,alignmentY=0.0,border=,flags=8388608,maximumSize=,minimumSize=,preferredSize=,defaultIcon=,disabledIcon=,horizontalAlignment=LEADING,horizontalTextPosition=TRAILING,iconTextGap=4,labelFor=,text=Hello World Kawa,verticalAlignment=CENTER,verticalTextPosition=CENTER<span class="org-rainbow-delimiters-depth-1">]</span>
-    <span class="org-comment">#|kawa:19|#</span> 
+<span class="org-comment">#|kawa:18|#</span> <span class="org-rainbow-delimiters-depth-1">(</span>HelloWorldFrame:add jlbHelloWorld<span class="org-rainbow-delimiters-depth-1">)</span>
+<span class="org-function-name">/dev/stdin</span>:18:2: warning - no known slot 'add' in java.lang.Object
+javax.swing.JLabel<span class="org-rainbow-delimiters-depth-1">[</span>,0,0,0x0,invalid,alignmentX=0.0,alignmentY=0.0,border=,flags=8388608,maximumSize=,minimumSize=,preferredSize=,defaultIcon=,disabledIcon=,horizontalAlignment=LEADING,horizontalTextPosition=TRAILING,iconTextGap=4,labelFor=,text=Hello World Kawa,verticalAlignment=CENTER,verticalTextPosition=CENTER<span class="org-rainbow-delimiters-depth-1">]</span>
+<span class="org-comment">#|kawa:19|#</span> 
 
-    <span class="org-comment">#|kawa:22|#</span> <span class="org-rainbow-delimiters-depth-1">(</span>HelloWorldFrame:setSize 100 100<span class="org-rainbow-delimiters-depth-1">)</span>
-    /dev/stdin:22:2: warning - no known slot 'setSize' in java.lang.Object
-    #!null
+<span class="org-comment">#|kawa:22|#</span> <span class="org-rainbow-delimiters-depth-1">(</span>HelloWorldFrame:setSize 100 100<span class="org-rainbow-delimiters-depth-1">)</span>
+<span class="org-function-name">/dev/stdin</span>:22:2: warning - no known slot 'setSize' in java.lang.Object
+#!null
 
-    <span class="org-comment">#|kawa:23|#</span> <span class="org-rainbow-delimiters-depth-1">(</span>HelloWorldFrame:setVisible #t<span class="org-rainbow-delimiters-depth-1">)</span>
-    /dev/stdin:23:2: warning - no known slot 'setVisible' in java.lang.Object
-    #!null
-    <span class="org-comment">#|kawa:24|#</span>
+<span class="org-comment">#|kawa:23|#</span> <span class="org-rainbow-delimiters-depth-1">(</span>HelloWorldFrame:setVisible #t<span class="org-rainbow-delimiters-depth-1">)</span>
+<span class="org-function-name">/dev/stdin</span>:23:2: warning - no known slot 'setVisible' in java.lang.Object
+#!null
+<span class="org-comment">#|kawa:24|#</span>
 </pre>
 </div>
 
@@ -8074,11 +8074,11 @@ File: <i>FahrenheitGUI.scm</i>
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-function-name">outputLabel</span> <span class="org-rainbow-delimiters-depth-2">(</span>JLabel <span class="org-string">"Temperature in Celsius: "</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span> 
 
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-function-name">resultLabel</span> <span class="org-rainbow-delimiters-depth-2">(</span>JLabel <span class="org-string">"---"</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>  
- 
+
 <span class="org-comment-delimiter">;; </span><span class="org-comment">fahrenheit = new JTextField(5); </span>
 <span class="org-comment-delimiter">;; </span>
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-function-name">fahrenheit</span> <span class="org-rainbow-delimiters-depth-2">(</span>JTextField 5<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>  
-  
+
 <span class="org-comment-delimiter">;; </span><span class="org-comment">panel = new JPanel(); </span>
 <span class="org-comment-delimiter">;; </span>
 <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">define</span> <span class="org-function-name">panel</span> <span class="org-rainbow-delimiters-depth-2">(</span>JPanel<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
@@ -8748,8 +8748,8 @@ Write programs to generate other programs](<a href="http://www.ibm.com/developer
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2016-03-24 Thu 05:54</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="date">Created: 2016-11-01 ter 01:18</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

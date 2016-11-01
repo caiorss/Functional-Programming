@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Exception Handling</title>
-<!-- 2016-10-31 seg 18:09 -->
+<!-- 2016-11-01 ter 01:18 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues Soares Silva" />
@@ -156,7 +156,14 @@ for the JavaScript code in this tag.
 <ul>
 <li><a href="#sec-1-3-1">1.3.1. Overview</a></li>
 <li><a href="#sec-1-3-2">1.3.2. Examples of Exceptions:</a></li>
-<li><a href="#sec-1-3-3">1.3.3. Catching Exceptions with catch</a></li>
+<li><a href="#sec-1-3-3">1.3.3. Catching Exceptions with catch</a>
+<ul>
+<li><a href="#sec-1-3-3-1">1.3.3.1. Overview</a></li>
+<li><a href="#sec-1-3-3-2">1.3.3.2. Catching all exceptions</a></li>
+<li><a href="#sec-1-3-3-3">1.3.3.3. Narrowing Exceptions</a></li>
+<li><a href="#sec-1-3-3-4">1.3.3.4. Narrowing IO Exceptions</a></li>
+</ul>
+</li>
 <li><a href="#sec-1-3-4">1.3.4. Catching Exceptions with catchIOError</a></li>
 <li><a href="#sec-1-3-5">1.3.5. Catching Exceptptions using the function catches</a></li>
 </ul>
@@ -1485,7 +1492,9 @@ Exceptions</b>. Available at
 <div id="outline-container-sec-1-3-3" class="outline-4">
 <h4 id="sec-1-3-3"><span class="section-number-4">1.3.3</span> Catching Exceptions with catch</h4>
 <div class="outline-text-4" id="text-1-3-3">
-</div><ol class="org-ol"><li><a id="sec-1-3-3-1" name="sec-1-3-3-1"></a>Overview<br  /><div class="outline-text-5" id="text-1-3-3-1">
+</div><div id="outline-container-sec-1-3-3-1" class="outline-5">
+<h5 id="sec-1-3-3-1"><span class="section-number-5">1.3.3.1</span> Overview</h5>
+<div class="outline-text-5" id="text-1-3-3-1">
 <ul class="org-ul">
 <li><code>catch &lt;computation which may fail&gt; &lt;exception handler&gt;</code> 
 </li>
@@ -1493,9 +1502,11 @@ Exceptions</b>. Available at
 </li>
 </ul>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-3-2" name="sec-1-3-3-2"></a>Catching all exceptions<br  /><div class="outline-text-5" id="text-1-3-3-2">
+<div id="outline-container-sec-1-3-3-2" class="outline-5">
+<h5 id="sec-1-3-3-2"><span class="section-number-5">1.3.3.2</span> Catching all exceptions</h5>
+<div class="outline-text-5" id="text-1-3-3-2">
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Exception</span> 
@@ -1637,9 +1648,11 @@ Exceptions</b>. Available at
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-3-3" name="sec-1-3-3-3"></a>Narrowing Exceptions<br  /><div class="outline-text-5" id="text-1-3-3-3">
+<div id="outline-container-sec-1-3-3-3" class="outline-5">
+<h5 id="sec-1-3-3-3"><span class="section-number-5">1.3.3.3</span> Narrowing Exceptions</h5>
+<div class="outline-text-5" id="text-1-3-3-3">
 <p>
 Catches only arithmetic exceptions while ignoring other types of
 exceptions. 
@@ -1801,9 +1814,11 @@ exceptions.
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-3-4" name="sec-1-3-3-4"></a>Narrowing IO Exceptions<br  /><div class="outline-text-5" id="text-1-3-3-4">
+<div id="outline-container-sec-1-3-3-4" class="outline-5">
+<h5 id="sec-1-3-3-4"><span class="section-number-5">1.3.3.4</span> Narrowing IO Exceptions</h5>
+<div class="outline-text-5" id="text-1-3-3-4">
 <p>
 The IO Exception type is an opaque type or abstract type which the
 implementation or type constructors are not exposed like
@@ -1995,7 +2010,7 @@ exception is by using IO Exception predicates available at
 </pre>
 </div>
 </div>
-</li></ol>
+</div>
 </div>
 
 <div id="outline-container-sec-1-3-4" class="outline-4">
@@ -2194,7 +2209,7 @@ only handles IOError(alias to IOExceptions).
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues Soares Silva</p>
-<p class="date">Created: 2016-10-31 seg 18:09</p>
+<p class="date">Created: 2016-11-01 ter 01:18</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

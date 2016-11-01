@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Libraries</title>
-<!-- 2016-03-24 Thu 05:53 -->
+<!-- 2016-11-01 ter 01:38 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues" />
@@ -286,7 +286,7 @@ Change Current Directory
 <span class="org-haskell-operator">&gt;</span> getCurrentDirectory 
 <span class="org-string">"/"</span>
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-function-name">getCurrentDirectory</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">FilePath</span>
+<span class="org-function-name">getCurrentDirectory</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">FilePath</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">fmap</span> (<span class="org-haskell-operator">==</span><span class="org-string">"/"</span>) getCurrentDirectory 
@@ -306,10 +306,10 @@ List Directory Contents
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">System.Directory</span>
 <span class="org-haskell-operator">&gt;</span>
 <span class="org-haskell-operator">&gt;</span>  getDirectoryContents <span class="org-string">"/usr"</span>
-[<span class="org-string">"."</span><span class="org-haskell-operator">,</span><span class="org-string">"include"</span><span class="org-haskell-operator">,</span><span class="org-string">"src"</span><span class="org-haskell-operator">,</span><span class="org-string">"local"</span><span class="org-haskell-operator">,</span><span class="org-string">"bin"</span><span class="org-haskell-operator">,</span><span class="org-string">"games"</span><span class="org-haskell-operator">,</span><span class="org-string">"share"</span><span class="org-haskell-operator">,</span><span class="org-string">"sbin"</span><span class="org-haskell-operator">,</span><span class="org-string">"lib"</span><span class="org-haskell-operator">,</span><span class="org-string">".."</span>]
+[<span class="org-string">"."</span>,<span class="org-string">"include"</span>,<span class="org-string">"src"</span>,<span class="org-string">"local"</span>,<span class="org-string">"bin"</span>,<span class="org-string">"games"</span>,<span class="org-string">"share"</span>,<span class="org-string">"sbin"</span>,<span class="org-string">"lib"</span>,<span class="org-string">".."</span>]
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t getDirectoryContents 
-<span class="org-function-name">getDirectoryContents</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> [<span class="org-haskell-constructor">FilePath</span>]
+<span class="org-function-name">getDirectoryContents</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> [<span class="org-haskell-type">FilePath</span>]
 <span class="org-haskell-operator">&gt;</span>
 </pre>
 </div>
@@ -340,9 +340,9 @@ Special Directories Location
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">System.Cmd</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t rawSystem
-<span class="org-function-name">rawSystem</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">String</span> <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-constructor">String</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">GHC.IO.Exception.ExitCode</span>
+<span class="org-function-name">rawSystem</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">String</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">GHC.IO.Exception.ExitCode</span>
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">rawSystem</span> <span class="org-string">"ls"</span> [<span class="org-string">"-l"</span><span class="org-haskell-operator">,</span> <span class="org-string">"/usr"</span>]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">rawSystem</span> <span class="org-string">"ls"</span> [<span class="org-string">"-l"</span>, <span class="org-string">"/usr"</span>]
 <span class="org-haskell-definition">total</span> 260
 drwxr<span class="org-haskell-definition">-</span>xr<span class="org-haskell-operator">-</span>x   2 root root 118784 <span class="org-haskell-constructor">Abr</span> 26 03<span class="org-haskell-constructor">:</span>38 bin
 drwxr<span class="org-haskell-definition">-</span>xr<span class="org-haskell-operator">-</span>x   2 root root   4096 <span class="org-haskell-constructor">Abr</span> 10  2014 games
@@ -375,7 +375,7 @@ This command executes ls -la and gets the output.
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> test <span class="org-haskell-operator">=</span> readProcess <span class="org-string">"ls"</span> [<span class="org-string">"-a"</span>] <span class="org-string">""</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t test
-<span class="org-function-name">test</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">String</span>
+<span class="org-function-name">test</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">String</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> test <span class="org-haskell-definition">&gt;&gt;=</span> putStrLn 
 <span class="org-haskell-operator">.</span>
@@ -421,7 +421,7 @@ Note that the UTC time might differ from your local time depending on the timezo
 
 <span class="org-haskell-definition">main</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
     now <span class="org-haskell-operator">&lt;-</span> getCurrentTime
-    <span class="org-haskell-keyword">let</span> (year<span class="org-haskell-operator">,</span> month<span class="org-haskell-operator">,</span> day) <span class="org-haskell-operator">=</span> toGregorian <span class="org-haskell-operator">$</span> utctDay now
+    <span class="org-haskell-keyword">let</span> (year, month, day) <span class="org-haskell-operator">=</span> toGregorian <span class="org-haskell-operator">$</span> utctDay now
     putStrLn <span class="org-haskell-operator">$</span> <span class="org-string">"Year: "</span> <span class="org-haskell-operator">++</span> show year
     putStrLn <span class="org-haskell-operator">$</span> <span class="org-string">"Month: "</span> <span class="org-haskell-operator">++</span> show month
     putStrLn <span class="org-haskell-operator">$</span> <span class="org-string">"Day: "</span> <span class="org-haskell-operator">++</span> show day
@@ -451,7 +451,7 @@ It is also possible to get your current local time using your system’s default
     now <span class="org-haskell-operator">&lt;-</span> getCurrentTime
     timezone <span class="org-haskell-operator">&lt;-</span> getCurrentTimeZone
     <span class="org-haskell-keyword">let</span> zoneNow <span class="org-haskell-operator">=</span> utcToLocalTime timezone now
-    <span class="org-haskell-keyword">let</span> (year<span class="org-haskell-operator">,</span> month<span class="org-haskell-operator">,</span> day) <span class="org-haskell-operator">=</span> toGregorian <span class="org-haskell-operator">$</span> localDay zoneNow
+    <span class="org-haskell-keyword">let</span> (year, month, day) <span class="org-haskell-operator">=</span> toGregorian <span class="org-haskell-operator">$</span> localDay zoneNow
     putStrLn <span class="org-haskell-operator">$</span> <span class="org-string">"Year: "</span> <span class="org-haskell-operator">++</span> show year
     putStrLn <span class="org-haskell-operator">$</span> <span class="org-string">"Month: "</span> <span class="org-haskell-operator">++</span> show month
     putStrLn <span class="org-haskell-operator">$</span> <span class="org-string">"Day: "</span> <span class="org-haskell-operator">++</span> show day
@@ -489,7 +489,7 @@ It is also possible to get your current local time using your system’s default
 <pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.Time</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t getCurrentTime
-<span class="org-function-name">getCurrentTime</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">UTCTime</span>
+<span class="org-function-name">getCurrentTime</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">UTCTime</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 
@@ -499,24 +499,24 @@ It is also possible to get your current local time using your system’s default
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t t
-<span class="org-function-name">t</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">UTCTime</span>
+<span class="org-function-name">t</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">UTCTime</span>
 
 
 <span class="org-haskell-operator">&gt;</span> today <span class="org-haskell-operator">&lt;-</span> fmap utctDay getCurrentTime 
 <span class="org-haskell-operator">&gt;</span> today
 2015<span class="org-haskell-operator">-</span>03<span class="org-haskell-operator">-</span>04
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t today
-<span class="org-function-name">today</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Day</span>
+<span class="org-function-name">today</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Day</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span>  <span class="org-haskell-keyword">let</span> (year<span class="org-haskell-operator">,</span> <span class="org-haskell-keyword">_</span><span class="org-haskell-operator">,</span> <span class="org-haskell-keyword">_</span>) <span class="org-haskell-operator">=</span> toGregorian today
+<span class="org-haskell-operator">&gt;</span>  <span class="org-haskell-keyword">let</span> (year, <span class="org-haskell-keyword">_</span>, <span class="org-haskell-keyword">_</span>) <span class="org-haskell-operator">=</span> toGregorian today
 <span class="org-haskell-operator">&gt;</span> year
 2015
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t fromGregorian 2015 0 0
-<span class="org-haskell-definition">fromGregorian</span> 2015 0 0 <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Day</span>
+<span class="org-haskell-definition">fromGregorian</span> 2015 0 0 <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Day</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">fromGregorian</span> 2015 0 0
 2015<span class="org-haskell-operator">-</span>01<span class="org-haskell-operator">-</span>01
@@ -529,7 +529,7 @@ It is also possible to get your current local time using your system’s default
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Text.Printf</span>
 <span class="org-haskell-operator">&gt;</span>
 <span class="org-haskell-operator">&gt;</span> tm <span class="org-haskell-operator">&lt;-</span> getCurrentTime
-<span class="org-haskell-operator">&gt;</span>  <span class="org-haskell-keyword">let</span> (year<span class="org-haskell-operator">,</span> month<span class="org-haskell-operator">,</span> day) <span class="org-haskell-operator">=</span> toGregorian (utctDay tm)
+<span class="org-haskell-operator">&gt;</span>  <span class="org-haskell-keyword">let</span> (year, month, day) <span class="org-haskell-operator">=</span> toGregorian (utctDay tm)
 <span class="org-haskell-operator">&gt;</span> year
 2015
 <span class="org-haskell-operator">&gt;</span> month
@@ -575,15 +575,15 @@ It is also possible to get your current local time using your system’s default
 
 
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> bree' <span class="org-haskell-operator">=</span> read <span class="org-string">"1981-06-16 04:35:25"</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">UTCTime</span>
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">bree</span>'
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> bree' <span class="org-haskell-operator">=</span> read <span class="org-string">"1981-06-16 04:35:25"</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">UTCTime</span>
+<span class="org-haskell-operator">&gt;</span> bree'
 1981<span class="org-haskell-operator">-</span>06<span class="org-haskell-operator">-</span>16 04<span class="org-haskell-constructor">:</span>35<span class="org-haskell-constructor">:</span>25 <span class="org-haskell-constructor">UTC</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t bree'
-<span class="org-haskell-definition">bree</span>' <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">UTCTime</span>
+<span class="org-haskell-definition">bree'</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">UTCTime</span>
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> nat'  <span class="org-haskell-operator">=</span> read <span class="org-string">"1973-01-18 03:45:50"</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">UTCTime</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> nat'  <span class="org-haskell-operator">=</span> read <span class="org-string">"1973-01-18 03:45:50"</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">UTCTime</span>
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">nat</span>'
+<span class="org-haskell-operator">&gt;</span> nat'
 1973<span class="org-haskell-operator">-</span>01<span class="org-haskell-operator">-</span>18 03<span class="org-haskell-constructor">:</span>45<span class="org-haskell-constructor">:</span>50 <span class="org-haskell-constructor">UTC</span>
 <span class="org-haskell-operator">&gt;</span> 
 
@@ -612,22 +612,22 @@ It is also possible to get your current local time using your system’s default
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">System.Locale</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t fromGregorian
-<span class="org-function-name">fromGregorian</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Integer</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Day</span>
+<span class="org-function-name">fromGregorian</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Integer</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Day</span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> (year<span class="org-haskell-operator">,</span> month<span class="org-haskell-operator">,</span> day) <span class="org-haskell-operator">=</span> (1981<span class="org-haskell-operator">,</span> 6<span class="org-haskell-operator">,</span> 16) <span class="org-haskell-operator">::</span> (<span class="org-haskell-constructor">Integer</span> <span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Int</span> <span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Int</span> )
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> (year, month, day) <span class="org-haskell-operator">=</span> (1981, 6, 16) <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Integer</span> , <span class="org-haskell-type">Int</span> , <span class="org-haskell-type">Int</span> )
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> date <span class="org-haskell-operator">=</span> (fromGregorian year month day)
 <span class="org-haskell-operator">&gt;</span> date
 1981<span class="org-haskell-operator">-</span>06<span class="org-haskell-operator">-</span>16
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> (week<span class="org-haskell-operator">,</span> week_day) <span class="org-haskell-operator">=</span> sundayStartWeek date
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> (week, week_day) <span class="org-haskell-operator">=</span> sundayStartWeek date
 <span class="org-haskell-operator">&gt;</span> week
 24
 <span class="org-haskell-operator">&gt;</span> week_day
 2
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> (year_<span class="org-haskell-operator">,</span> year_day) <span class="org-haskell-operator">=</span> toOrdinalDate date
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> (year_, year_day) <span class="org-haskell-operator">=</span> toOrdinalDate date
 <span class="org-haskell-operator">&gt;</span> year_
 1981
 <span class="org-haskell-operator">&gt;</span> year_day
@@ -635,16 +635,16 @@ It is also possible to get your current local time using your system’s default
 <span class="org-haskell-operator">&gt;</span> 
 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> (week_day_name<span class="org-haskell-operator">,</span> <span class="org-haskell-keyword">_</span>) <span class="org-haskell-operator">=</span> wDays defaultTimeLocale <span class="org-haskell-operator">!!</span> week_day
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> (week_day_name, <span class="org-haskell-keyword">_</span>) <span class="org-haskell-operator">=</span> wDays defaultTimeLocale <span class="org-haskell-operator">!!</span> week_day
 <span class="org-haskell-operator">&gt;</span> week_day_name
 <span class="org-string">"Tuesday"</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t defaultTimeLocale 
-<span class="org-function-name">defaultTimeLocale</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">TimeLocale</span>
+<span class="org-function-name">defaultTimeLocale</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">TimeLocale</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> defaultTimeLocale 
-<span class="org-haskell-constructor">TimeLocale</span> {wDays <span class="org-haskell-operator">=</span> [(<span class="org-string">"Sunday"</span><span class="org-haskell-operator">,</span><span class="org-string">"Sun"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"Monday"</span><span class="org-haskell-operator">,</span><span class="org-string">"Mon"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"Tuesday"</span><span class="org-haskell-operator">,</span><span class="org-string">"Tue"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"Wednesday"</span><span class="org-haskell-operator">,</span><span class="org-string">"Wed"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"Thursday"</span><span class="org-haskell-operator">,</span><span class="org-string">"Thu"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"Friday"</span><span class="org-haskell-operator">,</span><span class="org-string">"Fri"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"Saturday"</span><span class="org-haskell-operator">,</span><span class="org-string">"Sat"</span>)]<span class="org-haskell-operator">,</span> months <span class="org-haskell-operator">=</span> [(<span class="org-string">"January"</span><span class="org-haskell-operator">,</span><span class="org-string">"Jan"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"February"</span><span class="org-haskell-operator">,</span><span class="org-string">"Feb"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"March"</span><span class="org-haskell-operator">,</span><span class="org-string">"Mar"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"April"</span><span class="org-haskell-operator">,</span><span class="org-string">"Apr"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"May"</span><span class="org-haskell-operator">,</span><span class="org-string">"May"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"June"</span><span class="org-haskell-operator">,</span><span class="org-string">"Jun"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"July"</span><span class="org-haskell-operator">,</span><span class="org-string">"Jul"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"August"</span><span class="org-haskell-operator">,</span><span class="org-string">"Aug"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"September"</span><span class="org-haskell-operator">,</span><span class="org-string">"Sep"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"October"</span><span class="org-haskell-operator">,</span><span class="org-string">"Oct"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"November"</span><span class="org-haskell-operator">,</span><span class="org-string">"Nov"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"December"</span><span class="org-haskell-operator">,</span><span class="org-string">"Dec"</span>)]<span class="org-haskell-operator">,</span> intervals <span class="org-haskell-operator">=</span> [(<span class="org-string">"year"</span><span class="org-haskell-operator">,</span><span class="org-string">"years"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"month"</span><span class="org-haskell-operator">,</span><span class="org-string">"months"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"day"</span><span class="org-haskell-operator">,</span><span class="org-string">"days"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"hour"</span><span class="org-haskell-operator">,</span><span class="org-string">"hours"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"min"</span><span class="org-haskell-operator">,</span><span class="org-string">"mins"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"sec"</span><span class="org-haskell-operator">,</span><span class="org-string">"secs"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"usec"</span><span class="org-haskell-operator">,</span><span class="org-string">"usecs"</span>)]<span class="org-haskell-operator">,</span> amPm <span class="org-haskell-operator">=</span> (<span class="org-string">"AM"</span><span class="org-haskell-operator">,</span><span class="org-string">"PM"</span>)<span class="org-haskell-operator">,</span> dateTimeFmt <span class="org-haskell-operator">=</span> <span class="org-string">"%a %b %e %H:%M:%S %Z %Y"</span><span class="org-haskell-operator">,</span> dateFmt <span class="org-haskell-operator">=</span> <span class="org-string">"%m/%d/%y"</span><span class="org-haskell-operator">,</span> timeFmt <span class="org-haskell-operator">=</span> <span class="org-string">"%H:%M:%S"</span><span class="org-haskell-operator">,</span> time12Fmt <span class="org-haskell-operator">=</span> <span class="org-string">"%I:%M:%S %p"</span>}
+<span class="org-haskell-constructor">TimeLocale</span> {wDays <span class="org-haskell-operator">=</span> [(<span class="org-string">"Sunday"</span>,<span class="org-string">"Sun"</span>),(<span class="org-string">"Monday"</span>,<span class="org-string">"Mon"</span>),(<span class="org-string">"Tuesday"</span>,<span class="org-string">"Tue"</span>),(<span class="org-string">"Wednesday"</span>,<span class="org-string">"Wed"</span>),(<span class="org-string">"Thursday"</span>,<span class="org-string">"Thu"</span>),(<span class="org-string">"Friday"</span>,<span class="org-string">"Fri"</span>),(<span class="org-string">"Saturday"</span>,<span class="org-string">"Sat"</span>)], months <span class="org-haskell-operator">=</span> [(<span class="org-string">"January"</span>,<span class="org-string">"Jan"</span>),(<span class="org-string">"February"</span>,<span class="org-string">"Feb"</span>),(<span class="org-string">"March"</span>,<span class="org-string">"Mar"</span>),(<span class="org-string">"April"</span>,<span class="org-string">"Apr"</span>),(<span class="org-string">"May"</span>,<span class="org-string">"May"</span>),(<span class="org-string">"June"</span>,<span class="org-string">"Jun"</span>),(<span class="org-string">"July"</span>,<span class="org-string">"Jul"</span>),(<span class="org-string">"August"</span>,<span class="org-string">"Aug"</span>),(<span class="org-string">"September"</span>,<span class="org-string">"Sep"</span>),(<span class="org-string">"October"</span>,<span class="org-string">"Oct"</span>),(<span class="org-string">"November"</span>,<span class="org-string">"Nov"</span>),(<span class="org-string">"December"</span>,<span class="org-string">"Dec"</span>)], intervals <span class="org-haskell-operator">=</span> [(<span class="org-string">"year"</span>,<span class="org-string">"years"</span>),(<span class="org-string">"month"</span>,<span class="org-string">"months"</span>),(<span class="org-string">"day"</span>,<span class="org-string">"days"</span>),(<span class="org-string">"hour"</span>,<span class="org-string">"hours"</span>),(<span class="org-string">"min"</span>,<span class="org-string">"mins"</span>),(<span class="org-string">"sec"</span>,<span class="org-string">"secs"</span>),(<span class="org-string">"usec"</span>,<span class="org-string">"usecs"</span>)], amPm <span class="org-haskell-operator">=</span> (<span class="org-string">"AM"</span>,<span class="org-string">"PM"</span>), dateTimeFmt <span class="org-haskell-operator">=</span> <span class="org-string">"%a %b %e %H:%M:%S %Z %Y"</span>, dateFmt <span class="org-haskell-operator">=</span> <span class="org-string">"%m/%d/%y"</span>, timeFmt <span class="org-haskell-operator">=</span> <span class="org-string">"%H:%M:%S"</span>, time12Fmt <span class="org-haskell-operator">=</span> <span class="org-string">"%I:%M:%S %p"</span>}
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span>
 </pre>
@@ -662,7 +662,7 @@ It is also possible to get your current local time using your system’s default
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.Time.Clock.POSIX</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">System.Locale</span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> day<span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Day</span> <span class="org-haskell-operator">;</span> day <span class="org-haskell-operator">=</span> readTime defaultTimeLocale <span class="org-string">"%F"</span> <span class="org-string">"1998-06-03"</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> day<span class="org-haskell-operator">::</span> <span class="org-haskell-type">Day</span> ; day <span class="org-haskell-operator">=</span> readTime defaultTimeLocale <span class="org-string">"%F"</span> <span class="org-string">"1998-06-03"</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> day
 1998<span class="org-haskell-operator">-</span>06<span class="org-haskell-operator">-</span>03
@@ -683,14 +683,14 @@ It is also possible to get your current local time using your system’s default
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> now <span class="org-haskell-operator">&lt;-</span> getCurrentTime
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t now
-<span class="org-function-name">now</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">UTCTime</span>
+<span class="org-function-name">now</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">UTCTime</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">formatTime</span> defaultTimeLocale <span class="org-string">"The date is %A (%a) %d/%m/%Y"</span> now
 <span class="org-string">"The date is Wednesday (Wed) 04/03/2015"</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> t <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span> now <span class="org-haskell-operator">&lt;-</span> getCurrentTime <span class="org-haskell-operator">;</span> return <span class="org-haskell-operator">$</span> formatTime defaultTimeLocale <span class="org-string">"The date is %A (%a) %d/%m/%Y"</span> now
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> t <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span> now <span class="org-haskell-operator">&lt;-</span> getCurrentTime ; return <span class="org-haskell-operator">$</span> formatTime defaultTimeLocale <span class="org-string">"The date is %A (%a) %d/%m/%Y"</span> now
 <span class="org-haskell-operator">&gt;</span> t
 <span class="org-string">"The date is Wednesday (Wed) 04/03/2015"</span>
 <span class="org-haskell-operator">&gt;</span>
@@ -787,64 +787,64 @@ To avoid name conflicts the modules must be imported as qualified.
 <span class="org-comment-delimiter">{- </span><span class="org-comment">String to Bytestring -}</span>
 <span class="org-comment-delimiter">{-</span><span class="org-comment">--------------------------------------------}</span>
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">BC</span><span class="org-haskell-operator">.</span>pack <span class="org-string">"hello world"</span> 
+    <span class="org-haskell-operator">&gt;</span> BC.pack <span class="org-string">"hello world"</span> 
     <span class="org-string">"hello world"</span>
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">BC</span><span class="org-haskell-operator">.</span>pack <span class="org-string">"&#269;u&#353;paj&#382;&#26085;&#26412;&#35486;"</span>
+    <span class="org-haskell-operator">&gt;</span> BC.pack <span class="org-string">"&#269;u&#353;paj&#382;&#26085;&#26412;&#35486;"</span>
     <span class="org-string">"\ruapaj~\229,\158"</span>
     <span class="org-haskell-operator">&gt;</span> 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">BC</span><span class="org-haskell-operator">.</span>pack <span class="org-string">"&#269;u&#353;paj&#382;&#26085;&#26412;&#35486;"</span>
-    <span class="org-haskell-constructor">BC</span><span class="org-haskell-operator">.</span>pack <span class="org-string">"&#269;u&#353;paj&#382;&#26085;&#26412;&#35486;"</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">B.ByteString</span>
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t BC.pack <span class="org-string">"&#269;u&#353;paj&#382;&#26085;&#26412;&#35486;"</span>
+    BC.pack <span class="org-string">"&#269;u&#353;paj&#382;&#26085;&#26412;&#35486;"</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">B.ByteString</span>
     <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-comment-delimiter">{- </span><span class="org-comment">Strict to Lazy Conversion -}</span>
 <span class="org-comment-delimiter">{-</span><span class="org-comment">--------------------------------------------}</span>
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> s_strict <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">BC</span><span class="org-haskell-operator">.</span>pack  <span class="org-string">"&#269;u&#353;paj&#382;&#26085;&#26412;&#35486;"</span>
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> s_strict <span class="org-haskell-operator">=</span> BC.pack  <span class="org-string">"&#269;u&#353;paj&#382;&#26085;&#26412;&#35486;"</span>
     <span class="org-haskell-operator">&gt;</span> s_strict 
     <span class="org-string">"\ruapaj~\229,\158"</span>
     <span class="org-haskell-operator">&gt;</span> 
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> s_lazy <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">BLC</span><span class="org-haskell-operator">.</span>pack  <span class="org-string">"&#269;u&#353;paj&#382;&#26085;&#26412;&#35486;"</span> 
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> s_lazy <span class="org-haskell-operator">=</span> BLC.pack  <span class="org-string">"&#269;u&#353;paj&#382;&#26085;&#26412;&#35486;"</span> 
     <span class="org-haskell-operator">&gt;</span> s_lazy 
     <span class="org-string">"\ruapaj~\229,\158"</span>
     <span class="org-haskell-operator">&gt;</span> 
     <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t s_
     s_lazy    s_strict
     <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t s_lazy 
-    s_lazy <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">BL.ByteString</span>
+    s_lazy <span class="org-haskell-operator">::</span> <span class="org-haskell-type">BL.ByteString</span>
     <span class="org-haskell-operator">&gt;</span> 
 
     <span class="org-comment-delimiter">{- </span><span class="org-comment">Strict to Lazy -}</span>
-       
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">BL</span><span class="org-haskell-operator">.</span>fromChunks
-    <span class="org-haskell-constructor">BL</span><span class="org-haskell-operator">.</span>fromChunks <span class="org-haskell-operator">::</span> [<span class="org-haskell-constructor">B.ByteString</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">BL.ByteString</span>
+
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t BL.fromChunks
+    BL.fromChunks <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">B.ByteString</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">BL.ByteString</span>
     <span class="org-haskell-operator">&gt;</span> 
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> new_lazy <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">BL</span><span class="org-haskell-operator">.</span>fromChunks [s_strict]
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> new_lazy <span class="org-haskell-operator">=</span> BL.fromChunks [s_strict]
     <span class="org-haskell-operator">&gt;</span> new_lazy 
     <span class="org-string">"\ruapaj~\229,\158"</span>
     <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t new_lazy
-    new_lazy <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">BL.ByteString</span>
+    new_lazy <span class="org-haskell-operator">::</span> <span class="org-haskell-type">BL.ByteString</span>
     <span class="org-haskell-operator">&gt;</span> 
 
 
 <span class="org-comment-delimiter">{- </span><span class="org-comment">Lazy to Strict -}</span>
 <span class="org-comment-delimiter">{-</span><span class="org-comment">--------------------------------------------}</span>
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> new_strict <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">B</span><span class="org-haskell-operator">.</span>concat <span class="org-haskell-operator">$</span> <span class="org-haskell-constructor">BL</span><span class="org-haskell-operator">.</span>toChunks s_lazy 
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> new_strict <span class="org-haskell-operator">=</span> B.concat <span class="org-haskell-operator">$</span> BL.toChunks s_lazy 
     <span class="org-haskell-operator">&gt;</span> new_strict 
     <span class="org-string">"\ruapaj~\229,\158"</span>
     <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t new_strict
-    new_strict <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">B.ByteString</span>
+    new_strict <span class="org-haskell-operator">::</span> <span class="org-haskell-type">B.ByteString</span>
     <span class="org-haskell-operator">&gt;</span> 
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">BC</span><span class="org-haskell-operator">.</span>putStrLn new_strict 
-    uapaj<span class="org-haskell-operator">~&#65533;,&#65533;</span>
+    <span class="org-haskell-operator">&gt;</span> BC.putStrLn new_strict 
+    uapaj<span class="org-haskell-operator">~&#65533;</span>,<span class="org-haskell-operator">&#65533;</span>
     <span class="org-haskell-operator">&gt;</span> 
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">BLC</span><span class="org-haskell-operator">.</span>putStrLn new_lazy 
-    uapaj<span class="org-haskell-operator">~&#65533;,&#65533;</span>
+    <span class="org-haskell-operator">&gt;</span> BLC.putStrLn new_lazy 
+    uapaj<span class="org-haskell-operator">~&#65533;</span>,<span class="org-haskell-operator">&#65533;</span>
     <span class="org-haskell-operator">&gt;</span> 
 
 
@@ -855,52 +855,52 @@ To avoid name conflicts the modules must be imported as qualified.
     <span class="org-haskell-operator">&gt;</span> <span class="org-comment-delimiter">{- </span><span class="org-comment">Serializes Haskell Data to Lazy Bytestring -}</span>
     <span class="org-haskell-operator">&gt;</span> 
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">.</span>encode
-    <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">.</span>encode <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">D.Binary</span> a <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">BL.ByteString</span>
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t D.encode
+    D.encode <span class="org-haskell-operator">::</span> <span class="org-haskell-type">D.Binary</span> a <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">BL.ByteString</span>
     <span class="org-haskell-operator">&gt;</span> 
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">.</span>decode
-    <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">.</span>decode <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">D.Binary</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-constructor">BL.ByteString</span> <span class="org-haskell-operator">-&gt;</span> a
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t D.decode
+    D.decode <span class="org-haskell-operator">::</span> <span class="org-haskell-type">D.Binary</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">BL.ByteString</span> <span class="org-haskell-operator">-&gt;</span> a
     <span class="org-haskell-operator">&gt;</span>
 
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">.</span>encode 10 
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> a <span class="org-haskell-operator">=</span> D.encode 10 
     <span class="org-haskell-operator">&gt;</span> a
     <span class="org-string">"\NUL\NUL\NUL\NUL\n"</span>
     <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t a
-    a <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">BL.ByteString</span>
+    a <span class="org-haskell-operator">::</span> <span class="org-haskell-type">BL.ByteString</span>
     <span class="org-haskell-operator">&gt;</span> 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">.</span>decode a
+    <span class="org-haskell-operator">&gt;</span> D.decode a
     <span class="org-haskell-constructor">()</span>
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">.</span>decode a <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Int</span>
-    <span class="org-haskell-operator">***</span> <span class="org-haskell-constructor">Exception:</span> <span class="org-haskell-constructor">Data.Binary.Get</span><span class="org-haskell-operator">.</span>runGet at position 0<span class="org-haskell-constructor">:</span> demandInput<span class="org-haskell-constructor">:</span> not enough bytes
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">.</span>decode a <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Integer</span>
+    <span class="org-haskell-operator">&gt;</span> D.decode a <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
+    <span class="org-haskell-operator">***</span> <span class="org-haskell-type">Exception:</span> Data.Binary.Get.runGet at position 0<span class="org-haskell-type">:</span> demandInput<span class="org-haskell-type">:</span> not enough bytes
+    <span class="org-haskell-operator">&gt;</span> D.decode a <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Integer</span>
     10
     <span class="org-haskell-operator">&gt;</span> 
 
 
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> b <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">.</span>encode (<span class="org-haskell-constructor">Just</span> 10 <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Maybe</span> <span class="org-haskell-constructor">Int</span>)
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> b <span class="org-haskell-operator">=</span> D.encode (<span class="org-haskell-constructor">Just</span> 10 <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">Int</span>)
     <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t b
-    b <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">BL.ByteString</span>
+    b <span class="org-haskell-operator">::</span> <span class="org-haskell-type">BL.ByteString</span>
     <span class="org-haskell-operator">&gt;</span> b
     <span class="org-string">"\SOH\NUL\NUL\NUL\NUL\NUL\NUL\NUL\n"</span>
     <span class="org-haskell-operator">&gt;</span> 
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">.</span>decode b <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Maybe</span> <span class="org-haskell-constructor">Int</span>
+    <span class="org-haskell-operator">&gt;</span> D.decode b <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">Int</span>
     <span class="org-haskell-constructor">Just</span> 10
     <span class="org-haskell-operator">&gt;</span>
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> c <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">.</span>encode (<span class="org-haskell-constructor">Nothing</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Maybe</span> <span class="org-haskell-constructor">Int</span>)
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> c <span class="org-haskell-operator">=</span> D.encode (<span class="org-haskell-constructor">Nothing</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">Int</span>)
     <span class="org-haskell-operator">&gt;</span> c
     <span class="org-string">"\NUL"</span>
     <span class="org-haskell-operator">&gt;</span>
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">.</span>decode c <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Maybe</span> <span class="org-haskell-constructor">Int</span>
+    <span class="org-haskell-operator">&gt;</span> D.decode c <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">Int</span>
     <span class="org-haskell-constructor">Nothing</span>
     <span class="org-haskell-operator">&gt;</span>
 
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> d <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">.</span>encode (3.11415e4 <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Double</span>)
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> d <span class="org-haskell-operator">=</span> D.encode (3.11415e4 <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>)
     <span class="org-haskell-operator">&gt;</span> d
     <span class="org-string">"\SOH\SOH\NUL\NUL\NUL\NUL\NUL\NUL\NUL\a\NUL\NUL\NUL\NUL`i\RS\255\255\255\255\255\255\255\218"</span>
     <span class="org-haskell-operator">&gt;</span> 
@@ -910,89 +910,89 @@ To avoid name conflicts the modules must be imported as qualified.
 
     <span class="org-comment-delimiter">{- </span><span class="org-comment">Bytes are encoded as Word8 -}</span>
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">B</span><span class="org-haskell-operator">.</span>pack
-    <span class="org-haskell-constructor">B</span><span class="org-haskell-operator">.</span>pack <span class="org-haskell-operator">::</span> [<span class="org-haskell-constructor">GHC.Word.Word8</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">B.ByteString</span>
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">B</span><span class="org-haskell-operator">.</span>unpack
-    <span class="org-haskell-constructor">B</span><span class="org-haskell-operator">.</span>unpack <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">B.ByteString</span> <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-constructor">GHC.Word.Word8</span>]
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t B.pack
+    B.pack <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">GHC.Word.Word8</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">B.ByteString</span>
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t B.unpack
+    B.unpack <span class="org-haskell-operator">::</span> <span class="org-haskell-type">B.ByteString</span> <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">GHC.Word.Word8</span>]
     <span class="org-haskell-operator">&gt;</span> 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">BL</span><span class="org-haskell-operator">.</span>pack
-    <span class="org-haskell-constructor">BL</span><span class="org-haskell-operator">.</span>pack <span class="org-haskell-operator">::</span> [<span class="org-haskell-constructor">GHC.Word.Word8</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">BL.ByteString</span>
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">BL</span><span class="org-haskell-operator">.</span>unpack
-    <span class="org-haskell-constructor">BL</span><span class="org-haskell-operator">.</span>unpack <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">BL.ByteString</span> <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-constructor">GHC.Word.Word8</span>]
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t BL.pack
+    BL.pack <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">GHC.Word.Word8</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">BL.ByteString</span>
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t BL.unpack
+    BL.unpack <span class="org-haskell-operator">::</span> <span class="org-haskell-type">BL.ByteString</span> <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">GHC.Word.Word8</span>]
     <span class="org-haskell-operator">&gt;</span> 
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> msg <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">B</span><span class="org-haskell-operator">.</span>pack [72<span class="org-haskell-operator">,</span>101<span class="org-haskell-operator">,</span>108<span class="org-haskell-operator">,</span>108<span class="org-haskell-operator">,</span>111<span class="org-haskell-operator">,</span>32<span class="org-haskell-operator">,</span>119<span class="org-haskell-operator">,</span>111<span class="org-haskell-operator">,</span>114<span class="org-haskell-operator">,</span>108<span class="org-haskell-operator">,</span>100]
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> msg <span class="org-haskell-operator">=</span> B.pack [72,101,108,108,111,32,119,111,114,108,100]
     <span class="org-haskell-operator">&gt;</span> msg
     <span class="org-string">"Hello world"</span>
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> bytes <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">B</span><span class="org-haskell-operator">.</span>unpack msg
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> bytes <span class="org-haskell-operator">=</span> B.unpack msg
     <span class="org-haskell-operator">&gt;</span> bytes
-    [72<span class="org-haskell-operator">,</span>101<span class="org-haskell-operator">,</span>108<span class="org-haskell-operator">,</span>108<span class="org-haskell-operator">,</span>111<span class="org-haskell-operator">,</span>32<span class="org-haskell-operator">,</span>119<span class="org-haskell-operator">,</span>111<span class="org-haskell-operator">,</span>114<span class="org-haskell-operator">,</span>108<span class="org-haskell-operator">,</span>100]
+    [72,101,108,108,111,32,119,111,114,108,100]
     <span class="org-haskell-operator">&gt;</span> 
 
     <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t msg
-    msg <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">B.ByteString</span>
+    msg <span class="org-haskell-operator">::</span> <span class="org-haskell-type">B.ByteString</span>
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t bytes
-    bytes <span class="org-haskell-operator">::</span> [<span class="org-haskell-constructor">GHC.Word.Word8</span>]
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t bytes
+    bytes <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">GHC.Word.Word8</span>]
     <span class="org-haskell-operator">&gt;</span> 
 
     <span class="org-comment-delimiter">{- </span><span class="org-comment">Word8 to Int -}</span>
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t fromIntegral 
-    fromIntegral <span class="org-haskell-operator">::</span> (<span class="org-haskell-constructor">Num</span> b<span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Integral</span> a) <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> b
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t fromIntegral 
+    fromIntegral <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Num</span> b, <span class="org-haskell-type">Integral</span> a) <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> b
     <span class="org-haskell-operator">&gt;</span> 
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> x <span class="org-haskell-operator">=</span> 100 <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">GHC.Word.Word8</span>
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> x <span class="org-haskell-operator">=</span> 100 <span class="org-haskell-operator">::</span> <span class="org-haskell-type">GHC.Word.Word8</span>
     <span class="org-haskell-operator">&gt;</span> x
     100
     <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t x
-    x <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">GHC.Word.Word8</span>
+    x <span class="org-haskell-operator">::</span> <span class="org-haskell-type">GHC.Word.Word8</span>
     <span class="org-haskell-operator">&gt;</span> 
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> y <span class="org-haskell-operator">=</span> fromIntegral x <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Int</span>
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> y <span class="org-haskell-operator">=</span> fromIntegral x <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
     <span class="org-haskell-operator">&gt;</span> y
     100
     <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t y
-    y <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Int</span>
+    y <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
     <span class="org-haskell-operator">&gt;</span> 
 
-    <span class="org-haskell-operator">&gt;</span> fromIntegral ( 100 <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">GHC.Word.Word8</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Int</span>
+    <span class="org-haskell-operator">&gt;</span> fromIntegral ( 100 <span class="org-haskell-operator">::</span> <span class="org-haskell-type">GHC.Word.Word8</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
     100
     <span class="org-haskell-operator">&gt;</span> 
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> bytes_int <span class="org-haskell-operator">=</span> map (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> fromIntegral x <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Int</span>) bytes
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> bytes_int <span class="org-haskell-operator">=</span> map (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> fromIntegral x <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>) bytes
     <span class="org-haskell-operator">&gt;</span> bytes_int 
-    [72<span class="org-haskell-operator">,</span>101<span class="org-haskell-operator">,</span>108<span class="org-haskell-operator">,</span>108<span class="org-haskell-operator">,</span>111<span class="org-haskell-operator">,</span>32<span class="org-haskell-operator">,</span>119<span class="org-haskell-operator">,</span>111<span class="org-haskell-operator">,</span>114<span class="org-haskell-operator">,</span>108<span class="org-haskell-operator">,</span>100]
+    [72,101,108,108,111,32,119,111,114,108,100]
     <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t bytes_int 
-    bytes_int <span class="org-haskell-operator">::</span> [<span class="org-haskell-constructor">Int</span>]
+    bytes_int <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">Int</span>]
     <span class="org-haskell-operator">&gt;</span> 
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> bytes_word8 <span class="org-haskell-operator">=</span> map (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> fromIntegral x <span class="org-haskell-operator">::</span>  <span class="org-haskell-constructor">GHC.Word.Word8</span>) bytes_int 
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> bytes_word8 <span class="org-haskell-operator">=</span> map (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> fromIntegral x <span class="org-haskell-operator">::</span>  <span class="org-haskell-type">GHC.Word.Word8</span>) bytes_int 
     <span class="org-haskell-operator">&gt;</span> bytes_word8 
-    [72<span class="org-haskell-operator">,</span>101<span class="org-haskell-operator">,</span>108<span class="org-haskell-operator">,</span>108<span class="org-haskell-operator">,</span>111<span class="org-haskell-operator">,</span>32<span class="org-haskell-operator">,</span>119<span class="org-haskell-operator">,</span>111<span class="org-haskell-operator">,</span>114<span class="org-haskell-operator">,</span>108<span class="org-haskell-operator">,</span>100]
+    [72,101,108,108,111,32,119,111,114,108,100]
     <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t bytes_word8 
-    bytes_word8 <span class="org-haskell-operator">::</span> [<span class="org-haskell-constructor">GHC.Word.Word8</span>]
+    bytes_word8 <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">GHC.Word.Word8</span>]
     <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-comment-delimiter">{- </span><span class="org-comment">Bytes in Hexadecimal and Binary Format -}</span>
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Numeric</span> (showHex<span class="org-haskell-operator">,</span> showIntAtBase)
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Numeric</span> (showHex, showIntAtBase)
     <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.Char</span> (intToDigit)
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.Bits</span> (shiftL<span class="org-haskell-operator">,</span> shiftR<span class="org-haskell-operator">,</span> (<span class="org-haskell-operator">.&amp;.</span>)<span class="org-haskell-operator">,</span> (<span class="org-haskell-operator">.|.</span>))
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.Bits</span> (shiftL, shiftR, (<span class="org-haskell-operator">.&amp;.</span>), (<span class="org-haskell-operator">.|.</span>))
     <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.Word</span> (<span class="org-haskell-constructor">Word8</span>)
 
     <span class="org-haskell-operator">&gt;</span> 
         <span class="org-comment-delimiter">{- </span><span class="org-comment">Bytes in Hexadecimal Format Low Endian -}</span>
     <span class="org-haskell-operator">&gt;</span> map (<span class="org-haskell-operator">\</span>n <span class="org-haskell-operator">-&gt;</span> showHex n <span class="org-string">""</span>) bytes
-    [<span class="org-string">"48"</span><span class="org-haskell-operator">,</span><span class="org-string">"65"</span><span class="org-haskell-operator">,</span><span class="org-string">"6c"</span><span class="org-haskell-operator">,</span><span class="org-string">"6c"</span><span class="org-haskell-operator">,</span><span class="org-string">"6f"</span><span class="org-haskell-operator">,</span><span class="org-string">"20"</span><span class="org-haskell-operator">,</span><span class="org-string">"77"</span><span class="org-haskell-operator">,</span><span class="org-string">"6f"</span><span class="org-haskell-operator">,</span><span class="org-string">"72"</span><span class="org-haskell-operator">,</span><span class="org-string">"6c"</span><span class="org-haskell-operator">,</span><span class="org-string">"64"</span>]
+    [<span class="org-string">"48"</span>,<span class="org-string">"65"</span>,<span class="org-string">"6c"</span>,<span class="org-string">"6c"</span>,<span class="org-string">"6f"</span>,<span class="org-string">"20"</span>,<span class="org-string">"77"</span>,<span class="org-string">"6f"</span>,<span class="org-string">"72"</span>,<span class="org-string">"6c"</span>,<span class="org-string">"64"</span>]
     <span class="org-haskell-operator">&gt;</span> 
     <span class="org-haskell-operator">&gt;</span> 
 
     <span class="org-comment-delimiter">{- </span><span class="org-comment">Bytes in Hexadecimal Format Big Endian -}</span>
 
     <span class="org-haskell-operator">&gt;</span> reverse <span class="org-haskell-operator">$</span> map (<span class="org-haskell-operator">\</span>n <span class="org-haskell-operator">-&gt;</span> showHex n <span class="org-string">""</span>) bytes
-    [<span class="org-string">"64"</span><span class="org-haskell-operator">,</span><span class="org-string">"6c"</span><span class="org-haskell-operator">,</span><span class="org-string">"72"</span><span class="org-haskell-operator">,</span><span class="org-string">"6f"</span><span class="org-haskell-operator">,</span><span class="org-string">"77"</span><span class="org-haskell-operator">,</span><span class="org-string">"20"</span><span class="org-haskell-operator">,</span><span class="org-string">"6f"</span><span class="org-haskell-operator">,</span><span class="org-string">"6c"</span><span class="org-haskell-operator">,</span><span class="org-string">"6c"</span><span class="org-haskell-operator">,</span><span class="org-string">"65"</span><span class="org-haskell-operator">,</span><span class="org-string">"48"</span>]
+    [<span class="org-string">"64"</span>,<span class="org-string">"6c"</span>,<span class="org-string">"72"</span>,<span class="org-string">"6f"</span>,<span class="org-string">"77"</span>,<span class="org-string">"20"</span>,<span class="org-string">"6f"</span>,<span class="org-string">"6c"</span>,<span class="org-string">"6c"</span>,<span class="org-string">"65"</span>,<span class="org-string">"48"</span>]
     <span class="org-haskell-operator">&gt;</span> 
 
     <span class="org-comment-delimiter">{- </span><span class="org-comment">Hexadecimal String Low Endian -}</span>
@@ -1008,7 +1008,7 @@ To avoid name conflicts the modules must be imported as qualified.
 
     <span class="org-comment-delimiter">{- </span><span class="org-comment">Hexadecimal number to bytes -}</span>
 
-    
+
     <span class="org-haskell-operator">&gt;</span> 
     <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> num2hex <span class="org-haskell-operator">=</span> <span class="org-haskell-operator">\</span>n <span class="org-haskell-operator">-&gt;</span> showHex n <span class="org-string">""</span>
     <span class="org-haskell-operator">&gt;</span> 
@@ -1019,19 +1019,19 @@ To avoid name conflicts the modules must be imported as qualified.
     <span class="org-haskell-operator">&gt;</span> num2hex x
     <span class="org-string">"646c726f77206f6c6c6548"</span>
     <span class="org-haskell-operator">&gt;</span> 
-    
+
     <span class="org-comment-delimiter">{- </span><span class="org-comment">Split Bytes -}</span>
     <span class="org-comment-delimiter">{-</span><span class="org-comment">------------------------------------------}</span>
-    
+
     <span class="org-haskell-operator">&gt;</span> iterate (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> shiftR x 8) 0x646c726f77206f6c6c6548 <span class="org-haskell-operator">|&gt;</span> takeWhile ((<span class="org-haskell-operator">/=</span>) 0) <span class="org-haskell-operator">|&gt;</span> map (<span class="org-haskell-operator">.&amp;.</span> 0xFF)
-    [72<span class="org-haskell-operator">,</span>101<span class="org-haskell-operator">,</span>108<span class="org-haskell-operator">,</span>108<span class="org-haskell-operator">,</span>111<span class="org-haskell-operator">,</span>32<span class="org-haskell-operator">,</span>119<span class="org-haskell-operator">,</span>111<span class="org-haskell-operator">,</span>114<span class="org-haskell-operator">,</span>108<span class="org-haskell-operator">,</span>100]
+    [72,101,108,108,111,32,119,111,114,108,100]
     <span class="org-haskell-operator">&gt;</span> 
     <span class="org-haskell-operator">&gt;</span>  map num2hex <span class="org-haskell-operator">.</span>  map (<span class="org-haskell-operator">.&amp;.</span> 0xFF) <span class="org-haskell-operator">.</span> takeWhile ((<span class="org-haskell-operator">/=</span>) 0) <span class="org-haskell-operator">.</span>  iterate (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> shiftR x 8) <span class="org-haskell-operator">$</span>  0x646c726f77206f6c6c6548
-    [<span class="org-string">"48"</span><span class="org-haskell-operator">,</span><span class="org-string">"65"</span><span class="org-haskell-operator">,</span><span class="org-string">"6c"</span><span class="org-haskell-operator">,</span><span class="org-string">"6c"</span><span class="org-haskell-operator">,</span><span class="org-string">"6f"</span><span class="org-haskell-operator">,</span><span class="org-string">"20"</span><span class="org-haskell-operator">,</span><span class="org-string">"77"</span><span class="org-haskell-operator">,</span><span class="org-string">"6f"</span><span class="org-haskell-operator">,</span><span class="org-string">"72"</span><span class="org-haskell-operator">,</span><span class="org-string">"6c"</span><span class="org-haskell-operator">,</span><span class="org-string">"64"</span>]
+    [<span class="org-string">"48"</span>,<span class="org-string">"65"</span>,<span class="org-string">"6c"</span>,<span class="org-string">"6c"</span>,<span class="org-string">"6f"</span>,<span class="org-string">"20"</span>,<span class="org-string">"77"</span>,<span class="org-string">"6f"</span>,<span class="org-string">"72"</span>,<span class="org-string">"6c"</span>,<span class="org-string">"64"</span>]
     <span class="org-haskell-operator">&gt;</span>
 
     <span class="org-haskell-operator">&gt;</span> iterate (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> shiftR x 8) 0x646c726f77206f6c6c6548 <span class="org-haskell-operator">|&gt;</span> takeWhile ((<span class="org-haskell-operator">/=</span>) 0) <span class="org-haskell-operator">|&gt;</span> map (<span class="org-haskell-operator">.&amp;.</span> 0xFF) <span class="org-haskell-operator">|&gt;</span> map num2hex
-    [<span class="org-string">"48"</span><span class="org-haskell-operator">,</span><span class="org-string">"65"</span><span class="org-haskell-operator">,</span><span class="org-string">"6c"</span><span class="org-haskell-operator">,</span><span class="org-string">"6c"</span><span class="org-haskell-operator">,</span><span class="org-string">"6f"</span><span class="org-haskell-operator">,</span><span class="org-string">"20"</span><span class="org-haskell-operator">,</span><span class="org-string">"77"</span><span class="org-haskell-operator">,</span><span class="org-string">"6f"</span><span class="org-haskell-operator">,</span><span class="org-string">"72"</span><span class="org-haskell-operator">,</span><span class="org-string">"6c"</span><span class="org-haskell-operator">,</span><span class="org-string">"64"</span>]
+    [<span class="org-string">"48"</span>,<span class="org-string">"65"</span>,<span class="org-string">"6c"</span>,<span class="org-string">"6c"</span>,<span class="org-string">"6f"</span>,<span class="org-string">"20"</span>,<span class="org-string">"77"</span>,<span class="org-string">"6f"</span>,<span class="org-string">"72"</span>,<span class="org-string">"6c"</span>,<span class="org-string">"64"</span>]
     <span class="org-haskell-operator">&gt;</span> 
 
     <span class="org-haskell-operator">&gt;</span> iterate (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> shiftR x 8) 0x646c726f77206f6c6c6548 <span class="org-haskell-operator">|&gt;</span> takeWhile ((<span class="org-haskell-operator">/=</span>) 0) <span class="org-haskell-operator">|&gt;</span> map (<span class="org-haskell-operator">.&amp;.</span> 0xFF) <span class="org-haskell-operator">|&gt;</span> map num2hex <span class="org-haskell-operator">|&gt;</span> concat
@@ -1041,29 +1041,29 @@ To avoid name conflicts the modules must be imported as qualified.
     <span class="org-string">"646c726f77206f6c6c6548"</span>
     <span class="org-haskell-operator">&gt;</span> 
 
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> int2word8 <span class="org-haskell-operator">=</span> <span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> fromIntegral x <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Word8</span>
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> int2word8 <span class="org-haskell-operator">=</span> <span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> fromIntegral x <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Word8</span>
     <span class="org-haskell-operator">&gt;</span> 
     <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> num2bytes <span class="org-haskell-operator">=</span> map int2word8 <span class="org-haskell-operator">.</span> map (<span class="org-haskell-operator">.&amp;.</span> 0xFF) <span class="org-haskell-operator">.</span> takeWhile ((<span class="org-haskell-operator">/=</span>) 0) <span class="org-haskell-operator">.</span>  iterate (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> shiftR x 8)
 
     <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t num2bytes
-    num2bytes <span class="org-haskell-operator">::</span> (<span class="org-haskell-constructor">Data.Bits.Bits</span> a<span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">Integral</span> a) <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-constructor">Word8</span>]
+    num2bytes <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Data.Bits.Bits</span> a, <span class="org-haskell-type">Integral</span> a) <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">Word8</span>]
     <span class="org-haskell-operator">&gt;</span> 
     <span class="org-haskell-operator">&gt;</span> 
     <span class="org-haskell-operator">&gt;</span> num2bytes 0x646c726f77206f6c6c6548
-    [72<span class="org-haskell-operator">,</span>101<span class="org-haskell-operator">,</span>108<span class="org-haskell-operator">,</span>108<span class="org-haskell-operator">,</span>111<span class="org-haskell-operator">,</span>32<span class="org-haskell-operator">,</span>119<span class="org-haskell-operator">,</span>111<span class="org-haskell-operator">,</span>114<span class="org-haskell-operator">,</span>108<span class="org-haskell-operator">,</span>100]
+    [72,101,108,108,111,32,119,111,114,108,100]
     <span class="org-haskell-operator">&gt;</span> 
     <span class="org-haskell-operator">&gt;</span> num2bytes 0x646c726f77206f6c6c6548 <span class="org-haskell-operator">|&gt;</span> map num2hex
-    [<span class="org-string">"48"</span><span class="org-haskell-operator">,</span><span class="org-string">"65"</span><span class="org-haskell-operator">,</span><span class="org-string">"6c"</span><span class="org-haskell-operator">,</span><span class="org-string">"6c"</span><span class="org-haskell-operator">,</span><span class="org-string">"6f"</span><span class="org-haskell-operator">,</span><span class="org-string">"20"</span><span class="org-haskell-operator">,</span><span class="org-string">"77"</span><span class="org-haskell-operator">,</span><span class="org-string">"6f"</span><span class="org-haskell-operator">,</span><span class="org-string">"72"</span><span class="org-haskell-operator">,</span><span class="org-string">"6c"</span><span class="org-haskell-operator">,</span><span class="org-string">"64"</span>]
+    [<span class="org-string">"48"</span>,<span class="org-string">"65"</span>,<span class="org-string">"6c"</span>,<span class="org-string">"6c"</span>,<span class="org-string">"6f"</span>,<span class="org-string">"20"</span>,<span class="org-string">"77"</span>,<span class="org-string">"6f"</span>,<span class="org-string">"72"</span>,<span class="org-string">"6c"</span>,<span class="org-string">"64"</span>]
     <span class="org-haskell-operator">&gt;</span> 
 
-    <span class="org-haskell-operator">&gt;</span> num2bytes 0x646c726f77206f6c6c6548 <span class="org-haskell-operator">|&gt;</span> <span class="org-haskell-constructor">BL</span><span class="org-haskell-operator">.</span>pack 
+    <span class="org-haskell-operator">&gt;</span> num2bytes 0x646c726f77206f6c6c6548 <span class="org-haskell-operator">|&gt;</span> BL.pack 
     <span class="org-string">"Hello world"</span>
     <span class="org-haskell-operator">&gt;</span> 
     <span class="org-haskell-operator">&gt;</span> 
-    
+
     <span class="org-comment-delimiter">{- </span><span class="org-comment">Bytes to Int -}</span>
-    
-    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> bytes <span class="org-haskell-operator">=</span> [72<span class="org-haskell-operator">,</span>101<span class="org-haskell-operator">,</span>108<span class="org-haskell-operator">,</span>108<span class="org-haskell-operator">,</span>111<span class="org-haskell-operator">,</span>32<span class="org-haskell-operator">,</span>119<span class="org-haskell-operator">,</span>111<span class="org-haskell-operator">,</span>114<span class="org-haskell-operator">,</span>108<span class="org-haskell-operator">,</span>100]
+
+    <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> bytes <span class="org-haskell-operator">=</span> [72,101,108,108,111,32,119,111,114,108,100]
     <span class="org-haskell-operator">&gt;</span> foldr (<span class="org-haskell-operator">\</span>b0 b1 <span class="org-haskell-operator">-&gt;</span> (shiftL b1 8) <span class="org-haskell-operator">+</span> b0) 0 bytes
     121404708502361365413651784
 
@@ -1242,30 +1242,30 @@ This section will show how to parse the windows executable, PE32 executable.
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> (<span class="org-haskell-operator">|&gt;</span>) x f <span class="org-haskell-operator">=</span> f x
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">BL</span><span class="org-haskell-operator">.</span>readFile 
-<span class="org-function-name">BL.readFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">BL.ByteString</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t BL.readFile 
+<span class="org-function-name">BL.readFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">BL.ByteString</span>
 
-<span class="org-haskell-operator">&gt;</span> fdata <span class="org-haskell-operator">&lt;-</span> <span class="org-haskell-constructor">BL</span><span class="org-haskell-operator">.</span>readFile <span class="org-string">"notepad.exe"</span> 
+<span class="org-haskell-operator">&gt;</span> fdata <span class="org-haskell-operator">&lt;-</span> BL.readFile <span class="org-string">"notepad.exe"</span> 
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t fdata
-<span class="org-function-name">fdata</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">BL.ByteString</span>
+<span class="org-function-name">fdata</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">BL.ByteString</span>
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">BL</span><span class="org-haskell-operator">.</span>take 
-<span class="org-function-name">BL.take</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">GHC.Int.Int64</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">BL.ByteString</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">BL.ByteString</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t BL.take 
+<span class="org-function-name">BL.take</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">GHC.Int.Int64</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">BL.ByteString</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">BL.ByteString</span>
 
 
 <span class="org-comment-delimiter">{- </span><span class="org-comment">Read File Signare 2 bytes, always 0x5A4D OR ("MZ")</span>
 <span class="org-comment"> - </span>
 <span class="org-comment"> -}</span>
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">BL</span><span class="org-haskell-definition">.</span>take 2 fdata
+<span class="org-haskell-operator">&gt;</span> BL<span class="org-haskell-definition">.</span>take 2 fdata
 <span class="org-string">"MZ"</span>
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> toHex <span class="org-haskell-operator">::</span> [<span class="org-haskell-constructor">Word8</span>] <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-constructor">String</span>] <span class="org-haskell-operator">;</span>toHex <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Prelude</span><span class="org-haskell-operator">.</span>map ( (<span class="org-haskell-operator">\</span>n <span class="org-haskell-operator">-&gt;</span> showHex n <span class="org-string">""</span>) <span class="org-haskell-operator">.</span> (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> fromIntegral x <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Int</span>) )
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> toHex <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">Word8</span>] <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">String</span>] ;toHex <span class="org-haskell-operator">=</span> Prelude.map ( (<span class="org-haskell-operator">\</span>n <span class="org-haskell-operator">-&gt;</span> showHex n <span class="org-string">""</span>) <span class="org-haskell-operator">.</span> (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> fromIntegral x <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>) )
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span>  <span class="org-haskell-constructor">BL</span><span class="org-haskell-operator">.</span>take 2 fdata <span class="org-haskell-operator">|&gt;</span> <span class="org-haskell-constructor">BL</span><span class="org-haskell-operator">.</span>unpack <span class="org-haskell-operator">|&gt;</span> toHex 
-[<span class="org-string">"4d"</span><span class="org-haskell-operator">,</span><span class="org-string">"5a"</span>]
+<span class="org-haskell-operator">&gt;</span>  BL.take 2 fdata <span class="org-haskell-operator">|&gt;</span> BL.unpack <span class="org-haskell-operator">|&gt;</span> toHex 
+[<span class="org-string">"4d"</span>,<span class="org-string">"5a"</span>]
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-definition">read_dosHeader</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
@@ -1331,16 +1331,16 @@ COFF Header
 </p>
 
 <pre class="example">
- struct COFFHeader
- {
-    short Machine;
-    short NumberOfSections;
-    long TimeDateStamp;
-    long PointerToSymbolTable;
-    long NumberOfSymbols;
-    short SizeOfOptionalHeader;
-    short Characteristics;
- }
+struct COFFHeader
+{
+   short Machine;
+   short NumberOfSections;
+   long TimeDateStamp;
+   long PointerToSymbolTable;
+   long NumberOfSymbols;
+   short SizeOfOptionalHeader;
+   short Characteristics;
+}
 </pre>
 </div>
 </div>
@@ -1364,21 +1364,21 @@ Examples:
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Graphics.Gnuplot.Simple</span>
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">plotList</span> <span class="org-haskell-constructor">[]</span> [(1<span class="org-haskell-operator">,</span> 1)<span class="org-haskell-operator">,</span> (2<span class="org-haskell-operator">,</span> 2)<span class="org-haskell-operator">,</span> (3<span class="org-haskell-operator">,</span> 3)]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">plotList</span> <span class="org-haskell-constructor">[]</span> [(1, 1), (2, 2), (3, 3)]
 </pre>
 </div>
 
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Graphics.Gnuplot.Simple</span>
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">plotFunc</span> <span class="org-haskell-constructor">[]</span> (linearScale 1000 (<span class="org-haskell-operator">-</span>20<span class="org-haskell-operator">,</span>20)) (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> sin x <span class="org-haskell-operator">/</span> x)
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">plotFunc</span> <span class="org-haskell-constructor">[]</span> (linearScale 1000 (<span class="org-haskell-operator">-</span>20,20)) (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> sin x <span class="org-haskell-operator">/</span> x)
 </pre>
 </div>
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">plotList</span> [<span class="org-haskell-constructor">Title</span> <span class="org-string">"A title"</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">XLabel</span> <span class="org-string">"x label"</span>] [(2<span class="org-haskell-operator">,</span>10)<span class="org-haskell-operator">,</span>(3<span class="org-haskell-operator">,</span>15)<span class="org-haskell-operator">,</span>(4<span class="org-haskell-operator">,</span>14)<span class="org-haskell-operator">,</span>(5<span class="org-haskell-operator">,</span>19)]
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">plotList</span> [<span class="org-haskell-constructor">Title</span> <span class="org-string">"A title"</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">XLabel</span> <span class="org-string">"x label"</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">YLabel</span> <span class="org-string">"the y label"</span>] [(2<span class="org-haskell-operator">,</span>10)<span class="org-haskell-operator">,</span>(3<span class="org-haskell-operator">,</span>15)<span class="org-haskell-operator">,</span>(4<span class="org-haskell-operator">,</span>14)<span class="org-haskell-operator">,</span>(5<span class="org-haskell-operator">,</span>19)]
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">plotList</span> [<span class="org-haskell-constructor">Title</span> <span class="org-string">"A title"</span>, <span class="org-haskell-constructor">XLabel</span> <span class="org-string">"x label"</span>] [(2,10),(3,15),(4,14),(5,19)]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">plotList</span> [<span class="org-haskell-constructor">Title</span> <span class="org-string">"A title"</span>, <span class="org-haskell-constructor">XLabel</span> <span class="org-string">"x label"</span>, <span class="org-haskell-constructor">YLabel</span> <span class="org-string">"the y label"</span>] [(2,10),(3,15),(4,14),(5,19)]
 </pre>
 </div>
 
@@ -1400,8 +1400,8 @@ Examples:
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2016-03-24 Thu 05:53</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="date">Created: 2016-11-01 ter 01:38</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

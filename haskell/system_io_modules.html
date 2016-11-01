@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>System IO Modules</title>
-<!-- 2016-03-24 Thu 05:53 -->
+<!-- 2016-11-01 ter 01:18 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues" />
@@ -294,24 +294,24 @@ IOMode
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t putStrLn
-<span class="org-function-name">putStrLn</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-function-name">putStrLn</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">Bind operator</span>
 <span class="org-comment-delimiter">--</span>
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t (<span class="org-haskell-operator">&gt;&gt;=</span>)
-(<span class="org-haskell-definition">&gt;&gt;=</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Monad</span> m <span class="org-haskell-operator">=&gt;</span> m a <span class="org-haskell-operator">-&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> m b
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t (<span class="org-haskell-operator">&gt;&gt;=</span>)
+(<span class="org-haskell-definition">&gt;&gt;=</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> m a <span class="org-haskell-operator">-&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> m b
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">Reverse bind operator </span>
 <span class="org-comment-delimiter">-- </span>
 <span class="org-comment-delimiter">--</span>
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t (<span class="org-haskell-operator">=&lt;&lt;</span>)
-(<span class="org-haskell-definition">=&lt;&lt;</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> m a <span class="org-haskell-operator">-&gt;</span> m b
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t (<span class="org-haskell-operator">=&lt;&lt;</span>)
+(<span class="org-haskell-definition">=&lt;&lt;</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> m a <span class="org-haskell-operator">-&gt;</span> m b
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t readFile <span class="org-string">"/etc/lsb-release"</span> 
-<span class="org-haskell-definition">readFile</span> <span class="org-string">"/etc/lsb-release"</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">String</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t readFile <span class="org-string">"/etc/lsb-release"</span> 
+<span class="org-haskell-definition">readFile</span> <span class="org-string">"/etc/lsb-release"</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">String</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">readFile</span> <span class="org-string">"/etc/lsb-release"</span> 
 <span class="org-string">"DISTRIB_ID=Ubuntu\nDISTRIB_RELEASE=15.04 ..."</span>
@@ -337,10 +337,10 @@ IOMode
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">This code can be pasted in the repl.</span>
 <span class="org-comment-delimiter">--</span>
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> showFile3 fileName <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span> { content <span class="org-haskell-operator">&lt;-</span> readFile fileName <span class="org-haskell-operator">;</span> putStrLn content }
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> showFile3 fileName <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span> { content <span class="org-haskell-operator">&lt;-</span> readFile fileName ; putStrLn content }
 <span class="org-haskell-operator">&gt;</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t showFile3
-<span class="org-function-name">showFile3</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-function-name">showFile3</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">showFile</span> <span class="org-string">"/etc/lsb-release"</span>
 <span class="org-haskell-constructor">DISTRIB_ID</span><span class="org-haskell-operator">=</span><span class="org-haskell-constructor">Ubuntu</span>
@@ -373,42 +373,42 @@ IOMode
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">Type tab to list the module </span>
 <span class="org-comment-delimiter">--</span>
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">SIO</span><span class="org-haskell-definition">.</span>
+<span class="org-haskell-operator">&gt;</span> SIO<span class="org-haskell-definition">.</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-constructor">Display</span> all 106 possibilities<span class="org-haskell-operator">?</span> (y or n)
-<span class="org-haskell-constructor">SIO</span><span class="org-haskell-definition">.</span><span class="org-haskell-constructor">AbsoluteSeek</span>                              <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>hPutChar
-<span class="org-haskell-constructor">SIO</span><span class="org-haskell-definition">.</span><span class="org-haskell-constructor">AppendMode</span>                                <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>hPutStr
-<span class="org-haskell-constructor">SIO</span><span class="org-haskell-definition">.</span><span class="org-haskell-constructor">BlockBuffering</span>                            <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>hPutStrLn
-<span class="org-haskell-constructor">SIO</span><span class="org-haskell-definition">.</span><span class="org-haskell-constructor">BufferMode</span>                                <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>hReady
-<span class="org-haskell-constructor">SIO</span><span class="org-haskell-definition">.</span><span class="org-haskell-constructor">CRLF</span>                                      <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>hSeek
+SIO<span class="org-haskell-definition">.</span>AbsoluteSeek                              SIO.hPutChar
+SIO<span class="org-haskell-definition">.</span>AppendMode                                SIO.hPutStr
+SIO<span class="org-haskell-definition">.</span>BlockBuffering                            SIO.hPutStrLn
+SIO<span class="org-haskell-definition">.</span>BufferMode                                SIO.hReady
+SIO<span class="org-haskell-definition">.</span>CRLF                                      SIO.hSeek
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>readFile 
-<span class="org-function-name">SIO.readFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">String</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t SIO.readFile 
+<span class="org-function-name">SIO.readFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">String</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">File handler / File descriptor (Unix File descriptor)</span>
 <span class="org-comment-delimiter">-- </span>
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> fd <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>openFile <span class="org-string">"/etc/lsb-release"</span>  <span class="org-haskell-constructor">SIO.ReadMode</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> fd <span class="org-haskell-operator">=</span> SIO.openFile <span class="org-string">"/etc/lsb-release"</span>  <span class="org-haskell-constructor">SIO.ReadMode</span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>openFile 
-<span class="org-function-name">SIO.openFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">SIO.IOMode</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">SIO.Handle</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t SIO.openFile 
+<span class="org-function-name">SIO.openFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">SIO.IOMode</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">SIO.Handle</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> fd
 {handle<span class="org-haskell-constructor">:</span> <span class="org-haskell-operator">/</span>etc<span class="org-haskell-operator">/</span>lsb<span class="org-haskell-operator">-</span>release}
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t fd
-<span class="org-function-name">fd</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">SIO.Handle</span>
+<span class="org-function-name">fd</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">SIO.Handle</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">Return a line from file descritor </span>
 <span class="org-comment-delimiter">--</span>
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>hGetLine
-<span class="org-function-name">SIO.hGetLine</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">String</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t SIO.hGetLine
+<span class="org-function-name">SIO.hGetLine</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">String</span>
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> fd <span class="org-haskell-definition">&gt;&gt;=</span> <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>hGetLine 
+<span class="org-haskell-operator">&gt;</span> fd <span class="org-haskell-definition">&gt;&gt;=</span> SIO.hGetLine 
 <span class="org-string">"DISTRIB_ID=Ubuntu"</span>
-<span class="org-haskell-operator">&gt;</span> fd <span class="org-haskell-definition">&gt;&gt;=</span> <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>hGetLine 
+<span class="org-haskell-operator">&gt;</span> fd <span class="org-haskell-definition">&gt;&gt;=</span> SIO.hGetLine 
 <span class="org-string">"DISTRIB_ID=Ubuntu"</span>
 <span class="org-haskell-operator">&gt;</span>
 </pre>
@@ -424,12 +424,12 @@ IOMode
 <pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-keyword">qualified</span> <span class="org-haskell-constructor">System.IO</span> <span class="org-haskell-keyword">as</span> <span class="org-haskell-constructor">SIO</span> 
 
 <span class="org-haskell-definition">readThreeLines</span> fileName <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span> 
-  fd    <span class="org-haskell-operator">&lt;-</span> <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>openFile fileName <span class="org-haskell-constructor">SIO.ReadMode</span> 
-  line1 <span class="org-haskell-operator">&lt;-</span> <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>hGetLine fd     
-  line2 <span class="org-haskell-operator">&lt;-</span> <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>hGetLine fd 
-  line3 <span class="org-haskell-operator">&lt;-</span> <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>hGetLine fd 
-  <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>hClose fd 
-  return [line1<span class="org-haskell-operator">,</span> line2<span class="org-haskell-operator">,</span> line3]
+  fd    <span class="org-haskell-operator">&lt;-</span> SIO.openFile fileName <span class="org-haskell-constructor">SIO.ReadMode</span> 
+  line1 <span class="org-haskell-operator">&lt;-</span> SIO.hGetLine fd     
+  line2 <span class="org-haskell-operator">&lt;-</span> SIO.hGetLine fd 
+  line3 <span class="org-haskell-operator">&lt;-</span> SIO.hGetLine fd 
+  SIO.hClose fd 
+  return [line1, line2, line3]
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">--------------------------------</span>
 <span class="org-haskell-operator">-</span> <span class="org-comment-delimiter">--</span><span class="org-comment">-------------------------------</span>
@@ -437,10 +437,10 @@ IOMode
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>paste
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">readThreeLines</span> <span class="org-string">"/etc/lsb-release"</span>
-[<span class="org-string">"DISTRIB_ID=Ubuntu"</span><span class="org-haskell-operator">,</span><span class="org-string">"DISTRIB_RELEASE=15.04"</span><span class="org-haskell-operator">,</span><span class="org-string">"DISTRIB_CODENAME=vivid"</span>]
+[<span class="org-string">"DISTRIB_ID=Ubuntu"</span>,<span class="org-string">"DISTRIB_RELEASE=15.04"</span>,<span class="org-string">"DISTRIB_CODENAME=vivid"</span>]
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t readThreeLines <span class="org-string">"/etc/lsb-release"</span>
-<span class="org-haskell-definition">readThreeLines</span> <span class="org-string">"/etc/lsb-release"</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">IO</span> [<span class="org-haskell-constructor">String</span>]
+<span class="org-haskell-definition">readThreeLines</span> <span class="org-string">"/etc/lsb-release"</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> [<span class="org-haskell-type">String</span>]
 </pre>
 </div>
 </div>
@@ -454,17 +454,17 @@ IOMode
 <pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-keyword">qualified</span> <span class="org-haskell-constructor">System.IO</span> <span class="org-haskell-keyword">as</span> <span class="org-haskell-constructor">SIO</span> 
 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> fd <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>openFile <span class="org-string">"/etc/lsb-release"</span> <span class="org-haskell-constructor">SIO.ReadMode</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> fd <span class="org-haskell-operator">=</span> SIO.openFile <span class="org-string">"/etc/lsb-release"</span> <span class="org-haskell-constructor">SIO.ReadMode</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t fd
-<span class="org-function-name">fd</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">SIO.Handle</span>
+<span class="org-function-name">fd</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">SIO.Handle</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 
-<span class="org-haskell-operator">&gt;</span> fd <span class="org-haskell-definition">&gt;&gt;=</span> <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>hGetContents 
+<span class="org-haskell-operator">&gt;</span> fd <span class="org-haskell-definition">&gt;&gt;=</span> SIO.hGetContents 
 <span class="org-string">"DISTRIB_ID=Ubuntu\nDISTRIB_RELEASE=15.04\nDISTRIB_CODENAME ... ... "</span>
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> fd <span class="org-haskell-definition">&gt;&gt;=</span> <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>hGetContents <span class="org-haskell-operator">&gt;&gt;=</span> putStrLn
+<span class="org-haskell-operator">&gt;</span> fd <span class="org-haskell-definition">&gt;&gt;=</span> SIO.hGetContents <span class="org-haskell-operator">&gt;&gt;=</span> putStrLn
 <span class="org-haskell-constructor">DISTRIB_ID</span><span class="org-haskell-operator">=</span><span class="org-haskell-constructor">Ubuntu</span>
 <span class="org-haskell-constructor">DISTRIB_RELEASE</span><span class="org-haskell-operator">=</span>15.04
 <span class="org-haskell-constructor">DISTRIB_CODENAME</span><span class="org-haskell-operator">=</span>vivid
@@ -472,23 +472,23 @@ IOMode
 
 
 
-<span class="org-haskell-keyword">let</span> readLine fd <span class="org-haskell-operator">=</span>  <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>hGetLine fd <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>line <span class="org-haskell-operator">-&gt;</span> return (line<span class="org-haskell-operator">,</span> fd)
+<span class="org-haskell-keyword">let</span> readLine fd <span class="org-haskell-operator">=</span>  SIO.hGetLine fd <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>line <span class="org-haskell-operator">-&gt;</span> return (line, fd)
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t readLine 
-<span class="org-function-name">readLine</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> (<span class="org-haskell-constructor">String</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">SIO.Handle</span>)
+<span class="org-function-name">readLine</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">String</span>, <span class="org-haskell-type">SIO.Handle</span>)
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> fd <span class="org-haskell-definition">&gt;&gt;=</span> readLine 
-(<span class="org-string">"DISTRIB_ID=Ubuntu"</span><span class="org-haskell-operator">,</span>{handle<span class="org-haskell-constructor">:</span> <span class="org-haskell-operator">/</span>etc<span class="org-haskell-operator">/</span>lsb<span class="org-haskell-operator">-</span>release})
+(<span class="org-string">"DISTRIB_ID=Ubuntu"</span>,{handle<span class="org-haskell-constructor">:</span> <span class="org-haskell-operator">/</span>etc<span class="org-haskell-operator">/</span>lsb<span class="org-haskell-operator">-</span>release})
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> fd <span class="org-haskell-definition">&gt;&gt;=</span> readLine 
-(<span class="org-string">"DISTRIB_ID=Ubuntu"</span><span class="org-haskell-operator">,</span>{handle<span class="org-haskell-constructor">:</span> <span class="org-haskell-operator">/</span>etc<span class="org-haskell-operator">/</span>lsb<span class="org-haskell-operator">-</span>release})
+(<span class="org-string">"DISTRIB_ID=Ubuntu"</span>,{handle<span class="org-haskell-constructor">:</span> <span class="org-haskell-operator">/</span>etc<span class="org-haskell-operator">/</span>lsb<span class="org-haskell-operator">-</span>release})
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> readTwoLines fd <span class="org-haskell-operator">=</span> readLine fd <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>(line1<span class="org-haskell-operator">,</span> fd) <span class="org-haskell-operator">-&gt;</span> readLine fd <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>(line2<span class="org-haskell-operator">,</span> fd) <span class="org-haskell-operator">-&gt;</span> return ([line1<span class="org-haskell-operator">,</span> line2]<span class="org-haskell-operator">,</span> fd)
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> readTwoLines fd <span class="org-haskell-operator">=</span> readLine fd <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>(line1, fd) <span class="org-haskell-operator">-&gt;</span> readLine fd <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>(line2, fd) <span class="org-haskell-operator">-&gt;</span> return ([line1, line2], fd)
 
 <span class="org-haskell-operator">&gt;</span> fd <span class="org-haskell-definition">&gt;&gt;=</span> readTwoLines 
-([<span class="org-string">"DISTRIB_ID=Ubuntu"</span><span class="org-haskell-operator">,</span><span class="org-string">"DISTRIB_RELEASE=15.04"</span>]<span class="org-haskell-operator">,</span>{handle<span class="org-haskell-constructor">:</span> <span class="org-haskell-operator">/</span>etc<span class="org-haskell-operator">/</span>lsb<span class="org-haskell-operator">-</span>release})
+([<span class="org-string">"DISTRIB_ID=Ubuntu"</span>,<span class="org-string">"DISTRIB_RELEASE=15.04"</span>],{handle<span class="org-haskell-constructor">:</span> <span class="org-haskell-operator">/</span>etc<span class="org-haskell-operator">/</span>lsb<span class="org-haskell-operator">-</span>release})
 <span class="org-haskell-operator">&gt;</span>
 </pre>
 </div>
@@ -502,49 +502,49 @@ IOMode
 
 <pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-keyword">qualified</span> <span class="org-haskell-constructor">System.IO</span> <span class="org-haskell-keyword">as</span> <span class="org-haskell-constructor">SIO</span> 
 
-<span class="org-haskell-definition">fdtest</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>openFile <span class="org-string">"/etc/lsb-release"</span> <span class="org-haskell-constructor">SIO.ReadMode</span>
+<span class="org-haskell-definition">fdtest</span> <span class="org-haskell-operator">=</span> SIO.openFile <span class="org-string">"/etc/lsb-release"</span> <span class="org-haskell-constructor">SIO.ReadMode</span>
 
-<span class="org-function-name">readLineState</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> (<span class="org-haskell-constructor">String</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">SIO.Handle</span>)
+<span class="org-function-name">readLineState</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">String</span>, <span class="org-haskell-type">SIO.Handle</span>)
 <span class="org-haskell-definition">readLineState</span> fd <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span> 
-  line <span class="org-haskell-operator">&lt;-</span> <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>hGetLine fd 
-  return (line<span class="org-haskell-operator">,</span> fd)
+  line <span class="org-haskell-operator">&lt;-</span> SIO.hGetLine fd 
+  return (line, fd)
 
-<span class="org-function-name">readLinesAux</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-constructor">String</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> [<span class="org-haskell-constructor">String</span>] 
+<span class="org-function-name">readLinesAux</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">String</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> [<span class="org-haskell-type">String</span>] 
 <span class="org-haskell-definition">readLinesAux</span> fd lines <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
-   (lin<span class="org-haskell-operator">,</span> fdnext) <span class="org-haskell-operator">&lt;-</span> readLineState fd 
-   isEOF         <span class="org-haskell-operator">&lt;-</span> <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>hIsEOF fdnext
+   (lin, fdnext) <span class="org-haskell-operator">&lt;-</span> readLineState fd 
+   isEOF         <span class="org-haskell-operator">&lt;-</span> SIO.hIsEOF fdnext
    <span class="org-haskell-keyword">if</span> isEOF 
    <span class="org-haskell-keyword">then</span> return (reverse lines)
    <span class="org-haskell-keyword">else</span> readLinesAux fdnext (lin<span class="org-haskell-constructor">:</span>lines)
 
 
 
-<span class="org-function-name">readLines</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> [<span class="org-haskell-constructor">String</span>]
+<span class="org-function-name">readLines</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> [<span class="org-haskell-type">String</span>]
 <span class="org-haskell-definition">readLines</span> fd <span class="org-haskell-operator">=</span> readLinesAux fd <span class="org-haskell-constructor">[]</span>
 
-<span class="org-function-name">readLinesFromFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> [<span class="org-haskell-constructor">String</span>]
+<span class="org-function-name">readLinesFromFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> [<span class="org-haskell-type">String</span>]
 <span class="org-haskell-definition">readLinesFromFile</span> fileName <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span> 
-  handle    <span class="org-haskell-operator">&lt;-</span> <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>openFile fileName <span class="org-haskell-constructor">SIO.ReadMode</span> 
+  handle    <span class="org-haskell-operator">&lt;-</span> SIO.openFile fileName <span class="org-haskell-constructor">SIO.ReadMode</span> 
   lines     <span class="org-haskell-operator">&lt;-</span> readLines handle 
-  <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>hClose handle 
+  SIO.hClose handle 
   return  lines 
 
 
-<span class="org-function-name">makeReader</span>  <span class="org-haskell-operator">::</span> (<span class="org-haskell-constructor">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span>  <span class="org-haskell-constructor">IO</span> out) <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-constructor">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> (out<span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">SIO.Handle</span>))
+<span class="org-function-name">makeReader</span>  <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span>  <span class="org-haskell-type">IO</span> out) <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (out, <span class="org-haskell-type">SIO.Handle</span>))
 <span class="org-haskell-definition">makeReader</span> reader fd <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span> 
   out <span class="org-haskell-operator">&lt;-</span> reader fd 
-  return (out<span class="org-haskell-operator">,</span> fd)
-  
+  return (out, fd)
 
-<span class="org-function-name">applyFileReaderAux</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-constructor">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> (out<span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">SIO.Handle</span>)) <span class="org-haskell-operator">-&gt;</span>  <span class="org-haskell-constructor">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> [out] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> [out]
+
+<span class="org-function-name">applyFileReaderAux</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (out, <span class="org-haskell-type">SIO.Handle</span>)) <span class="org-haskell-operator">-&gt;</span>  <span class="org-haskell-type">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> [out] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> [out]
 <span class="org-haskell-definition">applyFileReaderAux</span> fileReader fd acc <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
-   (output<span class="org-haskell-operator">,</span> fdnext) <span class="org-haskell-operator">&lt;-</span> fileReader fd 
-   isEOF            <span class="org-haskell-operator">&lt;-</span> <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>hIsEOF fdnext 
+   (output, fdnext) <span class="org-haskell-operator">&lt;-</span> fileReader fd 
+   isEOF            <span class="org-haskell-operator">&lt;-</span> SIO.hIsEOF fdnext 
    <span class="org-haskell-keyword">if</span> isEOF 
    <span class="org-haskell-keyword">then</span> return (reverse acc)
    <span class="org-haskell-keyword">else</span> applyFileReaderAux fileReader fdnext (output<span class="org-haskell-constructor">:</span>acc)
 
-<span class="org-function-name">applyFileReader</span> <span class="org-haskell-operator">::</span>  (<span class="org-haskell-constructor">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> (out<span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">SIO.Handle</span>)) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> [out]
+<span class="org-function-name">applyFileReader</span> <span class="org-haskell-operator">::</span>  (<span class="org-haskell-type">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (out, <span class="org-haskell-type">SIO.Handle</span>)) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> [out]
 <span class="org-haskell-definition">applyFileReader</span> fileReader fd <span class="org-haskell-operator">=</span>   applyFileReaderAux fileReader fd <span class="org-haskell-constructor">[]</span>
 </pre>
 </div>
@@ -557,73 +557,73 @@ Repl tests:
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t fdtest 
-<span class="org-function-name">fdtest</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">SIO.Handle</span>
+<span class="org-function-name">fdtest</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">SIO.Handle</span>
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t readLineState 
-<span class="org-function-name">readLineState</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> (<span class="org-haskell-constructor">String</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">SIO.Handle</span>)
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t readLineState 
+<span class="org-function-name">readLineState</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">String</span>, <span class="org-haskell-type">SIO.Handle</span>)
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> fdtest <span class="org-haskell-definition">&gt;&gt;=</span> readLineState 
-(<span class="org-string">"DISTRIB_ID=Ubuntu"</span><span class="org-haskell-operator">,</span>{handle<span class="org-haskell-constructor">:</span> <span class="org-haskell-operator">/</span>etc<span class="org-haskell-operator">/</span>lsb<span class="org-haskell-operator">-</span>release})
+(<span class="org-string">"DISTRIB_ID=Ubuntu"</span>,{handle<span class="org-haskell-constructor">:</span> <span class="org-haskell-operator">/</span>etc<span class="org-haskell-operator">/</span>lsb<span class="org-haskell-operator">-</span>release})
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">readLineState</span> <span class="org-haskell-definition">=&lt;&lt;</span> fdtest
-(<span class="org-string">"DISTRIB_ID=Ubuntu"</span><span class="org-haskell-operator">,</span>{handle<span class="org-haskell-constructor">:</span> <span class="org-haskell-operator">/</span>etc<span class="org-haskell-operator">/</span>lsb<span class="org-haskell-operator">-</span>release})
+(<span class="org-string">"DISTRIB_ID=Ubuntu"</span>,{handle<span class="org-haskell-constructor">:</span> <span class="org-haskell-operator">/</span>etc<span class="org-haskell-operator">/</span>lsb<span class="org-haskell-operator">-</span>release})
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> fdtest <span class="org-haskell-definition">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>fd <span class="org-haskell-operator">-&gt;</span> readLinesAux fd <span class="org-haskell-constructor">[]</span>
-[<span class="org-string">"DISTRIB_ID=Ubuntu"</span><span class="org-haskell-operator">,</span><span class="org-string">"DISTRIB_RELEASE=15.04"</span><span class="org-haskell-operator">,</span><span class="org-string">"DISTRIB_CODENAME=vivid"</span>]
+[<span class="org-string">"DISTRIB_ID=Ubuntu"</span>,<span class="org-string">"DISTRIB_RELEASE=15.04"</span>,<span class="org-string">"DISTRIB_CODENAME=vivid"</span>]
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t fdtest <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>fd <span class="org-haskell-operator">-&gt;</span> readLinesAux fd <span class="org-haskell-constructor">[]</span>
-fdtest <span class="org-haskell-definition">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>fd <span class="org-haskell-operator">-&gt;</span> readLinesAux fd <span class="org-haskell-constructor">[]</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">IO</span> [<span class="org-haskell-constructor">String</span>]
+fdtest <span class="org-haskell-definition">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>fd <span class="org-haskell-operator">-&gt;</span> readLinesAux fd <span class="org-haskell-constructor">[]</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> [<span class="org-haskell-type">String</span>]
 <span class="org-haskell-operator">&gt;</span> 
 
 
 <span class="org-haskell-operator">&gt;</span> fdtest <span class="org-haskell-definition">&gt;&gt;=</span> readLines 
-[<span class="org-string">"DISTRIB_ID=Ubuntu"</span><span class="org-haskell-operator">,</span><span class="org-string">"DISTRIB_RELEASE=15.04"</span><span class="org-haskell-operator">,</span><span class="org-string">"DISTRIB_CODENAME=vivid"</span>]
+[<span class="org-string">"DISTRIB_ID=Ubuntu"</span>,<span class="org-string">"DISTRIB_RELEASE=15.04"</span>,<span class="org-string">"DISTRIB_CODENAME=vivid"</span>]
 <span class="org-haskell-operator">&gt;</span> 
 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">readLinesFromFile</span> <span class="org-string">"/etc/lsb-release"</span>
-[<span class="org-string">"DISTRIB_ID=Ubuntu"</span><span class="org-haskell-operator">,</span><span class="org-string">"DISTRIB_RELEASE=15.04"</span><span class="org-haskell-operator">,</span><span class="org-string">"DISTRIB_CODENAME=vivid"</span>]
+[<span class="org-string">"DISTRIB_ID=Ubuntu"</span>,<span class="org-string">"DISTRIB_RELEASE=15.04"</span>,<span class="org-string">"DISTRIB_CODENAME=vivid"</span>]
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>withFile
-<span class="org-haskell-constructor">SIO</span><span class="org-haskell-definition">.</span>withFile
-  <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">SIO.IOMode</span> <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-constructor">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> r) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> r
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t SIO.withFile
+SIO<span class="org-haskell-definition">.</span>withFile
+  <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">SIO.IOMode</span> <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> r) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> r
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">SIO</span><span class="org-haskell-definition">.</span>withFile <span class="org-string">"/etc/lsb-release"</span> <span class="org-haskell-constructor">SIO.ReadMode</span> readLines
-[<span class="org-string">"DISTRIB_ID=Ubuntu"</span><span class="org-haskell-operator">,</span><span class="org-string">"DISTRIB_RELEASE=15.04"</span><span class="org-haskell-operator">,</span><span class="org-string">"DISTRIB_CODENAME=vivid"</span>]
+<span class="org-haskell-operator">&gt;</span> SIO<span class="org-haskell-definition">.</span>withFile <span class="org-string">"/etc/lsb-release"</span> <span class="org-haskell-type">SIO.ReadMode</span> readLines
+[<span class="org-string">"DISTRIB_ID=Ubuntu"</span>,<span class="org-string">"DISTRIB_RELEASE=15.04"</span>,<span class="org-string">"DISTRIB_CODENAME=vivid"</span>]
 <span class="org-haskell-operator">&gt;</span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>withFile <span class="org-string">"/etc/lsb-release"</span> <span class="org-haskell-constructor">SIO.ReadMode</span> readLines
-<span class="org-haskell-constructor">SIO</span><span class="org-haskell-definition">.</span>withFile <span class="org-string">"/etc/lsb-release"</span> <span class="org-haskell-constructor">SIO.ReadMode</span> readLines
-  <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">IO</span> [<span class="org-haskell-constructor">String</span>]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t SIO.withFile <span class="org-string">"/etc/lsb-release"</span> <span class="org-haskell-constructor">SIO.ReadMode</span> readLines
+SIO<span class="org-haskell-definition">.</span>withFile <span class="org-string">"/etc/lsb-release"</span> <span class="org-haskell-constructor">SIO.ReadMode</span> readLines
+  <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> [<span class="org-haskell-type">String</span>]
 
 
  <span class="org-comment-delimiter">-- </span><span class="org-comment">------------------------</span>
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> fd <span class="org-haskell-operator">&lt;-</span> <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>openFile <span class="org-string">"/etc/lsb-release"</span> <span class="org-haskell-constructor">SIO.ReadMode</span>
+<span class="org-haskell-operator">&gt;</span> fd <span class="org-haskell-operator">&lt;-</span> SIO.openFile <span class="org-string">"/etc/lsb-release"</span> <span class="org-haskell-constructor">SIO.ReadMode</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t fd
-<span class="org-function-name">fd</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">SIO.Handle</span>
+<span class="org-function-name">fd</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">SIO.Handle</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> fd
 {handle<span class="org-haskell-constructor">:</span> <span class="org-haskell-operator">/</span>etc<span class="org-haskell-operator">/</span>lsb<span class="org-haskell-operator">-</span>release}
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t readLineState 
-<span class="org-function-name">readLineState</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> (<span class="org-haskell-constructor">String</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">SIO.Handle</span>)
+<span class="org-function-name">readLineState</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">String</span>, <span class="org-haskell-type">SIO.Handle</span>)
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">applyFileReaderAux</span> readLineState fd <span class="org-haskell-constructor">[]</span>
-[<span class="org-string">"DISTRIB_ID=Ubuntu"</span><span class="org-haskell-operator">,</span><span class="org-string">"DISTRIB_RELEASE=15.04"</span><span class="org-haskell-operator">,</span><span class="org-string">"DISTRIB_CODENAME=vivid"</span>]
+[<span class="org-string">"DISTRIB_ID=Ubuntu"</span>,<span class="org-string">"DISTRIB_RELEASE=15.04"</span>,<span class="org-string">"DISTRIB_CODENAME=vivid"</span>]
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> charReader <span class="org-haskell-operator">=</span> makeReader <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>hGetChar 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> charReader <span class="org-haskell-operator">=</span> makeReader SIO.hGetChar 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t charReader 
-<span class="org-function-name">charReader</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> (<span class="org-haskell-constructor">Char</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">SIO.Handle</span>)
+<span class="org-function-name">charReader</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">SIO.Handle</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Char</span>, <span class="org-haskell-type">SIO.Handle</span>)
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">applyFileReader</span> charReader fd
@@ -631,11 +631,11 @@ fdtest <span class="org-haskell-definition">&gt;&gt;=</span> <span class="org-ha
 <span class="org-haskell-operator">&gt;</span> 
 
 
-<span class="org-haskell-operator">&gt;</span> fd <span class="org-haskell-operator">&lt;-</span> <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>openFile <span class="org-string">"/etc/lsb-release"</span> <span class="org-haskell-constructor">SIO.ReadMode</span>
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">applyFileReader</span> (makeReader <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>hGetLine) fd
-[<span class="org-string">"DISTRIB_ID=Ubuntu"</span><span class="org-haskell-operator">,</span><span class="org-string">"DISTRIB_RELEASE=15.04"</span><span class="org-haskell-operator">,</span><span class="org-string">"DISTRIB_CODENAME=vivid"</span>]
+<span class="org-haskell-operator">&gt;</span> fd <span class="org-haskell-operator">&lt;-</span> SIO.openFile <span class="org-string">"/etc/lsb-release"</span> <span class="org-haskell-constructor">SIO.ReadMode</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">applyFileReader</span> (makeReader SIO.hGetLine) fd
+[<span class="org-string">"DISTRIB_ID=Ubuntu"</span>,<span class="org-string">"DISTRIB_RELEASE=15.04"</span>,<span class="org-string">"DISTRIB_CODENAME=vivid"</span>]
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">applyFileReader</span> (makeReader <span class="org-haskell-constructor">SIO</span><span class="org-haskell-operator">.</span>hGetLine) fd
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">applyFileReader</span> (makeReader SIO.hGetLine) fd
  <span class="org-haskell-operator">***</span> <span class="org-haskell-constructor">Exception:</span> <span class="org-haskell-operator">/</span>etc<span class="org-haskell-operator">/</span>lsb<span class="org-haskell-operator">-</span>release<span class="org-haskell-constructor">:</span> hGetLine<span class="org-haskell-constructor">:</span> end <span class="org-haskell-keyword">of</span> file
 <span class="org-haskell-operator">&gt;</span>
 </pre>
@@ -664,20 +664,20 @@ Miscellaneous information about the system environment.
 <span class="org-comment-delimiter">--  </span><span class="org-comment">(not including the program name).</span>
 <span class="org-comment-delimiter">-- </span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">E</span><span class="org-haskell-definition">.</span>getArgs 
+<span class="org-haskell-operator">&gt;</span> E<span class="org-haskell-definition">.</span>getArgs 
 <span class="org-haskell-constructor">[]</span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">E</span><span class="org-haskell-operator">.</span>getArgs 
-<span class="org-function-name">E.getArgs</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">IO</span> [<span class="org-haskell-constructor">String</span>]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t E.getArgs 
+<span class="org-function-name">E.getArgs</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> [<span class="org-haskell-type">String</span>]
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">Computation getProgName returns the name of the program as it was invoked.</span>
 <span class="org-comment-delimiter">--</span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">E</span><span class="org-haskell-operator">.</span>getProgName 
-<span class="org-function-name">E.getProgName</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">String</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t E.getProgName 
+<span class="org-function-name">E.getProgName</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">String</span>
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">E</span><span class="org-haskell-definition">.</span>getProgName 
+<span class="org-haskell-operator">&gt;</span> E<span class="org-haskell-definition">.</span>getProgName 
 <span class="org-string">"&lt;interactive&gt;"</span>
 <span class="org-haskell-operator">&gt;</span> 
 
@@ -687,17 +687,17 @@ Miscellaneous information about the system environment.
 <span class="org-comment-delimiter">-- </span><span class="org-comment">the path to the interpreter (e.g. ghci.)</span>
 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">E</span><span class="org-haskell-operator">.</span>getExecutablePath 
-<span class="org-function-name">E.getExecutablePath</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">FilePath</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t E.getExecutablePath 
+<span class="org-function-name">E.getExecutablePath</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">FilePath</span>
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">E</span><span class="org-haskell-definition">.</span>getExecutablePath 
+<span class="org-haskell-operator">&gt;</span> E<span class="org-haskell-definition">.</span>getExecutablePath 
 <span class="org-string">"/usr/lib/ghc/lib/ghc"</span>
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> path <span class="org-haskell-operator">&lt;-</span> <span class="org-haskell-constructor">E</span><span class="org-haskell-operator">.</span>getExecutablePath 
+<span class="org-haskell-operator">&gt;</span> path <span class="org-haskell-operator">&lt;-</span> E.getExecutablePath 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t path
-<span class="org-function-name">path</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">FilePath</span>
+<span class="org-function-name">path</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span>
 <span class="org-haskell-operator">&gt;</span> path
 <span class="org-string">"/usr/lib/ghc/lib/ghc"</span>
 <span class="org-haskell-operator">&gt;</span> 
@@ -707,18 +707,18 @@ Miscellaneous information about the system environment.
 <span class="org-comment-delimiter">--</span>
 <span class="org-comment-delimiter">-- </span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">E</span><span class="org-haskell-operator">.</span>getEnv
-<span class="org-function-name">E.getEnv</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">String</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t E.getEnv
+<span class="org-function-name">E.getEnv</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">String</span>
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">E</span><span class="org-haskell-definition">.</span>getEnv <span class="org-string">"HOME"</span>
+<span class="org-haskell-operator">&gt;</span> E<span class="org-haskell-definition">.</span>getEnv <span class="org-string">"HOME"</span>
 <span class="org-string">"/home/tux"</span>
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">E</span><span class="org-haskell-definition">.</span>getEnv <span class="org-string">"PATH"</span>
+<span class="org-haskell-operator">&gt;</span> E<span class="org-haskell-definition">.</span>getEnv <span class="org-string">"PATH"</span>
 <span class="org-string">"/home/tux/.cask/bin:/opt/bin:/home/tux/.opam/4.02.1/bin:/home/tux/bin ..."</span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">E</span><span class="org-haskell-definition">.</span>getEnv <span class="org-string">"DONTEXISTS"</span>
+<span class="org-haskell-operator">&gt;</span> E<span class="org-haskell-definition">.</span>getEnv <span class="org-string">"DONTEXISTS"</span>
  <span class="org-haskell-operator">***</span> <span class="org-haskell-constructor">Exception:</span> <span class="org-haskell-constructor">DONTEXISTS:</span> getEnv<span class="org-haskell-constructor">:</span> does not exist (no environment variable)
 <span class="org-haskell-operator">&gt;</span> 
 
@@ -726,47 +726,47 @@ Miscellaneous information about the system environment.
 <span class="org-comment-delimiter">--  </span><span class="org-comment">or Nothing if there is no such value.</span>
 <span class="org-comment-delimiter">--</span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">E</span><span class="org-haskell-operator">.</span>lookupEnv 
-<span class="org-function-name">E.lookupEnv</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> (<span class="org-haskell-constructor">Maybe</span> <span class="org-haskell-constructor">String</span>)
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t E.lookupEnv 
+<span class="org-function-name">E.lookupEnv</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">String</span>)
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">E</span><span class="org-haskell-definition">.</span>lookupEnv <span class="org-string">"JDK_HOME"</span>
+<span class="org-haskell-operator">&gt;</span> E<span class="org-haskell-definition">.</span>lookupEnv <span class="org-string">"JDK_HOME"</span>
 <span class="org-haskell-constructor">Just</span> <span class="org-string">"/opt/java"</span>
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">E</span><span class="org-haskell-definition">.</span>lookupEnv <span class="org-string">"JDK_HOMEasdasd"</span>
+<span class="org-haskell-operator">&gt;</span> E<span class="org-haskell-definition">.</span>lookupEnv <span class="org-string">"JDK_HOMEasdasd"</span>
 <span class="org-haskell-constructor">Nothing</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">getEnvironment retrieves the entire environment as a list of (key,value) pairs.</span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">E</span><span class="org-haskell-operator">.</span>getEnvironment 
-<span class="org-function-name">E.getEnvironment</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">IO</span> [(<span class="org-haskell-constructor">String</span><span class="org-haskell-operator">,</span> <span class="org-haskell-constructor">String</span>)]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t E.getEnvironment 
+<span class="org-function-name">E.getEnvironment</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> [(<span class="org-haskell-type">String</span>, <span class="org-haskell-type">String</span>)]
 <span class="org-haskell-operator">&gt;</span> 
 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">E</span><span class="org-haskell-definition">.</span>getEnvironment <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>lst <span class="org-haskell-operator">-&gt;</span> return (take 10 lst)
-[(<span class="org-string">"USER"</span><span class="org-haskell-operator">,</span><span class="org-string">"tux"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"LANGUAGE"</span><span class="org-haskell-operator">,</span><span class="org-string">"en_US"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"LC_TIME"</span><span class="org-haskell-operator">,</span><span class="org-string">"pt_BR.UTF-8"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"COMP_WORDBREAKS"</span><span class="org-haskell-operator">,</span><span class="org-string">" \t\n\"'&gt;&lt;;|&amp;(:"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"XDG_SEAT"</span><span class="org-haskell-operator">,</span><span class="org-string">"seat0"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"SSH_AGENT_PID"</span><span class="org-haskell-operator">,</span><span class="org-string">"15614"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"XDG_SESSION_TYPE"</span><span class="org-haskell-operator">,</span><span class="org-string">"x11"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"SHLVL"</span><span class="org-haskell-operator">,</span><span class="org-string">"1"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"HOME"</span><span class="org-haskell-operator">,</span><span class="org-string">"/home/tux"</span>)<span class="org-haskell-operator">,</span>(<span class="org-string">"QT4_IM_MODULE"</span><span class="org-haskell-operator">,</span><span class="org-string">"xim"</span>)]
+<span class="org-haskell-operator">&gt;</span> E<span class="org-haskell-definition">.</span>getEnvironment <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>lst <span class="org-haskell-operator">-&gt;</span> return (take 10 lst)
+[(<span class="org-string">"USER"</span>,<span class="org-string">"tux"</span>),(<span class="org-string">"LANGUAGE"</span>,<span class="org-string">"en_US"</span>),(<span class="org-string">"LC_TIME"</span>,<span class="org-string">"pt_BR.UTF-8"</span>),(<span class="org-string">"COMP_WORDBREAKS"</span>,<span class="org-string">" \t\n\"'&gt;&lt;;|&amp;(:"</span>),(<span class="org-string">"XDG_SEAT"</span>,<span class="org-string">"seat0"</span>),(<span class="org-string">"SSH_AGENT_PID"</span>,<span class="org-string">"15614"</span>),(<span class="org-string">"XDG_SESSION_TYPE"</span>,<span class="org-string">"x11"</span>),(<span class="org-string">"SHLVL"</span>,<span class="org-string">"1"</span>),(<span class="org-string">"HOME"</span>,<span class="org-string">"/home/tux"</span>),(<span class="org-string">"QT4_IM_MODULE"</span>,<span class="org-string">"xim"</span>)]
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t mapM_
-<span class="org-function-name">mapM_</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> m <span class="org-haskell-constructor">()</span>
+<span class="org-function-name">mapM_</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> m <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">E</span><span class="org-haskell-operator">.</span>getEnvironment <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>rows <span class="org-haskell-operator">-&gt;</span>  mapM_ (<span class="org-haskell-operator">\</span>row <span class="org-haskell-operator">-&gt;</span> putStrLn (show row)) rows
-<span class="org-haskell-constructor">E</span><span class="org-haskell-definition">.</span>getEnvironment <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>rows <span class="org-haskell-operator">-&gt;</span>  mapM_ (<span class="org-haskell-operator">\</span>row <span class="org-haskell-operator">-&gt;</span> putStrLn (show row)) rows
-  <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t E.getEnvironment <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>rows <span class="org-haskell-operator">-&gt;</span>  mapM_ (<span class="org-haskell-operator">\</span>row <span class="org-haskell-operator">-&gt;</span> putStrLn (show row)) rows
+E<span class="org-haskell-definition">.</span>getEnvironment <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>rows <span class="org-haskell-operator">-&gt;</span>  mapM_ (<span class="org-haskell-operator">\</span>row <span class="org-haskell-operator">-&gt;</span> putStrLn (show row)) rows
+  <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">E</span><span class="org-haskell-definition">.</span>getEnvironment <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>rows <span class="org-haskell-operator">-&gt;</span>  mapM_ (<span class="org-haskell-operator">\</span>row <span class="org-haskell-operator">-&gt;</span> putStrLn (show row)) rows
+<span class="org-haskell-operator">&gt;</span> E<span class="org-haskell-definition">.</span>getEnvironment <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>rows <span class="org-haskell-operator">-&gt;</span>  mapM_ (<span class="org-haskell-operator">\</span>row <span class="org-haskell-operator">-&gt;</span> putStrLn (show row)) rows
 
-(<span class="org-string">"USER"</span><span class="org-haskell-operator">,</span><span class="org-string">"tux"</span>)
-(<span class="org-string">"LANGUAGE"</span><span class="org-haskell-operator">,</span><span class="org-string">"en_US"</span>)
-(<span class="org-string">"LC_TIME"</span><span class="org-haskell-operator">,</span><span class="org-string">"pt_BR.UTF-8"</span>)
-(<span class="org-string">"XDG_SEAT"</span><span class="org-haskell-operator">,</span><span class="org-string">"seat0"</span>)
-(<span class="org-string">"SSH_AGENT_PID"</span><span class="org-haskell-operator">,</span><span class="org-string">"15614"</span>)
-(<span class="org-string">"XDG_SESSION_TYPE"</span><span class="org-haskell-operator">,</span><span class="org-string">"x11"</span>)
-(<span class="org-string">"SHLVL"</span><span class="org-haskell-operator">,</span><span class="org-string">"1"</span>)
+(<span class="org-string">"USER"</span>,<span class="org-string">"tux"</span>)
+(<span class="org-string">"LANGUAGE"</span>,<span class="org-string">"en_US"</span>)
+(<span class="org-string">"LC_TIME"</span>,<span class="org-string">"pt_BR.UTF-8"</span>)
+(<span class="org-string">"XDG_SEAT"</span>,<span class="org-string">"seat0"</span>)
+(<span class="org-string">"SSH_AGENT_PID"</span>,<span class="org-string">"15614"</span>)
+(<span class="org-string">"XDG_SESSION_TYPE"</span>,<span class="org-string">"x11"</span>)
+(<span class="org-string">"SHLVL"</span>,<span class="org-string">"1"</span>)
 <span class="org-haskell-operator">...</span>
 </pre>
 </div>
@@ -791,82 +791,82 @@ Miscellaneous information about the system environment.
 <span class="org-comment-delimiter">-- </span><span class="org-comment">empty, or as near to empty as the operating system allows.</span>
 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>createDirectory <span class="org-string">"/tmp/testdir"</span>
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>createDirectory <span class="org-string">"/tmp/testdir"</span>
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>createDirectory <span class="org-string">"/tmp/testdir"</span>
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>createDirectory <span class="org-string">"/tmp/testdir"</span>
  <span class="org-haskell-operator">***</span> <span class="org-haskell-constructor">Exception:</span> <span class="org-haskell-operator">/</span>tmp<span class="org-haskell-operator">/</span>testdir<span class="org-haskell-constructor">:</span> createDirectory<span class="org-haskell-constructor">:</span> already exists (<span class="org-haskell-constructor">File</span> exists)
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-comment-delimiter">{-</span>
 <span class="org-comment">createDirectoryIfMissing Source</span>
-<span class="org-comment">  :: Bool        Create its parents too?</span>
+<span class="org-comment">  :: Bool    Create its parents too?</span>
 <span class="org-comment">  -&gt; FilePath    The path to the directory you want to make</span>
 <span class="org-comment">  -&gt; IO ()</span>
 
 <span class="org-comment">-}</span>
 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>createDirectoryIfMissing <span class="org-haskell-constructor">True</span> <span class="org-string">"/tmp/tree1/1/2/3/4"</span>
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>createDirectoryIfMissing <span class="org-haskell-constructor">True</span> <span class="org-string">"/tmp/tree1/1/2/3/4"</span>
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>createDirectoryIfMissing <span class="org-haskell-constructor">True</span> <span class="org-string">"/tmp/tree1/1/2/3/4"</span>
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>createDirectoryIfMissing <span class="org-haskell-constructor">True</span> <span class="org-string">"/tmp/tree1/1/2/3/4"</span>
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>createDirectoryIfMissing <span class="org-haskell-constructor">True</span> <span class="org-string">"/tree1/1/2/3/4"</span>
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>createDirectoryIfMissing <span class="org-haskell-constructor">True</span> <span class="org-string">"/tree1/1/2/3/4"</span>
  <span class="org-haskell-operator">***</span> <span class="org-haskell-constructor">Exception:</span> <span class="org-haskell-operator">/</span>tree1<span class="org-haskell-constructor">:</span> createDirectory<span class="org-haskell-constructor">:</span> permission denied (<span class="org-haskell-constructor">Permission</span> denied)
 <span class="org-haskell-operator">&gt;</span> 
 
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">removeDirectory dir removes an existing directory dir. </span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>removeDirectory <span class="org-string">"/tmp/testdir"</span>
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>removeDirectory <span class="org-string">"/tmp/testdir"</span>
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>removeDirectory <span class="org-string">"/tmp/testdir"</span>
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>removeDirectory <span class="org-string">"/tmp/testdir"</span>
  <span class="org-haskell-operator">***</span> <span class="org-haskell-constructor">Exception:</span> <span class="org-haskell-operator">/</span>tmp<span class="org-haskell-operator">/</span>testdir<span class="org-haskell-constructor">:</span> removeDirectory<span class="org-haskell-constructor">:</span> does not exist (<span class="org-haskell-constructor">No</span> such file or directory)
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-comment-delimiter">--  </span><span class="org-comment">Similar to listDirectory, but always includes the special entries</span>
 <span class="org-comment-delimiter">--  </span><span class="org-comment">(. and ..). (This applies to Windows as well.)</span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">.</span>getDirectoryContents <span class="org-string">"/boot"</span> 
-<span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>getDirectoryContents <span class="org-string">"/boot"</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">IO</span> [<span class="org-haskell-constructor">FilePath</span>]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t D.getDirectoryContents <span class="org-string">"/boot"</span> 
+D<span class="org-haskell-definition">.</span>getDirectoryContents <span class="org-string">"/boot"</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> [<span class="org-haskell-type">FilePath</span>]
 <span class="org-haskell-operator">&gt;</span> 
 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">fmap</span> (take 2) (<span class="org-haskell-constructor">D</span><span class="org-haskell-operator">.</span>getDirectoryContents <span class="org-string">"/boot"</span> )
-[<span class="org-string">"initrd.img-3.19.0-37-generic"</span><span class="org-haskell-operator">,</span><span class="org-string">"config-3.19.0-21-generic"</span>]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">fmap</span> (take 2) (D.getDirectoryContents <span class="org-string">"/boot"</span> )
+[<span class="org-string">"initrd.img-3.19.0-37-generic"</span>,<span class="org-string">"config-3.19.0-21-generic"</span>]
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">take</span> 2 <span class="org-haskell-operator">&lt;$&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">.</span>getDirectoryContents <span class="org-string">"/boot"</span> 
-[<span class="org-string">"initrd.img-3.19.0-37-generic"</span><span class="org-haskell-operator">,</span><span class="org-string">"config-3.19.0-21-generic"</span>]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">take</span> 2 <span class="org-haskell-operator">&lt;$&gt;</span> D.getDirectoryContents <span class="org-string">"/boot"</span> 
+[<span class="org-string">"initrd.img-3.19.0-37-generic"</span>,<span class="org-string">"config-3.19.0-21-generic"</span>]
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>getDirectoryContents <span class="org-string">"/boot"</span> <span class="org-haskell-operator">&gt;&gt;=</span> mapM_ putStrLn
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>getDirectoryContents <span class="org-string">"/boot"</span> <span class="org-haskell-operator">&gt;&gt;=</span> mapM_ putStrLn
 initrd<span class="org-haskell-definition">.</span>img<span class="org-haskell-operator">-</span>3.19<span class="org-haskell-operator">.</span>0<span class="org-haskell-operator">-</span>37<span class="org-haskell-operator">-</span>generic
 config<span class="org-haskell-definition">-</span>3.19<span class="org-haskell-operator">.</span>0<span class="org-haskell-operator">-</span>21<span class="org-haskell-operator">-</span>generic
-<span class="org-haskell-constructor">System</span><span class="org-haskell-definition">.</span>map<span class="org-haskell-operator">-</span>3.19<span class="org-haskell-operator">.</span>0<span class="org-haskell-operator">-</span>39<span class="org-haskell-operator">-</span>generic
+System<span class="org-haskell-definition">.</span>map<span class="org-haskell-operator">-</span>3.19<span class="org-haskell-operator">.</span>0<span class="org-haskell-operator">-</span>39<span class="org-haskell-operator">-</span>generic
 abi<span class="org-haskell-definition">-</span>3.19<span class="org-haskell-operator">.</span>0<span class="org-haskell-operator">-</span>18<span class="org-haskell-operator">-</span>generic
 <span class="org-haskell-operator">...</span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>getDirectoryContents <span class="org-string">"/boot"</span> <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>rows <span class="org-haskell-operator">-&gt;</span> return (take 10 rows) <span class="org-haskell-operator">&gt;&gt;=</span> mapM_ putStrLn
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>getDirectoryContents <span class="org-string">"/boot"</span> <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>rows <span class="org-haskell-operator">-&gt;</span> return (take 10 rows) <span class="org-haskell-operator">&gt;&gt;=</span> mapM_ putStrLn
 initrd<span class="org-haskell-definition">.</span>img<span class="org-haskell-operator">-</span>3.19<span class="org-haskell-operator">.</span>0<span class="org-haskell-operator">-</span>37<span class="org-haskell-operator">-</span>generic
 config<span class="org-haskell-definition">-</span>3.19<span class="org-haskell-operator">.</span>0<span class="org-haskell-operator">-</span>21<span class="org-haskell-operator">-</span>generic
-<span class="org-haskell-constructor">System</span><span class="org-haskell-definition">.</span>map<span class="org-haskell-operator">-</span>3.19<span class="org-haskell-operator">.</span>0<span class="org-haskell-operator">-</span>39<span class="org-haskell-operator">-</span>generic
+System<span class="org-haskell-definition">.</span>map<span class="org-haskell-operator">-</span>3.19<span class="org-haskell-operator">.</span>0<span class="org-haskell-operator">-</span>39<span class="org-haskell-operator">-</span>generic
 <span class="org-haskell-operator">...</span> 
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> displayDir path <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">.</span>getDirectoryContents path <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>rows <span class="org-haskell-operator">-&gt;</span> return (take 10 rows) <span class="org-haskell-operator">&gt;&gt;=</span> mapM_ putStrLn
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> displayDir path <span class="org-haskell-operator">=</span> D.getDirectoryContents path <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>rows <span class="org-haskell-operator">-&gt;</span> return (take 10 rows) <span class="org-haskell-operator">&gt;&gt;=</span> mapM_ putStrLn
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">displayDir</span> <span class="org-string">"/boot"</span>
 initrd<span class="org-haskell-definition">.</span>img<span class="org-haskell-operator">-</span>3.19<span class="org-haskell-operator">.</span>0<span class="org-haskell-operator">-</span>37<span class="org-haskell-operator">-</span>generic
 config<span class="org-haskell-definition">-</span>3.19<span class="org-haskell-operator">.</span>0<span class="org-haskell-operator">-</span>21<span class="org-haskell-operator">-</span>generic
-<span class="org-haskell-constructor">System</span><span class="org-haskell-definition">.</span>map<span class="org-haskell-operator">-</span>3.19<span class="org-haskell-operator">.</span>0<span class="org-haskell-operator">-</span>39<span class="org-haskell-operator">-</span>generic
+System<span class="org-haskell-definition">.</span>map<span class="org-haskell-operator">-</span>3.19<span class="org-haskell-operator">.</span>0<span class="org-haskell-operator">-</span>39<span class="org-haskell-operator">-</span>generic
 <span class="org-haskell-operator">...</span>
 
 
 <span class="org-comment-delimiter">--  </span><span class="org-comment">Obtain the current working directory as an absolute path.</span>
 <span class="org-comment-delimiter">--</span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">.</span>getCurrentDirectory 
-<span class="org-function-name">D.getCurrentDirectory</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">FilePath</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t D.getCurrentDirectory 
+<span class="org-function-name">D.getCurrentDirectory</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">FilePath</span>
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>getCurrentDirectory 
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>getCurrentDirectory 
 <span class="org-string">"/home/tux"</span>
 <span class="org-haskell-operator">&gt;</span> 
 
@@ -874,21 +874,21 @@ config<span class="org-haskell-definition">-</span>3.19<span class="org-haskell-
 <span class="org-comment-delimiter">-- </span><span class="org-comment">Change the working directory to the given path.</span>
 <span class="org-comment-delimiter">--</span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">.</span>setCurrentDirectory 
-<span class="org-function-name">D.setCurrentDirectory</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t D.setCurrentDirectory 
+<span class="org-function-name">D.setCurrentDirectory</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-comment-delimiter">--  </span><span class="org-comment">Returns the current user's home direct</span>
 <span class="org-comment-delimiter">-- </span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>getHomeDirectory 
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>getHomeDirectory 
 <span class="org-string">"/home/tux"</span>
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>getUserDocumentsDirectory 
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>getUserDocumentsDirectory 
 <span class="org-string">"/home/tux"</span>
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>getTemporaryDirectory 
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>getTemporaryDirectory 
 <span class="org-string">"/tmp"</span>
 <span class="org-haskell-operator">&gt;</span> 
 
@@ -898,11 +898,11 @@ config<span class="org-haskell-definition">-</span>3.19<span class="org-haskell-
 <span class="org-comment-delimiter">--  </span><span class="org-comment">file. Neither path may refer to an existing directory. The</span>
 <span class="org-comment-delimiter">--  </span><span class="org-comment">permissions of old are copied to new, if possible.  </span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">.</span>copyFile
-<span class="org-function-name">D.copyFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">()</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t D.copyFile
+<span class="org-function-name">D.copyFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span> 
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>copyFile <span class="org-string">"/etc/lsb-release"</span> <span class="org-string">"/tmp/test.txt"</span> 
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>copyFile <span class="org-string">"/etc/lsb-release"</span> <span class="org-string">"/tmp/test.txt"</span> 
 <span class="org-haskell-operator">&gt;</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">readFile</span> <span class="org-string">"/tmp/test.txt"</span> <span class="org-haskell-operator">&gt;&gt;=</span> putStrLn
 <span class="org-haskell-constructor">DISTRIB_ID</span><span class="org-haskell-operator">=</span><span class="org-haskell-constructor">Ubuntu</span>
@@ -918,13 +918,13 @@ config<span class="org-haskell-definition">-</span>3.19<span class="org-haskell-
 
 <span class="org-comment">-}</span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">.</span>removeFile
-<span class="org-function-name">D.removeFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t D.removeFile
+<span class="org-function-name">D.removeFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>removeFile <span class="org-string">"/tmp/test.txt"</span>
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>removeFile <span class="org-string">"/tmp/test.txt"</span>
- <span class="org-haskell-operator">***</span> <span class="org-haskell-constructor">Exception:</span> <span class="org-haskell-operator">/</span>tmp<span class="org-haskell-operator">/</span>test<span class="org-haskell-operator">.</span>txt<span class="org-haskell-constructor">:</span> removeLink<span class="org-haskell-constructor">:</span> does not exist (<span class="org-haskell-constructor">No</span> such file or directory)
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>removeFile <span class="org-string">"/tmp/test.txt"</span>
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>removeFile <span class="org-string">"/tmp/test.txt"</span>
+ <span class="org-haskell-operator">***</span> <span class="org-haskell-type">Exception:</span> <span class="org-haskell-operator">/</span>tmp<span class="org-haskell-operator">/</span>test<span class="org-haskell-operator">.</span>txt<span class="org-haskell-type">:</span> removeLink<span class="org-haskell-type">:</span> does not exist (<span class="org-haskell-type">No</span> such file or directory)
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-comment-delimiter">{-</span>
@@ -936,12 +936,12 @@ config<span class="org-haskell-definition">-</span>3.19<span class="org-haskell-
 
 <span class="org-comment">-}</span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>findExecutable <span class="org-string">"java"</span>
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>findExecutable <span class="org-string">"java"</span>
 <span class="org-haskell-constructor">Just</span> <span class="org-string">"/opt/bin/java"</span>
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>findExecutable <span class="org-string">"javac"</span>
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>findExecutable <span class="org-string">"javac"</span>
 <span class="org-haskell-constructor">Just</span> <span class="org-string">"/opt/java/bin/javac"</span>
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>findExecutable <span class="org-string">"javaasdas"</span>
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>findExecutable <span class="org-string">"javaasdas"</span>
 <span class="org-haskell-constructor">Nothing</span>
 <span class="org-haskell-operator">&gt;</span> 
 
@@ -952,11 +952,11 @@ config<span class="org-haskell-definition">-</span>3.19<span class="org-haskell-
 
 <span class="org-comment">-}</span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>findExecutables <span class="org-string">"java"</span>
-[<span class="org-string">"/opt/bin/java"</span><span class="org-haskell-operator">,</span><span class="org-string">"/opt/bin/java"</span><span class="org-haskell-operator">,</span><span class="org-string">"/usr/bin/java"</span><span class="org-haskell-operator">,</span><span class="org-string">"/opt/java/bin/java"</span>]
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>findExecutables <span class="org-string">"java"</span>
+[<span class="org-string">"/opt/bin/java"</span>,<span class="org-string">"/opt/bin/java"</span>,<span class="org-string">"/usr/bin/java"</span>,<span class="org-string">"/opt/java/bin/java"</span>]
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>findExecutables <span class="org-string">"ghci"</span>
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>findExecutables <span class="org-string">"ghci"</span>
 [<span class="org-string">"/usr/bin/ghci"</span>]
 <span class="org-haskell-operator">&gt;</span>
 
@@ -966,24 +966,24 @@ config<span class="org-haskell-definition">-</span>3.19<span class="org-haskell-
 <span class="org-comment">returns a list of all occurences that are executable.</span>
 <span class="org-comment">-}</span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">.</span>findFile
-<span class="org-function-name">D.findFile</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-constructor">FilePath</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> (<span class="org-haskell-constructor">Maybe</span> <span class="org-haskell-constructor">FilePath</span>)
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t D.findFile
+<span class="org-function-name">D.findFile</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">FilePath</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">FilePath</span>)
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>findFiles [<span class="org-string">"/opt/bin"</span><span class="org-haskell-operator">,</span> <span class="org-string">"/usr/bin"</span>]  <span class="org-string">"java"</span>
-[<span class="org-string">"/opt/bin/java"</span><span class="org-haskell-operator">,</span><span class="org-string">"/usr/bin/java"</span>]
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>findFiles [<span class="org-string">"/opt/bin"</span>, <span class="org-string">"/usr/bin"</span>]  <span class="org-string">"java"</span>
+[<span class="org-string">"/opt/bin/java"</span>,<span class="org-string">"/usr/bin/java"</span>]
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>findFiles [<span class="org-string">"/opt/bin"</span><span class="org-haskell-operator">,</span> <span class="org-string">"/usr/bin"</span>]  <span class="org-string">"jasadva"</span>
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>findFiles [<span class="org-string">"/opt/bin"</span>, <span class="org-string">"/usr/bin"</span>]  <span class="org-string">"jasadva"</span>
 <span class="org-haskell-constructor">[]</span>
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">The operation doesFileExist returns True if the argument file</span>
 <span class="org-comment-delimiter">-- </span><span class="org-comment">exists and is not a directory, and False otherwise.</span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>doesFileExist <span class="org-string">"/etc/fstab"</span>
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>doesFileExist <span class="org-string">"/etc/fstab"</span>
 <span class="org-haskell-constructor">True</span>
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>doesFileExist <span class="org-string">"/etc/fstaASDb"</span>
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>doesFileExist <span class="org-string">"/etc/fstaASDb"</span>
 <span class="org-haskell-constructor">False</span>
 <span class="org-haskell-operator">&gt;</span> 
 
@@ -995,17 +995,17 @@ config<span class="org-haskell-definition">-</span>3.19<span class="org-haskell-
 <span class="org-comment">-}</span>
 
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>doesDirectoryExist <span class="org-string">"/etc"</span>
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>doesDirectoryExist <span class="org-string">"/etc"</span>
 <span class="org-haskell-constructor">True</span>
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>doesDirectoryExist <span class="org-string">"/etc/Dummy"</span>
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>doesDirectoryExist <span class="org-string">"/etc/Dummy"</span>
 <span class="org-haskell-constructor">False</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">The getPermissions operation returns the permissions for the file or directory.</span>
 <span class="org-comment-delimiter">--</span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-definition">.</span>getPermissions <span class="org-string">"/etc/fstab"</span>
-<span class="org-haskell-constructor">Permissions</span> {readable <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">True</span><span class="org-haskell-operator">,</span> writable <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">False</span><span class="org-haskell-operator">,</span> executable <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">False</span><span class="org-haskell-operator">,</span> searchable <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">False</span>}
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>getPermissions <span class="org-string">"/etc/fstab"</span>
+<span class="org-haskell-constructor">Permissions</span> {readable <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">True</span>, writable <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">False</span>, executable <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">False</span>, searchable <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">False</span>}
 <span class="org-haskell-operator">&gt;</span>
 </pre>
 </div>
@@ -1028,20 +1028,20 @@ to run your program.
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-keyword">qualified</span> <span class="org-haskell-constructor">System.Info</span> <span class="org-haskell-keyword">as</span> <span class="org-haskell-constructor">I</span>
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">I</span><span class="org-haskell-definition">.</span>os
+<span class="org-haskell-operator">&gt;</span> I<span class="org-haskell-definition">.</span>os
 <span class="org-string">"linux"</span>
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">I</span><span class="org-haskell-definition">.</span>arch
+<span class="org-haskell-operator">&gt;</span> I<span class="org-haskell-definition">.</span>arch
 <span class="org-string">"i386"</span>
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">I</span><span class="org-haskell-definition">.</span>compilerName 
+<span class="org-haskell-operator">&gt;</span> I<span class="org-haskell-definition">.</span>compilerName 
 <span class="org-string">"ghc"</span>
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">I</span><span class="org-haskell-definition">.</span>compilerVersion 
-<span class="org-haskell-constructor">Version</span> {versionBranch <span class="org-haskell-operator">=</span> [7<span class="org-haskell-operator">,</span>6]<span class="org-haskell-operator">,</span> versionTags <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">[]</span>}
+<span class="org-haskell-operator">&gt;</span> I<span class="org-haskell-definition">.</span>compilerVersion 
+<span class="org-haskell-constructor">Version</span> {versionBranch <span class="org-haskell-operator">=</span> [7,6], versionTags <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">[]</span>}
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">I</span><span class="org-haskell-operator">.</span>compilerVersion 
-<span class="org-function-name">I.compilerVersion</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">Data.Version.Version</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t I.compilerVersion 
+<span class="org-function-name">I.compilerVersion</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Data.Version.Version</span>
 <span class="org-haskell-operator">&gt;</span>
 </pre>
 </div>
@@ -1069,17 +1069,17 @@ to run your program.
 
 <span class="org-comment">-}</span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">P</span><span class="org-haskell-definition">.</span>callProcess <span class="org-string">"date"</span> <span class="org-haskell-constructor">[]</span>
+<span class="org-haskell-operator">&gt;</span> P<span class="org-haskell-definition">.</span>callProcess <span class="org-string">"date"</span> <span class="org-haskell-constructor">[]</span>
 <span class="org-haskell-constructor">Ter</span> <span class="org-haskell-constructor">Fev</span> 23 12<span class="org-haskell-constructor">:</span>29<span class="org-haskell-constructor">:</span>42 <span class="org-haskell-constructor">BRT</span> 2016
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">P</span><span class="org-haskell-operator">.</span>callProcess <span class="org-string">"date"</span> <span class="org-haskell-constructor">[]</span>
-<span class="org-haskell-constructor">P</span><span class="org-haskell-definition">.</span>callProcess <span class="org-string">"date"</span> <span class="org-haskell-constructor">[]</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t P.callProcess <span class="org-string">"date"</span> <span class="org-haskell-constructor">[]</span>
+P<span class="org-haskell-definition">.</span>callProcess <span class="org-string">"date"</span> <span class="org-haskell-constructor">[]</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">P</span><span class="org-haskell-definition">.</span>callProcess <span class="org-string">"dadsfte"</span> <span class="org-haskell-constructor">[]</span>
- <span class="org-haskell-operator">***</span> <span class="org-haskell-constructor">Exception:</span> dadsfte<span class="org-haskell-constructor">:</span> callProcess<span class="org-haskell-constructor">:</span> runInteractiveProcess<span class="org-haskell-constructor">:</span> exec<span class="org-haskell-constructor">:</span> does not exist (<span class="org-haskell-constructor">No</span> such file or directory)
+<span class="org-haskell-operator">&gt;</span> P<span class="org-haskell-definition">.</span>callProcess <span class="org-string">"dadsfte"</span> <span class="org-haskell-constructor">[]</span>
+ <span class="org-haskell-operator">***</span> <span class="org-haskell-type">Exception:</span> dadsfte<span class="org-haskell-type">:</span> callProcess<span class="org-haskell-type">:</span> runInteractiveProcess<span class="org-haskell-type">:</span> exec<span class="org-haskell-type">:</span> does not exist (<span class="org-haskell-type">No</span> such file or directory)
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">P</span><span class="org-haskell-definition">.</span>callProcess <span class="org-string">"uname"</span> [<span class="org-string">"-a"</span>]
+<span class="org-haskell-operator">&gt;</span> P<span class="org-haskell-definition">.</span>callProcess <span class="org-string">"uname"</span> [<span class="org-string">"-a"</span>]
 <span class="org-haskell-constructor">Linux</span> tuxhorse 3.19<span class="org-haskell-operator">.</span>0<span class="org-haskell-operator">-</span>39<span class="org-haskell-operator">-</span>generic <span class="org-haskell-operator">#</span>44<span class="org-haskell-operator">-</span><span class="org-haskell-constructor">Ubuntu</span> <span class="org-haskell-constructor">SMP</span> <span class="org-haskell-constructor">Tue</span> <span class="org-haskell-constructor">Dec</span> 1 14<span class="org-haskell-constructor">:</span>38<span class="org-haskell-constructor">:</span>23 <span class="org-haskell-constructor">UTC</span> 2015 i686 i686 i686 <span class="org-haskell-constructor">GNU</span><span class="org-haskell-operator">/</span><span class="org-haskell-constructor">Linux</span>
 <span class="org-haskell-operator">&gt;</span>
 
@@ -1088,12 +1088,12 @@ to run your program.
 <span class="org-comment">command returns a non-zero exit code, an exception is raised.</span>
 <span class="org-comment">-}</span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">P</span><span class="org-haskell-definition">.</span>callCommand <span class="org-string">"uname -a"</span>
+<span class="org-haskell-operator">&gt;</span> P<span class="org-haskell-definition">.</span>callCommand <span class="org-string">"uname -a"</span>
 <span class="org-haskell-constructor">Linux</span> tuxhorse 3.19<span class="org-haskell-operator">.</span>0<span class="org-haskell-operator">-</span>39<span class="org-haskell-operator">-</span>generic <span class="org-haskell-operator">#</span>44<span class="org-haskell-operator">-</span><span class="org-haskell-constructor">Ubuntu</span> <span class="org-haskell-constructor">SMP</span> <span class="org-haskell-constructor">Tue</span> <span class="org-haskell-constructor">Dec</span> 1 14<span class="org-haskell-constructor">:</span>38<span class="org-haskell-constructor">:</span>23 <span class="org-haskell-constructor">UTC</span> 2015 i686 i686 i686 <span class="org-haskell-constructor">GNU</span><span class="org-haskell-operator">/</span><span class="org-haskell-constructor">Linux</span>
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">P</span><span class="org-haskell-operator">.</span>callCommand 
-<span class="org-function-name">P.callCommand</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t P.callCommand 
+<span class="org-function-name">P.callCommand</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-comment-delimiter">{-  </span>
@@ -1104,24 +1104,24 @@ to run your program.
 <span class="org-comment">readProcess Source</span>
 <span class="org-comment">  :: FilePath    Filename of the executable (see RawCommand for details)</span>
 <span class="org-comment">  -&gt; [String]    any arguments</span>
-<span class="org-comment">  -&gt; String          standard input</span>
+<span class="org-comment">  -&gt; String      standard input</span>
 <span class="org-comment">  -&gt; IO String   stdout</span>
 
 <span class="org-comment">-}</span>
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">P</span><span class="org-haskell-operator">.</span>readProcess
-<span class="org-function-name">P.readProcess</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">FilePath</span> <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-constructor">String</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">IO</span> <span class="org-haskell-constructor">String</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t P.readProcess
+<span class="org-function-name">P.readProcess</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">String</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">String</span>
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">P</span><span class="org-haskell-definition">.</span>readProcess <span class="org-string">"uname"</span> [<span class="org-string">"-r"</span>] <span class="org-string">""</span>
+<span class="org-haskell-operator">&gt;</span> P<span class="org-haskell-definition">.</span>readProcess <span class="org-string">"uname"</span> [<span class="org-string">"-r"</span>] <span class="org-string">""</span>
 <span class="org-string">"3.19.0-39-generic\n"</span>
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> kernelVersion <span class="org-haskell-operator">&lt;-</span> <span class="org-haskell-constructor">P</span><span class="org-haskell-operator">.</span>readProcess <span class="org-string">"uname"</span> [<span class="org-string">"-r"</span>] <span class="org-string">""</span>
+<span class="org-haskell-operator">&gt;</span> kernelVersion <span class="org-haskell-operator">&lt;-</span> P.readProcess <span class="org-string">"uname"</span> [<span class="org-string">"-r"</span>] <span class="org-string">""</span>
 <span class="org-haskell-operator">&gt;</span> kernelVersion 
 <span class="org-string">"3.19.0-39-generic\n"</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t kernelVersion 
-<span class="org-function-name">kernelVersion</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">String</span>
+<span class="org-function-name">kernelVersion</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-comment-delimiter">{-</span>
@@ -1129,18 +1129,18 @@ to run your program.
 <span class="org-comment">   :: FilePath                       Filename of the executable (see RawCommand for details)</span>
 <span class="org-comment">   -&gt; [String]                       any arguments</span>
 <span class="org-comment">   -&gt; String                         standard input</span>
-<span class="org-comment">   -&gt; IO (ExitCode, String, String)      exitcode, stdout, stderr</span>
+<span class="org-comment">   -&gt; IO (ExitCode, String, String)  exitcode, stdout, stderr</span>
 <span class="org-comment">-}</span>
 
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">P</span><span class="org-haskell-definition">.</span>readProcessWithExitCode <span class="org-string">"uname"</span> [<span class="org-string">"-a"</span>] <span class="org-string">""</span>
-(<span class="org-haskell-constructor">ExitSuccess</span><span class="org-haskell-operator">,</span><span class="org-string">"Linux tuxhorse 3.19.0-39-generic #44-Ubuntu SMP Tue Dec 1 14:38:23 UTC 2015 i686 i686 i686 GNU/Linux\n"</span><span class="org-haskell-operator">,</span><span class="org-string">""</span>)
+<span class="org-haskell-operator">&gt;</span> P<span class="org-haskell-definition">.</span>readProcessWithExitCode <span class="org-string">"uname"</span> [<span class="org-string">"-a"</span>] <span class="org-string">""</span>
+(<span class="org-haskell-constructor">ExitSuccess</span>,<span class="org-string">"Linux tuxhorse 3.19.0-39-generic #44-Ubuntu SMP Tue Dec 1 14:38:23 UTC 2015 i686 i686 i686 GNU/Linux\n"</span>,<span class="org-string">""</span>)
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">P</span><span class="org-haskell-definition">.</span>readProcessWithExitCode <span class="org-string">"uname"</span> [<span class="org-string">"-x"</span>] <span class="org-string">""</span>
-(<span class="org-haskell-constructor">ExitFailure</span> 1<span class="org-haskell-operator">,</span><span class="org-string">""</span><span class="org-haskell-operator">,</span><span class="org-string">"uname: invalid option -- 'x'\nTry 'uname --help' for more information.\n"</span>)
+<span class="org-haskell-operator">&gt;</span> P<span class="org-haskell-definition">.</span>readProcessWithExitCode <span class="org-string">"uname"</span> [<span class="org-string">"-x"</span>] <span class="org-string">""</span>
+(<span class="org-haskell-constructor">ExitFailure</span> 1,<span class="org-string">""</span>,<span class="org-string">"uname: invalid option -- 'x'\nTry 'uname --help' for more information.\n"</span>)
 <span class="org-haskell-operator">&gt;</span> 
 
-<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">P</span><span class="org-haskell-definition">.</span>readProcessWithExitCode <span class="org-string">"unasdame"</span> [<span class="org-string">"-x"</span>] <span class="org-string">""</span>
+<span class="org-haskell-operator">&gt;</span> P<span class="org-haskell-definition">.</span>readProcessWithExitCode <span class="org-string">"unasdame"</span> [<span class="org-string">"-x"</span>] <span class="org-string">""</span>
  <span class="org-haskell-operator">***</span> <span class="org-haskell-constructor">Exception:</span> unasdame<span class="org-haskell-constructor">:</span> readCreateProcessWithExitCode<span class="org-haskell-constructor">:</span> runInteractiveProcess<span class="org-haskell-constructor">:</span> exec<span class="org-haskell-constructor">:</span> does not exist (<span class="org-haskell-constructor">No</span> such file or directory)
 <span class="org-haskell-operator">&gt;</span>
 </pre>
@@ -1151,8 +1151,8 @@ to run your program.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2016-03-24 Thu 05:53</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="date">Created: 2016-11-01 ter 01:18</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
