@@ -24,3 +24,9 @@ tags
 *.tmp
 *~
 .#*
+*.zip
+*.tar.gz
+temp
+tmp
+#*
+\\#.*

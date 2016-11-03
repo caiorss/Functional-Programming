@@ -1,5 +1,7 @@
 #+INCLUDE: ../theme/style.org
+#+TODO: TODO OK |  FAILED TEST DONE
 #+TITLE: Real World Haskell Walk 
+
 
 * Real World Haskell 
 ** Overview 
@@ -17,18 +19,19 @@ Haskell v7.10.2.
 
 Reference: 
 
- - O'Sullivan, Bryan, John Goerzen, and Donald Bruce Stewart. Real
-   world haskell: Code you can believe in. " O'Reilly Media,
+ - O'Sullivan, Bryan, John Goerzen, and Donald Bruce Stewart. *Real
+   world haskell: Code you can believe in.* " O'Reilly Media,
    Inc.", 2008. Available at:
    <http://book.realworldhaskell.org/read/>.
 
-The Haskell version used in this section is v7.10.2. running in Linux
+The Haskell version used in this section is v7.10.2. running on Linux
 64 bits.
 
 The development environment used in this section can be reproduced
 using the [[https://nixos.org/nix/][Nix Package manager]] which is a functional package manager
 that doesn't mess with the system packages and allows multiple
-versions of Haskell to be installed avoiding dependency hell. 
+versions of Haskell to be installed avoiding dependency hell and cabal
+hell. 
 
 When nix run the file shell.nix it will load a shell that has Haskell
 of version 7.10.2 in the current PATH variable. If the Haskell tool
@@ -91,7 +94,7 @@ GHCi, version 7.10.2: http://www.haskell.org/ghc/  :? for help
 
 Haskell can also be invoked from nix.shell file in batch mode:
 
-#+BEGIN_SRC 
+#+BEGIN_SRC sh
 $ ghci
 bash: ghci: command not foun
 
@@ -2917,7 +2920,7 @@ let stateFn3 :: State Int Int
 >>> 
 
 #+END_SRC
-** Chapter 27 - Sockets and Syslog 
+** FAILED Chapter 27 - Sockets and Syslog 
 *** Location 
  
  - [[http://book.realworldhaskell.org/read/sockets-and-syslog.html][Chapter 27. Sockets and Syslog]]
@@ -3148,7 +3151,6 @@ Linux 64 bits, Linux version 4.4.3-1-ARCH.
     :ID:       9a184320-586d-4bd4-84b5-5f65c06b801a
     :END:
 **** Code
-
 ***** syslogtcpserver.hs
       :PROPERTIES:
       :ID:       ea0bc382-3629-421b-9041-2f4c0eab5843
@@ -3302,7 +3304,6 @@ makeCode fac pri =
 
 
 #+END_SRC
-
 
 **** Running
 

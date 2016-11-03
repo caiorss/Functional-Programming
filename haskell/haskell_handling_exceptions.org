@@ -1,4 +1,4 @@
-#+INCLIDE: ../theme/style.org
+#+INCLUDE: ../theme/style.org
 #+TITLE: Exception Handling 
 
 * Exception Handling 
@@ -1313,7 +1313,7 @@ only handles IOError(alias to IOExceptions).
 
     
 #+END_SRC
-*** Catching Exceptptions using the function catches
+*** Catching Exceptions using the function catches
 
 #+BEGIN_SRC haskell 
   > import System.IO.Error 

@@ -66,18 +66,16 @@ This repository is dedicated to public domain.
 
  - [[file:haskell/haskell_handling_exceptions.org][Exception Handling]]
 
+ - [[file:haskell/DatabaseHDBC.org][Databases - HDBC package]]
+
  - Modules
 
-   - [[https://www.haskell.org/onlinereport/haskell2010/][Haskell 2010 Language Report]]
-
-   - [[https://downloads.haskell.org/~ghc/latest/docs/html/libraries/][Haskell Hierarchical Libraries]] - Built-in Haskell libraries.
-
    - [[file:haskell/control_monad.org][Contro.Monad]]      - Monad Combinators 
-    
+
    - [[file:haskell/package_Data_Text.org][Data.Text]]         - String processing combinators.
 
    - [[file:haskell/system_io_modules.org][System IO Modules]] - Basic System IO Modules
-
+    
    - [[file:haskell/system_filepath.org][System.FilePath]]   - File path manipulation on all platforms. 
 
    - [[file:haskell/control_exception.org][Control.Exception]] - Exception Handling
@@ -85,6 +83,17 @@ This repository is dedicated to public domain.
    - [[file:haskell/data_map.org][Data.Map]]          - Immutable hash map. Implemented with balanced trees.
 
  - [[file:haskell/Real_World_Haskell.org][Codes and Examples from "Real World Haskell"]]
+
+ - Haskell Bookmarks:
+
+   - [[https://www.haskell.org/onlinereport/haskell2010/][Haskell 2010 Language Report]]
+
+   - [[https://downloads.haskell.org/~ghc/latest/docs/html/libraries/][Haskell Hierarchical Libraries]] - Built-in Haskell libraries.
+
+   - [[https://www.haskell.org/hoogle/][Hoogle]]
+
+
+
 
 *Functional Programming in OCaml*
 

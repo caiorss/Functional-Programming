@@ -1,0 +1,437 @@
+#+INCLUDE: ../theme/style.org
+#+TITLE: Databases - HDBC
+
+
+* Databases - HDBC 
+** Overview 
+
+HDBC is a library that provides a common abstraction or interface to
+different database engines like sqlite, mysql and postgres. The
+communication to each database engine is handled by the database
+driver.
+
+Documentation:
+
+| Haskell Database Connectivity library | [[https://hackage.haskell.org/package/HDBC-2.4.0.1/docs/Database-HDBC.html][Database.HDBC]]                           |
+| Sqlite Driver                         | [[https://hackage.haskell.org/package/HDBC-sqlite3][HDBC-sqlite3: Sqlite v3 driver for HDBC]] |
+| Postgresql Driver                     | [[https://hackage.haskell.org/package/HDBC-postgresql-2.3.2.4/docs/Database-HDBC-PostgreSQL.html][Database.HDBC.PostgreSQL]]                |
+| MySQL Driver                          | [[https://hackage.haskell.org/package/HDBC-mysql][HDBC-mysql: MySQL driver for HDBC]]       |
+|                                       |                                         |
+
+** Example
+
+Connect to sqlite3 database 
+
+#+BEGIN_SRC haskell 
+  import Database.HDBC
+  import Database.HDBC.Sqlite3 
+
+  > conn <- connectSqlite3 "zotero.sqlite" 
+  conn :: Connection
+  > 
+#+END_SRC
+
+Database Metadata
+
+#+BEGIN_SRC haskell 
+  -- Driver name
+  --
+  > hdbcDriverName conn
+  "sqlite3"
+  it :: String
+  > :t hdbcDriverName conn
+  hdbcDriverName conn :: String
+  > 
+
+
+  -- Version of database server
+  --
+  > dbServerVer conn
+  "3.14.1"
+  it :: String
+  > 
+
+  > :t dbServerVer conn
+  dbServerVer conn :: String
+  > 
+
+    
+#+END_SRC
+
+Tables metadata 
+
+#+BEGIN_SRC haskell 
+  > :t getTables 
+  getTables :: IConnection conn => conn -> IO [String]
+  > 
+
+  > getTables conn 
+  ["annotations","baseFieldMappings","baseFieldMappingsCombined","charsets", ...]
+
+
+  -- Print all tables available 
+  --
+  > getTables conn >>= mapM_ putStrLn 
+  annotations
+  baseFieldMappings
+  baseFieldMappingsCombined
+  charsets
+  collectionItems
+  collections
+  creatorData
+  creatorTypes
+  creators
+  customBaseFieldMappings
+  customFields
+  customItemTypeFields
+  customItemTypes
+  deletedItems
+  fieldFormats
+  fields
+  fieldsCombined
+  fileTypeMimeType
+  ...
+  tags
+  transactionLog
+  transactionSets
+  transactions
+  translatorCache
+  users
+  version
+  zoteroDummyTable
+
+
+  -- Show specific table metadata  
+  --
+  --
+  > describeTable conn "tags"
+  [("tagID",SqlColDesc {colType = SqlIntegerT, colSize = Nothing,
+  colOctetLength = Nothing, colDecDigits = Nothing, colNullable = Nothing})...]
+
+  > describeTable conn "tags" >>= mapM_ print
+
+  ("tagID",SqlColDesc {colType = SqlIntegerT, colSize = Nothing, colOctetLength = Nothing, colDecDigits = Nothing, colNullable = Nothing})
+  ("name",SqlColDesc {colType = SqlVarCharT, colSize = Nothing, colOctetLength = Nothing, colDecDigits = Nothing, colNullable = Nothing})
+  ("type",SqlColDesc {colType = SqlIntegerT, colSize = Nothing, colOctetLength = Nothing, colDecDigits = Nothing, colNullable = Nothing})
+  ("dateAdded",SqlColDesc {colType = SqlUnknownT "timestamp", colSize = Nothing, colOctetLength = Nothing, colDecDigits = Nothing, colNullable = Nothing})
+  ("dateModified",SqlColDesc {colType = SqlUnknownT "timestamp", colSize = Nothing, colOctetLength = Nothing, colDecDigits = Nothing, colNullable = Nothing})
+  ("clientDateModified",SqlColDesc {colType = SqlUnknownT "timestamp", colSize = Nothing, colOctetLength = Nothing, colDecDigits = Nothing, colNullable = Nothing})
+  ("libraryID",SqlColDesc {colType = SqlIntegerT, colSize = Nothing, colOctetLength = Nothing, colDecDigits = Nothing, colNullable = Nothing})
+  ("key",SqlColDesc {colType = SqlVarCharT, colSize = Nothing, colOctetLength = Nothing, colDecDigits = Nothing, colNullable = Nothing})
+  it :: ()
+  > 
+    
+#+END_SRC
+
+
+
+Quick query 
+
+#+BEGIN_SRC haskell 
+  > :t quickQuery
+  quickQuery
+    :: IConnection conn =>
+       conn -> String -> [SqlValue] -> IO [[SqlValue]]
+  >
+
+
+  -- Output: formatted manually in order to fit in the screen. 
+  --
+  --
+  > quickQuery conn "SELECT tagID, name FROM tags WHERE tagID > 80 LIMIT 15" []
+
+  [[SqlInt64 81,SqlByteString "excel"],
+   [SqlInt64 82,SqlByteString "spreadsheet"],
+   [SqlInt64 83,SqlByteString "vba"],
+   [SqlInt64 84,SqlByteString "code"],
+   [SqlInt64 85,SqlByteString "thermodynamics"],
+   [SqlInt64 86,SqlByteString "mechanical"],
+   [SqlInt64 87,SqlByteString "energy"],
+   [SqlInt64 88,SqlByteString "catalog"],
+   [SqlInt64 89,SqlByteString "parts"],
+   [SqlInt64 90,SqlByteString "MVC"],
+   [SqlInt64 91,SqlByteString "hydraulics"],
+   [SqlInt64 92,SqlByteString "manufacturer"],
+   [SqlInt64 93,SqlByteString "design"],
+   [SqlInt64 94,SqlByteString "manual"],
+   [SqlInt64 95,SqlByteString "cable"]]
+  it :: [[SqlValue]]
+
+
+  > quickQuery conn "SELECT tagID, name FROM tags WHERE tagID > 80 LIMIT 15" [] >>= mapM_ print
+  [SqlInt64 81,SqlByteString "excel"]
+  [SqlInt64 82,SqlByteString "spreadsheet"]
+  [SqlInt64 83,SqlByteString "vba"]
+  [SqlInt64 84,SqlByteString "code"]
+  [SqlInt64 85,SqlByteString "thermodynamics"]
+  [SqlInt64 86,SqlByteString "mechanical"]
+  [SqlInt64 87,SqlByteString "energy"]
+  [SqlInt64 88,SqlByteString "catalog"]
+  [SqlInt64 89,SqlByteString "parts"]
+  [SqlInt64 90,SqlByteString "MVC"]
+  [SqlInt64 91,SqlByteString "hydraulics"]
+  [SqlInt64 92,SqlByteString "manufacturer"]
+  [SqlInt64 93,SqlByteString "design"]
+  [SqlInt64 94,SqlByteString "manual"]
+  [SqlInt64 95,SqlByteString "cable"]
+  it :: ()
+  > 
+
+    
+#+END_SRC
+
+
+Query
+
+#+BEGIN_SRC haskell 
+
+
+  let query = unlines $ [
+        "SELECT fieldName, value FROM itemDataValues, itemData, fields WHERE", 
+        "itemDataValues.valueID = itemData.valueID", 
+        "and itemData.itemID = 5805",
+        "and fields.fieldID = itemData.fieldID"
+        ]
+
+  > putStrLn query 
+  SELECT fieldName, value FROM itemDataValues, itemData, fields WHERE
+  itemDataValues.valueID = itemData.valueID
+  and itemData.itemID = 5805
+  and fields.fieldID = itemData.fieldID
+
+  it :: ()
+  > 
+
+  > :t prepare 
+  prepare :: IConnection conn => conn -> String -> IO Statement
+  > 
+
+  > stmt <- prepare conn query 
+  stmt :: Statement
+  > 
+
+  > 
+  > :t stmt 
+  stmt :: Statement
+  > 
+
+
+  > :t execute
+  execute :: Statement -> [SqlValue] -> IO Integer
+  > 
+  > nrows <- execute stmt []
+  nrows :: Integer
+  > nrows
+  0
+  it :: Integer
+  > 
+
+  > getColumnNames stmt
+  ["fieldName","value"]
+  it :: [String]
+  > 
+    
+  -- ========= fetchAllRows =============== -
+   
+    
+  > rows <- fetchAllRows stmt -- Output changed to fit on the screen.
+  rows :: [[SqlValue]]
+  > rows
+  [[SqlByteString "url",SqlByteString "http://www.eliza.ch/doc/wadler92essence_of_FP.pdf"]
+    ,[SqlByteString "place",SqlByteString "Albuquerque, NM, USA"],
+     [SqlByteString "publisher",SqlByteString "ACM"],
+     [SqlByteString "pages",SqlByteString "1-14"],
+     [SqlByteString "date",SqlByteString "1992-00-00 1992"],
+     [SqlByteString "DOI",SqlByteString "10.1145/143165.143169"],
+     [SqlByteString "accessDate",SqlByteString "2016-04-04 20:05:57"],
+     [SqlByteString "language",SqlByteString "en"],
+     [SqlByteString "title",SqlByteString "The essence of functional programming"],
+     [SqlByteString "proceedingsTitle",SqlByteString "POPL '92 Proceedings of the 19th ACM SIGPLAN-SIGACT symposium on Principles of programming languages"]]
+  it :: [[SqlValue]]
+
+  > 
+  > mapM_ print rows
+  [SqlByteString "url",SqlByteString "http://www.eliza.ch/doc/wadler92essence_of_FP.pdf"]
+  [SqlByteString "place",SqlByteString "Albuquerque, NM, USA"]
+  [SqlByteString "publisher",SqlByteString "ACM"]
+  [SqlByteString "pages",SqlByteString "1-14"]
+  [SqlByteString "date",SqlByteString "1992-00-00 1992"]
+  [SqlByteString "DOI",SqlByteString "10.1145/143165.143169"]
+  [SqlByteString "accessDate",SqlByteString "2016-04-04 20:05:57"]
+  [SqlByteString "language",SqlByteString "en"]
+  [SqlByteString "title",SqlByteString "The essence of functional programming"]
+  [SqlByteString "proceedingsTitle",SqlByteString "POPL '92 Proceedings of the 19th ACM SIGPLAN-SIGACT symposium on Principles of programming languages"]
+  it :: ()
+  > 
+
+  > let sqlRowToString = map (fromSql :: SqlValue -> String)
+  - 
+  sqlRowToString :: [SqlValue] -> [String]
+  > 
+  > mapM_ print $ map sqlRowToString rows 
+  ["url","http://www.eliza.ch/doc/wadler92essence_of_FP.pdf"]
+  ["place","Albuquerque, NM, USA"]
+  ["publisher","ACM"]
+  ["pages","1-14"]
+  ["date","1992-00-00 1992"]
+  ["DOI","10.1145/143165.143169"]
+  ["accessDate","2016-04-04 20:05:57"]
+  ["language","en"]
+  ["title","The essence of functional programming"]
+  ["proceedingsTitle","POPL '92 Proceedings of the 19th ACM SIGPLAN-SIGACT symposium on Principles of programming languages"]
+  it :: ()
+  > 
+
+  > let sqlRowToLine row = unwords $ map (fromSql :: SqlValue -> String) row
+  - 
+  sqlRowToLine :: [SqlValue] -> String
+  >
+
+  > mapM_ putStrLn $ map sqlRowToLine rows 
+  url http://www.eliza.ch/doc/wadler92essence_of_FP.pdf
+  place Albuquerque, NM, USA
+  publisher ACM
+  pages 1-14
+  date 1992-00-00 1992
+  DOI 10.1145/143165.143169
+  accessDate 2016-04-04 20:05:57
+  language en
+  title The essence of functional programming
+  proceedingsTitle POPL '92 Proceedings of the 19th ACM SIGPLAN-SIGACT symposium on Principles of programming languages
+  it :: ()
+  > 
+  > 
+    
+    
+  > fetchAllRows stmt 
+  []
+  it :: [[SqlValue]]
+  > 
+
+
+  -- ================  fetchAllRowsAL  ======================= ---
+    
+  > stmt <- prepare conn query 
+  stmt :: Statement
+
+  > execute stmt []
+  0
+  it :: Integer
+  > 
+
+  > 
+  > rows <- fetchAllRowsAL stmt
+  rows :: [[(String, SqlValue)]]
+
+  > mapM_ print rows
+  [("fieldName",SqlByteString "url"),("value",SqlByteString "http://www.eliza.ch/doc/wadler92essence_of_FP.pdf")]
+  [("fieldName",SqlByteString "place"),("value",SqlByteString "Albuquerque, NM, USA")]
+  [("fieldName",SqlByteString "publisher"),("value",SqlByteString "ACM")]
+  [("fieldName",SqlByteString "pages"),("value",SqlByteString "1-14")]
+  [("fieldName",SqlByteString "date"),("value",SqlByteString "1992-00-00 1992")]
+  [("fieldName",SqlByteString "DOI"),("value",SqlByteString "10.1145/143165.143169")]
+  [("fieldName",SqlByteString "accessDate"),("value",SqlByteString "2016-04-04 20:05:57")]
+  [("fieldName",SqlByteString "language"),("value",SqlByteString "en")]
+  [("fieldName",SqlByteString "title"),("value",SqlByteString "The essence of functional programming")]
+  [("fieldName",SqlByteString "proceedingsTitle"),("value",SqlByteString "POPL '92 Proceedings of the 19th ACM SIGPLAN-SIGACT symposium on Principles of programming languages")]
+  it :: ()
+  > 
+
+  -- =============== fetchAllRowsMap ================== --
+
+  > stmt <- prepare conn query 
+  stmt :: Statement
+
+  > execute stmt []
+  0
+
+  > rows <- fetchAllRowsMap stmt
+  rows :: [containers-0.5.7.1:Data.Map.Base.Map String SqlValue]
+  > 
+  > mapM_ print rows
+  fromList [("fieldName",SqlByteString "url"),("value",SqlByteString "http://www.eliza.ch/doc/wadler92essence_of_FP.pdf")]
+  fromList [("fieldName",SqlByteString "place"),("value",SqlByteString "Albuquerque, NM, USA")]
+  fromList [("fieldName",SqlByteString "publisher"),("value",SqlByteString "ACM")]
+  fromList [("fieldName",SqlByteString "pages"),("value",SqlByteString "1-14")]
+  fromList [("fieldName",SqlByteString "date"),("value",SqlByteString "1992-00-00 1992")]
+  fromList [("fieldName",SqlByteString "DOI"),("value",SqlByteString "10.1145/143165.143169")]
+  fromList [("fieldName",SqlByteString "accessDate"),("value",SqlByteString "2016-04-04 20:05:57")]
+  fromList [("fieldName",SqlByteString "language"),("value",SqlByteString "en")]
+  fromList [("fieldName",SqlByteString "title"),("value",SqlByteString "The essence of functional programming")]
+  fromList [("fieldName",SqlByteString "proceedingsTitle"),("value",SqlByteString "POPL '92 Proceedings of the 19th ACM SIGPLAN-SIGACT symposium on Principles of programming languages")]
+  it :: ()
+  > 
+    
+
+
+#+END_SRC
+
+
+Query Item by ID 
+
+#+BEGIN_SRC haskell 
+
+
+  :{
+  queryItemByID ::  IConnection conn => Int -> conn -> IO [[SqlValue]]
+  queryItemByID itemID conn = do
+    stmt <- prepare conn query
+    execute stmt [toSql itemID]
+    rows <- fetchAllRows stmt 
+    return rows 
+    where
+      query = unlines $ [ "SELECT fieldName, value FROM itemDataValues, itemData, fields WHERE", 
+                          "itemDataValues.valueID = itemData.valueID", 
+                          "and itemData.itemID = ?",
+                          "and fields.fieldID = itemData.fieldID"
+                        ]
+  :}
+
+  queryItemByID :: IConnection conn => Int -> conn -> IO [[SqlValue]]
+
+  > queryItemByID 5569 conn >>= mapM_ print
+  [SqlByteString "title",SqlByteString "From Stochastic Calculus to Mathematical Finance-Kabanov.pdf"]
+  it :: ()
+  > 
+
+  > queryItemByID 5790 conn >>= mapM_ print
+  [SqlByteString "url",SqlByteString "http://twanvl.nl/blog/haskell/building-pipes-with-monad-transformers"]
+  [SqlByteString "accessDate",SqlByteString "2016-04-04 16:45:25"]
+  [SqlByteString "title",SqlByteString "Building pipes with monad transformers"]
+  it :: ()
+  > 
+
+  > queryItemByID 5805 conn >>= mapM_ print
+  [SqlByteString "url",SqlByteString "http://www.eliza.ch/doc/wadler92essence_of_FP.pdf"]
+  [SqlByteString "place",SqlByteString "Albuquerque, NM, USA"]
+  [SqlByteString "publisher",SqlByteString "ACM"]
+  [SqlByteString "pages",SqlByteString "1-14"]
+  [SqlByteString "date",SqlByteString "1992-00-00 1992"]
+  [SqlByteString "DOI",SqlByteString "10.1145/143165.143169"]
+  [SqlByteString "accessDate",SqlByteString "2016-04-04 20:05:57"]
+  [SqlByteString "language",SqlByteString "en"]
+  [SqlByteString "title",SqlByteString "The essence of functional programming"]
+  [SqlByteString "proceedingsTitle",SqlByteString "POPL '92 Proceedings of the 19th ACM SIGPLAN-SIGACT symposium on Principles of programming languages"]
+  it :: ()
+  > 
+
+    
+#+END_SRC
+
+
+Disconnect 
+
+#+BEGIN_SRC haskell 
+  > :t disconnect 
+  disconnect :: IConnection conn => conn -> IO ()
+  > 
+
+  > disconnect conn
+  it :: ()
+  >   
+#+END_SRC
+
+
+ 
+
+
