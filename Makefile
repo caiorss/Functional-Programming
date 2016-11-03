@@ -1,17 +1,13 @@
 
-index:
-	doctoc  README.md
-
 html:
-	grip README.md --gfm --export ./Test.html
+	emacs --batch  -l build.el --kill 
 
 tags:
 	git tag
 
 clean:
-	rm -rf *.hi *.o
-	
-     
+	rm -rf  {.,dist}/{clojure,ocaml,haskell}/{.*html,.*html~}
+
 upload:
 	git push github master
 
