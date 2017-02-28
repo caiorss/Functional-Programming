@@ -790,14 +790,27 @@ val it : int = 30
 
 ** Currying and Partial Application
 *** Currying
+**** Overview 
 
 Currying is the decomposition of a function of multiples arguments in
 a chained sequence of functions of a single argument. The name
 currying comes from the mathematician [[https://en.wikipedia.org/wiki/Haskell_Curry][Haskell Curry]] who developed the
-concept of curried functions.
+concept of curried functions. Curried functions can take one argument
+at a time and a uncurried function must have all arguments passed at
+once. 
 
-In Haskell, Standard ML, OCaml and F# all functions are curryfied by
-default:
+Let a function  =f(x, y) = 10*x - 3*y= which is uncurryied. This
+function can only take two arguments at once. 
+
+This function can be rewritten in a curried form as:
+
+ - =f(x)(y) = 10*x - 3*y= 
+
+By applying it to a value of x = 4 creates a function with parameter y:
+
+ - g(y) = f(4) = 10*4 - 3*y 
+
+ - g(3) = f(4)(3) = 10*4 - 3*3 = 31
 
 #+BEGIN_SRC
     f (x, y) = 10*x - 3*y   
@@ -811,7 +824,7 @@ In the curried form becomes:
      
 To evaluate f(4, 3): 
 
-    h(y)  = (x -> y -> 10 * x - 3*y) 4 
+    h(y)  = f(4) = (x -> y -> 10 * x - 3*y) 4  -- x = 4 
           = ( y -> 10 * 4 -  3*y )
           =  y -> 40 - 3*y
           
@@ -828,7 +841,8 @@ Or:
       = 31
 #+END_SRC
           
-The same function h(y) can be reused: applied to another arguments, used in mapping, filtering and another higher order functions.
+The same function h(y) can be reused: applied to other arguments, used
+in mapping, filtering and another higher order functions.
 
 #+BEGIN_SRC
 Ex1
@@ -843,126 +857,227 @@ Ex2
       = [34, 31, 28]
 #+END_SRC
 
-*Example in Haskell GHCI*
+**** Example in Haskell GHCI
+
+
+In Haskell, Standard ML, OCaml and F# all functions are curried by
+default and in most of programming languages they are uncurried by default.
+
+Example: Curried functions in Haskell.
 
 #+BEGIN_SRC haskell
-> let f x y = 10 * x - 3 * y
-> :t f
-f :: Num a => a -> a -> a
-> 
-> f 4 3 
-31
-> let h_y = f 4
-> :t h_y
-h_y :: Integer -> Integer
-> 
-> h_y 3
-31
-> map h_y [2, 3, 4]
-[34,31,28]
-> 
-
-> -- It is evaluated as:
-
-> ((f 4) 3)
-31
-> 
-
-{-
-   The function f can be also seen in this way
--}   
-
-> let f' = \x -> \y -> 10 * x - 3 * y 
-> 
-
-> :t f'
-f' :: Integer -> Integer -> Integer
-> 
-
-> f' 4 3
-31
-> 
-
-> (f' 4 ) 3
-31
-> 
-
-> let h__x_is_4_of_y = f' 4
-
-> h__x_is_4_of_y 3
-31
-> 
-{-
-    (\x -> \y -> 10 * x - 3 * y) 4 3
-    =  (\x -> (\y -> 10 * x - 3 * y) 4) 3
-    =  (\y -> 10 * 4 - 3 * y) 3
-    =  (10 * 4 - 3 * 3)
-    =  40 - 9 
-    =  31    
--}
-> (\x -> \y -> 10 * x - 3 * y) 4 3
-31
-> 
-
-> ((\x -> (\y -> 10 * x - 3 * y)) 4) 3
-31
-> 
+  > let f x y = 10 * x - 3 * y
+  > :t f
+  f :: Num a => a -> a -> a
+  > 
+  > f 4 3 
+  31
 
 
-{-
-Curried functions are suitable for composition, pipelining 
-(F#, OCaml with the |> operator),  mapping/ filtering operations,
-and to create new function from previous defined increasing code reuse.
-
--}
-
-> map (f 4) [2, 3, 4]
-[34,31,28]
-> 
-
-> map ((\x -> \y -> 10 * x - 3 * y) 4) [2, 3, 4]
-[34,31,28]
-> 
+  --- Fix the value of x = 4 --> h(y) = f(x=4) = 10 * 4 - 3 * y
+  --                                            = 40 - 3 *  y
+  ---
+  > let h_y = f 4
+  > :t h_y
+  h_y :: Integer -> Integer
+  > 
+  > h_y 3
+  31
 
 
-> -- ----------------- 
+  {- 
+     34 = h_y 2 = 40 - 3*2 = 34 
+     31 = h_y 3 = 40 - 3*3 = 31
+     28 = h_y 4 = 40 - 3*4 = 28 
+  -}
+  > map h_y [2, 3, 4]
+  [34,31,28]
+  > 
 
-> let f_of_x_y_z x y z = 10 * x + 3 * y + 4 * z
-> 
+  > -- It is evaluated as:
 
-> :t f_of_x_y_z 
-f_of_x_y_z :: Num a => a -> a -> a -> a
+  > ((f 4) 3)
+  31
+  > 
 
-> f_of_x_y_z 2 3 5
-49
-> 
+  {-
+     The function f can be also seen in this way
+  -}   
 
-> let g_of_y_z = f_of_x_y_z 2
+  > let f' = \x -> \y -> 10 * x - 3 * y 
+  > 
 
-> :t g_of_y_z 
-g_of_y_z :: Integer -> Integer -> Integer
-> 
+  > :t f'
+  f' :: Integer -> Integer -> Integer
+  > 
 
-> g_of_y_z 3 5
-49
-> 
+  > f' 4 3
+  31
+  > 
 
-> let h_of_z = g_of_y_z 3
-> :t h_of_z 
-h_of_z :: Integer -> Integer
-> 
+  > (f' 4 ) 3
+  31
+  > 
 
-> h_of_z 5
-49
-> 
+  > let h__x_is_4_of_y = f' 4
 
-> -- So it is evaluated as 
-> (((f_of_x_y_z 2) 3) 5)
-49
-> 
+  > h__x_is_4_of_y 3
+  31
+  > 
+  {-
+      (\x -> \y -> 10 * x - 3 * y) 4 3
+      =  (\x -> (\y -> 10 * x - 3 * y) 4) 3
+      =  (\y -> 10 * 4 - 3 * y) 3
+      =  (10 * 4 - 3 * 3)
+      =  40 - 9 
+      =  31    
+  -}
+  > (\x -> \y -> 10 * x - 3 * y) 4 3
+  31
+  > 
+
+  > ((\x -> (\y -> 10 * x - 3 * y)) 4) 3
+  31
+  > 
+
+
+  {-
+  Curried functions are suitable for composition, pipelining 
+  (F#, OCaml with the |> operator),  mapping/ filtering operations,
+  and to create new function from previous defined increasing code reuse.
+
+  -}
+
+  > map (f 4) [2, 3, 4]
+  [34,31,28]
+  > 
+
+  > map ((\x -> \y -> 10 * x - 3 * y) 4) [2, 3, 4]
+  [34,31,28]
+  > 
+
+
+  > -- ----------------- 
+
+  > let f_of_x_y_z x y z = 10 * x + 3 * y + 4 * z
+  > 
+
+  > :t f_of_x_y_z 
+  f_of_x_y_z :: Num a => a -> a -> a -> a
+
+  > f_of_x_y_z 2 3 5
+  49
+  > 
+
+  > let g_of_y_z = f_of_x_y_z 2
+
+  > :t g_of_y_z 
+  g_of_y_z :: Integer -> Integer -> Integer
+  > 
+
+  > g_of_y_z 3 5
+  49
+  > 
+
+  > let h_of_z = g_of_y_z 3
+  > :t h_of_z 
+  h_of_z :: Integer -> Integer
+  > 
+
+  > h_of_z 5
+  49
+  > 
+
+  > -- So it is evaluated as 
+  > (((f_of_x_y_z 2) 3) 5)
+  49
+  > 
 #+END_SRC
 
-*Example in Python 3*
+Uncurried functions can also be defined in Haskell.
+
+#+BEGIN_SRC haskell
+
+  let f (x, y) = 10 * x - 3 * y
+
+  Prelude> :t f
+  f :: Num a => (a, a) -> a
+  Prelude>
+
+  {- | Uncurried function cannot be applied to one argument at a time -}       
+  Prelude> f 3 5
+
+  <interactive>:9:1: error:
+      • Non type-variable argument
+          in the constraint: Num (t -> t1, t -> t1)
+        (Use FlexibleContexts to permit this)
+      • When checking the inferred type
+          it :: forall t t1.
+                (Num (t -> t1, t -> t1), Num (t -> t1), Num t) =>
+                t1
+  Prelude> 
+
+  Prelude> f(3, 4)
+  18
+  Prelude> f(3, 1)
+  27
+  Prelude> f(3, 2)
+  24
+  Prelude> f(3, 5)
+  15
+
+  Prelude> map f [(1, 2), (3, 4), (5, 6), (7, 8)]
+  [4,18,32,46]
+  Prelude>        
+#+END_SRC
+
+**** Example in Ocaml and F#
+
+#+BEGIN_SRC ocaml
+
+    # let f x y = 10 * x - 3 * y ;;
+    val f : int -> int -> int = <fun>
+
+    # f 4 3 ;;
+    - : int = 31
+
+    # f 4 ;;
+    - : int -> int = <fun>
+
+    # (f 4) 3 ;;
+    - : int = 31
+    # 
+
+    # let h_y = f 4 ;;
+    val h_y : int -> int = <fun>
+
+    # h_y 3 ;;
+    - : int = 31
+    # 
+
+    # List.map h_y [2; 3; 4] ;;
+    - : int list = [34; 31; 28]
+    # 
+
+    # List.map (f 4) [2; 3; 4] ;;
+    - : int list = [34; 31; 28]
+
+    # let f' = fun x -> fun y -> 10 * x - 3 * y ;;
+    val f' : int -> int -> int = <fun>
+
+    # (f' 4) 3 ;;
+    - : int = 31
+
+    # (fun x -> fun y -> 10 * x - 3 * y) 4 3 ;;
+    - : int = 31
+    # 
+
+    # List.map ((fun x -> fun y -> 10 * x - 3 * y) 4) [2; 3; 4] ;;
+    - : int list = [34; 31; 28]
+
+#+END_SRC
+
+**** Example in Python 3
 
 #+BEGIN_SRC python
 
@@ -1041,49 +1156,107 @@ h_of_z :: Integer -> Integer
 
 #+END_SRC
 
-*Example in Ocaml and F#*
+**** Example in Scala
 
-#+BEGIN_SRC ocaml
+The function =f(x, y) = 10 * x - 3 * y= is defined in a uncurried form.
 
-    # let f x y = 10 * x - 3 * y ;;
-    val f : int -> int -> int = <fun>
+#+BEGIN_SRC scala 
+  def f(x: Int, y: Int) = 10 * x - 3 * y
 
-    # f 4 3 ;;
-    - : int = 31
+  scala> f(3, 4)
+  res0: Int = 18
 
-    # f 4 ;;
-    - : int -> int = <fun>
+  scala> f(3)
+  <console>:13: error: not enough arguments for method f: (x: Int, y: Int)Int.
+  Unspecified value parameter y.
+         f(3)
 
-    # (f 4) 3 ;;
-    - : int = 31
-    # 
+  scala> List(1, 2, 3, 4).map( y => f(4, y))
+  res5: List[Int] = List(37, 34, 31, 28)
 
-    # let h_y = f 4 ;;
-    val h_y : int -> int = <fun>
+#+END_SRC
 
-    # h_y 3 ;;
-    - : int = 31
-    # 
+Scala provides a syntax that makes easier to define functions in
+curried form: 
 
-    # List.map h_y [2; 3; 4] ;;
-    - : int list = [34; 31; 28]
-    # 
+#+BEGIN_SRC scala 
 
-    # List.map (f 4) [2; 3; 4] ;;
-    - : int list = [34; 31; 28]
+  def f(x: Int) (y: Int) = 10 * x - 3 * y
 
-    # let f' = fun x -> fun y -> 10 * x - 3 * y ;;
-    val f' : int -> int -> int = <fun>
+  scala> f(4)(1)
+  res14: Int = 37
 
-    # (f' 4) 3 ;;
-    - : int = 31
+  scala> f(4)(2)
+  res15: Int = 34
 
-    # (fun x -> fun y -> 10 * x - 3 * y) 4 3 ;;
-    - : int = 31
-    # 
+  scala> f(4)(3)
+  res16: Int = 31
 
-    # List.map ((fun x -> fun y -> 10 * x - 3 * y) 4) [2; 3; 4] ;;
-    - : int list = [34; 31; 28]
+  scala> f(4)(4)
+  res17: Int = 28
+
+
+
+  scala> List(1, 2, 3, 4).map(f(4))
+  res13: List[Int] = List(37, 34, 31, 28)
+
+  scala> f(4) _
+  res11: Int => Int = <function1>
+
+  scala> f _
+  res12: Int => (Int => Int) = <function1>
+
+  scala>
+
+  scala> val g = (y: Int) => f(4)(y)
+  g: Int => Int = <function1>
+
+  scala> g(3)
+  res18: Int = 31
+
+  scala> g(4)
+  res19:
+#+END_SRC
+
+This function in curried form could also be defned in this way:
+
+#+BEGIN_SRC scala
+
+  scala> val f = (x: Int) => (y: Int) => 10 * x - 3 * y
+  f: Int => (Int => Int) = <function1>
+
+  scala> f(4)(3)
+  res2: Int = 31
+
+  scala> f(4)(2)
+  res3: Int = 34
+
+  scala> f(4)(5)
+  res4: Int = 25
+
+  scala> 
+
+  scala> val g = f(4)
+  g: Int => Int = <function1>
+
+
+  scala> g(5)
+  res5: Int = 25
+
+  scala> g(3)
+  res6: Int = 31
+
+  scala> g(2)
+  res7: Int = 34
+
+  scala> g(5)
+  res8: Int = 25
+
+  scala> List(1, 2, 3, 4).map(f(4))
+  res9: List[Int] = List(37, 34, 31, 28)
+
+  scala> List(1, 2, 3, 4).map(g)
+  res11: List[Int] = List(37, 34, 31, 28)
 
 #+END_SRC
 
@@ -1092,7 +1265,7 @@ h_of_z :: Integer -> Integer
 A function of multiple arguments is converted into a new function that
 takes fewer arguments, some arguments are supplied and returns
 function with signature consisting of remaining arguments. *Partially
-applied** functions must not be confused with **currying*.
+applied* functions must not be confused with *currying*.
 
 Example in Python:
 
@@ -1162,8 +1335,10 @@ Example in OCaml:
 
 See also:
 
- - [[http://www.ibm.com/developerworks/library/j-jn9/][Java.next: Currying and partial application]]
+ - [[http://www.ibm.com/developerworks/library/j-jn9/][Java.next: Currying and partial application]]  
+
  - [[https://en.wikipedia.org/wiki/Partial_application][Partial application - Wikipedia]]
+
  - [[https://dzone.com/articles/whats-wrong-java-8-currying-vs][What's Wrong with Java 8: Currying vs Closures]]
 
 ** Lazy Evaluation
