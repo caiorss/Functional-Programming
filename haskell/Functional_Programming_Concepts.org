@@ -272,7 +272,7 @@ x = 15
 
 ** First-Class Function 
 
-Functions can be passed as arguments to another functions, returned
+Functions can be passed as arguments to other functions, returned
 from functions, stored in variables and data structures and built at
 run time. The majority of languages supports first-class functions
 like Scheme, Javascript, Python, Haskell, ML, OCaml and many others
