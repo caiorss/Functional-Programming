@@ -4846,7 +4846,7 @@ mapped with _map_ function. This concept from category theory and
 like many mathematical abstractions it is defined by the laws that it must
 satisfies, in this case Functor's laws.
 
-In Haskell functors are instances of the type class Functor that must
+In Haskell functors are instances of the _type class_ Functor that must
 implement the function fmap for each functor implementation.
 
 Note: Haskell functors must not be confused with _C++ functor_ and
@@ -7338,30 +7338,82 @@ The type IO indicates an action that when evaluated may perform some
 IO. The function =putChar :: Char -> IO ()= takes a char and returns
 an _IO action_ that prints a char, no character is printed on the
 screen and no side-effect is performed. This IO action can be passed
-as a ordinary values to another IO actions and combined with another
-IO actions. IO actions only will be executed when called from the
-function =main :: IO ()= or called from another IO actions called from
+as a ordinary values to other IO actions and combined with other IO
+actions. IO actions only will be executed when called from the _main IO_
+_action_ =main :: IO ()= or called from other IO actions called from
 main.
 
 The values wrapped in an IO type like =getChar :: IO Char= can only be
 extracted inside an IO action. 
 
-Remarks: 
+Summary: 
 
  - The Haskell's IO is pure and lazy.
+
+ - The IO action type separates the definition from execution. 
+
  - There is no way to extract a value of an IO action outside an IO
    action.
- - Only IO actions perform IO actions.  
- - The entry point of a Haskell program is the function _main_. Only
-   the IO functions called from main will be executed.
+
+ - Only IO actions perform IO actions.
+
+ - The _entry point_ of a Haskell program is the _main_ IO action. Only
+   the IO action executed from main will be executed.
+
+ - _IO actions are not functions_. _IO actions are values_ that can be passed to
+   functions and stored in data structures like any other value. 
+
  - IO Actions are commands. =_putSTrln "str"_= doesn't print a
    string. It actually creates a command to print a string that can be
    manipulated like a value, repeated, stored in data structures and
    passed to another IO actions. 
- - By typing an action action in the REPL (ghci) forces its execution.
+
+ - By typing the name of an IO action in the REPL (ghci) the user forces its execution.
 
 
-Example: 
+
+*Reading type signatures:*
+
+ - ~main :: IO ()~ is an IO action, not a function. 
+
+#+BEGIN_SRC haskell 
+main :: IO 
+main = do 
+    putStrLn "hello"
+#+END_SRC
+
+ - putStrLn is a function which takes a string and returns an IO
+   action which produces nothing '()' unit value.
+
+#+BEGIN_SRC haskell 
+putStrLn :: String -> IO ()
+#+END_SRC
+
+ - getLine is an IO action that when executed produces a string. It is
+   not a function.
+
+#+BEGIN_SRC haskell 
+getLine :: IO String 
+#+END_SRC
+
+ - readFile is a function that takes a string and returns an IO
+   action which when executed produces a string.
+
+#+BEGIN_SRC haskell 
+readFile :: FilePath -> IO String
+#+END_SRC
+
+*Example: IO actions are execute only when forced to do so.* 
+
+It is noticeable that: 
+
+ - action2 neither action3 are executed and they don't print anything.
+
+ - Only the IO actions called from main are executed.
+
+ - The string returned by the IO action askQuestion can only be
+   extracted inside an IO action.
+
 
 file: haskell_io1.hs
 
@@ -7434,61 +7486,456 @@ You entered the line: Hola mundo Haskell.
 
 #+END_SRC
 
-It is noticeable that: 
-
- - action2 neither action3 are executed and they don't print anything.
- - Only the IO actions called from main are executed.
- - The string returned by the function askQuestion can only be
-   extracted inside an IO action.
-
-The application of the function =putStrLn :: String -> IO ()= to a
-string =_putStrLn "Hello world"_= is equivalent to the code below in
-OCaml. 
-
-#+BEGIN_SRC ocaml
-> let putStrLn message = fun () -> print_string message ; 
-                                   print_string "\n" ;;
-
-val putStrLn : string -> unit -> unit = <fun>
 
 
->  putStrLn "Hello world" ;;
-- : unit -> unit = <fun>
+*Example: IO Actions can be stored in data structures and passed as values*
 
-(* Nothing is printed. It is created an action or command 
-   that prints hello world
-,*)
-> let action = putStrLn "hello world" ;;
-val action : unit -> unit = <fun>
+#+BEGIN_SRC haskell
 
-(* Forces the evaluation of IO action. 
-,*)
-> let runIO ioAction = ioAction () ;;
-val runIO : (unit -> 'a) -> 'a = <fun>
- 
+  :{
+  printFile :: String -> IO ()
+  printFile file = do 
+      content <- readFile file
+      putStrLn content 
+  :}
 
-(* Not executed  *)
-- action ;; 
-val it : (unit -> unit) 
-> 
+  let printHello = putStrLn "Hello"
+  let printWorld = putStrLn "world"
 
->  runIO action ;;
-hello world
-- : unit = ()
- 
-let do3times action =
-  runIO action ;
-  runIO action ;
-  runIO action
-;;        
-val do3times : (unit -> 'a) -> 'a = <fun>
+  let actionList = [printHello, printWorld, printFile "/etc/issue", print [1..10]]                 
+
+  Prelude> :t actionList 
+  actionList :: [IO ()]
+  Prelude>
+
+  :{
+  runActions :: [IO()] -> IO ()
+  runActions ioList = do 
+      case ioList of
+        []              -> return ()
+        (ioAction:rest) -> do ioAction
+                              runActions rest 
+  :}
+
+  Prelude> runActions actionList 
+  Hello
+  world
+  Manjaro Linux \r  (\n) (\l)
 
 
->  do3times action ;;
-hello world
-hello world
-hello world
-- : unit = ()
+
+  [1,2,3,4,5,6,7,8,9,10]
+  Prelude>
+
+
+  Prelude> let actions = [putStrLn "hello world (en)", putStrLn "hola mundo (es)", putStrLn "ola mundo (pt)"]
+  Prelude>
+
+  Prelude> :t actions
+  actions :: [IO ()]
+  Prelude>
+
+
+  Prelude> runActions actions
+  hello world (en)
+  hola mundo (es)
+  ola mundo (pt)
+  Prelude>
+
+  {- | Not Haskell has a function for this: sequence_ -}
+
+  > import Control.Monad (sequence_)
+
+  > :t sequence_
+  sequence_ :: (Foldable t, Monad m) => t (m a) -> m ()
+
+  > sequence_ actionList 
+  Hello
+  world
+  Manjaro Linux \r  (\n) (\l)
+
+
+
+  [1,2,3,4,5,6,7,8,9,10]
+  > 
+               
+
+  > sequence_ actions
+  hello world (en)
+  hola mundo (es)
+  ola mundo (pt)
+  >             
+               
+  -- IO actions can be passed as values and manipulated as values 
+  -- 
+  :{
+  doTimes :: Int -> IO () -> IO ()   
+  doTimes n action = do
+      if n < 0
+      then error "Error: n cannot be negative"
+      else case n of      
+             0   -> return ()             
+             k   -> do action
+                       doTimes (k - 1) action
+  :}                
+
+  Prelude>  :t doTimes 
+  doTimes :: Int -> IO () -> IO ()
+  Prelude>
+
+  Prelude> doTimes 3 (putStrLn "hello world")
+  hello world
+  hello world
+  hello world
+  Prelude>
+         
+  Prelude> doTimes 8 (putStrLn "hello world")
+  hello world
+  hello world
+  hello world
+  hello world
+  hello world
+  hello world
+  hello world
+  hello world
+  Prelude>
+
+
+  > doTimes 3 (sequence_ actionList)
+  Hello
+  world
+  Manjaro Linux \r  (\n) (\l)
+
+
+
+  [1,2,3,4,5,6,7,8,9,10]
+  Hello
+  world
+  Manjaro Linux \r  (\n) (\l)
+
+
+
+  [1,2,3,4,5,6,7,8,9,10]
+  Hello
+  world
+  Manjaro Linux \r  (\n) (\l)
+
+
+
+  [1,2,3,4,5,6,7,8,9,10]
+  > 
+         
+#+END_SRC
+
+IO Actions allows to build functions that works like control
+structures.
+
+#+BEGIN_SRC haskell
+  :{
+  myIF :: Bool -> IO () -> IO () -> IO ()
+  myIF cond actionThen actionElse =
+      if cond
+      then actionThen
+      else actionElse
+  :}
+
+  > myIF True (putStrLn "Turn on control valve") (putStrLn "Shutdown control valve")
+  Turn on control valve
+  > 
+  > myIF False (putStrLn "Turn on control valve") (putStrLn "Shutdown control valve")
+  Shutdown control valve
+  > 
+  > 
+           
+  :{         
+  myWhen :: Bool -> IO () -> IO ()
+  myWhen cond action = if cond then action else return ()
+  :}
+
+  > myWhen True (putStrLn "Fire missiles")
+  Fire missiles
+  > myWhen False (putStrLn "Fire missiles")
+  >
+
+  > import Text.Read (readMaybe)
+  > 
+
+
+  {- | Read input from user until he provides a valid value. -}
+
+  :{
+  readUntil :: Read a => String -> IO a
+  readUntil prompt = do
+    putStr prompt
+    input <- getLine  
+    case readMaybe input of
+      Nothing -> do putStrLn "Error: Enter a valid value."
+                    readUntil prompt
+      Just x  -> return x    
+  :}
+
+  > :t readUntil 
+  readUntil :: Read a => IO a
+  > 
+
+  > readUntil "> Enter a number: " :: IO Int
+  > Enter a number: dsfsd
+  Error: Enter a valid value.
+  > Enter a number: 234dsfsd
+  Error: Enter a valid value.
+  > Enter a number: 145
+  145
+  > 
+  > readUntil "> Enter a Maybe number: " :: IO (Maybe Int)
+  > Enter a Maybe number: dsfsd
+  Error: Enter a valid value.
+  > Enter a Maybe number: 345sa
+  Error: Enter a valid value.
+  > Enter a Maybe number: 2343
+  Error: Enter a valid value.
+  > Enter a Maybe number: Just 100
+  Just 100
+  > 
+
+  {- | IO Actions can be composed -}
+  :{
+  sumTwoNumbers :: IO ()
+  sumTwoNumbers = do
+    number1 <- readUntil "Enter number 1: " :: IO Int
+    number2 <- readUntil "Enter number 2: " :: IO Int
+    let s = number1 + number2            
+    putStrLn ("The sum is equal to " ++ show s)                 
+  :}
+   
+  > sumTwoNumbers 
+  Enter number 1: sada
+  Error: Enter a valid value.
+  Enter number 1: 3423asd
+  Error: Enter a valid value.
+  Enter number 1: 
+  Error: Enter a valid value.
+  Enter number 1: 1000^?^?
+  Error: Enter a valid value.
+  Enter number 1: 2-
+  Error: Enter a valid value.
+  Enter number 1: 200
+  Enter number 2: dsafs
+  Error: Enter a valid value.
+  Enter number 2: djgfh
+  Error: Enter a valid value.
+  Enter number 2: 300
+  The sum is equal to 500
+  > 
+   
+#+END_SRC
+
+
+It is not possible to do in a non-pure language. Example in F#
+(Fsharp).
+
+#+BEGIN_SRC fsharp 
+  > let putStrLn s = printfn "%s" s ;;
+
+  val putStrLn : s:string -> unit
+
+  > let actions = [putStrLn "hello world" ; putStrLn "hola mundo" ; putStrLn "ola mundo"] ;;                       
+  hello world
+  hola mundo
+  ola mundo
+
+  val actions : unit list = [null; null; null]
+
+  (* It doesn't work.
+
+   myIF True (putStrLn "Turn on control valve") (putStrLn "Shutdown control valve")
+  ,*)
+
+  let myIF cond actionThen actionElse: unit =
+      if cond then actionThen else actionElse
+  ;;        
+
+  - myIF true (putStrLn "Turn on control valve") (putStrLn "Shutdown control valve") ;;
+  Turn on control valve
+  Shutdown control valve
+  val it : unit = ()
+
+  > myIF false (putStrLn "Turn on control valve") (putStrLn "Shutdown control valve") ;;    
+  Turn on control valve
+  Shutdown control valve
+  val it : unit = ()
+  > 
+
+
+  // It doesn't work
+  //
+  let myWhen cond fn = if cond then fn else ()
+
+  > myWhen true (putStrLn "Fire missiles") ;;
+  Fire missiles
+  val it : unit = ()
+
+  > myWhen false (putStrLn "Fire missiles") ;;
+  Fire missiles
+  val it : unit = ()
+  > 
+                         
+#+END_SRC
+
+It is possible if the the function application is wrapped in a thunk:
+
+#+BEGIN_SRC fsharp
+
+  let putStrLn s = fun () -> printfn "%s" s
+  ;;
+
+  val putStrLn : s:string -> unit -> unit
+
+  > let actions = [putStrLn "hello world" ; putStrLn "hola mundo" ; putStrLn "ola mundo"] ;;
+
+  val actions : (unit -> unit) list 
+
+  let runActions actions = 
+
+
+  (*  Haskell Code:
+    
+      runActions :: [IO()] -> IO ()
+      runActions ioList = do 
+          case ioList of
+            []              -> return ()
+            (ioAction:rest) -> do ioAction
+                                  runActions rest 
+
+  ,*)
+
+  let rec runActions ioList = do
+      match ioList with
+      | []               -> ()
+      | (ioAction::rest) -> ioAction (); runActions rest
+  ;;
+
+  - runActions ;;
+  val it : ((unit -> unit) list -> unit) 
+
+
+  - runActions actions ;;
+  hello world
+  hola mundo
+  ola mundo
+  val it : unit = ()
+  >
+
+
+  let myIf cond actionThen actionElse : unit =
+      if cond
+      then actionThen ()
+      else actionElse ()
+  ;;
+
+
+  val myIf : cond:bool -> actionThen:unit -> actionElse:unit -> unit
+
+
+  > myIf false (putStrLn "Turn on control valve") (putStrLn "Shutdown control valve") ;;
+  Shutdown control valve
+  val it : unit = ()
+
+  > myIf true (putStrLn "Turn on control valve") (putStrLn "Shutdown control valve") ;; 
+  Turn on control valve
+  val it : unit = ()
+  > 
+#+END_SRC
+
+The implementation details can abstracted by defining a type IO. 
+
+#+BEGIN_SRC fsharp 
+  type IO<'T> = IO of (unit -> 'T)
+
+  - let runIO (IO thunk) = thunk () ;;  
+
+  val runIO : IO<'a> -> 'a
+
+
+  > let putStrLn s: IO<unit> = IO (fun () -> printfn "%s" s) ;;
+
+  val putStrLn : s:string -> IO<unit>
+
+
+  - putStrLn "hello world" ;;
+  val it : IO<unit> 
+  > 
+
+  - runIO (putStrLn "hello world") ;;
+  hello world
+  val it : unit = ()
+  > 
+
+  - runIO <| putStrLn "hello world"  ;;
+  hello world
+  val it : unit = ()
+  > 
+
+
+  let sequence_ (actions: IO<unit> list): IO<unit> =
+      let rec aux xs = match xs with
+                       | []       -> ()
+                       | io::rest -> runIO io ; aux rest
+      IO (fun () -> aux actions)
+  ;;
+
+  val sequence_ : actions:IO<unit> list -> IO<unit>
+
+  >
+
+  - let actionList = [putStrLn "(en) hello world"; putStrLn "(es) hola mundo"; putStrLn "(pt) ola mundo"] ;; 
+  val actionList : IO<unit> list =
+
+
+  // Creates a new IO actions that will execute each of the IO actions in the list 
+  > let action = sequence_ actionList ;;
+
+  val action : IO<unit> 
+
+  > runIO action ;;
+  (en) hello world
+  (es) hola mundo
+  (pt) ola mundo
+  val it : unit = ()
+  > 
+
+  // F# operator (<|) is similar to Haskell operator ($) dollar sign.
+  // To eliminate parenthesis.
+  // 
+  - runIO <| sequence_  [putStrLn "(en) hello world"; putStrLn "(es) hola mundo"; putStrLn "(pt) ola mundo"] ;;  
+  (en) hello world
+  (es) hola mundo
+  (pt) ola mundo
+  val it : unit = ()
+  > 
+
+
+  let doTimes (n: int) (ioAction: IO<unit>): IO<unit> =
+      let rec aux n =
+          match n with 
+          | _ when n < 0 -> failwith "Error: n cannot be negative"
+          | 0            -> ()
+          | k            -> runIO ioAction ; aux (k - 1)
+
+      IO (fun () -> aux n)
+
+  val doTimes : n:int -> ioAction:IO<unit> -> IO<unit>
+
+
+  > doTimes 3 (putStrLn "hello world") ;;
+  val it : IO<unit> 
+
+  > 
+  - doTimes 3 (putStrLn "hello world") |> runIO ;;
+  hello world
+  hello world
+  hello world
+  val it : unit = ()
+  > 
 
 #+END_SRC
 
@@ -7703,7 +8150,7 @@ The IO monad cannot be implemented in Haskell. However by implementing
 it in OCaml is possible to understand how it works and get some
 intuition about IO actions and also understand how the monad
 combinators like (>>), sequence, sequence_ works. This implementation
-was designed to by as simple as possible to understand. 
+was designed to by as simple as possible. 
 
 
 It is based on the paper: Waddler, Philip. *How to Declare an
@@ -9335,7 +9782,6 @@ val stackStuff : (stack, unit) State.state = State.ST <fun>
 - : unit * stack = ((), [8; 3; 0; 2; 1; 0])
 #   
 #+END_SRC
-
 
 *** Writer Monad 
 
