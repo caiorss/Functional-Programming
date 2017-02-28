@@ -279,9 +279,10 @@ like Scheme, Javascript, Python, Haskell, ML, OCaml and many others
 some exceptions are C, Java, Matlab (Octave open source
 implementation), Bash, and Forth.
 
-Examples:
+*Examples:*
 
- - Python:
+ - Python: Functions are values and can be passed as argument and
+   returned from functions.
 
 The function f is passed as argument to the derivate function that
 returns a new function named _, that computes the derivate of f at x.
@@ -334,6 +335,58 @@ def derivate (f, dx=1e-5):
 74
 >>> 
 #+END_SRC
+
+
+ - Functions can be stored in data strcutures: 
+
+Example: Haskell 
+
+#+BEGIN_SRC haskell 
+  > let funlist = [sin, cos, exp, \x -> 10.0 * x - 3.0]
+  > 
+  > :t funlist
+  funlist :: Floating a => [a -> a]
+  > funlist
+
+  > (funlist !! 0) 0 
+  0.0
+  > (funlist !! 0) (pi / 2.0)
+  1.0
+  > 
+  > (funlist !! 3) 10.0
+  97.0
+
+  > (funlist !! 3) 4.0
+  37.0
+  > 
+
+  -- Apply all functions to a single arguments:
+  --
+  > map (\f -> f 4.0) funlist 
+  [-0.7568024953079282,-0.6536436208636119,54.598150033144236,37.0]
+  > 
+
+  > let funlist2 = [\x -> 2.0 * x, (*3.0), (+10.0)] ;;
+  > 
+  > map (\f -> f 4.0) funlist2 
+  [8.0,12.0,14.0]
+  > 
+
+  -- Functions can be generated at run-time.
+  --
+  --
+  > let flist = map (*) [1, 2, 3, 4]
+                
+  > :t flist
+  flist :: Num a => [a -> a]
+  > 
+
+  > map (\f -> f 3) flist
+  [3,6,9,12]
+  > 
+
+#+END_SRC
+
 
 See also: 
 
