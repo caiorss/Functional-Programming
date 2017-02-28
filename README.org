@@ -90,9 +90,13 @@ This repository is dedicated to public domain.
 
    - [[https://downloads.haskell.org/~ghc/latest/docs/html/libraries/][Haskell Hierarchical Libraries]] - Built-in Haskell libraries.
 
-   - [[https://www.haskell.org/hoogle/][Hoogle]]
+   - [[https://docs.haskellstack.org/en/stable/README/][Haskell Stack Tool]] - Haskell dependency manager, package manager
+     which can install multiple Haskell versions, library versions per
+     project repository avoiding dependency hell.
 
+   - [[https://www.haskell.org/platform/contents.html][Haskell Platform - Included Packages]]
 
+   - [[https://www.haskell.org/hoogle/][Hoogle]] - Haskell types search engine.
 
 
 *Functional Programming in OCaml*
