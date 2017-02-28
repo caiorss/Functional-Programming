@@ -711,6 +711,7 @@ Papers:
 
 #+BEGIN_SRC haskell 
   import Control.Exception 
+  import Data.Typeable (typeOf)
 
   > :t catch
   catch :: Exception e => IO a -> (e -> IO a) -> IO a
