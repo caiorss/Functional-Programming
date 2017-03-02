@@ -1,8 +1,6 @@
 ;; Minimal script to build the *.html files and export them
 ;; to the ./dist directory (Branch gh-pages).
 ;;
-;; Usage: Run with
-;;        $ emacs --batch -q -l build.el --kill 
 ;; 
 ;;
 
@@ -27,9 +25,7 @@
                    ;;#'package-require
                    ))
 
-         packs
-         
-         ))
+         packs))
 
 
 (packages-require  'htmlize)
@@ -78,62 +74,6 @@
 (setq org-html-htmlize-font-prefix "org-")
 
 
-
-
-;; (org-publish '(""
-;;               :base-directory       "."
-;;               :base-extension        "org"
-;;               :publishing-directory  "./dist"
-;;               :recursive             t 
-;;               :publishing-function    org-html-publish-to-html
-;;               :headline-levels       4
-;;               :html-preamble         t
-;;               )
-;;              t
-;;              )
-
-;; (org-publish '("html"
-;;               :base-directory       "./haskell"
-;;               :base-extension        "org"
-;;               :publishing-directory  "./dist/haskell"
-;;               :publishing-function    org-html-publish-to-html
-;;               )
-;;              t
-;;              )
-
-
-
-(defun export-directory-to-html (directory)
-  (let* ((files (directory-files directory t ".org" ))
-       (dest  (expand-file-name (concat "dist/" directory)))
-       ;(default-directory "./haskell")
-       )
-
-  (mapc (lambda (file)
-          (let ((buffer    (find-file-noselect file))
-                (html-file (concat (file-name-as-directory (file-name-directory file))
-                                   (file-name-base file)
-                                   ".html"
-                                   )))
-
-            (message (concat "Exporting " file))
-
-            (with-current-buffer buffer
-              (org-html-export-to-html)
-              ;;(save-buffer)
-              (kill-buffer))
-
-            (copy-file html-file dest t)
-            
-            (message (concat "Finished to export " html-file))
-            ;;(delete-file html-file)
-            (message "-----------------")
-            ))
-        files
-        )))
-
-
-
 (defun insert-line (line)
   (insert (concat line "\n")))
 
@@ -145,9 +85,10 @@
   ;; Go to top of buffer 
   (goto-char (point-min))
 
-  (insert-line "#+INFOJS_OPT: view:info toc:t ltoc:t ftoc:nil mouse:underline button:nil path:theme/org-info.js")
+  (insert-line "#+INFOJS_OPT: view:info toc:t ltoc:t ftoc:nil mouse:underline button:nil path:/theme/org-info.js")
   (insert-line "#+HTML_HEAD: <link href='/theme/style.css' rel='stylesheet'>" )
-
+  ;; (insert-line "#+STARTUP: content")
+  
   ;; Export current buffer to Html 
   (org-html-export-as-html)
 
@@ -159,23 +100,4 @@
   (append-to-file (point-min) (point-max) filename)
 
   ))
-
-
-;; (mapc #'export-directory-to-html (list  "haskell"
-;;                                         "ocaml"
-;;                                         "clojure"
-;;                                         "papers"
-;;                                         ))
-
-;; (export-directory-to-html ".")
-
-;; (export-directory-to-html "haskell")
-
-;; (export-directory-to-html "ocaml")
-;; (export-directory-to-html "clojure")
-;; (export-directory-to-html "papers")
-
-;; (file-name-base "/haskell/1/example1.org")
-;; (file-name-directory "/haskell/1/example1.org")
-;; (file-name-nondirectory "/haskell/1/example1.org")
 
