@@ -1,15 +1,15 @@
+FSI=fsharpi # F# Interpreter path 
 
-html:
-	emacs --batch  -l build.el --kill 
-
-tags:
-	git tag
+all:
+	fsharpi build.fsx	
 
 clean:
-	rm -rf  {.,dist}/{clojure,ocaml,haskell}/{.*html,.*html~}
+	# Remove all temporary files
+	find . -name "*~" | xargs rm -rf
+    # Remove all *.html files
+	find . -name "*.html" | xargs rm -rf
+
 
 upload:
 	git push github master
 
-commit:
-	git commit 
