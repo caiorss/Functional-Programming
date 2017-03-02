@@ -4,10 +4,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Module: Control.Monad</title>
-<!-- 2016-11-01 ter 01:18 -->
+<!-- 2017-03-02 qui 14:13 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
-<meta  name="author" content="Caio Rodrigues" />
+<meta  name="author" content="arch" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   .title  { text-align: center; }
@@ -88,15 +88,15 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
-<link href="/Functional-Programming/theme/style.css" rel="stylesheet">
+<link href='/theme/style.css' rel='stylesheet'>
 
-<script type="text/javascript" src="/Functional-Programming/theme/org-info.js">
+<script type="text/javascript" src="/theme/org-info.js">
 /**
  *
- * @source: /Functional-Programming/theme/org-info.js
+ * @source: /theme/org-info.js
  *
  * @licstart  The following is the entire license notice for the
- *  JavaScript code in /Functional-Programming/theme/org-info.js.
+ *  JavaScript code in /theme/org-info.js.
  *
  * Copyright (C) 2012-2013 Free Software Foundation, Inc.
  *
@@ -116,7 +116,7 @@
  * through which recipients can access the Corresponding Source.
  *
  * @licend  The above is the entire license notice
- * for the JavaScript code in /Functional-Programming/theme/org-info.js.
+ * for the JavaScript code in /theme/org-info.js.
  *
  */
 </script>
@@ -149,7 +149,7 @@ for the JavaScript code in this tag.
 */
 
 <!--/*--><![CDATA[/*><!--*/
-org_html_manager.set("TOC_DEPTH", "4");
+org_html_manager.set("TOC_DEPTH", "3");
 org_html_manager.set("LINK_HOME", "");
 org_html_manager.set("LINK_UP", "");
 org_html_manager.set("LOCAL_TOC", "1");
@@ -157,7 +157,7 @@ org_html_manager.set("VIEW_BUTTONS", "0");
 org_html_manager.set("MOUSE_HINT", "underline");
 org_html_manager.set("FIXED_TOC", "0");
 org_html_manager.set("TOC", "1");
-org_html_manager.set("VIEW", "showall");
+org_html_manager.set("VIEW", "info");
 org_html_manager.setup();  // activate after the parameters are set
 /*]]>*///-->
 </script>
@@ -234,10 +234,6 @@ for the JavaScript code in this tag.
 </ul>
 </div>
 </div>
-<lu> 
-  <li><a href="/Functional-Programming/index.html">Index</a></li>
-  <li><a href="https://github.com/caiorss/Functional-Programming">Repository</a></li>
-</lu>
 
 <div id="outline-container-sec-1" class="outline-2">
 <h2 id="sec-1"><span class="section-number-2">1</span> Control.Monad - Monad Combinators</h2>
@@ -256,7 +252,7 @@ This module provides functions to manipulate monads.
 <div class="outline-text-3" id="text-1-1">
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">join</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> m (m a) <span class="org-haskell-operator">-&gt;</span> m a 
+<pre class="src src-haskell"><span class="org-haskell-definition">join</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> m (m a) <span class="org-haskell-operator">-&gt;</span> m a 
 <span class="org-haskell-definition">join</span> mma <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span> 
    ma <span class="org-haskell-operator">&lt;-</span> mma 
    a  <span class="org-haskell-operator">&lt;-</span> ma 
@@ -278,7 +274,7 @@ Example:
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Monad</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t join
-<span class="org-function-name">join</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> m (m a) <span class="org-haskell-operator">-&gt;</span> m a
+<span class="org-haskell-definition">join</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> m (m a) <span class="org-haskell-operator">-&gt;</span> m a
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> join <span class="org-haskell-definition">$</span> <span class="org-haskell-type">Just</span> (<span class="org-haskell-type">Just</span> 10)
@@ -335,7 +331,7 @@ liftM is equivalent to fmap. Apply a function to monad
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">liftM</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> b) <span class="org-haskell-operator">-&gt;</span> m a <span class="org-haskell-operator">-&gt;</span> m b <span class="org-haskell-operator">=</span>
+<pre class="src src-haskell"><span class="org-haskell-definition">liftM</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> b) <span class="org-haskell-operator">-&gt;</span> m a <span class="org-haskell-operator">-&gt;</span> m b <span class="org-haskell-operator">=</span>
 <span class="org-haskell-definition">liftM</span>  f ma  <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>  
   a <span class="org-haskell-operator">&lt;-</span> ma
   return <span class="org-haskell-operator">$</span> f a
@@ -402,7 +398,7 @@ Apply a function to two monads.
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">liftM2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> b <span class="org-haskell-operator">-&gt;</span> c) <span class="org-haskell-operator">-&gt;</span> m a <span class="org-haskell-operator">-&gt;</span> m b <span class="org-haskell-operator">-&gt;</span> m c
+<pre class="src src-haskell"><span class="org-haskell-definition">liftM2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> b <span class="org-haskell-operator">-&gt;</span> c) <span class="org-haskell-operator">-&gt;</span> m a <span class="org-haskell-operator">-&gt;</span> m b <span class="org-haskell-operator">-&gt;</span> m c
 <span class="org-haskell-definition">liftM2</span> f ma mb <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span> 
   a <span class="org-haskell-operator">&lt;-</span> ma 
   b <span class="org-haskell-operator">&lt;-</span> mb 
@@ -471,12 +467,12 @@ that ignores the results see mapM_. (documentation)
 
 <pre class="src src-haskell"><span class="org-comment-delimiter">-- </span><span class="org-comment">Haskell 7.6.3 </span>
 <span class="org-comment-delimiter">-- </span>
-<span class="org-function-name">mapM</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> m [b]
+<span class="org-haskell-definition">mapM</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> m [b]
 <span class="org-haskell-definition">mapM</span> f ts <span class="org-haskell-operator">=</span> sequence (map f ts)
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">Haskell 7.10.2 </span>
 <span class="org-comment-delimiter">-- </span>
-<span class="org-function-name">mapM</span> <span class="org-haskell-operator">::</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> t a <span class="org-haskell-operator">-&gt;</span> m (t b)
+<span class="org-haskell-definition">mapM</span> <span class="org-haskell-operator">::</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> t a <span class="org-haskell-operator">-&gt;</span> m (t b)
 <span class="org-haskell-definition">mapM</span> f ts <span class="org-haskell-operator">=</span> sequence (fmap f ts)
 </pre>
 </div>
@@ -496,17 +492,17 @@ Example:
 <span class="org-comment-delimiter">-- </span><span class="org-comment">Signature in Haskell 7.6.3</span>
 <span class="org-comment-delimiter">--</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t mapM
-<span class="org-function-name">mapM</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> m [b]
+<span class="org-haskell-definition">mapM</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> m [b]
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t E.lookupEnv 
-<span class="org-function-name">E.lookupEnv</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">String</span>)
+E<span class="org-haskell-definition">.</span>lookupEnv <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">String</span>)
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">Singature in Haskell 7.10.2 (mapM is generalized). </span>
 <span class="org-comment-delimiter">-- </span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t mapM
-<span class="org-function-name">mapM</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Monad</span> m, <span class="org-haskell-type">Traversable</span> t) <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> t a <span class="org-haskell-operator">-&gt;</span> m (t b)
+<span class="org-haskell-definition">mapM</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Monad</span> m, <span class="org-haskell-type">Traversable</span> t) <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> t a <span class="org-haskell-operator">-&gt;</span> m (t b)
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">mapM</span> E.lookupEnv [<span class="org-string">"HOME"</span>, <span class="org-string">"a1"</span>, <span class="org-string">"b1"</span>, <span class="org-string">"LANGUAGE"</span>, <span class="org-string">"PYTHONPATH"</span>]
@@ -514,7 +510,7 @@ Example:
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t M.catMaybes 
-<span class="org-function-name">M.catMaybes</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">Maybe</span> a] <span class="org-haskell-operator">-&gt;</span> [a]
+M<span class="org-haskell-definition">.</span>catMaybes <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">Maybe</span> a] <span class="org-haskell-operator">-&gt;</span> [a]
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">fmap</span> M.catMaybes  <span class="org-haskell-operator">$</span> mapM E.lookupEnv [<span class="org-string">"HOME"</span>, <span class="org-string">"a1"</span>, <span class="org-string">"b1"</span>, <span class="org-string">"LANGUAGE"</span>, <span class="org-string">"PYTHONPATH"</span>]
@@ -529,7 +525,7 @@ Example:
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> selector <span class="org-haskell-operator">=</span> <span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-keyword">if</span> x <span class="org-haskell-operator">&gt;</span> 10 <span class="org-haskell-keyword">then</span> <span class="org-haskell-constructor">Just</span> (3 <span class="org-haskell-operator">+</span> x) <span class="org-haskell-keyword">else</span> <span class="org-haskell-constructor">Nothing</span>
 <span class="org-haskell-operator">&gt;</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t selector 
-<span class="org-function-name">selector</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Num</span> a, <span class="org-haskell-type">Ord</span> a) <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a
+<span class="org-haskell-definition">selector</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Num</span> a, <span class="org-haskell-type">Ord</span> a) <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">mapM</span> selector (<span class="org-haskell-type">Just</span> 20)
@@ -558,12 +554,12 @@ Example:
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-comment-delimiter">-- </span><span class="org-comment">Haskell 7.6.3</span>
-<span class="org-function-name">mapM_</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> m <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">mapM_</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> m <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-definition">mapM_</span> fn ta <span class="org-haskell-operator">=</span> sequence_ <span class="org-haskell-operator">$</span> map fn ta 
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">Haskell 7.10.2  - Generalized version of old mapM_</span>
 <span class="org-comment-delimiter">--</span>
-<span class="org-function-name">mapM_</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Monad</span> m, <span class="org-haskell-type">Foldable</span> t) <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> t a <span class="org-haskell-operator">-&gt;</span> m <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">mapM_</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Monad</span> m, <span class="org-haskell-type">Foldable</span> t) <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> t a <span class="org-haskell-operator">-&gt;</span> m <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-definition">matM_</span> fn ta <span class="org-haskell-operator">=</span>  sequence_ <span class="org-haskell-operator">$</span> fmap fn ta
 </pre>
 </div>
@@ -620,7 +616,7 @@ line
 
 <pre class="src src-haskell"><span class="org-comment-delimiter">-- </span><span class="org-comment">Haskell 7.10.2  </span>
 <span class="org-comment-delimiter">-- </span>
-<span class="org-function-name">forM</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Monad</span> m, <span class="org-haskell-type">Traversable</span> t) <span class="org-haskell-operator">=&gt;</span> t a <span class="org-haskell-operator">-&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> m (t b)
+<span class="org-haskell-definition">forM</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Monad</span> m, <span class="org-haskell-type">Traversable</span> t) <span class="org-haskell-operator">=&gt;</span> t a <span class="org-haskell-operator">-&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> m (t b)
 <span class="org-haskell-definition">forM</span> <span class="org-haskell-operator">=</span> flip mapM
 </pre>
 </div>
@@ -677,7 +673,7 @@ Example:
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">Haskell 7.6.3 </span>
 <span class="org-comment-delimiter">--</span>
-<span class="org-function-name">forM_</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Monad</span> m, <span class="org-haskell-type">Foldable</span> t) <span class="org-haskell-operator">=&gt;</span> t a <span class="org-haskell-operator">-&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> m <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">forM_</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Monad</span> m, <span class="org-haskell-type">Foldable</span> t) <span class="org-haskell-operator">=&gt;</span> t a <span class="org-haskell-operator">-&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> m <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-definition">forM_</span> <span class="org-haskell-operator">=</span> flip mapM_
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">forM_</span> [1, 2, 3, 4, 5] <span class="org-haskell-operator">$</span> <span class="org-haskell-operator">\</span> n <span class="org-haskell-operator">-&gt;</span> putStrLn <span class="org-haskell-operator">$</span> show n
@@ -730,7 +726,7 @@ Replicate a monad n times getting the results.
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">replicateM</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> m a <span class="org-haskell-operator">-&gt;</span> m [a]
+<pre class="src src-haskell"><span class="org-haskell-definition">replicateM</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> m a <span class="org-haskell-operator">-&gt;</span> m [a]
 <span class="org-haskell-definition">replicateM</span> n x    <span class="org-haskell-operator">=</span> sequence (replicate n x)
 </pre>
 </div>
@@ -779,7 +775,7 @@ line3
 <span class="org-haskell-operator">&gt;</span> lines
 [<span class="org-string">"line1"</span>,<span class="org-string">"line2"</span>,<span class="org-string">"line3"</span>]
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t lines
-<span class="org-function-name">lines</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">String</span>]
+<span class="org-haskell-definition">lines</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">String</span>]
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Monad.Identity</span> 
@@ -801,7 +797,7 @@ Like replicateM, but throw away the result.
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">replicateM_</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> m a <span class="org-haskell-operator">-&gt;</span> m <span class="org-haskell-constructor">()</span>
+<pre class="src src-haskell"><span class="org-haskell-definition">replicateM_</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> m a <span class="org-haskell-operator">-&gt;</span> m <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-definition">replicateM_</span> n x   <span class="org-haskell-operator">=</span> sequence_ (replicate n x)
 </pre>
 </div>
@@ -842,7 +838,7 @@ sequence_.
 <span class="org-comment-delimiter">-- </span>
 <span class="org-comment-delimiter">-- </span><span class="org-comment">Source: http://kodu.ut.ee/~varmo/FP2007/slides/loeng13.pdf</span>
 <span class="org-comment-delimiter">-- </span>
-<span class="org-function-name">sequence</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> [m a] <span class="org-haskell-operator">-&gt;</span> m [a]
+<span class="org-haskell-definition">sequence</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> [m a] <span class="org-haskell-operator">-&gt;</span> m [a]
 <span class="org-haskell-definition">sequence</span> <span class="org-haskell-operator">=</span> foldr mcons (return <span class="org-haskell-constructor">[]</span>)
     <span class="org-haskell-keyword">where</span> 
        mcons p q <span class="org-haskell-operator">=</span> 
@@ -863,13 +859,13 @@ Example:
 <span class="org-comment-delimiter">-- </span><span class="org-comment">Haskell 7.6.3 </span>
 <span class="org-comment-delimiter">--</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t sequence
-<span class="org-function-name">sequence</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> [m a] <span class="org-haskell-operator">-&gt;</span> m [a]
+<span class="org-haskell-definition">sequence</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> [m a] <span class="org-haskell-operator">-&gt;</span> m [a]
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">Haskell 7.10.2 </span>
 <span class="org-comment-delimiter">-- </span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t sequence
-<span class="org-function-name">sequence</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Monad</span> m, <span class="org-haskell-type">Traversable</span> t) <span class="org-haskell-operator">=&gt;</span> t (m a) <span class="org-haskell-operator">-&gt;</span> m (t a)
+<span class="org-haskell-definition">sequence</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Monad</span> m, <span class="org-haskell-type">Traversable</span> t) <span class="org-haskell-operator">=&gt;</span> t (m a) <span class="org-haskell-operator">-&gt;</span> m (t a)
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sequence</span> [[1], [2, 3, 4], <span class="org-haskell-constructor">[]</span>, [4], <span class="org-haskell-constructor">[]</span>, <span class="org-haskell-constructor">[]</span>, [20, 30]]
@@ -929,11 +925,11 @@ line3
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> inputNunmber <span class="org-haskell-operator">=</span> getLine <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span> str <span class="org-haskell-operator">-&gt;</span> return <span class="org-haskell-operator">$</span> (read str <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Integer</span>)
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t inputNunmber 
-<span class="org-function-name">inputNunmber</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">Integer</span>
+<span class="org-haskell-definition">inputNunmber</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">Integer</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> actions <span class="org-haskell-operator">=</span> [inputNunmber, inputNunmber, inputNunmber]
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t actions 
-<span class="org-function-name">actions</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">IO</span> <span class="org-haskell-type">Integer</span>]
+<span class="org-haskell-definition">actions</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">IO</span> <span class="org-haskell-type">Integer</span>]
 <span class="org-haskell-operator">&gt;</span> 
 
  <span class="org-comment-delimiter">-- </span><span class="org-comment">Only works in the repl (&lt;-) to extract content from IO Monad.</span>
@@ -945,7 +941,7 @@ line3
 <span class="org-haskell-operator">&gt;</span> out
 [23,100,200]
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t out
-<span class="org-function-name">out</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">Integer</span>]
+<span class="org-haskell-definition">out</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">Integer</span>]
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sequence</span> actions 
@@ -981,11 +977,11 @@ sequence. (documentation).
 <pre class="src src-haskell"><span class="org-comment-delimiter">-- </span><span class="org-comment">Haskell 7.6.3. Most of texts and lectures notes refers </span>
 <span class="org-comment-delimiter">-- </span><span class="org-comment">to the old implementation of sequence_. </span>
 <span class="org-comment-delimiter">--</span>
-<span class="org-function-name">sequence_</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> [m a] <span class="org-haskell-operator">-&gt;</span> m <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">sequence_</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> [m a] <span class="org-haskell-operator">-&gt;</span> m <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-definition">sequence_</span> <span class="org-haskell-operator">=</span> foldr (<span class="org-haskell-operator">&gt;&gt;</span>) (return <span class="org-haskell-constructor">()</span>)
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">Haskell 7.10.2</span>
-<span class="org-function-name">sequence_</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Monad</span> m, <span class="org-haskell-type">Foldable</span> t) <span class="org-haskell-operator">=&gt;</span> t (m a) <span class="org-haskell-operator">-&gt;</span> m <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">sequence_</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Monad</span> m, <span class="org-haskell-type">Foldable</span> t) <span class="org-haskell-operator">=&gt;</span> t (m a) <span class="org-haskell-operator">-&gt;</span> m <span class="org-haskell-constructor">()</span>
 </pre>
 </div>
 
@@ -1040,13 +1036,13 @@ sequence_ <span class="org-haskell-definition">$</span> <span class="org-haskell
 
 <pre class="src src-haskell"><span class="org-comment-delimiter">-- </span><span class="org-comment">Haskell 7.6.3</span>
 <span class="org-comment-delimiter">-- </span>
-<span class="org-function-name">foldM</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> b <span class="org-haskell-operator">-&gt;</span> m a) <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> [b] <span class="org-haskell-operator">-&gt;</span> m a
+<span class="org-haskell-definition">foldM</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> b <span class="org-haskell-operator">-&gt;</span> m a) <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> [b] <span class="org-haskell-operator">-&gt;</span> m a
 <span class="org-haskell-definition">foldM</span> f a <span class="org-haskell-constructor">[]</span>     <span class="org-haskell-operator">=</span> return a 
 <span class="org-haskell-definition">foldM</span> f a (x<span class="org-haskell-constructor">:</span>xs) <span class="org-haskell-operator">=</span>  f a x <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span> fax <span class="org-haskell-operator">-&gt;</span> foldM f fax xs
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">Haskell 7.10.2 </span>
 <span class="org-comment-delimiter">--</span>
-<span class="org-function-name">foldM</span>  <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Monad</span> m, <span class="org-haskell-type">Foldable</span> t) <span class="org-haskell-operator">=&gt;</span> (b <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> b <span class="org-haskell-operator">-&gt;</span> t a <span class="org-haskell-operator">-&gt;</span> m b
+<span class="org-haskell-definition">foldM</span>  <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Monad</span> m, <span class="org-haskell-type">Foldable</span> t) <span class="org-haskell-operator">=&gt;</span> (b <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> b <span class="org-haskell-operator">-&gt;</span> t a <span class="org-haskell-operator">-&gt;</span> m b
 <span class="org-haskell-definition">foldM</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-operator">???</span>
 
 
@@ -1098,8 +1094,8 @@ Example:
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2016-11-01 ter 01:18</p>
+<p class="author">Author: arch</p>
+<p class="date">Created: 2017-03-02 qui 14:13</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

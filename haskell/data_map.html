@@ -4,10 +4,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Module: Data.Map</title>
-<!-- 2016-11-01 ter 01:18 -->
+<!-- 2017-03-02 qui 14:14 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
-<meta  name="author" content="Caio Rodrigues" />
+<meta  name="author" content="arch" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   .title  { text-align: center; }
@@ -88,15 +88,15 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
-<link href="/Functional-Programming/theme/style.css" rel="stylesheet">
+<link href='/theme/style.css' rel='stylesheet'>
 
-<script type="text/javascript" src="/Functional-Programming/theme/org-info.js">
+<script type="text/javascript" src="/theme/org-info.js">
 /**
  *
- * @source: /Functional-Programming/theme/org-info.js
+ * @source: /theme/org-info.js
  *
  * @licstart  The following is the entire license notice for the
- *  JavaScript code in /Functional-Programming/theme/org-info.js.
+ *  JavaScript code in /theme/org-info.js.
  *
  * Copyright (C) 2012-2013 Free Software Foundation, Inc.
  *
@@ -116,7 +116,7 @@
  * through which recipients can access the Corresponding Source.
  *
  * @licend  The above is the entire license notice
- * for the JavaScript code in /Functional-Programming/theme/org-info.js.
+ * for the JavaScript code in /theme/org-info.js.
  *
  */
 </script>
@@ -149,7 +149,7 @@ for the JavaScript code in this tag.
 */
 
 <!--/*--><![CDATA[/*><!--*/
-org_html_manager.set("TOC_DEPTH", "4");
+org_html_manager.set("TOC_DEPTH", "3");
 org_html_manager.set("LINK_HOME", "");
 org_html_manager.set("LINK_UP", "");
 org_html_manager.set("LOCAL_TOC", "1");
@@ -157,7 +157,7 @@ org_html_manager.set("VIEW_BUTTONS", "0");
 org_html_manager.set("MOUSE_HINT", "underline");
 org_html_manager.set("FIXED_TOC", "0");
 org_html_manager.set("TOC", "1");
-org_html_manager.set("VIEW", "showall");
+org_html_manager.set("VIEW", "info");
 org_html_manager.setup();  // activate after the parameters are set
 /*]]>*///-->
 </script>
@@ -219,10 +219,6 @@ for the JavaScript code in this tag.
 </ul>
 </div>
 </div>
-<lu> 
-  <li><a href="/Functional-Programming/index.html">Index</a></li>
-  <li><a href="https://github.com/caiorss/Functional-Programming">Repository</a></li>
-</lu>
 
 <div id="outline-container-sec-1" class="outline-2">
 <h2 id="sec-1"><span class="section-number-2">1</span> Data.Map</h2>
@@ -256,11 +252,11 @@ Example:
 <span class="org-haskell-keyword">let</span> alist <span class="org-haskell-operator">=</span> [(10, <span class="org-string">"Texas"</span>), (2, <span class="org-string">"Utah"</span>), (3, <span class="org-string">"New Mexico"</span>), (14, <span class="org-string">"Ohio"</span>)]
 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t Map.fromList
-<span class="org-function-name">Map.fromList</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> [(k, a)] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a
+Map<span class="org-haskell-definition">.</span>fromList <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> [(k, a)] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-type">:</span>t hmap1
-<span class="org-function-name">hmap1</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Num</span> k, <span class="org-haskell-type">Ord</span> k) <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">M.Map</span> k [<span class="org-haskell-type">Char</span>]
+<span class="org-haskell-definition">hmap1</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Num</span> k, <span class="org-haskell-type">Ord</span> k) <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">M.Map</span> k [<span class="org-haskell-type">Char</span>]
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> hmap1
 <span class="org-haskell-definition">fromList</span> [(2,<span class="org-string">"Utah"</span>),(3,<span class="org-string">"New Mexico"</span>),(10,<span class="org-string">"Texas"</span>),(14,<span class="org-string">"Ohio"</span>)]
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
@@ -271,7 +267,7 @@ Example:
 <span class="org-comment-delimiter">--  </span><span class="org-comment">Test if a key is a member of the map. </span>
 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t Map.member 
-<span class="org-function-name">Map.member</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> k <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
+Map<span class="org-haskell-definition">.</span>member <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> k <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.member 2 hmap1 
 <span class="org-haskell-constructor">True</span>
@@ -300,7 +296,7 @@ Example:
 
 <span class="org-comment">-}</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t Map.lookup 
-<span class="org-function-name">Map.lookup</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> k <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a
+Map<span class="org-haskell-definition">.</span>lookup <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> k <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.lookup 1 hmap1
@@ -334,7 +330,7 @@ Example:
 <span class="org-comment-delimiter">--</span><span class="org-comment">-</span>
 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t Map.findWithDefault 
-<span class="org-function-name">Map.findWithDefault</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> k <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a <span class="org-haskell-operator">-&gt;</span> a
+Map<span class="org-haskell-definition">.</span>findWithDefault <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> k <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a <span class="org-haskell-operator">-&gt;</span> a
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.findWithDefault <span class="org-string">"Arizona"</span> 2 hmap1
@@ -355,7 +351,7 @@ Example:
 <span class="org-comment-delimiter">--</span><span class="org-comment">-</span>
 <span class="org-comment-delimiter">--</span><span class="org-comment">-</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t Map.singleton 
-<span class="org-function-name">Map.singleton</span> <span class="org-haskell-operator">::</span> k <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a
+Map<span class="org-haskell-definition">.</span>singleton <span class="org-haskell-operator">::</span> k <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.singleton  <span class="org-string">"Texas"</span> 30 
@@ -399,7 +395,7 @@ Example:
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t Map.delete 
-<span class="org-function-name">Map.delete</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> k <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a
+Map<span class="org-haskell-definition">.</span>delete <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> k <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.delete <span class="org-string">"a"</span> hmap
@@ -432,7 +428,7 @@ Example:
 <span class="org-comment">-}</span>
 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t Map.adjust
-<span class="org-function-name">Map.adjust</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> a) <span class="org-haskell-operator">-&gt;</span> k <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a
+Map<span class="org-haskell-definition">.</span>adjust <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> a) <span class="org-haskell-operator">-&gt;</span> k <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> hmap
@@ -528,12 +524,12 @@ Map<span class="org-haskell-definition">.</span>update
 <span class="org-comment">-}</span>
 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t Map.unions
-<span class="org-function-name">Map.unions</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> [<span class="org-haskell-type">M.Map</span> k a] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a
+Map<span class="org-haskell-definition">.</span>unions <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> [<span class="org-haskell-type">M.Map</span> k a] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-keyword">let</span> fromList <span class="org-haskell-operator">=</span> Map.fromList
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t fromList 
-<span class="org-function-name">fromList</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> [(k, a)] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a
+<span class="org-haskell-definition">fromList</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> [(k, a)] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.unions [fromList [(1, <span class="org-string">"a"</span>), (2, <span class="org-string">"c"</span>)], fromList [(2, <span class="org-string">"c"</span>), (3, <span class="org-string">"m"</span>)],  fromList [(10, <span class="org-string">"x"</span>), (3, <span class="org-string">"m"</span>), (4, <span class="org-string">"y"</span>)] ]
@@ -562,7 +558,7 @@ Map<span class="org-haskell-definition">.</span>update
 <span class="org-comment">-}</span>
 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t Map.intersection
-<span class="org-function-name">Map.intersection</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">M.Map</span> k a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k b <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a
+Map<span class="org-haskell-definition">.</span>intersection <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Ord</span> k <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">M.Map</span> k a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k b <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M.Map</span> k a
 <span class="org-haskell-operator">&gt;&gt;&gt;</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.intersection (fromList [(5, <span class="org-string">"a"</span>), (3, <span class="org-string">"b"</span>)]) (fromList [(5, <span class="org-string">"A"</span>), (7, <span class="org-string">"C"</span>)])
 <span class="org-haskell-definition">fromList</span> [(5,<span class="org-string">"a"</span>)]
@@ -620,7 +616,7 @@ Map<span class="org-haskell-definition">.</span>mapAccum
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.Char</span> (ord)
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> <span class="org-haskell-constructor">:</span>t ord
-<span class="org-function-name">ord</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Char</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">ord</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Char</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> 
 <span class="org-haskell-operator">&gt;&gt;&gt;</span> Map.mapKeys (map ord) hmap
 <span class="org-haskell-definition">fromList</span> [([97],3),([99],10),([109],23),([120],2)]
@@ -654,8 +650,8 @@ Map<span class="org-haskell-definition">.</span>mapAccum
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2016-11-01 ter 01:18</p>
+<p class="author">Author: arch</p>
+<p class="date">Created: 2017-03-02 qui 14:14</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

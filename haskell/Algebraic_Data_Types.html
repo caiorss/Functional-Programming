@@ -4,9 +4,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Algebraic Data Types</title>
-<!-- 2016-11-01 ter 01:49 -->
+<!-- 2017-03-02 qui 14:13 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
+<meta  name="author" content="Caio Rodrigues" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   .title  { text-align: center; }
@@ -87,15 +88,16 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
+<link href='/theme/style.css' rel='stylesheet'>
 <link href="/Functional-Programming/theme/style.css" rel="stylesheet">
 
-<script type="text/javascript" src="/Functional-Programming/theme/org-info.js">
+<script type="text/javascript" src="/theme/org-info.js">
 /**
  *
- * @source: /Functional-Programming/theme/org-info.js
+ * @source: /theme/org-info.js
  *
  * @licstart  The following is the entire license notice for the
- *  JavaScript code in /Functional-Programming/theme/org-info.js.
+ *  JavaScript code in /theme/org-info.js.
  *
  * Copyright (C) 2012-2013 Free Software Foundation, Inc.
  *
@@ -115,7 +117,7 @@
  * through which recipients can access the Corresponding Source.
  *
  * @licend  The above is the entire license notice
- * for the JavaScript code in /Functional-Programming/theme/org-info.js.
+ * for the JavaScript code in /theme/org-info.js.
  *
  */
 </script>
@@ -156,7 +158,7 @@ org_html_manager.set("VIEW_BUTTONS", "0");
 org_html_manager.set("MOUSE_HINT", "underline");
 org_html_manager.set("FIXED_TOC", "0");
 org_html_manager.set("TOC", "1");
-org_html_manager.set("VIEW", "showall");
+org_html_manager.set("VIEW", "info");
 org_html_manager.setup();  // activate after the parameters are set
 /*]]>*///-->
 </script>
@@ -404,10 +406,10 @@ Enumerated sets is type which can only have a limited number of values.
              <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Sunday</span>
   <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span>, <span class="org-haskell-constructor">Ord</span>, <span class="org-haskell-constructor">Enum</span>)
 
-<span class="org-function-name">fromDay</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Weekday</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">fromDay</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Weekday</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
 <span class="org-haskell-definition">fromDay</span> <span class="org-haskell-operator">=</span> fromEnum
 
-<span class="org-function-name">toDay</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Weekday</span>
+<span class="org-haskell-definition">toDay</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Weekday</span>
 <span class="org-haskell-definition">toDay</span> <span class="org-haskell-operator">=</span> toEnum   
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">map</span> (<span class="org-haskell-constructor">Monday</span><span class="org-haskell-operator">&lt;</span>) [ <span class="org-haskell-constructor">Tuesday</span>, <span class="org-haskell-constructor">Friday</span>, <span class="org-haskell-constructor">Sunday</span>]
@@ -500,10 +502,10 @@ Enumerated sets is type which can only have a limited number of values.
             <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Rect</span>   <span class="org-haskell-constructor">Float</span> <span class="org-haskell-constructor">Float</span> 
             <span class="org-haskell-keyword">deriving</span> <span class="org-haskell-constructor">Show</span>
 
-<span class="org-function-name">square</span>   <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Float</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Shape</span>
+<span class="org-haskell-definition">square</span>   <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Float</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Shape</span>
 <span class="org-haskell-definition">square</span> n <span class="org-haskell-operator">=</span>  <span class="org-haskell-constructor">Rect</span> n n 
 
-<span class="org-function-name">area</span>            <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Shape</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Float</span>
+<span class="org-haskell-definition">area</span>            <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Shape</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Float</span>
 <span class="org-haskell-definition">area</span> (<span class="org-haskell-constructor">Circle</span> r)  <span class="org-haskell-operator">=</span> pi <span class="org-haskell-operator">*</span> r<span class="org-haskell-operator">^</span>2
 <span class="org-haskell-definition">area</span> (<span class="org-haskell-constructor">Rect</span> x y)  <span class="org-haskell-operator">=</span> x  <span class="org-haskell-operator">*</span> y
 
@@ -531,9 +533,9 @@ Enumerated sets is type which can only have a limited number of values.
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t is_rect 
-<span class="org-function-name">is_rect</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Shape</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
+<span class="org-haskell-definition">is_rect</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Shape</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t is_circle 
-<span class="org-function-name">is_circle</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Shape</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
+<span class="org-haskell-definition">is_circle</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Shape</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">filter</span> is_rect [<span class="org-haskell-type">Rect</span> 20.0 30.0, <span class="org-haskell-type">Rect</span> 10.0 30.0, <span class="org-haskell-type">Circle</span> 3.0, <span class="org-haskell-type">Circle</span> 4.0]
@@ -543,7 +545,7 @@ Enumerated sets is type which can only have a limited number of values.
 [<span class="org-haskell-constructor">Circle</span> 3.0,<span class="org-haskell-constructor">Circle</span> 4.0]
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t describe 
-<span class="org-function-name">describe</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Shape</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">describe</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Shape</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">describe</span> (<span class="org-haskell-type">Rect</span> 20 30)
@@ -585,13 +587,13 @@ Enumerated sets is type which can only have a limited number of values.
 <pre class="src src-haskell"><span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Student</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">USU</span> <span class="org-haskell-constructor">String</span> <span class="org-haskell-constructor">Float</span> 
              <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Show</span>)
 
-<span class="org-function-name">get_gpa</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Student</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Float</span>
+<span class="org-haskell-definition">get_gpa</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Student</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Float</span>
 <span class="org-haskell-definition">get_gpa</span> (<span class="org-haskell-constructor">USU</span> <span class="org-haskell-keyword">_</span> grade) <span class="org-haskell-operator">=</span> grade
 
-<span class="org-function-name">get_name</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Student</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-definition">get_name</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Student</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span>
 <span class="org-haskell-definition">get_name</span> (<span class="org-haskell-constructor">USU</span> name <span class="org-haskell-keyword">_</span> ) <span class="org-haskell-operator">=</span> name
 
-<span class="org-function-name">class_gpa</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">Student</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Float</span>
+<span class="org-haskell-definition">class_gpa</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">Student</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Float</span>
 <span class="org-haskell-definition">class_gpa</span> myclass <span class="org-haskell-operator">=</span> (sum c) <span class="org-haskell-operator">/</span> fromIntegral  (length c)
                   <span class="org-haskell-keyword">where</span> 
                   c <span class="org-haskell-operator">=</span> map get_gpa myclass
@@ -640,7 +642,7 @@ Enumerated sets is type which can only have a limited number of values.
 <span class="org-haskell-definition">getPerson</span> n <span class="org-haskell-operator">=</span> people <span class="org-haskell-operator">!!</span> n
 
 <span class="org-comment-delimiter">{- </span><span class="org-comment">Show Person -}</span>
-<span class="org-function-name">showPerson</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Person</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-definition">showPerson</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Person</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span>
 <span class="org-haskell-definition">showPerson</span> person  <span class="org-haskell-operator">=</span> <span class="org-string">"Name: "</span> <span class="org-haskell-operator">++</span> show(firstName person) <span class="org-haskell-operator">++</span> <span class="org-string">" - Last Name: "</span> <span class="org-haskell-operator">++</span> show(lastName person) <span class="org-haskell-operator">++</span> <span class="org-string">" - Age "</span> <span class="org-haskell-operator">++</span> show(age person) 
 
 <span class="org-haskell-operator">&gt;</span> people
@@ -712,7 +714,7 @@ File: list_cons.hs
 
 <pre class="src src-haskell"><span class="org-haskell-keyword">data</span> <span class="org-haskell-type">List</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nil</span> <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Cons</span> a (<span class="org-haskell-constructor">List</span> a) <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Show</span>)
 
-<span class="org-function-name">is_empty</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> t <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
+<span class="org-haskell-definition">is_empty</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> t <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
 <span class="org-haskell-definition">is_empty</span> <span class="org-haskell-constructor">Nil</span> <span class="org-haskell-operator">=</span>  <span class="org-haskell-constructor">True</span>
 <span class="org-haskell-definition">is_empty</span> <span class="org-haskell-keyword">_</span>   <span class="org-haskell-operator">=</span>  <span class="org-haskell-constructor">False</span>
 
@@ -720,7 +722,7 @@ File: list_cons.hs
                     <span class="org-haskell-constructor">Nil</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">True</span>
                     <span class="org-haskell-keyword">_</span>   <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">False</span>
 
-<span class="org-function-name">count</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> t <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">count</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> t <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
 <span class="org-haskell-definition">count</span> lst <span class="org-haskell-operator">=</span> 
     <span class="org-haskell-keyword">case</span> lst <span class="org-haskell-keyword">of</span> 
         <span class="org-haskell-constructor">Nil</span>             <span class="org-haskell-operator">-&gt;</span> 0
@@ -793,9 +795,9 @@ Running in ghci
 <span class="org-haskell-constructor">Ok</span>, modules loaded<span class="org-haskell-constructor">:</span> Main.
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t is_empty
-<span class="org-function-name">is_empty</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> t <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
+<span class="org-haskell-definition">is_empty</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> t <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t count 
-<span class="org-function-name">count</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> t <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">count</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> t <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
 
 
 <span class="org-haskell-operator">&gt;</span> list0
@@ -810,15 +812,15 @@ Running in ghci
 <span class="org-haskell-constructor">Cons</span> 1.25 (<span class="org-haskell-constructor">Cons</span> 0.65 (<span class="org-haskell-constructor">Cons</span> 8.123 (<span class="org-haskell-constructor">Cons</span> 9.434 <span class="org-haskell-constructor">Nil</span>)))
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t list0
-<span class="org-function-name">list0</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> a
+<span class="org-haskell-definition">list0</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> a
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t list1
-<span class="org-function-name">list1</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> <span class="org-haskell-type">Integer</span>
+<span class="org-haskell-definition">list1</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> <span class="org-haskell-type">Integer</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t list2
-<span class="org-function-name">list2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> [<span class="org-haskell-type">Char</span>]
+<span class="org-haskell-definition">list2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> [<span class="org-haskell-type">Char</span>]
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t list3
-<span class="org-function-name">list3</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> <span class="org-haskell-type">Integer</span>
+<span class="org-haskell-definition">list3</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> <span class="org-haskell-type">Integer</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t list4
-<span class="org-function-name">list4</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-definition">list4</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> <span class="org-haskell-type">Double</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">Cons</span> 10.23 list0
 <span class="org-haskell-constructor">Cons</span> 10.23 <span class="org-haskell-constructor">Nil</span>
@@ -866,13 +868,13 @@ Running in ghci
 
 <span class="org-haskell-operator">*</span><span class="org-haskell-constructor">Example:</span> <span class="org-haskell-constructor">Custom</span> <span class="org-haskell-constructor">List</span> <span class="org-haskell-constructor">Implementation</span><span class="org-haskell-operator">*</span>
 
-<span class="org-function-name">File</span><span class="org-haskell-definition">:</span> list_cons<span class="org-haskell-operator">.</span>hs
+<span class="org-haskell-constructor">File</span><span class="org-haskell-definition">:</span> list_cons<span class="org-haskell-operator">.</span>hs
 
 <span class="org-preprocessor">#+BEGIN_SRC haskell</span>
 
 <span class="org-haskell-keyword">data</span> <span class="org-haskell-type">List</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nil</span> <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Cons</span> a (<span class="org-haskell-constructor">List</span> a) <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Show</span>)
 
-<span class="org-function-name">is_empty</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> t <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
+<span class="org-haskell-definition">is_empty</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> t <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
 <span class="org-haskell-definition">is_empty</span> <span class="org-haskell-constructor">Nil</span> <span class="org-haskell-operator">=</span>  <span class="org-haskell-constructor">True</span>
 <span class="org-haskell-definition">is_empty</span> <span class="org-haskell-keyword">_</span>   <span class="org-haskell-operator">=</span>  <span class="org-haskell-constructor">False</span>
 
@@ -880,7 +882,7 @@ Running in ghci
                     <span class="org-haskell-constructor">Nil</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">True</span>
                     <span class="org-haskell-keyword">_</span>   <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">False</span>
 
-<span class="org-function-name">count</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> t <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">count</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> t <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
 <span class="org-haskell-definition">count</span> lst <span class="org-haskell-operator">=</span> 
     <span class="org-haskell-keyword">case</span> lst <span class="org-haskell-keyword">of</span> 
         <span class="org-haskell-constructor">Nil</span>             <span class="org-haskell-operator">-&gt;</span> 0
@@ -948,9 +950,9 @@ Running in ghci
 <span class="org-haskell-constructor">Ok</span>, modules loaded<span class="org-haskell-constructor">:</span> Main.
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t is_empty
-<span class="org-function-name">is_empty</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> t <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
+<span class="org-haskell-definition">is_empty</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> t <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t count 
-<span class="org-function-name">count</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> t <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">count</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> t <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
 
 
 <span class="org-haskell-operator">&gt;</span> list0
@@ -965,15 +967,15 @@ Running in ghci
 <span class="org-haskell-constructor">Cons</span> 1.25 (<span class="org-haskell-constructor">Cons</span> 0.65 (<span class="org-haskell-constructor">Cons</span> 8.123 (<span class="org-haskell-constructor">Cons</span> 9.434 <span class="org-haskell-constructor">Nil</span>)))
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t list0
-<span class="org-function-name">list0</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> a
+<span class="org-haskell-definition">list0</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> a
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t list1
-<span class="org-function-name">list1</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> <span class="org-haskell-type">Integer</span>
+<span class="org-haskell-definition">list1</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> <span class="org-haskell-type">Integer</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t list2
-<span class="org-function-name">list2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> [<span class="org-haskell-type">Char</span>]
+<span class="org-haskell-definition">list2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> [<span class="org-haskell-type">Char</span>]
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t list3
-<span class="org-function-name">list3</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> <span class="org-haskell-type">Integer</span>
+<span class="org-haskell-definition">list3</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> <span class="org-haskell-type">Integer</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t list4
-<span class="org-function-name">list4</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-definition">list4</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> <span class="org-haskell-type">Double</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">Cons</span> 10.23 list0
 <span class="org-haskell-constructor">Cons</span> 10.23 <span class="org-haskell-constructor">Nil</span>
@@ -1043,7 +1045,7 @@ Running in ghci
 <span class="org-haskell-constructor">Just</span> 1.25
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t safe_headl 
-<span class="org-function-name">safe_headl</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a
+<span class="org-haskell-definition">safe_headl</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-comment-delimiter">{- </span><span class="org-comment">Getting the last element -}</span>
@@ -1074,7 +1076,7 @@ Running in ghci
 [1.25,0.65,8.123,9.434]
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t to_list 
-<span class="org-function-name">to_list</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> a <span class="org-haskell-operator">-&gt;</span> [a]
+<span class="org-haskell-definition">to_list</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">List</span> a <span class="org-haskell-operator">-&gt;</span> [a]
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">takel</span> 0 <span class="org-haskell-type">Nil</span>
 <span class="org-haskell-constructor">Nil</span>
@@ -1146,7 +1148,7 @@ Running in ghci
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t nth
-<span class="org-function-name">nth</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Eq</span> t, <span class="org-haskell-type">Num</span> t) <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">List</span> t1 <span class="org-haskell-operator">-&gt;</span> t <span class="org-haskell-operator">-&gt;</span> t1
+<span class="org-haskell-definition">nth</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Eq</span> t, <span class="org-haskell-type">Num</span> t) <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">List</span> t1 <span class="org-haskell-operator">-&gt;</span> t <span class="org-haskell-operator">-&gt;</span> t1
 <span class="org-haskell-operator">&gt;</span> 
 
 
@@ -1158,7 +1160,7 @@ Running in ghci
 <span class="org-haskell-constructor">Cons</span> 8.75 (<span class="org-haskell-constructor">Cons</span> 6.95 (<span class="org-haskell-constructor">Cons</span> 29.369 (<span class="org-haskell-constructor">Cons</span> 33.302 <span class="org-haskell-constructor">Nil</span>)))
 <span class="org-haskell-operator">&gt;</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t mapl
-<span class="org-function-name">mapl</span> <span class="org-haskell-operator">::</span> (t <span class="org-haskell-operator">-&gt;</span> a) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">List</span> t <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">List</span> a
+<span class="org-haskell-definition">mapl</span> <span class="org-haskell-operator">::</span> (t <span class="org-haskell-operator">-&gt;</span> a) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">List</span> t <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">List</span> a
 
 
 <span class="org-haskell-operator">&gt;</span> 
@@ -1172,7 +1174,7 @@ Running in ghci
 <span class="org-haskell-constructor">Cons</span> 8.123 (<span class="org-haskell-constructor">Cons</span> 9.434 <span class="org-haskell-constructor">Nil</span>)
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t filterl
-<span class="org-function-name">filterl</span> <span class="org-haskell-operator">::</span> (a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">List</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">List</span> a
+<span class="org-haskell-definition">filterl</span> <span class="org-haskell-operator">::</span> (a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">List</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">List</span> a
 </pre>
 </div>
 
@@ -1191,7 +1193,8 @@ Reference:
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="date">Created: 2016-11-01 ter 01:49</p>
+<p class="author">Author: Caio Rodrigues</p>
+<p class="date">Created: 2017-03-02 qui 14:13</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

@@ -3,11 +3,13 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<title>style</title>
-<!-- 2016-11-01 ter 01:18 -->
+<title>Functional Programming by Example</title>
+<!-- 2017-03-02 qui 14:13 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
-<meta  name="author" content="Caio Rodrigues" />
+<meta  name="author" content="Caio Rodrigues Soares Silva" />
+<meta  name="description" content="Functional programming examples, theory,"
+ />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   .title  { text-align: center; }
@@ -88,15 +90,16 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
-<link href="/Functional-Programming/theme/style.css" rel="stylesheet">
+<link href='/theme/style.css' rel='stylesheet'>
+<link href="/theme/index.css" rel="stylesheet">
 
-<script type="text/javascript" src="/Functional-Programming/theme/org-info.js">
+<script type="text/javascript" src="/theme/org-info.js">
 /**
  *
- * @source: /Functional-Programming/theme/org-info.js
+ * @source: /theme/org-info.js
  *
  * @licstart  The following is the entire license notice for the
- *  JavaScript code in /Functional-Programming/theme/org-info.js.
+ *  JavaScript code in /theme/org-info.js.
  *
  * Copyright (C) 2012-2013 Free Software Foundation, Inc.
  *
@@ -116,7 +119,7 @@
  * through which recipients can access the Corresponding Source.
  *
  * @licend  The above is the entire license notice
- * for the JavaScript code in /Functional-Programming/theme/org-info.js.
+ * for the JavaScript code in /theme/org-info.js.
  *
  */
 </script>
@@ -149,7 +152,7 @@ for the JavaScript code in this tag.
 */
 
 <!--/*--><![CDATA[/*><!--*/
-org_html_manager.set("TOC_DEPTH", "4");
+org_html_manager.set("TOC_DEPTH", "3");
 org_html_manager.set("LINK_HOME", "");
 org_html_manager.set("LINK_UP", "");
 org_html_manager.set("LOCAL_TOC", "1");
@@ -157,7 +160,7 @@ org_html_manager.set("VIEW_BUTTONS", "0");
 org_html_manager.set("MOUSE_HINT", "underline");
 org_html_manager.set("FIXED_TOC", "0");
 org_html_manager.set("TOC", "1");
-org_html_manager.set("VIEW", "showall");
+org_html_manager.set("VIEW", "info");
 org_html_manager.setup();  // activate after the parameters are set
 /*]]>*///-->
 </script>
@@ -210,15 +213,202 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="content">
-<h1 class="title">style</h1>
-<lu> 
-  <li><a href="/Functional-Programming/index.html">Index</a></li>
-  <li><a href="https://github.com/caiorss/Functional-Programming">Repository</a></li>
-</lu>
+<h1 class="title">Functional Programming by Example</h1>
+
+<div class="figure">
+<p><img src="haskell/images/haskellLogo.png" alt="haskellLogo.png" />
+</p>
+</div>
+
+<p>
+The purpose of this tutorial is to illustrate functional programming
+concepts in many languages by providing reusable and useful snippets
+of code, examples, case studies and applications.
+</p>
+
+
+<p>
+Author:   <a href="https://www.linkedin.com/in/caiorodrigues">Caio Rodrigues</a> / &lt;caiorss.rodrigue@gmail.com&gt; 
+</p>
+
+<p>
+Note: This still a work in progress and a long term project.
+</p>
+
+<p>
+You can access this page from:
+</p>
+
+<ul class="org-ul">
+<li><a href="https://github.com/caiorss/Functional-Programming">https://github.com/caiorss/Functional-Programming</a>
+</li>
+
+<li><a href="http://tinyurl.com/fpbyexample">http://tinyurl.com/fpbyexample</a>
+</li>
+</ul>
+
+<p>
+The website of this repository is:
+</p>
+
+<ul class="org-ul">
+<li><a href="http://caiorss.github.io/Functional-Programming">http://caiorss.github.io/Functional-Programming</a>  
+</li>
+</ul>
+
+
+<p>
+This repository is dedicated to public domain.
+</p>
+
+<p>
+<b>Concepts</b>
+</p>
+
+<ul class="org-ul">
+<li><a href="haskell/Functional_Programming_Concepts.html">Functional Programming Concepts</a>
+</li>
+</ul>
+
+<p>
+<b>Functional Programming in Haskell</b>
+</p>
+
+<ul class="org-ul">
+<li><a href="haskell/Haskell.html">Haskell</a>
+</li>
+
+<li><a href="haskell/Basic_Syntax.html">Basic Syntax</a>
+</li>
+
+<li><a href="haskell/Functions.html">Functions</a>
+</li>
+
+<li><a href="haskell/Pattern_Matching.html">Pattern Matching</a>
+</li>
+
+<li><a href="haskell/List_Comprehension.html">List Comprehension</a>
+</li>
+
+<li><a href="haskell/Algebraic_Data_Types.html">Algebraic Data Type</a>
+</li>
+
+<li><a href="haskell/Functors__Monads__Applicatives_and_Monoids.html">Functors and Monads</a>
+</li>
+
+<li><a href="haskell/monoids.html">Monoids</a>
+</li>
+
+<li><a href="haskell/Libraries.html">Haskell Libraries</a>
+</li>
+
+<li><a href="haskell/Useful_Custom_Functions__Iterators_and_Operators.html">Useful Custom Functions/ Iterators and Operators</a>
+</li>
+
+<li><a href="haskell/Applications.html">Applications</a>
+</li>
+
+<li><a href="haskell/Miscellaneous.html">Miscellaneous</a>
+</li>
+
+<li><a href="haskell/Documentation_and_Learning_Materials.html">Documentation and Learning Materials</a>
+</li>
+
+<li><a href="haskell/haskell_handling_exceptions.html">Exception Handling</a>
+</li>
+
+<li><a href="haskell/DatabaseHDBC.html">Databases - HDBC package</a>
+</li>
+
+<li>Modules
+
+<ul class="org-ul">
+<li><a href="haskell/control_monad.html">Contro.Monad</a>      - Monad Combinators 
+</li>
+
+<li><a href="haskell/package_Data_Text.html">Data.Text</a>         - String processing combinators.
+</li>
+
+<li><a href="haskell/system_io_modules.html">System IO Modules</a> - Basic System IO Modules
+</li>
+
+<li><a href="haskell/system_filepath.html">System.FilePath</a>   - File path manipulation on all platforms. 
+</li>
+
+<li><a href="haskell/control_exception.html">Control.Exception</a> - Exception Handling
+</li>
+
+<li><a href="haskell/data_map.html">Data.Map</a>          - Immutable hash map. Implemented with balanced trees.
+</li>
+</ul>
+</li>
+
+<li><a href="haskell/Real_World_Haskell.html">Codes and Examples from "Real World Haskell"</a>
+</li>
+
+<li>Haskell Bookmarks:
+
+<ul class="org-ul">
+<li><a href="https://www.haskell.org/onlinereport/haskell2010/">Haskell 2010 Language Report</a>
+</li>
+
+<li><a href="https://downloads.haskell.org/~ghc/latest/docs/html/libraries/">Haskell Hierarchical Libraries</a> - Built-in Haskell libraries.
+</li>
+
+<li><a href="https://docs.haskellstack.org/en/stable/README/">Haskell Stack Tool</a> - Haskell dependency manager, package manager
+which can install multiple Haskell versions, library versions per
+project repository avoiding dependency hell.
+</li>
+
+<li><a href="https://www.haskell.org/platform/contents.html">Haskell Platform - Included Packages</a>
+</li>
+
+<li><a href="https://www.haskell.org/hoogle/">Hoogle</a> - Haskell types search engine.
+</li>
+</ul>
+</li>
+</ul>
+
+
+<p>
+<b>Functional Programming in OCaml</b>
+</p>
+
+<ul class="org-ul">
+<li><a href="ocaml/README.html">OCaml</a>
+</li>
+</ul>
+
+<p>
+<b>Functional Programming in Scheme</b>
+</p>
+
+<ul class="org-ul">
+<li><a href="scheme/README.html">Scheme</a>
+</li>
+</ul>
+
+<p>
+<b>Functional Programming in Clojure</b>
+</p>
+
+<ul class="org-ul">
+<li><a href="clojure/README.html">Clojure</a>  
+</li>
+</ul>
+
+<p>
+<b>Papers</b> 
+</p>
+
+<ul class="org-ul">
+<li><a href="papers/README.html">Papers in this Repository</a>
+</li>
+</ul>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2016-11-01 ter 01:18</p>
+<p class="author">Author: Caio Rodrigues Soares Silva</p>
+<p class="date">Created: 2017-03-02 qui 14:13</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

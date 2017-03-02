@@ -4,9 +4,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Functors, Monads, Applicatives and Monoids</title>
-<!-- 2016-11-01 ter 01:50 -->
+<!-- 2017-03-02 qui 14:13 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
+<meta  name="author" content="Caio Rodrigues" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   .title  { text-align: center; }
@@ -87,15 +88,16 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
+<link href='/theme/style.css' rel='stylesheet'>
 <link href="/Functional-Programming/theme/style.css" rel="stylesheet">
 
-<script type="text/javascript" src="/Functional-Programming/theme/org-info.js">
+<script type="text/javascript" src="/theme/org-info.js">
 /**
  *
- * @source: /Functional-Programming/theme/org-info.js
+ * @source: /theme/org-info.js
  *
  * @licstart  The following is the entire license notice for the
- *  JavaScript code in /Functional-Programming/theme/org-info.js.
+ *  JavaScript code in /theme/org-info.js.
  *
  * Copyright (C) 2012-2013 Free Software Foundation, Inc.
  *
@@ -115,7 +117,7 @@
  * through which recipients can access the Corresponding Source.
  *
  * @licend  The above is the entire license notice
- * for the JavaScript code in /Functional-Programming/theme/org-info.js.
+ * for the JavaScript code in /theme/org-info.js.
  *
  */
 </script>
@@ -156,7 +158,7 @@ org_html_manager.set("VIEW_BUTTONS", "0");
 org_html_manager.set("MOUSE_HINT", "underline");
 org_html_manager.set("FIXED_TOC", "0");
 org_html_manager.set("TOC", "1");
-org_html_manager.set("VIEW", "showall");
+org_html_manager.set("VIEW", "info");
 org_html_manager.setup();  // activate after the parameters are set
 /*]]>*///-->
 </script>
@@ -354,7 +356,7 @@ A functor must satisfy the following operations (aka functor laws):
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-comment-delimiter">-- </span><span class="org-comment">id is the identity function:</span>
-<span class="org-function-name">id</span> <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+<span class="org-haskell-definition">id</span> <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
 <span class="org-haskell-definition">id</span> x <span class="org-haskell-operator">=</span> x
 
 <span class="org-haskell-definition">fmap</span> (f <span class="org-haskell-operator">.</span> g) <span class="org-haskell-operator">=</span> fmap f <span class="org-haskell-operator">.</span> fmap g  <span class="org-comment-delimiter">-- </span><span class="org-comment">Composition law</span>
@@ -794,7 +796,7 @@ Credits: <a href="http://mvanier.livejournal.com/4586.html">http://mvanier.livej
 <div class="org-src-container">
 
 <pre class="src src-haskell">(<span class="org-haskell-definition">&gt;&gt;=</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Maybe</span> a <span class="org-haskell-operator">-&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> b) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> b
-<span class="org-function-name">return</span> <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a
+<span class="org-haskell-definition">return</span> <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a
 </pre>
 </div>
 
@@ -805,7 +807,7 @@ Credits: <a href="http://mvanier.livejournal.com/4586.html">http://mvanier.livej
 <div class="org-src-container">
 
 <pre class="src src-haskell">(<span class="org-haskell-definition">&gt;&gt;=</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> a <span class="org-haskell-operator">-&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> b) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> b
-<span class="org-function-name">return</span> <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> b
+<span class="org-haskell-definition">return</span> <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> b
 </pre>
 </div>
 </div>
@@ -827,7 +829,7 @@ Examples:
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t return
-<span class="org-function-name">return</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> m a
+<span class="org-haskell-definition">return</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> m a
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">return</span> 223.23 <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">Double</span>)
@@ -883,9 +885,9 @@ Under this interpretation, the functions behave as follows:
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">fmap</span>   <span class="org-haskell-operator">::</span> (a <span class="org-haskell-operator">-&gt;</span> b) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M</span> b  <span class="org-comment-delimiter">-- </span><span class="org-comment">functor</span>
-<span class="org-function-name">return</span> <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M</span> a
-<span class="org-function-name">join</span>   <span class="org-haskell-operator">::</span> <span class="org-haskell-type">M</span> (<span class="org-haskell-type">M</span> a) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M</span> a
+<pre class="src src-haskell"><span class="org-haskell-definition">fmap</span>   <span class="org-haskell-operator">::</span> (a <span class="org-haskell-operator">-&gt;</span> b) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M</span> b  <span class="org-comment-delimiter">-- </span><span class="org-comment">functor</span>
+<span class="org-haskell-definition">return</span> <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M</span> a
+<span class="org-haskell-definition">join</span>   <span class="org-haskell-operator">::</span> <span class="org-haskell-type">M</span> (<span class="org-haskell-type">M</span> a) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">M</span> a
 </pre>
 </div>
 </div>
@@ -995,10 +997,10 @@ Lift Functions
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">liftM</span>  <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a1 <span class="org-haskell-operator">-&gt;</span> r) <span class="org-haskell-operator">-&gt;</span> m a1 <span class="org-haskell-operator">-&gt;</span> m r
-<span class="org-function-name">liftM2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a1 <span class="org-haskell-operator">-&gt;</span> a2 <span class="org-haskell-operator">-&gt;</span> r) <span class="org-haskell-operator">-&gt;</span> m a1 <span class="org-haskell-operator">-&gt;</span> m a2 <span class="org-haskell-operator">-&gt;</span> m r
-<span class="org-function-name">liftM3</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a1 <span class="org-haskell-operator">-&gt;</span> a2 <span class="org-haskell-operator">-&gt;</span> a3 <span class="org-haskell-operator">-&gt;</span> r) <span class="org-haskell-operator">-&gt;</span> m a1 <span class="org-haskell-operator">-&gt;</span> m a2 <span class="org-haskell-operator">-&gt;</span> m a3 <span class="org-haskell-operator">-&gt;</span> m r
-<span class="org-function-name">liftM4</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a1 <span class="org-haskell-operator">-&gt;</span> a2 <span class="org-haskell-operator">-&gt;</span> a3 <span class="org-haskell-operator">-&gt;</span> a4 <span class="org-haskell-operator">-&gt;</span> r) <span class="org-haskell-operator">-&gt;</span> m a1 <span class="org-haskell-operator">-&gt;</span> m a2 <span class="org-haskell-operator">-&gt;</span> m a3 <span class="org-haskell-operator">-&gt;</span> m a4 <span class="org-haskell-operator">-&gt;</span> m r
+<pre class="src src-haskell"><span class="org-haskell-definition">liftM</span>  <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a1 <span class="org-haskell-operator">-&gt;</span> r) <span class="org-haskell-operator">-&gt;</span> m a1 <span class="org-haskell-operator">-&gt;</span> m r
+<span class="org-haskell-definition">liftM2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a1 <span class="org-haskell-operator">-&gt;</span> a2 <span class="org-haskell-operator">-&gt;</span> r) <span class="org-haskell-operator">-&gt;</span> m a1 <span class="org-haskell-operator">-&gt;</span> m a2 <span class="org-haskell-operator">-&gt;</span> m r
+<span class="org-haskell-definition">liftM3</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a1 <span class="org-haskell-operator">-&gt;</span> a2 <span class="org-haskell-operator">-&gt;</span> a3 <span class="org-haskell-operator">-&gt;</span> r) <span class="org-haskell-operator">-&gt;</span> m a1 <span class="org-haskell-operator">-&gt;</span> m a2 <span class="org-haskell-operator">-&gt;</span> m a3 <span class="org-haskell-operator">-&gt;</span> m r
+<span class="org-haskell-definition">liftM4</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a1 <span class="org-haskell-operator">-&gt;</span> a2 <span class="org-haskell-operator">-&gt;</span> a3 <span class="org-haskell-operator">-&gt;</span> a4 <span class="org-haskell-operator">-&gt;</span> r) <span class="org-haskell-operator">-&gt;</span> m a1 <span class="org-haskell-operator">-&gt;</span> m a2 <span class="org-haskell-operator">-&gt;</span> m a3 <span class="org-haskell-operator">-&gt;</span> m a4 <span class="org-haskell-operator">-&gt;</span> m r
 </pre>
 </div>
 
@@ -1040,7 +1042,7 @@ Examples without Maybe:
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">&#955;</span> <span class="org-haskell-definition">:</span>set prompt <span class="org-string">"&gt; "</span> 
+<pre class="src src-haskell">&#955; <span class="org-haskell-definition">:</span>set prompt <span class="org-string">"&gt; "</span> 
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span>  head [1, 2, 3, 4]
@@ -1071,20 +1073,20 @@ Examples with Maybe monad:
 
 <pre class="src src-haskell"><span class="org-haskell-definition">fromJust</span> (<span class="org-haskell-constructor">Just</span> x) <span class="org-haskell-operator">=</span> x
 
-<span class="org-function-name">safeHead</span> <span class="org-haskell-operator">::</span> [a] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a
+<span class="org-haskell-definition">safeHead</span> <span class="org-haskell-operator">::</span> [a] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a
 <span class="org-haskell-definition">safeHead</span> <span class="org-haskell-constructor">[]</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>
 <span class="org-haskell-definition">safeHead</span> (x<span class="org-haskell-constructor">:</span><span class="org-haskell-keyword">_</span>) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Just</span> x
 
-<span class="org-function-name">safeTail</span> <span class="org-haskell-operator">::</span> [a] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> [a]
+<span class="org-haskell-definition">safeTail</span> <span class="org-haskell-operator">::</span> [a] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> [a]
 <span class="org-haskell-definition">safeTail</span> <span class="org-haskell-constructor">[]</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>
 <span class="org-haskell-definition">safeTail</span> (<span class="org-haskell-keyword">_</span><span class="org-haskell-constructor">:</span>xs) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Just</span> xs
 
-<span class="org-function-name">safeLast</span> <span class="org-haskell-operator">::</span> [a] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a
+<span class="org-haskell-definition">safeLast</span> <span class="org-haskell-operator">::</span> [a] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a
 <span class="org-haskell-definition">safeLast</span> <span class="org-haskell-constructor">[]</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>
 <span class="org-haskell-definition">safeLast</span> (y<span class="org-haskell-constructor">:[]</span>) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Just</span> y
 <span class="org-haskell-definition">safeLast</span> (<span class="org-haskell-keyword">_</span><span class="org-haskell-constructor">:</span>xs) <span class="org-haskell-operator">=</span> safeLast xs
 
-<span class="org-function-name">safeInit</span> <span class="org-haskell-operator">::</span> [a] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> [a]
+<span class="org-haskell-definition">safeInit</span> <span class="org-haskell-operator">::</span> [a] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> [a]
 <span class="org-haskell-definition">safeInit</span> <span class="org-haskell-constructor">[]</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>
 <span class="org-haskell-definition">safeInit</span> (x<span class="org-haskell-constructor">:[]</span>) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Just</span> <span class="org-haskell-constructor">[]</span>
 <span class="org-haskell-definition">safeInit</span> (x<span class="org-haskell-constructor">:</span>xs) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Just</span> (x <span class="org-haskell-constructor">:</span> fromJust(safeInit xs))
@@ -1227,7 +1229,7 @@ File: listMonad.hs
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">listOfTuples</span> <span class="org-haskell-operator">::</span> [(<span class="org-haskell-type">Int</span>,<span class="org-haskell-type">Char</span>)]  
+<pre class="src src-haskell"><span class="org-haskell-definition">listOfTuples</span> <span class="org-haskell-operator">::</span> [(<span class="org-haskell-type">Int</span>,<span class="org-haskell-type">Char</span>)]  
 <span class="org-haskell-definition">listOfTuples</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>  
     n <span class="org-haskell-operator">&lt;-</span> [1,2]  
     ch <span class="org-haskell-operator">&lt;-</span> [<span class="org-string">'a'</span>,<span class="org-string">'b'</span>]  
@@ -1382,12 +1384,12 @@ Stdin - Standard Input
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">getChar</span>             <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">Char</span>
-<span class="org-function-name">getLine</span>             <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">String</span>
-<span class="org-function-name">getContents</span>         <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">String</span>
-<span class="org-function-name">interact</span>            <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span>) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
-<span class="org-function-name">readIO</span>              <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Read</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> a
-<span class="org-function-name">readLine</span>            <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Read</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">IO</span> a
+<pre class="src src-haskell"><span class="org-haskell-definition">getChar</span>             <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">Char</span>
+<span class="org-haskell-definition">getLine</span>             <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-definition">getContents</span>         <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-definition">interact</span>            <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span>) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">readIO</span>              <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Read</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> a
+<span class="org-haskell-definition">readLine</span>            <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Read</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">IO</span> a
 </pre>
 </div>
 
@@ -1402,9 +1404,9 @@ Stdout - Standard Output
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">print</span>               <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Show</span> a <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
-<span class="org-function-name">putStrLn</span>            <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
-<span class="org-function-name">putStr</span>              <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<pre class="src src-haskell"><span class="org-haskell-definition">print</span>               <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Show</span> a <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">putStrLn</span>            <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">putStr</span>              <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
 </pre>
 </div>
 
@@ -1490,7 +1492,7 @@ Example:
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> x <span class="org-haskell-operator">=</span> read <span class="org-string">"1.245"</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t x
-<span class="org-function-name">x</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-definition">x</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">read</span> <span class="org-string">"[1, 2, 3, 4, 5]"</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">Int</span>]
 [1,2,3,4,5]
@@ -1559,7 +1561,7 @@ Examples:
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">getChar</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">Char</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">Performs an action that returns a character</span>
+<pre class="src src-haskell"><span class="org-haskell-definition">getChar</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">Char</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">Performs an action that returns a character</span>
 
 <span class="org-comment-delimiter">{- </span>
 <span class="org-comment">    To capture a value returned by an action, the operator &lt;- must be used</span>
@@ -1569,7 +1571,7 @@ h<span class="org-haskell-definition">&gt;</span>
 <span class="org-haskell-operator">&gt;</span> c
 <span class="org-string">'h'</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t c
-<span class="org-function-name">c</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Char</span>
+<span class="org-haskell-definition">c</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Char</span>
 <span class="org-haskell-operator">&gt;</span>
 </pre>
 </div>
@@ -1585,7 +1587,7 @@ Example:
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t putChar
-<span class="org-function-name">putChar</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Char</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">putChar</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Char</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">putChar</span> <span class="org-string">'X'</span>
 <span class="org-haskell-constructor">X</span><span class="org-haskell-definition">&gt;</span> 
@@ -1660,7 +1662,7 @@ Plain Syntax
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">getTwoChars</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Char</span>,<span class="org-haskell-type">Char</span>)
+<pre class="src src-haskell"><span class="org-haskell-definition">getTwoChars</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Char</span>,<span class="org-haskell-type">Char</span>)
 <span class="org-haskell-definition">getTwoChars</span> <span class="org-haskell-operator">=</span> getChar   <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>c1 <span class="org-haskell-operator">-&gt;</span>
               getChar   <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>c2 <span class="org-haskell-operator">-&gt;</span>
               return (c1,c2)
@@ -1673,7 +1675,7 @@ Do Notation
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">getTwoCharsDo</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span>(<span class="org-haskell-type">Char</span>,<span class="org-haskell-type">Char</span>)
+<pre class="src src-haskell"><span class="org-haskell-definition">getTwoCharsDo</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span>(<span class="org-haskell-type">Char</span>,<span class="org-haskell-type">Char</span>)
 <span class="org-haskell-definition">getTwoCharsDo</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span> { c1 <span class="org-haskell-operator">&lt;-</span> getChar ;
                      c2 <span class="org-haskell-operator">&lt;-</span> getChar ;
                      return (c1,c2) }
@@ -1686,7 +1688,7 @@ Or:
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">getTwoCharsDo</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span>(<span class="org-haskell-type">Char</span>,<span class="org-haskell-type">Char</span>)
+<pre class="src src-haskell"><span class="org-haskell-definition">getTwoCharsDo</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span>(<span class="org-haskell-type">Char</span>,<span class="org-haskell-type">Char</span>)
 <span class="org-haskell-definition">getTwoCharsDo</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span> 
     c1 <span class="org-haskell-operator">&lt;-</span> getChar 
     c2 <span class="org-haskell-operator">&lt;-</span> getChar 
@@ -1723,7 +1725,7 @@ In the shell ghci
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t do1test 
-<span class="org-function-name">do1test</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">do1test</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> do1test <span class="org-comment-delimiter">-- </span><span class="org-comment">User types character 'a'</span>
@@ -1747,7 +1749,7 @@ File: do_notation2.hs
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">make_string</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Char</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span>
+<pre class="src src-haskell"><span class="org-haskell-definition">make_string</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Char</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span>
 <span class="org-haskell-definition">make_string</span> achar <span class="org-haskell-operator">=</span> <span class="org-string">"\nThe character is : "</span> <span class="org-haskell-operator">++</span> [achar]
 
 <span class="org-haskell-definition">do2test</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
@@ -1776,11 +1778,11 @@ In the shell ghci
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t make_string 
-<span class="org-function-name">make_string</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Char</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-definition">make_string</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Char</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span>
 <span class="org-haskell-operator">&gt;</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t do2test 
-<span class="org-function-name">do2test</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">do2test</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">make_string</span> <span class="org-string">'q'</span>
 <span class="org-string">"\nThe character is : q"</span>
@@ -1831,7 +1833,7 @@ In ghci shell
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t doReturn 
-<span class="org-function-name">doReturn</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">Bool</span>
+<span class="org-haskell-definition">doReturn</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">Bool</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> doReturn 
@@ -1872,7 +1874,7 @@ y<span class="org-haskell-definition">&gt;</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> shout <span class="org-haskell-operator">=</span> map toUpper 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t shout
-<span class="org-function-name">shout</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">Char</span>] <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">Char</span>]
+<span class="org-haskell-definition">shout</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">Char</span>] <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">Char</span>]
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-comment-delimiter">{- </span><span class="org-comment">Fmap is Equivalent to liftM , those functions</span>
@@ -1882,9 +1884,9 @@ y<span class="org-haskell-definition">&gt;</span>
 <span class="org-comment">-}</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t liftM
-<span class="org-function-name">liftM</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a1 <span class="org-haskell-operator">-&gt;</span> r) <span class="org-haskell-operator">-&gt;</span> m a1 <span class="org-haskell-operator">-&gt;</span> m r
+<span class="org-haskell-definition">liftM</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a1 <span class="org-haskell-operator">-&gt;</span> r) <span class="org-haskell-operator">-&gt;</span> m a1 <span class="org-haskell-operator">-&gt;</span> m r
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t fmap
-<span class="org-function-name">fmap</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Functor</span> f <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> b) <span class="org-haskell-operator">-&gt;</span> f a <span class="org-haskell-operator">-&gt;</span> f b
+<span class="org-haskell-definition">fmap</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Functor</span> f <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> b) <span class="org-haskell-operator">-&gt;</span> f a <span class="org-haskell-operator">-&gt;</span> f b
 <span class="org-haskell-operator">&gt;</span> 
 
 
@@ -1933,11 +1935,11 @@ The list myTodoList doesn't execute any action, it holds them. To join those act
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> myTodoList <span class="org-haskell-operator">=</span> [putChar <span class="org-string">'1'</span>, putChar <span class="org-string">'2'</span>, putChar <span class="org-string">'3'</span>, putChar <span class="org-string">'4'</span>]
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t myTodoList 
-<span class="org-function-name">myTodoList</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>]
+<span class="org-haskell-definition">myTodoList</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>]
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t sequence_
-<span class="org-function-name">sequence_</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> [m a] <span class="org-haskell-operator">-&gt;</span> m <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">sequence_</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> [m a] <span class="org-haskell-operator">-&gt;</span> m <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sequence_</span> myTodoList 
 1234<span class="org-haskell-operator">&gt;</span> 
@@ -1946,7 +1948,7 @@ The list myTodoList doesn't execute any action, it holds them. To join those act
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> newAction <span class="org-haskell-operator">=</span> sequence_ myTodoList 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t newAction 
-<span class="org-function-name">newAction</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">newAction</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> newAction 
 1234<span class="org-haskell-operator">&gt;</span> 
@@ -1961,7 +1963,7 @@ The function sequence_ is defined as:
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">sequence_</span>        <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<pre class="src src-haskell"><span class="org-haskell-definition">sequence_</span>        <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-definition">sequence_</span> <span class="org-haskell-constructor">[]</span>     <span class="org-haskell-operator">=</span>  return <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-definition">sequence_</span> (a<span class="org-haskell-constructor">:</span>as) <span class="org-haskell-operator">=</span>  <span class="org-haskell-keyword">do</span> a
                        sequence_ as
@@ -1974,7 +1976,7 @@ Or defined as:
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-function-name">sequence_</span>        <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<pre class="src src-haskell"><span class="org-haskell-definition">sequence_</span>        <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-definition">sequence_</span>        <span class="org-haskell-operator">=</span>  foldr (<span class="org-haskell-operator">&gt;&gt;</span>) (return <span class="org-haskell-constructor">()</span>)
 </pre>
 </div>
@@ -2000,10 +2002,10 @@ For Loops
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t forM_
-<span class="org-function-name">forM_</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> m <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">forM_</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> m <span class="org-haskell-constructor">()</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t forM
-<span class="org-function-name">forM</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> m [b]
+<span class="org-haskell-definition">forM</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> m [b]
 <span class="org-haskell-operator">&gt;</span>
 </pre>
 </div>
@@ -2050,10 +2052,10 @@ is similar to forM and formM_.
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t mapM
-<span class="org-function-name">mapM</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> m [b]
+<span class="org-haskell-definition">mapM</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> m [b]
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t mapM_
-<span class="org-function-name">mapM_</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> m <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">mapM_</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> m <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span>
 </pre>
@@ -2102,9 +2104,9 @@ cc<span class="org-haskell-definition">&gt;</span>
 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t getChar
-<span class="org-function-name">getChar</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">Char</span>
+<span class="org-haskell-definition">getChar</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">Char</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t putChar
-<span class="org-function-name">putChar</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Char</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">putChar</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Char</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t (<span class="org-haskell-operator">&gt;&gt;=</span>)
 (<span class="org-haskell-definition">&gt;&gt;=</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> m a <span class="org-haskell-operator">-&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> m b
 <span class="org-haskell-operator">&gt;</span>
@@ -2204,7 +2206,7 @@ GHCI Shell
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> content <span class="org-haskell-operator">&lt;-</span> readFile <span class="org-string">"squares.txt"</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t content
-<span class="org-function-name">content</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-definition">content</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span>
 <span class="org-haskell-operator">&gt;</span> content
 <span class="org-string">"[(0,0),(1,1),(2,4),(3,9),(4,16),(5,25),(6,36),(7,49),(8,64),(9,81),(10,100)]"</span>
 <span class="org-haskell-operator">&gt;</span> 
@@ -2219,7 +2221,7 @@ GHCI Shell
 [(0,0),(1,1),(2,4),(3,9),(4,16),(5,25),(6,36),(7,49),(8,64),(9,81),(10,100)]
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t readSquareFile 
-<span class="org-function-name">readSquareFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> [(<span class="org-haskell-type">Int</span>, <span class="org-haskell-type">Int</span>)]
+<span class="org-haskell-definition">readSquareFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> [(<span class="org-haskell-type">Int</span>, <span class="org-haskell-type">Int</span>)]
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> sq <span class="org-haskell-operator">&lt;-</span> readSquareFile 
@@ -2227,7 +2229,7 @@ GHCI Shell
 [(0,0),(1,1),(2,4),(3,9),(4,16),(5,25),(6,36),(7,49),(8,64),(9,81),(10,100)]
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t sq
-<span class="org-function-name">sq</span> <span class="org-haskell-operator">::</span> [(<span class="org-haskell-type">Int</span>, <span class="org-haskell-type">Int</span>)]
+<span class="org-haskell-definition">sq</span> <span class="org-haskell-operator">::</span> [(<span class="org-haskell-type">Int</span>, <span class="org-haskell-type">Int</span>)]
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t liftM (map <span class="org-haskell-operator">$</span> uncurry (<span class="org-haskell-operator">+</span>)) readSquareFile 
@@ -2316,10 +2318,10 @@ File: stack.hs
 
 <span class="org-haskell-keyword">type</span> <span class="org-haskell-type">Stack</span> <span class="org-haskell-operator">=</span> [<span class="org-haskell-type">Int</span>]
 
-<span class="org-function-name">pop</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Stack</span> <span class="org-haskell-type">Int</span>  
+<span class="org-haskell-definition">pop</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Stack</span> <span class="org-haskell-type">Int</span>  
 <span class="org-haskell-definition">pop</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">State</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-operator">\</span>(x<span class="org-haskell-constructor">:</span>xs) <span class="org-haskell-operator">-&gt;</span> (x,xs)  
 
-<span class="org-function-name">push</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Stack</span> <span class="org-haskell-constructor">()</span>  
+<span class="org-haskell-definition">push</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Stack</span> <span class="org-haskell-constructor">()</span>  
 <span class="org-haskell-definition">push</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">State</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-operator">\</span>xs <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-constructor">()</span>,a<span class="org-haskell-constructor">:</span>xs)
 </pre>
 </div>
@@ -2336,11 +2338,11 @@ Running:
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>l stack<span class="org-haskell-operator">.</span>hs
 [1 <span class="org-haskell-keyword">of</span> 1] <span class="org-haskell-constructor">Compiling</span> <span class="org-haskell-constructor">Main</span>             ( stack<span class="org-haskell-operator">.</span>hs, interpreted )
 
-<span class="org-function-name">stack.hs</span><span class="org-haskell-constructor">:</span>6<span class="org-haskell-constructor">:</span>7<span class="org-haskell-constructor">:</span>
+stack<span class="org-haskell-definition">.</span>hs<span class="org-haskell-constructor">:</span>6<span class="org-haskell-constructor">:</span>7<span class="org-haskell-constructor">:</span>
     <span class="org-haskell-constructor">Not</span> <span class="org-haskell-keyword">in</span> scope<span class="org-haskell-constructor">:</span> <span class="org-haskell-keyword">data</span> constructor `<span class="org-haskell-type">State'</span>
     <span class="org-haskell-constructor">Perhaps</span> you meant `<span class="org-haskell-constructor">StateT'</span> (imported from <span class="org-haskell-constructor">Control.Monad.State</span>)
 
-<span class="org-function-name">stack.hs</span><span class="org-haskell-constructor">:</span>9<span class="org-haskell-constructor">:</span>10<span class="org-haskell-constructor">:</span>
+stack<span class="org-haskell-definition">.</span>hs<span class="org-haskell-constructor">:</span>9<span class="org-haskell-constructor">:</span>10<span class="org-haskell-constructor">:</span>
     <span class="org-haskell-constructor">Not</span> <span class="org-haskell-keyword">in</span> scope<span class="org-haskell-constructor">:</span> <span class="org-haskell-keyword">data</span> constructor `<span class="org-haskell-type">State'</span>
     <span class="org-haskell-constructor">Perhaps</span> you meant `<span class="org-haskell-constructor">StateT'</span> (imported from <span class="org-haskell-constructor">Control.Monad.State</span>)
 <span class="org-haskell-constructor">Failed</span>, modules loaded<span class="org-haskell-constructor">:</span> none<span class="org-haskell-operator">.</span>
@@ -2365,13 +2367,13 @@ File: <i>stack.hs</i>
 
 <span class="org-haskell-keyword">type</span> <span class="org-haskell-type">Stack</span> <span class="org-haskell-operator">=</span> [<span class="org-haskell-type">Int</span>]
 
-<span class="org-function-name">pop</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Stack</span> <span class="org-haskell-type">Int</span>  
+<span class="org-haskell-definition">pop</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Stack</span> <span class="org-haskell-type">Int</span>  
 <span class="org-haskell-definition">pop</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">State</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-operator">\</span>(x<span class="org-haskell-constructor">:</span>xs) <span class="org-haskell-operator">-&gt;</span> (x,xs)  
 
-<span class="org-function-name">push</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Stack</span> <span class="org-haskell-constructor">()</span>  
+<span class="org-haskell-definition">push</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Stack</span> <span class="org-haskell-constructor">()</span>  
 <span class="org-haskell-definition">push</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">State</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-operator">\</span>xs <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-constructor">()</span>,a<span class="org-haskell-constructor">:</span>xs) 
 
-<span class="org-function-name">stackStuff</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Stack</span> <span class="org-haskell-constructor">()</span>  
+<span class="org-haskell-definition">stackStuff</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Stack</span> <span class="org-haskell-constructor">()</span>  
 <span class="org-haskell-definition">stackStuff</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>  
     a <span class="org-haskell-operator">&lt;-</span> pop  
     <span class="org-haskell-keyword">if</span> a <span class="org-haskell-operator">==</span> 5  
@@ -2380,7 +2382,7 @@ File: <i>stack.hs</i>
             push 3  
             push 8  
 
-<span class="org-function-name">moreStack</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Stack</span> <span class="org-haskell-constructor">()</span>  
+<span class="org-haskell-definition">moreStack</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Stack</span> <span class="org-haskell-constructor">()</span>  
 <span class="org-haskell-definition">moreStack</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>  
     a <span class="org-haskell-operator">&lt;-</span> stackManip  
     <span class="org-haskell-keyword">if</span> a <span class="org-haskell-operator">==</span> 100  
@@ -2436,13 +2438,13 @@ state and returns a value and a new state.
 <span class="org-haskell-constructor">Ok</span>, modules loaded<span class="org-haskell-constructor">:</span> OldState.
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t runState 
-<span class="org-function-name">runState</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> s a <span class="org-haskell-operator">-&gt;</span> s <span class="org-haskell-operator">-&gt;</span> (a, s)
+<span class="org-haskell-definition">runState</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> s a <span class="org-haskell-operator">-&gt;</span> s <span class="org-haskell-operator">-&gt;</span> (a, s)
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> incstate  <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">State</span> ( <span class="org-haskell-operator">\</span>s <span class="org-haskell-operator">-&gt;</span> (s<span class="org-haskell-operator">+</span>1, s<span class="org-haskell-operator">+</span>1) )
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t incstate 
-<span class="org-function-name">incstate</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Integer</span> <span class="org-haskell-type">Integer</span>
+<span class="org-haskell-definition">incstate</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Integer</span> <span class="org-haskell-type">Integer</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runState</span> incstate 2
@@ -2556,7 +2558,7 @@ the new state.
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> postincrement <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-type">Int</span> ; postincrement <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span> { x <span class="org-haskell-operator">&lt;-</span> get ;  put (x <span class="org-haskell-operator">+</span> 1) ; return x }
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t postincrement 
-<span class="org-function-name">postincrement</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">postincrement</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-type">Int</span>
 <span class="org-haskell-operator">&gt;</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t runState postincrement 
 <span class="org-haskell-definition">runState</span> postincrement <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">Int</span>, <span class="org-haskell-type">Int</span>)
@@ -2615,7 +2617,7 @@ Example:
 <pre class="src src-haskell"><span class="org-comment-delimiter">-- </span><span class="org-comment">import Control.Monad.State</span>
 <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">OldState</span>
 
-<span class="org-function-name">test1</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">test1</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-type">Int</span>
 <span class="org-haskell-definition">test1</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
   put 3         <span class="org-comment-delimiter">-- </span><span class="org-comment">Set the state to 3 --&gt; (\s -&gt; ((), s)) 3 = ((), 3)</span>
   modify (<span class="org-haskell-operator">+</span>1)   <span class="org-comment-delimiter">-- </span><span class="org-comment">Apply the infix function (+1) to the state ((), 4)</span>
@@ -2648,7 +2650,7 @@ Example:
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t test2
-<span class="org-function-name">test2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Integer</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">test2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Integer</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-comment-delimiter">--  </span><span class="org-comment">State Integer () = State s a  ==&gt; s = Interger and a = ()</span>
 <span class="org-haskell-operator">&gt;</span> 
@@ -2661,7 +2663,7 @@ Example:
 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t test3
-<span class="org-function-name">test3</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Integer</span> <span class="org-haskell-type">Integer</span>
+<span class="org-haskell-definition">test3</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Integer</span> <span class="org-haskell-type">Integer</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runState</span>  test3 0  <span class="org-comment-delimiter">-- </span><span class="org-comment">(\x -&gt; 10 * x, x + 2) 0 = (0, 2)</span>
 (0,2)
@@ -2674,7 +2676,7 @@ Example:
 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t test4
-<span class="org-function-name">test4</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">test4</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-type">Int</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runState</span> test4 0
 (8,4)
@@ -2833,7 +2835,7 @@ file: <i>randomst.hs</i>
 <pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">System.Random</span>  
 <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">OldState</span>         <span class="org-comment-delimiter">-- </span><span class="org-comment">import Control.Monad.State  </span>
 
-<span class="org-function-name">threeCoins</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">StdGen</span> (<span class="org-haskell-type">Bool</span>,<span class="org-haskell-type">Bool</span>,<span class="org-haskell-type">Bool</span>)  
+<span class="org-haskell-definition">threeCoins</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">StdGen</span> (<span class="org-haskell-type">Bool</span>,<span class="org-haskell-type">Bool</span>,<span class="org-haskell-type">Bool</span>)  
 <span class="org-haskell-definition">threeCoins</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>  
     a <span class="org-haskell-operator">&lt;-</span> randomSt  
     b <span class="org-haskell-operator">&lt;-</span> randomSt  
@@ -2855,7 +2857,7 @@ Running:
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t random
-<span class="org-function-name">random</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">RandomGen</span> g, <span class="org-haskell-type">Random</span> a) <span class="org-haskell-operator">=&gt;</span> g <span class="org-haskell-operator">-&gt;</span> (a, g)
+<span class="org-haskell-definition">random</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">RandomGen</span> g, <span class="org-haskell-type">Random</span> a) <span class="org-haskell-operator">=&gt;</span> g <span class="org-haskell-operator">-&gt;</span> (a, g)
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>i random
 <span class="org-haskell-keyword">class</span> <span class="org-haskell-type">Random</span> a <span class="org-haskell-keyword">where</span>
@@ -2865,10 +2867,10 @@ Running:
     <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in `System.Random'</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t mkStdGen 
-<span class="org-function-name">mkStdGen</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">StdGen</span>
+<span class="org-haskell-definition">mkStdGen</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">StdGen</span>
 <span class="org-haskell-operator">&gt;</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>i mkStdGen 
-<span class="org-function-name">mkStdGen</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">StdGen</span>   <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in `System.Random'</span>
+<span class="org-haskell-definition">mkStdGen</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">StdGen</span>   <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in `System.Random'</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runState</span> threeCoins (mkStdGen 33)
 <span class="org-haskell-constructor">Loading</span> package random<span class="org-haskell-operator">-</span>1.0<span class="org-haskell-operator">.</span>1.1 <span class="org-haskell-operator">...</span> linking <span class="org-haskell-operator">...</span> done<span class="org-haskell-operator">.</span>
@@ -2934,7 +2936,7 @@ values.
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> fibState1 <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">State</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-operator">\</span>(an, an1) <span class="org-haskell-operator">-&gt;</span> (an <span class="org-haskell-operator">+</span> an1, (an1, an <span class="org-haskell-operator">+</span> an1))
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t fibState1 
-<span class="org-function-name">fibState1</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> (<span class="org-haskell-type">Integer</span>, <span class="org-haskell-type">Integer</span>) <span class="org-haskell-type">Integer</span>
+<span class="org-haskell-definition">fibState1</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> (<span class="org-haskell-type">Integer</span>, <span class="org-haskell-type">Integer</span>) <span class="org-haskell-type">Integer</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runState</span> fibState1 (0, 1)
@@ -2964,7 +2966,7 @@ values.
 
 <span class="org-haskell-keyword">type</span> <span class="org-haskell-type">Fib</span> <span class="org-haskell-operator">=</span> (<span class="org-haskell-type">Integer</span>, <span class="org-haskell-type">Integer</span>)
 
-<span class="org-function-name">fibstate2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Fib</span> <span class="org-haskell-type">Integer</span>
+<span class="org-haskell-definition">fibstate2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Fib</span> <span class="org-haskell-type">Integer</span>
 <span class="org-haskell-definition">fibstate2</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
     (an, an1) <span class="org-haskell-operator">&lt;-</span> get
     <span class="org-haskell-keyword">let</span> an2 <span class="org-haskell-operator">=</span> an <span class="org-haskell-operator">+</span> an1
@@ -2972,7 +2974,7 @@ values.
     return an2
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t fibstate2 
-<span class="org-function-name">fibstate2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Fib</span> <span class="org-haskell-type">Integer</span>
+<span class="org-haskell-definition">fibstate2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">State</span> <span class="org-haskell-type">Fib</span> <span class="org-haskell-type">Integer</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runState</span> fibstate2 (0, 1)
@@ -3112,7 +3114,7 @@ File: <i>bisection_state.hs</i>
 
     return c
 
-<span class="org-function-name">findRoot</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>) <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">Double</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-definition">findRoot</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>) <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">Double</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">Double</span>
 <span class="org-haskell-definition">findRoot</span> eps itmax f serie <span class="org-haskell-operator">=</span>
     <span class="org-haskell-keyword">case</span> (itmax, serie) <span class="org-haskell-keyword">of</span>   
         (<span class="org-haskell-keyword">_</span>, <span class="org-haskell-constructor">[]</span>)          <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Nothing</span>
@@ -3125,7 +3127,7 @@ File: <i>bisection_state.hs</i>
 <span class="org-haskell-definition">bisecSolver</span> eps itmax f x0 x1 <span class="org-haskell-operator">=</span>
     findRoot eps f (evalStateLoop  (bisecStateFactory f (x0, x1)))
 
-<span class="org-function-name">f</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-definition">f</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
 <span class="org-haskell-definition">f</span> x <span class="org-haskell-operator">=</span>  x <span class="org-haskell-operator">**</span> 3.0 <span class="org-haskell-operator">-</span> x <span class="org-haskell-operator">-</span> 2.0
 </pre>
 </div>
@@ -3201,7 +3203,8 @@ References:
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="date">Created: 2016-11-01 ter 01:50</p>
+<p class="author">Author: Caio Rodrigues</p>
+<p class="date">Created: 2017-03-02 qui 14:13</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

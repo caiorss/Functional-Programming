@@ -1,4 +1,3 @@
-#+INCLUDE: ../theme/style.org
 #+TITLE: Ocaml 
 
 * OCaml

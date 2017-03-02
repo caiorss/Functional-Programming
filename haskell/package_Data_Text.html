@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Module: Data.Text</title>
-<!-- 2016-11-01 ter 01:18 -->
+<!-- 2017-03-02 qui 14:14 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues" />
@@ -88,15 +88,16 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
+<link href='/theme/style.css' rel='stylesheet'>
 <link href="/Functional-Programming/theme/style.css" rel="stylesheet">
 
-<script type="text/javascript" src="/Functional-Programming/theme/org-info.js">
+<script type="text/javascript" src="/theme/org-info.js">
 /**
  *
- * @source: /Functional-Programming/theme/org-info.js
+ * @source: /theme/org-info.js
  *
  * @licstart  The following is the entire license notice for the
- *  JavaScript code in /Functional-Programming/theme/org-info.js.
+ *  JavaScript code in /theme/org-info.js.
  *
  * Copyright (C) 2012-2013 Free Software Foundation, Inc.
  *
@@ -116,7 +117,7 @@
  * through which recipients can access the Corresponding Source.
  *
  * @licend  The above is the entire license notice
- * for the JavaScript code in /Functional-Programming/theme/org-info.js.
+ * for the JavaScript code in /theme/org-info.js.
  *
  */
 </script>
@@ -157,7 +158,7 @@ org_html_manager.set("VIEW_BUTTONS", "0");
 org_html_manager.set("MOUSE_HINT", "underline");
 org_html_manager.set("FIXED_TOC", "0");
 org_html_manager.set("TOC", "1");
-org_html_manager.set("VIEW", "showall");
+org_html_manager.set("VIEW", "info");
 org_html_manager.setup();  // activate after the parameters are set
 /*]]>*///-->
 </script>
@@ -273,7 +274,7 @@ T<span class="org-haskell-definition">.</span>copy            T.foldr1          
 <span class="org-comment-delimiter">-- </span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t T.pack 
-<span class="org-function-name">T.pack</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Text</span>
+T<span class="org-haskell-definition">.</span>pack <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Text</span>
 
 <span class="org-haskell-operator">&gt;</span> T<span class="org-haskell-definition">.</span>pack <span class="org-string">"Hello world Haskell rocks in FP"</span>
 <span class="org-string">"Hello world Haskell rocks in FP"</span>
@@ -285,24 +286,24 @@ T<span class="org-haskell-definition">.</span>pack <span class="org-string">"Hel
 <span class="org-comment-delimiter">-- </span><span class="org-comment">Convert Text to String </span>
 <span class="org-comment-delimiter">--</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t T.unpack
-<span class="org-function-name">T.unpack</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">T.Text</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span>
+T<span class="org-haskell-definition">.</span>unpack <span class="org-haskell-operator">::</span> <span class="org-haskell-type">T.Text</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> text <span class="org-haskell-operator">=</span> T.pack <span class="org-string">"hello world"</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t text
-<span class="org-function-name">text</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">T.Text</span>
+<span class="org-haskell-definition">text</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">T.Text</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> str <span class="org-haskell-operator">=</span> T.unpack text
 <span class="org-haskell-operator">&gt;</span> str
 <span class="org-string">"hello world"</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t str
-<span class="org-function-name">str</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-definition">str</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-comment-delimiter">--</span>
 <span class="org-comment-delimiter">-- </span><span class="org-comment">Apply a a function from T.Text to a String </span>
 <span class="org-comment-delimiter">--</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t apTextf 
-<span class="org-function-name">apTextf</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">T.Text</span> <span class="org-haskell-operator">-&gt;</span> t) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> t
+<span class="org-haskell-definition">apTextf</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">T.Text</span> <span class="org-haskell-operator">-&gt;</span> t) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> t
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">apTextf</span> T.lines <span class="org-string">"hello\nworld\nhaskell"</span>
 [<span class="org-string">"hello"</span>,<span class="org-string">"world"</span>,<span class="org-string">"haskell"</span>]
@@ -325,7 +326,7 @@ T<span class="org-haskell-definition">.</span>pack <span class="org-string">"Hel
 <span class="org-comment-delimiter">--</span>
 <span class="org-comment-delimiter">--</span><span class="org-comment">--------------------------------------------</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t T.unwords
-<span class="org-function-name">T.unwords</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">T.Text</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">T.Text</span>
+T<span class="org-haskell-definition">.</span>unwords <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">T.Text</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">T.Text</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 
@@ -344,7 +345,7 @@ T<span class="org-haskell-definition">.</span>pack <span class="org-string">"Hel
 <span class="org-comment-delimiter">--</span><span class="org-comment">-------------------------------------------------</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t T.lines
-<span class="org-function-name">T.lines</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">T.Text</span> <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">T.Text</span>]
+T<span class="org-haskell-definition">.</span>lines <span class="org-haskell-operator">::</span> <span class="org-haskell-type">T.Text</span> <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">T.Text</span>]
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> text <span class="org-haskell-operator">=</span> T.pack <span class="org-string">"line1\nline2\nline3\nline4"</span>
@@ -353,7 +354,7 @@ T<span class="org-haskell-definition">.</span>pack <span class="org-string">"Hel
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t lines
-<span class="org-function-name">lines</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">T.Text</span>]
+<span class="org-haskell-definition">lines</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">T.Text</span>]
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> lines
@@ -402,7 +403,7 @@ T<span class="org-haskell-definition">.</span>pack <span class="org-string">"Hel
 <span class="org-comment-delimiter">--</span><span class="org-comment">-----------------------------------------</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t T.strip
-<span class="org-function-name">T.strip</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">T.Text</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">T.Text</span>
+T<span class="org-haskell-definition">.</span>strip <span class="org-haskell-operator">::</span> <span class="org-haskell-type">T.Text</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">T.Text</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> T<span class="org-haskell-definition">.</span>strip (T.pack <span class="org-string">" line \n\n\r\n"</span>)
 <span class="org-string">"line"</span>
@@ -422,7 +423,7 @@ T<span class="org-haskell-definition">.</span>pack <span class="org-string">"Hel
 <span class="org-comment-delimiter">--</span><span class="org-comment">---------------------------</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t T.concat
-<span class="org-function-name">T.concat</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">T.Text</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">T.Text</span>
+T<span class="org-haskell-definition">.</span>concat <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">T.Text</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">T.Text</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> T<span class="org-haskell-definition">.</span>concat [T.pack <span class="org-string">"text1"</span>, T.pack <span class="org-string">"text2"</span>, T.pack <span class="org-string">"text 3"</span>]
 <span class="org-string">"text1text2text 3"</span>
@@ -443,7 +444,7 @@ T<span class="org-haskell-definition">.</span>pack <span class="org-string">"Hel
 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t T.isPrefixOf 
-<span class="org-function-name">T.isPrefixOf</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">T.Text</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">T.Text</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
+T<span class="org-haskell-definition">.</span>isPrefixOf <span class="org-haskell-operator">::</span> <span class="org-haskell-type">T.Text</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">T.Text</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> T<span class="org-haskell-definition">.</span>isPrefixOf (T.pack <span class="org-string">"xyz"</span>) (T.pack <span class="org-string">"xyz-hello-world"</span>)
@@ -454,7 +455,7 @@ T<span class="org-haskell-definition">.</span>pack <span class="org-string">"Hel
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t T.isSuffixOf 
-<span class="org-function-name">T.isSuffixOf</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">T.Text</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">T.Text</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
+T<span class="org-haskell-definition">.</span>isSuffixOf <span class="org-haskell-operator">::</span> <span class="org-haskell-type">T.Text</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">T.Text</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
 <span class="org-haskell-operator">&gt;</span>
 
 <span class="org-haskell-operator">&gt;</span> T<span class="org-haskell-definition">.</span>isSuffixOf (T.pack <span class="org-string">".pdf"</span>) (T.pack <span class="org-string">"file1.pdf"</span>)
@@ -472,7 +473,7 @@ T<span class="org-haskell-definition">.</span>pack <span class="org-string">"Hel
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> isSuffixOf suffix <span class="org-haskell-operator">=</span> T.isSuffixOf (T.pack suffix) <span class="org-haskell-operator">.</span> T.pack
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t isSuffixOf 
-<span class="org-function-name">isSuffixOf</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
+<span class="org-haskell-definition">isSuffixOf</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">filter</span> (isSuffixOf <span class="org-string">".pdf"</span>) [<span class="org-string">"file1.pdf"</span>, <span class="org-string">"dummy.org"</span>, <span class="org-string">"mrdummy.el"</span>, <span class="org-string">"file2.pdf"</span> ]
@@ -512,7 +513,7 @@ T<span class="org-haskell-definition">.</span>pack <span class="org-string">"Hel
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2016-11-01 ter 01:18</p>
+<p class="date">Created: 2017-03-02 qui 14:14</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

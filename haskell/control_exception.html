@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Module: Control.Exception</title>
-<!-- 2016-11-01 ter 01:19 -->
+<!-- 2017-03-02 qui 14:13 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues" />
@@ -88,15 +88,16 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
+<link href='/theme/style.css' rel='stylesheet'>
 <link href="/Functional-Programming/theme/style.css" rel="stylesheet">
 
-<script type="text/javascript" src="/Functional-Programming/theme/org-info.js">
+<script type="text/javascript" src="/theme/org-info.js">
 /**
  *
- * @source: /Functional-Programming/theme/org-info.js
+ * @source: /theme/org-info.js
  *
  * @licstart  The following is the entire license notice for the
- *  JavaScript code in /Functional-Programming/theme/org-info.js.
+ *  JavaScript code in /theme/org-info.js.
  *
  * Copyright (C) 2012-2013 Free Software Foundation, Inc.
  *
@@ -116,7 +117,7 @@
  * through which recipients can access the Corresponding Source.
  *
  * @licend  The above is the entire license notice
- * for the JavaScript code in /Functional-Programming/theme/org-info.js.
+ * for the JavaScript code in /theme/org-info.js.
  *
  */
 </script>
@@ -157,7 +158,7 @@ org_html_manager.set("VIEW_BUTTONS", "0");
 org_html_manager.set("MOUSE_HINT", "underline");
 org_html_manager.set("FIXED_TOC", "0");
 org_html_manager.set("TOC", "1");
-org_html_manager.set("VIEW", "showall");
+org_html_manager.set("VIEW", "info");
 org_html_manager.setup();  // activate after the parameters are set
 /*]]>*///-->
 </script>
@@ -242,16 +243,16 @@ for the JavaScript code in this tag.
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t try
-<span class="org-function-name">try</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Exception</span> e <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">IO</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Either</span> e a)
+<span class="org-haskell-definition">try</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Exception</span> e <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">IO</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Either</span> e a)
 <span class="org-haskell-operator">&gt;</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> tryIO ioact <span class="org-haskell-operator">=</span> try ioact <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Either</span> <span class="org-haskell-type">IOException</span> <span class="org-haskell-constructor">()</span>)
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t tryIO
-<span class="org-function-name">tryIO</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Either</span> <span class="org-haskell-type">IOException</span> <span class="org-haskell-constructor">()</span>)
+<span class="org-haskell-definition">tryIO</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Either</span> <span class="org-haskell-type">IOException</span> <span class="org-haskell-constructor">()</span>)
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t catch
-<span class="org-function-name">catch</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Exception</span> e <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">IO</span> a <span class="org-haskell-operator">-&gt;</span> (e <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> a) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> a
+<span class="org-haskell-definition">catch</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Exception</span> e <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">IO</span> a <span class="org-haskell-operator">-&gt;</span> (e <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> a) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> a
 </pre>
 </div>
 
@@ -264,12 +265,12 @@ Example 2: exception1.hs
 <pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Exception</span> 
 <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">System.Directory</span> <span class="org-haskell-keyword">as</span> <span class="org-haskell-constructor">D</span>
 
-<span class="org-function-name">tryIO</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> a <span class="org-haskell-operator">-&gt;</span>  <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Either</span> <span class="org-haskell-type">IOException</span> a)
+<span class="org-haskell-definition">tryIO</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> a <span class="org-haskell-operator">-&gt;</span>  <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Either</span> <span class="org-haskell-type">IOException</span> a)
 <span class="org-haskell-definition">tryIO</span> ioact <span class="org-haskell-operator">=</span> try ioact 
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">:: IO (Either IOException a)</span>
 
-<span class="org-function-name">tryReadFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span>  <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Either</span> <span class="org-haskell-type">IOException</span> <span class="org-haskell-type">String</span>)
+<span class="org-haskell-definition">tryReadFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span>  <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Either</span> <span class="org-haskell-type">IOException</span> <span class="org-haskell-type">String</span>)
 <span class="org-haskell-definition">tryReadFile</span> filename <span class="org-haskell-operator">=</span> tryIO <span class="org-haskell-operator">$</span> readFile filename 
 
 <span class="org-haskell-definition">tryShowFile</span> fileName <span class="org-haskell-operator">=</span>  <span class="org-haskell-keyword">do</span>
@@ -286,7 +287,7 @@ Example 2: exception1.hs
 
 
 <span class="org-comment-delimiter">{-  </span><span class="org-comment">catch :: Exception e =&gt; IO a -&gt; (e -&gt; IO a) -&gt; IO a -}</span>    
-<span class="org-function-name">tryReadFile2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">String</span> 
+<span class="org-haskell-definition">tryReadFile2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">String</span> 
 <span class="org-haskell-definition">tryReadFile2</span> fileName <span class="org-haskell-operator">=</span>
   catch (readFile fileName) errorHandler
   <span class="org-haskell-keyword">where</span>
@@ -294,17 +295,17 @@ Example 2: exception1.hs
     errorHandler error <span class="org-haskell-operator">=</span> return <span class="org-haskell-operator">$</span> show error 
 
 
-<span class="org-function-name">readFileSafe</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Either</span> <span class="org-haskell-type">IOException</span> <span class="org-haskell-type">String</span>) 
+<span class="org-haskell-definition">readFileSafe</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Either</span> <span class="org-haskell-type">IOException</span> <span class="org-haskell-type">String</span>) 
 <span class="org-haskell-definition">readFileSafe</span> filePath <span class="org-haskell-operator">=</span> 
    catch  (fmap <span class="org-haskell-constructor">Right</span> (readFile filePath))  (<span class="org-haskell-operator">\</span>e <span class="org-haskell-operator">-&gt;</span> return (<span class="org-haskell-constructor">Left</span> e))
 
 
-<span class="org-function-name">fileChars</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Either</span> <span class="org-haskell-type">IOException</span> <span class="org-haskell-type">Int</span>)
+<span class="org-haskell-definition">fileChars</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Either</span> <span class="org-haskell-type">IOException</span> <span class="org-haskell-type">Int</span>)
 <span class="org-haskell-definition">fileChars</span> filePath <span class="org-haskell-operator">=</span> fmap (fmap length ) (readFileSafe filePath)
 
 <span class="org-haskell-definition">fileChars2</span> <span class="org-haskell-operator">=</span> fmap (fmap length) <span class="org-haskell-operator">.</span> readFileSafe 
 
-<span class="org-function-name">safePrintFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Either</span> <span class="org-haskell-type">IOException</span> <span class="org-haskell-constructor">()</span>)
+<span class="org-haskell-definition">safePrintFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Either</span> <span class="org-haskell-type">IOException</span> <span class="org-haskell-constructor">()</span>)
 <span class="org-haskell-definition">safePrintFile</span> f <span class="org-haskell-operator">=</span> readFileSafe f <span class="org-haskell-operator">&gt;&gt;=</span> 
                   <span class="org-haskell-operator">\</span>result <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-keyword">case</span> result <span class="org-haskell-keyword">of</span> 
                    <span class="org-haskell-constructor">Right</span> content <span class="org-haskell-operator">-&gt;</span>  <span class="org-haskell-keyword">do</span> 
@@ -323,24 +324,24 @@ Example 2: exception1.hs
 <span class="org-haskell-constructor">Ubuntu</span> 15.04
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">tryShowFile</span> <span class="org-string">"/etc/issue.netasda"</span>
-<span class="org-function-name">Error</span><span class="org-haskell-definition">:</span> <span class="org-haskell-operator">/</span>etc<span class="org-haskell-operator">/</span>issue<span class="org-haskell-operator">.</span>netasda<span class="org-haskell-constructor">:</span> openFile<span class="org-haskell-constructor">:</span> does not exist (<span class="org-haskell-constructor">No</span> such file or directory)
+<span class="org-haskell-constructor">Error</span><span class="org-haskell-definition">:</span> <span class="org-haskell-operator">/</span>etc<span class="org-haskell-operator">/</span>issue<span class="org-haskell-operator">.</span>netasda<span class="org-haskell-constructor">:</span> openFile<span class="org-haskell-constructor">:</span> does not exist (<span class="org-haskell-constructor">No</span> such file or directory)
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t tryRemoveFile 
-<span class="org-function-name">tryRemoveFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">tryRemoveFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t tryShowFile 
-<span class="org-function-name">tryShowFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">tryShowFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">tryRemoveFile</span> <span class="org-string">"/etc/lsb-release"</span>
-<span class="org-function-name">Error</span><span class="org-haskell-definition">:</span> <span class="org-haskell-operator">/</span>etc<span class="org-haskell-operator">/</span>lsb<span class="org-haskell-operator">-</span>release<span class="org-haskell-constructor">:</span> removeLink<span class="org-haskell-constructor">:</span> permission denied (<span class="org-haskell-constructor">Permission</span> denied)
+<span class="org-haskell-constructor">Error</span><span class="org-haskell-definition">:</span> <span class="org-haskell-operator">/</span>etc<span class="org-haskell-operator">/</span>lsb<span class="org-haskell-operator">-</span>release<span class="org-haskell-constructor">:</span> removeLink<span class="org-haskell-constructor">:</span> permission denied (<span class="org-haskell-constructor">Permission</span> denied)
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">tryRemoveFile</span> <span class="org-string">"/tmp/dummy"</span>
-<span class="org-function-name">Error</span><span class="org-haskell-definition">:</span> <span class="org-haskell-operator">/</span>tmp<span class="org-haskell-operator">/</span>dummy<span class="org-haskell-constructor">:</span> removeLink<span class="org-haskell-constructor">:</span> does not exist (<span class="org-haskell-constructor">No</span> such file or directory)
+<span class="org-haskell-constructor">Error</span><span class="org-haskell-definition">:</span> <span class="org-haskell-operator">/</span>tmp<span class="org-haskell-operator">/</span>dummy<span class="org-haskell-constructor">:</span> removeLink<span class="org-haskell-constructor">:</span> does not exist (<span class="org-haskell-constructor">No</span> such file or directory)
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> touch fname <span class="org-haskell-operator">=</span> writeFile fname <span class="org-string">""</span>
@@ -350,12 +351,12 @@ Example 2: exception1.hs
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">tryRemoveFile</span> <span class="org-string">"/tmp/test1"</span>
 <span class="org-haskell-constructor">OK</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">tryRemoveFile</span> <span class="org-string">"/tmp/test1"</span>
-<span class="org-function-name">Error</span><span class="org-haskell-definition">:</span> <span class="org-haskell-operator">/</span>tmp<span class="org-haskell-operator">/</span>test1<span class="org-haskell-constructor">:</span> removeLink<span class="org-haskell-constructor">:</span> does not exist (<span class="org-haskell-constructor">No</span> such file or directory)
+<span class="org-haskell-constructor">Error</span><span class="org-haskell-definition">:</span> <span class="org-haskell-operator">/</span>tmp<span class="org-haskell-operator">/</span>test1<span class="org-haskell-constructor">:</span> removeLink<span class="org-haskell-constructor">:</span> does not exist (<span class="org-haskell-constructor">No</span> such file or directory)
 <span class="org-haskell-operator">&gt;</span> 
 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t tryReadFile 
-<span class="org-function-name">tryReadFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Either</span> <span class="org-haskell-type">IOException</span> <span class="org-haskell-type">String</span>)
+<span class="org-haskell-definition">tryReadFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Either</span> <span class="org-haskell-type">IOException</span> <span class="org-haskell-type">String</span>)
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">tryReadFile</span> <span class="org-string">"/etc/issue.net"</span>
@@ -374,11 +375,11 @@ Example 2: exception1.hs
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t catch
-<span class="org-function-name">catch</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Exception</span> e <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">IO</span> a <span class="org-haskell-operator">-&gt;</span> (e <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> a) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> a
+<span class="org-haskell-definition">catch</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Exception</span> e <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">IO</span> a <span class="org-haskell-operator">-&gt;</span> (e <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> a) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> a
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t readFileSafe 
-<span class="org-function-name">readFileSafe</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Either</span> <span class="org-haskell-type">IOException</span> <span class="org-haskell-type">String</span>)
+<span class="org-haskell-definition">readFileSafe</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Either</span> <span class="org-haskell-type">IOException</span> <span class="org-haskell-type">String</span>)
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">readFileSafe</span> <span class="org-string">"/etc/issue.net"</span>
@@ -403,7 +404,7 @@ Example 2: exception1.hs
 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t fileChars2
-<span class="org-function-name">fileChars2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Either</span> <span class="org-haskell-type">IOException</span> <span class="org-haskell-type">Int</span>)
+<span class="org-haskell-definition">fileChars2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Either</span> <span class="org-haskell-type">IOException</span> <span class="org-haskell-type">Int</span>)
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">fileChars2</span> <span class="org-string">"/etc/issue.net"</span>
@@ -426,7 +427,7 @@ Example 2: exception1.hs
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2016-11-01 ter 01:19</p>
+<p class="date">Created: 2017-03-02 qui 14:13</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
