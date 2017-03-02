@@ -23,6 +23,13 @@ let doAnyway fn =
     try fn ()
     with _ -> ()
 
+
+let moveFile fileName dest =
+    if System.IO.File.Exists dest 
+    then System.IO.File.Delete dest
+    System.IO.File.Move(fileName, dest)
+    
+
 let runShell executable (arglist: string list) : int =
     let args = String.Join(" ", arglist)
 
@@ -81,7 +88,8 @@ let exportFile dest destRelPath orgFile =
     printfn "Exporting file %s to %s" orgFile htmlFileDest;
 
     try
-        SF.Copy(htmlFileOrig, htmlFileDest, true)
+        // SF.Copy(htmlFileOrig, htmlFileDest, true)
+        moveFile htmlFileOrig htmlFileDest
         printfn "Ok."
     with :? System.IO.FileNotFoundException as ex -> printfn "Error: %s" ex.Message
     
