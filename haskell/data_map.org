@@ -1,4 +1,3 @@
-#+INCLUDE:../theme/style.org
 #+TITLE: Module: Data.Map
 
 * Data.Map
