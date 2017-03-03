@@ -3,11 +3,12 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<title>Functional Programming by Example</title>
-<!-- 2017-03-02 qui 14:13 -->
+<title>Setting up a Haskell Development Environment</title>
+<!-- 2017-03-03 sex 16:51 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
-<meta  name="author" content="Caio Rodrigues" />
+<meta  name="author" content="arch" />
+<meta  name="keywords" content="haskell development environment fp ide editor stack" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   .title  { text-align: center; }
@@ -89,7 +90,6 @@
   /*]]>*/-->
 </style>
 <link href='/theme/style.css' rel='stylesheet'>
-<link href="/Functional-Programming/theme/style.css" rel="stylesheet">
 
 <script type="text/javascript" src="/theme/org-info.js">
 /**
@@ -150,7 +150,7 @@ for the JavaScript code in this tag.
 */
 
 <!--/*--><![CDATA[/*><!--*/
-org_html_manager.set("TOC_DEPTH", "4");
+org_html_manager.set("TOC_DEPTH", "3");
 org_html_manager.set("LINK_HOME", "");
 org_html_manager.set("LINK_UP", "");
 org_html_manager.set("LOCAL_TOC", "1");
@@ -211,7 +211,7 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="content">
-<h1 class="title">Functional Programming by Example</h1>
+<h1 class="title">Setting up a Haskell Development Environment</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
@@ -219,38 +219,47 @@ for the JavaScript code in this tag.
 <li><a href="#sec-1">1. Haskell</a>
 <ul>
 <li><a href="#sec-1-1">1.1. Overview</a></li>
-<li><a href="#sec-1-2">1.2. Suffixes of file names for Haskell</a></li>
-<li><a href="#sec-1-3">1.3. Toolset</a></li>
-<li><a href="#sec-1-4">1.4. Install Haskell Platform</a></li>
-<li><a href="#sec-1-5">1.5. GHCI Reference</a></li>
+<li><a href="#sec-1-2">1.2. Setting up a Haskell Development Environment</a>
+<ul>
+<li><a href="#sec-1-2-1">1.2.1. Get Haskell through stack</a></li>
+<li><a href="#sec-1-2-2">1.2.2. Text editor</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-3">1.3. Haskell stack tool</a>
+<ul>
+<li><a href="#sec-1-3-1">1.3.1. Using stack without a project</a></li>
+<li><a href="#sec-1-3-2">1.3.2. Using stack with a project</a></li>
+<li><a href="#sec-1-3-3">1.3.3. Misc Stack commands</a></li>
+<li><a href="#sec-1-3-4">1.3.4. Some useful stack packages</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">1.4. GHCI Reference</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<lu> 
-  <li><a href="/Functional-Programming/index.html">Index</a></li>
-  <li><a href="https://github.com/caiorss/Functional-Programming">Repository</a></li>
-</lu>
 
 <div id="outline-container-sec-1" class="outline-2">
 <h2 id="sec-1"><span class="section-number-2">1</span> Haskell</h2>
 <div class="outline-text-2" id="text-1">
-</div>
-
-<div id="outline-container-sec-1-1" class="outline-3">
+</div><div id="outline-container-sec-1-1" class="outline-3">
 <h3 id="sec-1-1"><span class="section-number-3">1.1</span> Overview</h3>
 <div class="outline-text-3" id="text-1-1">
+<p>
+<b>Features</b>
+</p>
+
 <ul class="org-ul">
 <li>Pure Functional programming language
 </li>
-<li>Strong Static Typed Language 
+<li>Strong Static Typed Language
 </li>
-<li>Type Inference (The Haskell compiler deduce the types for you). 
+<li>Type Inference (The Haskell compiler deduces the types for you).
 </li>
-<li>Lazy Evaluation ( Delayed evaluation) by default
+<li>Lazy Evaluation (Delayed evaluation) by default
 </li>
-<li>Data Immutability/ Haskell has no variables
+<li>Data Immutability / Haskell has no variables
 <ul class="org-ul">
 <li>Values can be bound to a name and can only be assigned once.
 </li>
@@ -269,31 +278,12 @@ for the JavaScript code in this tag.
 <li>Compiles to native code.
 </li>
 </ul>
-</div>
-</div>
 
-<div id="outline-container-sec-1-2" class="outline-3">
-<h3 id="sec-1-2"><span class="section-number-3">1.2</span> Suffixes of file names for Haskell</h3>
-<div class="outline-text-3" id="text-1-2">
-<pre class="example">
-.hs    Haskell source code; preprocess, compile
 
-.lhs   literate Haskell source; unlit, preprocess, compile
+<p>
+<b>Tool</b>
+</p>
 
-.hi    Interface file; contains information about exported symbols
-
-.hc    intermediate C files
-
-.x_o   way x object files; common ways are: p, u, s
-
-.x_hi  way x interface files
-</pre>
-</div>
-</div>
-
-<div id="outline-container-sec-1-3" class="outline-3">
-<h3 id="sec-1-3"><span class="section-number-3">1.3</span> Toolset</h3>
-<div class="outline-text-3" id="text-1-3">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -316,7 +306,7 @@ for the JavaScript code in this tag.
 
 <tr>
 <td class="left">ghci</td>
-<td class="left">Haskell Interactive Shell/ Interpreter</td>
+<td class="left">Haskell Interactive Shell / Interpreter</td>
 </tr>
 
 <tr>
@@ -331,41 +321,670 @@ for the JavaScript code in this tag.
 
 <tr>
 <td class="left">cabal</td>
-<td class="left">GHC Haskell Cabal package manager</td>
+<td class="left">GHC Haskell Cabal building tool</td>
+</tr>
+
+<tr>
+<td class="left">stack</td>
+<td class="left">Haskell new package manager and building automation tool.</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>
+<b>Suffixes of file names for Haskell</b>
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Extension</th>
+<th scope="col" class="left">Description</th>
+<th scope="col" class="left">&#xa0;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left"><b>Source File</b></td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">.hs</td>
+<td class="left">Haskell source code; preprocess, compile</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">.lhs</td>
+<td class="left">literate Haskell source; unlit, preprocess, compile</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left"><b>Compilation output</b></td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">.hi</td>
+<td class="left">Interface file; contains information about exported symbols</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">.hc</td>
+<td class="left">intermediate C files</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">.x_o</td>
+<td class="left">way x object files; common ways are: p, u, s</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">.x_hi</td>
+<td class="left">way x interface files</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 
-<div id="outline-container-sec-1-4" class="outline-3">
-<h3 id="sec-1-4"><span class="section-number-3">1.4</span> Install Haskell Platform</h3>
-<div class="outline-text-3" id="text-1-4">
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> Setting up a Haskell Development Environment</h3>
+<div class="outline-text-3" id="text-1-2">
+</div><div id="outline-container-sec-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1"><span class="section-number-4">1.2.1</span> Get Haskell through stack</h4>
+<div class="outline-text-4" id="text-1-2-1">
 <p>
-Binaries and Installation files: 
+There are many ways to install Haskell like through Haskell Platform
+and Linux distributions packages. The most easier and reliable way is
+through stack tool which is a package manager and a build automation
+tool for Haskell because it can install and run multiple Haskell GHC
+versions without breaking each other or overwritten the already
+installed ghc in the system.
 </p>
+
+
+<p>
+<b>Capabilities:</b>
+</p>
+
 <ul class="org-ul">
-<li><a href="https://www.haskell.org/platform/">https://www.haskell.org/platform/</a>
+<li>Install and run multiple versions of GHC avoiding the dependency
+hell and that each GHC version overwrites or breaks each other. All
+ghc versions are installed in the ~/.stack directory.
 </li>
-<li><a href="https://www.haskell.org/platform/linux.html">Haskell for Linux</a>
+
+<li>Can resolve and install all dependencies per project automatically.
+</li>
+
+<li>Simple configuration file in YAML format stack.yaml. 
+</li>
+
+<li>Reliability: Fetch packages from a curated set of packages 
+</li>
+
+<li>Reproducible builds.
+</li>
+
+<li>Ensures backward compatibility.
 </li>
 </ul>
 
 <p>
-Install Haskell Libraries:
+<b>Install stack</b>
 </p>
 
-<pre class="example">
-cabal update
+<p>
+See the instructions to install stack at <a href="https://www.haskellstack.org/">https://www.haskellstack.org/</a>
+</p>
 
-cabal install &lt;some package&gt;
+<p>
+<b>Documentation</b>
+</p>
+
+<ul class="org-ul">
+<li>Stack guide: <a href="https://github.com/commercialhaskell/stack/blob/master/doc/GUIDE.md">stack/GUIDE.md at master · commercialhaskell/stack</a>
+</li>
+
+<li><a href="https://haskell-lang.org/get-started">Get Started with Haskell</a>
+</li>
+
+<li><a href="https://www.stackage.org/">Stackage Server</a>
+</li>
+
+<li><a href="https://github.com/fpco/lts-haskell#readme">fpco/lts-haskell: LTS Haskell build plans</a>
+</li>
+
+<li><a href="http://stackoverflow.com/questions/33446558/understanding-haskells-stack-program-and-the-resolver-and-lts-version">Understanding Haskell's stack program and the resolver and LTS version - Stack Overflow</a>
+</li>
+
+<li><a href="https://haskell-lang.org/tutorial/stack-script">How to Script with Stack</a>  
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-sec-1-2-2" class="outline-4">
+<h4 id="sec-1-2-2"><span class="section-number-4">1.2.2</span> Text editor</h4>
+<div class="outline-text-4" id="text-1-2-2">
+</div><ol class="org-ol"><li><a id="sec-1-2-2-1" name="sec-1-2-2-1"></a>Atom<br  /><div class="outline-text-5" id="text-1-2-2-1">
+<ul class="org-ul">
+<li><a href="https://atom.io/packages/ide-haskell#configuration">ide-haskell</a>
+</li>
+
+<li><a href="https://github.com/simonmichael/haskell-atom-setup">simonmichael/haskell-atom-setup: How to set up and use the Atom IDE for Haskell development</a>
+</li>
+
+<li><a href="http://www.jkrause.io/blog/2016/03/26/setup-atom-io-for-developing-haskell-on-osx/">Jens Krause - Set up Atom.io for developing Haskell on OS X</a>
+</li>
+</ul>
+</div>
+</li>
+
+<li><a id="sec-1-2-2-2" name="sec-1-2-2-2"></a>Emacs<br  /><div class="outline-text-5" id="text-1-2-2-2">
+<ul class="org-ul">
+<li><a href="https://commercialhaskell.github.io/intero/">Intero for Emacs</a>
+</li>
+
+<li><a href="https://emacsclub.github.io/html/haskell.html">Getting Started with Haskell</a>
+</li>
+
+<li><a href="https://www.inf.ed.ac.uk/teaching/courses/inf1/fp/emacs.pdf">Setting up Haskell Mode for Emacs</a>
+</li>
+</ul>
+</div>
+</li></ol>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> Haskell stack tool</h3>
+<div class="outline-text-3" id="text-1-3">
+</div><div id="outline-container-sec-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1"><span class="section-number-4">1.3.1</span> Using stack without a project</h4>
+<div class="outline-text-4" id="text-1-3-1">
+</div><ol class="org-ol"><li><a id="sec-1-3-1-1" name="sec-1-3-1-1"></a>Overview<br  /><div class="outline-text-5" id="text-1-3-1-1">
+<p>
+Stack can be used exploratory programming without setting up a
+project by running any stack command outside a project directory (a
+directory without an stack.yaml file).
+</p>
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">LST Version / Resolver</th>
+<th scope="col" class="left">Haskell Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left"><a href="https://www.stackage.org/lts-8.3">lts-8.3</a></td>
+<td class="left">GHC 8.0.2</td>
+</tr>
+
+<tr>
+<td class="left"><a href="https://www.stackage.org/lts-7.19">lts-7.19</a></td>
+<td class="left">GHC 8.0.1</td>
+</tr>
+
+<tr>
+<td class="left"><a href="https://www.stackage.org/lts-6.30">lts-6.30</a></td>
+<td class="left">GHC 7.10.3</td>
+</tr>
+
+<tr>
+<td class="left"><a href="https://www.stackage.org/lts-3.22">lts-3.22</a></td>
+<td class="left">GHC 7.10.2</td>
+</tr>
+
+<tr>
+<td class="left"><a href="https://www.stackage.org/lts-2.22">lts-2.22</a></td>
+<td class="left">GHC 7.8.4</td>
+</tr>
+
+<tr>
+<td class="left"><a href="https://www.stackage.org/lts-0.7">lts-0.7</a></td>
+<td class="left">GHC 7.8.3</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+
+<li><a id="sec-1-3-1-2" name="sec-1-3-1-2"></a>Installing packages globally<br  /><div class="outline-text-5" id="text-1-3-1-2">
+<p>
+To install a package globally run <code>$ stack install &lt;package&gt;</code> outside
+any project directory. 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ cd ~
+
+$ stack install HUnit
+[1 of 2] Compiling Main             ( /home/arch/.stack/setup-exe-src/setup-mPHDZzAJ.hs, /home/arch/.stack/setup-exe-src/setup-mPHDZzAJ.o )
+[2 of 2] Compiling StackSetupShim   ( /home/arch/.stack/setup-exe-src/setup-shim-mPHDZzAJ.hs, /home/arch/.stack/setup-exe-src/setup-shim-mPHDZzAJ.o )
+Linking /home/arch/.stack/setup-exe-cache/x86_64-linux/tmp-Cabal-simple_mPHDZzAJ_1.24.0.0_ghc-8.0.1 ...
+HUnit-1.3.1.2: download
+HUnit-1.3.1.2: configure
+HUnit-1.3.1.2: build
+HUnit-1.3.1.2: copy/register
 </pre>
 </div>
 </div>
+</li>
 
-<div id="outline-container-sec-1-5" class="outline-3">
-<h3 id="sec-1-5"><span class="section-number-3">1.5</span> GHCI Reference</h3>
-<div class="outline-text-3" id="text-1-5">
+<li><a id="sec-1-3-1-3" name="sec-1-3-1-3"></a>Running Haskell REPL without a project<br  /><div class="outline-text-5" id="text-1-3-1-3">
+<p>
+Just run <code>$ stack ghci</code> outside of a project directory.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">$</span> stack ghci
+<span class="org-haskell-constructor">Configuring</span> <span class="org-haskell-constructor">GHCi</span> with the following packages<span class="org-haskell-constructor">:</span> 
+<span class="org-haskell-constructor">GHCi</span>, version 8.0<span class="org-haskell-operator">.</span>1<span class="org-haskell-constructor">:</span> http<span class="org-haskell-constructor">://</span>www<span class="org-haskell-operator">.</span>haskell<span class="org-haskell-operator">.</span>org<span class="org-haskell-operator">/</span>ghc<span class="org-haskell-operator">/</span>  <span class="org-haskell-constructor">:?</span> for help
+<span class="org-haskell-constructor">Loaded</span> <span class="org-haskell-constructor">GHCi</span> configuration from <span class="org-haskell-operator">/</span>tmp<span class="org-haskell-operator">/</span>ghci6134<span class="org-haskell-operator">/</span>ghci<span class="org-haskell-operator">-</span>script
+<span class="org-haskell-constructor">Prelude</span><span class="org-haskell-definition">&gt;</span> 
+<span class="org-haskell-constructor">Prelude</span><span class="org-haskell-definition">&gt;</span> <span class="org-haskell-keyword">let</span> f x <span class="org-haskell-operator">=</span> 10 <span class="org-haskell-operator">*</span> x 
+<span class="org-haskell-constructor">Prelude</span><span class="org-haskell-definition">&gt;</span> f 20
+200
+<span class="org-haskell-constructor">Prelude</span><span class="org-haskell-definition">&gt;</span> map f [1, 2, 3, 4, 5]
+[10,20,30,40,50]
+<span class="org-haskell-constructor">Prelude</span><span class="org-haskell-definition">&gt;</span> 
+<span class="org-haskell-constructor">Prelude</span><span class="org-haskell-definition">&gt;</span> <span class="org-haskell-constructor">:</span>{
+<span class="org-haskell-constructor">Prelude</span><span class="org-haskell-definition">|</span> mysum <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> 
+<span class="org-haskell-constructor">Prelude</span><span class="org-haskell-definition">|</span> mysum x y <span class="org-haskell-operator">=</span> x <span class="org-haskell-operator">+</span> y 
+<span class="org-haskell-constructor">Prelude</span><span class="org-haskell-definition">|</span> <span class="org-haskell-constructor">:</span>}
+<span class="org-haskell-constructor">Prelude</span><span class="org-haskell-definition">&gt;</span> 
+<span class="org-haskell-constructor">Prelude</span><span class="org-haskell-definition">&gt;</span> <span class="org-haskell-constructor">:</span>t mysum 
+<span class="org-haskell-definition">mysum</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-constructor">Prelude</span><span class="org-haskell-definition">&gt;</span> 
+<span class="org-haskell-constructor">Prelude</span><span class="org-haskell-definition">&gt;</span> mysum 10.23 20.23
+30.46
+<span class="org-haskell-constructor">Prelude</span><span class="org-haskell-definition">&gt;</span>
+</pre>
+</div>
+
+<p>
+To pass command line options to ghci run: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack ghci --ghci-options=<span class="org-string">"+RTS -M256m -K256m -RTS"</span>
+</pre>
+</div>
+
+<p>
+or 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack exec -- ghci +RTS -M256m -K256m -RTS
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-3-1-4" name="sec-1-3-1-4"></a>Run a specific GHC version<br  /><div class="outline-text-5" id="text-1-3-1-4">
+<p>
+Run Haskell REPL ghci for LTS resolver 3.22 / ghc-7.10.2. GHC will be
+installed if it is not available.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack exec -- stack --resolver lts-3.22 --install-ghc ghci
+</pre>
+</div>
+
+<p>
+Run Haskell REPL ghci installing a specific version of GHC and
+installing packages HDBC, HDBC-sqlite3 and random automatically.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack exec -- stack --resolver lts-3.22 --install-ghc ghci --package HDBC --package HDBC-sqlite3 --package random
+HDBC-sqlite3-2.3.3.1: configure
+HDBC-sqlite3-2.3.3.1: build
+HDBC-sqlite3-2.3.3.1: copy/register
+Configuring GHCi with the following packages: 
+GHCi, version 7.10.2: http://www.haskell.org/ghc/  :? for help
+Prelude&gt;
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-3-1-5" name="sec-1-3-1-5"></a>Run a Haskell script with specific ghc version:<br  /><div class="outline-text-5" id="text-1-3-1-5">
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack exec -- stack --resolver lts-3.22 --install-ghc runghc haskell-script.hs
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-3-1-6" name="sec-1-3-1-6"></a>Compile a haskell source code without a project<br  /><div class="outline-text-5" id="text-1-3-1-6">
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack ghc Main.hs Module1.hs Module2.hs
+</pre>
+</div>
+
+<p>
+or with command line options:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack exec -- ghc Main.hs Module1.hs Module2.hs -o myapp.bin
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-3-1-7" name="sec-1-3-1-7"></a>Compile a sources without a project with a specific Haskell version<br  /><div class="outline-text-5" id="text-1-3-1-7">
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack exec -- stack --resolver lts-3.22 --install-ghc ghc Main.hs Module1.hs Module2.hs ...
+</pre>
+</div>
+</div>
+</li></ol>
+</div>
+<div id="outline-container-sec-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2"><span class="section-number-4">1.3.2</span> Using stack with a project</h4>
+<div class="outline-text-4" id="text-1-3-2">
+<p>
+Stack can install specific versions of packages and Haskell run-time
+per project in a isolated way avoiding the dependency hell problem,
+therefore it is possible to have multiple versions of Haskell without
+them breaking each other.
+</p>
+
+<p>
+See: 
+</p>
+
+<ul class="org-ul">
+<li><a href="https://haskell-lang.org/tutorial/stack-build">How to Build with Stack</a>
+</li>
+
+<li><a href="http://seanhess.github.io/2015/08/04/practical-haskell-getting-started.html">Practical Haskell - Getting Started with Stack</a>
+</li>
+
+<li><a href="https://duplode.github.io/posts/migrating-a-project-to-stack.html">Migrating a Project to stack - The Life Monadic</a>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3-3" class="outline-4">
+<h4 id="sec-1-3-3"><span class="section-number-4">1.3.3</span> Misc Stack commands</h4>
+<div class="outline-text-4" id="text-1-3-3">
+</div><ol class="org-ol"><li><a id="sec-1-3-3-1" name="sec-1-3-3-1"></a>Where is ghci ?<br  /><div class="outline-text-5" id="text-1-3-3-1">
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack exec -- which ghci
+/home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/bin/ghci
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-3-3-2" name="sec-1-3-3-2"></a>Where is ghc ?<br  /><div class="outline-text-5" id="text-1-3-3-2">
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack exec -- which ghc
+/home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/bin/ghc
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-3-3-3" name="sec-1-3-3-3"></a>Show stack search path<br  /><div class="outline-text-5" id="text-1-3-3-3">
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack path
+
+stack-root: /home/arch/.stack
+project-root: /home/arch/Documents/projects/zhserver.haskell
+config-location: /home/arch/Documents/projects/zhserver.haskell/stack.yaml
+bin-path: /home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1/bin:/home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/home/arch/bin:/home/arch/.local/bin:/home/arch/opt/cling/bin:/home/arch/opt/cling2:/home/arch/opt/fsformatting:/home/arch/opt/gambit-4.8.4/bin:/home/arch/opt/jars:/home/arch/opt/java/bin:/home/arch/opt/jdk/bin:/home/arch/opt/jdk1.8.0_20/bin:/home/arch/opt/maven/bin:/home/arch/opt/scala-2.11.8/bin:/home/arch/opt/vivaldi
+programs: /home/arch/.stack/programs/x86_64-linux
+compiler-exe: /home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/bin/ghc
+compiler-bin: /home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/bin
+local-bin: /home/arch/.local/bin
+extra-include-dirs: 
+extra-library-dirs: 
+snapshot-pkg-db: /home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb
+local-pkg-db: /home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb
+global-pkg-db: /home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/lib/ghc-8.0.1/package.conf.d
+ghc-package-path: /home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb:/home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb:/home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/lib/ghc-8.0.1/package.conf.d
+snapshot-install-root: /home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1
+local-install-root: /home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1
+snapshot-doc-root: /home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1/doc
+local-doc-root: /home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1/doc
+dist-dir: .stack-work/dist/x86_64-linux/Cabal-1.24.0.0
+local-hpc-root: /home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1/hpc
+local-bin-path: /home/arch/.local/bin
+ghc-paths: /home/arch/.stack/programs/x86_64-linux
+</pre>
+</div>
+
+
+<p>
+Way 1: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ echo $(<span class="org-sh-quoted-exec">stack</span> exec -- bash -c <span class="org-string">"echo \$PATH"</span>) | tr <span class="org-string">':'</span> <span class="org-string">'\n'</span> | grep stack
+
+/home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/lts-8.0/8.0.2/bin
+/home/arch/.stack/snapshots/x86_64-linux/lts-8.0/8.0.2/bin
+/home/arch/.stack/programs/x86_64-linux/ghc-8.0.2/bin
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-3-3-4" name="sec-1-3-3-4"></a>Show all programs in stack search path<br  /><div class="outline-text-5" id="text-1-3-3-4">
+<div class="org-src-container">
+
+<pre class="src src-sh">$ echo $(<span class="org-sh-quoted-exec">stack</span> exec -- bash -c <span class="org-string">"echo \$PATH"</span>) | tr <span class="org-string">':'</span> <span class="org-string">'\n'</span> | grep stack | xargs ls -l
+ls: cannot access <span class="org-string">'/home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/lts-8.0/8.0.2/bin'</span>: No such file or directory
+/home/arch/.stack/programs/x86_64-linux/ghc-8.0.2/bin:
+total 72
+lrwxrwxrwx 1 arch arch     9 fev 16 10:58 ghc -&gt; ghc-8.0.2
+-rwxr-xr-x 1 arch arch   418 fev 16 10:58 ghc-8.0.2
+lrwxrwxrwx 1 arch arch    10 fev 16 10:58 ghci -&gt; ghci-8.0.2
+-rwxr-xr-x 1 arch arch   100 fev 16 10:58 ghci-8.0.2
+lrwxrwxrwx 1 arch arch    13 fev 16 10:58 ghc-pkg -&gt; ghc-pkg-8.0.2
+-rwxr-xr-x 1 arch arch   450 fev 16 10:58 ghc-pkg-8.0.2
+lrwxrwxrwx 1 arch arch    17 fev 16 10:58 haddock -&gt; haddock-ghc-8.0.2
+-rwxr-xr-x 1 arch arch   409 fev 16 10:58 haddock-ghc-8.0.2
+-rwxr-xr-x 1 arch arch 42907 fev 16 10:59 hp2ps
+-rwxr-xr-x 1 arch arch   380 fev 16 10:58 hpc
+-rwxr-xr-x 1 arch arch  1159 fev 16 10:58 hsc2hs
+lrwxrwxrwx 1 arch arch    12 fev 16 10:58 runghc -&gt; runghc-8.0.2
+-rwxr-xr-x 1 arch arch   426 fev 16 10:58 runghc-8.0.2
+lrwxrwxrwx 1 arch arch     6 fev 16 10:58 runhaskell -&gt; runghc
+
+/home/arch/.stack/snapshots/x86_64-linux/lts-8.0/8.0.2/bin:
+total 30164
+-rwxr-xr-x 1 arch arch 18205184 fev 16 11:44 cabal
+-rwxr-xr-x 1 arch arch 12677664 fev 16 11:20 smpl
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-3-3-5" name="sec-1-3-3-5"></a>Show stack environment variables<br  /><div class="outline-text-5" id="text-1-3-3-5">
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack exec env 
+
+<span class="org-variable-name">COLORTERM</span>=truecolor
+<span class="org-variable-name">DBUS_SESSION_BUS_ADDRESS</span>=unix:<span class="org-variable-name">abstract</span>=/tmp/dbus-Ubv8WhFbAO,<span class="org-variable-name">guid</span>=676a06582bbad1b5d87c300b58a87182
+<span class="org-variable-name">DESKTOP_SESSION</span>=xfce
+<span class="org-variable-name">DISPLAY</span>=:0.0
+<span class="org-variable-name">DOCKER_HOST</span>=tcp://127.0.0.1:4243
+<span class="org-variable-name">EDITOR</span>=emacs -Q -nw --no-site -eval <span class="org-string">"(progn (setq  inhibit-startup-message t) (global-font-lock-mode t))"</span>
+<span class="org-variable-name">GDMSESSION</span>=xfce
+<span class="org-variable-name">GHC_PACKAGE_PATH</span>=/home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb:/home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb:/home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/lib/ghc-8.0.1/package.conf.d
+<span class="org-variable-name">GLADE_CATALOG_PATH</span>=:
+<span class="org-variable-name">GLADE_MODULE_PATH</span>=:
+<span class="org-variable-name">GLADE_PIXMAP_PATH</span>=:
+<span class="org-variable-name">GNOME_KEYRING_CONTROL</span>=/home/arch/.cache/keyring-BEAWVY
+<span class="org-variable-name">GTK_MODULES</span>=canberra-gtk-module
+<span class="org-variable-name">HASKELL_DIST_DIR</span>=.stack-work/dist/x86_64-linux/Cabal-1.24.0.0
+<span class="org-variable-name">HASKELL_PACKAGE_SANDBOX</span>=/home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb
+<span class="org-variable-name">HASKELL_PACKAGE_SANDBOXES</span>=/home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb:/home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb:
+<span class="org-variable-name">HOME</span>=/home/arch
+<span class="org-variable-name">LANG</span>=en_US.utf8
+<span class="org-variable-name">LC_ADDRESS</span>=pt_BR.UTF-8
+<span class="org-variable-name">LC_IDENTIFICATION</span>=pt_BR.UTF-8
+<span class="org-variable-name">LC_MEASUREMENT</span>=pt_BR.UTF-8
+<span class="org-variable-name">LC_MONETARY</span>=pt_BR.UTF-8
+<span class="org-variable-name">LC_NAME</span>=pt_BR.UTF-8
+<span class="org-variable-name">LC_NUMERIC</span>=pt_BR.UTF-8
+<span class="org-variable-name">LC_PAPER</span>=pt_BR.UTF-8
+<span class="org-variable-name">LC_TELEPHONE</span>=pt_BR.UTF-8
+<span class="org-variable-name">LC_TIME</span>=pt_BR.UTF-8
+<span class="org-variable-name">LOGNAME</span>=arch
+<span class="org-variable-name">MAIL</span>=/var/spool/mail/arch
+<span class="org-variable-name">MOZ_PLUGIN_PATH</span>=/usr/lib/mozilla/plugins
+<span class="org-variable-name">PATH</span>=/home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1/bin:/home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1/bin:/home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/home/arch/bin:/home/arch/.local/bin:/home/arch/opt/cling/bin:/home/arch/opt/cling2:/home/arch/opt/fsformatting:/home/arch/opt/gambit-4.8.4/bin:/home/arch/opt/jars:/home/arch/opt/java/bin:/home/arch/opt/jdk/bin:/home/arch/opt/jdk1.8.0_20/bin:/home/arch/opt/maven/bin:/home/arch/opt/scala-2.11.8/bin:/home/arch/opt/vivaldi
+<span class="org-variable-name">PS1</span>=
+<span class="org-string">\[</span>\033[0;31m<span class="org-string">\]</span>\u<span class="org-string">\[</span>\033[0;36m<span class="org-string">\]</span>@<span class="org-string">\[</span>\033[0;34m<span class="org-string">\]</span>\h <span class="org-string">\[</span>\033[0;32m<span class="org-string">\]</span>\A <span class="org-string">\[</span>\033[0;36m<span class="org-string">\]</span>\w<span class="org-string">\[</span>\033[0;37m<span class="org-string">\]</span>
+$ 
+<span class="org-variable-name">PWD</span>=/home/arch/Documents/projects/zhserver.haskell
+<span class="org-variable-name">SHELL</span>=/bin/bash
+<span class="org-variable-name">SHLVL</span>=2
+<span class="org-variable-name">STACK_EXE</span>=/usr/bin/stack
+<span class="org-variable-name">TERM</span>=xterm-256color
+<span class="org-variable-name">USER</span>=arch
+<span class="org-variable-name">VISUAL</span>=emacs -Q -nw --no-site -eval <span class="org-string">"(progn (setq  inhibit-startup-message t) (global-font-lock-mode t))"</span>
+<span class="org-variable-name">VTE_VERSION</span>=4601
+<span class="org-variable-name">WINDOWID</span>=52514098
+<span class="org-variable-name">XAUTHORITY</span>=/home/arch/.Xauthority
+<span class="org-variable-name">XDG_CONFIG_DIRS</span>=/etc/xdg
+<span class="org-variable-name">XDG_CURRENT_DESKTOP</span>=XFCE
+<span class="org-variable-name">XDG_DATA_DIRS</span>=/usr/local/share:/usr/share
+<span class="org-variable-name">XDG_GREETER_DATA_DIR</span>=/var/lib/lightdm-data/arch
+<span class="org-variable-name">XDG_MENU_PREFIX</span>=xfce-
+<span class="org-variable-name">XDG_RUNTIME_DIR</span>=/run/user/1000
+<span class="org-variable-name">XDG_SEAT</span>=seat0
+<span class="org-variable-name">XDG_SEAT_PATH</span>=/org/freedesktop/DisplayManager/Seat0
+<span class="org-variable-name">XDG_SESSION_COOKIE</span>=arch-pc-1487434114.151435-7060458
+<span class="org-variable-name">XDG_SESSION_DESKTOP</span>=xfce
+<span class="org-variable-name">XDG_SESSION_PATH</span>=/org/freedesktop/DisplayManager/Session0
+<span class="org-variable-name">XDG_SESSION_TYPE</span>=x11
+<span class="org-variable-name">XDG_VTNR</span>=7
+</pre>
+</div>
+</div>
+</li></ol>
+</div>
+<div id="outline-container-sec-1-3-4" class="outline-4">
+<h4 id="sec-1-3-4"><span class="section-number-4">1.3.4</span> Some useful stack packages</h4>
+<div class="outline-text-4" id="text-1-3-4">
+<ul class="org-ul">
+<li>Commands to install some useful Haskell packages of <a href="https://www.haskell.org/platform/contents.html">Haskell Platform - Included Packages</a>
+</li>
+</ul>
+
+<p>
+Basic Libraries
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack install mtl random turtle conduit async network network uri
+</pre>
+</div>
+
+<p>
+Testing libraries:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack install HUnit QuickCheck
+</pre>
+</div>
+
+<p>
+Parsing and regex libraries:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack install attoparsec parsec regex-base regex-compat regex-posix
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-4" class="outline-3">
+<h3 id="sec-1-4"><span class="section-number-3">1.4</span> GHCI Reference</h3>
+<div class="outline-text-3" id="text-1-4">
 <p>
 GHCI Interactive Shell
 </p>
@@ -392,22 +1011,22 @@ GHCI Interactive Shell
 
 <tr>
 <td class="left">:load [haskell-source.hs] or :l src.hs</td>
-<td class="left">Load Haskell Source Code</td>
+<td class="left">Load Haskell source code</td>
 </tr>
 
 <tr>
 <td class="left">:reload or :r</td>
-<td class="left">Reload Code after it was edited</td>
+<td class="left">Reload code after it was edited</td>
 </tr>
 
 <tr>
-<td class="left">:type [symbol]   or :t [symbol]</td>
-<td class="left">Show the Type of a Symbol</td>
+<td class="left">:type [expr]   or :t [expr]</td>
+<td class="left">Show the type of an expression</td>
 </tr>
 
 <tr>
 <td class="left">:browse</td>
-<td class="left">Gives the type signature of all functions</td>
+<td class="left">Gives the type signature of all functions in a module</td>
 </tr>
 
 <tr>
@@ -417,7 +1036,7 @@ GHCI Interactive Shell
 
 <tr>
 <td class="left">:{ [code here ] :}</td>
-<td class="left">Multiline Code</td>
+<td class="left">Multiline code</td>
 </tr>
 
 <tr>
@@ -460,8 +1079,8 @@ See also:
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2017-03-02 qui 14:13</p>
+<p class="author">Author: arch</p>
+<p class="date">Created: 2017-03-03 sex 16:51</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
