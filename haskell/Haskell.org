@@ -1,11 +1,13 @@
-#+INCLUDE: ../theme/style.org
-#+TITLE: Functional Programming by Example
+# #+INCLUDE: ../theme/style.org
+#+TITLE: Setting up a Haskell Development Environment
+#+DESCRIPTION:
+#+KEYWORDS: haskell development environment fp ide editor stack
+#+STARTUP: overview 
 
 * Haskell
-
-# <a href="https://www.haskell.org"><img src="images/haskellLogo.png"/></a>
-
 ** Overview
+
+*Features*
 
  - Pure Functional programming language
  - Strong Static Typed Language
@@ -20,44 +22,407 @@
  - Tail Recursions
  - Compiles to native code.
 
-** Suffixes of file names for Haskell
 
-#+BEGIN_SRC
-.hs    Haskell source code; preprocess, compile
+*Tool*
 
-.lhs   literate Haskell source; unlit, preprocess, compile
+|                                    |                                                           |
+|------------------------------------+-----------------------------------------------------------|
+| ghc - the Glasgow Haskell Compiler | Transforms Haskell Source code .hs into native code.      |
+| ghci                               | Haskell Interactive Shell / Interpreter                   |
+| runghc                             | Haskell Non Interactive Interpreter                       |
+| haddock                            | Documentation tool for annotated Haskell source code      |
+| cabal                              | GHC Haskell Cabal building tool                           |
+| stack                              | Haskell new package manager and building automation tool. |
+|                                    |                                                           |
 
-.hi    Interface file; contains information about exported symbols
 
-.hc    intermediate C files
+*Suffixes of file names for Haskell*
 
-.x_o   way x object files; common ways are: p, u, s
+| Extension            | Description                                                 |   |
+|----------------------+-------------------------------------------------------------+---|
+| *Source File*        |                                                             |   |
+| .hs                  | Haskell source code; preprocess, compile                    |   |
+| .lhs                 | literate Haskell source; unlit, preprocess, compile         |   |
+|                      |                                                             |   |
+| *Compilation output* |                                                             |   |
+| .hi                  | Interface file; contains information about exported symbols |   |
+| .hc                  | intermediate C files                                        |   |
+| .x_o                 | way x object files; common ways are: p, u, s                |   |
+| .x_hi                | way x interface files                                       |   |
+|                      |                                                             |   |
 
-.x_hi  way x interface files
+** Setting up a Haskell Development Environment  
+*** Get Haskell through stack 
+ 
+There are many ways to install Haskell like through Haskell Platform
+and Linux distributions packages. The most easier and reliable way is
+through stack tool which is a package manager and a build automation
+tool for Haskell because it can install and run multiple Haskell GHC
+versions without breaking each other or overwritten the already
+installed ghc in the system.
+
+
+*Capabilities:*
+
+ - Install and run multiple versions of GHC avoiding the dependency
+   hell and that each GHC version overwrites or breaks each other. All
+   ghc versions are installed in the ~/.stack directory.
+
+ - Can resolve and install all dependencies per project automatically.
+
+ - Simple configuration file in YAML format stack.yaml. 
+
+ - Reliability: Fetch packages from a curated set of packages 
+
+ - Reproducible builds.
+
+ - Ensures backward compatibility.
+
+*Install stack*
+
+See the instructions to install stack at https://www.haskellstack.org/
+
+*Documentation*
+
+ - Stack guide: [[https://github.com/commercialhaskell/stack/blob/master/doc/GUIDE.md][stack/GUIDE.md at master · commercialhaskell/stack]]
+
+ - [[https://haskell-lang.org/get-started][Get Started with Haskell]]
+
+ - [[https://www.stackage.org/][Stackage Server]]
+
+ - [[https://github.com/fpco/lts-haskell#readme][fpco/lts-haskell: LTS Haskell build plans]]
+
+ - [[http://stackoverflow.com/questions/33446558/understanding-haskells-stack-program-and-the-resolver-and-lts-version][Understanding Haskell's stack program and the resolver and LTS version - Stack Overflow]]
+
+ - [[https://haskell-lang.org/tutorial/stack-script][How to Script with Stack]]  
+
+
+*** Text editor 
+**** Atom 
+
+ - [[https://atom.io/packages/ide-haskell#configuration][ide-haskell]]
+
+ - [[https://github.com/simonmichael/haskell-atom-setup][simonmichael/haskell-atom-setup: How to set up and use the Atom IDE for Haskell development]]
+
+ - [[http://www.jkrause.io/blog/2016/03/26/setup-atom-io-for-developing-haskell-on-osx/][Jens Krause - Set up Atom.io for developing Haskell on OS X]]
+
+**** Emacs 
+
+ - [[https://commercialhaskell.github.io/intero/][Intero for Emacs]]
+
+ - [[https://emacsclub.github.io/html/haskell.html][Getting Started with Haskell]]
+
+ - [[https://www.inf.ed.ac.uk/teaching/courses/inf1/fp/emacs.pdf][Setting up Haskell Mode for Emacs]]
+
+** Haskell stack tool 
+*** Using stack without a project 
+**** Overview 
+
+Stack can be used exploratory programming without setting up a
+project by running any stack command outside a project directory (a
+directory without an stack.yaml file).
+
+
+| LST Version / Resolver | Haskell Version |
+|------------------------+-----------------|
+| [[https://www.stackage.org/lts-8.3][lts-8.3]]                | GHC 8.0.2       |
+| [[https://www.stackage.org/lts-7.19][lts-7.19]]               | GHC 8.0.1       |
+| [[https://www.stackage.org/lts-6.30][lts-6.30]]               | GHC 7.10.3      |
+| [[https://www.stackage.org/lts-3.22][lts-3.22]]               | GHC 7.10.2      |
+| [[https://www.stackage.org/lts-2.22][lts-2.22]]               | GHC 7.8.4       |
+| [[https://www.stackage.org/lts-0.7][lts-0.7]]                | GHC 7.8.3       |
+|                        |                 |
+
+**** Installing packages globally
+
+To install a package globally run =$ stack install <package>= outside
+any project directory. 
+
+#+BEGIN_SRC sh
+$ cd ~
+
+$ stack install HUnit
+[1 of 2] Compiling Main             ( /home/arch/.stack/setup-exe-src/setup-mPHDZzAJ.hs, /home/arch/.stack/setup-exe-src/setup-mPHDZzAJ.o )
+[2 of 2] Compiling StackSetupShim   ( /home/arch/.stack/setup-exe-src/setup-shim-mPHDZzAJ.hs, /home/arch/.stack/setup-exe-src/setup-shim-mPHDZzAJ.o )
+Linking /home/arch/.stack/setup-exe-cache/x86_64-linux/tmp-Cabal-simple_mPHDZzAJ_1.24.0.0_ghc-8.0.1 ...
+HUnit-1.3.1.2: download
+HUnit-1.3.1.2: configure
+HUnit-1.3.1.2: build
+HUnit-1.3.1.2: copy/register
+
 #+END_SRC
 
-** Toolset
+**** Running Haskell REPL without a project
 
-|                                    |                                                      |
-|------------------------------------|------------------------------------------------------|
-| ghc - the Glasgow Haskell Compiler | Transforms Haskell Source code .hs into native code. |
-| ghci                               | Haskell Interactive Shell / Interpreter              |
-| runghc                             | Haskell Non Interactive Interpreter                  |
-| haddock                            | Documentation tool for annotated Haskell source code |
-| cabal                              | GHC Haskell Cabal package manager                    |
+Just run =$ stack ghci= outside of a project directory.
 
-** Install Haskell Platform
+#+BEGIN_SRC haskell
+$ stack ghci
+Configuring GHCi with the following packages: 
+GHCi, version 8.0.1: http://www.haskell.org/ghc/  :? for help
+Loaded GHCi configuration from /tmp/ghci6134/ghci-script
+Prelude> 
+Prelude> let f x = 10 * x 
+Prelude> f 20
+200
+Prelude> map f [1, 2, 3, 4, 5]
+[10,20,30,40,50]
+Prelude> 
+Prelude> :{
+Prelude| mysum :: Double -> Double -> Double 
+Prelude| mysum x y = x + y 
+Prelude| :}
+Prelude> 
+Prelude> :t mysum 
+mysum :: Double -> Double -> Double
+Prelude> 
+Prelude> mysum 10.23 20.23
+30.46
+Prelude> 
+#+END_SRC
 
-Binaries and Installation files:
-    * https://www.haskell.org/platform/
-    * [[https://www.haskell.org/platform/linux.html][Haskell for Linux]]
+To pass command line options to ghci run: 
 
-Install Haskell Libraries:
+#+BEGIN_SRC sh 
+ $ stack ghci --ghci-options="+RTS -M256m -K256m -RTS"
+#+END_SRC
 
-#+BEGIN_SRC
-cabal update
+or 
 
-cabal install <some package>
+#+BEGIN_SRC sh
+  $ stack exec -- ghci +RTS -M256m -K256m -RTS
+#+END_SRC
+
+**** Run a specific GHC version
+
+Run Haskell REPL ghci for LTS resolver 3.22 / ghc-7.10.2. GHC will be
+installed if it is not available.
+
+#+BEGIN_SRC sh
+  $ stack exec -- stack --resolver lts-3.22 --install-ghc ghci 
+#+END_SRC
+
+Run Haskell REPL ghci installing a specific version of GHC and
+installing packages HDBC, HDBC-sqlite3 and random automatically.
+
+#+BEGIN_SRC sh 
+  $ stack exec -- stack --resolver lts-3.22 --install-ghc ghci --package HDBC --package HDBC-sqlite3 --package random
+  HDBC-sqlite3-2.3.3.1: configure
+  HDBC-sqlite3-2.3.3.1: build
+  HDBC-sqlite3-2.3.3.1: copy/register
+  Configuring GHCi with the following packages: 
+  GHCi, version 7.10.2: http://www.haskell.org/ghc/  :? for help
+  Prelude> 
+#+END_SRC
+
+**** Run a Haskell script with specific ghc version: 
+
+#+BEGIN_SRC sh 
+ $ stack exec -- stack --resolver lts-3.22 --install-ghc runghc haskell-script.hs
+#+END_SRC
+
+**** Compile a haskell source code without a project
+
+#+BEGIN_SRC sh 
+  $ stack ghc Main.hs Module1.hs Module2.hs 
+#+END_SRC
+
+or with command line options:
+
+#+BEGIN_SRC sh 
+  $ stack exec -- ghc Main.hs Module1.hs Module2.hs -o myapp.bin 
+#+END_SRC
+
+**** Compile a sources without a project with a specific Haskell version
+
+#+BEGIN_SRC sh
+ $ stack exec -- stack --resolver lts-3.22 --install-ghc ghc Main.hs Module1.hs Module2.hs ...
+#+END_SRC
+*** Using stack with a project
+
+Stack can install specific versions of packages and Haskell run-time
+per project in a isolated way avoiding the dependency hell problem,
+therefore it is possible to have multiple versions of Haskell without
+them breaking each other.
+
+See: 
+
+ - [[https://haskell-lang.org/tutorial/stack-build][How to Build with Stack]]
+
+ - [[http://seanhess.github.io/2015/08/04/practical-haskell-getting-started.html][Practical Haskell - Getting Started with Stack]]
+
+ - [[https://duplode.github.io/posts/migrating-a-project-to-stack.html][Migrating a Project to stack - The Life Monadic]]
+
+*** Misc Stack commands 
+**** Where is ghci ? 
+
+#+BEGIN_SRC sh
+$ stack exec -- which ghci
+/home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/bin/ghci
+#+END_SRC
+
+**** Where is ghc ?
+
+#+BEGIN_SRC sh
+$ stack exec -- which ghc
+/home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/bin/ghc
+#+END_SRC
+
+**** Show stack search path
+
+#+BEGIN_SRC sh 
+  $ stack path
+
+  stack-root: /home/arch/.stack
+  project-root: /home/arch/Documents/projects/zhserver.haskell
+  config-location: /home/arch/Documents/projects/zhserver.haskell/stack.yaml
+  bin-path: /home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1/bin:/home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/home/arch/bin:/home/arch/.local/bin:/home/arch/opt/cling/bin:/home/arch/opt/cling2:/home/arch/opt/fsformatting:/home/arch/opt/gambit-4.8.4/bin:/home/arch/opt/jars:/home/arch/opt/java/bin:/home/arch/opt/jdk/bin:/home/arch/opt/jdk1.8.0_20/bin:/home/arch/opt/maven/bin:/home/arch/opt/scala-2.11.8/bin:/home/arch/opt/vivaldi
+  programs: /home/arch/.stack/programs/x86_64-linux
+  compiler-exe: /home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/bin/ghc
+  compiler-bin: /home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/bin
+  local-bin: /home/arch/.local/bin
+  extra-include-dirs: 
+  extra-library-dirs: 
+  snapshot-pkg-db: /home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb
+  local-pkg-db: /home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb
+  global-pkg-db: /home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/lib/ghc-8.0.1/package.conf.d
+  ghc-package-path: /home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb:/home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb:/home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/lib/ghc-8.0.1/package.conf.d
+  snapshot-install-root: /home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1
+  local-install-root: /home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1
+  snapshot-doc-root: /home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1/doc
+  local-doc-root: /home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1/doc
+  dist-dir: .stack-work/dist/x86_64-linux/Cabal-1.24.0.0
+  local-hpc-root: /home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1/hpc
+  local-bin-path: /home/arch/.local/bin
+  ghc-paths: /home/arch/.stack/programs/x86_64-linux
+
+#+END_SRC
+
+
+Way 1: 
+
+#+BEGIN_SRC sh 
+  $ echo $(stack exec -- bash -c "echo \$PATH") | tr ':' '\n' | grep stack
+
+  /home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/lts-8.0/8.0.2/bin
+  /home/arch/.stack/snapshots/x86_64-linux/lts-8.0/8.0.2/bin
+  /home/arch/.stack/programs/x86_64-linux/ghc-8.0.2/bin
+#+END_SRC
+
+**** Show all programs in stack search path
+
+#+BEGIN_SRC sh 
+  $ echo $(stack exec -- bash -c "echo \$PATH") | tr ':' '\n' | grep stack | xargs ls -l
+  ls: cannot access '/home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/lts-8.0/8.0.2/bin': No such file or directory
+  /home/arch/.stack/programs/x86_64-linux/ghc-8.0.2/bin:
+  total 72
+  lrwxrwxrwx 1 arch arch     9 fev 16 10:58 ghc -> ghc-8.0.2
+  -rwxr-xr-x 1 arch arch   418 fev 16 10:58 ghc-8.0.2
+  lrwxrwxrwx 1 arch arch    10 fev 16 10:58 ghci -> ghci-8.0.2
+  -rwxr-xr-x 1 arch arch   100 fev 16 10:58 ghci-8.0.2
+  lrwxrwxrwx 1 arch arch    13 fev 16 10:58 ghc-pkg -> ghc-pkg-8.0.2
+  -rwxr-xr-x 1 arch arch   450 fev 16 10:58 ghc-pkg-8.0.2
+  lrwxrwxrwx 1 arch arch    17 fev 16 10:58 haddock -> haddock-ghc-8.0.2
+  -rwxr-xr-x 1 arch arch   409 fev 16 10:58 haddock-ghc-8.0.2
+  -rwxr-xr-x 1 arch arch 42907 fev 16 10:59 hp2ps
+  -rwxr-xr-x 1 arch arch   380 fev 16 10:58 hpc
+  -rwxr-xr-x 1 arch arch  1159 fev 16 10:58 hsc2hs
+  lrwxrwxrwx 1 arch arch    12 fev 16 10:58 runghc -> runghc-8.0.2
+  -rwxr-xr-x 1 arch arch   426 fev 16 10:58 runghc-8.0.2
+  lrwxrwxrwx 1 arch arch     6 fev 16 10:58 runhaskell -> runghc
+
+  /home/arch/.stack/snapshots/x86_64-linux/lts-8.0/8.0.2/bin:
+  total 30164
+  -rwxr-xr-x 1 arch arch 18205184 fev 16 11:44 cabal
+  -rwxr-xr-x 1 arch arch 12677664 fev 16 11:20 smpl
+
+
+#+END_SRC
+
+**** Show stack environment variables 
+
+#+BEGIN_SRC sh 
+  $ stack exec env 
+
+  COLORTERM=truecolor
+  DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-Ubv8WhFbAO,guid=676a06582bbad1b5d87c300b58a87182
+  DESKTOP_SESSION=xfce
+  DISPLAY=:0.0
+  DOCKER_HOST=tcp://127.0.0.1:4243
+  EDITOR=emacs -Q -nw --no-site -eval "(progn (setq  inhibit-startup-message t) (global-font-lock-mode t))"
+  GDMSESSION=xfce
+  GHC_PACKAGE_PATH=/home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb:/home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb:/home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/lib/ghc-8.0.1/package.conf.d
+  GLADE_CATALOG_PATH=:
+  GLADE_MODULE_PATH=:
+  GLADE_PIXMAP_PATH=:
+  GNOME_KEYRING_CONTROL=/home/arch/.cache/keyring-BEAWVY
+  GTK_MODULES=canberra-gtk-module
+  HASKELL_DIST_DIR=.stack-work/dist/x86_64-linux/Cabal-1.24.0.0
+  HASKELL_PACKAGE_SANDBOX=/home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb
+  HASKELL_PACKAGE_SANDBOXES=/home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb:/home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb:
+  HOME=/home/arch
+  LANG=en_US.utf8
+  LC_ADDRESS=pt_BR.UTF-8
+  LC_IDENTIFICATION=pt_BR.UTF-8
+  LC_MEASUREMENT=pt_BR.UTF-8
+  LC_MONETARY=pt_BR.UTF-8
+  LC_NAME=pt_BR.UTF-8
+  LC_NUMERIC=pt_BR.UTF-8
+  LC_PAPER=pt_BR.UTF-8
+  LC_TELEPHONE=pt_BR.UTF-8
+  LC_TIME=pt_BR.UTF-8
+  LOGNAME=arch
+  MAIL=/var/spool/mail/arch
+  MOZ_PLUGIN_PATH=/usr/lib/mozilla/plugins
+  PATH=/home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1/bin:/home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1/bin:/home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/home/arch/bin:/home/arch/.local/bin:/home/arch/opt/cling/bin:/home/arch/opt/cling2:/home/arch/opt/fsformatting:/home/arch/opt/gambit-4.8.4/bin:/home/arch/opt/jars:/home/arch/opt/java/bin:/home/arch/opt/jdk/bin:/home/arch/opt/jdk1.8.0_20/bin:/home/arch/opt/maven/bin:/home/arch/opt/scala-2.11.8/bin:/home/arch/opt/vivaldi
+  PS1=
+  \[\033[0;31m\]\u\[\033[0;36m\]@\[\033[0;34m\]\h \[\033[0;32m\]\A \[\033[0;36m\]\w\[\033[0;37m\]
+  $ 
+  PWD=/home/arch/Documents/projects/zhserver.haskell
+  SHELL=/bin/bash
+  SHLVL=2
+  STACK_EXE=/usr/bin/stack
+  TERM=xterm-256color
+  USER=arch
+  VISUAL=emacs -Q -nw --no-site -eval "(progn (setq  inhibit-startup-message t) (global-font-lock-mode t))"
+  VTE_VERSION=4601
+  WINDOWID=52514098
+  XAUTHORITY=/home/arch/.Xauthority
+  XDG_CONFIG_DIRS=/etc/xdg
+  XDG_CURRENT_DESKTOP=XFCE
+  XDG_DATA_DIRS=/usr/local/share:/usr/share
+  XDG_GREETER_DATA_DIR=/var/lib/lightdm-data/arch
+  XDG_MENU_PREFIX=xfce-
+  XDG_RUNTIME_DIR=/run/user/1000
+  XDG_SEAT=seat0
+  XDG_SEAT_PATH=/org/freedesktop/DisplayManager/Seat0
+  XDG_SESSION_COOKIE=arch-pc-1487434114.151435-7060458
+  XDG_SESSION_DESKTOP=xfce
+  XDG_SESSION_PATH=/org/freedesktop/DisplayManager/Session0
+  XDG_SESSION_TYPE=x11
+  XDG_VTNR=7
+
+#+END_SRC
+*** Some useful stack packages
+
+ - Commands to install some useful Haskell packages of [[https://www.haskell.org/platform/contents.html][Haskell Platform - Included Packages]]
+
+Basic Libraries
+
+#+BEGIN_SRC sh 
+$ stack install mtl random turtle conduit async network network uri 
+#+END_SRC
+
+Testing libraries:
+
+#+BEGIN_SRC sh
+$ stack install HUnit QuickCheck
+#+END_SRC
+
+Parsing and regex libraries:
+
+#+BEGIN_SRC sh
+$ stack install attoparsec parsec regex-base regex-compat regex-posix
 #+END_SRC
 
 ** GHCI Reference
