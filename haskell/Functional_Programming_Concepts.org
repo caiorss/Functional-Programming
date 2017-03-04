@@ -8916,6 +8916,22 @@ test- : unit = ()
                           
 #+END_SRC
 
+**** See also 
+
+ - [[https://www.haskell.org/tutorial/io.html][A Gentle Introduction to Haskell: IO]]
+
+ - [[https://www.haskell.org/tutorial/monads.html][A Gentle Introduction to Haskell: About Monads]]
+
+ - [[https://wiki.haskell.org/IO_inside][IO inside - HaskellWiki]]
+
+ - [[https://www.vex.net/~trebla/haskell/IO.xhtml][Haskell I/O Tutorial]]
+
+ - [[https://web.stanford.edu/class/cs209/lectures/CS209-Lecture-04-IOMonad.pdf][CS 209 - Functional Programming]]
+
+ -  Waddler, Philip. *How to Declare an Imperative*
+    Language. Page 27. Available at
+    <http://homepages.inf.ed.ac.uk/wadler/papers/monadsdeclare/monadsdeclare.ps>
+
 *** State Monad 
 **** Overview 
 
