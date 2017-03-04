@@ -1,6 +1,7 @@
 #+INCLUDE: ../theme/style.org
-#+TITLE: Databases - HDBC
-
+#+TITLE: Databases in Haskell - HDBC
+#+DESCRIPTION: Databases in Haskell, database drivers 
+#+KEYWORDS: haskell, database, drivers, hdbc, sqlite, postgres
 
 * Databases - HDBC 
 ** Overview 
@@ -10,13 +11,100 @@ different database engines like sqlite, mysql and postgres. The
 communication to each database engine is handled by the database
 driver.
 
-Documentation:
+*Documentation:*
 
 | Haskell Database Connectivity library | [[https://hackage.haskell.org/package/HDBC-2.4.0.1/docs/Database-HDBC.html][Database.HDBC]]                           |
 | Sqlite Driver                         | [[https://hackage.haskell.org/package/HDBC-sqlite3][HDBC-sqlite3: Sqlite v3 driver for HDBC]] |
 | Postgresql Driver                     | [[https://hackage.haskell.org/package/HDBC-postgresql-2.3.2.4/docs/Database-HDBC-PostgreSQL.html][Database.HDBC.PostgreSQL]]                |
 | MySQL Driver                          | [[https://hackage.haskell.org/package/HDBC-mysql][HDBC-mysql: MySQL driver for HDBC]]       |
 |                                       |                                         |
+
+
+*Getting a database to play*
+
+#+BEGIN_SRC sh 
+  # Download sample database dump 
+  $ curl -L -o zotero.sql https://github.com/caiorss/zhserver/raw/master/database/zotero-test.sql
+
+  $ du -h zotero.sql 
+  3,0M    zotero.sql
+  3,0M    total
+
+  $ file zotero.sql 
+  zotero.sql: UTF-8 Unicode text, with very long lines, with LF, NEL line terminators
+
+  # Make the database 
+  $ cat zotero.sql | sqlite3 zotero.sqlite
+
+  # Check the file type 
+  $ file zotero.sqlite 
+  zotero.sqlite: SQLite 3.x database, last written using SQLite version 3016002
+
+  sqlite> 
+  sqlite> .tables
+  annotations                itemNotes                
+  baseFieldMappings          itemSeeAlso              
+  baseFieldMappingsCombined  itemTags                 
+  charsets                   itemTypeCreatorTypes     
+  collectionItems            itemTypeFields           
+  collections                itemTypeFieldsCombined   
+  creatorData                itemTypes                
+  creatorTypes               itemTypesCombined        
+  creators                   items                    
+  customBaseFieldMappings    libraries                
+  customFields               proxies                  
+  customItemTypeFields       proxyHosts               
+  customItemTypes            relations            
+     ... ... ... ... ...
+
+
+  sqlite> .headers on
+  sqlite> .mode column
+
+     
+  sqlite> SELECT * FROM tags LIMIT 10 ;
+  tagID       name        type        dateAdded            dateModified         clientDateModified   libraryID   key       
+  ----------  ----------  ----------  -------------------  -------------------  -------------------  ----------  ----------
+  2           fp          0           2016-11-07 22:03:05  2017-02-08 20:10:06  2017-02-08 20:10:06              TCG4NFU2  
+  3           fsharp      0           2016-11-07 22:03:09  2016-11-07 22:03:23  2016-11-07 22:03:23              ZWMIIEA9  
+  4           doc         0           2016-11-07 22:03:11  2016-11-07 22:03:29  2016-11-07 22:03:29              B4SGSEZR  
+  5           overview    0           2016-11-07 22:03:25  2016-11-07 22:03:25  2016-11-07 22:03:25              DP9WBHZJ  
+  6           haskell     0           2016-11-07 22:03:44  2017-02-08 20:10:31  2017-02-08 20:10:31              FSZTVA3J  
+  7           tutorial    0           2016-11-07 22:03:47  2016-11-07 22:03:47  2016-11-07 22:03:47              Z2KJVEKI  
+  8           quickref    0           2016-11-07 22:06:24  2016-11-07 22:07:34  2016-11-07 22:07:34              P67M4AB5  
+  9           linux       0           2016-11-07 22:06:26  2016-11-07 22:07:30  2016-11-07 22:07:30              JQR7943E  
+  10          c++         0           2016-11-07 22:15:22  2017-02-08 20:09:44  2017-02-08 20:09:44              VG2ZRGWM  
+  11          numerical   0           2016-11-07 22:20:56  2016-11-07 22:24:03  2016-11-07 22:24:03              P859CH9I  
+  sqlite> 
+
+
+  sqlite> SELECT * FROM collections LIMIT 10 ;
+  collectionID  collectionName  parentCollectionID  dateAdded            dateModified         clientDateModified   libraryID   key       
+  ------------  --------------  ------------------  -------------------  -------------------  -------------------  ----------  ----------
+  2             Haskell                             2016-11-07 21:50:38  2016-11-07 23:13:55  2016-11-07 23:13:55              PMHEFIBA  
+  3             Haskell doc     2                   2016-11-07 21:50:57  2016-11-07 21:51:18  2016-11-07 21:51:18              CCCGVG4V  
+  5             Haskell Tutori  2                   2016-11-07 21:53:30  2016-11-07 21:54:32  2016-11-07 21:54:32              FRE2DHFB  
+  6             Fsharp                              2016-11-07 21:59:56  2016-11-07 22:01:43  2016-11-07 22:01:43              BICWZD7P  
+  7             Linux                               2016-11-07 22:05:05  2016-11-07 22:07:05  2016-11-07 22:07:05              TIWU5EPF  
+  8             C++/CPP                             2016-11-07 22:11:57  2016-11-07 22:42:28  2016-11-07 22:42:28              42H6QC5D  
+  sqlite>
+#+END_SRC
+
+** Install the Database Drivers 
+
+
+#+BEGIN_SRC sh 
+# Go outside a project 
+$ cd ~
+
+# Install database drivers 
+$ stack install HDBC
+$ stack install HDBC-sqlite3
+$ stack install HDBC-postgresql
+
+# Run Haskell REPL
+$ stack ghci 
+#+END_SRC
 
 ** Example
 
