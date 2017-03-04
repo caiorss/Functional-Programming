@@ -7518,7 +7518,7 @@ f :: Either Integer Integer -> Integer
 #+END_SRC 
 
 *** IO Monad 
-**** Overview 
+**** IO Actions 
 
 The type IO indicates an action that when evaluated may perform some
 IO. The function =putChar :: Char -> IO ()= takes a char and returns
@@ -7536,7 +7536,9 @@ Summary:
 
  - The Haskell's IO is pure and lazy.
 
- - The IO action type separates the definition from execution. 
+ - The IO action type separates the definition from execution.
+
+ - All functions that returns IO actions are pure functions.
 
  - There is no way to extract a value of an IO action outside an IO
    action.
@@ -7557,10 +7559,9 @@ Summary:
  - By typing the name of an IO action in the REPL (ghci) the user forces its execution.
 
 
-
 *Reading type signatures:*
 
- - ~main :: IO ()~ is an IO action, not a function. 
+ - main is an IO action, not a function. 
 
 #+BEGIN_SRC haskell 
 main :: IO 
@@ -7673,7 +7674,6 @@ You entered the line: Hola mundo Haskell.
 #+END_SRC
 
 
-
 *Example: IO Actions can be stored in data structures and passed as values*
 
 #+BEGIN_SRC haskell
@@ -7728,7 +7728,7 @@ You entered the line: Hola mundo Haskell.
   ola mundo (pt)
   Prelude>
 
-  {- | Not Haskell has a function for this: sequence_ -}
+  {- | Note that Haskell has a function for this: sequence_  -}
 
   > import Control.Monad (sequence_)
 
@@ -7813,7 +7813,7 @@ You entered the line: Hola mundo Haskell.
          
 #+END_SRC
 
-IO Actions allows to build functions that works like control
+IO Actions allow to write functions that works like control
 structures.
 
 #+BEGIN_SRC haskell
@@ -7916,8 +7916,7 @@ structures.
 #+END_SRC
 
 
-It is not possible to do in a non-pure language. Example in F#
-(Fsharp).
+It is not possible in a non-pure language. Example in F# (Fsharp).
 
 #+BEGIN_SRC fsharp 
   > let putStrLn s = printfn "%s" s ;;
@@ -8125,73 +8124,238 @@ The implementation details can abstracted by defining a type IO.
 
 #+END_SRC
 
-Bind and Return: 
+**** IO Monad 
 
-#+BEGIN_SRC 
-(>>=) :: IO a -> a -> IO b -> IO b 
-(>>) :: IO () -> IO () -> IO ()
-return :: a -> IO a
-#+END_SRC
+The IO monad consists of the IO type constructor, the return (unit)
+function and the (>>=) bind operator implemented for the IO type
+constructor. It allows build IO actions from smaller IO actions and
+combine IO actions.
 
-**** Example 
+| Description       | Function | Signature                   |
+|-------------------+----------+-----------------------------|
+| Bind operator     | (>>=)    | IO a -> (a -> IO b) -> IO b |
+| Return function   | return   | a -> IO a                   |
+| Operator >>       | (>>)     | IO a -> IO b -> IO b        |
+|                   |          |                             |
 
+Some IO Primitives: 
 
-Examples with IO Monad:
-
-#+BEGIN_SRC haskell 
-
- -- Wrapping a value into IO
- -- 
-
-> return "Hello world" :: IO String
-"Hello world"
-> 
-> return 100 :: IO Integer
-100
-> :t return 100 :: IO Integer
-return 100 :: IO Integer :: IO Integer
-> 
+| Console Output Functions         | Console Input Functions  |
+|----------------------------------+--------------------------|
+| putChar  :: Char -> IO ()        | getChar :: Char -> IO () |
+| putStr   :: String -> IO ()      |                          |
+| putStrLn :: String -> IO ()      | getLine :: IO String     |
+| print    :: Show a => a -> IO () | readLn :: Read a => IO a |
+|                                  |                          |
 
 
--- The repl forces the evaluation of an IO action. 
---
-> return "Hello world" >>= putStrLn 
-Hello world
->
+*Return function*
 
-> :t return "Hello world" >>= putStrLn 
-return "Hello world" >>= putStrLn :: IO ()
-> 
-
--- This is not executed, unless forced. 
--- 
-> let action0 = return "Hello world" >>= putStrLn 
-> 
-> :t action0 
-action0 :: IO ()
-> 
-
-> action0
-Hello world
-> 
-
-> let action = putStrLn "Line1" >> putStrLn "Line2" >> putStrLn "Line3"
-> :t action 
-action :: IO ()
-
-> action 
-Line1
-Line2
-Line3
-> 
-
-#+END_SRC
-
-
-
-File: haskelldo.hs 
+The return function injects a value into an IO action or IO type constructor.
 
 #+BEGIN_SRC haskell
+  return :: a -> IO a
+#+END_SRC
+
+*Bind operator*
+
+The bind (>>=) operator extracts the value wrapped by the IO action
+and pass it to a monadic IO function.
+
+#+BEGIN_SRC text 
+  IO a >>= (a -> IO b) :: IO b 
+    |        |
+    |        |
+    |         \----> Pass the value wrapped by type constructor to the monadic
+    |                function (fn :: a -> IO b) returning a new IO action of type IO b.
+    |
+     \----> Extracts the value (a) wrapped by the IO action 
+
+  ma = mb >>= fn 
+#+END_SRC
+
+
+Example: 
+
+#+BEGIN_SRC haskell 
+  :{
+  dupLine = do
+    line <- getLine
+    putStrLn line
+  :}
+
+  Prelude M> dupLine 
+  haskell rocks 
+  haskell rocks 
+  Prelude M> 
+
+  {- | The value of IO action getLine is passed to the function putStrLn -}
+  let dupLine2 = getLine >>= putStrLn
+
+  Prelude M> dupLine2
+  haskell rocks
+  haskell rocks
+  Prelude M>
+
+
+  Prelude M> :t getLine 
+  getLine :: IO String
+
+  Prelude M> :t putStrLn
+  putStrLn :: String -> IO ()
+  Prelude M> 
+
+          
+  Prelude M> :t readFile
+  readFile :: FilePath -> IO String
+  Prelude M> :t putStrLn
+  putStrLn :: String -> IO ()
+  Prelude M> 
+
+  Prelude M> let showFile file = readFile file >>= putStrLn
+  Prelude M> showFile "/etc/issue"
+  Manjaro Linux \r  (\n) (\l)
+
+  :{
+  showFile2 file = do
+    content <- readFile file
+    putStrLn content
+  :}
+
+  Prelude M> showFile2 "/etc/issue"
+  Manjaro Linux \r  (\n) (\l)
+
+
+          
+#+END_SRC
+
+Bind operator with return: 
+
+#+BEGIN_SRC haskell 
+  > return "Print this line" >>= putStrLn 
+  Print this line
+
+        
+  > return "/etc/issue" >>= readFile >>= putStrLn
+  Manjaro Linux \r  (\n) (\l)
+
+
+#+END_SRC
+
+*Operator (>>)*
+
+The (>>) operators runs two IO actions sequentially returning the
+result of the second IO action.
+
+It is defined as 
+
+#+BEGIN_SRC haskell
+action1 >> action2 = action1 >>= (\_ -> action2)
+#+END_SRC
+
+It is equivalent to in do-notation:
+
+#+BEGIN_SRC haskell 
+  do
+    action1
+    action2 
+#+END_SRC
+
+Example:
+
+#+BEGIN_SRC haskell 
+  > return 10 >> return 20 :: IO Int
+  20
+  > 
+
+  > getLine >> putStrLn "The line is discarded"
+  this line will be discarded
+  The line is discarded
+
+  > putStrLn "haskell" >> putStrLn "fp" >> putStrLn "rocks"
+  haskell
+  fp
+  rocks
+  >  
+
+  >  :t putStrLn "haskell" >> putStrLn "fp" >> putStrLn "rocks"
+  putStrLn "haskell" >> putStrLn "fp" >> putStrLn "rocks" :: IO ()
+
+  :{
+  action1 = 
+     putStrLn "haskell" >>
+     putStrLn "fp"      >>
+     putStrLn "rocks"
+  :}
+
+  >  :t action1 
+  action1 :: IO ()
+  >  action1
+  haskell
+  fp
+  rocks
+  >  
+
+   -- Equivalent code in do-notation
+  :{        
+  action2 = do
+    putStrLn "haskell"
+    putStrLn "fp"
+    putStrLn "rocks"
+  :}
+
+  > action2   
+  haskell
+  fp
+  rocks
+  >  
+
+#+END_SRC
+
+
+Do-notation for the IO monad: 
+
+#+BEGIN_SRC haskell 
+:{
+showFile :: IO ()
+showFile = do
+  putStr "Enter a file: "
+  file    <- getLine
+  content <- readFile file
+  putStrLn content
+ :}
+
+
+ Prelude M> showFile 
+ Enter a file: /etc/issue
+ Manjaro Linux \r  (\n) (\l)
+#+END_SRC
+
+
+The Haskell code above like is equivalent to the code below:
+
+#+BEGIN_SRC haskell
+  :{
+  showFile :: IO ()
+  showFile = 
+    putStr "Enter a file: "  >>= \ _       ->
+    getLine                  >>= \ file    ->       
+    readFile file            >>= \ content ->
+    putStrLn content
+  :}
+
+  Prelude M> showFile 
+  Enter a file: /etc/issue
+  Manjaro Linux \r  (\n) (\l)
+#+END_SRC
+
+
+*Do-notation example for IO monad*
+
+Code:
+
+#+BEGIN_SRC haskell
+:{
 sumTwoNumbers = do 
    putStr "Enter the first number: "
    line1 <- getLine 
@@ -8202,10 +8366,11 @@ sumTwoNumbers = do
    let sum = x1 + x2 
    putStrLn ("The sum is " ++ show sum)
    return sum
-
+:}
 
 -- SumTwonumbers dessugarized 
 --
+:{
 sumTwoNumbers_v2 = 
   putStr "Enter the first number: "     >>= \_      ->
   getLine                               >>= \line1  ->
@@ -8216,21 +8381,36 @@ sumTwoNumbers_v2 =
   let sum = x1 + x2 in 
   putStrLn  ("The sum is " ++ show sum) >>= \_ -> 
   return sum
+:}
 
+
+--  Do-notation dessugarized simplified with operators (>>)
+--
+:{ 
+sumTwoNumbers_v3 = 
+  putStr "Enter the first number: "     >>
+  getLine                               >>= \line1  ->
+  putStr "Enter the second number: "    >>
+  getLine                               >>= \line2 -> 
+  let x1 = read line1 :: Integer in 
+  let x2 = read line2 :: Integer in 
+  let sum = x1 + x2 in 
+  putStrLn  ("The sum is " ++ show sum) >>
+  return sum
+:}
+
+:{
 showResult :: IO Integer ->  IO ()
 showResult inputAction = do
   x <- inputAction 
   putStrLn ( "The result is " ++ show x)
-
+:}
 #+END_SRC
 
 
 Running in the REPL:
 
 #+BEGIN_SRC haskell
-> :load haskelldo.hs
-
-
 > sumTwoNumbers 
 Enter the first number: 100
 Enter the second number: 200
@@ -8248,6 +8428,14 @@ Enter the second number: 200
 The sum is 300
 300
 > 
+
+
+> sumTwoNumbers_v3 
+Enter the first number: 100
+Enter the second number: 200
+The sum is 300
+300
+
 
 > :t sumTwoNumbers_v2
 sumTwoNumbers_v2 :: IO Integer
@@ -8319,25 +8507,13 @@ The sum is 390
 >
 #+END_SRC
 
-
-Some IO Primitives: 
-
-| Console Output Functions         | Console Input Functions  |
-|----------------------------------+--------------------------|
-| putChar  :: Char -> IO ()        | getChar :: Char -> IO () |
-| putStr   :: String -> IO ()      |                          |
-| putStrLn :: String -> IO ()      | getLine :: IO String     |
-| print    :: Show a => a -> IO () | readLn :: Read a => IO a |
-|                                  |                          |
-
 **** IO Monad in OCaml 
 
-The IO monad cannot be implemented in Haskell. However by implementing
-it in OCaml is possible to understand how it works and get some
-intuition about IO actions and also understand how the monad
-combinators like (>>), sequence, sequence_ works. This implementation
-was designed to by as simple as possible. 
-
+The IO monad cannot be implemented in Haskell since it is a primitive
+type. However by implementing it in OCaml is possible to understand
+how it works and get some intuition about IO actions and also
+understand how the monad combinators like (>>), sequence, sequence_
+works. This implementation was designed to by as simple as possible.
 
 It is based on the paper: Waddler, Philip. *How to Declare an
 Imperative* Language. Page 27. Available at
