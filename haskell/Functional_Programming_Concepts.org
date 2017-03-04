@@ -279,13 +279,12 @@ like Scheme, Javascript, Python, Haskell, ML, OCaml and many others
 some exceptions are C, Java, Matlab (Octave open source
 implementation), Bash, and Forth.
 
-*Examples:*
 
- - Python: Functions are values and can be passed as argument and
-   returned from functions.
+*Functions can be passed as arguments and returned from functions*
 
-The function f is passed as argument to the derivate function that
-returns a new function named _, that computes the derivate of f at x.
+ - _Example in Python_: The function f is passed as argument to the
+   derivate function that returns a new function named _, that
+   computes the derivate of f at x.
 
 #+BEGIN_SRC python
 def derivate (f, dx=1e-5):
@@ -337,9 +336,48 @@ def derivate (f, dx=1e-5):
 #+END_SRC
 
 
- - Functions can be stored in data strcutures: 
+*Functions can be stored in data structures*
 
-Example: Haskell 
+Example: Python - Functions stored in a dictionary hash-table
+
+#+BEGIN_SRC python
+  import math
+
+  def myfun2(x):
+      return 5.68 * x - 5.0
+
+  dispatchTable = {
+      "sin": math.sin,
+      "cos": math.cos,
+      "exp": math.exp,
+      "tan": math.tan,
+      "myfun": lambda x: 10.2 * x - 5.0,
+      "myfun2": myfun2
+      }
+
+  >>> dispatchTable["sin"](math.pi)
+  1.2246467991473532e-16
+  >>> dispatchTable["cos"](math.pi)
+  -1.0
+  >>> dispatchTable["tan"](math.pi)
+  -1.2246467991473532e-16
+  >>> dispatchTable["exp"](math.pi)
+  23.140692632779267
+  >>>
+  >>>
+  >>> dispatchTable["exp"](1.0)
+  2.718281828459045
+  >>>
+
+  >>>
+  >>> dispatchTable["myfun"](1.0)
+  5.199999999999999
+  >>> dispatchTable["myfun2"](1.0)
+  0.6799999999999997
+
+#+END_SRC
+
+Example: Haskell - Functions stored in a list.
 
 #+BEGIN_SRC haskell 
   > let funlist = [sin, cos, exp, \x -> 10.0 * x - 3.0]
@@ -387,8 +425,103 @@ Example: Haskell
 
 #+END_SRC
 
+Example: Haskell functions stored in a Map (aka dictionary or hash table)
 
-See also: 
+#+BEGIN_SRC haskell
+  import qualified Data.Map as M
+
+  >  :t M.fromList
+  M.fromList :: Ord k => [(k, a)] -> M.Map k a
+  >
+
+  :{
+  dispatchTable = M.fromList [("sin", sin)
+                             ,("cos", cos)
+                             ,("exp", exp)
+                             ,("myfun", \x -> 10.5 * x - 3.0)
+                   ]
+
+
+  :}
+
+
+  >  M.keys dispatchTable
+  ["cos","exp","myfun","sin"]
+  >
+
+  >  :t M.lookup "sin" dispatchTable
+  M.lookup "sin" dispatchTable :: Floating a => Maybe (a -> a)
+  >
+
+  >  fmap (\f -> f 1.0) (M.lookup "sin" dispatchTable)
+  Just 0.8414709848078965
+  >
+  >  fmap (\f -> f 1.0) (M.lookup "cos" dispatchTable)
+  Just 0.5403023058681398
+  >  fmap (\f -> f 1.0) (M.lookup "exp" dispatchTable)
+  Just 2.718281828459045
+  >
+  >  fmap (\f -> f 1.0) (M.lookup "notfound" dispatchTable)
+  Nothing
+
+
+  :{
+  applyFun dict key x =
+      case M.lookup key dict of
+        Just f   -> Just (f x)
+        Nothing  -> Nothing
+  :}
+
+  >  :t applyFun
+  applyFun :: Ord k => M.Map k (t -> a) -> k -> t -> Maybe a
+
+
+  >
+
+  >  applyFun dispatchTable "sin" 2.0
+  Just 0.9092974268256817
+  >  applyFun dispatchTable "sin" 0.0
+  Just 0.0
+  >  applyFun dispatchTable "sisadn" 0.0
+  Nothing
+  >
+
+  >  let dispatchFun = applyFun dispatchTable
+  >  dispatchFun "sin" 3.1415
+  Just 9.265358966049026e-5
+  >  dispatchFun "cos" 3.1415
+  Just (-0.9999999957076562)
+  >
+  >  dispatchFun  "myfun" 2.30
+  Just 21.15
+  >
+
+  :{
+  applyHmap dict x =
+     M.fromList $ map (\ (k, fn) -> (k, fn x))
+                $ zip (M.keys dict) (M.elems dict)
+  :}
+
+  >  :t applyHmap
+  applyHmap :: Ord k => M.Map k (t -> a) -> t -> M.Map k a
+  >
+
+  >  applyHmap dispatchTable  2.0
+  fromList [("cos",-0.4161468365471424),("exp",7.38905609893065),("myfun",18.0),("sin",0.9092974268256817)]
+  >
+
+
+  -- Formatted for better display
+  --
+  >  map (applyHmap dispatchTable) [1.0, 2.0, 3.0, 4.0]
+  [fromList [("cos",0.5403023058681398),("exp",2.718281828459045),("myfun",7.5),("sin",0.8414709848078965)],
+   fromList [("cos",-0.4161468365471424),("exp",7.38905609893065),("myfun",18.0),("sin",0.9092974268256817)],
+   fromList [("cos",-0.9899924966004454),("exp",20.085536923187668),("myfun",28.5),("sin",0.1411200080598672)],
+   fromList [("cos",-0.6536436208636119),("exp",54.598150033144236),("myfun",39.0),("sin",-0.7568024953079282)]]
+
+#+END_SRC
+
+*See also*:
 
 Many examples of first class functions in several languages. 
 
