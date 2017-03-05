@@ -1,7 +1,7 @@
 #+INCLUDE: ../theme/style.org
 #+TODO: TODO OK |  FAILED TEST DONE
 #+TITLE: Real World Haskell Walk 
-
+#+STARTUP: content
 
 * Real World Haskell 
 ** Overview 
@@ -24,47 +24,15 @@ Reference:
    Inc.", 2008. Available at:
    <http://book.realworldhaskell.org/read/>.
 
-The Haskell version used in this section is v7.10.2. running on Linux
-64 bits.
+*Install the necessary libraries with stack*
 
-The development environment used in this section can be reproduced
-using the [[https://nixos.org/nix/][Nix Package manager]] which is a functional package manager
-that doesn't mess with the system packages and allows multiple
-versions of Haskell to be installed avoiding dependency hell and cabal
-hell. 
+The necessary libraries to run the codes in this page can be installed
+with the following command outside a project directory (Directory
+without stack.yaml file):
 
-When nix run the file shell.nix it will load a shell that has Haskell
-of version 7.10.2 in the current PATH variable. If the Haskell tool
-chain is not installed in the system it will be downloaded and
-installed in /nix/store/ directory.
-
-File: file:rwh/shell.nix 
-
-#+BEGIN_SRC nix :tangle rwh/shell.nix 
-# It will install the libraries: 
-# 
-#  - mtl       - Monad transformers 
-#  - conduit  - 
-#  - turtle  
-#  - aeson 
-#  - regex-posix 
-#  - network 
-#  - random 
-#
-{ nixpkgs ? import <nixpkgs> {}, compiler ? "ghc7102" }:
-let
-  inherit (nixpkgs) pkgs;
-  ghc = pkgs.haskell.packages.${compiler}.ghcWithPackages (ps: with ps; [
-          mtl conduit turtle aeson regex-posix network random 
-        ]);
-in
-pkgs.stdenv.mkDerivation {
-  name = "haskell-learn";
-  buildInputs = [ ghc ];
-  shellHook = "eval $(egrep ^export ${ghc}/bin/ghc)";
-}
+#+BEGIN_SRC sh 
+ $  stack install mtl turtle aeson regex-posix network random
 #+END_SRC
-
 
 Once the package manager is installed you can run: 
 
@@ -75,49 +43,17 @@ $ ls
 ch03/  ch05/  ch07/  ch10/  ch14/  ch16/  ch18/  shell.nix
 ch04/  ch06/  ch08/  ch13/  ch15/  ch17/  ch27/
 
-# Load the shell.nix definitions 
 #
-$ nix-shell 
-
 # Where is ghci ??
-[nix-shell:~/org/wiki/rwh]$ which ghci
-/nix/store/j1335blff9jllh1mvpin5vjl42pvrapv-ghc-7.10.2/bin/ghci
+$ stack exec -- which ghci
+/home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/bin/ghci
 
 # Where is ghc ??
-[nix-shell:~/org/wiki/rwh]$ which ghc
-/nix/store/j1335blff9jllh1mvpin5vjl42pvrapv-ghc-7.10.2/bin/ghc
+$ stack exec -- which ghc
+/home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/bin/ghc
 
-GHCi, version 7.10.2: http://www.haskell.org/ghc/  :? for help
->>> 
->>> 
-#+END_SRC
-
-Haskell can also be invoked from nix.shell file in batch mode:
-
-#+BEGIN_SRC sh
-$ ghci
-bash: ghci: command not foun
-
-$ nix-shell ~/org/wiki/rwh/shell.nix 
-
-[nix-shell:~/org/wiki]$ which ghci
-/nix/store/j1335blff9jllh1mvpin5vjl42pvrapv-ghc-7.10.2/bin/ghci
-
-
-$ nix-shell ~/org/wiki/rwh/shell.nix --command "ghci"
-GHCi, version 7.10.2: http://www.haskell.org/ghc/  :? for help
->>> 
-
-
-$ nix-shell ~/org/wiki/rwh/shell.nix --command "ghci --version"
-The Glorious Glasgow Haskell Compilation System, version 7.10.2
-
-$ nix-shell ~/org/wiki/rwh/shell.nix --command "ghc --version"
-The Glorious Glasgow Haskell Compilation System, version 7.10.2
-
-$ nix-shell ~/org/wiki/rwh/shell.nix --command "which ghc"
-/nix/store/j1335blff9jllh1mvpin5vjl42pvrapv-ghc-7.10.2/bin/ghc
-
+# Run ghci 
+$ stack ghci 
 #+END_SRC
 
 ** Chapter 3  - Defining Types, Streamlining Functions 
