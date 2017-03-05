@@ -1,6 +1,7 @@
 #+INCLUDE: ../theme/style.org
 #+TITLE:  Functional Programming Concepts
 #+DESCRIPTION: Functional programming concepts, examples, algorithms and ideas.
+#+KEYWORDS: concepts, functional, programming, monad, functor, haskell, ocaml, fsharp
 
 * Concepts
 ** Overview
@@ -7576,6 +7577,14 @@ main = do
 putStrLn :: String -> IO ()
 #+END_SRC
 
+
+ - printMsg is a IO action, that when executed, will print a string. 
+
+#+BEGIN_SRC haskell 
+printMsg :: IO ()
+printMSg = putStrLn "Hello world"
+#+END_SRC
+
  - getLine is an IO action that when executed produces a string. It is
    not a function.
 
@@ -7912,7 +7921,53 @@ structures.
   Enter number 2: 300
   The sum is equal to 500
   > 
-   
+
+
+  > import Control.Monad (forever)
+  > import Control.Concurrent (threadDelay)  
+  > 
+  > :t forever 
+  forever :: Applicative f => f a -> f b
+  > 
+  > :t threadDelay 
+  threadDelay :: Int -> IO ()
+  >
+
+
+  > forever (putStrLn "Hello world Haskell")
+  Hello world Haskell
+  Hello world Haskell
+  Hello world Haskell
+  Hello world Haskell
+  ...  ... ... ... 
+
+  -- 1s = 1e6 = 1000000 us delay 
+  --
+  --
+  > forever (putStrLn "Hello world Haskell" >> threadDelay 1000000)
+  Hello world Haskell
+  Hello world Haskell
+  Hello world Haskell
+  Hello world Haskell
+  Hello world Haskell
+  ^CInterrupted.
+
+  --- Alternative way 
+  ---
+  :{
+  forever $ do putStrLn "Hello world Haskell"
+               threadDelay 1000000
+  :}
+
+  >  :{
+  - forever $ do putStrLn "Hello world Haskell"
+  -              threadDelay 1000000
+  - :}
+  Hello world Haskell
+  Hello world Haskell
+  Hello world Haskell
+  Hello world Haskell
+  ... ... ... ...  
 #+END_SRC
 
 
