@@ -3,11 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<title>Databases - HDBC</title>
-<!-- 2017-03-04 sáb 14:18 -->
+<title>Databases in Haskell - HDBC</title>
+<!-- 2017-03-05 dom 08:15 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues" />
+<meta  name="description" content="Databases in Haskell, database drivers"
+ />
+<meta  name="keywords" content="haskell, database, drivers, hdbc, sqlite, postgres" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   .title  { text-align: center; }
@@ -211,7 +214,7 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="content">
-<h1 class="title">Databases - HDBC</h1>
+<h1 class="title">Databases in Haskell - HDBC</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
@@ -219,7 +222,8 @@ for the JavaScript code in this tag.
 <li><a href="#sec-1">1. Databases - HDBC</a>
 <ul>
 <li><a href="#sec-1-1">1.1. Overview</a></li>
-<li><a href="#sec-1-2">1.2. Example</a></li>
+<li><a href="#sec-1-2">1.2. Install the Database Drivers</a></li>
+<li><a href="#sec-1-3">1.3. Example</a></li>
 </ul>
 </li>
 </ul>
@@ -229,7 +233,6 @@ for the JavaScript code in this tag.
   <li><a href="/Functional-Programming/index.html">Index</a></li>
   <li><a href="https://github.com/caiorss/Functional-Programming">Repository</a></li>
 </lu>
-
 
 <div id="outline-container-sec-1" class="outline-2">
 <h2 id="sec-1"><span class="section-number-2">1</span> Databases - HDBC</h2>
@@ -245,7 +248,7 @@ driver.
 </p>
 
 <p>
-Documentation:
+<b>Documentation:</b>
 </p>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
@@ -283,12 +286,107 @@ Documentation:
 </tr>
 </tbody>
 </table>
+
+
+<p>
+<b>Getting a database to play</b>
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh"><span class="org-comment-delimiter"># </span><span class="org-comment">Download sample database dump </span>
+$ curl -L -o zotero.sql https://github.com/caiorss/zhserver/raw/master/database/zotero-test.sql
+
+$ du -h zotero.sql 
+3,0M    zotero.sql
+3,0M    total
+
+$ file zotero.sql 
+zotero.sql: UTF-8 Unicode text, with very long lines, with LF, NEL line terminators
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Make the database </span>
+$ cat zotero.sql | sqlite3 zotero.sqlite
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Check the file type </span>
+$ file zotero.sqlite 
+zotero.sqlite: SQLite 3.x database, last written using SQLite version 3016002
+
+sqlite&gt; 
+sqlite&gt; .tables
+annotations                itemNotes                
+baseFieldMappings          itemSeeAlso              
+baseFieldMappingsCombined  itemTags                 
+charsets                   itemTypeCreatorTypes     
+collectionItems            itemTypeFields           
+collections                itemTypeFieldsCombined   
+creatorData                itemTypes                
+creatorTypes               itemTypesCombined        
+creators                   items                    
+customBaseFieldMappings    libraries                
+customFields               proxies                  
+customItemTypeFields       proxyHosts               
+customItemTypes            relations            
+   ... ... ... ... ...
+
+
+sqlite&gt; .headers on
+sqlite&gt; .mode column
+
+
+sqlite&gt; SELECT * FROM tags LIMIT 10 ;
+tagID       name        type        dateAdded            dateModified         clientDateModified   libraryID   key       
+----------  ----------  ----------  -------------------  -------------------  -------------------  ----------  ----------
+2           fp          0           2016-11-07 22:03:05  2017-02-08 20:10:06  2017-02-08 20:10:06              TCG4NFU2  
+3           fsharp      0           2016-11-07 22:03:09  2016-11-07 22:03:23  2016-11-07 22:03:23              ZWMIIEA9  
+4           doc         0           2016-11-07 22:03:11  2016-11-07 22:03:29  2016-11-07 22:03:29              B4SGSEZR  
+5           overview    0           2016-11-07 22:03:25  2016-11-07 22:03:25  2016-11-07 22:03:25              DP9WBHZJ  
+6           haskell     0           2016-11-07 22:03:44  2017-02-08 20:10:31  2017-02-08 20:10:31              FSZTVA3J  
+7           tutorial    0           2016-11-07 22:03:47  2016-11-07 22:03:47  2016-11-07 22:03:47              Z2KJVEKI  
+8           quickref    0           2016-11-07 22:06:24  2016-11-07 22:07:34  2016-11-07 22:07:34              P67M4AB5  
+9           linux       0           2016-11-07 22:06:26  2016-11-07 22:07:30  2016-11-07 22:07:30              JQR7943E  
+10          c++         0           2016-11-07 22:15:22  2017-02-08 20:09:44  2017-02-08 20:09:44              VG2ZRGWM  
+11          numerical   0           2016-11-07 22:20:56  2016-11-07 22:24:03  2016-11-07 22:24:03              P859CH9I  
+sqlite&gt; 
+
+
+sqlite&gt; SELECT * FROM collections LIMIT 10 ;
+collectionID  collectionName  parentCollectionID  dateAdded            dateModified         clientDateModified   libraryID   key       
+------------  --------------  ------------------  -------------------  -------------------  -------------------  ----------  ----------
+2             Haskell                             2016-11-07 21:50:38  2016-11-07 23:13:55  2016-11-07 23:13:55              PMHEFIBA  
+3             Haskell doc     2                   2016-11-07 21:50:57  2016-11-07 21:51:18  2016-11-07 21:51:18              CCCGVG4V  
+5             Haskell Tutori  2                   2016-11-07 21:53:30  2016-11-07 21:54:32  2016-11-07 21:54:32              FRE2DHFB  
+6             Fsharp                              2016-11-07 21:59:56  2016-11-07 22:01:43  2016-11-07 22:01:43              BICWZD7P  
+7             Linux                               2016-11-07 22:05:05  2016-11-07 22:07:05  2016-11-07 22:07:05              TIWU5EPF  
+8             C++/CPP                             2016-11-07 22:11:57  2016-11-07 22:42:28  2016-11-07 22:42:28              42H6QC5D  
+sqlite&gt;
+</pre>
+</div>
 </div>
 </div>
 
 <div id="outline-container-sec-1-2" class="outline-3">
-<h3 id="sec-1-2"><span class="section-number-3">1.2</span> Example</h3>
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> Install the Database Drivers</h3>
 <div class="outline-text-3" id="text-1-2">
+<div class="org-src-container">
+
+<pre class="src src-sh"><span class="org-comment-delimiter"># </span><span class="org-comment">Go outside a project </span>
+$ cd ~
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Install database drivers </span>
+$ stack install HDBC
+$ stack install HDBC-sqlite3
+$ stack install HDBC-postgresql
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Run Haskell REPL</span>
+$ stack ghci
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> Example</h3>
+<div class="outline-text-3" id="text-1-3">
 <p>
 Connect to sqlite3 database 
 </p>
@@ -719,7 +817,7 @@ Disconnect
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2017-03-04 sáb 14:18</p>
+<p class="date">Created: 2017-03-05 dom 08:15</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

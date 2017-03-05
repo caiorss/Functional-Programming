@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Setting up a Haskell Development Environment</title>
-<!-- 2017-03-04 sáb 14:19 -->
+<!-- 2017-03-05 dom 08:15 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="arch" />
@@ -686,7 +686,7 @@ installed if it is not available.
 
 <div class="org-src-container">
 
-<pre class="src src-sh">$ stack exec -- stack --resolver lts-3.22 --install-ghc ghci
+<pre class="src src-sh">$ stack --resolver lts-3.22 --install-ghc ghci
 </pre>
 </div>
 
@@ -697,7 +697,7 @@ installing packages HDBC, HDBC-sqlite3 and random automatically.
 
 <div class="org-src-container">
 
-<pre class="src src-sh">$ stack exec -- stack --resolver lts-3.22 --install-ghc ghci --package HDBC --package HDBC-sqlite3 --package random
+<pre class="src src-sh">$ stack --resolver lts-3.22 --install-ghc ghci --package HDBC --package HDBC-sqlite3 --package random
 HDBC-sqlite3-2.3.3.1: configure
 HDBC-sqlite3-2.3.3.1: build
 HDBC-sqlite3-2.3.3.1: copy/register
@@ -712,7 +712,7 @@ Prelude&gt;
 <li><a id="sec-1-3-1-5" name="sec-1-3-1-5"></a>Run a Haskell script with specific ghc version:<br  /><div class="outline-text-5" id="text-1-3-1-5">
 <div class="org-src-container">
 
-<pre class="src src-sh">$ stack exec -- stack --resolver lts-3.22 --install-ghc runghc haskell-script.hs
+<pre class="src src-sh">$ stack --resolver lts-3.22 --install-ghc runghc haskell-script.hs
 </pre>
 </div>
 </div>
@@ -740,7 +740,7 @@ or with command line options:
 <li><a id="sec-1-3-1-7" name="sec-1-3-1-7"></a>Compile a sources without a project with a specific Haskell version<br  /><div class="outline-text-5" id="text-1-3-1-7">
 <div class="org-src-container">
 
-<pre class="src src-sh">$ stack exec -- stack --resolver lts-3.22 --install-ghc ghc Main.hs Module1.hs Module2.hs ...
+<pre class="src src-sh">$ stack --resolver lts-3.22 --install-ghc ghc Main.hs Module1.hs Module2.hs ...
 </pre>
 </div>
 </div>
@@ -1080,7 +1080,7 @@ See also:
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: arch</p>
-<p class="date">Created: 2017-03-04 sáb 14:19</p>
+<p class="date">Created: 2017-03-05 dom 08:15</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
