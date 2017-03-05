@@ -68,6 +68,8 @@ This repository is dedicated to public domain.
 
  - [[file:haskell/DatabaseHDBC.org][Databases - HDBC package]]
 
+ - [[file:haskell/UnitTest_Hunit.org][Unit Test with HUNIT]]
+
  - Modules
 
    - [[file:haskell/control_monad.org][Contro.Monad]]      - Monad Combinators 

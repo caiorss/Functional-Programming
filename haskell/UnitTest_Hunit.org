@@ -1,0 +1,625 @@
+* Unit Testing with HUnit 
+** Overview - HUnit functions and types
+
+The package HUnit provides unit testing facilities for Haskell. It is
+inspired by JUnit tool for Java.
+
+Documentation: [[http://hackage.haskell.org/package/HUnit][HUnit: A unit testing framework for Haskell]]
+
+
+*Install HUnit*
+
+#+BEGIN_SRC haskell 
+ $ stack install HUnit
+#+END_SRC
+
+*Assert Functions*
+
+| Function           |    | Signature                                        |
+|                    |    |                                                  |
+| assert             | :: | Assertable t => t -> Assertion                   |
+| assertFailure      | :: | assertFailure :: String -> Assertion             |
+| assertBool         | :: | String -> Bool -> Assertion                      |
+| assertEqual        | :: | (Show a, Eq a) => String -> a -> a -> Assertion  |
+| assertionPredicate | :: | AssertionPredicable t => t -> AssertionPredicate |
+| assertString       | :: | String -> Assertion                              |
+|                    |    |                                                  |
+
+*Types*
+
+Type _Assertion_
+
+#+BEGIN_SRC haskell
+type Assertion = IO ()
+#+END_SRC
+
+Type: _Count_
+
+#+BEGIN_SRC haskell
+data Counts = Counts { cases, tried, errors, failures :: Int }
+              deriving (Eq, Show, Read)
+#+END_SRC
+
+
+Type: _Test_ 
+
+#+BEGIN_SRC haskell
+data Test = TestCase Assertion
+          | TestList [Test]
+          | TestLabel String Test
+#+END_SRC
+
+*Functions* 
+
+_assertFailure_ displays an error message. 
+
+#+BEGIN_SRC haskell
+assertFailure :: String -> Assertion
+assertFailure msg = ioError (userError ("HUnit:" ++ msg))
+#+END_SRC
+
+Example: 
+
+#+BEGIN_SRC haskell 
+  > assertFailure "It is going to fail. Fatal Kernel error ... error code 0x42343" 
+  ,*** Exception: HUnitFailure (Just (Location {locationFile = "<interactive>", locationLine = 4, locationColumn = 1})) 
+  "It is going to fail. Fatal Kernel error ... error code 0x42343"
+  > 
+  > 
+#+END_SRC
+
+_assertBool_ shows an error message if the condition fails.
+
+#+BEGIN_SRC haskell
+assertBool :: String -> Bool -> Assertion
+assertBool msg b = unless b (assertFailure msg)
+#+END_SRC
+
+Example: 
+
+#+BEGIN_SRC haskell 
+  > assertBool "It should be true" True
+  > assertBool "It should be true" False
+  ,*** Exception: HUnitFailure (Just (Location {locationFile = "<interactive>", locationLine = 10, locationColumn = 1})) 
+  "It should be true"
+  > 
+#+END_SRC
+
+
+_assertString_ shows an error message if the the input string is not empty.
+
+#+BEGIN_SRC haskell
+assertString :: String -> Assertion
+assertString s = unless (null s) (assertFailure s)
+#+END_SRC
+
+Example: 
+
+#+BEGIN_SRC haskell
+  > assertString "hello world"
+  ,*** Exception: HUnitFailure (Just (Location {locationFile = "<interactive>", locationLine = 19, locationColumn = 1}))
+  "hello world"
+  > 
+
+  > assertString ""
+  > 
+
+#+END_SRC
+
+_assertEqual_ shows  an error message if the input values are not equal. 
+
+#+BEGIN_SRC haskell
+assertEqual :: (Eq a, Show a) => String -> a -> a -> Assertion
+assertEqual preface expected actual =
+  unless (actual == expected) (assertFailure msg)
+ where msg = (if null preface then "" else preface ++ "\n") ++
+             "expected: " ++ show expected ++ "\n but got: " ++ show actual
+#+END_SRC
+
+Example:
+
+#+BEGIN_SRC haskell
+  > assertEqual "10 + 15 should be equal to 25" 25 (10 + 15)
+  > 
+  > assertEqual "10 + 15 should be equal to 35" 35 (10 + 15)
+  ,*** Exception: HUnitFailure (Just (Location {locationFile = "<interactive>", locationLine = 17, locationColumn = 1}))
+  "10 + 15 should be equal to 35\nexpected: 35\n but got: 25"
+  > 
+
+#+END_SRC
+
+*Run the test cases* 
+
+#+BEGIN_SRC haskell
+> :t runTestTT
+runTestTT :: Test -> IO Counts
+#+END_SRC
+
+Type Test 
+
+#+BEGIN_SRC haskell
+data Test = TestCase Assertion
+          | TestList [Test]
+          | TestLabel String Test
+#+END_SRC
+
+Example: Running a single test
+
+#+BEGIN_SRC haskell
+> runTestTT (TestCase $ assertEqual "sum should be equal to 25" 25 (10 + 15))
+Cases: 1  Tried: 1  Errors: 0  Failures: 0
+Counts {cases = 1, tried = 1, errors = 0, failures = 0}
+> 
+> runTestTT (TestCase $ assertEqual "sum should be equal to 25" 25 (50 + 15))
+### Failure:                              
+<interactive>:161
+sum should be equal to 25
+expected: 25
+ but got: 65
+Cases: 1  Tried: 1  Errors: 0  Failures: 1
+Counts {cases = 1, tried = 1, errors = 0, failures = 1}
+> 
+
+#+END_SRC
+
+Example: Running a single test with label 
+
+#+BEGIN_SRC haskell
+> let testEqual25 = TestLabel "testEqual25" (TestCase $ assertEqual "sum should be equal to 25" 25 (10 + 15))
+> 
+
+> runTestTT testEqual25 
+Cases: 1  Tried: 1  Errors: 0  Failures: 0
+Counts {cases = 1, tried = 1, errors = 0, failures = 0}
+> 
+
+> let testEqual25_2 = TestLabel "testEqual25" (TestCase $ assertEqual "sum should be equal to 25" 25 (20 + 15))
+> 
+> testEqual25_2 
+TestLabel testEqual25 TestCase _
+> 
+> runTestTT testEqual25_2 
+### Failure in: testEqual25               
+<interactive>:153
+sum should be equal to 25
+expected: 25
+ but got: 35
+Cases: 1  Tried: 1  Errors: 0  Failures: 1
+Counts {cases = 1, tried = 1, errors = 0, failures = 1}
+> 
+> 
+
+#+END_SRC
+
+Example: Running multiple test cases. 
+
+#+BEGIN_SRC haskell
+  > let testTrue = TestCase $ assertBool "It should be true" True
+  > let testFalse = TestCase $ assertBool "It is gonna fail." False 
+  > let testEqual25 = TestCase $ assertEqual "The sum should be equal to 25" 25 (10 + 15)
+  > let testEqual25Fail = TestCase $ assertEqual "The sum should be equal to 25" 25 (150 + 25)
+  > 
+
+  > runTestTT $ TestList [testTrue, testFalse, testEqual25, testEqual25Fail]
+  ### Failure in: 1                         
+  <interactive>:164
+  It is gonna fail.
+  ### Failure in: 3                         
+  <interactive>:166
+  The sum should be equal to 25
+  expected: 25
+   but got: 175
+  Cases: 4  Tried: 4  Errors: 0  Failures: 2
+  Counts {cases = 4, tried = 4, errors = 0, failures = 2}
+  > 
+
+  :{
+  runTestTT $ TestList [TestLabel "testTrue" testTrue,
+                        TestLabel "testFalse" testFalse,
+                        TestLabel "testEqual25" testEqual25,
+                        TestLabel "testEqual25Fail" testEqual25Fail
+                       ]
+  :}
+
+  -- Pasting this code in the terminal:
+  > :{
+  - runTestTT $ TestList [TestLabel "testTrue" testTrue,
+  -                       TestLabel "testFalse" testFalse,
+  -                       TestLabel "testEqual25" testEqual25,
+  -                       TestLabel "testEqual25Fail" testEqual25Fail
+  -                      ]
+  - :}
+  ### Failure in: 1:testFalse               
+  <interactive>:164
+  It is gonna fail.
+    
+  ### Failure in: 3:testEqual25Fail         
+  <interactive>:166
+  The sum should be equal to 25
+  expected: 25
+   but got: 175
+  Cases: 4  Tried: 4  Errors: 0  Failures: 2
+  Counts {cases = 4, tried = 4, errors = 0, failures = 2}
+  > 
+
+#+END_SRC
+
+
+*Operators*
+
+| Description                   | Operator |    | Signature                                                 |
+|-------------------------------+----------+----+-----------------------------------------------------------|
+| Assert Bool (True)            | (@?)     | :: | (AssertionPredicable t) => t -> String -> Assertion       |
+|                               |          |    |                                                           |
+| Assert Equal                  | (@=?)    | :: | (Show a, Eq a) => a: expected -> a: value -> Assertion    |
+| Assert Equal                  | (@?=)    | :: | (Eq a, Show a) => a: value    -> a: expected -> Assertion |
+|                               |          |    |                                                           |
+|                               |          |    |                                                           |
+| Creates test case with label  | (~:)     | :: | Testable t => String -> t -> Test                         |
+|                               |          |    |                                                           |
+| Creates an equality test case | (~?=)    | :: | (Show a, Eq a) => a: value    -> a: expected -> Test      |
+| Creates an equality test case | (~=?)    | :: | (Show a, Eq a) => a: expected -> a: value    -> Test      |
+|                               |          |    |                                                           |
+
+Example: (@=?)
+
+#+BEGIN_SRC haskell
+  > :t (@=?)
+  (@=?) :: (Show a, Eq a) => a -> a -> Assertion
+  >
+
+  > 10 @=? (1 + 2 + 3 + 4)
+  > 10 @=? (1 + 2 + 3 + 4 + 5)
+  ,*** Exception: HUnitFailure (Just (Location {locationFile = "<interactive>", locationLine = 46, locationColumn = 1})) "expected: 10\n but got: 15"
+  > 
+
+  > 120 @=? product [1, 2, 3, 4, 5]
+  > 120 @=? product [1, 2, 3, 4, 5, 6]
+  ,*** Exception: HUnitFailure (Just (Location {locationFile = "<interactive>", locationLine = 58, locationColumn = 1})) "expected: 120\n but got: 720"
+  > 
+    
+#+END_SRC
+
+Example: (@?) 
+
+#+BEGIN_SRC haskell
+> 100 > 10 @? "It should be true" 
+
+> 100 < 10 @? "It should be true" 
+ *** Exception: HUnitFailure (Just (Location {locationFile = "<interactive>", locationLine = 286, locationColumn = 1})) "It should be true"
+> 
+#+END_SRC
+
+Example: (~:) 
+
+#+BEGIN_SRC haskell
+> :t (~:)
+(~:) :: Testable t => String -> t -> Test
+> 
+
+> let test1 = "testSumIs25" ~: assertEqual "The sum is 25" 25 (10 + 15)
+> runTestTT test1
+Cases: 1  Tried: 1  Errors: 0  Failures: 0
+Counts {cases = 1, tried = 1, errors = 0, failures = 0}
+> 
+
+> let test2 = "testSumIs25" ~: assertEqual "The sum is 25" 25 (13 + 15)
+> runTestTT test2
+### Failure in: testSumIs25               
+<interactive>:223
+The sum is 25
+expected: 25
+ but got: 28
+Cases: 1  Tried: 1  Errors: 0  Failures: 1
+Counts {cases = 1, tried = 1, errors = 0, failures = 1}
+> 
+
+> let test3 = "testSumIs25" ~:  25 @=? (10 + 15)
+> runTestTT test3
+Cases: 1  Tried: 1  Errors: 0  Failures: 0
+Counts {cases = 1, tried = 1, errors = 0, failures = 0}
+> 
+
+> let test4 = "testSumIs25" ~:  25 @=? (1023 + 15)
+> runTestTT test4
+### Failure in: testSumIs25               
+<interactive>:234
+expected: 25
+ but got: 1038
+Cases: 1  Tried: 1  Errors: 0  Failures: 1
+Counts {cases = 1, tried = 1, errors = 0, failures = 1}
+> 
+
+#+END_SRC
+
+Example: (~?=) 
+
+#+BEGIN_SRC haskell
+> runTestTT $ 20 ~?= 20
+Cases: 1  Tried: 1  Errors: 0  Failures: 0
+Counts {cases = 1, tried = 1, errors = 0, failures = 0}
+> 
+
+> runTestTT $ 10 ~?= 20
+### Failure:                              
+<interactive>:276
+expected: 20
+ but got: 10
+Cases: 1  Tried: 1  Errors: 0  Failures: 1
+Counts {cases = 1, tried = 1, errors = 0, failures = 1}
+> 
+#+END_SRC
+
+Example: (~=?)
+
+#+BEGIN_SRC haskell
+> runTestTT $ 10 ~=? 20
+### Failure:                              
+<interactive>:281
+expected: 10
+ but got: 20
+Cases: 1  Tried: 1  Errors: 0  Failures: 1
+Counts {cases = 1, tried = 1, errors = 0, failures = 1}
+> 
+
+> runTestTT $ 20 ~=? 20
+Cases: 1  Tried: 1  Errors: 0  Failures: 0
+Counts {cases = 1, tried = 1, errors = 0, failures = 0}
+> 
+
+#+END_SRC
+
+#+BEGIN_SRC haskell 
+import Test.HUnit
+import System.IO
+
+:{
+fact 1 = 1
+fact n = n * fact (n - 1)
+:}
+
+:{
+tests = TestList
+    [ "fact 1" ~: fact 1 ~?= 1
+    , "fact 2" ~: fact 2 ~?= 2
+    , "fact 3" ~: fact 3 ~?= 6
+    , "fact 4" ~: fact 4 ~?= 24
+    , "fact 5" ~: fact 5 ~?= 120
+    ]
+:}
+
+> runTestTT tests
+Cases: 5  Tried: 5  Errors: 0  Failures: 0
+Counts {cases = 5, tried = 5, errors = 0, failures = 0}
+> 
+
+#+END_SRC
+
+** HUnit in the REPL
+
+Example using =$ stack ghci=
+
+#+BEGIN_SRC haskell 
+  > import Test.HUnit
+  > 
+
+  > :info Counts
+  data Counts
+    = Counts {cases :: Int,
+              tried :: Int,
+              errors :: Int,
+              failures :: Int}
+          -- Defined in ‘Test.HUnit.Base’
+  instance [safe] Eq Counts -- Defined in ‘Test.HUnit.Base’
+  instance [safe] Read Counts -- Defined in ‘Test.HUnit.Base’
+  instance [safe] Show Counts -- Defined in ‘Test.HUnit.Base’
+  > 
+
+  > :info TestCase
+  data Test = TestCase Assertion | ...
+          -- Defined in ‘Test.HUnit.Base’
+
+  > :t TestCase 
+  TestCase :: Assertion -> Test
+
+
+  > :info Assertion
+  type Assertion = IO ()  -- Defined in ‘Test.HUnit.Lang’
+  > 
+
+  > 
+  > :{
+  - addInt :: Int -> Int -> Int 
+  - addInt x y = x + y
+  - :}
+  > 
+  > addInt 10 20
+  30
+  > 
+  > import Test.HUnit
+  > 
+  > :t TestCase
+  TestCase :: Assertion -> Test
+  > 
+  > assertEqual "add 2 10 should be 12" 12 (add 10 2)
+  > 
+  > assertEqual "add 2 10 should be 12" 0 (add 10 2)
+  ,*** Exception: HUnitFailure (Just (Location {locationFile = "<interactive>", locationLine = 23, locationColumn = 1})) 
+  "add 2 10 should be 12\nexpected: 0.0\n but got: 12.0"
+  >
+
+  > assertBool "It should be true" True
+  > assertBool "It should be true" False
+  ,*** Exception: HUnitFailure (Just (Location {locationFile = "<interactive>", locationLine = 50, locationColumn = 1})) 
+  "It should be true"
+  > 
+  >
+
+  > assertBool "It should be true" (10 > 5)
+  > assertBool "It should be true" (10 < 5)
+  ,*** Exception: HUnitFailure (Just (Location {locationFile = "<interactive>", locationLine = 54, locationColumn = 1})) 
+  "It should be true"
+  > 
+   
+
+  :{
+  testFile filename msg = do 
+    writeFile filename msg
+    content <- readFile filename
+    assertEqual ("File content should be equal to \"" ++ msg ++ "\"") msg content
+  :}
+
+  > testFile "/tmp/testfile1" "hello world"
+  > 
+
+  :{
+  testFile2 filename msg msgExpect = do 
+    writeFile filename msg
+    content <- readFile filename
+    assertEqual ("File content should be equal to \"" ++ msg ++ "\"") msgExpect content
+  :}
+
+  > testFile2 "/tmp/testfile2" "hello world" "hello world"
+
+  > testFile2 "/tmp/testfile2" "hello world" "hello"
+  ,*** Exception: HUnitFailure (Just (Location {locationFile = "<interactive>", locationLine = 90, locationColumn = 3})) 
+  "File content should be equal to \"hello world\"\nexpected: \"hello\"\n but got: \"hello world\""
+  >
+
+  > testFile2 "/afile.txt" "hello" "hello"
+   ,*** Exception: /afile.txt: openFile: permission denied (Permission denied)
+  > 
+
+  > runTestTT $ TestCase $ testFile2 "/afile.txt" "hello" "hello"
+  ### Error:                                
+  /afile.txt: openFile: permission denied (Permission denied)
+  Cases: 1  Tried: 1  Errors: 1  Failures: 0
+  Counts {cases = 1, tried = 1, errors = 1, failures = 0}
+  > 
+
+    
+
+  > import Text.Read (readMaybe)
+  >  
+  > assertEqual "The parsed string should be equal to 100" (Just 100) ((readMaybe "100") :: Maybe Int)
+  > 
+  > assertEqual "The parsed string should be equal to 100" (Just 100) ((readMaybe "1asd00") :: Maybe Int)
+  ,*** Exception: HUnitFailure (Just (Location {locationFile = "<interactive>", locationLine = 115, locationColumn = 1})) 
+  "The parsed string should be equal to 100\nexpected: Just 100\n but got: Nothing"
+  > 
+       
+    
+    
+  > let testSum = TestCase $ assertEqual "10 + 5 = 15" 15 (10 + 5)
+  > let testProd = TestCase $ assertEqual "10 * 15" 150 (10 * 15)
+  > let testPred = TestCase $ assertBool "10 > 5" (10 > 5)
+  >
+
+  > let testFailure = TestCase $ assertEqual "It will fail 10 + 2 = 15" (10 + 2) 15  
+    
+  :{  
+  testlist = TestList [TestLabel "testSum" testSum,
+                       TestLabel "testPred" testPred,
+                       TestLabel "testFailure" testFailure,
+                       TestLabel "testProd" testProd                    
+                      ]
+    
+  :}
+
+  > runTestTT testlist
+  ### Failure in: 2:testFailure             
+  <interactive>:94
+  It will fail 10 + 2 = 15
+  expected: 12
+   but got: 15
+  Cases: 4  Tried: 4  Errors: 0  Failures: 1
+  Counts {cases = 4, tried = 4, errors = 0, failures = 1}
+  > 
+
+  :{  
+  testlist2 = TestList [TestLabel "testSum" testSum,
+                        TestLabel "testPred" testPred,
+                        -- TestLabel "testFailure" testFailure,
+                        TestLabel "testProd" testProd                    
+                       ]
+   
+  :}  
+
+
+  > runTestTT testlist2
+  Cases: 3  Tried: 3  Errors: 0  Failures: 0
+  Counts {cases = 3, tried = 3, errors = 0, failures = 0}
+  > 
+
+#+END_SRC
+
+** Example: Unit test with HUnit
+
+#+BEGIN_SRC haskell :tangle /tmp/uniTestExample.hs
+-- File: unitTestExample.hs
+
+import Test.HUnit
+
+testSum = TestCase $ assertEqual "10 + 5 = 15" 15 (10 + 5)
+
+testProd = TestCase $ assertEqual "10 * 15" 150 (10 * 15)
+
+testPred = TestCase $ assertBool "10 > 5" (10 > 5)
+
+testFailure = TestCase $ assertEqual "It will fail 10 + 2 = 15" (10 + 2) 15  
+  
+testlist = TestList [TestLabel "testSum" testSum,
+                     TestLabel "testPred" testPred,
+                     TestLabel "testFailure" testFailure,
+                     TestLabel "testProd" testProd                    
+                    ]
+
+main :: IO ()
+main = do
+  runTestTT testlist
+  return ()  
+
+#+END_SRC
+
+*Running the tests* 
+
+Run the test as a script with runhaskell: 
+
+#+BEGIN_SRC sh 
+$ stack exec -- runhaskell /tmp/uniTestExample.hs 
+### Failure in: 2:testFailure             
+/tmp/uniTestExample.hs:12
+It will fail 10 + 2 = 15
+expected: 12
+ but got: 15
+Cases: 4  Tried: 4  Errors: 0  Failures: 1
+
+#+END_SRC
+
+Run the test compiling:
+
+#+BEGIN_SRC sh
+$ stack exec -- ghc --make /tmp/uniTestExample.hs 
+[1 of 1] Compiling Main             ( /tmp/uniTestExample.hs, /tmp/uniTestExample.o )
+Linking /tmp/uniTestExample ..
+
+$ /tmp/uniTestExample
+### Failure in: 2:testFailure             
+/tmp/uniTestExample.hs:12
+It will fail 10 + 2 = 15
+expected: 12
+ but got: 15
+Cases: 4  Tried: 4  Errors: 0  Failures: 1
+
+#+END_SRC
+
+** References 
+
+ - Official HUnit documentation: [[http://hackage.haskell.org/package/HUnit][HUnit: A unit testing framework for Haskell]]
+
+ - [[http://blog.ploeh.dk/2015/05/07/functional-design-is-intrinsically-testable/][Functional design is intrinsically testable]]
+
+ - [[http://www.seas.upenn.edu/~cis552/12fa/hw/hw1/][CIS 552: Advanced Programming- HW1 Haskell List Processing and recursion]]
+
+ - [[http://www.shakthimaan.com/posts/2015/10/09/testing/news.html][Shakthimaan's Blog | Introduction to Haskell - Testing]]
+
