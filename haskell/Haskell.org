@@ -199,14 +199,14 @@ Run Haskell REPL ghci for LTS resolver 3.22 / ghc-7.10.2. GHC will be
 installed if it is not available.
 
 #+BEGIN_SRC sh
-  $ stack exec -- stack --resolver lts-3.22 --install-ghc ghci 
+  $ stack --resolver lts-3.22 --install-ghc ghci 
 #+END_SRC
 
 Run Haskell REPL ghci installing a specific version of GHC and
 installing packages HDBC, HDBC-sqlite3 and random automatically.
 
 #+BEGIN_SRC sh 
-  $ stack exec -- stack --resolver lts-3.22 --install-ghc ghci --package HDBC --package HDBC-sqlite3 --package random
+  $ stack --resolver lts-3.22 --install-ghc ghci --package HDBC --package HDBC-sqlite3 --package random
   HDBC-sqlite3-2.3.3.1: configure
   HDBC-sqlite3-2.3.3.1: build
   HDBC-sqlite3-2.3.3.1: copy/register
@@ -218,7 +218,7 @@ installing packages HDBC, HDBC-sqlite3 and random automatically.
 **** Run a Haskell script with specific ghc version: 
 
 #+BEGIN_SRC sh 
- $ stack exec -- stack --resolver lts-3.22 --install-ghc runghc haskell-script.hs
+ $ stack --resolver lts-3.22 --install-ghc runghc haskell-script.hs
 #+END_SRC
 
 **** Compile a haskell source code without a project
@@ -236,7 +236,7 @@ or with command line options:
 **** Compile a sources without a project with a specific Haskell version
 
 #+BEGIN_SRC sh
- $ stack exec -- stack --resolver lts-3.22 --install-ghc ghc Main.hs Module1.hs Module2.hs ...
+ $ stack --resolver lts-3.22 --install-ghc ghc Main.hs Module1.hs Module2.hs ...
 #+END_SRC
 *** Using stack with a project
 
