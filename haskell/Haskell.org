@@ -52,7 +52,7 @@
 |                      |                                                             |   |
 
 ** Setting up a Haskell Development Environment  
-*** Get Haskell through stack 
+*** Gettin Haskell through stack 
  
 There are many ways to install Haskell like through Haskell Platform
 and Linux distributions packages. The most easier and reliable way is
@@ -95,7 +95,6 @@ See the instructions to install stack at https://www.haskellstack.org/
  - [[http://stackoverflow.com/questions/33446558/understanding-haskells-stack-program-and-the-resolver-and-lts-version][Understanding Haskell's stack program and the resolver and LTS version - Stack Overflow]]
 
  - [[https://haskell-lang.org/tutorial/stack-script][How to Script with Stack]]  
-
 
 *** Text editor 
 **** Atom 
@@ -238,7 +237,99 @@ or with command line options:
 #+BEGIN_SRC sh
  $ stack --resolver lts-3.22 --install-ghc ghc Main.hs Module1.hs Module2.hs ...
 #+END_SRC
-*** Using stack with a project
+**** Misc 
+***** Install and run a plot library
+
+ - [[https://hackage.haskell.org/package/easyplot-1.0/docs/Graphics-EasyPlot.html][Graphics.EasyPlot]]
+
+1. Install GnuPlot  (Command for ArchLinux)
+
+#+BEGIN_SRC sh 
+  $ pacman -S gnuplot 
+#+END_SRC
+
+2. Run 
+
+#+BEGIN_SRC sh 
+$ stack --resolver lts-7.19 --install-ghc exec --package easyplot -- ghci
+#+END_SRC
+
+LTS-7.19 - Always runs Haskell 8.0.1
+
+3. Plot something. 
+
+#+BEGIN_SRC sh 
+$  stack --resolver lts-7.19 --install-ghc exec --package easyplot -- ghci
+GHCi, version 8.0.1: http://www.haskell.org/ghc/  :? for help
+Prelude> 
+Prelude> import Graphics.EasyPlot
+Prelude Graphics.EasyPlot> :set prompt "> "
+> :set prompt2 "- "
+> 
+>  plot X11 $ Gnuplot2D [Color Blue] [] "2**cos(x)"
+True
+
+>  plot X11 "x*y"
+True 
+#+END_SRC
+***** Install and run gtk GUI library 
+      :PROPERTIES:
+      :ID:       92097d4c-3ce6-4952-9b89-56452c8cf76b
+      :END:
+
+1. Install gtk libraries for Arch Linux. 
+
+#+BEGIN_SRC sh
+  $ sudo pacman -S gobject-introspection gobject-introspection-runtime gtksourceview3 webkitgtk webkit2gtk
+#+END_SRC
+
+
+2. Run: 
+
+Get ghci Version:
+
+#+BEGIN_SRC sh
+$  stack --resolver lts-3.22 --install-ghc exec --package gtk -- runhaskell gui1.hs 
+#+END_SRC
+
+It installs gtk library and Haskell 7.10.2 
+
+
+File gui1.hs 
+
+#+BEGIN_SRC haskell :tangle ~/gui1.hs
+  import Control.Concurrent (forkIO, killThread)
+  import Graphics.UI.Gtk
+
+  main :: IO ()
+  main = do
+    initGUI
+
+    {---------- Create GUI Widgets -------}
+
+    -- Create a new Window
+    w <- windowNew
+
+    set w [windowTitle := "Hello gtk2hs"]
+    windowSetDefaultSize w 300 400
+
+     --    Add a button
+    --
+    b <- buttonNewWithLabel "click me"
+    containerAdd w b
+
+
+    {--------- Add Events ---------------}
+    onClicked b (putStrLn "I was clicked !")
+
+    {--------- Start GUI Loop --------}
+    widgetShowAll w -- Refresh the Window to display the button.
+    mainGUI
+#+END_SRC
+
+
+
+*** Build and manage projects with Stack
 
 Stack can install specific versions of packages and Haskell run-time
 per project in a isolated way avoiding the dependency hell problem,
@@ -253,7 +344,7 @@ See:
 
  - [[https://duplode.github.io/posts/migrating-a-project-to-stack.html][Migrating a Project to stack - The Life Monadic]]
 
-*** Misc Stack commands 
+*** Exploring Stack 
 **** Where is ghci ? 
 
 #+BEGIN_SRC sh
@@ -403,7 +494,7 @@ Way 1:
   XDG_VTNR=7
 
 #+END_SRC
-*** Some useful stack packages
+*** Some useful packages
 
  - Commands to install some useful Haskell packages of [[https://www.haskell.org/platform/contents.html][Haskell Platform - Included Packages]]
 
