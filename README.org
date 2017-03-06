@@ -38,7 +38,7 @@ This repository is dedicated to public domain.
 
 *Functional Programming in Haskell*
 
- - [[file:haskell/Haskell.org][Haskell]]
+ - [[file:haskell/Haskell.org][Setting Up Development Environment ]]
 
  - [[file:haskell/Basic_Syntax.org][Basic Syntax]]
 
