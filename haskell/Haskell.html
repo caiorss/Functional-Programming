@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Setting up a Haskell Development Environment</title>
-<!-- 2017-03-05 dom 08:15 -->
+<!-- 2017-03-06 seg 12:33 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="arch" />
@@ -221,16 +221,16 @@ for the JavaScript code in this tag.
 <li><a href="#sec-1-1">1.1. Overview</a></li>
 <li><a href="#sec-1-2">1.2. Setting up a Haskell Development Environment</a>
 <ul>
-<li><a href="#sec-1-2-1">1.2.1. Get Haskell through stack</a></li>
+<li><a href="#sec-1-2-1">1.2.1. Gettin Haskell through stack</a></li>
 <li><a href="#sec-1-2-2">1.2.2. Text editor</a></li>
 </ul>
 </li>
 <li><a href="#sec-1-3">1.3. Haskell stack tool</a>
 <ul>
 <li><a href="#sec-1-3-1">1.3.1. Using stack without a project</a></li>
-<li><a href="#sec-1-3-2">1.3.2. Using stack with a project</a></li>
-<li><a href="#sec-1-3-3">1.3.3. Misc Stack commands</a></li>
-<li><a href="#sec-1-3-4">1.3.4. Some useful stack packages</a></li>
+<li><a href="#sec-1-3-2">1.3.2. Build and manage projects with Stack</a></li>
+<li><a href="#sec-1-3-3">1.3.3. Exploring Stack</a></li>
+<li><a href="#sec-1-3-4">1.3.4. Some useful packages</a></li>
 </ul>
 </li>
 <li><a href="#sec-1-4">1.4. GHCI Reference</a></li>
@@ -427,7 +427,7 @@ for the JavaScript code in this tag.
 <h3 id="sec-1-2"><span class="section-number-3">1.2</span> Setting up a Haskell Development Environment</h3>
 <div class="outline-text-3" id="text-1-2">
 </div><div id="outline-container-sec-1-2-1" class="outline-4">
-<h4 id="sec-1-2-1"><span class="section-number-4">1.2.1</span> Get Haskell through stack</h4>
+<h4 id="sec-1-2-1"><span class="section-number-4">1.2.1</span> Gettin Haskell through stack</h4>
 <div class="outline-text-4" id="text-1-2-1">
 <p>
 There are many ways to install Haskell like through Haskell Platform
@@ -498,7 +498,6 @@ See the instructions to install stack at <a href="https://www.haskellstack.org/"
 </ul>
 </div>
 </div>
-
 
 <div id="outline-container-sec-1-2-2" class="outline-4">
 <h4 id="sec-1-2-2"><span class="section-number-4">1.2.2</span> Text editor</h4>
@@ -744,10 +743,138 @@ or with command line options:
 </pre>
 </div>
 </div>
+</li>
+<li><a id="sec-1-3-1-8" name="sec-1-3-1-8"></a>Misc<br  /><ol class="org-ol"><li><a id="sec-1-3-1-8-1" name="sec-1-3-1-8-1"></a>Install and run a plot library<br  /><div class="outline-text-6" id="text-1-3-1-8-1">
+<ul class="org-ul">
+<li><a href="https://hackage.haskell.org/package/easyplot-1.0/docs/Graphics-EasyPlot.html">Graphics.EasyPlot</a>
+</li>
+
+<li>Install GnuPlot  (Command for ArchLinux)
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ pacman -S gnuplot
+</pre>
+</div>
+
+<ol class="org-ol">
+<li>Run 
+</li>
+</ol>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack --resolver lts-7.19 --install-ghc exec --package easyplot -- ghci
+</pre>
+</div>
+
+<p>
+LTS-7.19 - Always runs Haskell 8.0.1
+</p>
+
+<ol class="org-ol">
+<li>Plot something. 
+</li>
+</ol>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$  stack --resolver lts-7.19 --install-ghc exec --package easyplot -- ghci
+GHCi, version 8.0.1: http://www.haskell.org/ghc/  :? for help
+Prelude&gt; 
+Prelude&gt; import Graphics.EasyPlot
+Prelude Graphics.EasyPlot&gt; :set prompt <span class="org-string">"&gt; "</span>
+&gt; :set prompt2 <span class="org-string">"- "</span>
+&gt; 
+&gt;  plot X11 $ Gnuplot2D [Color Blue] [] <span class="org-string">"2**cos(x)"</span>
+True
+
+&gt;  plot X11 <span class="org-string">"x*y"</span>
+True
+</pre>
+</div>
+</div>
+</li>
+<li><a id="sec-1-3-1-8-2" name="sec-1-3-1-8-2"></a><a id="ID-92097d4c-3ce6-4952-9b89-56452c8cf76b" name="ID-92097d4c-3ce6-4952-9b89-56452c8cf76b"></a>Install and run gtk GUI library<br  /><div class="outline-text-6" id="text-1-3-1-8-2">
+
+<ol class="org-ol">
+<li>Install gtk libraries for Arch Linux. 
+</li>
+</ol>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ sudo pacman -S gobject-introspection gobject-introspection-runtime gtksourceview3 webkitgtk webkit2gtk
+</pre>
+</div>
+
+
+<ol class="org-ol">
+<li>Run: 
+</li>
+</ol>
+
+<p>
+Get ghci Version:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$  stack --resolver lts-3.22 --install-ghc exec --package gtk -- runhaskell gui1.hs
+</pre>
+</div>
+
+<p>
+It installs gtk library and Haskell 7.10.2 
+</p>
+
+
+<p>
+File gui1.hs 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Concurrent</span> (forkIO, killThread)
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Graphics.UI.Gtk</span>
+
+<span class="org-haskell-definition">main</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">main</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  initGUI
+
+  <span class="org-comment-delimiter">{-</span><span class="org-comment">--------- Create GUI Widgets -------}</span>
+
+  <span class="org-comment-delimiter">-- </span><span class="org-comment">Create a new Window</span>
+  w <span class="org-haskell-operator">&lt;-</span> windowNew
+
+  set w [windowTitle <span class="org-haskell-constructor">:=</span> <span class="org-string">"Hello gtk2hs"</span>]
+  windowSetDefaultSize w 300 400
+
+   <span class="org-comment-delimiter">--    </span><span class="org-comment">Add a button</span>
+  <span class="org-comment-delimiter">--</span>
+  b <span class="org-haskell-operator">&lt;-</span> buttonNewWithLabel <span class="org-string">"click me"</span>
+  containerAdd w b
+
+
+  <span class="org-comment-delimiter">{-</span><span class="org-comment">-------- Add Events ---------------}</span>
+  onClicked b (putStrLn <span class="org-string">"I was clicked !"</span>)
+
+  <span class="org-comment-delimiter">{-</span><span class="org-comment">-------- Start GUI Loop --------}</span>
+  widgetShowAll w <span class="org-comment-delimiter">-- </span><span class="org-comment">Refresh the Window to display the button.</span>
+  mainGUI
+</pre>
+</div>
+</div>
+</li></ol>
 </li></ol>
 </div>
+
+
+
 <div id="outline-container-sec-1-3-2" class="outline-4">
-<h4 id="sec-1-3-2"><span class="section-number-4">1.3.2</span> Using stack with a project</h4>
+<h4 id="sec-1-3-2"><span class="section-number-4">1.3.2</span> Build and manage projects with Stack</h4>
 <div class="outline-text-4" id="text-1-3-2">
 <p>
 Stack can install specific versions of packages and Haskell run-time
@@ -774,7 +901,7 @@ See:
 </div>
 
 <div id="outline-container-sec-1-3-3" class="outline-4">
-<h4 id="sec-1-3-3"><span class="section-number-4">1.3.3</span> Misc Stack commands</h4>
+<h4 id="sec-1-3-3"><span class="section-number-4">1.3.3</span> Exploring Stack</h4>
 <div class="outline-text-4" id="text-1-3-3">
 </div><ol class="org-ol"><li><a id="sec-1-3-3-1" name="sec-1-3-3-1"></a>Where is ghci ?<br  /><div class="outline-text-5" id="text-1-3-3-1">
 <div class="org-src-container">
@@ -942,7 +1069,7 @@ $
 </li></ol>
 </div>
 <div id="outline-container-sec-1-3-4" class="outline-4">
-<h4 id="sec-1-3-4"><span class="section-number-4">1.3.4</span> Some useful stack packages</h4>
+<h4 id="sec-1-3-4"><span class="section-number-4">1.3.4</span> Some useful packages</h4>
 <div class="outline-text-4" id="text-1-3-4">
 <ul class="org-ul">
 <li>Commands to install some useful Haskell packages of <a href="https://www.haskell.org/platform/contents.html">Haskell Platform - Included Packages</a>
@@ -1080,7 +1207,7 @@ See also:
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: arch</p>
-<p class="date">Created: 2017-03-05 dom 08:15</p>
+<p class="date">Created: 2017-03-06 seg 12:33</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
