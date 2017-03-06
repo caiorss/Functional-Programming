@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Functional Programming by Example</title>
-<!-- 2016-10-31 seg 18:35 -->
+<!-- 2017-03-06 seg 13:09 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues Soares Silva" />
@@ -90,7 +90,80 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
-<link href="/Functional-Programming/theme/index.css" rel="stylesheet">
+<link href='/theme/style.css' rel='stylesheet'>
+<link href="/theme/index.css" rel="stylesheet">
+
+<script type="text/javascript" src="/theme/org-info.js">
+/**
+ *
+ * @source: /theme/org-info.js
+ *
+ * @licstart  The following is the entire license notice for the
+ *  JavaScript code in /theme/org-info.js.
+ *
+ * Copyright (C) 2012-2013 Free Software Foundation, Inc.
+ *
+ *
+ * The JavaScript code in this tag is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU
+ * General Public License (GNU GPL) as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option)
+ * any later version.  The code is distributed WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+ *
+ * As additional permission under GNU GPL version 3 section 7, you
+ * may distribute non-source (e.g., minimized or compacted) forms of
+ * that code without the copy of the GNU GPL normally required by
+ * section 4, provided you include this license notice and a URL
+ * through which recipients can access the Corresponding Source.
+ *
+ * @licend  The above is the entire license notice
+ * for the JavaScript code in /theme/org-info.js.
+ *
+ */
+</script>
+
+<script type="text/javascript">
+
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+
+<!--/*--><![CDATA[/*><!--*/
+org_html_manager.set("TOC_DEPTH", "3");
+org_html_manager.set("LINK_HOME", "");
+org_html_manager.set("LINK_UP", "");
+org_html_manager.set("LOCAL_TOC", "1");
+org_html_manager.set("VIEW_BUTTONS", "0");
+org_html_manager.set("MOUSE_HINT", "underline");
+org_html_manager.set("FIXED_TOC", "0");
+org_html_manager.set("TOC", "1");
+org_html_manager.set("VIEW", "info");
+org_html_manager.setup();  // activate after the parameters are set
+/*]]>*///-->
+</script>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -202,7 +275,7 @@ This repository is dedicated to public domain.
 </p>
 
 <ul class="org-ul">
-<li><a href="haskell/Haskell.html">Haskell</a>
+<li><a href="haskell/Haskell.html">Setting Up Development Environment </a>
 </li>
 
 <li><a href="haskell/Basic_Syntax.html">Basic Syntax</a>
@@ -244,15 +317,15 @@ This repository is dedicated to public domain.
 <li><a href="haskell/haskell_handling_exceptions.html">Exception Handling</a>
 </li>
 
+<li><a href="haskell/DatabaseHDBC.html">Databases - HDBC package</a>
+</li>
+
+<li><a href="haskell/UnitTest_Hunit.html">Unit Test with HUNIT</a>
+</li>
+
 <li>Modules
 
 <ul class="org-ul">
-<li><a href="https://www.haskell.org/onlinereport/haskell2010/">Haskell 2010 Language Report</a>
-</li>
-
-<li><a href="https://downloads.haskell.org/~ghc/latest/docs/html/libraries/">Haskell Hierarchical Libraries</a> - Built-in Haskell libraries.
-</li>
-
 <li><a href="haskell/control_monad.html">Contro.Monad</a>      - Monad Combinators 
 </li>
 
@@ -275,7 +348,30 @@ This repository is dedicated to public domain.
 
 <li><a href="haskell/Real_World_Haskell.html">Codes and Examples from "Real World Haskell"</a>
 </li>
+
+<li>Haskell Bookmarks:
+
+<ul class="org-ul">
+<li><a href="https://www.haskell.org/onlinereport/haskell2010/">Haskell 2010 Language Report</a>
+</li>
+
+<li><a href="https://downloads.haskell.org/~ghc/latest/docs/html/libraries/">Haskell Hierarchical Libraries</a> - Built-in Haskell libraries.
+</li>
+
+<li><a href="https://docs.haskellstack.org/en/stable/README/">Haskell Stack Tool</a> - Haskell dependency manager, package manager
+which can install multiple Haskell versions, library versions per
+project repository avoiding dependency hell.
+</li>
+
+<li><a href="https://www.haskell.org/platform/contents.html">Haskell Platform - Included Packages</a>
+</li>
+
+<li><a href="https://www.haskell.org/hoogle/">Hoogle</a> - Haskell types search engine.
+</li>
 </ul>
+</li>
+</ul>
+
 
 <p>
 <b>Functional Programming in OCaml</b>
@@ -315,7 +411,7 @@ This repository is dedicated to public domain.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues Soares Silva</p>
-<p class="date">Created: 2016-10-31 seg 18:35</p>
+<p class="date">Created: 2017-03-06 seg 13:09</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
