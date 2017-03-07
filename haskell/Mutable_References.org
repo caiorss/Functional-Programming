@@ -29,7 +29,7 @@ Module: [[https://hackage.haskell.org/package/base-4.9.1.0/docs/Data-IORef.html]
 
 Example in Haskell REPL: 
 
-#+BEGIN_SRC haskell 
+#+BEGIN_SRC haskell
   {- ===== Check The Types ====== -}
 
   > import Data.IORef 
@@ -398,4 +398,132 @@ Example: Infinite loop with delay
   ... ... ...
       
 #+END_SRC
-** STRef - Mutable References Inside Pure Functions 
+** ST Monad - Mutable References Inside Pure Functions 
+*** Overview 
+
+The ST monad is used to perform local mutability. The mutability
+happens only inside the function. 
+
+Modules: 
+
+ - [[https://hackage.haskell.org/package/base-4.9.1.0/docs/Data-STRef.html][Data.STRef]]
+
+ - [[https://hackage.haskell.org/package/base-4.8.2.0/docs/Control-Monad-ST.html][Control.Monad.ST]]
+
+ - [[https://hackage.haskell.org/package/base-4.9.1.0/docs/Data-STRef-Lazy.html][Data.STRef.Lazy]]
+
+Functions: 
+
+| Function                  |    | Signature                         | Description                                    |
+|---------------------------+----+-----------------------------------+------------------------------------------------|
+|                           |    |                                   |                                                |
+| *Module* Data.STRef       |    |                                   |                                                |
+|---------------------------+----+-----------------------------------+------------------------------------------------|
+| newSTRef                  | :: | a -> ST s (STRef s a)             | Create a new STRef in the current state thread |
+| readSTRef                 | :: | STRef s a -> ST s a               | Read the value of an STRef                     |
+| writeSTRef                | :: | STRef s a -> a -> ST s ()         | Write a new value into an STRef                |
+| modifySTRef               | :: | STRef s a -> (a -> a) -> ST s ()  | Mutate the contents of an STRef.               |
+|                           |    |                                   |                                                |
+| *Module* Control.Monad.ST |    |                                   |                                                |
+|---------------------------+----+-----------------------------------+------------------------------------------------|
+| runST                     | :: | (forall s. ST s a) -> a           | Extract content                                |
+|                           |    | Monad and Functor signatures      |                                                |
+| (>>=)                     | :: | ST s a -> (a -> ST s b) -> ST s b | Monad bind operator                            |
+| return                    |    |                                   | Monad return function                          |
+| (>>)                      | :: | ST s a -> ST s b -> ST s b        | Monad (>>) operator                            |
+| fmap                      | :: | (a -> b) -> ST s a -> ST s b      | Functor operator                               |
+|                           |    |                                   |                                                |
+
+*** Examples
+
+Example 1: Sum all list elements.
+
+#+BEGIN_SRC haskell
+  import Control.Monad.ST
+  import Data.STRef    
+  import Control.Monad (forM_)
+
+  :{
+  sumST :: Num a => [a] -> a
+  sumST xs = runST $ do           -- Extract value from ST Monad 
+
+      n <- newSTRef 0             -- Create an STRef mutable reference (aka variable)
+
+      forM_ xs $ \x -> do         -- For each element of xs, add it to n 
+          modifySTRef n (+x)      
+
+      readSTRef n                 -- read value from mutable reference n and return it
+  :}
+
+  > 
+  > sumST [1, 2, 3, 4, 5, 6]
+  21
+  > sum [1, 2, 3, 4, 5, 6]
+  21
+
+  > 
+  > sumST [1..100]
+  5050
+  >
+  > sumST [1..1000000]
+  500000500000
+  > 
+
+#+END_SRC
+
+
+
+Example: Alternative fold implementation in a imperative-like way.
+
+#+BEGIN_SRC haskell 
+  :{
+  foldST :: (acc -> x -> acc) -> acc -> [x] -> acc 
+  foldST step acc0 xs =
+      runST $ do accum <- newSTRef acc0
+                 forM_ xs $ \x -> modifySTRef accum (\a -> step a x)
+                 readSTRef accum
+  :}
+
+  > foldl (\acc x -> 10*acc + x) 0 [1, 2, 3, 4, 5]
+  12345
+  >
+  > foldl (\acc x -> 10*acc + x) 0 [1, 2, 3, 4, 5, 6]
+  123456
+  > 
+
+  > foldST (\acc x -> 10*acc + x) 0 [1, 2, 3, 4, 5]
+  12345
+  > foldST (\acc x -> 10*acc + x) 0 [1, 2, 3, 4, 5, 6]
+  123456
+  > 
+
+
+#+END_SRC
+
+It is equivalent to the code below in Python. This function is a pure
+fucntion like foldST despite it has local mutability.
+
+#+BEGIN_SRC python 
+  def foldl(step, acc0, xs):
+      accum = acc0 
+      for x in xs:
+          accum = step(accum, x)
+      return accum
+
+
+  >>> def foldl(step, acc0, xs):
+  ...     accum = acc0 
+  ...     for x in xs:
+  ...         accum = step(accum, x)
+  ...     return accum
+  ... 
+  >>> 
+
+  >>> foldl(lambda a, x: 10 * a + x, 0, [1, 2, 3, 4, 5])
+  12345
+  >>>
+  >>> foldl(lambda a, x: 10 * a + x, 0, [1, 2, 3, 4, 5, 6])
+  123456
+  >>> 
+#+END_SRC
+
