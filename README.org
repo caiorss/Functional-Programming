@@ -64,11 +64,13 @@ This repository is dedicated to public domain.
 
  - [[file:haskell/Documentation_and_Learning_Materials.org][Documentation and Learning Materials]]
 
- - [[file:haskell/haskell_handling_exceptions.org][Exception Handling]]
+ - [[file:haskell/haskell_handling_exceptions.org][Exception Handling]]  
 
  - [[file:haskell/DatabaseHDBC.org][Databases - HDBC package]]
 
  - [[file:haskell/UnitTest_Hunit.org][Unit Test with HUNIT]]
+
+ - [[file:haskell/Mutable_References.org][Mutable References]]
 
  - Modules
 

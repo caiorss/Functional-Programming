@@ -1,0 +1,401 @@
+#+TITLE: Mutable References 
+#+DESCRIPTIONS: Mutable references in Haskell 
+#+KEWYWORDS:    haskell mutability mutable references io monad 
+#+STARTUP:      showall
+
+* Mutable References 
+** IORef - Mutable References Inside IO Monad 
+*** Overview 
+
+The IORef type provides mutable references in the IO Monad. It allows
+Haskell to perform computations with mutability like imperative languages.
+
+Module: [[https://hackage.haskell.org/package/base-4.9.1.0/docs/Data-IORef.html][Data.IORef]]
+
+| Function / Type |    | Signature                    | Description                                               |
+|-----------------+----+------------------------------+-----------------------------------------------------------|
+| *Types*         |    |                              |                                                           |
+| data IORef a    |    |                              |                                                           |
+|                 |    |                              |                                                           |
+| *Functions*     |    |                              |                                                           |
+|-----------------+----+------------------------------+-----------------------------------------------------------|
+| newIORef        | :: | a -> IO (IORef a)            | Create new IORef                                          |
+| readIORef       | :: | IORef a -> IO a              | Read IORef                                                |
+| writeIORef      | :: | IORef a -> a -> IO ()        | Update IORef                                              |
+| modifyIORef     | :: | IORef a -> (a -> a) -> IO () | Apply a function to the value in the IORef and update it. |
+|                 |    |                              |                                                           |
+
+*** Examples
+
+Example in Haskell REPL: 
+
+#+BEGIN_SRC haskell 
+  {- ===== Check The Types ====== -}
+
+  > import Data.IORef 
+  > 
+  > :info IORef
+  newtype IORef a
+    = GHC.IORef.IORef (GHC.STRef.STRef GHC.Prim.RealWorld a)
+          -- Defined in ‘GHC.IORef’
+  instance Eq (IORef a) -- Defined in ‘GHC.IORef’
+  >
+
+  > :t newIORef 
+  newIORef :: a -> IO (IORef a)
+  >
+  > :t readIORef 
+  readIORef :: IORef a -> IO a
+  > 
+
+  > :t modifyIORef
+  modifyIORef :: IORef a -> (a -> a) -> IO ()
+  > 
+
+  {- === Experiment 1 - IORef within the REPL ========== -}
+
+  {- | Extract IO a -> a is only possible in the REPL due to it be inside an IO monad. -}
+  > cell <- newIORef (100.0 :: Double)
+  > :t cell
+  cell :: IORef Double
+  > 
+
+  > readIORef cell
+  100.0
+  > 
+  > :t readIORef cell
+  readIORef cell :: IO Double
+  > 
+
+  -- Apply a function to value returned from reading the cell 
+  ---------------------------------------------------------------
+
+  > fmap ((+)100) $ readIORef cell
+  200.0
+  > 
+
+  > (*3) <$> ((+)100) <$> readIORef cell
+  600.0
+  > 
+
+  > (+5) <$> (*3) <$> ((+)100) <$> readIORef cell
+  605.0
+  > 
+
+  > (+5) . (*3) . ((+)100) <$> readIORef cell
+  605.0
+  > 
+
+  > fmap ((+5) . (*3) . ((+)100)) $ readIORef cell
+  605.0
+  > 
+
+  -- Update 
+  ------------------------------------------------------------
+
+  > :t writeIORef 
+  writeIORef :: IORef a -> a -> IO ()
+  > 
+
+  > writeIORef cell 500.322
+  > readIORef cell
+  500.322
+  > 
+
+  >  fmap ((+5) . (*3) . ((+)100)) $ readIORef cell
+  1805.966
+  > 
+
+  -- Modify 
+  ----------------------------------------------------------
+
+  > writeIORef cell 200.0
+
+
+  > readIORef cell
+  200.0
+  > 
+
+  > :t modifyIORef 
+  modifyIORef :: IORef a -> (a -> a) -> IO ()
+  >
+
+  >  modifyIORef cell (\x -> 3.0 * x )
+  > readIORef cell
+  600.0
+
+  >  modifyIORef cell (\x -> 3.0 * x )
+  > readIORef cell
+  1800.0
+
+  >  modifyIORef cell (\x -> 3.0 * x )
+  > readIORef cell
+  5400.0
+  > 
+
+#+END_SRC
+
+Example: Counter.
+
+#+BEGIN_SRC haskell 
+  import Data.IORef 
+
+  :{    
+  counter :: IO (IORef Int)
+  counter = newIORef 0
+  :}
+
+  :{ 
+  incrCounter :: IORef Int -> IO ()
+  incrCounter cell = modifyIORef cell (\x -> x + 1) 
+  :}
+
+  :{
+  showCounter cell = do
+    value <- readIORef cell
+    putStrLn $ "The counter value is " ++ show value
+  :}
+   
+  > :t showCounter 
+  showCounter :: Show a => IORef a -> IO ()
+  > 
+
+  > counter >>= showCounter 
+  The counter value is 0
+  > 
+
+  :{
+  testCounter1 c = do  
+    incrCounter c
+    incrCounter c
+    incrCounter c
+    showCounter c
+  :}
+
+  > :t testCounter1 
+  testCounter1 :: IORef Int -> IO ()
+  >  
+  > testCounter1 =<< counter 
+  The counter value is 3
+  > 
+
+  > showCounter =<< counter
+  The counter value is 0
+  > 
+  > counter >>= showCounter 
+  The counter value is 0
+  > 
+
+
+
+  > c <- counter 
+  > :t c
+  c :: IORef Int
+  >
+  > showCounter c
+  The counter value is 0
+
+  > incrCounter c
+  > showCounter c
+  The counter value is 1
+  > 
+
+  > incrCounter c >> showCounter c
+  The counter value is 2
+  > incrCounter c >> showCounter c
+  The counter value is 3
+  > incrCounter c >> showCounter c
+  The counter value is 4
+  > incrCounter c >> showCounter c
+  The counter value is 5
+  > incrCounter c >> showCounter c
+  The counter value is 6
+  > incrCounter c >> showCounter c
+  The counter value is 7
+  > incrCounter c >> showCounter c
+  The counter value is 8
+  > 
+
+#+END_SRC
+
+Example: Sum list elements in a imperative way using IORef.
+
+#+BEGIN_SRC haskell 
+  import Data.IORef 
+  import Control.Monad (forever, forM_)           
+
+  :{
+  sumList :: Num a => [a] -> IO a
+  sumList xs = do
+   acc    <- newIORef 0
+   forM_ xs $ \x -> modifyIORef acc (\val -> val + x)
+   result <- readIORef acc
+   return result 
+  :}
+
+  > :t sumList 
+  sumList :: Num a => [a] -> IO a
+  >
+
+  > sumList [1, 2, 3, 4, 5, 6]
+  21
+  > sumList [1, 2, 3, 4, 5, 6, 10]
+  31
+  > sumList [1, 2, 3, 4, 5, 6, 10, 11]
+  42
+  > 
+  > sumList [1, 2, 3.23, 4.0, 5, 6, 10, 11]
+  42.230000000000004
+  > 
+
+
+  :set +s 
+
+  --- SumList simplified
+  --- 
+  :{
+  sumList :: Num a => [a] -> IO a
+  sumList xs = do
+   acc    <- newIORef 0
+   forM_ xs $ \x -> modifyIORef acc (\val -> val + x)
+   readIORef acc 
+  :}
+
+  > sumList [1, 2, 3, 4, 5, 6]
+  21
+  > sumList [1, 2, 3.34, 4.7567, 5, 6]
+  22.0967
+  >  
+
+
+  {- | ==========  Testing Space Leaks ============= -}
+  --
+
+  > sumList [1..10000]
+  50005000
+  (0.03 secs, 3,770,264 bytes)
+  > 
+
+  > sumList [1..10000000]
+  50000005000000
+  (6.70 secs, 3,696,483,880 bytes)
+  > 
+
+  -- WARNING: Don't try it or the computer may freeze because it consumes a huge amount of memory
+  -- 
+  > sumList [1..1000000000]
+
+  fSegmentation fault  -- Stop with linux emergency keys - Ctrl + SysRq + f 
+
+
+  -- Solution to the space leak issue: Use the strict version of modifyIORef ( modifyIORef')
+  --
+
+
+  :{
+  sumList' :: Num a => [a] -> IO a
+  sumList' xs = do
+   acc    <- newIORef 0
+   forM_ xs $ \x -> modifyIORef' acc (\val -> val + x)
+   result <- readIORef acc
+   return result 
+  :}
+
+   
+  > sumList'  [1..10000]
+  50005000
+  (0.03 secs, 3,120,456 bytes)
+
+  -- This implementation is faster. 
+  > sumList' [1..10000000]
+  50000005000000
+  (3.64 secs, 3,040,086,304 bytes)
+  > 
+
+
+#+END_SRC
+
+
+Example: Ask the number for a number and display the sum in a infinite loop. 
+
+#+BEGIN_SRC haskell 
+  import Data.IORef 
+  import Control.Monad (forever, forM_)           
+
+  :{
+  sumLoop :: IO ()
+  sumLoop = do
+    cell <- newIORef (0 :: Int)
+    forever $ do putStr "Enter the next number to sum: "
+                 nextNum <- fmap read getLine :: IO Int
+                 modifyIORef cell (\value-> value + nextNum)
+                 sumval  <- readIORef cell             
+                 putStrLn $ "sum = " ++ show sumval  
+  :}
+   
+  > sumLoop 
+  Enter the next number to sum: 100
+  sum = 100
+  Enter the next number to sum: 200
+  sum = 300
+  Enter the next number to sum: 300
+  sum = 600
+  Enter the next number to sum: 45
+  sum = 645
+  Enter the next number to sum: 78
+  sum = 723
+  Enter the next number to sum: -458
+  sum = 265
+  Enter the next number to sum: 200
+  sum = 465
+  Enter the next number to sum: 300
+  sum = 765
+  Enter the next number to sum: ^CInterrupted. --- Type Ctrl+C to exit the Loop
+  > 
+
+         
+#+END_SRC
+
+
+Example: Infinite loop with delay 
+
+#+BEGIN_SRC haskell 
+  import Data.IORef
+  import Control.Concurrent (threadDelay)
+  import Control.Monad (forever)    
+
+  delay1Second = 1000000 -- 1 million us = 1 second 
+      
+  :{
+  runLoop = do     
+    count <- newIORef 0
+    forever $ do val <- readIORef count
+                 putStrLn $ "Counter is " ++ show val
+                 modifyIORef count (+1)
+                 threadDelay delay1Second
+  :}
+
+   
+  >  runLoop 
+  Counter is 0
+  Counter is 1
+  Counter is 2
+  Counter is 3
+  Counter is 4
+  Counter is 5
+  Counter is 6
+  Counter is 7
+  Counter is 8
+  Counter is 9
+  Counter is 10
+  Counter is 11
+  Counter is 12
+  Counter is 13
+  Counter is 14
+  Counter is 15
+  Counter is 16
+  Counter is 17
+  ... ... ...
+      
+#+END_SRC
+** STRef - Mutable References Inside Pure Functions 
