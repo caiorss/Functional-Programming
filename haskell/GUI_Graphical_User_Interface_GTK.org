@@ -66,17 +66,17 @@ for gtk 2.0.
    event when it happens. The drawback of this approach is the loss of
    control and the possibility of callback hell.
 
-** Gtk2 functions and types 
+** Gtk3 functions and types 
 
 *Package Documentation* 
 
 Package Gtk2
 
- - [[https://hackage.haskell.org/package/gtk][gtk: Binding to the Gtk+ graphical user interface library.]]
+ - [[https://hackage.haskell.org/package/gtk][gtk Binding to the Gtk+ graphical user interface library.]]
 
 Package Gtk3
 
- - [[https://hackage.haskell.org/package/gtk3][gtk3: Binding to the Gtk+ 3 graphical user interface library]]
+ - [[https://hackage.haskell.org/package/gtk3][gtk3 Binding to the Gtk+ 3 graphical user interface library]]
 
 *Useful Functions for Gtk*
 
@@ -99,44 +99,40 @@ Package Gtk3
 
 *Gtk Functions*
 
-| Function / type       |    | Singature                                                            | Description                                     |
-|-----------------------+----+----------------------------------------------------------------------+-------------------------------------------------|
-| initGUI               | :: | IO ()                                                                | Initialize Gtk                                  |
-| mainGUI               | :: | IO ()                                                                | Run Gtk event loop.                             |
-|                       |    |                                                                      |                                                 |
-| widgetShowAll         | :: | WidgetClass self => self -> IO ()                                    |                                                 |
-|                       |    |                                                                      |                                                 |
-| *Widget Layout*       |    |                                                                      |                                                 |
-|-----------------------+----+----------------------------------------------------------------------+-------------------------------------------------|
-| vBoxNew               | :: | Bool -> Int IO -> VBox                                               | Create new VBox container                       |
-| hBoxNew               | :: | Bool -> Int IO -> HBox                                               | Create new HBox container                       |
-| containerAdd          | :: | (WidgetClass widget, ContainerClass self) => self -> widget -> IO () | Add widget to a container widget like Window.   |
-|                       |    |                                                                      |                                                 |
-|                       |    |                                                                      |                                                 |
-| *Widget Constructors* |    |                                                                      |                                                 |
-|-----------------------+----+----------------------------------------------------------------------+-------------------------------------------------|
-| windowNew             | :: | IO Window                                                            | Create new window                               |
-|                       |    |                                                                      |                                                 |
-| buttonNew             | :: | IO Button                                                            | Create new button                               |
-| buttonNewWithLabel    | :: | string -> IO Button                                                  | Create button with label                        |
-|                       |    |                                                                      |                                                 |
-| drawingAreaNew        | :: | IO DrawingArea                                                       | Create new drawing area (canvas)                |
-| labelNew              | :: | Maybe string -> IO Label                                             | Create new label                                |
-| entryNew              | :: | IO Entry                                                             | Create new entry (single-line text input)       |
-|                       |    |                                                                      |                                                 |
-| *Window Functions*    |    |                                                                      |                                                 |
-|-----------------------+----+----------------------------------------------------------------------+-------------------------------------------------|
-| windowSetDefaultSize  | :: | WindowClass self => self -> Int -> Int -> IO ()                      | Set default window size - window, width, height |
-| windowGetDefaultSize  | :: | WindowClass self => self -> IO (Int, Int)                            | Get window default size - (width, height)       |
-|                       |    |                                                                      |                                                 |
-| *Event Handling*      |    |                                                                      |                                                 |
-|-----------------------+----+----------------------------------------------------------------------+-------------------------------------------------|
-| onClicked             | :: | ButtonClass b => b -> IO () -> IO (ConnectId b)                      | Event fired when a button is clicked.           |
-| onKeyPress            | :: | WidgetClass w => w ->  (Event -> IO Bool) -> IO (ConnectId w)        | Event fired when a key is pressed.              |
-| onKeyRelease          | :: | WidgetClass w => w ->  (Event -> IO Bool) -> IO (ConnectId w)        | Event fired when key is released.               |
-| onDestroy             | :: | WidgetClass w => w -> IO () -> IO (ConnectId w)                      | Event fired when widget is destroyed.           |
-|                       |    |                                                                      |                                                 |
-|                       |    |                                                                      |                                                 |
+| Function / type       |    | Singature                                                             | Description                                     |
+|-----------------------+----+-----------------------------------------------------------------------+-------------------------------------------------|
+| initGUI               | :: | IO ()                                                                 | Initialize Gtk                                  |
+| mainGUI               | :: | IO ()                                                                 | Run Gtk event loop.                             |
+|                       |    |                                                                       |                                                 |
+| widgetShowAll         | :: | WidgetClass self => self -> IO ()                                     |                                                 |
+|                       |    |                                                                       |                                                 |
+| *Widget Layout*       |    |                                                                       |                                                 |
+|-----------------------+----+-----------------------------------------------------------------------+-------------------------------------------------|
+| vBoxNew               | :: | Bool -> Int IO -> VBox                                                | Create new VBox container                       |
+| hBoxNew               | :: | Bool -> Int IO -> HBox                                                | Create new HBox container                       |
+| containerAdd          | :: | (WidgetClass widget, ContainerClass self) => self -> widget -> IO ()  | Add widget to a container widget like Window.   |
+|                       |    |                                                                       |                                                 |
+|                       |    |                                                                       |                                                 |
+| *Widget Constructors* |    |                                                                       |                                                 |
+|-----------------------+----+-----------------------------------------------------------------------+-------------------------------------------------|
+| windowNew             | :: | IO Window                                                             | Create new window                               |
+|                       |    |                                                                       |                                                 |
+| buttonNew             | :: | IO Button                                                             | Create new button                               |
+| buttonNewWithLabel    | :: | string -> IO Button                                                   | Create button with label                        |
+|                       |    |                                                                       |                                                 |
+| drawingAreaNew        | :: | IO DrawingArea                                                        | Create new drawing area (canvas)                |
+| labelNew              | :: | Maybe string -> IO Label                                              | Create new label                                |
+| entryNew              | :: | IO Entry                                                              | Create new entry (single-line text input)       |
+|                       |    |                                                                       |                                                 |
+| *Window Functions*    |    |                                                                       |                                                 |
+|-----------------------+----+-----------------------------------------------------------------------+-------------------------------------------------|
+| windowSetDefaultSize  | :: | WindowClass self => self -> Int -> Int -> IO ()                       | Set default window size - window, width, height |
+| windowGetDefaultSize  | :: | WindowClass self => self -> IO (Int, Int)                             | Get window default size - (width, height)       |
+|                       |    |                                                                       |                                                 |
+| *Event Handling*      |    |                                                                       |                                                 |
+|-----------------------+----+-----------------------------------------------------------------------+-------------------------------------------------|
+| on                    | :: | object -> Signal object callback -> callback -> IO (ConnectId object) | Register callback                               |
+                                                                   |                                                 |
 
 
 Note: The type _string_ is:
@@ -314,7 +310,397 @@ Compiling:
   $ ./clockDisplay 
 #+END_SRC 
 
-** Build Interface with Glade 
+*** Build Interface with Glade 
+
+Specifying a GUI pragmatically is not viable for a complex GUI
+application because each layout change will require the code to be
+changed and recompiled. The Glade 3 (glade for gtk3) GUI builder
+generate a XML layout containing the GUI specifications. The GUI
+library can read it, build the widgets automatically and display the
+user interface.
+
+*Screenshot:*
+
+Glade Gtk Builder 
+
+[[file:images/glade_builder_screenshot.png][file:images/glade_builder_screenshot.png]]
+
+*GUI application*
+
+[[file:images/haskell_gtk_glade1.png][file:images/haskell_gtk_glade1.png]]
+
+*How it works ?*
+
+The displayed exchange rate BRL/USD (BRL - Brazilian Reals to USD) is
+a random number updated every 2 seconds within the range 3.0 +- 2.0 or
+1.0 (3.0 - 2.0) to 5.0 (3.0 + 2.0).
+
+The user enters the amount of USD and the equivalent BRL amount is
+displayed every time the user changes in input. Example: If the
+current exchange rate is BRL/USD is 2.0 and the "amount in USD" is
+100.0 the 'Total in BRL' will be 200.0.
+
+When the user press the button 'Sum' current amount in BRL 'Total in BRL' is 
+add to the reference totalSumRef and the current sum is displayed in
+the field 'Total Sum'.
+
+
+File: Converter.hs 
+
+#+BEGIN_SRC haskell 
+  {-# language PackageImports #-}
+
+  import Control.Concurrent (forkIO,  forkOS, threadDelay)    
+  import Data.IORef 
+  import Control.Monad (forever)
+  import Control.Monad.Trans
+  import qualified Data.DateTime as Date
+      
+  import Graphics.UI.Gtk
+  import Graphics.UI.Gtk.Builder
+
+  import System.Random (randomRIO)    
+      
+  import Text.Read (readMaybe)
+  import Text.Printf (printf)
+      
+      
+  parseDouble :: String -> Maybe Double 
+  parseDouble text = readMaybe text 
+
+  formatDouble :: Double -> String 
+  formatDouble = printf "%.3f"
+                     
+  -- 1 second dealy = 1 million us = 1 sec   
+  delay1sec = 1000000 
+          
+  -- Execute an IO action in a infinite loop and
+  -- in a regular time interval given in us.
+  --
+  clockUpdate :: Int -> IO () -> IO ()
+  clockUpdate delay ioAction = do
+      forkIO $ forever $ do  
+        threadsEnter         -- Acquire the global Gtk lock
+        ioAction             -- Perform Gtk interaction like update widget 
+        threadsLeave         -- Release the global Gtk lock
+        threadDelay delay    -- Delay in us               
+      return ()
+
+  driveClockDisplays :: Entry -> Entry -> Entry -> IO ()
+  driveClockDisplays amountEntry rateDisplay totalSumDisplay = undefined 
+     
+
+  getAmount :: Entry -> IORef Double -> IO (Maybe Double)
+  getAmount amountEntry rateRef = do
+    rate     <- readIORef rateRef
+    amount   <- parseDouble <$> entryGetText amountEntry
+    return $ fmap (\ x -> x * rate) amount            
+
+  clockUpdateGUI :: Int -> Entry -> Entry -> (IORef Double) -> IO () -> IO ()
+  clockUpdateGUI delay timeDisplay rateDisplay rateRef action =
+      clockUpdate delay $ do
+        rnd <- randomRIO (-2.0, 2.0)
+        let nextRate = rnd + 3.0
+        writeIORef rateRef nextRate
+        action   
+           
+
+  updateAmount :: Entry -> Entry -> IORef Double -> IO ()
+  updateAmount amountEntry totalDisplay rateRef = do
+    rate     <- readIORef rateRef  
+    amount   <- getAmount amountEntry rateRef              
+    case amount of
+      Nothing      -> entrySetText totalDisplay "Error: Invalid input"
+                      
+      Just amount' -> do let total = rate * amount'
+                         entrySetText totalDisplay (formatDouble total)
+
+  updateRate :: Int -> Entry -> Entry -> Entry ->  IORef Double -> IO ()
+  updateRate delay rateDisplay amountEntry totalDisplay rateRef = do
+    clockUpdate delay $ do 
+      rnd <- randomRIO (-2.0, 2.0)
+      let nextRate = rnd + 3.0
+      writeIORef rateRef nextRate                
+      entrySetText rateDisplay $ formatDouble nextRate
+      updateAmount amountEntry totalDisplay rateRef
+
+  updateTimeDisplay :: Entry -> IO ()
+  updateTimeDisplay entry = do
+    clockUpdate delay1sec $ do
+      localTime <- show . Date.toClockTime <$> Date.getCurrentTime
+      entrySetText entry $ localTime        
+
+  clearTotalSum :: Entry -> IORef Double -> IO ()
+  clearTotalSum totalSumDisplay totalSumRef = do
+    writeIORef totalSumRef 0.0
+    entrySetText totalSumDisplay "0.0"  
+    putStrLn "Total sum set to 0.0"
+                 
+  updateTotalSum :: Entry -> Entry ->  IORef Double -> IORef Double -> IO ()
+  updateTotalSum amountEntry totalSumDisplay rateRef totalSumRef = do
+    amount   <- getAmount amountEntry rateRef
+    totalSum <- readIORef totalSumRef
+    case amount of
+      Nothing       -> return ()
+      Just amount'  -> do let nextTotal = amount' + totalSum
+                          writeIORef totalSumRef nextTotal
+                          entrySetText totalSumDisplay (formatDouble nextTotal)  
+                 
+  main :: IO ()    
+  main = do
+    initGUI -- Start Gtk 
+
+    -- Application State - (Mutable references )
+    rateRef     <- newIORef 2.5
+    totalSumRef <- newIORef 0.0      
+    
+    {- ========= Set up widgets and GUI layout ========= -}
+    
+    -- Load GUI layout from XML file built by glade2 GUI builder.
+    --
+    builder         <- builderNew
+    builderAddFromFile builder "converter2.glade"
+   
+
+    let getEntry objID   =  builderGetObject builder castToEntry objID
+    let getButton objID  =  builderGetObject builder castToButton objID  
+                            
+    window          <- builderGetObject builder castToWindow "mainWindow"
+    buttonSum       <- getButton "buttonSum"       -- Sum total amount in BRL to total sum
+    buttonClear     <- getButton "buttonClear"     -- Clear total sum 
+
+    amountEntry     <- getEntry "amountEntry"      -- USD amount entry          
+    rateDisplay     <- getEntry "rateDisplay"      -- Display exchange rate in USD/BRL
+    totalDisplay    <- getEntry "totalDisplay"     -- Display total amount in BRL
+    totalSumDisplay <- getEntry "totalSumDisplay"  -- Display total sum in BRL               
+    timeDisplay     <- getEntry "timeDisplay"      -- Display user local time
+                       
+    widgetShowAll window
+
+    {- ======= Initialize Widget ====== -}
+
+    entrySetText amountEntry "3.0"
+    clearTotalSum totalSumDisplay totalSumRef               
+                  
+    {- ======= Set up events  ========== -}
+              
+    on window deleteEvent $ liftIO mainQuit >> return False
+
+
+    -- let updateGUIHandler     = updateGUI amountEntry rateDisplay totalDisplay totalSumDisplay rateRef 
+    let updateTotalSumHandler = updateTotalSum amountEntry totalSumDisplay rateRef totalSumRef
+    let updateAmountHandler   = updateAmount amountEntry totalDisplay rateRef
+                                
+    on buttonSum buttonReleaseEvent $ tryEvent $ liftIO $ updateTotalSumHandler
+
+    on buttonClear buttonReleaseEvent $ tryEvent $ liftIO $ clearTotalSum totalSumDisplay totalSumRef
+
+    on amountEntry keyReleaseEvent $ tryEvent $ liftIO $ updateAmountHandler
+
+    {- ===== Run long-running background tasks ====== -}
+
+    -- Update time display every 1 second    
+    updateTimeDisplay timeDisplay
+       
+    -- Update exchange rate each 2 seconds 
+    updateRate (2 * delay1sec) rateDisplay amountEntry totalDisplay rateRef
+    
+    -- on window deleteEvent $ liftIO mainQuit >> return False
+              
+    putStrLn "GUI application started. Up and running. OK."
+    mainGUI -- Start Gtk Event loop 
+
+#+END_SRC
+
+File: converter2.glade - Generated by glade3 GUI builder. This file
+can be edited in Glade.
+
+#+BEGIN_SRC xml
+  <?xml version="1.0" encoding="UTF-8"?>
+  <!-- Generated with glade 3.20.0 -->
+  <interface>
+    <requires lib="gtk+" version="3.20"/>
+    <object class="GtkWindow" id="mainWindow">
+      <property name="can_focus">False</property>
+      <property name="default_width">500</property>
+      <child>
+        <object class="GtkGrid">
+          <property name="width_request">400</property>
+          <property name="height_request">300</property>
+          <property name="visible">True</property>
+          <property name="can_focus">False</property>
+          <property name="margin_top">1</property>
+          <property name="margin_bottom">1</property>
+          <property name="hexpand">False</property>
+          <property name="vexpand">False</property>
+          <property name="row_spacing">5</property>
+          <property name="column_homogeneous">True</property>
+          <child>
+            <object class="GtkLabel">
+              <property name="visible">True</property>
+              <property name="can_focus">False</property>
+              <property name="margin_right">30</property>
+              <property name="label" translatable="yes">Exchange Rate BRL/USD</property>
+            </object>
+            <packing>
+              <property name="left_attach">0</property>
+              <property name="top_attach">0</property>
+            </packing>
+          </child>
+          <child>
+            <object class="GtkLabel">
+              <property name="visible">True</property>
+              <property name="can_focus">False</property>
+              <property name="margin_right">77</property>
+              <property name="label" translatable="yes">Amount in USD</property>
+            </object>
+            <packing>
+              <property name="left_attach">0</property>
+              <property name="top_attach">1</property>
+            </packing>
+          </child>
+          <child>
+            <object class="GtkLabel">
+              <property name="visible">True</property>
+              <property name="can_focus">False</property>
+              <property name="margin_right">80</property>
+              <property name="label" translatable="yes">Total in BRL</property>
+            </object>
+            <packing>
+              <property name="left_attach">0</property>
+              <property name="top_attach">2</property>
+            </packing>
+          </child>
+          <child>
+            <object class="GtkButton" id="buttonSum">
+              <property name="label" translatable="yes">Sum</property>
+              <property name="visible">True</property>
+              <property name="can_focus">True</property>
+              <property name="receives_default">True</property>
+            </object>
+            <packing>
+              <property name="left_attach">0</property>
+              <property name="top_attach">3</property>
+            </packing>
+          </child>
+          <child>
+            <object class="GtkButton" id="buttonClear">
+              <property name="label" translatable="yes">Clear</property>
+              <property name="visible">True</property>
+              <property name="can_focus">True</property>
+              <property name="receives_default">True</property>
+            </object>
+            <packing>
+              <property name="left_attach">1</property>
+              <property name="top_attach">3</property>
+            </packing>
+          </child>
+          <child>
+            <object class="GtkLabel">
+              <property name="visible">True</property>
+              <property name="can_focus">False</property>
+              <property name="margin_right">80</property>
+              <property name="label" translatable="yes">Total Sum</property>
+            </object>
+            <packing>
+              <property name="left_attach">0</property>
+              <property name="top_attach">4</property>
+            </packing>
+          </child>
+          <child>
+            <object class="GtkEntry" id="rateDisplay">
+              <property name="visible">True</property>
+              <property name="can_focus">True</property>
+            </object>
+            <packing>
+              <property name="left_attach">1</property>
+              <property name="top_attach">0</property>
+            </packing>
+          </child>
+          <child>
+            <object class="GtkEntry" id="amountEntry">
+              <property name="visible">True</property>
+              <property name="can_focus">True</property>
+            </object>
+            <packing>
+              <property name="left_attach">1</property>
+              <property name="top_attach">1</property>
+            </packing>
+          </child>
+          <child>
+            <object class="GtkEntry" id="totalDisplay">
+              <property name="visible">True</property>
+              <property name="can_focus">True</property>
+            </object>
+            <packing>
+              <property name="left_attach">1</property>
+              <property name="top_attach">2</property>
+            </packing>
+          </child>
+          <child>
+            <object class="GtkEntry" id="totalSumDisplay">
+              <property name="visible">True</property>
+              <property name="can_focus">True</property>
+            </object>
+            <packing>
+              <property name="left_attach">1</property>
+              <property name="top_attach">4</property>
+            </packing>
+          </child>
+          <child>
+            <object class="GtkEntry" id="timeDisplay">
+              <property name="visible">True</property>
+              <property name="can_focus">True</property>
+            </object>
+            <packing>
+              <property name="left_attach">1</property>
+              <property name="top_attach">5</property>
+            </packing>
+          </child>
+          <child>
+            <object class="GtkLabel">
+              <property name="visible">True</property>
+              <property name="can_focus">False</property>
+              <property name="margin_right">80</property>
+              <property name="label" translatable="yes">Time</property>
+            </object>
+            <packing>
+              <property name="left_attach">0</property>
+              <property name="top_attach">5</property>
+            </packing>
+          </child>
+        </object>
+      </child>
+      <child>
+        <placeholder/>
+      </child>
+    </object>
+  </interface>
+
+#+END_SRC
+
+Run as script:
+
+#+BEGIN_SRC sh 
+  $ stack --resolver lts-3.22 --install-ghc runhaskell Converter.hs 
+  Total sum set to 0.0
+  GUI application started. Up and running. OK.
+    
+#+END_SRC
+
+Compile: 
+
+#+BEGIN_SRC sh 
+  $ stack --resolver lts-3.22 --install-ghc exec -- ghc -threaded Converter.hs 
+  [1 of 1] Compiling Main             ( Converter.hs, Converter.o )
+  Linking Converter ...
+
+
+  $ ./Converter 
+  Total sum set to 0.0
+  GUI application started. Up and running. OK.
+
+#+END_SRC
 ** References and Bookmarks 
 
 *Package Documentations*
