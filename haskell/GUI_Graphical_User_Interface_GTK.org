@@ -1,0 +1,417 @@
+#+TITLE: Graphical User Interface with Gtk
+#+DESCRIPTION: Graphical User Interface with GTK 
+#+KEYWORDS: gui, haskell, gtk, fp, gtk 
+#+STARTUP: contents 
+
+* Graphical User Interface with GTK 
+** Overview 
+
+GTK is cross-platform GUI toolkit written in C available for Linux,
+Mac Osx and Windows. The Haskell package Gtk2HS provides bindings to
+it through the foreign function interface FFI.
+
+*Installation* 
+
+ - 1. Install GTK libraries: 
+
+Linux: (Manjaro / Arch Linux)
+
+#+BEGIN_SRC sh
+  $ sudo pacman -S gobject-introspection gobject-introspection-runtime gtksourceview3 webkitgtk webkit2gtk
+#+END_SRC
+
+
+Install gtk2hs (gtk 2.0) package and Haskell 7.10.2
+
+#+BEGIN_SRC sh 
+  $ stack --resolver lts-3.22 --install-ghc install gtk # Install gtk 2.0 bindings 
+  $ stack --resolver lts-3.22 --install-ghc install gtk3 # Install gtk 3.0 bindings
+#+END_SRC
+
+** GUI Terminology 
+
+ - _Widget_ - GUI component or item such as button, text box, entry,
+   menu and etc.
+
+ - _Container_ - Widget that can allocate space for other widgets and
+   contain them such as Window, hbox, vbox and so on.
+
+   - hbox - aligns widgets in a horizontal way.
+
+   - vbox - aligns widgets in a vertical way
+
+ - _Event loop_ - Infinite loop generally running in a single thread
+   which scans for inputs and calls the registered callbacks (aka
+   event handling) when some event happens. The event loop is
+   generally not exposed to the application developer.
+
+ - _Event_ - Notification provided by the GUI event-loop which can call
+   an callback function (aka event-handling) registered by the
+   application programmer.
+
+ - _Callback or event handler_ - Function provided by the application
+   programmer that will be called by the GUI event loop when some
+   event happens. Example: function called when the user clicks in a
+   button.
+
+ - _Event driven or asyncrhonous_ - GUI Programming is _event-driven_
+   or _asyncrhonous_. The program doesn't wait for some input to
+   arrive or poll some input. Instead of doing that the program only
+   needs to _register the event handlers_ to the events that it will
+   react. The event loop calls the event handlers associated to an
+   event when it happens. The drawback of this approach is the loss of
+   control and the possibility of callback hell.
+
+** Gtk2 functions and types 
+
+*Package Documentation* 
+
+Package Gtk2
+
+ - [[https://hackage.haskell.org/package/gtk][gtk: Binding to the Gtk+ graphical user interface library.]]
+
+Package Gtk3
+
+ - [[https://hackage.haskell.org/package/gtk3][gtk3: Binding to the Gtk+ 3 graphical user interface library]]
+
+*Useful Functions for Gtk*
+
+| Function / type             |    | Signature                           | Description                                                        |
+|-----------------------------+----+-------------------------------------+--------------------------------------------------------------------|
+| *Module* Data.IORef         |    |                                     |                                                                    |
+|-----------------------------+----+-------------------------------------+--------------------------------------------------------------------|
+| newIORef                    | :: | a -> IO (IORef a)                   | Create new IO Reference initialized with some value.               |
+| readIORef                   | :: | IORef a -> IO a                     | Read IO reference.                                                 |
+| writeIORef                  | :: | writeIORef :: IORef a -> a -> IO () | Update IO reference                                                |
+| modifyIORef                 | :: | IORef a -> (a -> a) -> IO ()        | Apply function to IO reference value and update it.                |
+|                             |    |                                     |                                                                    |
+| *Module* Control.Concurrent |    |                                     |                                                                    |
+|-----------------------------+----+-------------------------------------+--------------------------------------------------------------------|
+| forkIO                      | :: | IO () -> IO ThreadId                | Run IO action in a new lightweight thread                          |
+| forkIOS                     | :: | IO () -> IO ThreadId                | Run IO action in a new os (aka native) thread                      |
+| killThread                  | :: | ThreadId -> IO ()                   | Stop a thread given its ID                                         |
+| threadDelay                 | :: | threadDelay :: Int -> IO ()         | Pause current thread for N micro seconds (us) or N x 1e-6 seconds. |
+|                             |    |                                     |                                                                    |
+
+*Gtk Functions*
+
+| Function / type       |    | Singature                                                            | Description                                     |
+|-----------------------+----+----------------------------------------------------------------------+-------------------------------------------------|
+| initGUI               | :: | IO ()                                                                | Initialize Gtk                                  |
+| mainGUI               | :: | IO ()                                                                | Run Gtk event loop.                             |
+|                       |    |                                                                      |                                                 |
+| widgetShowAll         | :: | WidgetClass self => self -> IO ()                                    |                                                 |
+|                       |    |                                                                      |                                                 |
+| *Widget Layout*       |    |                                                                      |                                                 |
+|-----------------------+----+----------------------------------------------------------------------+-------------------------------------------------|
+| vBoxNew               | :: | Bool -> Int IO -> VBox                                               | Create new VBox container                       |
+| hBoxNew               | :: | Bool -> Int IO -> HBox                                               | Create new HBox container                       |
+| containerAdd          | :: | (WidgetClass widget, ContainerClass self) => self -> widget -> IO () | Add widget to a container widget like Window.   |
+|                       |    |                                                                      |                                                 |
+|                       |    |                                                                      |                                                 |
+| *Widget Constructors* |    |                                                                      |                                                 |
+|-----------------------+----+----------------------------------------------------------------------+-------------------------------------------------|
+| windowNew             | :: | IO Window                                                            | Create new window                               |
+|                       |    |                                                                      |                                                 |
+| buttonNew             | :: | IO Button                                                            | Create new button                               |
+| buttonNewWithLabel    | :: | string -> IO Button                                                  | Create button with label                        |
+|                       |    |                                                                      |                                                 |
+| drawingAreaNew        | :: | IO DrawingArea                                                       | Create new drawing area (canvas)                |
+| labelNew              | :: | Maybe string -> IO Label                                             | Create new label                                |
+| entryNew              | :: | IO Entry                                                             | Create new entry (single-line text input)       |
+|                       |    |                                                                      |                                                 |
+| *Window Functions*    |    |                                                                      |                                                 |
+|-----------------------+----+----------------------------------------------------------------------+-------------------------------------------------|
+| windowSetDefaultSize  | :: | WindowClass self => self -> Int -> Int -> IO ()                      | Set default window size - window, width, height |
+| windowGetDefaultSize  | :: | WindowClass self => self -> IO (Int, Int)                            | Get window default size - (width, height)       |
+|                       |    |                                                                      |                                                 |
+| *Event Handling*      |    |                                                                      |                                                 |
+|-----------------------+----+----------------------------------------------------------------------+-------------------------------------------------|
+| onClicked             | :: | ButtonClass b => b -> IO () -> IO (ConnectId b)                      | Event fired when a button is clicked.           |
+| onKeyPress            | :: | WidgetClass w => w ->  (Event -> IO Bool) -> IO (ConnectId w)        | Event fired when a key is pressed.              |
+| onKeyRelease          | :: | WidgetClass w => w ->  (Event -> IO Bool) -> IO (ConnectId w)        | Event fired when key is released.               |
+| onDestroy             | :: | WidgetClass w => w -> IO () -> IO (ConnectId w)                      | Event fired when widget is destroyed.           |
+|                       |    |                                                                      |                                                 |
+|                       |    |                                                                      |                                                 |
+
+
+Note: The type _string_ is:
+
+#+BEGIN_SRC sh 
+  > :t Gtk.labelNew
+  Gtk.labelNew
+    :: System.Glib.UTFString.GlibString string =>
+       Maybe string -> IO Label
+  > 
+#+END_SRC
+
+** Examples 
+*** Simple GUI1
+   :PROPERTIES:
+   :ID:       cbd3ba2f-35c2-492e-88aa-98e6bae4571e
+   :END:
+
+Screenshot: 
+
+[[file:images/haskell_gtk_gui1.png][file:images/haskell_gtk_gui1.png]]
+
+File: gui1.hs
+
+#+BEGIN_SRC haskell :tangle /tmp/gui1.hs
+  import Graphics.UI.Gtk
+
+  main :: IO ()    
+  main = do
+    initGUI  -- Start Gtk. Must be called before creating the widgets
+
+    -- Create Widgets 
+    window  <- windowNew
+               
+    btn     <- buttonNew                       
+    set btn [ buttonLabel := "Click me!" ]
+
+    containerAdd window btn 
+        
+    widgetShowAll window
+                  
+    -- Set up events and register callbacks (aka event handlers)
+    --
+    onClicked btn (putStrLn "I was clicked")
+    onDestroy window mainQuit  -- Exit application if the user click on exit button 
+
+    mainGUI  -- Start GTK event loop and and react to events.
+                   
+#+END_SRC
+
+*Running:*
+
+Conflict with package gtk3. 
+
+#+BEGIN_SRC sh 
+  $ stack --resolver lts-3.22 runhaskell /tmp/gui1.hs 
+
+  /tmp/gui1.hs:2:8:
+      Ambiguous module name ‘Graphics.UI.Gtk’:
+        it was found in multiple packages:
+        gtk3-0.14.2@gtk3_AhgiKTeOdGE7p0vrO3qlnB gtk-0.13.9@gtk_DUp9k2RGwvV1yhb3dtjYiE
+
+#+END_SRC
+
+Solving ambiguous module name:
+
+#+BEGIN_SRC sh 
+  $ stack --resolver lts-3.22 exec -- ghc-pkg hide gtk3
+  $ stack --resolver lts-3.22 runhaskell /tmp/gui1.hs    # Now it works 
+#+END_SRC
+
+*** GUI with long running task - Clock display
+
+Screenshot: 
+
+[[file:images/haskell_gtk_clock_display.png][file:images/haskell_gtk_clock_display.png]]
+
+
+File: clockDisplay.hs 
+
+#+BEGIN_SRC haskell 
+  import Control.Concurrent (forkIO,  forkOS, threadDelay)    
+  import Data.IORef 
+  import Control.Monad (forever)
+
+  import qualified Data.DateTime as Date
+      
+  import Graphics.UI.Gtk
+
+  -- 1 second dealy = 1 million us = 1 sec   
+  delay1sec = 1000000 
+      
+  ignore :: IO a -> IO ()
+  ignore ioAction = do
+    _ <- ioAction
+    return ()
+
+  {-| Run IO action in infinite loop in a new thread, 
+      without block Gtk main thread.  
+
+  threadLopp delayMilliSeconds GtkIOAction 
+
+  -}         
+  threadLoop :: Int -> IO () -> IO ()
+  threadLoop delay ioAction = do
+      forkIO $ forever $ do  
+        threadsEnter         -- Acquire the global Gtk lock
+        ioAction             -- Perform Gtk interaction like update widget 
+        threadsLeave         -- Release the global Gtk lock
+        threadDelay delay    -- Delay in us               
+      return ()
+           
+  driveDisplay :: Entry -> IO ()
+  driveDisplay entry = do
+      acc <- newIORef 0 
+      ignore $ forkIO $ forever $ do
+        counter <- readIORef acc             
+        entrySetText entry $ show counter
+        writeIORef acc (counter + 1)
+        threadDelay delay1sec
+
+
+  driveDisplayClock :: Entry -> IO ()
+  driveDisplayClock entry =
+      threadLoop delay1sec $ do
+        localTime <- show . Date.toClockTime <$> Date.getCurrentTime
+        entrySetText entry $ localTime      
+    
+      
+  main :: IO ()
+  main = do
+    initGUI -- Init Gtk 
+
+    -- Create main window 
+    window  <- windowNew
+               
+    -- Create new user input or entry            
+    display <- entryNew
+
+        
+    set window  [ windowTitle           := "Clock time App"
+                 ,windowDefaultWidth    := 300
+                 ,windowDefaultHeight   := 100
+                 ,windowResizable       := True
+                 ,containerBorderWidth := 2  
+                ]
+
+    -- Add entry to window 
+    containerAdd window display              
+
+    -- entrySetText display "Display Message"
+    -- driveDisplay display
+    driveDisplayClock display
+                      
+    ---------------------------------------------
+    -- Set Signals or Events callbacks         --
+    ---------------------------------------------
+    
+    -- Exit app when the window is deleted (User clicks exit button).
+    onDestroy window mainQuit  -- Exit application if the user click on exit button   
+    
+    -- Display Widget 
+    widgetShowAll window
+                  
+    -- Start GUI Event loop 
+    mainGUI
+
+#+END_SRC
+
+Running as script:
+
+#+BEGIN_SRC sh 
+  $ stack --resolver lts-3.22 --install-ghc runhaskell clockDisplay.hs
+#+END_SRC
+
+Compiling: 
+
+#+BEGIN_SRC sh 
+  $ stack --resolver lts-3.22 --install-ghc exec -- ghc -threaded clockDisplay.hs  
+  Linking clockDisplay ...
+
+  $ ./clockDisplay 
+#+END_SRC 
+
+** Build Interface with Glade 
+** References and Bookmarks 
+
+*Package Documentations*
+
+ - [[https://hackage.haskell.org/package/gtk][gtk: Binding to the Gtk+ graphical user interface library.]]
+
+ - [[https://hackage.haskell.org/package/gtk3][gtk3: Binding to the Gtk+ 3 graphical user interface library]]
+
+*GTK Libraries for Windows*
+
+ - [[https://sourceforge.net/projects/gtk-win/][GTK+ for Windows Runtime Environment download | SourceForge.net]]
+
+ - [[https://sourceforge.net/projects/gtk-mingw/][GTK+ for Windows (MinGW) download | SourceForge.net]]
+
+ - [[https://tschoonj.github.io/blog/2014/09/29/gtk2-64-bit-windows-runtime-environment-installer-now-on-github/][Gtk2 64-bit Windows Runtime Environment Installer: now on GitHub! - The Code Dungeon]]
+
+
+*Misc*
+
+ - Kenneth Hoste. *An Introduction to Gtk2Hs, a Haskell GUI
+   Library*. Available at
+   <https://pdfs.semanticscholar.org/dd9a/8d3986630da6dea10c504c907681fdb3c322.pdf>
+
+
+ - [[https://wiki.haskell.org/Gtk2Hs/Tutorials][Gtk2Hs/Tutorials - HaskellWiki]]
+
+
+ - Krasimir Angelov. *Gtk2Hs Tutorial*
+   <http://www.cse.chalmers.se/edu/year/2010/course/TDA451_Functional_Programming/FPLectures/06A-gtk2hs.pdf>
+
+
+*Papers* 
+
+ - Thomas Van Noort. *Building GUIs in Haskell - Comparing Gtk2Hs and
+   wxHaskell*. Available at <http://foswiki.cs.uu.nl/foswiki/pub/Stc/BuildingGUIsInHaskell/GUI-paper.pdf>
+   or <https://archive.is/8VRgN>
+
+
+
+ - John Peterson, Antony Courtney and Bart Robinson. *Can GUI
+   Programming Be Liberated From The IO Monad*. Available at
+   <http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.112.2186&rep=rep1&type=pdf>
+
+
+
+ - Beatriz Alarcón, Salvador Lucas *Building .NET GUIs for Haskell
+   applications*. Available at
+   <http://s3.amazonaws.com/academia.edu.documents/41680191/NET06.pdf?AWSAccessKeyId=AKIAIWOWYYGZ2Y53UL3A&Expires=1489302403&Signature=W5tajDKres%2Fv1dgCxuuyyLyK6as%3D&response-content-disposition=inline%3B%20filename%3DBuilding_.NET_GUIs_for_Haskell_applicati.pdf>
+
+
+ - Daan Leijen. *wxHaskell - A Portable and Concise GUI Library for
+   Haskell*. Available at
+   <http://www.inf.ufpr.br/andrey/ci062/wxhaskell.pdf>
+
+ - Sebastiaan la Fleur. *Outsourcing the Graphical Input/Output using
+   Streams and Haskell* <http://referaat.cs.utwente.nl/conference/20/paper/7418/outsourcing-the-graphical-input-output-using-streams-and-haskell.pdf>
+
+
+*Wikipedia*
+
+ - [[https://en.wikipedia.org/wiki/GTK%2B][GTK+ - Wikipedia]]
+
+
+ - [[https://en.wikipedia.org/wiki/Continuation-passing_style][Continuation-passing style - Wikipedia]]
+
+
+ - [[https://en.wikipedia.org/wiki/Event_loop][Event loop - Wikipedia]]
+
+
+ - [[https://en.wikipedia.org/wiki/Event_(computing)#Event_handler][Event (computing) - Wikipedia]]
+
+
+ - [[https://en.wikipedia.org/wiki/Asynchronous_I/O][Asynchronous I/O - Wikipedia]]
+
+
+ - [[https://en.wikipedia.org/wiki/Event-driven_programming][Event-driven programming - Wikipedia]]
+
+
+ - [[https://en.wikipedia.org/wiki/Polling_(computer_science)][Polling (computer science) - Wikipedia]]
+
+
+ - [[https://en.wikipedia.org/wiki/Interrupt_handler][Interrupt handler - Wikipedia]]
+
+
+ - [[https://en.wikipedia.org/wiki/Callback_(computer_programming)][Callback (computer programming) - Wikipedia]]
+
+
+ - [[https://en.wikipedia.org/wiki/Windowing_system][Windowing system - Wikipedia]]
+
+
+ - [[https://en.wikipedia.org/wiki/Observer_pattern][Observer pattern - Wikipedia]]
+
+
+ - [[https://en.wikipedia.org/wiki/Event-driven_architecture][Event-driven architecture - Wikipedia]]
+
+
+ - [[https://en.wikipedia.org/wiki/Inversion_of_control][Inversion of control - Wikipedia]]
