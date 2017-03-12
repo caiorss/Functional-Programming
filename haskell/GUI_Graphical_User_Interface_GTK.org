@@ -326,6 +326,8 @@ Compiling:
 
  - [[https://hackage.haskell.org/package/gtk3][gtk3: Binding to the Gtk+ 3 graphical user interface library]]
 
+ - [[https://github.com/gtk2hs/gtk2hs][GitHub - gtk2hs/gtk2hs: GUI library for Haskell based on GTK+]] (Github)
+
 *GTK Libraries for Windows*
 
  - [[https://sourceforge.net/projects/gtk-win/][GTK+ for Windows Runtime Environment download | SourceForge.net]]
@@ -337,6 +339,9 @@ Compiling:
 
 *Misc*
 
+ - [[http://book.realworldhaskell.org/read/gui-programming-with-gtk-hs.html][Chapter 23. GUI Programming with gtk2hs]]
+
+
  - Kenneth Hoste. *An Introduction to Gtk2Hs, a Haskell GUI
    Library*. Available at
    <https://pdfs.semanticscholar.org/dd9a/8d3986630da6dea10c504c907681fdb3c322.pdf>
@@ -347,6 +352,15 @@ Compiling:
 
  - Krasimir Angelov. *Gtk2Hs Tutorial*
    <http://www.cse.chalmers.se/edu/year/2010/course/TDA451_Functional_Programming/FPLectures/06A-gtk2hs.pdf>
+
+
+ - [[http://tab.snarc.org/posts/haskell/2010-11-13-webkit_part1.html][Vincent Hanquez 2010-11-13-webkit_part1]]
+
+
+ - [[http://rickardlindberg.me/writing/reflections-on-programming/2012-02-11-hello-world-haskell-gtk/][Hello world in Haskell and GTK | Rickard's personal homepage]]
+
+
+ - [[http://berlinbrownresearch.blogspot.com.br/2011/03/first-example-ever-on-gtk-and-haskell.html][Berlin Research Code Posts: First example EVER on GTK and Haskell, Render Primitives]]
 
 
 *Papers* 
