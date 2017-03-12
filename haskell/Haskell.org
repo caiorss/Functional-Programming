@@ -2,7 +2,7 @@
 #+TITLE: Setting up a Haskell Development Environment
 #+DESCRIPTION:
 #+KEYWORDS: haskell development environment fp ide editor stack
-#+STARTUP: overview 
+#+STARTUP: showall 
 
 * Haskell
 ** Overview
@@ -327,7 +327,102 @@ File gui1.hs
     mainGUI
 #+END_SRC
 
+***** Solve the problem: Ambiguous module name problem 
 
+Sample code: 
+
+File: gui1.hs 
+
+#+BEGIN_SRC haskell 
+  import Graphics.UI.Gtk
+
+  main :: IO ()    
+  main = do
+    initGUI  
+    window  <- windowNew
+    widgetShowAll window
+    onDestroy window mainQuit
+    mainGUI  
+#+END_SRC
+
+*Problem description*
+
+It happens because there are two packages gtk2hs installed gtk (gtk 2.0) and gtk3 (gtk 3.0).
+
+#+BEGIN_SRC sh 
+  $ stack --resolver lts-3.22 runhaskell /tmp/gui1.hs 
+
+  /tmp/gui1.hs:2:8:
+      Ambiguous module name ‘Graphics.UI.Gtk’:
+        it was found in multiple packages:
+        gtk3-0.14.2@gtk3_AhgiKTeOdGE7p0vrO3qlnB gtk-0.13.9@gtk_DUp9k2RGwvV1yhb3dtjYiE
+#+END_SRC
+
+*Solution 1*
+
+
+#+BEGIN_SRC sh 
+$ stack --resolver lts-3.22 exec -- ghc-pkg hide gtk3
+#+END_SRC
+
+Running the sample code:
+
+#+BEGIN_SRC sh 
+  $ stack --resolver lts-3.22 runhaskell /tmp/gui1.hs 
+#+END_SRC
+
+*Solution 2*
+
+An alternative solution is to use the language extension: 
+
+#+BEGIN_SRC haskell 
+  {-# language PackageImports #-}
+  import "gtk" Graphics.UI.Gtk
+
+  main :: IO ()    
+  main = do
+    initGUI  
+    window  <- windowNew
+    widgetShowAll window
+    onDestroy window mainQuit
+    mainGUI  
+#+END_SRC
+
+For gtk3 package the code would be: 
+
+#+BEGIN_SRC sh haskell 
+  {-# language PackageImports #-}
+
+  import "gtk3" Graphics.UI.Gtk
+  import "gtk3" Graphics.UI.Gtk.Builder
+  import "gtk3" Graphics.UI.Gtk.Gdk.EventM
+
+  import Control.Concurrent (forkIO, killThread)
+
+  main :: IO ()
+  main = do
+    initGUI
+
+    {---------- Create GUI Widgets -------}
+
+    -- Create a new Window
+    w <- windowNew
+
+    set w [windowTitle := "Hello gtk2hs"]
+    windowSetDefaultSize w 300 400
+
+    --    Add a button
+    --
+    b <- buttonNewWithLabel "click me"
+    containerAdd w b
+
+    {--------- Add Events ---------------}
+    onClicked b (putStrLn "I was clicked !")
+
+    {--------- Start GUI Loop --------}
+    widgetShowAll w -- Refresh the Window to display the button.
+    mainGUI    
+#+END_SRC
 
 *** Build and manage projects with Stack
 

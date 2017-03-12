@@ -1,0 +1,814 @@
+#+TITLE: Graphical User Interface with Gtk
+#+DESCRIPTION: Graphical User Interface with GTK 
+#+KEYWORDS: gui, haskell, gtk, fp, gtk 
+#+STARTUP: contents 
+
+* Graphical User Interface with GTK 
+** Overview 
+
+GTK is cross-platform GUI toolkit written in C available for Linux,
+Mac Osx and Windows. The Haskell package Gtk2HS provides bindings to
+it through the foreign function interface FFI.
+
+*Installation* 
+
+ - 1. Install GTK libraries: 
+
+Linux: (Manjaro / Arch Linux)
+
+#+BEGIN_SRC sh
+  $ sudo pacman -S gobject-introspection gobject-introspection-runtime gtksourceview3 webkitgtk webkit2gtk
+#+END_SRC
+
+
+Install gtk2hs (gtk 2.0) package and Haskell 7.10.2
+
+#+BEGIN_SRC sh 
+  $ stack --resolver lts-3.22 --install-ghc install gtk datetime  # Install gtk 2.0 bindings
+  $ stack --resolver lts-3.22 --install-ghc install gtk3 datetime # Install gtk 3.0 bindings
+#+END_SRC
+
+This section will use gtk3 (gtk 3.0) package due to it support glade3 generated
+layout files unlike the gtk (gtk 2.0), despite most of documentation and examples be available
+for gtk 2.0.
+
+** GUI Terminology 
+
+ - _Widget_ - GUI component or item such as button, text box, entry,
+   menu and etc.
+
+ - _Container_ - Widget that can allocate space for other widgets and
+   contain them such as Window, hbox, vbox and so on.
+
+   - hbox - aligns widgets in a horizontal way.
+
+   - vbox - aligns widgets in a vertical way
+
+ - _Event loop_ - Infinite loop generally running in a single thread
+   which scans for inputs and calls the registered callbacks (aka
+   event handling) when some event happens. The event loop is
+   generally not exposed to the application developer.
+
+ - _Event_ - Notification provided by the GUI event-loop which can call
+   an callback function (aka event-handling) registered by the
+   application programmer.
+
+ - _Callback or event handler_ - Function provided by the application
+   programmer that will be called by the GUI event loop when some
+   event happens. Example: function called when the user clicks in a
+   button.
+
+ - _Event driven or asyncrhonous_ - GUI Programming is _event-driven_
+   or _asyncrhonous_. The program doesn't wait for some input to
+   arrive or poll some input. Instead of doing that the program only
+   needs to _register the event handlers_ to the events that it will
+   react. The event loop calls the event handlers associated to an
+   event when it happens. The drawback of this approach is the loss of
+   control and the possibility of callback hell.
+
+** Gtk3 functions and types 
+
+*Package Documentation* 
+
+Package Gtk2
+
+ - [[https://hackage.haskell.org/package/gtk][gtk Binding to the Gtk+ graphical user interface library.]]
+
+Package Gtk3
+
+ - [[https://hackage.haskell.org/package/gtk3][gtk3 Binding to the Gtk+ 3 graphical user interface library]]
+
+*Useful Functions for Gtk*
+
+| Function / type             |    | Signature                           | Description                                                        |
+|-----------------------------+----+-------------------------------------+--------------------------------------------------------------------|
+| *Module* Data.IORef         |    |                                     |                                                                    |
+|-----------------------------+----+-------------------------------------+--------------------------------------------------------------------|
+| newIORef                    | :: | a -> IO (IORef a)                   | Create new IO Reference initialized with some value.               |
+| readIORef                   | :: | IORef a -> IO a                     | Read IO reference.                                                 |
+| writeIORef                  | :: | writeIORef :: IORef a -> a -> IO () | Update IO reference                                                |
+| modifyIORef                 | :: | IORef a -> (a -> a) -> IO ()        | Apply function to IO reference value and update it.                |
+|                             |    |                                     |                                                                    |
+| *Module* Control.Concurrent |    |                                     |                                                                    |
+|-----------------------------+----+-------------------------------------+--------------------------------------------------------------------|
+| forkIO                      | :: | IO () -> IO ThreadId                | Run IO action in a new lightweight thread                          |
+| forkIOS                     | :: | IO () -> IO ThreadId                | Run IO action in a new os (aka native) thread                      |
+| killThread                  | :: | ThreadId -> IO ()                   | Stop a thread given its ID                                         |
+| threadDelay                 | :: | threadDelay :: Int -> IO ()         | Pause current thread for N micro seconds (us) or N x 1e-6 seconds. |
+|                             |    |                                     |                                                                    |
+
+*Gtk Functions*
+
+| Function / type       |    | Singature                                                             | Description                                     |
+|-----------------------+----+-----------------------------------------------------------------------+-------------------------------------------------|
+| initGUI               | :: | IO ()                                                                 | Initialize Gtk                                  |
+| mainGUI               | :: | IO ()                                                                 | Run Gtk event loop.                             |
+|                       |    |                                                                       |                                                 |
+| widgetShowAll         | :: | WidgetClass self => self -> IO ()                                     |                                                 |
+|                       |    |                                                                       |                                                 |
+| *Widget Layout*       |    |                                                                       |                                                 |
+|-----------------------+----+-----------------------------------------------------------------------+-------------------------------------------------|
+| vBoxNew               | :: | Bool -> Int IO -> VBox                                                | Create new VBox container                       |
+| hBoxNew               | :: | Bool -> Int IO -> HBox                                                | Create new HBox container                       |
+| containerAdd          | :: | (WidgetClass widget, ContainerClass self) => self -> widget -> IO ()  | Add widget to a container widget like Window.   |
+|                       |    |                                                                       |                                                 |
+|                       |    |                                                                       |                                                 |
+| *Widget Constructors* |    |                                                                       |                                                 |
+|-----------------------+----+-----------------------------------------------------------------------+-------------------------------------------------|
+| windowNew             | :: | IO Window                                                             | Create new window                               |
+|                       |    |                                                                       |                                                 |
+| buttonNew             | :: | IO Button                                                             | Create new button                               |
+| buttonNewWithLabel    | :: | string -> IO Button                                                   | Create button with label                        |
+|                       |    |                                                                       |                                                 |
+| drawingAreaNew        | :: | IO DrawingArea                                                        | Create new drawing area (canvas)                |
+| labelNew              | :: | Maybe string -> IO Label                                              | Create new label                                |
+| entryNew              | :: | IO Entry                                                              | Create new entry (single-line text input)       |
+|                       |    |                                                                       |                                                 |
+| *Window Functions*    |    |                                                                       |                                                 |
+|-----------------------+----+-----------------------------------------------------------------------+-------------------------------------------------|
+| windowSetDefaultSize  | :: | WindowClass self => self -> Int -> Int -> IO ()                       | Set default window size - window, width, height |
+| windowGetDefaultSize  | :: | WindowClass self => self -> IO (Int, Int)                             | Get window default size - (width, height)       |
+|                       |    |                                                                       |                                                 |
+| *Event Handling*      |    |                                                                       |                                                 |
+|-----------------------+----+-----------------------------------------------------------------------+-------------------------------------------------|
+| on                    | :: | object -> Signal object callback -> callback -> IO (ConnectId object) | Register callback                               |
+                                                                   |                                                 |
+
+
+Note: The type _string_ is:
+
+#+BEGIN_SRC sh 
+  > :t Gtk.labelNew
+  Gtk.labelNew
+    :: System.Glib.UTFString.GlibString string =>
+       Maybe string -> IO Label
+  > 
+#+END_SRC
+
+** Examples 
+*** Simple GUI
+   :PROPERTIES:
+   :ID:       cbd3ba2f-35c2-492e-88aa-98e6bae4571e
+   :END:
+
+Screenshot: 
+
+[[file:images/haskell_gtk_gui1.png][file:images/haskell_gtk_gui1.png]]
+
+File: gui1.hs
+
+
+#+BEGIN_SRC haskell 
+  import Graphics.UI.Gtk
+  import Graphics.UI.Gtk.Gdk.EventM
+  import qualified Graphics.UI.Gtk.Gdk.Events as E
+      
+  import Control.Monad.Trans 
+
+  main :: IO ()    
+  main = do
+    initGUI  -- Start Gtk. Must be called before creating the widgets
+
+    -- Create Widgets 
+    window  <- windowNew
+               
+    btn     <- buttonNew                       
+    set btn [ buttonLabel := "Click me!" ]
+
+    containerAdd window btn 
+        
+    widgetShowAll window
+                  
+    -- Set up events and register callbacks (aka event handlers)
+    --                 
+    on btn buttonPressEvent $ tryEvent $ liftIO $ putStrLn "I was clicked"
+
+    -- Exit application if the user click on exit button 
+    on window deleteEvent $ liftIO mainQuit >> return False   
+
+    mainGUI  -- Start GTK event loop and and react to events.                 
+#+END_SRC
+
+
+*Running:*
+
+
+#+BEGIN_SRC sh 
+  $ stack --resolver lts-3.22 runhaskell /tmp/gui1.hs    # Now it works 
+#+END_SRC
+
+*** GUI with long running task - Clock display
+
+Screenshot: 
+
+[[file:images/haskell_gtk_clock_display.png][file:images/haskell_gtk_clock_display.png]]
+
+
+File: clockDisplay.hs 
+
+#+BEGIN_SRC haskell 
+  import Control.Concurrent (forkIO,  forkOS, threadDelay)    
+  import Data.IORef 
+  import Control.Monad (forever)
+  import Control.Monad.Trans (liftIO)
+
+  import qualified Data.DateTime as Date
+      
+  import Graphics.UI.Gtk
+
+  -- 1 second dealy = 1 million us = 1 sec   
+  delay1sec = 1000000 
+      
+  ignore :: IO a -> IO ()
+  ignore ioAction = do
+    _ <- ioAction
+    return ()
+
+  {-| Run IO action in infinite loop in a new thread, 
+      without block Gtk main thread.  
+
+  threadLopp delayMilliSeconds GtkIOAction 
+
+  -}         
+  threadLoop :: Int -> IO () -> IO ()
+  threadLoop delay ioAction = do
+      forkIO $ forever $ do  
+        threadsEnter         -- Acquire the global Gtk lock
+        ioAction             -- Perform Gtk interaction like update widget 
+        threadsLeave         -- Release the global Gtk lock
+        threadDelay delay    -- Delay in us               
+      return ()
+           
+  driveDisplay :: Entry -> IO ()
+  driveDisplay entry = do
+      acc <- newIORef 0 
+      ignore $ forkIO $ forever $ do
+        counter <- readIORef acc             
+        entrySetText entry $ show counter
+        writeIORef acc (counter + 1)
+        threadDelay delay1sec
+
+
+  driveDisplayClock :: Entry -> IO ()
+  driveDisplayClock entry =
+      threadLoop delay1sec $ do
+        localTime <- show . Date.toClockTime <$> Date.getCurrentTime
+        entrySetText entry $ localTime      
+    
+      
+  main :: IO ()
+  main = do
+    initGUI -- Init Gtk 
+
+    -- Create main window 
+    window  <- windowNew
+               
+    -- Create new user input or entry            
+    display <- entryNew
+
+        
+    set window  [ windowTitle           := "Clock time App"
+                 ,windowDefaultWidth    := 300
+                 ,windowDefaultHeight   := 100
+                 ,windowResizable       := True
+                 ,containerBorderWidth := 2  
+                ]
+
+    -- Add entry to window 
+    containerAdd window display              
+
+    -- entrySetText display "Display Message"
+    -- driveDisplay display
+    driveDisplayClock display
+                      
+    ---------------------------------------------
+    -- Set Signals or Events callbacks         --
+    ---------------------------------------------
+    
+    -- Exit app when the window is deleted (User clicks exit button).
+    on window deleteEvent $ liftIO mainQuit >> return False
+    
+    -- Display Widget 
+    widgetShowAll window
+                  
+    -- Start GUI Event loop 
+    mainGUI
+#+END_SRC
+
+Running as script:
+
+#+BEGIN_SRC sh 
+  $ stack --resolver lts-3.22 --install-ghc runhaskell clockDisplay.hs
+#+END_SRC
+
+Compiling: 
+
+#+BEGIN_SRC sh 
+  $ stack --resolver lts-3.22 --install-ghc exec -- ghc -threaded clockDisplay.hs  
+  Linking clockDisplay ...
+
+  $ ./clockDisplay 
+#+END_SRC 
+
+*** Build Interface with Glade 
+
+Specifying a GUI pragmatically is not viable for a complex GUI
+application because each layout change will require the code to be
+changed and recompiled. The Glade 3 (glade for gtk3) GUI builder
+generate a XML layout containing the GUI specifications. The GUI
+library can read it, build the widgets automatically and display the
+user interface.
+
+*Screenshot:*
+
+Glade Gtk Builder 
+
+[[file:images/glade_builder_screenshot.png][file:images/glade_builder_screenshot.png]]
+
+*GUI application*
+
+[[file:images/haskell_gtk_glade1.png][file:images/haskell_gtk_glade1.png]]
+
+*How it works ?*
+
+The displayed exchange rate BRL/USD (BRL - Brazilian Reals to USD) is
+a random number updated every 2 seconds within the range 3.0 +- 2.0 or
+1.0 (3.0 - 2.0) to 5.0 (3.0 + 2.0).
+
+The user enters the amount of USD and the equivalent BRL amount is
+displayed every time the user changes in input or the exchange rate is
+updated. Example: If the current exchange rate is BRL/USD is 2.0 and
+the "amount in USD" is 100.0 the 'Total in BRL' will be 200.0.
+
+When the user press the button 'Sum' current amount in BRL 'Total in BRL' is 
+add to the reference totalSumRef and the current sum is displayed in
+the field 'Total Sum'.
+
+
+File: Converter.hs 
+
+#+BEGIN_SRC haskell 
+  {-# language PackageImports #-}
+
+  import Control.Concurrent (forkIO,  forkOS, threadDelay)    
+  import Data.IORef 
+  import Control.Monad (forever)
+  import Control.Monad.Trans
+  import qualified Data.DateTime as Date
+      
+  import Graphics.UI.Gtk
+  import Graphics.UI.Gtk.Builder
+
+  import System.Random (randomRIO)    
+      
+  import Text.Read (readMaybe)
+  import Text.Printf (printf)
+      
+      
+  parseDouble :: String -> Maybe Double 
+  parseDouble text = readMaybe text 
+
+  formatDouble :: Double -> String 
+  formatDouble = printf "%.3f"
+                     
+  -- 1 second dealy = 1 million us = 1 sec   
+  delay1sec = 1000000 
+          
+  -- Execute an IO action in a infinite loop and
+  -- in a regular time interval given in us.
+  --
+  clockUpdate :: Int -> IO () -> IO ()
+  clockUpdate delay ioAction = do
+      forkIO $ forever $ do  
+        threadsEnter         -- Acquire the global Gtk lock
+        ioAction             -- Perform Gtk interaction like update widget 
+        threadsLeave         -- Release the global Gtk lock
+        threadDelay delay    -- Delay in us               
+      return ()
+
+  driveClockDisplays :: Entry -> Entry -> Entry -> IO ()
+  driveClockDisplays amountEntry rateDisplay totalSumDisplay = undefined 
+     
+
+  getAmount :: Entry -> IORef Double -> IO (Maybe Double)
+  getAmount amountEntry rateRef = do
+    rate     <- readIORef rateRef
+    amount   <- parseDouble <$> entryGetText amountEntry
+    return $ fmap (\ x -> x * rate) amount            
+
+  clockUpdateGUI :: Int -> Entry -> Entry -> (IORef Double) -> IO () -> IO ()
+  clockUpdateGUI delay timeDisplay rateDisplay rateRef action =
+      clockUpdate delay $ do
+        rnd <- randomRIO (-2.0, 2.0)
+        let nextRate = rnd + 3.0
+        writeIORef rateRef nextRate
+        action   
+           
+
+  updateAmount :: Entry -> Entry -> IORef Double -> IO ()
+  updateAmount amountEntry totalDisplay rateRef = do
+    rate     <- readIORef rateRef  
+    amount   <- getAmount amountEntry rateRef              
+    case amount of
+      Nothing      -> entrySetText totalDisplay "Error: Invalid input"
+                      
+      Just amount' -> do let total = rate * amount'
+                         entrySetText totalDisplay (formatDouble total)
+
+  updateRate :: Int -> Entry -> Entry -> Entry ->  IORef Double -> IO ()
+  updateRate delay rateDisplay amountEntry totalDisplay rateRef = do
+    clockUpdate delay $ do 
+      rnd <- randomRIO (-2.0, 2.0)
+      let nextRate = rnd + 3.0
+      writeIORef rateRef nextRate                
+      entrySetText rateDisplay $ formatDouble nextRate
+      updateAmount amountEntry totalDisplay rateRef
+
+  updateTimeDisplay :: Entry -> IO ()
+  updateTimeDisplay entry = do
+    clockUpdate delay1sec $ do
+      localTime <- show . Date.toClockTime <$> Date.getCurrentTime
+      entrySetText entry $ localTime        
+
+  clearTotalSum :: Entry -> IORef Double -> IO ()
+  clearTotalSum totalSumDisplay totalSumRef = do
+    writeIORef totalSumRef 0.0
+    entrySetText totalSumDisplay "0.0"  
+    putStrLn "Total sum set to 0.0"
+                 
+  updateTotalSum :: Entry -> Entry ->  IORef Double -> IORef Double -> IO ()
+  updateTotalSum amountEntry totalSumDisplay rateRef totalSumRef = do
+    amount   <- getAmount amountEntry rateRef
+    totalSum <- readIORef totalSumRef
+    case amount of
+      Nothing       -> return ()
+      Just amount'  -> do let nextTotal = amount' + totalSum
+                          writeIORef totalSumRef nextTotal
+                          entrySetText totalSumDisplay (formatDouble nextTotal)  
+                 
+  main :: IO ()    
+  main = do
+    initGUI -- Start Gtk 
+
+    -- Application State - (Mutable references )
+    rateRef     <- newIORef 2.5
+    totalSumRef <- newIORef 0.0      
+    
+    {- ========= Set up widgets and GUI layout ========= -}
+    
+    -- Load GUI layout from XML file built by glade2 GUI builder.
+    --
+    builder         <- builderNew
+    builderAddFromFile builder "converter2.glade"
+   
+
+    let getEntry objID   =  builderGetObject builder castToEntry objID
+    let getButton objID  =  builderGetObject builder castToButton objID  
+                            
+    window          <- builderGetObject builder castToWindow "mainWindow"
+    buttonSum       <- getButton "buttonSum"       -- Sum total amount in BRL to total sum
+    buttonClear     <- getButton "buttonClear"     -- Clear total sum 
+
+    amountEntry     <- getEntry "amountEntry"      -- USD amount entry          
+    rateDisplay     <- getEntry "rateDisplay"      -- Display exchange rate in USD/BRL
+    totalDisplay    <- getEntry "totalDisplay"     -- Display total amount in BRL
+    totalSumDisplay <- getEntry "totalSumDisplay"  -- Display total sum in BRL               
+    timeDisplay     <- getEntry "timeDisplay"      -- Display user local time
+                       
+    widgetShowAll window
+
+    {- ======= Initialize Widget ====== -}
+
+    entrySetText amountEntry "3.0"
+    clearTotalSum totalSumDisplay totalSumRef               
+                  
+    {- ======= Set up events  ========== -}
+              
+    on window deleteEvent $ liftIO mainQuit >> return False
+
+
+    -- let updateGUIHandler     = updateGUI amountEntry rateDisplay totalDisplay totalSumDisplay rateRef 
+    let updateTotalSumHandler = updateTotalSum amountEntry totalSumDisplay rateRef totalSumRef
+    let updateAmountHandler   = updateAmount amountEntry totalDisplay rateRef
+                                
+    on buttonSum buttonReleaseEvent $ tryEvent $ liftIO $ updateTotalSumHandler
+
+    on buttonClear buttonReleaseEvent $ tryEvent $ liftIO $ clearTotalSum totalSumDisplay totalSumRef
+
+    on amountEntry keyReleaseEvent $ tryEvent $ liftIO $ updateAmountHandler
+
+    {- ===== Run long-running background tasks ====== -}
+
+    -- Update time display every 1 second    
+    updateTimeDisplay timeDisplay
+       
+    -- Update exchange rate each 2 seconds 
+    updateRate (2 * delay1sec) rateDisplay amountEntry totalDisplay rateRef
+    
+    -- on window deleteEvent $ liftIO mainQuit >> return False
+              
+    putStrLn "GUI application started. Up and running. OK."
+    mainGUI -- Start Gtk Event loop 
+
+#+END_SRC
+
+File: converter2.glade - Generated by glade3 GUI builder. This file
+can be edited in Glade.
+
+#+BEGIN_SRC xml
+  <?xml version="1.0" encoding="UTF-8"?>
+  <!-- Generated with glade 3.20.0 -->
+  <interface>
+    <requires lib="gtk+" version="3.20"/>
+    <object class="GtkWindow" id="mainWindow">
+      <property name="can_focus">False</property>
+      <property name="default_width">500</property>
+      <child>
+        <object class="GtkGrid">
+          <property name="width_request">400</property>
+          <property name="height_request">300</property>
+          <property name="visible">True</property>
+          <property name="can_focus">False</property>
+          <property name="margin_top">1</property>
+          <property name="margin_bottom">1</property>
+          <property name="hexpand">False</property>
+          <property name="vexpand">False</property>
+          <property name="row_spacing">5</property>
+          <property name="column_homogeneous">True</property>
+          <child>
+            <object class="GtkLabel">
+              <property name="visible">True</property>
+              <property name="can_focus">False</property>
+              <property name="margin_right">30</property>
+              <property name="label" translatable="yes">Exchange Rate BRL/USD</property>
+            </object>
+            <packing>
+              <property name="left_attach">0</property>
+              <property name="top_attach">0</property>
+            </packing>
+          </child>
+          <child>
+            <object class="GtkLabel">
+              <property name="visible">True</property>
+              <property name="can_focus">False</property>
+              <property name="margin_right">77</property>
+              <property name="label" translatable="yes">Amount in USD</property>
+            </object>
+            <packing>
+              <property name="left_attach">0</property>
+              <property name="top_attach">1</property>
+            </packing>
+          </child>
+          <child>
+            <object class="GtkLabel">
+              <property name="visible">True</property>
+              <property name="can_focus">False</property>
+              <property name="margin_right">80</property>
+              <property name="label" translatable="yes">Total in BRL</property>
+            </object>
+            <packing>
+              <property name="left_attach">0</property>
+              <property name="top_attach">2</property>
+            </packing>
+          </child>
+          <child>
+            <object class="GtkButton" id="buttonSum">
+              <property name="label" translatable="yes">Sum</property>
+              <property name="visible">True</property>
+              <property name="can_focus">True</property>
+              <property name="receives_default">True</property>
+            </object>
+            <packing>
+              <property name="left_attach">0</property>
+              <property name="top_attach">3</property>
+            </packing>
+          </child>
+          <child>
+            <object class="GtkButton" id="buttonClear">
+              <property name="label" translatable="yes">Clear</property>
+              <property name="visible">True</property>
+              <property name="can_focus">True</property>
+              <property name="receives_default">True</property>
+            </object>
+            <packing>
+              <property name="left_attach">1</property>
+              <property name="top_attach">3</property>
+            </packing>
+          </child>
+          <child>
+            <object class="GtkLabel">
+              <property name="visible">True</property>
+              <property name="can_focus">False</property>
+              <property name="margin_right">80</property>
+              <property name="label" translatable="yes">Total Sum</property>
+            </object>
+            <packing>
+              <property name="left_attach">0</property>
+              <property name="top_attach">4</property>
+            </packing>
+          </child>
+          <child>
+            <object class="GtkEntry" id="rateDisplay">
+              <property name="visible">True</property>
+              <property name="can_focus">True</property>
+            </object>
+            <packing>
+              <property name="left_attach">1</property>
+              <property name="top_attach">0</property>
+            </packing>
+          </child>
+          <child>
+            <object class="GtkEntry" id="amountEntry">
+              <property name="visible">True</property>
+              <property name="can_focus">True</property>
+            </object>
+            <packing>
+              <property name="left_attach">1</property>
+              <property name="top_attach">1</property>
+            </packing>
+          </child>
+          <child>
+            <object class="GtkEntry" id="totalDisplay">
+              <property name="visible">True</property>
+              <property name="can_focus">True</property>
+            </object>
+            <packing>
+              <property name="left_attach">1</property>
+              <property name="top_attach">2</property>
+            </packing>
+          </child>
+          <child>
+            <object class="GtkEntry" id="totalSumDisplay">
+              <property name="visible">True</property>
+              <property name="can_focus">True</property>
+            </object>
+            <packing>
+              <property name="left_attach">1</property>
+              <property name="top_attach">4</property>
+            </packing>
+          </child>
+          <child>
+            <object class="GtkEntry" id="timeDisplay">
+              <property name="visible">True</property>
+              <property name="can_focus">True</property>
+            </object>
+            <packing>
+              <property name="left_attach">1</property>
+              <property name="top_attach">5</property>
+            </packing>
+          </child>
+          <child>
+            <object class="GtkLabel">
+              <property name="visible">True</property>
+              <property name="can_focus">False</property>
+              <property name="margin_right">80</property>
+              <property name="label" translatable="yes">Time</property>
+            </object>
+            <packing>
+              <property name="left_attach">0</property>
+              <property name="top_attach">5</property>
+            </packing>
+          </child>
+        </object>
+      </child>
+      <child>
+        <placeholder/>
+      </child>
+    </object>
+  </interface>
+
+#+END_SRC
+
+Run as script:
+
+#+BEGIN_SRC sh 
+  $ stack --resolver lts-3.22 --install-ghc runhaskell Converter.hs 
+  Total sum set to 0.0
+  GUI application started. Up and running. OK.
+    
+#+END_SRC
+
+Compile: 
+
+#+BEGIN_SRC sh 
+  $ stack --resolver lts-3.22 --install-ghc exec -- ghc -threaded Converter.hs 
+  [1 of 1] Compiling Main             ( Converter.hs, Converter.o )
+  Linking Converter ...
+
+
+  $ ./Converter 
+  Total sum set to 0.0
+  GUI application started. Up and running. OK.
+
+#+END_SRC
+** References and Bookmarks 
+
+*Package Documentations*
+
+ - [[https://hackage.haskell.org/package/gtk][gtk: Binding to the Gtk+ graphical user interface library.]]
+
+ - [[https://hackage.haskell.org/package/gtk3][gtk3: Binding to the Gtk+ 3 graphical user interface library]]
+
+ - [[https://github.com/gtk2hs/gtk2hs][GitHub - gtk2hs/gtk2hs: GUI library for Haskell based on GTK+]] (Github)
+
+*GTK Libraries for Windows*
+
+ - [[https://sourceforge.net/projects/gtk-win/][GTK+ for Windows Runtime Environment download | SourceForge.net]]
+
+ - [[https://sourceforge.net/projects/gtk-mingw/][GTK+ for Windows (MinGW) download | SourceForge.net]]
+
+ - [[https://tschoonj.github.io/blog/2014/09/29/gtk2-64-bit-windows-runtime-environment-installer-now-on-github/][Gtk2 64-bit Windows Runtime Environment Installer: now on GitHub! - The Code Dungeon]]
+
+
+*Misc*
+
+ - [[http://book.realworldhaskell.org/read/gui-programming-with-gtk-hs.html][Chapter 23. GUI Programming with gtk2hs]]
+
+
+ - Kenneth Hoste. *An Introduction to Gtk2Hs, a Haskell GUI
+   Library*. Available at
+   <https://pdfs.semanticscholar.org/dd9a/8d3986630da6dea10c504c907681fdb3c322.pdf>
+
+
+ - [[https://wiki.haskell.org/Gtk2Hs/Tutorials][Gtk2Hs/Tutorials - HaskellWiki]]
+
+
+ - Krasimir Angelov. *Gtk2Hs Tutorial*
+   <http://www.cse.chalmers.se/edu/year/2010/course/TDA451_Functional_Programming/FPLectures/06A-gtk2hs.pdf>
+
+
+ - [[http://tab.snarc.org/posts/haskell/2010-11-13-webkit_part1.html][Vincent Hanquez 2010-11-13-webkit_part1]]
+
+
+ - [[http://rickardlindberg.me/writing/reflections-on-programming/2012-02-11-hello-world-haskell-gtk/][Hello world in Haskell and GTK | Rickard's personal homepage]]
+
+
+ - [[http://berlinbrownresearch.blogspot.com.br/2011/03/first-example-ever-on-gtk-and-haskell.html][Berlin Research Code Posts: First example EVER on GTK and Haskell, Render Primitives]]
+
+
+*Papers* 
+
+ - Thomas Van Noort. *Building GUIs in Haskell - Comparing Gtk2Hs and
+   wxHaskell*. Available at <http://foswiki.cs.uu.nl/foswiki/pub/Stc/BuildingGUIsInHaskell/GUI-paper.pdf>
+   or <https://archive.is/8VRgN>
+
+
+
+ - John Peterson, Antony Courtney and Bart Robinson. *Can GUI
+   Programming Be Liberated From The IO Monad*. Available at
+   <http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.112.2186&rep=rep1&type=pdf>
+
+
+
+ - Beatriz Alarcón, Salvador Lucas *Building .NET GUIs for Haskell
+   applications*. Available at
+   <http://s3.amazonaws.com/academia.edu.documents/41680191/NET06.pdf?AWSAccessKeyId=AKIAIWOWYYGZ2Y53UL3A&Expires=1489302403&Signature=W5tajDKres%2Fv1dgCxuuyyLyK6as%3D&response-content-disposition=inline%3B%20filename%3DBuilding_.NET_GUIs_for_Haskell_applicati.pdf>
+
+
+ - Daan Leijen. *wxHaskell - A Portable and Concise GUI Library for
+   Haskell*. Available at
+   <http://www.inf.ufpr.br/andrey/ci062/wxhaskell.pdf>
+
+ - Sebastiaan la Fleur. *Outsourcing the Graphical Input/Output using
+   Streams and Haskell* <http://referaat.cs.utwente.nl/conference/20/paper/7418/outsourcing-the-graphical-input-output-using-streams-and-haskell.pdf>
+
+
+*Wikipedia*
+
+ - [[https://en.wikipedia.org/wiki/GTK%2B][GTK+ - Wikipedia]]
+
+
+ - [[https://en.wikipedia.org/wiki/Continuation-passing_style][Continuation-passing style - Wikipedia]]
+
+
+ - [[https://en.wikipedia.org/wiki/Event_loop][Event loop - Wikipedia]]
+
+
+ - [[https://en.wikipedia.org/wiki/Event_(computing)#Event_handler][Event (computing) - Wikipedia]]
+
+
+ - [[https://en.wikipedia.org/wiki/Asynchronous_I/O][Asynchronous I/O - Wikipedia]]
+
+
+ - [[https://en.wikipedia.org/wiki/Event-driven_programming][Event-driven programming - Wikipedia]]
+
+
+ - [[https://en.wikipedia.org/wiki/Polling_(computer_science)][Polling (computer science) - Wikipedia]]
+
+
+ - [[https://en.wikipedia.org/wiki/Interrupt_handler][Interrupt handler - Wikipedia]]
+
+
+ - [[https://en.wikipedia.org/wiki/Callback_(computer_programming)][Callback (computer programming) - Wikipedia]]
+
+
+ - [[https://en.wikipedia.org/wiki/Windowing_system][Windowing system - Wikipedia]]
+
+
+ - [[https://en.wikipedia.org/wiki/Observer_pattern][Observer pattern - Wikipedia]]
+
+
+ - [[https://en.wikipedia.org/wiki/Event-driven_architecture][Event-driven architecture - Wikipedia]]
+
+
+ - [[https://en.wikipedia.org/wiki/Inversion_of_control][Inversion of control - Wikipedia]]
