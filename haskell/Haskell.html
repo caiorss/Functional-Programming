@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Setting up a Haskell Development Environment</title>
-<!-- 2017-03-06 seg 13:10 -->
+<!-- 2017-03-12 dom 16:47 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="arch" />
@@ -867,11 +867,137 @@ File gui1.hs
 </pre>
 </div>
 </div>
+</li>
+
+<li><a id="sec-1-3-1-8-3" name="sec-1-3-1-8-3"></a>Solve the problem: Ambiguous module name problem<br  /><div class="outline-text-6" id="text-1-3-1-8-3">
+<p>
+Sample code: 
+</p>
+
+<p>
+File: gui1.hs 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Graphics.UI.Gtk</span>
+
+<span class="org-haskell-definition">main</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>    
+<span class="org-haskell-definition">main</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  initGUI  
+  window  <span class="org-haskell-operator">&lt;-</span> windowNew
+  widgetShowAll window
+  onDestroy window mainQuit
+  mainGUI
+</pre>
+</div>
+
+<p>
+<b>Problem description</b>
+</p>
+
+<p>
+It happens because there are two packages gtk2hs installed gtk (gtk 2.0) and gtk3 (gtk 3.0).
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack --resolver lts-3.22 runhaskell /tmp/gui1.hs 
+
+/tmp/gui1.hs:2:8:
+    Ambiguous module name &#8216;Graphics.UI.Gtk&#8217;:
+      it was found<span class="org-keyword"> in</span> multiple packages:
+      gtk3-0.14.2@gtk3_AhgiKTeOdGE7p0vrO3qlnB gtk-0.13.9@gtk_DUp9k2RGwvV1yhb3dtjYiE
+</pre>
+</div>
+
+<p>
+<b>Solution 1</b>
+</p>
+
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack --resolver lts-3.22 exec -- ghc-pkg hide gtk3
+</pre>
+</div>
+
+<p>
+Running the sample code:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack --resolver lts-3.22 runhaskell /tmp/gui1.hs
+</pre>
+</div>
+
+<p>
+<b>Solution 2</b>
+</p>
+
+<p>
+An alternative solution is to use the language extension: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-pragma">{-# language PackageImports #-}</span>
+<span class="org-haskell-keyword">import</span> <span class="org-string">"gtk"</span> <span class="org-haskell-constructor">Graphics.UI.Gtk</span>
+
+<span class="org-haskell-definition">main</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>    
+<span class="org-haskell-definition">main</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  initGUI  
+  window  <span class="org-haskell-operator">&lt;-</span> windowNew
+  widgetShowAll window
+  onDestroy window mainQuit
+  mainGUI
+</pre>
+</div>
+
+<p>
+For gtk3 package the code would be: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">{-# language PackageImports <span class="org-comment-delimiter">#</span><span class="org-comment">-}</span>
+
+import <span class="org-string">"gtk3"</span> Graphics.UI.Gtk
+import <span class="org-string">"gtk3"</span> Graphics.UI.Gtk.Builder
+import <span class="org-string">"gtk3"</span> Graphics.UI.Gtk.Gdk.EventM
+
+import Control.Concurrent (forkIO, killThread)
+
+main :: IO ()
+main = do
+  initGUI
+
+  {---------- Create GUI Widgets -------}
+
+  -- Create a new Window
+  w &lt;- windowNew
+
+  <span class="org-builtin">set</span> w [windowTitle := <span class="org-string">"Hello gtk2hs"</span>]
+  windowSetDefaultSize w 300 400
+
+  --    Add a button
+  --
+  b &lt;- buttonNewWithLabel <span class="org-string">"click me"</span>
+  containerAdd w b
+
+  {--------- Add Events ---------------}
+  onClicked b (putStrLn <span class="org-string">"I was clicked !"</span>)
+
+  {--------- Start GUI Loop --------}
+  widgetShowAll w -- Refresh the Window to display the button.
+  mainGUI
+</pre>
+</div>
+</div>
 </li></ol>
 </li></ol>
 </div>
-
-
 
 <div id="outline-container-sec-1-3-2" class="outline-4">
 <h4 id="sec-1-3-2"><span class="section-number-4">1.3.2</span> Build and manage projects with Stack</h4>
@@ -1207,7 +1333,7 @@ See also:
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: arch</p>
-<p class="date">Created: 2017-03-06 seg 13:10</p>
+<p class="date">Created: 2017-03-12 dom 16:47</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
