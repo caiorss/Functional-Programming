@@ -213,6 +213,7 @@ File: clockDisplay.hs
   import Control.Concurrent (forkIO,  forkOS, threadDelay)    
   import Data.IORef 
   import Control.Monad (forever)
+  import Control.Monad.Trans (liftIO)
 
   import qualified Data.DateTime as Date
       
@@ -288,14 +289,13 @@ File: clockDisplay.hs
     ---------------------------------------------
     
     -- Exit app when the window is deleted (User clicks exit button).
-    onDestroy window mainQuit  -- Exit application if the user click on exit button   
+    on window deleteEvent $ liftIO mainQuit >> return False
     
     -- Display Widget 
     widgetShowAll window
                   
     -- Start GUI Event loop 
     mainGUI
-
 #+END_SRC
 
 Running as script:
