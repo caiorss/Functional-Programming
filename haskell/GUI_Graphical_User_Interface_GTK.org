@@ -146,7 +146,7 @@ Note: The type _string_ is:
 #+END_SRC
 
 ** Examples 
-*** Simple GUI1
+*** Simple GUI
    :PROPERTIES:
    :ID:       cbd3ba2f-35c2-492e-88aa-98e6bae4571e
    :END:
@@ -157,8 +157,13 @@ Screenshot:
 
 File: gui1.hs
 
-#+BEGIN_SRC haskell :tangle /tmp/gui1.hs
+
+#+BEGIN_SRC haskell 
   import Graphics.UI.Gtk
+  import Graphics.UI.Gtk.Gdk.EventM
+  import qualified Graphics.UI.Gtk.Gdk.Events as E
+      
+  import Control.Monad.Trans 
 
   main :: IO ()    
   main = do
@@ -175,32 +180,20 @@ File: gui1.hs
     widgetShowAll window
                   
     -- Set up events and register callbacks (aka event handlers)
-    --
-    onClicked btn (putStrLn "I was clicked")
-    onDestroy window mainQuit  -- Exit application if the user click on exit button 
+    --                 
+    on btn buttonPressEvent $ tryEvent $ liftIO $ putStrLn "I was clicked"
 
-    mainGUI  -- Start GTK event loop and and react to events.
-                   
+    -- Exit application if the user click on exit button 
+    on window deleteEvent $ liftIO mainQuit >> return False   
+
+    mainGUI  -- Start GTK event loop and and react to events.                 
 #+END_SRC
+
 
 *Running:*
 
-Conflict with package gtk3. 
 
 #+BEGIN_SRC sh 
-  $ stack --resolver lts-3.22 runhaskell /tmp/gui1.hs 
-
-  /tmp/gui1.hs:2:8:
-      Ambiguous module name ‘Graphics.UI.Gtk’:
-        it was found in multiple packages:
-        gtk3-0.14.2@gtk3_AhgiKTeOdGE7p0vrO3qlnB gtk-0.13.9@gtk_DUp9k2RGwvV1yhb3dtjYiE
-
-#+END_SRC
-
-Solving ambiguous module name:
-
-#+BEGIN_SRC sh 
-  $ stack --resolver lts-3.22 exec -- ghc-pkg hide gtk3
   $ stack --resolver lts-3.22 runhaskell /tmp/gui1.hs    # Now it works 
 #+END_SRC
 
