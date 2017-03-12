@@ -336,9 +336,9 @@ a random number updated every 2 seconds within the range 3.0 +- 2.0 or
 1.0 (3.0 - 2.0) to 5.0 (3.0 + 2.0).
 
 The user enters the amount of USD and the equivalent BRL amount is
-displayed every time the user changes in input. Example: If the
-current exchange rate is BRL/USD is 2.0 and the "amount in USD" is
-100.0 the 'Total in BRL' will be 200.0.
+displayed every time the user changes in input or the exchange rate is
+updated. Example: If the current exchange rate is BRL/USD is 2.0 and
+the "amount in USD" is 100.0 the 'Total in BRL' will be 200.0.
 
 When the user press the button 'Sum' current amount in BRL 'Total in BRL' is 
 add to the reference totalSumRef and the current sum is displayed in
