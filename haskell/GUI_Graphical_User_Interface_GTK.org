@@ -28,8 +28,9 @@ Install gtk2hs (gtk 2.0) package and Haskell 7.10.2
   $ stack --resolver lts-3.22 --install-ghc install gtk3 datetime # Install gtk 3.0 bindings
 #+END_SRC
 
-It is better gtk3 package due to it support glade3 generated layout
-files, despite most of documentation and examples be available for gtk 2.0.
+This section will use gtk3 (gtk 3.0) package due to it support glade3 generated
+layout files unlike the gtk (gtk 2.0), despite most of documentation and examples be available
+for gtk 2.0.
 
 ** GUI Terminology 
 
