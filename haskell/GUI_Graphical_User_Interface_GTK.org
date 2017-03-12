@@ -331,9 +331,9 @@ Glade Gtk Builder
 
 *How it works ?*
 
-The displayed exchange rate BRL/USD (BRL - Brazilian Reals to USD) is
-a random number updated every 2 seconds within the range 3.0 +- 2.0 or
-1.0 (3.0 - 2.0) to 5.0 (3.0 + 2.0).
+The displayed exchange rate BRL/USD (USD to BRL - Brazilian Reals) or
+Brazilian Reals per USD is a random number updated every 2 seconds
+within the range 3.0 +- 2.0 or 1.0 (3.0 - 2.0) to 5.0 (3.0 + 2.0).
 
 The user enters the amount of USD and the equivalent BRL amount is
 displayed every time the user changes in input or the exchange rate is
