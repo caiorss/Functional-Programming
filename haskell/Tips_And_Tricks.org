@@ -138,7 +138,7 @@ Load the file in the REPL:
 
 #+END_SRC
 
-** Undefined 
+** Using undefined to specify function signature before implementation
    :PROPERTIES:
    :ID:       21aa4a3c-16d1-407c-a497-f4cbaf28ef5f
    :END:
@@ -246,6 +246,267 @@ Loading in the repl:
   > :t Main.product
   Main.product :: Num a => [a] -> a
   > 
+#+END_SRC
+** Using pattern matching for simple command line application
+   :PROPERTIES:
+   :ID:       84ba0fa5-63d2-4392-bbcf-9a94dfa38fa9
+   :END:
+
+The pattern match is useful to develop simple command line
+applications in a declarative and robust way. 
+
+File: calculator.hs 
+
+
+#+BEGIN_SRC haskell   :tangle /tmp/calculator.hs 
+ 
+  import System.Environment  (getArgs)
+  import System.Exit (exitFailure, exitSuccess)   
+  import Text.Read (readMaybe)
+  import Control.Monad 
+      
+  parseNum :: String -> Maybe Double 
+  parseNum = readMaybe    
+
+  parseNumList :: [String] -> Maybe [Double]
+  parseNumList xs = mapM readMaybe xs                
+
+  {- | Perform operation on a single command line argument -}                  
+  doOperation :: Show b => (a -> b) -> (String -> Maybe a) -> String -> IO ()
+  doOperation fn fnParser arg =
+      case fnParser arg of
+        Just x  -> do putStrLn $ "Result = " ++ show (fn x)
+                      exitSuccess
+                      
+        Nothing -> do putStrLn $ "Error: Invalid input '" ++ arg ++ "'"
+                      exitFailure 
+
+  {- | Perform operation on multiple command line arguments -}
+  doListOperation :: Show b => ([a] -> b) -> ([String] -> Maybe [a]) -> [String] -> IO () 
+  doListOperation fn fnParser args =
+      case fnParser args of
+        Just xs -> do putStrLn $ "Result = " ++ show (fn xs)
+                      exitSuccess
+                      
+        Nothing -> do putStrLn $ "Error: Invalid input '" ++ show args ++ "'"
+                      exitFailure
+                     
+                   
+  showHelp = putStrLn $ unlines [
+               "Calculator App"
+              ,"\nOptions\n"
+              ," -help           - Show help"
+              ," -pi             - Show pi number"
+              ," -exp x          - Compute exponential"
+              ," -sin x          - Compute sin"
+              ," -echo file      - Display file"
+              ," -sum 10 20 30   - Compute sum"
+              ," -prod 10 20 30  - Compute product"
+
+              ]
+
+         
+  echoFile file = do
+    content <- readFile file
+    putStrLn content
+
+  parseArgs :: [String] -> IO ()
+  parseArgs args =
+      case args of
+        []                -> showHelp >> exitSuccess
+        ["-pi"]           -> putStrLn (show 3.1415) >> exitSuccess                     
+        ["-help"]         -> showHelp >> exitSuccess
+        ["-exp", x]       -> doOperation exp parseNum x
+        ["-sin", x]       -> doOperation sin parseNum x
+        ["-cos", x]       -> doOperation cos parseNum x                     
+        ["-echo", file]   -> echoFile file                      
+        "-sum":args       -> doListOperation sum parseNumList args
+        "-prod":args      -> doListOperation product parseNumList args
+        _                 -> do putStrLn "Error: Invalid command line switches."
+                                exitFailure
+  {-
+  Or 
+     main :: IO () 
+     main = do 
+        args <- getArgs 
+        parseArgs args 
+
+
+  -}                           
+  main :: IO () 
+  main = getArgs >>= parseArgs
+
+#+END_SRC
+
+*Command line tests:*
+
+Running in as script:
+
+#+BEGIN_SRC sh
+  $ stack exec -- runhaskell /tmp/calculator.hs 
+  Calculator App
+
+  Options
+
+   -help           - Show help
+   -pi             - Show pi number
+   -exp x          - Compute exponential
+   -sin x          - Compute sin
+   -echo file      - Display file
+   -sum 10 20 30   - Compute sum
+   -prod 10 20 30  - Compute product
+
+
+  $ stack exec -- runhaskell /tmp/calculator.hs -help
+  Calculator App
+
+  Options
+
+   -help           - Show help
+   -pi             - Show pi number
+   -exp x          - Compute exponential
+   -sin x          - Compute sin
+   -echo file      - Display file
+   -sum 10 20 30   - Compute sum
+   -prod 10 20 30  - Compute product
+
+    
+  $ stack exec -- runhaskell /tmp/calculator.hs sada
+  Error: Invalid command line switches.
+
+
+  $ stack exec -- runhaskell /tmp/calculator.hs -exp 1.0
+  Result = 2.718281828459045
+
+  $ stack exec -- runhaskell /tmp/calculator.hs -exp 2.0
+  Result = 7.38905609893065
+
+  $ stack exec -- runhaskell /tmp/calculator.hs -sin 3.1415
+  Result = 9.265358966049026e-5
+
+  $ stack exec -- runhaskell /tmp/calculator.hs -cos x2323
+  Error: Invalid input 'x2323'
+
+  $ stack exec -- runhaskell /tmp/calculator.hs -cos
+  Error: Invalid command line switches.
+
+  $ stack exec -- runhaskell /tmp/calculator.hs -sum 1 2 3 4 5
+  Result = 15.0
+
+  $ stack exec -- runhaskell /tmp/calculator.hs -prod 1 2 3 4 5 
+  Result = 120.0
+
+  $ stack exec -- runhaskell /tmp/calculator.hs -prod 1 2 3 sads 4 5 
+  Error: Invalid input '["1","2","3","sads","4","5"]'
+
+  $ stack exec -- runhaskell /tmp/calculator.hs -echo /etc/issue
+  Manjaro Linux \r  (\n) (\l)
+
+          
+       
+#+END_SRC
+
+Compiling:
+
+#+BEGIN_SRC sh 
+  $ stack exec -- ghc /tmp/calculator.hs -o /tmp/calculator.bin
+  [1 of 1] Compiling Main             ( /tmp/calculator.hs, /tmp/calculator.o )
+  Linking /tmp/calculator.bin ...
+
+  $ file /tmp/calculator.bin 
+  /tmp/calculator.bin: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32, BuildID[sha1]=b3a0da3f4814ef85dd257b9e81651e2d234bb026, not stripped, with debug_info
+
+
+  $ /tmp/calculator.bin 
+  Calculator App
+
+  Options
+
+   -help           - Show help
+   -pi             - Show pi number
+   -exp x          - Compute exponential
+   -sin x          - Compute sin
+   -echo file      - Display file
+   -sum 10 20 30   - Compute sum
+   -prod 10 20 30  - Compute product
+
+  $ /tmp/calculator.bin -pi
+  3.1415
+
+   
+  $ /tmp/calculator.bin -exp pi
+  Error: Invalid input 'pi'
+   
+
+  $ /tmp/calculator.bin -exp 3.1415
+  Result = 23.138548663861286
+
+   
+  $ /tmp/calculator.bin -sum 1 2 3 4 5 6 7
+  Result = 28.0
+   
+
+  $ /tmp/calculator.bin -sum 1 nothing 3 4 5 6 asdas
+  Error: Invalid input '["1","nothing","3","4","5","6","asdas"]'
+
+  $ /tmp/calculator.bin -echo /etc/lsb-release
+  DISTRIB_ID=ManjaroLinux
+  DISTRIB_RELEASE=17.0
+  DISTRIB_CODENAME=Gellivara
+  DISTRIB_DESCRIPTION="Manjaro Linux"
+
+
+#+END_SRC
+
+Testing in REPL:
+
+#+BEGIN_SRC haskell 
+  > :t parseArgs 
+  parseArgs :: [String] -> IO ()
+  > 
+  > parseArgs ["-help"]
+  Calculator App
+
+  Options
+
+   -help           - Show help
+   -pi             - Show pi number
+   -exp x          - Compute exponential
+   -sin x          - Compute sin
+   -echo file      - Display file
+   -sum 10 20 30   - Compute sum
+   -prod 10 20 30  - Compute product
+
+  ,*** Exception: ExitSuccess
+  > 
+  > parseArgs ["-help", "qasdas", "seds"]
+  Error: Invalid command line switches.
+  ,*** Exception: ExitFailure 1
+  > 
+  > parseArgs ["-pi"]
+  3.1415
+  ,*** Exception: ExitSuccess
+  > 
+
+  > 
+  > parseArgs ["-exp", "1.23"]
+  Result = 3.4212295362896734
+  ,*** Exception: ExitSuccess
+  > 
+  > parseArgs ["-sum", "1.23", "2.323", "4.23"]
+  Result = 7.783
+  ,*** Exception: ExitSuccess
+  > 
+
+  > parseArgs ["-echo", "/etc/lsb-release"]
+  DISTRIB_ID=ManjaroLinux
+  DISTRIB_RELEASE=17.0
+  DISTRIB_CODENAME=Gellivara
+  DISTRIB_DESCRIPTION="Manjaro Linux"
+
+  > 
+
+
 #+END_SRC
 
 ** Haskell Interactive Shell - GHCI
