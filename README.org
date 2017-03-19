@@ -74,6 +74,7 @@ This repository is dedicated to public domain.
 
  - [[file:haskell/GUI_Graphical_User_Interface_GTK.org][GUI Graphical User Interface with GTK]]
 
+ - [[file:haskell/Tips_And_Tricks.org][Tips and Tricks]]
 
  - Modules
 

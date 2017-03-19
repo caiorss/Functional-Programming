@@ -1,0 +1,251 @@
+#+TITLE: Tips And Tricks
+#+DESCRIPTION: Tips and tricks for Haskell development. 
+#+STARTUP:  overview
+
+* Tips and Tricks 
+** Overview 
+
+It is a collection of many tips and tricks for Haskell development.
+** Configuration files in Haskell Syntax 
+   :PROPERTIES:
+   :ID:       a795774c-42af-46fb-bbab-9c1d370cfba1
+   :END:
+
+Configuration files can be written in Haskell since it provides a
+parser (readMaybe) that can read arbitrary data structures defined as
+instance of show and read type classes.
+
+Example: 
+
+File: serverConf.hs 
+
+#+BEGIN_SRC haskell :tangle /tmp/serverconf.hs 
+  import Text.Read (readMaybe)
+  import Text.Printf (printf)
+      
+  type Password = String
+  type Username = String     
+
+  data ServerAuth = AuthEmpty
+                  | AuthBasic Username Password
+                  deriving (Eq, Read, Show)
+
+  data ServerConf = ServerConf
+        {
+        serverHost     :: String      
+       ,serverPort     :: Int
+       ,serverAssets   :: String
+       ,serverSecurity :: ServerAuth
+        } deriving (Eq, Read, Show)
+
+
+  readConfig1 :: String -> Maybe ServerConf
+  readConfig1 = readMaybe 
+
+  readConfig2 :: String -> Maybe ServerConf
+  readConfig2 str = readMaybe str 
+
+
+  readConfigFile :: String -> IO (Maybe ServerConf)
+  readConfigFile configFile = readConfig1 <$> readFile configFile -- Or fmap readConfig1 (readFile configFile)
+
+
+  runServer :: ServerConf -> IO ()
+  runServer config = do printf "Running server at port %d, listening host %s\n" (serverPort config) (serverHost config) 
+                        putStrLn $ "Server Authentication = " ++ show (serverSecurity config)
+
+
+  runServerConfigFile :: String -> IO ()
+  runServerConfigFile configFile = do
+    config <- readConfigFile configFile
+    case config of
+      Just conf -> runServer conf
+      Nothing   -> putStrLn "Error: I can't read the server configuration file"
+                                 
+
+
+  config1 = ServerConf "0.0.0.0" 8080 "/var/www" AuthEmpty
+
+  config2 = ServerConf { serverHost = "0.0.0.0",
+                         serverPort = 9090,
+                         serverAssets = "/home/arch/www",
+                         serverSecurity = AuthBasic "gh0st" "xmkg3p98sfawgav"
+                       }
+   
+                             
+#+END_SRC
+
+
+Configuration File: server.conf 
+
+#+BEGIN_SRC conf :tangle /tmp/server.conf 
+ServerConf {
+  serverHost = "127.0.0.1" 
+ ,serverPort = 80 
+ ,serverAssets = "/var/www"
+ ,serverSecurity = AuthBasic "admin" "xjwxfm2pcfg56hga" 
+}
+#+END_SRC
+
+Load the file in the REPL:
+
+#+BEGIN_SRC haskell 
+  > :load /tmp/serverconf.hs 
+  [1 of 1] Compiling Main             ( /tmp/serverconf.hs, interpreted )
+  Ok, modules loaded: Main.
+  > 
+  > :t ServerConf 
+  ServerConf :: String -> Int -> String -> ServerAuth -> ServerConf
+  > 
+
+
+  > config1
+  ServerConf {serverHost = "0.0.0.0", serverPort = 8080, serverAssets = "/var/www", serverSecurity = AuthEmpty}
+  >
+
+  > config2
+  ServerConf {serverHost = "0.0.0.0", serverPort = 9090, serverAssets = "/home/arch/www", serverSecurity = AuthBasic "gh0st" "xmkg3p98sfawgav"}
+  >
+
+  > runServer config1
+  Running server at port 8080, listening host 0.0.0.0
+  Server Authentication = AuthEmpty
+  > 
+  > runServer config2
+  Running server at port 9090, listening host 0.0.0.0
+  Server Authentication = AuthBasic "gh0st" "xmkg3p98sfawgav"
+  > 
+  >
+
+  -- Read configuration file.
+  -- 
+  > readConfigFile "/tmp/server.conf" 
+  Just (ServerConf {serverHost = "127.0.0.1", serverPort = 80, serverAssets = "/var/www", serverSecurity = AuthBasic "admin" "xjwxfm2pcfg56hga"})
+  > 
+
+  > :t readConfigFile "/tmp/server.conf" 
+  readConfigFile "/tmp/server.conf" :: IO (Maybe ServerConf)
+  > 
+
+  > runServerConfigFile "/tmp/server.conf"
+  Running server at port 80, listening host 127.0.0.1
+  Server Authentication = AuthBasic "admin" "xjwxfm2pcfg56hga"
+  > 
+  > runServerConfigFile "/etc/fstab"
+  Error: I can't read the server configuration file
+  > 
+
+
+#+END_SRC
+
+** Undefined 
+   :PROPERTIES:
+   :ID:       21aa4a3c-16d1-407c-a497-f4cbaf28ef5f
+   :END:
+
+Undefined can be used to define function signatures before they are implemented.
+
+Example:
+
+File: math1.hs - Before implement the functions.
+
+#+BEGIN_SRC haskell :tangle /tmp/math1.hs 
+  add :: Int -> Int -> Int
+  add = undefined
+
+  sub :: Int -> Int -> Int
+  sub x y = x - y        
+        
+  product :: Num a => [a] -> a
+  product = undefined            
+#+END_SRC
+
+Load in the Repl: 
+
+#+BEGIN_SRC haskell 
+  > :load /tmp/math1.hs 
+  [1 of 1] Compiling Main             ( /tmp/math1.hs, interpreted )
+  Ok, modules loaded: Main.
+  > 
+
+  > :t add
+  add :: Int -> Int -> Int
+  >
+  > :t Main.add
+  Main.add :: Int -> Int -> Int
+  > 
+
+
+  > :t product
+
+  <interactive>:1:1:
+      Ambiguous occurrence ‘product’
+      It could refer to either ‘Main.product’,
+                               defined at /tmp/math1.hs:6:1
+                            or ‘Prelude.product’,
+                               imported from ‘Prelude’ at /tmp/math1.hs:1:1
+                               (and originally defined in ‘Data.Foldable’)
+  > 
+
+  > :t Main.product
+  Main.product :: Num a => [a] -> a
+  > 
+
+  > Main.add 3 5
+  ,*** Exception: Prelude.undefined
+  > 
+
+  > Main.product [1, 2, 3, 4, 5]
+  ,*** Exception: Prelude.undefined
+  > 
+
+#+END_SRC
+
+
+File: math1.hs after implement the functions. 
+
+#+BEGIN_SRC haskell :tangle /tmp/math2.hs 
+  add :: Int -> Int -> Int
+  add = \x y -> x + y
+
+  sub :: Int -> Int -> Int
+  sub x y = x - y        
+        
+  product :: Num a => [a] -> a
+  product xs = foldr (*) 1 xs             
+#+END_SRC
+
+Loading in the repl: 
+
+#+BEGIN_SRC haskell 
+  > :t add
+  add :: Int -> Int -> Int
+  > 
+  > add 3 5
+  8
+  >
+
+  > Main.add 3 5
+  8
+  > 
+
+
+  > :t product 
+
+  <interactive>:1:1:
+      Ambiguous occurrence ‘product’
+      It could refer to either ‘Main.product’,
+                               defined at /tmp/math2.hs:9:1
+                            or ‘Prelude.product’,
+                               imported from ‘Prelude’ at /tmp/math2.hs:1:1
+                               (and originally defined in ‘Data.Foldable’)
+  > 
+  > 
+  > Main.product [1, 2, 3, 4, 5]
+  120
+  > :t Main.product
+  Main.product :: Num a => [a] -> a
+  > 
+#+END_SRC
+
+** Haskell Interactive Shell - GHCI
