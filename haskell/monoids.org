@@ -772,7 +772,6 @@ Example:
 
  - [[http://repository.upenn.edu/cgi/viewcontent.cgi?article%3D1773&context%3Dcis_papers][Monoids: Theme and Variations (Functional Pearl)]] - or [[https://web.archive.org/web/20170320050543/http://repository.upenn.edu/cgi/viewcontent.cgi?article%3D1773&context%3Dcis_papers][Web archive]]
 
-
 ** Foldable 
 *** Overview 
 
@@ -858,21 +857,9 @@ functions fold or foldMap.
 **** List 
 
 #+BEGIN_SRC haskell 
-  instance Foldable [] where
-      elem    = List.elem
-      foldl   = List.foldl
-      foldl'  = List.foldl'
-      foldl1  = List.foldl1
-      foldr   = List.foldr
-      foldr1  = List.foldr1
-      length  = List.length
-      maximum = List.maximum
-      minimum = List.minimum
-      null    = List.null
-      product = List.product
-      sum     = List.sum
-      toList  = id
-
+instance Foldable [] where
+    foldMap _ [] = mempty
+    foldMap f (x : xs) = f x <> foldMap xs
 #+END_SRC
 
 
@@ -1106,6 +1093,12 @@ Example 4: Foldable list and Endo monoid
 #+END_SRC
 
 **** Maybe 
+
+#+BEGIN_SRC haskell 
+instance Foldable Maybe where
+    foldMap _ Nothing  = mempty
+    foldMap f (Just x) = f x
+#+END_SRC
 
 Example 1: Maybe foldable and list monoid 
 
