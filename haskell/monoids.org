@@ -1,6 +1,7 @@
 #+INCLUDE: ../theme/style.org
-#+TITLE: Monoids
+#+TITLE: Monoids and Foldables 
 
+* Monoids and Foldables
 ** Monoids
 *** Overview
     :PROPERTIES:
@@ -754,4 +755,456 @@ Example:
  - http://www.scs.stanford.edu/14sp-cs240h/slides/phantoms.html
 
  - [[https://twdkz.wordpress.com/2013/05/31/data-analysis-with-monoids/][Data analysis with Monoids | twdkz]]
+
+** Foldable 
+*** Overview 
+
+Foldable is a  class of data structures that can be folded to a
+summary value. It is a generalization of fold. 
+
+Module documentation: [[https://hackage.haskell.org/package/base-4.9.1.0/docs/Data-Foldable.html][Data.Foldable]]  
+
+
+#+BEGIN_SRC haskell 
+class Foldable t where
+    fold :: Monoid m => t m -> m
+    foldMap :: Monoid m => (a -> m) -> t a -> m
+    foldr :: (a -> b -> b) -> b -> t a -> b
+    foldr' :: (a -> b -> b) -> b -> t a -> b
+    foldl :: (a -> b -> a) -> a -> t b -
+    foldl' :: (a -> b -> a) -> a -> t b -> a
+    foldr1 :: (a -> a -> a) -> t a -> a
+    foldl1 :: (a -> a -> a) -> t a -> a
+    ... ... ... 
+#+END_SRC
+
+A minimal implementation of type class Foldable must implement the
+functions fold or foldMap.
+
+ - Combine the elements of a structure using a monoid.
+
+#+BEGIN_SRC haskell    
+    fold :: Monoid m => t m -> m
+    fold = foldMap id
+#+END_SRC
+
+ - Map each element of the structure to a monoid, and combine the results.
+ 
+#+BEGIN_SRC haskell 
+    foldMap :: Monoid m => (a -> m) -> t a -> m
+    {-# INLINE foldMap #-}
+    -- This INLINE allows more list functions to fuse. See Trac #9848.
+    foldMap f = foldr (mappend . f) mempty
+#+END_SRC
+
+*** Instance of class foldable 
+**** Get all Foldable instances 
+
+#+BEGIN_SRC haskell 
+  > import Data.Foldable
+   
+  > :info Foldable
+    
+  class Foldable (t :: * -> *) where
+    fold :: Monoid m => t m -> m
+    foldMap :: Monoid m => (a -> m) -> t a -> m
+    foldr :: (a -> b -> b) -> b -> t a -> b
+    foldr' :: (a -> b -> b) -> b -> t a -> b
+    foldl :: (b -> a -> b) -> b -> t a -> b
+    foldl' :: (b -> a -> b) -> b -> t a -> b
+    foldr1 :: (a -> a -> a) -> t a -> a
+    foldl1 :: (a -> a -> a) -> t a -> a
+    toList :: t a -> [a]
+    null :: t a -> Bool
+    length :: t a -> Int
+    elem :: Eq a => a -> t a -> Bool
+    maximum :: Ord a => t a -> a
+    minimum :: Ord a => t a -> a
+    sum :: Num a => t a -> a
+    product :: Num a => t a -> a
+    {-# MINIMAL foldMap | foldr #-}
+               
+          -- Defined in ‘Data.Foldable’
+  instance Foldable [] -- Defined in ‘Data.Foldable’
+  instance Foldable Sum -- Defined in ‘Data.Foldable’
+  instance Foldable Product -- Defined in ‘Data.Foldable’
+  instance Foldable Maybe -- Defined in ‘Data.Foldable’
+  instance Foldable Last -- Defined in ‘Data.Foldable’
+  instance Foldable First -- Defined in ‘Data.Foldable’
+  instance Foldable (Either a) -- Defined in ‘Data.Foldable’
+  instance Foldable Dual -- Defined in ‘Data.Foldable’
+  instance Foldable ((,) a) -- Defined in ‘Data.Foldable’
+  > 
+
+#+END_SRC
+
+**** List 
+
+#+BEGIN_SRC haskell 
+  instance Foldable [] where
+      elem    = List.elem
+      foldl   = List.foldl
+      foldl'  = List.foldl'
+      foldl1  = List.foldl1
+      foldr   = List.foldr
+      foldr1  = List.foldr1
+      length  = List.length
+      maximum = List.maximum
+      minimum = List.minimum
+      null    = List.null
+      product = List.product
+      sum     = List.sum
+      toList  = id
+
+#+END_SRC
+
+
+Example 1: Foldable list and list monoid 
+
+#+BEGIN_SRC haskell 
+  > import Data.Foldable
+  >
+
+  -- For lists - Data.Foldable.fold is equivalent to concat 
+  --
+  -- fold :: [[a]] -> [a]
+  -- 
+  > :t fold
+  fold :: (Monoid m, Foldable t) => t m -> m
+  > 
+
+  > fold [[1, 10, 30], [1, 2, 3, 4, 5], [], [3, 4]]
+  [1,10,30,1,2,3,4,5,3,4]
+  > 
+
+  > concat [[1, 10, 30], [1, 2, 3, 4, 5], [], [3, 4]]
+  [1,10,30,1,2,3,4,5,3,4]
+  > 
+
+
+  -- Lazy letf fold -> Can cause memory leak 
+  --
+  > foldl (\acc x -> 10 * acc + x) 0 [1, 2, 3, 4, 5]
+  12345
+  > 
+
+  -- Strict left fold
+  --
+  > foldl' (\acc x -> 10 * acc + x) 0 [1, 2, 3, 4, 5]
+  12345
+  > 
+
+  -- Right fold 
+  --
+  > 
+  > :t foldr
+  foldr :: Foldable t => (a -> b -> b) -> b -> t a -> b
+  > 
+  > foldr (\x acc -> 10 * acc + x) 0 [1, 2, 3, 4, 5]
+  54321
+
+  -- foldMap - Equivalent to map and concat for list.
+  --
+  -- For lists:
+  --  foldMap :: (a -> [a]) -> [a] -> [a]
+  -- 
+  > :t foldMap 
+  foldMap :: (Monoid m, Foldable t) => (a -> m) -> t a -> m
+  > 
+
+  > foldMap (\x -> [2 * x, 3 * x, 5 * x]) [1, 2, 3, 4, 5]
+  [2,3,5,4,6,10,6,9,15,8,12,20,10,15,25]
+  > 
+
+  > 
+  > map (\x -> [2 * x, 3 * x, 5 * x]) [1, 2, 3, 4, 5]
+  [[2,3,5],[4,6,10],[6,9,15],[8,12,20],[10,15,25]]
+  > 
+  > concat $ map (\x -> [2 * x, 3 * x, 5 * x]) [1, 2, 3, 4, 5]
+  [2,3,5,4,6,10,6,9,15,8,12,20,10,15,25]
+  > 
+
+#+END_SRC
+
+
+Example 2: Foldable list and string monoid 
+
+#+BEGIN_SRC haskell 
+  > import Data.Monoid
+  > import Data.Foldable 
+  > 
+
+  > mempty :: String
+  ""
+  > "hello " <> " world " <> " Haskell "
+  "hello  world  Haskell "
+  > 
+
+
+  --
+  -- fold :: [String] -> String
+  --
+  > :t fold
+  fold :: (Monoid m, Foldable t) => t m -> m
+  >
+
+  > fold ["hello ",  " world ", " Haskell "]
+  "hello  world  Haskell "
+  > 
+
+  -- 
+  -- foldMap :: (a -> String) -> [String] -> String
+  --
+  > :t foldMap 
+  foldMap :: (Monoid m, Foldable t) => (a -> m) -> t a -> m
+  >
+   
+  > foldMap (\x -> " x = " ++ show x ++ ", ") [1, 2, 3, 4, 5]
+  " x = 1,  x = 2,  x = 3,  x = 4,  x = 5, "
+  > 
+
+#+END_SRC
+
+Example 3: Foldable list and sum monoid 
+
+#+BEGIN_SRC haskell 
+  > import Data.Monoid
+  > import Data.Foldable as DF
+  > 
+
+  --
+  -- fold :: [Sum a] -> Sum a 
+  --
+  > :t fold
+  fold :: (Monoid m, Foldable t) => t m -> m
+  >
+
+  > fold [Sum 3, Sum 10, Sum 6, Sum 10]
+  Sum {getSum = 29}
+  > 
+  > getSum $ fold [Sum 3, Sum 10, Sum 6, Sum 10]
+  29
+  > 
+
+
+  -- 
+  -- foldMap :: (a -> Sum a) -> [a] -> Sum a 
+  --
+  > :t foldMap 
+  DF.foldMap :: (Monoid m, Foldable t) => (a -> m) -> t a -> m
+  >
+
+  > 
+  > foldMap Sum [1, 2, 3, 4, 5]
+  Sum {getSum = 15}
+  > 
+  > getSum $ foldMap Sum [1, 2, 3, 4, 5]
+  15
+  > 
+
+#+END_SRC
+
+Example 4: Foldable list and Endo monoid 
+
+#+BEGIN_SRC haskell
+  > import Data.Monoid
+  > import Data.Foldable
+  > 
+
+  > :t Endo
+  Endo :: (a -> a) -> Endo a
+  >
+
+  -- Composes all functions wrapped by Endo 
+  -- 
+  -- fold :: [Endo a] -> Endo a 
+  --
+  --
+  > :t fold
+  fold :: (Monoid m, Foldable t) => t m -> m
+  >
+
+
+  > let m = fold [Endo (+10), Endo (*3), Endo $ \x -> 10 * x - 5] :: Endo Int
+
+  > :t m
+  m :: Endo Int
+
+  > appEndo m 5
+  145
+
+  > appEndo m 4
+  115
+  > 
+
+   -- Equivalent expressions 
+
+  > (+10) . (*3) . (\x -> 10 * x - 5) $ 5 :: Int
+  145
+  > (+10) . (*3) . (\x -> 10 * x - 5) $ 5 
+  145
+  > (+10) . (*3) . (\x -> 10 * x - 5) $ 5 :: Int
+  145
+  > (+10) . (*3) . (\x -> 10 * x - 5) $ 4 :: Int
+  115
+  > (+10) $ (*3) $ (\x -> 10 * x - 5) $ 4 :: Int
+  115
+  > 
+
+
+  --------------------------------------------------------
+  --
+  -- foldMap :: (a -> Endo a) -> [Endo a] -> Endo a
+  --
+  > :t foldMap 
+  foldMap :: (Monoid m, Foldable t) => (a -> m) -> t a -> m
+  >
+
+  > let f = foldMap Endo [ (+10),  (*3),  \x -> 10 * x - 5] 
+  > :t f
+  f :: Num a => Endo a
+  > 
+  > appEndo f 4
+  115
+  > appEndo f 5
+  145
+  > 
+
+  > let f2 = foldMap (\f -> Endo $ \x -> f (3 * x - 2))  [ (+10),  (*3),  \x -> 10 * x - 5] 
+
+  > appEndo f2 4
+  2555
+  > appEndo f2 5
+  3365
+
+  > let f3 = fold $ map  (\f -> Endo $ \x -> f (3 * x - 2))  [ (+10),  (*3),  \x -> 10 * x - 5] 
+  > :t f3
+  f3 :: Num a => Endo a
+  > appEndo f3 4
+  2555
+  > appEndo f3 5
+  3365
+  > 
+
+#+END_SRC
+
+**** Maybe 
+
+Example 1: Maybe foldable and list monoid 
+
+#+BEGIN_SRC haskell 
+  > import Data.Monoid
+  > import Data.Foldable 
+  > 
+
+  -- List Monoid
+  --
+  > mempty :: [Int]
+  []
+  > [1, 2, 3] <> [3, 5] <> [9, 10]
+  [1,2,3,3,5,9,10]
+  > 
+
+
+  --
+  -- fold :: Maybe [Int] -> [Int]
+  --
+  > :t fold
+  fold :: (Monoid m, Foldable t) => t m -> m
+  >
+
+  > fold (Just [1, 2, 3, 4])
+  [1,2,3,4]
+  >
+  > fold Nothing :: [Int]
+  []
+  >
+
+
+  -- foldMap :: (a -> [a]) -> Maybe [a] -> [a] 
+  --
+  > :t foldMap 
+  foldMap :: (Monoid m, Foldable t) => (a -> m) -> t a -> m
+  >
+
+  > foldMap (\x -> [2 * x, 3 + x]) (Just 10)
+  [20,13]
+  > foldMap (\x -> [2 * x, 3 + x, x + 8]) (Just 10)
+  [20,13,18]
+  > foldMap (\x -> [2 * x, 3 + x, x + 8]) (Just 5)
+  [10,8,13]
+  > foldMap (\x -> [2 * x, 3 + x, x + 8]) Nothing
+  []
+  >
+
+
+  > :t foldl
+  foldl :: Foldable t => (b -> a -> b) -> b -> t a -> b
+  > 
+  > foldl (\ acc x -> 10 * acc + x) 10 (Just 4)
+  104
+  > foldl (\ acc x -> 10 * acc + x) 10 Nothing
+  10
+  > 
+
+  > 
+  > foldr (\x acc -> 10 * acc + x) 10 (Just 5)
+  105
+  > foldr (\x acc -> 10 * acc + x) 10 Nothing
+  10
+  > 
+
+#+END_SRC
+
+Example: Maybe foldable and Sum monoid 
+
+#+BEGIN_SRC haskell 
+  import Data.Foldable
+  import Data.Monoid     
+
+  > fold (Just $ Sum 10)
+  Sum {getSum = 10}
+
+  > fold (Just $ Sum 10) :: Sum Int
+  Sum {getSum = 10}
+  > 
+
+  > fold Nothing :: Sum Int
+  Sum {getSum = 0}
+  >
+
+  > 
+  > foldMap (\x -> Sum $ x * 3) (Just 10)
+  Sum {getSum = 30}
+  > foldMap (\x -> Sum $ x * 3) Nothing
+  Sum {getSum = 0}
+  > 
+
+
+#+END_SRC
+
+*** References 
+
+References: 
+
+ - [[https://en.wikibooks.org/wiki/Haskell/Foldable][Haskell/Foldable - Wikibooks, open books for an open world]]
+
+
+ - Module [[https://hackage.haskell.org/package/base-4.9.1.0/docs/Data-Foldable.html][Data.Foldable]]
+
+  
+ - Module Source Code: [[https://hackage.haskell.org/package/base-4.9.1.0/docs/src/Data.Foldable.html][Data.Foldable]]
+
+
+See also: 
+
+
+ - [[http://brianshourd.com/posts/2013-01-15-tilt-foldable.html][Brian Shourd - Blog - Thing I Learned Today: Foldable]]  
+
+
+ - [[https://byorgey.wordpress.com/2012/11/05/foldr-is-made-of-monoids/][foldr is made of monoids ]]
+
+
+ - [[https://ocharles.org.uk/blog/posts/2013-02-12-quick-dsls-with-endo-writers.html][Quick and Easy DSLs with Writer Endo]]
+
 
