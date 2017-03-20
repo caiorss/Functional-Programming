@@ -748,13 +748,30 @@ Example:
 
  - Module:  [[https://hackage.haskell.org/package/base-4.8.2.0/docs/Data-Monoid.html][Data.Monoid]]
 
+
  - Source of Module: [[https://hackage.haskell.org/package/base-4.8.2.0/docs/src/Data.Monoid.html#Last][Data.Monoid]]
+
 
  - [[https://wiki.haskell.org/Monoid][Monoids - Haskell Wiki]]
 
+
  - http://www.scs.stanford.edu/14sp-cs240h/slides/phantoms.html
 
+
  - [[https://twdkz.wordpress.com/2013/05/31/data-analysis-with-monoids/][Data analysis with Monoids | twdkz]]
+
+
+ - [[https://people.cs.kuleuven.be/~tom.schrijvers/Research/talks/lhug4.pdf][List and Other Monoids - Tom Schrijvers]]
+
+ 
+ - [[http://debasishg.blogspot.com.br/2013/02/a-dsl-with-endo-monoids-for-free.html][Ruminations of a Programmer: A DSL with an Endo - monoids for free]]  (Scala) 
+
+
+ - [[https://dzone.com/articles/dsl-endo-monoids-free][A DSL with an Endo - monoids for free - DZone Performance]]
+
+
+ - [[http://repository.upenn.edu/cgi/viewcontent.cgi?article%3D1773&context%3Dcis_papers][Monoids: Theme and Variations (Functional Pearl)]] - or [[https://web.archive.org/web/20170320050543/http://repository.upenn.edu/cgi/viewcontent.cgi?article%3D1773&context%3Dcis_papers][Web archive]]
+
 
 ** Foldable 
 *** Overview 
