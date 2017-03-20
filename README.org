@@ -52,7 +52,7 @@ This repository is dedicated to public domain.
 
  - [[file:haskell/Functors__Monads__Applicatives_and_Monoids.org][Functors and Monads]]
 
- - [[file:haskell/monoids.org][Monoids]]
+ - [[file:haskell/monoids.org][Monoids and Foldables]]
 
  - [[file:haskell/Libraries.org][Haskell Libraries]]
 
@@ -101,6 +101,8 @@ This repository is dedicated to public domain.
    - [[https://docs.haskellstack.org/en/stable/README/][Haskell Stack Tool]] - Haskell dependency manager, package manager
      which can install multiple Haskell versions, library versions per
      project repository avoiding dependency hell.
+
+   - [[http://cheatsheet.codeslower.com/][The Haskell Cheatsheet]]
 
    - [[https://www.haskell.org/platform/contents.html][Haskell Platform - Included Packages]]
 
