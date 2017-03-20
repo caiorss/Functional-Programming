@@ -1,25 +1,28 @@
 #+INCLUDE: ../theme/style.org
 #+TITLE: Monoids
 
-* Monoids 
-** Overview 
+** Monoids
+*** Overview
+    :PROPERTIES:
+    :ID:       ef383b43-ab07-43a1-94b2-99b8425814c9
+    :END:
 
-
-A monoid is a type constructor with an identity value _mempty_ and a
-binary operation _mappend_ that defines how two monoids can be
-combined to generate a new one. The function moncat concatenates a
+A monoid is a type constructor with an _identity value_ _mempty_ and a
+_binary operation_ _mappend_ that defines how two monoids can be
+combinated to generate a new one. The function moncat concatenates a
 list of monoids into a one monoid.
 
 The monoid type class and monoid combinators are defined in the module
 [[https://hackage.haskell.org/package/base-4.8.2.0/docs/Data-Monoid.html][Data.Monoid]].
 
-#+BEGIN_SRC haskell 
+
+#+BEGIN_SRC haskell
 class Monoid m where
 
     {- Identity Element -}
     mempty :: m
 
-    {- Associative / Binary operator - the alias 
+    {- Associative / Binary operator - the alias
        for mappend is (<>) -}
     mappend :: m -> m -> m
 
@@ -29,28 +32,38 @@ class Monoid m where
 
 #+END_SRC
 
+
+| Function |    | Signature   | Description                        |
+|----------+----+-------------+------------------------------------|
+| mempty   | :: | m           | Identity element or Identity value |
+| mappend  | :: | m -> m -> m | Binary operator                    |
+| moncat   | :: | [m] -> m    | Concatenate list of monoids        |
+| <>       | :: | m -> m ->   | Operator alias to mappend.         |
+
+
+
 *Mappend*
 
-Combine two monoids into a new one. 
+Combine two monoids into a new one.
 
-#+BEGIN_SRC haskell 
-mappend :: Monoid m => m -> m -> m 
+#+BEGIN_SRC haskell
+mappend :: Monoid m => m -> m -> m
 #+END_SRC
 
 *Mappend Operator*
 
-Alias for Mappend. 
+Alias for Mappend.
 
-#+BEGIN_SRC haskell 
-(<>) :: Monoid a => a -> a -> a 
-(<>) = mappend 
+#+BEGIN_SRC haskell
+(<>) :: Monoid a => a -> a -> a
+(<>) = mappend
 #+END_SRC
 
 *Moncat*
 
-Append a list of monoids into a new one. 
+Append a list of monoids into a new one.
 
-#+BEGIN_SRC haskell 
+#+BEGIN_SRC haskell
 moncat :: Monoid m => [m] -> m
 #+END_SRC
 
@@ -73,106 +86,140 @@ moncat :: Monoid m => [m] -> m
 | Lists          | ++        | []       |
 | Strings        | ++        | ""       |
 
-** Instances of Monoid Type Class 
-*** List
+*** Instances of Monoid Type Class
+**** List
 
-#+BEGIN_SRC haskell 
+
+| Function        |    | Signature         | Description                     |
+|-----------------+----+-------------------+---------------------------------|
+| Monoid instance |    | [a]               |                                 |
+|                 |    |                   |                                 |
+| mempty          | :: | []                | Identity element is empty list. |
+| mappend         | :: | [a] -> [a] -> [a] | Concatenate two lists           |
+| moncat          | :: | [a] -> a          | Concatenate a list of lists     |
+| <>              | :: | [a] -> [a] -> [a] | Alias to mappend.               |
+|                 |    |                   |                                 |
+
+
+#+BEGIN_SRC haskell
 instance Monoid [a] where
     mempty  = []
     mappend = (++)
 
     -- mconcat :: [m] -> m
     -- mconcat ms = foldr mappend mempty ms
-    mconcat = concat 
+    mconcat = concat
 #+END_SRC
 
 Example:
 
-#+BEGIN_SRC haskell 
+#+BEGIN_SRC haskell
 
 ----------------------
--- Test List Monoids 
+-- Test List Monoids
 
 >>> import Data.Monoid
->>> 
+>>>
 >>> :t mconcat
 mconcat :: Monoid a => [a] -> a
->>> 
+>>>
 >>> :t mempty
 mempty :: Monoid a => a
->>> 
+>>>
 >>> :t mappend
 mappend :: Monoid a => a -> a -> a
->>> 
+>>>
 >>> :t (<>)
 (<>) :: Monoid m => m -> m -> m
 >>>
 
 >>> [9, 3] <> [1, 2, 3]
 [9,3,1,2,3]
->>> 
+>>>
 
 >>> mempty :: [a]
 []
->>> 
+>>>
 
->>> [1, 2, 3] <> mempty 
+>>> [1, 2, 3] <> mempty
 [1,2,3]
 
 >>> mempty <> [1, 2, 3]
 [1,2,3]
->>> 
+>>>
 
 >>> [9, 3] <> [1, 2, 3] <> [9, 3, 10]
 [9,3,1,2,3,9,3,10]
->>> 
+>>>
 
 >>> [9, 3] `mappend` [1, 2, 3] `mappend` [9, 3, 10]
 [9,3,1,2,3,9,3,10]
->>> 
+>>>
 
 #+END_SRC
 
-*** String
+**** String
 
 Strings are similar to lists and the mempty element is a empty string.
 
-#+BEGIN_SRC haskell 
+| Function        |    | Signature                  | Description                   |
+|-----------------+----+----------------------------+-------------------------------|
+| Monoid instance |    | String                     |                               |
+|                 |    |                            |                               |
+| mempty          | :: | ""                         | Empty string                  |
+| mappend         | :: | String -> String -> String | Concatenate two strings       |
+| moncat          | :: | [String] -> String         | Concatenate a list of strings |
+| <>              | :: | String -> String -> String | Same as mappend.              |
+|                 |    |                            |                               |
+
+
+#+BEGIN_SRC haskell
 >>> import Data.Monoid
 
 >>> :t mempty
 mempty :: Monoid a => a
->>> 
+>>>
 
 >>> mempty :: String
 ""
->>> 
+>>>
 
 >>> :t mappend
 mappend :: Monoid a => a -> a -> a
->>> 
+>>>
 
 >>> "Testing " `mappend` " String " `mappend` " monoids"
 "Testing  String  monoids"
->>> 
+>>>
 
 >>> "Testing " <> " String " <> " monoids"
 "Testing  String  monoids"
->>> 
+>>>
 
 >>> :t mconcat
 mconcat :: Monoid a => [a] -> a
->>> 
+>>>
 
 
 >>> mconcat ["Testing ", "String", " monoids"]
 "Testing String monoids"
->>> 
+>>>
 #+END_SRC
 
-*** Sum
+**** Sum
 
-#+BEGIN_SRC haskell 
+| Function        |    | Signature                           | Description                 |
+|-----------------+----+-------------------------------------+-----------------------------|
+| Monoid instance |    | newtype Sum a = Sum { getSum :: a } |                             |
+|                 |    |                                     |                             |
+| mempty          | :: | Sum 0                               | Identity element            |
+| mappend         | :: | Sum a -> Sum a -> Sum a             | Binary operation is sum (+) |
+| moncat          | :: | [Sum a] -> Sum a                    | Sum all numbers of a list   |
+| <>              | :: | Sum a -> Sum a -> Sum a             | Alias to mappend.           |
+|                 |    |                                     |                             |
+
+
+#+BEGIN_SRC haskell
 -- | Monoid under addition.
 newtype Sum a = Sum { getSum :: a }
         deriving (Eq, Ord, Read, Show, Bounded, Generic, Generic1, Num)
@@ -183,45 +230,68 @@ instance Num a => Monoid (Sum a) where
 --        Sum x `mappend` Sum y = Sum (x + y)
 #+END_SRC
 
-Example: 
+Example:
 
-#+BEGIN_SRC haskell 
+#+BEGIN_SRC haskell
 
 >>> import Data.Monoid
 
 
-{- Sum Monoid 
+{- Sum Monoid
  ----------------------------------}
+> :t Sum 
+Sum :: a -> Sum a
+> Sum 10 
+Sum {getSum = 10}
+> 
+
+> :t getSum 
+getSum :: Sum a -> a
+> 
 
 >>> mempty :: Sum Int
 Sum {getSum = 0}
 
 >>> mempty :: Product Int
 Product {getProduct = 1}
->>> 
+>>>
 
 >>> getSum (mempty :: Sum Int)
 0
 
 >>> 1 <> mempty <> 2 <> 3 <> 10 :: Sum Int
 Sum {getSum = 16}
->>> 
+>>>
 
 >>> 1 `mappend` mempty `mappend` 2 `mappend` 3 `mappend` 10 :: Sum Int
 Sum {getSum = 16}
->>> 
+>>>
 
 >>> mconcat [1, mempty, 2, 3, 10] :: Sum Int
 Sum {getSum = 16}
->>> 
+>>>
 
 >>> getSum ( mconcat [1, mempty, 2, 3, 10] :: Sum Int)
 16
->>> 
+>>>
 
 #+END_SRC
 
-*** Product
+**** Product
+
+
+| Function        |    | Signature                           | Description                     |
+|-----------------+----+-------------------------------------+---------------------------------|
+| Monoid instance |    | Product { getProduct :: a }         |                                 |
+|                 |    |                                     |                                 |
+| mempty          | :: | Product 1                           | Identity element                |
+| mappend         | :: | Product a -> Product a -> Product a | Binary operation is product (*) |
+| moncat          | :: | [Product a] -> Product a            | Product of all numbers in list  |
+| <>              | :: | Prduct a -> Product a -> Product a  | Alias to mappend.               |
+|                 |    |                                     |                                 |
+
+
+
 
 #+BEGIN_SRC haskell
 -- | Monoid under multiplication.
@@ -236,11 +306,11 @@ instance Num a => Monoid (Product a) where
 
 Example:
 
-#+BEGIN_SRC haskell 
+#+BEGIN_SRC haskell
 >>> import Data.Monoid
 
 
-{- Product Monoid  
+{- Product Monoid
  ---------------------------------}
 
 >>> 2 <> mempty :: Product Int
@@ -249,47 +319,47 @@ Product {getProduct = 2}
 Product {getProduct = 1}
 >>> mempty <> 2 :: Product Int
 Product {getProduct = 2}
->>> 
+>>>
 
 >>> getProduct (mempty :: Product Int)
 1
->>> 
+>>>
 
 >>> 2 <> 3 :: Product Int
 Product {getProduct = 6}
->>> 
+>>>
 >>> getProduct (2 <> 3 :: Product Int)
 6
->>> 
+>>>
 
 >>> mconcat [1, 2, 3, 4, 5, mempty] :: Product Int
 Product {getProduct = 120}
->>> 
+>>>
 
 >>> getProduct ( mconcat [1, 2, 3, 4, 5, mempty] :: Product Int)
 120
->>> 
+>>>
 
 :{
-let value :: Product Int 
+let value :: Product Int
     value = mconcat [1, 2, 3, 4, 5, mempty]
 :}
 
 >>> value
 Product {getProduct = 120}
->>> 
+>>>
 
 #+END_SRC
 
-*** Maybe
+**** Maybe
 
 It is useful to deal with monoids resulting from failed
-computations. 
+computations.
 
 The contents of Maybe must be an instance of Monoid type
 class.
 
-#+BEGIN_SRC haskell 
+#+BEGIN_SRC haskell
 instance Monoid a => Monoid (Maybe a) where
 
   mempty = Nothing
@@ -301,14 +371,14 @@ instance Monoid a => Monoid (Maybe a) where
 
 Example:
 
-#+BEGIN_SRC haskell 
+#+BEGIN_SRC haskell
 >>> mempty :: Maybe String
 Nothing
->>> 
+>>>
 
 >>> Just "Hello " `mappend` Just "World"
 Just "Hello World"
->>> 
+>>>
 
 >>> Just "Hello "  `mappend` Nothing
 Just "Hello "
@@ -316,53 +386,53 @@ Just "Hello "
 
 >>> Nothing  `mappend` Just "World"
 Just "World"
->>> 
+>>>
 
 >>> Nothing `mappend` Nothing
 Nothing
->>> 
+>>>
 
 
->>> Just "Hello " <> Nothing 
+>>> Just "Hello " <> Nothing
 Just "Hello "
->>> 
+>>>
 
 >>> Just "Hello " <>  Just "World"
 Just "Hello World"
->>> 
+>>>
 
 >>> Just "Hello " <>  Just "World" <> Just " Haskell" <> Just " rocks!"
 Just "Hello World Haskell rocks!"
->>> 
+>>>
 
 >>> Just "Hello " <>  Nothing <> Nothing  <> Just " rocks!"
 Just "Hello  rocks!"
->>> 
+>>>
 
 >>> mconcat [Just "Hello ", Nothing, Just " Haskell", Just " rocks"]
 Just "Hello  Haskell rocks"
->>> 
+>>>
 
 >>> mconcat [Nothing, Nothing]
 Nothing
->>> 
+>>>
 
 >>> mconcat [] :: Maybe String
 Nothing
->>> 
+>>>
 
 
 >>> Just (Product 4) <> Just (Product 5)
 Just (Product {getProduct = 20})
->>> 
+>>>
 
 >>> Just (Product 4) <> Nothing
 Just (Product {getProduct = 4})
->>> 
+>>>
 
 >>> Just (Product 4)  <> Nothing <> Just (Product 5) <> Just (Product 3)
 Just (Product {getProduct = 60})
->>> 
+>>>
 
 >>> mconcat [Just $ Sum 2, Just $ Sum 3, Nothing, Just $ Sum 10, Nothing]
 Just (Sum {getSum = 15})
@@ -370,83 +440,83 @@ Just (Sum {getSum = 15})
 
 >>> fmap getSum $ mconcat [Just $ Sum 2, Just $ Sum 3, Nothing, Just $ Sum 10, Nothing]
 Just 15
->>> 
+>>>
 
 >>> getSum <$> mconcat [Just $ Sum 2, Just $ Sum 3, Nothing, Just $ Sum 10, Nothing]
 Just 15
->>> 
+>>>
 #+END_SRC
 
-*** First
+**** First
 
 Gets the first Just value of the two operands. The content of Maybe
-doesn't need to be a instance of Monoid type class. 
+doesn't need to be a instance of Monoid type class.
 
-#+BEGIN_SRC haskell 
-newtype First a = First { getFirst :: Maybe a }  
-     deriving (Eq, Ord, Read, Show)  
+#+BEGIN_SRC haskell
+newtype First a = First { getFirst :: Maybe a }
+     deriving (Eq, Ord, Read, Show)
 
 
-instance Monoid (First a) where  
+instance Monoid (First a) where
 
-     mempty = First Nothing  
+     mempty = First Nothing
 
-     First (Just x) `mappend` _ = First (Just x)  
-     First Nothing  `mappend` x = x  
+     First (Just x) `mappend` _ = First (Just x)
+     First Nothing  `mappend` x = x
 #+END_SRC
 
 
-Example: 
+Example:
 
-#+BEGIN_SRC haskell 
+#+BEGIN_SRC haskell
 >>> First (Just 100)
 First {getFirst = Just 100}
->>> 
+>>>
 
 >>> getFirst $ First (Just 100)
 Just 100
->>> 
+>>>
 
 >>> getFirst $ First Nothing
 Nothing
->>> 
+>>>
 
 >>> First (Just 100) <> First Nothing
 First {getFirst = Just 100}
->>> 
+>>>
 
 >>> First (Just 100) <> First (Just 10)
 First {getFirst = Just 100}
->>> 
+>>>
 
 >>> First Nothing <> First (Just 10)
 First {getFirst = Just 10}
->>> 
+>>>
 
 >>> First Nothing <> First Nothing
 First {getFirst = Nothing}
->>> 
+>>>
 
 >>> mconcat [First Nothing, First (Just 10), First (Just 2)]
 First {getFirst = Just 10}
 
 >>> mconcat [First Nothing, First Nothing, First (Just 2)]
 First {getFirst = Just 2}
->>> 
+>>>
 
 >>> mconcat [First Nothing, First Nothing, First Nothing]
 First {getFirst = Nothing}
->>> 
+>>>
 
 
 #+END_SRC
 
-*** Last
+**** Last
 
 Gets the last Just value of two operands. The contents of Maybe
-doesn't need to be a instance of Monoid. 
+doesn't need to be a instance of Monoid.
 
-#+BEGIN_SRC haskell 
+#+BEGIN_SRC haskell
 newtype Last a = Last { getLast :: Maybe a }
         deriving (Eq, Ord, Read, Show, Generic, Generic1,
                   Functor, Applicative, Monad)
@@ -459,9 +529,9 @@ instance Monoid (Last a) where
 
 Example:
 
-#+BEGIN_SRC haskell 
->>> import Data.Monoid 
->>> 
+#+BEGIN_SRC haskell
+>>> import Data.Monoid
+>>>
 
 >>> :info Last
 newtype Last a = Last {getLast :: Maybe a}
@@ -480,41 +550,41 @@ instance Monoid (Last a) -- Defined in ‘Data.Monoid’
 Last {getLast = Nothing}
 >>> Last (Just 100)
 Last {getLast = Just 100}
->>> 
+>>>
 
 >>> getLast $ Last (Just 100)
 Just 100
 >>> getLast $ Last Nothing
 Nothing
->>> 
+>>>
 
 >>> Last (Just 10) <> Last (Just 100)
 Last {getLast = Just 100}
->>> 
+>>>
 >>> Last Nothing `mappend` Last (Just 100)
 Last {getLast = Just 100}
->>> 
+>>>
 >>> Last (Just 10) <> Last Nothing
 Last {getLast = Just 10}
->>> 
+>>>
 >>> Last Nothing <> Last (Just 100)
 Last {getLast = Just 100}
->>> 
+>>>
 >>> Last Nothing <> Last Nothing
 Last {getLast = Nothing}
->>> 
+>>>
 
 >>> mconcat [Last (Just 10), Last (Just 2), Last Nothing, Last (Just 3)]
 Last {getLast = Just 3}
->>> 
+>>>
 
 >>> mconcat [Last (Just 6),  Last Nothing, Last (Just 3)]
 Last {getLast = Just 3}
->>> 
+>>>
 
 >>> mconcat [Last (Just 6),  Last Nothing]
 Last {getLast = Just 6}
->>> 
+>>>
 
 >>> mconcat [Last Nothing]
 Last {getLast = Nothing}
@@ -523,7 +593,157 @@ Last {getLast = Nothing}
 
 #+END_SRC
 
-** References
+**** Endo 
+
+Endo is a Monoid defined for endomorphism which means transformation
+(a -> a) from a type to itself. 
+
+
+
+| Function        |    | Signature                                   | Description                                  |
+|-----------------+----+---------------------------------------------+----------------------------------------------|
+| Monoid instance |    | newtype Endo a = Endo { appEndo :: a -> a } |                                              |
+|                 |    |                                             |                                              |
+| mempty          | :: | Endo id                                     | Identity element is identity function        |
+| mappend         | :: | Endo a -> Endo a -> Endo a                  | Binary operation is function composition (.) |
+| moncat          | :: | [Endo a] -> Endo a                          | Composition of all functions in a list       |
+| <>              | :: | Endo a -> Endo a -> Endo a                  | Alias to mappend.                            |
+|                 |    |                                             |                                              |
+
+
+ - [[http://hackage.haskell.org/package/base-4.9.1.0/docs/src/Data.Monoid.html#Endo][Source Code]]
+
+#+BEGIN_SRC haskell 
+  -- | The monoid of endomorphisms under composition.
+  newtype Endo a = Endo { appEndo :: a -> a }
+                 deriving (Generic)
+
+  instance Monoid (Endo a) where
+          mempty = Endo id
+          Endo f `mappend` Endo g = Endo (f . g)
+                                    
+#+END_SRC
+
+
+Example:
+
+#+BEGIN_SRC haskell 
+  > import Data.Monoid
+  >
+
+  -- Check the types 
+  --
+  > :info Endo
+  newtype Endo a = Endo {appEndo :: a -> a}
+          -- Defined in ‘Data.Monoid’
+  instance Monoid (Endo a) -- Defined in ‘Data.Monoid’
+  > 
+  > 
+
+
+  > :t Endo
+  Endo :: (a -> a) -> Endo a
+  > 
+  > :t appEndo
+  appEndo :: Endo a -> a -> a
+  > 
+
+  -- Define test functions 
+  -- 
+  > let f1 x = 10 * x
+  > let f2 x = 5 * x
+  > let f3 x = x + 9
+  > let f4 x = x - 7
+  > 
+  > let m = Endo f1 
+  > :t m
+  m :: Num a => Endo a
+  > 
+  > appEndo m 3
+  30
+  > f1 3
+  30
+  >
+
+
+  -- Monoid Identity value 
+  -- 
+
+  > let m1 = mempty :: Num a => Endo a
+  > :t m1
+  m1 :: Num a => Endo a
+  > app
+  appEndo     appendFile
+  > appEndo m1 3
+  3
+  > appEndo m1 100
+  100
+  > 
+
+
+  -- It is just function composition.
+  --
+  > let a = Endo f1 <> Endo f2 
+  > appEndo a 3
+  150
+  > f1 . f2 $ 3
+  150
+  > 
+  > let b = Endo f1 <> Endo f2 <> Endo f3
+  > :t b
+  b :: Num a => Endo a
+  > 
+  > appEndo b 3
+  600
+  > f1 . f2 . f3 $ 3
+  600
+  > 
+  > let flist = [f1, f2, f3, f4]
+  > :t flist
+  flist :: Num a => [a -> a]
+  > 
+
+
+  ---  Compose all functions in the list.
+  --- 
+  > let flist = [Endo f1, Endo f2, Endo f3, Endo f4]
+  > :t flist
+  flist :: Num a => [Endo a]
+  > 
+  > let mm = mconcat flist
+  > :t mm
+  mm :: Num a => Endo a
+  > 
+  > app
+  appEndo     appendFile
+  > appEndo mm 3
+  250
+  > f1 . f2 . f3 . f4 $ 3
+  250
+  > f1 $ f2 $ f3 $ f4 $ 3
+  250
+  > f1 ( f2 ( f3 ( f4  3 )))
+  250
+  > 
+
+
+  > let mm2 = map Endo [f1, f2, f3, f4]
+  > :t mm2
+  mm2 :: Num a => [Endo a]
+  > 
+  > let mm2 = mconcat $ map Endo [f1, f2, f3, f4]
+  > :t mm2
+  mm2 :: Num a => Endo a
+  > 
+  > appEndo mm2 3
+  250
+  > map (appEndo mm2) [1, 2, 3, 4, 5]
+  [150,200,250,300,350]
+  > 
+
+#+END_SRC
+
+*** References
 
  - Module:  [[https://hackage.haskell.org/package/base-4.8.2.0/docs/Data-Monoid.html][Data.Monoid]]
 
@@ -534,3 +754,4 @@ Last {getLast = Nothing}
  - http://www.scs.stanford.edu/14sp-cs240h/slides/phantoms.html
 
  - [[https://twdkz.wordpress.com/2013/05/31/data-analysis-with-monoids/][Data analysis with Monoids | twdkz]]
+
