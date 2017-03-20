@@ -509,4 +509,145 @@ Testing in REPL:
 
 #+END_SRC
 
+** Debug Computations using trace 
+
+The module Debug.Trace provides functions to allow debug
+computations. 
+
+
+ - Module: [[https://hackage.haskell.org/package/base-4.9.0.0/docs/Debug-Trace.html][Debug.Trace]]
+
+| Function  |    | Signature             | Description                                               |
+|-----------+----+-----------------------+-----------------------------------------------------------|
+| trace     | :: | String -> a -> a      | Print the first argument (string) and returns the second. |
+| traceShow | :: | Show a => a -> b -> b | Print the first value and returns the second.             |
+| traceIO   | :: | String -> IO ()       | Like trace but works in a IO Monad.                       |
+|           |    |                       |                                                           |
+
+
+Example:
+
+#+BEGIN_SRC haskell 
+  import Debug.Trace
+
+  let x = 10 + 20 in trace ("the value of (10 + 20) is = " ++ show x) x
+  > the value of (10 + 20) is = 30
+  30
+  it
+
+
+  :{
+  factorial :: Integer -> Integer
+  factorial 0 = 1
+  factorial n = trace ("n = " ++ show n) n * factorial (n -1)
+  :}
+
+
+  > factorial 5
+  n = 5
+  n = 4
+  n = 3
+  n = 2
+  n = 1
+  120
+  it :: Integer
+  >
+
+  > factorial 10
+  n = 10
+  n = 9
+  n = 8
+  n = 7
+  n = 6
+  n = 5
+  n = 4
+  n = 3
+  n = 2
+  n = 1
+  3628800
+  it :: Integer
+  >
+
+
+
+  :{    
+  myfoldl :: Show acc => (acc -> x -> acc) -> acc -> [x] -> acc
+  myfoldl step acc []      =  acc
+  myfoldl step acc (x:xs)  =  myfoldl step (step acc x) xs                       
+  :}
+
+
+  > myfoldl (\acc x -> 10 * acc +x) 0 [1, 2, 3, 4, 5]
+  12345
+  >     
+
+
+  :{    
+  myfoldl2 :: Show acc => (acc -> x -> acc) -> acc -> [x] -> acc
+  myfoldl2 step acc []      =  acc
+  myfoldl2 step acc (x:xs)  =  let acc' = step acc x
+                               in trace ("acc' = " ++ show acc') $ myfoldl2 step acc' xs                       
+  :}
+
+  >  myfoldl2 (\acc x -> 10 * acc +x) 0 [1, 2, 3, 4, 5]
+  acc' = 1
+  acc' = 12
+  acc' = 123
+  acc' = 1234
+  acc' = 12345
+  12345
+  > 
+
+  > let result =  myfoldl2 (\acc x -> 10 * acc +x) 0 [1, 2, 3, 4, 5]
+
+  > result
+  acc' = 1
+  acc' = 12
+  acc' = 123
+  acc' = 1234
+  acc' = 12345
+  12345
+
+  > result
+  acc' = 1
+  acc' = 12
+  acc' = 123
+  acc' = 1234
+  acc' = 12345
+  12345
+
+  > result * 3
+  acc' = 1
+  acc' = 12
+  acc' = 123
+  acc' = 1234
+  acc' = 12345
+  37035
+  > 
+
+  :{
+  traceLabel :: Show a => String -> a -> a 
+  traceLabel label value = trace (label ++ show value) value
+  :}
+
+   
+  :{    
+  myfoldl3 :: Show acc => (acc -> x -> acc) -> acc -> [x] -> acc
+  myfoldl3 step acc []      =  acc
+  myfoldl3 step acc (x:xs)  =  myfoldl3 step (traceLabel "acc' = " $ step acc x) xs                       
+  :}
+
+   
+  >  myfoldl3 (\acc x -> 10 * acc +x) 0 [1, 2, 3, 4, 5]
+  acc' = 1
+  acc' = 12
+  acc' = 123
+  acc' = 1234
+  acc' = 12345
+  12345
+  > 
+
+
+#+END_SRC
+
 ** Haskell Interactive Shell - GHCI
