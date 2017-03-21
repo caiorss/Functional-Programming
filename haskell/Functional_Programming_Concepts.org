@@ -41,236 +41,6 @@ Non Essential Features:
  - Pattern Matching
  - Monads
 
-** Evaluation Strategy / Parameter Passing 
-*** Call-by-value
-
-Call-by-value (aka pass-by-value, eager evaluation, strict evaluation or
-applicative-order evaluation) Evaluation at the point of call, before
-the function application application. This evaluation strategy is used
-by most programming languages like Python, Scheme, Ocaml and others.
-
-
-#+BEGIN_SRC 
-let add2xy x y = x + x + y 
-
-add2xy (3 * 4) ( 2 + 3) 
-add2xy 12 5 
-=  12 + 12 + 5 
-=  29
-
-#+END_SRC
-
-Example in Python:
-
-#+BEGIN_SRC python
->>> def add(x, y):
-...   sum = x + y
-...   x = sum 
-...   return (x, sum)
-... 
->>> 
-
-
->>> x = 10
->>> y = 20
-
-# In call-by-value strategy. The function doesn't change its arguments. 
-# 
->>> add(x, y)
-(30, 30)
-
-# They remain unchanged.
-#
->>> x
-10
->>> y
-20
-
-# Arguments are evaluated before the function invocation.
-#
-# add((10 + 20), (3 * 3))
-# add(30, 9)
-# (39, 39)
-#
->>> add((10 + 20),(3 * 3))
-(39, 39)
->>> 
->>> add((10 + 20),(3 / 0))
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-ZeroDivisionError: division by zero
->>> 
-
-#+END_SRC
-
-*** Call-by-name
-
-Call-by-name (aka pass-by-name): It is a _non-memoized lazy_
-_evaluation_. Arguments are passed non evaluated, they are only
-evaluated when it is needed. The arguments are substituted in the
-function. This evaluation strategy can be inefficient when the
-arguments are evaluated many times.
-
-Example: 
-
-#+BEGIN_SRC
-// Each use of x y and replaced in the function by (3 * 4) and (2 + 3)
-// respectively. The arguments are evaluated after substituted 
-// in the function
-
-let add2xy x y = x + x + y
-let add2xy (3 * 4) (2 + 3) 
-= (3 * 4) + (3 * 4) + (2 + 3)
-= 12 + 12 + 5
-= 29
-#+END_SRC
-
-
-
-Call-by-name can be simulated using thunks (functions without arguments).
-
-Example in Python: 
-
-#+BEGIN_SRC python
->>> def add2xy (x, y):
-...     return x() + x() + y()
-... 
->>> add2xy (lambda : (3 * 4), lambda: (2 + 3))
-29
->>> 
-
-#+END_SRC
-
-Example in Scheme:
-
-#+BEGIN_SRC scheme
->  (define (add2xy x y) (+ (x) (x) (y))) 
-> 
-;; The parameter is evaluated every time it is used. 
-;;
-> (define (displayln msg) 
-      (display msg)
-      (newline))
-
-
-> (add2xy (lambda () (displayln "Eval x") (* 3 4))  
-          (lambda () (displayln "Eval y") (+ 2 3))
-  )               
-Eval x
-Eval x
-Eval y
-29
-> 
-#+END_SRC
-
-*** Call-by-need 
-
-Call-by-need_ (aka lazy evaluation, non-strict evaluation or
-normal-order evaluation): _Memoized lazy-evaluation_. It is a 
-memoized version of call-by-name, after its argument is evaluated,
-the values are stored for further computations. When the argument
-evaluation has no side-effects, in other words, always yields the
-same output when evaluated many times it produces the same result
-as call-by-name. This strategy is used in Haskell.
-
-Example: In Haskell the parameters are not evaluated at the point they
-are passed to the function. They are only evaluated when needed.
-
-#+BEGIN_SRC haskell
-> let add_xy x y z = x + y
-> 
-> :t add_xy
-add_xy :: Num a => a -> a -> t -> a
->
-
-
->>> div 10 2
-5
->>> div 10 0
- ,*** Exception: divide by zero
->>> 
-
-
--- The parameter z: (3 / 0) is not evaluated 
--- because it is not needed.
--- 
-> add_xy 3 4 (3 / 0)
-7
-> 
-
->>> add_xy 3 4 (div 10 0)
-7
->>> 
-
--- sum [1 ..] is not evaluated. 
--- If it were evaluated the computer would hang 
--- or trow an arithmetic overflow exception
---
->>> add_xy 3 4 (sum [1 ..])
-7
->>> 
-
->>> add_xy 3 4 (div (sum [1 ..]) 0)
-7
->>> 
-
--- The infinite list is not fully evaluated 
---
-> let ones = 1:ones
-
-> take 10 ones
-[1,1,1,1,1,1,1,1,1,1]
-> 
-> take 20 ones
-[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-> 
-#+END_SRC
-
-*** Call-by-reference 
-
- - _Call-by-reference_ (aka pass-by-reference): The function changes
-   the value of the argument. Supported in: C++, Pascal, Python
-   Objects.
-
-Example in C:
-
-#+BEGIN_SRC C
-// The function add10 changes it argument.
-//
-#include <stdio.h>
-
-void add10(int * x){
-  *x = *x + 10 ;
-}
-
-void main (){
-  
-  int x = 5;
-  add10(&x);
-  printf("x = %d\n", x);  
-}
-
-#+END_SRC
-
-Test:
-
-#+BEGIN_SRC 
-$ gcc /tmp/test.c
-$ ./a.out 
-x = 15
-
-$ tcc -run /tmp/test.c
-x = 15
-#+END_SRC
-
-*** References
-
-  - [[http://www.lix.polytechnique.fr/~catuscia/teaching/cg428/02Spring/lecture_notes/L07.1.html][CSE 428: Lecture Notes 8]]
-  - [[http://users-cs.au.dk/danvy/dProgSprog12/Lecture-notes/parameter-passing-strategies.html][Parameter-passing strategies — dProgSprog 2012 Lecture Notes]]
-  - [[http://academic.udayton.edu/saverioperugini/courses/cps343/lecture_notes/lazyevaluation.html][CPS 343/543 Lecture notes: Lazy evaluation and thunks]]
-  - [[https://en.wikipedia.org/wiki/Evaluation_strategy#Strict_evaluation][Evaluation strategy - Wikipedia, the free encyclopedia]]
-  - [[http://www.lix.polytechnique.fr/~catuscia/teaching/cg428/02Spring/lecture_notes/L07.1.html][CSE 428: Lecture Notes 8 - Procedures and Functions]] 
-
 ** First-Class Function 
 
 Functions can be passed as arguments to other functions, returned
@@ -1527,82 +1297,6 @@ See also:
  - [[https://en.wikipedia.org/wiki/Partial_application][Partial application - Wikipedia]]
 
  - [[https://dzone.com/articles/whats-wrong-java-8-currying-vs][What's Wrong with Java 8: Currying vs Closures]]
-
-** Lazy Evaluation
-
-"Lazy evaluation" means that data structures are computed
-incrementally, as they are needed (so the trees never exist in memory
-all at once) parts that are never needed are never computed. Haskell
-uses lazy evaluation by default.
-
-Example in Haskell: 
-
-#+BEGIN_SRC haskell
-> let lazylist = [2..1000000000]
-> 
-> let f x = x^6 
-> 
-> take 5 lazylist 
-[2,3,4,5,6]
->
->
-> {- Only the terms needed are computed. -}
-> take 5 ( map f lazylist )
-[64,729,4096,15625,46656]
-> 
-#+END_SRC
-
-Example in Python:
-
- - Python uses eager evaluation by default. In order to get lazy evaluation in python the programmer must use iterators or generators. The example below uses generator.
-
-#+BEGIN_SRC python
-
-def lazy_list():
-    """ Infinite list """
-    x = 0 
-    while True:
-        x += 2
-        yield x
-
-
->>> gen = lazy_list()
->>> next(gen)
-2
->>> next(gen)
-4
->>> next(gen)
-6
->>> next(gen)
-8
->>> next(gen)
-10
->>> 
-
-def take(n, iterable):
-    return [next(iterable) for i in range(n)]
-
-def mapi(func, iterable):   
-    while True:
-        yield func(next(iterable))
-        
-f = lambda x: x**5
-
->>> take(5, lazy_list())
-[2, 4, 6, 8, 10]
->>> take(10, lazy_list())
-[2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
->>> 
-
->>> take(5, mapi(f, lazy_list()))
-[32, 1024, 7776, 32768, 100000]
->>> 
->>> take(6, mapi(f, lazy_list()))
-[32, 1024, 7776, 32768, 100000, 248832]
->>> 
-
-#+END_SRC
-
 ** Tail Call Optimization and Tail Recursive Functions 
 *** Tail Call 
 
@@ -3767,7 +3461,606 @@ def map_apply (f, xss):
 
 
 #+END_SRC
-** Special Functions 
+** Lazy Evaluation
+*** Overview 
+
+"Lazy evaluation" means that data structures are computed
+incrementally, as they are needed (so the trees never exist in memory
+all at once) parts that are never needed are never computed. Haskell
+uses lazy evaluation by default.
+
+
+Benefits
+
+ - Avoid unecessary computations
+
+ - Infinite data structure
+
+ - Separate generation from consumption
+
+ - Control-flow structures can be defined as functions
+
+ - Cyclic programming
+
+ - Ability to use Functiosn as control structures
+
+ - Define control flow (structures) as abstractions instead of primitives
+
+Drawbacks
+
+ - Hard to predict performance
+
+ - Hard to predict space leaks
+
+ - Difficult to predict when the memory is freed
+
+ - Can lead to space leaks (aka memory leak) if not used without care (see foldl).
+
+
+#+BEGIN_SRC haskell
+> let lazylist = [2..1000000000]
+> 
+> let f x = x^6 
+> 
+> take 5 lazylist 
+[2,3,4,5,6]
+>
+>
+> {- Only the terms needed are computed. -}
+> take 5 ( map f lazylist )
+[64,729,4096,15625,46656]
+> 
+#+END_SRC
+
+Example in Python:
+
+ - Python uses eager evaluation by default. In order to get lazy evaluation in python the programmer must use iterators or generators. The example below uses generator.
+
+#+BEGIN_SRC python
+
+def lazy_list():
+    """ Infinite list """
+    x = 0 
+    while True:
+        x += 2
+        yield x
+
+
+>>> gen = lazy_list()
+>>> next(gen)
+2
+>>> next(gen)
+4
+>>> next(gen)
+6
+>>> next(gen)
+8
+>>> next(gen)
+10
+>>> 
+
+def take(n, iterable):
+    return [next(iterable) for i in range(n)]
+
+def mapi(func, iterable):   
+    while True:
+        yield func(next(iterable))
+        
+f = lambda x: x**5
+
+>>> take(5, lazy_list())
+[2, 4, 6, 8, 10]
+>>> take(10, lazy_list())
+[2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+>>> 
+
+>>> take(5, mapi(f, lazy_list()))
+[32, 1024, 7776, 32768, 100000]
+>>> 
+>>> take(6, mapi(f, lazy_list()))
+[32, 1024, 7776, 32768, 100000, 248832]
+>>> 
+
+#+END_SRC
+*** Evaluation Strategy / Parameter Passing 
+**** Call-by-value
+
+Call-by-value (aka pass-by-value, eager evaluation, strict evaluation or
+applicative-order evaluation) Evaluation at the point of call, before
+the function application application. This evaluation strategy is used
+by most programming languages like Python, Scheme, Ocaml and others.
+
+
+#+BEGIN_SRC 
+let add2xy x y = x + x + y 
+
+add2xy (3 * 4) ( 2 + 3) 
+add2xy 12 5 
+=  12 + 12 + 5 
+=  29
+
+#+END_SRC
+
+Example in Python:
+
+#+BEGIN_SRC python
+>>> def add(x, y):
+...   sum = x + y
+...   x = sum 
+...   return (x, sum)
+... 
+>>> 
+
+
+>>> x = 10
+>>> y = 20
+
+# In call-by-value strategy. The function doesn't change its arguments. 
+# 
+>>> add(x, y)
+(30, 30)
+
+# They remain unchanged.
+#
+>>> x
+10
+>>> y
+20
+
+# Arguments are evaluated before the function invocation.
+#
+# add((10 + 20), (3 * 3))
+# add(30, 9)
+# (39, 39)
+#
+>>> add((10 + 20),(3 * 3))
+(39, 39)
+>>> 
+>>> add((10 + 20),(3 / 0))
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ZeroDivisionError: division by zero
+>>> 
+
+#+END_SRC
+
+**** Call-by-name
+
+Call-by-name (aka pass-by-name): It is a _non-memoized lazy_
+_evaluation_. Arguments are passed non evaluated, they are only
+evaluated when it is needed. The arguments are substituted in the
+function. This evaluation strategy can be inefficient when the
+arguments are evaluated many times.
+
+Example: 
+
+#+BEGIN_SRC
+// Each use of x y and replaced in the function by (3 * 4) and (2 + 3)
+// respectively. The arguments are evaluated after substituted 
+// in the function
+
+let add2xy x y = x + x + y
+let add2xy (3 * 4) (2 + 3) 
+= (3 * 4) + (3 * 4) + (2 + 3)
+= 12 + 12 + 5
+= 29
+#+END_SRC
+
+
+
+Call-by-name can be simulated using thunks (functions without arguments).
+
+Example in Python: 
+
+#+BEGIN_SRC python
+>>> def add2xy (x, y):
+...     return x() + x() + y()
+... 
+>>> add2xy (lambda : (3 * 4), lambda: (2 + 3))
+29
+>>> 
+
+#+END_SRC
+
+Example in Scheme:
+
+#+BEGIN_SRC scheme
+>  (define (add2xy x y) (+ (x) (x) (y))) 
+> 
+;; The parameter is evaluated every time it is used. 
+;;
+> (define (displayln msg) 
+      (display msg)
+      (newline))
+
+
+> (add2xy (lambda () (displayln "Eval x") (* 3 4))  
+          (lambda () (displayln "Eval y") (+ 2 3))
+  )               
+Eval x
+Eval x
+Eval y
+29
+> 
+#+END_SRC
+
+**** Call-by-need 
+
+Call-by-need_ (aka lazy evaluation, non-strict evaluation or
+normal-order evaluation): _Memoized lazy-evaluation_. It is a 
+memoized version of call-by-name, after its argument is evaluated,
+the values are stored for further computations. When the argument
+evaluation has no side-effects, in other words, always yields the
+same output when evaluated many times it produces the same result
+as call-by-name. This strategy is used in Haskell.
+
+Example: In Haskell the parameters are not evaluated at the point they
+are passed to the function. They are only evaluated when needed.
+
+#+BEGIN_SRC haskell
+> let add_xy x y z = x + y
+> 
+> :t add_xy
+add_xy :: Num a => a -> a -> t -> a
+>
+
+
+>>> div 10 2
+5
+>>> div 10 0
+ ,*** Exception: divide by zero
+>>> 
+
+
+-- The parameter z: (3 / 0) is not evaluated 
+-- because it is not needed.
+-- 
+> add_xy 3 4 (3 / 0)
+7
+> 
+
+>>> add_xy 3 4 (div 10 0)
+7
+>>> 
+
+-- sum [1 ..] is not evaluated. 
+-- If it were evaluated the computer would hang 
+-- or trow an arithmetic overflow exception
+--
+>>> add_xy 3 4 (sum [1 ..])
+7
+>>> 
+
+>>> add_xy 3 4 (div (sum [1 ..]) 0)
+7
+>>> 
+
+-- The infinite list is not fully evaluated 
+--
+> let ones = 1:ones
+
+> take 10 ones
+[1,1,1,1,1,1,1,1,1,1]
+> 
+> take 20 ones
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+> 
+#+END_SRC
+
+**** Call-by-reference 
+
+ - _Call-by-reference_ (aka pass-by-reference): The function changes
+   the value of the argument. Supported in: C++, Pascal, Python
+   Objects.
+
+Example in C:
+
+#+BEGIN_SRC C
+// The function add10 changes it argument.
+//
+#include <stdio.h>
+
+void add10(int * x){
+  *x = *x + 10 ;
+}
+
+void main (){
+  
+  int x = 5;
+  add10(&x);
+  printf("x = %d\n", x);  
+}
+
+#+END_SRC
+
+Test:
+
+#+BEGIN_SRC 
+$ gcc /tmp/test.c
+$ ./a.out 
+x = 15
+
+$ tcc -run /tmp/test.c
+x = 15
+#+END_SRC
+
+**** References
+
+   - [[http://www.lix.polytechnique.fr/~catuscia/teaching/cg428/02Spring/lecture_notes/L07.1.html][CSE 428: Lecture Notes 8]]
+   - [[http://users-cs.au.dk/danvy/dProgSprog12/Lecture-notes/parameter-passing-strategies.html][Parameter-passing strategies — dProgSprog 2012 Lecture Notes]]
+   - [[http://academic.udayton.edu/saverioperugini/courses/cps343/lecture_notes/lazyevaluation.html][CPS 343/543 Lecture notes: Lazy evaluation and thunks]]
+   - [[https://en.wikipedia.org/wiki/Evaluation_strategy#Strict_evaluation][Evaluation strategy - Wikipedia, the free encyclopedia]]
+   - [[http://www.lix.polytechnique.fr/~catuscia/teaching/cg428/02Spring/lecture_notes/L07.1.html][CSE 428: Lecture Notes 8 - Procedures and Functions]] 
+
+*** Lazy Evaluation implementation in strict languages
+
+In strict languages with first-class function it is possible to
+implement lazy evaluation with "thunks" or function with no arguments
+wrapping an expression. 
+
+Example in F#.
+
+#+BEGIN_SRC fsharp
+// Ordinary Value 
+//----------------------------------------
+- let a = 1 + 2 + 3 + 5 + 5 ;;
+
+val a : int = 16
+
+// Lazy Value - implementation 1
+//-----------------------------------------
+- let b = fun () -> 1 + 2 + 3 + 4 + 5 ;;
+
+val b : unit -> int
+
+> b () ;; // Force evalution ;;
+val it : int = 15
+> 
+
+// Lazy Valye - Implementation 2 
+//-----------------------------------
+- 
+- type Lazy<'T> = Lazy of (unit -> 'T) ;;
+
+
+- let force (Lazy thunk) = thunk () ;     
+- ;;
+
+val force : Lazy<'a> -> 'a
+
+
+> let lazyValue = Lazy(fun () -> 1 + 2 + 3 + 5) ;;
+
+val lazyValue : Lazy<int> 
+
+- force lazyValue ;;
+val it : int = 11
+> 
+
+
+- let lazyValue2 = Lazy(fun () -> 10 / 0 ) ;;      
+
+val lazyValue2 : Lazy<int> 
+
+> force lazyValue2 ;;                        
+System.DivideByZeroException: Attempted to divide by zero.
+  at FSI_0021+lazyValue2@37.Invoke (Microsoft.FSharp.Core.Unit unitVar0) [0x00001] in <edb3af9a5a774c15bfbce9f877c6be59>:0 
+
+#+END_SRC
+
+Lazy lists or streams like can implemented with thunks. All Haskell
+lists and expressions are lazy by default.
+
+Example in F#.
+
+#+BEGIN_SRC fsharp 
+  /// Almost equivalent to Haskell lists 
+  type stream<'a> =
+      | Nil
+      | Cons of 'a * (unit -> stream<'a>)
+  ;;    
+
+
+
+  > let xs0 = Nil
+  ;;
+  val xs0 : stream<'a>
+
+
+  > let xs1 = Cons(10, fun () -> Nil) ;;
+  ;;
+  val xs1 : stream<int> 
+
+  > 
+
+  let xs2 = Cons(10, fun () -> Cons (20, fun () -> Nil))
+  ;;
+  val xs2 : stream<int>
+
+
+
+  let toList (xs: stream<'a>) =
+      let rec aux acc xs =
+          match xs with
+          | Nil            -> List.rev acc
+          | Cons(a, thunk) -> aux (a::acc) (thunk())
+      aux [] xs
+  ;;        
+          
+  val toList : xs:stream<'a> -> 'a list
+
+  - toList xs1 ;;
+  val it : int list = [10]
+  >
+
+
+  - toList xs2 ;;
+  val it : int list = [10; 20]
+  >
+
+
+  let take n (xs: stream<'a>) =
+      let rec aux acc xs n =
+          match (n, xs) with
+          | 0, _               ->  List.rev acc
+          | _, Nil             ->  List.rev acc
+          | k, Cons(a, thunk)  ->  aux (a::acc) (thunk()) (k - 1)
+      aux [] xs n 
+  ;;
+
+
+  val take : n:int -> xs:stream<'a> -> 'a list
+
+
+  let sumSt (xs: stream<int>) =
+      let rec aux acc xs =
+          match xs with
+          | Nil             -> acc 
+          | Cons(a, thunk)  -> aux (acc + a) (thunk())
+      aux 0 xs
+  ;;
+
+  val sumSt : xs:stream<int> -> int
+
+
+  let rec mapSt fn (xs: stream<'a>): stream<'b> =
+      match xs with
+      | Nil            -> Nil 
+      | Cons(a, thunk) -> Cons(fn a, fun () -> mapSt fn (thunk()))
+  ;;
+      
+
+  let takeSt n (xs: stream<'a>) =
+      let rec aux n xs = 
+          match n, xs with 
+          | 0, _               -> Nil
+          | _, Nil             -> Nil 
+          | k, Cons(a, thunk)  -> Cons(a, fun () -> aux (k - 1) (thunk()))
+      aux n xs 
+  ;;
+
+
+  val takeSt : n:int -> xs:stream<'a> -> stream<'a>
+
+
+
+  /// Create an infinite list/stream with some value 
+  //
+  let rec repeat x = Cons (x, fun () -> repeat x)
+
+  val repeat : x:'a -> stream<'a>
+
+
+  > let ones = repeat 1 ;;
+
+  val ones : stream<int>
+
+
+  > take 3 ones ;;
+  val it : int list = [1; 1; 1]
+  > 
+  - take 15 ones ;;
+  val it : int list = [1; 1; 1; 1; 1; 1; 1; 1; 1; 1; 1; 1; 1; 1; 1]
+  > 
+
+  let numbers =
+      let rec aux n = Cons(n, fun () -> aux (n + 1))
+      aux 0
+  ;;              
+
+  > take 2 numbers ;;
+  val it : int list = [0; 1]
+  > 
+  - take 12 numbers ;;
+  val it : int list = [0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11]
+  > 
+
+  - takeSt 5 numbers |> toList ;;
+  val it : int list = [0; 1; 2; 3; 4]
+  > 
+  - takeSt 10 numbers |> toList ;;
+  val it : int list = [0; 1; 2; 3; 4; 5; 6; 7; 8; 9]
+  > 
+
+  > takeSt 5 numbers |> sumSt ;; 
+  val it : int = 10
+  > 
+
+  - sumSt <| takeSt 5 numbers  ;;        
+  val it : int = 10
+  > 
+
+
+  > takeSt 10 numbers |> sumSt ;;                       
+  val it : int = 45
+
+
+  - numbers |> mapSt (fun x -> 3 * x + 4) |> takeSt 5 |> toList ;;
+  val it : int list = [4; 7; 10; 13; 16]
+  > 
+
+  - numbers |> mapSt (fun x -> 3 * x + 4) |> takeSt 5 |> sumSt ;; 
+  val it : int = 50
+  > 
+
+  let rec unfold (fn: 'state -> ('output * 'state) option)  (state: 'state) : stream<'output>=
+      match fn state with
+      | None            -> Nil
+      | Some (out, st)  -> Cons(out, fun () -> unfold fn st)
+  ;;    
+
+  val unfold :
+    fn:('state -> ('output * 'state) option) -> state:'state -> stream<'output>
+
+
+  let naturals = unfold (fun s -> Some (s + 1, s + 1)) 0
+
+  - takeSt 10 naturals |> toList ;;
+  val it : int list = [1; 2; 3; 4; 5; 6; 7; 8; 9; 10]
+  > 
+
+  let fibSerie = unfold (fun (an, an1) -> let next = an + an1 in Some (next, (an1, next))) (0, 1)
+
+  > 
+  - fibSerie |> takeSt 10 |> toList ;;
+
+  val it : int list = [1; 2; 3; 5; 8; 13; 21; 34; 55; 89]
+  >
+
+  - fibSerie |> takeSt 20 |> sumSt ;; 
+  val it : int = 28655
+  > 
+#+END_SRC
+
+*See also*
+
+Lazy Evaluation in OCaml and Strams (Lazy Lists)
+
+ - [[http://www.cs.cornell.edu/courses/cs3110/2011sp/lectures/lec24-streams/streams.htm][Lecture 23: Streams and Lazy Evaluation]] 
+
+ - [[http://www.cs.cornell.edu/courses/cs3110/2009sp/recitations/rec24.html][Recitation 24: Streams and lazy evaluation]]
+
+Lazy Evaluation in SML 
+
+ - [[https://www.cs.cmu.edu/~rwh/introsml/techniques/memoization.htm][Memoization and Laziness]]
+
+Matlab 
+
+ - [[http://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/11321/versions/1/previews/Streams/html/demo.html][Stream programming in Matlab]]
+
+
+Misc 
+
+ - [[http://academic.udayton.edu/saverioperugini/courses/cps343/lecture_notes/lazyevaluation.html][CPS 343/543 Lecture notes: Lazy evaluation and thunks]]  
+
+
+ - Phillip Wadler, Walid Taha and David MacQueen. *How to Add laziness
+   to a strict language without even being odd* -
+   <https://www.cs.rice.edu/~taha/publications/conference/sml98.pdf>
+
+** Terminology 
+*** Predicate
+*** Thunk
 *** Identity Function 
 
 The identity function is a polymorphic function which returns the
@@ -3825,7 +4118,8 @@ Python Implementation:
 10
 >>> 
 #+END_SRC
-
+*** Combinators 
+** Special Functions 
 *** List Constructor (Cons)
 
 The cons operator is widely used in list recursive functions and
