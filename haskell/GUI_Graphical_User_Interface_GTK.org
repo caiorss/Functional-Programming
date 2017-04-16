@@ -66,6 +66,46 @@ for gtk 2.0.
    event when it happens. The drawback of this approach is the loss of
    control and the possibility of callback hell.
 
+
+GUI Challenges:
+
+ - GUI design, look and feel is hard to specify in programatically. So
+   it is hard to develop a complex GUI without a GUI builder such as
+   Glade for Gtk, QT Designer for QT and so on.
+
+ - The event handlers or callbacks execution must finish as soon as
+   possible and avoid _blocking IO_ or perform any task that operation
+   that blocks GUI event loop thread.
+
+ - Any long running computation like run Haskell getLine that waits
+   the user enter an input or an http request or anything that does
+   not finish soon or blocks the GUI event loop thread must run in
+   another thread in order to avoid the GUI crashing or freezing and
+   it becoming unresponsive.
+
+ - Callbacks are written in continuation passing style what makes it
+   hard to reason about and to compose and it can also lead to
+   callback-hell, when there is multiple nested callback function.
+
+ - Many GUI toolkits like GTK are not thread-safe. The GUI functions
+   can only be called from the GUI event loop thread.
+
+ - The communication between callbacks requires global variables or
+   global mutable references what can lead to race conditions and
+   make the code hard to understand and debug.
+
+See: 
+
+ - [[http://stackoverflow.com/questions/2548200/how-do-i-access-gui-gtk-from-multi-threads][c# - How do I access GUI (GTK) from multi threads? - Stack Overflow]]  
+
+ - [[http://trampster.blogspot.com.br/2012/10/invoking-on-ui-thread-in-gtk.html][Before Humanity: Invoking on the UI thread in GTK#]]
+
+ - [[http://softwareengineering.stackexchange.com/questions/165663/thread-safe-gui-programming][multithreading - Thread safe GUI programming - Software Engineering Stack Exchange]]
+
+ - [[https://blogs.oracle.com/swinger/entry/on_gui_multithreading][On GUI Multithreading (Let's Swing!)]]
+
+ - [[http://wiki.c2.com/?TheGuiThreadIsTheMainThread][The Gui Thread Is The Main Thread]]
+
 ** Gtk3 functions and types 
 
 *Package Documentation* 
