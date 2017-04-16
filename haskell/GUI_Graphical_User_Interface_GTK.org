@@ -69,9 +69,12 @@ for gtk 2.0.
 
 GUI Challenges:
 
- - GUI design, look and feel is hard to specify in programatically. So
-   it is hard to develop a complex GUI without a GUI builder such as
-   Glade for Gtk, QT Designer for QT and so on.
+ - GUI design, look and feel are hard to specify programatically
+   because the code must be recompiled if the GUI is modified, changes
+   in the GUI may break the GUI code and end-users may want to change
+   it to fit better their needs. So it is hard to develop a complex GUI
+   without a GUI builder such as Glade for Gtk, QT Designer for QT and
+   so on. 
 
  - The event handlers or callbacks execution must finish as soon as
    possible and avoid _blocking IO_ or perform any task that operation
