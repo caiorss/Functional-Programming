@@ -1,10 +1,11 @@
 # #+INCLUDE: ../theme/style.org
 #+TITLE: Ocaml 
+#+STARTUP: contents
 
 * OCaml
 ** Overview 
 
-file:images/ocamlogo.png
+[[file:images/ocamlogo.png][file:images/ocamlogo.png]]
 
 OCaml (Objective Categorical Abstract Machine Language) (formerly
 known as Objective Caml) is the main implementation of the Caml
@@ -231,7 +232,7 @@ Install Utop:
  # opam install utop
 #+END_SRC
 
-file:images/utopshell.png
+[[file:images/utopshell.png][file:images/utopshell.png]]
 
 *Show UTOP help*
 
@@ -370,7 +371,7 @@ $ ocamlfind ocamlbrowser -package core
 $ ocamlfind browser -package batterie
 #+END_SRC
 
-file:images/ocamlbrowser.png
+[[file:images/ocamlbrowser.png][file:images/ocamlbrowser.png]]
 
  - http://caml.inria.fr/pub/docs/manual-ocaml/browser.html
 
@@ -9222,23 +9223,23 @@ $ chromium-browser batteries/index.html
 
 Documentation Directory
 
-file:images/apidoc_directory.png
+[[file:images/apidoc_directory.png][file:images/apidoc_directory.png]]
 
 Batteries modules:
 
-file:images/apidoc1.png
+[[file:images/apidoc1.png][file:images/apidoc1.png]]
 
 Batteries BattList module:
 
-file:images/apidoc2.png
+[[file:images/apidoc2.png][file:images/apidoc2.png]]
 
 Batteries BattList Functions Signatures and Descriptions:
 
-file:images/apidoc3.png
+[[file:images/apidoc3.png][file:images/apidoc3.png]]
 
 Generated Files
 
-file:images/apidoc_generated_files.png
+[[file:images/apidoc_generated_files.png][file:images/apidoc_generated_files.png]]
 
 ** Resources
 *** Articles
@@ -9247,7 +9248,6 @@ file:images/apidoc_generated_files.png
  - [[http://cacm.acm.org/magazines/2011/11/138203-ocaml-for-the-masses/fulltext][Ocaml for the masses - by Yaron Minks, Jane Stree Capital]]
 
  - [ocamlscript: natively-compiled OCaml scripts]
-
 
 *** Links
 
@@ -9262,7 +9262,6 @@ file:images/apidoc_generated_files.png
  - http://www.loria.fr/~shornus/ocaml/slides-ocaml-3.pdf
 
  - http://blog.enfranchisedmind.com/2007/01/ocaml-lazy-lists-an-introduction/
-
 
 
 
