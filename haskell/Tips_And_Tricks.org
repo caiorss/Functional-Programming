@@ -651,3 +651,420 @@ Example:
 #+END_SRC
 
 ** Haskell Interactive Shell - GHCI
+*** GHCI configuration file 
+
+*Example - GHCI without configuration file*
+
+#+BEGIN_SRC haskell
+  $ stack ghci
+  Configuring GHCi with the following packages: 
+  GHCi, version 8.0.1: http://www.haskell.org/ghc/  :? for help
+  Loaded GHCi configuration from /tmp/ghci7713/ghci-script
+  Prelude> 
+  Prelude> import Control.Monad
+  Prelude Control.Monad> 
+
+  Prelude Control.Monad> import System.Directory as D
+  Prelude Control.Monad D> 
+
+  Prelude Control.Monad D> D.getDirectoryContents "/etc/" >>= mapM_ putStrLn
+  systemd
+  motd
+  adobe
+  ld.so.cache
+  environment
+  libreoffice
+  rc_keymaps
+  sensors3.conf
+  gshadow
+  acpi
+  pkcs11
+  modules-load.d
+  cron.deny
+  shadow-
+  gufw
+  security
+  tmpfiles.d
+  ... ...         
+
+  Prelude Control.Monad D> 
+  Prelude Control.Monad D> :{
+  Prelude Control.Monad D| getPassword :: String -> IO () -> IO () -> IO ()         
+  Prelude Control.Monad D| getPassword password success error = do
+  Prelude Control.Monad D|   passwd <- putStr "Enter the password: " >> getLine 
+  Prelude Control.Monad D|   if passwd == password
+  Prelude Control.Monad D|   then success
+  Prelude Control.Monad D|   else do error
+  Prelude Control.Monad D|           getPassword password success error
+  Prelude Control.Monad D| :}
+  Prelude Control.Monad D> 
+
+#+END_SRC
+
+*Example - GHCI with configuration file*
+
+File: ~/.ghci 
+
+#+BEGIN_SRC haskell
+import Control.Concurrent (forkIO, threadDelay)
+import System.Directory (getCurrentDirectory)
+
+-- Set prompts
+
+:set prompt "> "
+:set prompt2 "- "
+
+-- Print type after evaluation 
+:set +t 
+
+-- Start at tmp directory 
+:cd /tmp
+
+-- Add language extensions 
+:set -XFlexibleInstances
+
+putStrLn "Wellcome to Haskell"
+#+END_SRC
+
+GHCI Repl:
+
+#+BEGIN_SRC haskell 
+  $ stack ghci
+  Configuring GHCi with the following packages: 
+  GHCi, version 8.0.1: http://www.haskell.org/ghc/  :? for help
+  Wellcome to Haskell
+  it :: ()
+  Loaded GHCi configuration from /home/archbox/.ghci
+  Loaded GHCi configuration from /tmp/ghci8295/ghci-script
+  > 
+
+  > import Control.Monad
+  > import System.Directory as D
+  > 
+  > D.getDirectoryContents "/etc/" >>= mapM_ putStrLn
+  systemd
+  motd
+  adobe
+  ld.so.cache
+  environment
+  libreoffice
+  rc_keymaps
+  sensors3.conf
+  gshadow
+
+  ... ... ...
+
+  -- Paste this function
+  {-
+  getPassword :: String -> IO () -> IO () -> IO ()         
+  getPassword password success error = do
+    passwd <- putStr "Enter the password: " >> getLine 
+    if passwd == password
+    then success
+    else do error
+            getPassword password success error
+  -}
+
+  > :{
+  - getPassword :: String -> IO () -> IO () -> IO ()         
+  - getPassword password success error = do
+  -   passwd <- putStr "Enter the password: " >> getLine 
+  -   if passwd == password
+  -   then success
+  -   else do error
+  -           getPassword password success error
+  - :}
+  getPassword :: String -> IO () -> IO () -> IO ()
+  >
+
+
+  > let fn a b = 10 * a - b
+  fn :: Num a => a -> a -> a
+  > fn 10 20
+  80
+  it :: Num a => a
+  > it
+  80
+  it :: Num a => a
+  > 
+
+  > :t forkIO
+  forkIO :: IO () -> IO GHC.Conc.Sync.ThreadId
+
+  > :t threadDelay 
+  threadDelay :: Int -> IO ()
+  > 
+            
+
+  > forkIO (forever $ threadDelay 1000000 >> putStrLn "Repeat forever with 1 second delay")
+  ThreadId 82
+  it :: GHC.Conc.Sync.ThreadId
+  > Repeat forever with 1 second delay
+  Repeat forever with 1 second delay
+  Repeat forever with 1 second delay
+  Repeat forever with 1 second delay
+  Repeat forever with 1 second delay
+  Repeat forever with 1 second delay
+  Repeat forever with 1 second delay
+  Repeat forever with 1 second delay
+       .. ... ... ...
+     
+#+END_SRC
+
+*** Extract contents of IO action 
+
+It is useful to extract the value wrapped by an IO action to small
+experiments and interactive commands. Note: It is only possible in the
+REPL.
+
+Not possible because readFile returns an IO action.
+
+#+BEGIN_SRC haskell 
+  > putStrLn (readFile "/etc/lsb-release")
+
+  <interactive>:5:11: error:
+      • Couldn't match type ‘IO String’ with ‘[Char]’
+        Expected type: String
+          Actual type: IO String
+      • In the first argument of ‘putStrLn’, namely
+          ‘(readFile "/etc/lsb-release")’
+        In the expression: putStrLn (readFile "/etc/lsb-release")
+        In an equation for ‘it’:
+            it = putStrLn (readFile "/etc/lsb-release")
+  >
+
+  > :t readFile
+  readFile :: FilePath -> IO String
+
+  > let content = readFile "/etc/lsb-release"
+
+  > :t content
+  content :: IO String
+  > 
+               
+
+  > putStrLn content
+
+  <interactive>:9:10: error:
+      • Couldn't match type ‘IO String’ with ‘[Char]’
+        Expected type: String
+          Actual type: IO String
+      • In the first argument of ‘putStrLn’, namely ‘content’
+        In the expression: putStrLn content
+        In an equation for ‘it’: it = putStrLn content
+  >
+
+  > :t readFile
+  readFile :: FilePath -> IO String
+
+#+END_SRC
+
+*Solutions:*
+
+Extract the IO action content. It is possible due to the Haskell REPL
+be inside an IO action.
+
+#+BEGIN_SRC haskell
+  > let contentIOaction = readFile "/etc/lsb-release"
+
+  > :t contentIOaction 
+  contentIOaction :: IO String
+  > 
+
+  > content <- contentIOaction 
+  >
+
+  > :t content
+  content :: String
+
+  > putStrLn content
+  DISTRIB_ID=ManjaroLinux
+  DISTRIB_RELEASE=17.0.1
+  DISTRIB_CODENAME=Gellivara
+  DISTRIB_DESCRIPTION="Manjaro Linux"
+
+  > length content
+  110
+  >
+
+  > lines content
+  ["DISTRIB_ID=ManjaroLinux","DISTRIB_RELEASE=17.0.1","DISTRIB_CODENAME=Gellivara","DISTRIB_DESCRIPTION=\"Manjaro Linux\""]
+  > 
+
+
+  {- -- ========================   Or ======================= --}
+
+  > content <- readFile "/etc/lsb-release"
+  > :t content
+  content :: String
+
+
+  > putStrLn content
+  DISTRIB_ID=ManjaroLinux
+  DISTRIB_RELEASE=17.0.1
+  DISTRIB_CODENAME=Gellivara
+  DISTRIB_DESCRIPTION="Manjaro Linux"
+
+  > length content
+  110
+  > 
+
+#+END_SRC
+
+Pass the IO action content using (>>=) bind or (=<<)
+
+#+BEGIN_SRC haskell
+  > readFile "/etc/lsb-release" >>= putStrLn
+  DISTRIB_ID=ManjaroLinux
+  DISTRIB_RELEASE=17.0.1
+  DISTRIB_CODENAME=Gellivara
+  DISTRIB_DESCRIPTION="Manjaro Linux"
+
+   
+  > putStrLn =<< readFile "/etc/lsb-release"
+  DISTRIB_ID=ManjaroLinux
+  DISTRIB_RELEASE=17.0.1
+  DISTRIB_CODENAME=Gellivara
+  DISTRIB_DESCRIPTION="Manjaro Linux"
+#+END_SRC
+
+*** Load interactive commands from file 
+    :PROPERTIES:
+    :ID:       56ce68d8-6ae4-415a-99b9-68f5b2d5296c
+    :END:
+
+The Ghci directive _:script_ is load interactive commands that could
+by typed in Ghci shell from a file.  
+
+File: [[file:src/script_ghci.hs][file:src/script_ghci.hs]]
+
+#+BEGIN_SRC haskell :tangle src/script_ghci.hs
+
+  content <- readFile "/etc/lsb-release"
+
+  let nChars = length content
+
+  putStrLn $ "File content = \n" ++ content
+
+  putStrLn $ "File size (number of chars) = " ++ show nChars
+
+           
+  putStrLn "--------------------------------"
+           
+  :{
+  getPassword :: String -> IO () -> IO () -> IO ()         
+  getPassword password success error = do
+    passwd <- putStr "Enter the password: " >> getLine 
+    if passwd == password
+    then success
+    else do error
+            getPassword password success error
+  :}
+
+
+  :{
+  showSecreteFile :: String -> IO ()
+  showSecreteFile file = do
+    content <- readFile file
+    putStrLn "Secrete File Content"
+    putStrLn content
+     
+  :}   
+    
+           
+  :{
+  getPassword2 :: String -> Int -> IO ()
+  getPassword2 password maxTry = aux (maxTry - 1)
+    where
+      aux counter = do 
+        passwd <- putStr "Enter the password: " >> getLine
+        case (counter, passwd) of
+          _ | passwd == password
+                -> showSecreteFile "/etc/shells"
+          
+          _ | counter == 0
+                -> putStrLn $ "File destroyed after " ++ show maxTry ++ " attempts."                 
+          _
+                -> do putStrLn $ "Try again. You only have " ++ show counter ++ " attempts."
+                      aux (counter - 1)                                      
+               
+  :}
+     
+  let printLine = putStrLn "-----------------------------------------------"
+
+  printLine                
+  putStrLn "Open secrete vault: "
+  getPassword "guessthepassword" (putStrLn "Vault opened. Ok.") (putStrLn "Error: Wrong password. Try Again")               
+  printLine
+  putStrLn "Open secret file: (1)"         
+  getPassword2 "xyzVjkmArchp972343asx" 3
+
+  printLine             
+  putStrLn "Open secret file: (2)"         
+  getPassword2 "xyzVjkmArchp972343asx" 3
+
+               
+
+#+END_SRC
+
+
+Running: 
+
+#+BEGIN_SRC sh 
+  archbox@ghostpc 18:19 ~/Documents/projects/fp-by-example.tutorial/haskell
+  $ stack ghci
+  Configuring GHCi with the following packages: 
+  GHCi, version 8.0.1: http://www.haskell.org/ghc/  :? for help
+  Loaded GHCi configuration from /home/archbox/.ghci
+  Loaded GHCi configuration from /tmp/ghci7633/ghci-script
+  >
+
+  > 
+  > :script src/script_ghci.hs 
+  File content = 
+  DISTRIB_ID=ManjaroLinux
+  DISTRIB_RELEASE=17.0.1
+  DISTRIB_CODENAME=Gellivara
+  DISTRIB_DESCRIPTION="Manjaro Linux"
+
+  File size (number of chars) = 110
+  --------------------------------
+  -----------------------------------------------
+  Open secrete vault: 
+  Enter the password: mxkasdasd
+  Error: Wrong password. Try Again
+  Enter the password: 32423asdas
+  Error: Wrong password. Try Again
+  Enter the password: guessht^?
+  Error: Wrong password. Try Again
+  Enter the password: guessthepassword
+  Vault opened. Ok.
+  -----------------------------------------------
+  Open secret file: (1)
+  Enter the password: 234asdqa
+  Try again. You only have 2 attempts.
+  Enter the password: i dont know
+  Try again. You only have 1 attempts.
+  Enter the password: try again
+  File destroyed after 3 attempts.
+  -----------------------------------------------
+  Open secret file: (2)
+  Enter the password: tell me it
+  Try again. You only have 2 attempts.
+  Enter the password: archxfmksjpfUif83432
+  Try again. You only have 1 attempts.
+  Enter the password: xyzVjkmArchp972343asx
+  Secrete File Content
+  #
+  # /etc/shells
+  #
+
+  /bin/sh
+  /bin/bash
+
+  # End of file
+  /bin/zsh
+  /usr/bin/zsh
+
+
+#+END_SRC
