@@ -8,7 +8,7 @@
 
 # * Functional Programming by Example
 
-file:haskell/images/haskellLogo.png
+[[file:haskell/images/haskellLogo.png][file:haskell/images/haskellLogo.png]]
 
 The purpose of this tutorial is to illustrate functional programming
 concepts in many languages by providing reusable and useful snippets
