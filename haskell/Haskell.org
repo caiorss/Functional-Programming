@@ -113,6 +113,8 @@ See the instructions to install stack at https://www.haskellstack.org/
 
  - [[https://www.inf.ed.ac.uk/teaching/courses/inf1/fp/emacs.pdf][Setting up Haskell Mode for Emacs]]
 
+ - [[https://github.com/serras/emacs-haskell-tutorial/blob/master/tutorial.md][emacs-haskell-tutorial/tutorial.md at master · serras/emacs-haskell-tutorial · GitHub]]
+
 ** Haskell stack tool 
 *** Using stack without a project 
 **** Overview 
