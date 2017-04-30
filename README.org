@@ -46,11 +46,13 @@ This repository is dedicated to public domain.
 
  - [[file:haskell/Pattern_Matching.org][Pattern Matching]]
 
- - [[file:haskell/List_Comprehension.org][List Comprehension]]
+ - [[file:haskell/List_Comprehension.org][List Comprehension]]  
 
- - [[file:haskell/Algebraic_Data_Types.org][Algebraic Data Type]]
+ - [[file:haskell/Algebraic_Data_Types.org][Algebraic Data Type]]  
 
  - [[file:haskell/Functors__Monads__Applicatives_and_Monoids.org][Functors and Monads]]
+
+ - [[file:haskell/polymorphism_and_typeclasses.org][Polymorphism and Typeclasses]]
 
  - [[file:haskell/monoids.org][Monoids and Foldables]]
 
