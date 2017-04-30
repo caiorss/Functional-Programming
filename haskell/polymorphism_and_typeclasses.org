@@ -1,3 +1,6 @@
+#+TITLE:  Polymorphism and Typeclasses
+#+KEYWORDS: polymorphism ad-hoc typeclass haskell fp
+
 * Polymorphism and Typeclasses
 ** Polymorphism 
 *** Parametric Polymorphism 
@@ -708,6 +711,196 @@ function fn to two monad instances.
   > v1
   "Vector = 4.5i + -3.0j + 2.0k"
   it :: Vector3D
+  > 
+
+#+END_SRC
+
+**** Complex Number Implementation 
+
+#+BEGIN_SRC haskell 
+  import Text.Printf (printf)
+      
+
+
+  -- Complex number in rectangular form
+  -- 
+  data Cpl = Cpl Double Double deriving (Eq, Read)
+
+
+  > let real (Cpl x y) = x 
+  real :: Cpl -> Double
+  > 
+
+  > let imag (Cpl x y) = y 
+  imag :: Cpl -> Double
+  >
+
+  > let rad2deg rad = 180 / pi * rad 
+  rad2deg :: Floating a => a -> a
+
+  > let deg2rad deg = pi / 180 * deg
+  deg2rad :: Floating a => a -> a
+  > 
+           
+  -- Magnitude 
+  > let mag (Cpl x y) = sqrt ( x * x + y * y)
+  mag :: Cpl -> Double
+
+  -- Angle 
+  let phase (Cpl x y) = rad2deg $ atan2 y x 
+
+                 
+  -- Complex in polar form with angle in degrees.                       
+  :{
+  let polard r a =
+          let ar = deg2rad a -- angle in radians
+          in Cpl (r * cos ar) (r * sin ar)
+  :}
+
+
+  > let (+.) x y = Cpl x y
+  (+.) :: Double -> Double -> Cpl
+  > 
+
+  > let (<@) r a = polard r a
+  (<@) :: Double -> Double -> Cpl
+  > 
+   
+   
+             
+  :{         
+  instance Show Cpl where
+      show (Cpl x y) = printf "%.3f + %.3fj" x y 
+  :}
+
+  :{ 
+  instance Num Cpl where
+      (Cpl x1 y1) + (Cpl x2 y2) =
+          Cpl (x1 + x2) (y1 + y2)
+                                  
+      (Cpl x1 y1) - (Cpl x2 y2) =
+          Cpl (x1 - x2) (y1 - y2)
+
+      {- (x1 + y1*j)(x2 + y2*j) = x1 x2 + x1 y2 j + y1 x2 j + y1 y2 j j 
+                                = (x1 x2 - y1y2) + (x1 y2 + y1 x2)j
+      -}                            
+      (Cpl x1 y1) * (Cpl x2 y2) =
+          Cpl (x1 * x2 - y1 * y2) (x1 * y2 + y1 * x2)
+
+      negate (Cpl x y) = Cpl (-x) (-y)
+
+      abs (Cpl x y) = Cpl (sqrt $ x * x + y * y) 0                   
+
+      signum (Cpl x y) = Cpl (signum x) 0
+
+      fromInteger x = Cpl (fromIntegral x) 0 
+  :}
+
+
+  > :info Fractional
+  class Num a => Fractional a where
+    (/) :: a -> a -> a
+    recip :: a -> a
+    fromRational :: Rational -> a
+    {-# MINIMAL fromRational, (recip | (/)) #-}
+          -- Defined in ‘GHC.Real’
+  instance Fractional Float -- Defined in ‘GHC.Float’
+  instance Fractional Double -- Defined in ‘GHC.Float’
+  > 
+
+  :{
+  instance Fractional Cpl where
+      recip (Cpl x y) = let s = x * x + y * y
+                        in  Cpl (x / s) (- y / s)
+
+      fromRational x = Cpl 1.0 0 -- Dummy operation to satisfy the type class                      
+  :}   
+
+
+  > 10 +. 4
+  10.000 + 4.000j
+  it :: Cpl
+  > 
+
+  > 20.0 <@ 45.0
+  14.142 + 14.142j
+  it :: Cpl
+  > 10.0 <@ 60.0
+  5.000 + 8.660j
+  it :: Cpl
+  > 10.0 <@ 30.0
+  8.660 + 5.000j
+  it :: Cpl
+  > 
+
+
+  > polard 2.0 (-135.0)
+  -1.414 + -1.414j
+  it :: Cpl
+  > 
+  > phase $ polard 2.0 (-135.0)
+  -135.0
+  it :: Double
+  > mag $ polard 2.0 (-135.0)
+  2.0
+  it :: Double
+  > 
+
+   
+  > Cpl 3.0 (-4.0)
+  3.000 + -4.000j
+  it :: Cpl
+  > 
+  > Cpl 3.0 4.0 
+  3.000 + 4.000j
+  it :: Cpl
+  > 
+  > Cpl 3.0 0.0
+  3.000 + 0.000j
+  it :: Cpl
+  > 
+
+  > Cpl 10 3 + Cpl 4 5
+  14.000 + 8.000j
+  it :: Cpl
+  > Cpl 10 3 * Cpl 4 5
+  25.000 + 62.000j
+  it :: Cpl
+  > Cpl 0 1 * Cpl 0 1
+  -1.000 + 0.000j
+  it :: Cpl
+  > 
+
+  > let c1 = 10 +. 20
+  c1 :: Cpl
+  > c1
+  10.000 + 20.000j
+  it :: Cpl
+  > let c2 = 5 +. 0 
+  c2 :: Cpl
+  > 
+  > let c3 = 10.0 <@ 30.0 
+  c3 :: Cpl
+  > c3
+  8.660 + 5.000j
+  it :: Cpl
+  > 
+
+  > mag $ recip c3 
+  0.1
+  it :: Double
+  > phase $ recip c3 
+  -29.999999999999993
+  it :: Double
+  > 
+
+  > c1 / c2 
+  2.000 + 4.000j
+  it :: Cpl
+  > 
+  > c1 / c3 
+  1.866 + 1.232j
+  it :: Cpl
   > 
 
 #+END_SRC
