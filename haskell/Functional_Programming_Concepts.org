@@ -3100,7 +3100,7 @@ val it : int list = [5; 9; 11]
 
 #+END_SRC
 
-*** For Each, Impure map 
+*** For Each, Imperative map
 
 For each is an _impure higher order function_ which performs
 side-effect on each element of a list, array or sequence. Unlike map
@@ -3204,7 +3204,7 @@ x = 6,000
 
 *Ocaml*
 
-#+BEGIN_SRC
+#+BEGIN_SRC ocaml
 > List.iter ;;
 - : ('a -> unit) -> 'a list -> unit = <fun>
 
@@ -3220,7 +3220,7 @@ x = 6,000
 
 *F#*
 
-#+BEGIN_SRC
+#+BEGIN_SRC fsharp
 > List.iter ;;
 val it : (('a -> unit) -> 'a list -> unit) = <fun:clo@1>
 
@@ -4119,6 +4119,95 @@ Python Implementation:
 >>> 
 #+END_SRC
 *** Combinators 
+
+A combinator are a set of primitive functions, operatores and higher
+order functions that can be combined in order to create more complex
+functions out of simple functions. Combinators are widespread in
+Haskell and one of the most famous case is Parsec the parser
+combinator libraries which provides parser combinator functions which
+allows the user build more complex parsers out of primitive parsers.
+
+Combinators can be used to build EDSL - Embedded Domain Specific
+languages which are Domain Specific Language embedded in a host
+language or basically a library with convenient names and syntax that
+fits the problem domain. Parsec can be regarded as an EDSL to build
+parsers.
+
+
+#+BEGIN_QUOTE
+"One of the distinguishing features of functional programming is the
+widespread use of combinators to construct programs. A combinator is a
+function which builds program fragments from program fragments; in a
+sense the programmer using combinators constructs much of the desired
+program automatically, rather that writing every detail by hand."
+#+END_QUOTE
+
+ - John Hughes - [[http://www.cse.chalmers.se/~rjmh/Papers/arrows.pdf][Generalizing Monads to Arrows]] 
+
+
+
+Example of combinators in Haskell:
+
+ - Function combinators
+
+   - id - Identity function
+
+   - const - Constant function 
+
+   - (.)  - Function composition
+
+   - ($) - Function application
+
+   - flip f a b = f b a 
+
+ - List processing functions: map, filter, zip, fold
+
+ - Monads Combinators: Haskell's Maybe monad, Either Monad, IO Monad, ...
+   - return, (>>=), >=> ... 
+   - Control.Monad (mapM, mapM_, forM, forM, liftM, liftM2)
+
+ - _Parsec_ - Parser combinator library which provides higher order
+   functions, operators and primitive functions (primitive parsers)
+   that combined to build more complex parsers.
+
+ - _Lava_ - Combinator library for digital circuits description and
+   simulatioin -- <https://archive.alvb.in/msc/thesis/reading/lava-1999.pdf>
+
+
+Combinators building blocks:
+
+ - Primitive functions 
+
+ - Higher order functions 
+
+ - Algebraic data types 
+
+ - Custom binary operators 
+
+References: 
+
+ - John Hughes. *Generalizing Monads to Arrows* Accessed at
+   2017-3-0. Available at
+   <http://www.cse.chalmers.se/~rjmh/Papers/arrows.pdf>
+
+ - *Designing and Using Combinators:* Accessed at 2017-3-0. Available
+   at <http://www.cse.chalmers.se/~rjmh/Combinators/>
+
+ - *Combinator pattern - HaskellWiki* Accessed at 2017-3-0. Available
+   at <https://wiki.haskell.org/Combinator_pattern>
+
+ - *Parsec - HaskellWiki* Accessed at 2017-3-0. Available at
+   <https://wiki.haskell.org/Parsec>
+
+ - *Combinator - HaskellWiki* Accessed at 2017-3-0. Available at
+   <https://wiki.haskell.org/Combinator>
+
+ - *Filter combinators* Accessed at 2017-3-0. Available at
+   <https://www.fh-wedel.de/~si/HXmlToolbox/thesis/x1178.html>
+
+ - *What is Combinators in Haskell - Stack Overflow* Accessed at
+   2017-3-0. Available at
+   <http://stackoverflow.com/questions/20027707/what-is-combinators-in-haskell>
 ** Special Functions 
 *** List Constructor (Cons)
 
