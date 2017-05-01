@@ -615,6 +615,76 @@ Running:
 (>>=) :: Parser a -> (a -> Parser b) -> Parser b
 #+END_SRC
 
+**** Functor fmap and operator (<$>)
+
+The function fmap or the operator (<$>) that is a fmap synonym apply a
+function to the parser result.
+
+#+BEGIN_SRC haskell
+fmap  :: (a -> b) -> Parser a -> Parser b
+(<$>) :: (a -> b) -> Parser a -> Parser b
+#+END_SRC
+
+Example:
+
+#+BEGIN_SRC haskell
+> let pNumStr = P.many1 P.digit :: Parser String
+pNumStr :: Parser String
+>
+
+> run (fmap read pNumStr) "2323"
+ *** Exception: Prelude.read: no parse
+>
+
+> run (fmap read pNumStr :: Parser Int) "2323"
+2323
+it :: ()
+
+> run (fmap read pNumStr :: Parser Int) ""
+Parser Error
+(line 1, column 1):
+unexpected end of input
+expecting digit
+it :: ()
+
+> run (fmap read pNumStr :: Parser Int) "100"
+100
+it :: ()
+>
+
+> run (read <$> pNumStr :: Parser Int) "100"
+100
+it :: ()
+> run ((+120) <$> read <$> pNumStr :: Parser Int) "100"
+220
+it :: ()
+
+> run ((*3) <$> (+120) <$> read <$> pNumStr :: Parser Int) "100"
+660
+it :: ()
+>
+
+> run ((*3) . (+120) . read <$> pNumStr :: Parser Int) "100"
+660
+it :: ()
+>
+
+#+END_SRC
+
+**** TODO Applicative operators (<*), (*>) and (<*>)
+
+#+BEGIN_SRC haskell
+> :t (*>)
+(*>) :: Applicative f => f a -> f b -> f b
+>
+> :t (<*)
+(<*) :: Applicative f => f a -> f b -> f a
+>
+> :t (<*>)
+(<*>) :: Applicative f => f (a -> b) -> f a -> f b
+>
+#+END_SRC
+
 **** Parser choice (<|>)
 
 The parser choice operator (<|>) only will try the second alternative
