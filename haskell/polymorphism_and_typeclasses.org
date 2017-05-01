@@ -905,6 +905,189 @@ function fn to two monad instances.
 
 #+END_SRC
 
+**** Vector Arithmetic
+
+#+BEGIN_SRC haskell
+  data Vector = Vector [Double] deriving (Eq, Read, Show)
+
+  > :t uncurry
+  uncurry :: (a -> b -> c) -> (a, b) -> c
+  >               
+
+  :{ 
+  instance Num Vector where   
+
+      (Vector xs) + (Vector ys) = Vector $ map (uncurry (+)) (zip xs ys)
+
+      (Vector xs) - (Vector ys) = Vector $ map (uncurry (-)) (zip xs ys)
+
+      (Vector xs) * (Vector ys) = Vector $ map (uncurry (*)) (zip xs ys)                                
+      
+      negate (Vector xs) = Vector $ map (\x -> -1.0 * x) xs
+
+      abs (Vector xs) = Vector $ map abs xs
+
+      signum (Vector xs) = Vector $ map signum xs
+
+      -- Dummy operation (Don't care)                      
+      fromInteger x = Vector [fromIntegral x]
+  :}
+
+
+
+  :{
+  instance Fractional Vector where
+      -- recip (Vector xs) = Vector $ map (\x -> 1 / x) xs
+      --- Or
+      (Vector xs) / (Vector ys) = Vector $ map (uncurry (/)) (zip xs ys)    
+
+      -- Dummy operation - Don't care
+      fromRational x = Vector [fromRational x]
+  :}   
+
+  let apply fn (Vector xs) = Vector (map fn xs)
+   
+
+  > let scale k = apply (\x -> x * k)
+  scale :: Double -> Vector -> Vector
+
+
+  > let repeatv x size = Vector (take size $ repeat x)
+  repeatv :: Double -> Int -> Vector
+  > 
+           
+
+  > 
+  > :info Floating
+  class Fractional a => Floating a where
+    pi :: a
+    exp :: a -> a
+    log :: a -> a
+    sqrt :: a -> a
+    (**) :: a -> a -> a
+    logBase :: a -> a -> a
+    sin :: a -> a
+    cos :: a -> a
+    tan :: a -> a
+    asin :: a -> a
+    acos :: a -> a
+    atan :: a -> a
+    sinh :: a -> a
+    cosh :: a -> a
+    tanh :: a -> a
+    asinh :: a -> a
+    acosh :: a -> a
+    atanh :: a -> a
+    GHC.Float.log1p :: a -> a
+    GHC.Float.expm1 :: a -> a
+    GHC.Float.log1pexp :: a -> a
+    GHC.Float.log1mexp :: a -> a
+    {-# MINIMAL pi, exp, log, sin, cos, asin, acos, atan, sinh, cosh,
+                asinh, acosh, atanh #-}
+          -- Defined in ‘GHC.Float’
+  instance Floating Float -- Defined in ‘GHC.Float’
+  instance Floating Double -- Defined in ‘GHC.Float’
+  > 
+
+  :{
+  instance Floating Vector where
+      pi                    = Vector $ repeat pi
+      exp  (Vector xs)      = Vector (map exp xs)
+      log  (Vector xs)      = Vector (map log xs)
+      sqrt  (Vector xs)     = Vector (map sqrt xs)
+                              
+      (**) (Vector xs) (Vector ns) =
+          let n = head ns
+          in Vector $ map (\x -> x ** n) xs
+                                            
+      logBase (Vector xs) (Vector ns) =
+          let n = head ns
+          in Vector $ map (\x -> logBase x n) xs
+                                           
+      sin (Vector xs)       = Vector $ map sin xs
+      cos (Vector xs)       = Vector $ map cos xs
+      tan (Vector xs)       = Vector $ map tan xs
+      asin (Vector xs)      = Vector $ map asin xs
+      acos (Vector xs)      = Vector $ map acos xs
+      atan (Vector xs)      = Vector $ map atan xs
+      sinh (Vector xs)      = Vector $ map sinh xs
+      cosh (Vector xs)      = Vector $ map cosh xs
+      tanh (Vector xs)      = Vector $ map tanh xs
+      asinh (Vector xs)     = Vector $ map asinh xs
+      acosh (Vector xs)     = Vector $ map acosh xs
+      atanh (Vector xs)     = Vector $ map atanh xs
+  :}
+                          
+      
+
+
+  -- ------------------- Testing ------------------------ 
+
+
+
+  > 10.0 :: Vector
+  Vector [10.0]
+  it :: Vector
+  > 
+
+                             
+  > let xs = Vector [1.0, 2.0, 3.0, 4.0]
+  xs :: Vector
+  > let ys = Vector [10.0, 3.0, 5.0, 6.0] 
+  ys :: Vector
+  > 
+
+   
+  > ys - xs
+  Vector [9.0,1.0,2.0,2.0]
+  it :: Vector
+  > 
+  > xs * ys 
+  Vector [10.0,6.0,15.0,24.0]
+  it :: Vector
+  > 
+  > 
+
+  > apply sqrt xs
+  Vector [1.0,1.4142135623730951,1.7320508075688772,2.0]
+  it :: Vector
+  > 
+  > apply sqrt ys
+  Vector [3.1622776601683795,1.7320508075688772,2.23606797749979,2.449489742783178]
+  it :: Vector
+  >
+
+  > 
+  > scale 4.0 ys + scale 3.0 xs
+  Vector [43.0,18.0,29.0,36.0]
+  it :: Vector
+  > scale 4.0 ys / scale 3.0 xs
+  Vector [13.333333333333334,2.0,2.2222222222222223,2.0]
+  it :: Vector
+  > 
+
+  > xs + repeatv 3.0 5 + ys
+  Vector [14.0,8.0,11.0,13.0]
+  it :: Vector
+  > 
+  >
+
+  > exp xs
+  Vector [2.718281828459045,7.38905609893065,20.085536923187668,54.598150033144236]
+  it :: Vector
+  > 
+
+  > xs + sqrt ys
+  Vector [4.16227766016838,3.732050807568877,5.23606797749979,6.449489742783178]
+  it :: Vector
+  > 
+
+  > xs ** 5.0 - scale 3.0 ys
+  Vector [-29.0,23.0,228.0,1006.0]
+  it :: Vector
+  > 
+#+END_SRC
+
 *** Creating a type class
 
 #+BEGIN_SRC haskell 
