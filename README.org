@@ -50,21 +50,13 @@ This repository is dedicated to public domain.
 
  - [[file:haskell/Algebraic_Data_Types.org][Algebraic Data Type]]  
 
- - [[file:haskell/Functors__Monads__Applicatives_and_Monoids.org][Functors and Monads]]
-
  - [[file:haskell/polymorphism_and_typeclasses.org][Polymorphism and Typeclasses]]
+
+ - [[file:haskell/Functors__Monads__Applicatives_and_Monoids.org][Functors and Monads]]
 
  - [[file:haskell/monoids.org][Monoids and Foldables]]
 
- - [[file:haskell/Libraries.org][Haskell Libraries]]
-
- - [[file:haskell/Useful_Custom_Functions__Iterators_and_Operators.org][Useful Custom Functions/ Iterators and Operators]]
-
- - [[file:haskell/Applications.org][Applications]]
-
- - [[file:haskell/Miscellaneous.org][Miscellaneous]]
-
- - [[file:haskell/Documentation_and_Learning_Materials.org][Documentation and Learning Materials]]
+ - [[file:haskell/Parsec_parser_combinators.org][Parsec - Parser Combinators]]
 
  - [[file:haskell/haskell_handling_exceptions.org][Exception Handling]]  
 
@@ -74,9 +66,21 @@ This repository is dedicated to public domain.
 
  - [[file:haskell/Mutable_References.org][Mutable References]]
 
+ - [[file:haskell/Useful_Custom_Functions__Iterators_and_Operators.org][Useful Custom Functions/ Iterators and Operators]]
+
  - [[file:haskell/GUI_Graphical_User_Interface_GTK.org][GUI Graphical User Interface with GTK]]
 
+ - [[file:haskell/Applications.org][Applications]]
+
  - [[file:haskell/Tips_And_Tricks.org][Tips and Tricks]]
+
+ - [[file:haskell/Miscellaneous.org][Miscellaneous]]
+
+ - [[file:haskell/Libraries.org][Haskell Libraries]]
+
+ - [[file:haskell/Real_World_Haskell.org][Codes and Examples from "Real World Haskell"]]
+
+ - [[file:haskell/Documentation_and_Learning_Materials.org][Documentation and Learning Materials]]
 
  - Modules
 
@@ -91,8 +95,6 @@ This repository is dedicated to public domain.
    - [[file:haskell/control_exception.org][Control.Exception]] - Exception Handling
 
    - [[file:haskell/data_map.org][Data.Map]]          - Immutable hash map. Implemented with balanced trees.
-
- - [[file:haskell/Real_World_Haskell.org][Codes and Examples from "Real World Haskell"]]
 
  - Haskell Bookmarks:
 
