@@ -1,0 +1,1005 @@
+#+TITLE: Parsec - Parser Combinators 
+#+DESCRIPTION: Parsec parser combinators 
+
+* Parsec - Parser Combinators 
+** Overview 
+   :PROPERTIES:
+   :ID:       884b9aaa-aa75-433e-b9f9-9424db4dd588
+   :END:
+*** Package Documentation
+
+   - [[https://hackage.haskell.org/package/parsec-3.1.11/docs/Text-Parsec.html][Text.Parsec]]
+
+   - [[https://hackage.haskell.org/package/parsec-3.1.11/docs/Text-Parsec-Combinator.html][Text.Parsec.Combinator]]
+
+   - [[https://hackage.haskell.org/package/parsec-3.1.11/docs/Text-Parsec-Char.html][Text.Parsec.Char]]
+
+   - [[https://hackage.haskell.org/package/parsec-3.1.11/docs/Text-ParserCombinators-Parsec-Prim.html][Text.ParserCombinators.Parsec.Prim]]
+
+   - [[https://www.stackage.org/package/parsec][parsec - Stackage Server]]
+
+
+*** Loading Script
+
+This section will assume that the script _parsecHelpers.hs_ was loaded
+with:
+
+#+BEGIN_SRC haskell
+> :script /tmp/parsecHelpers.hs 
+apply :: Parser a -> String -> Either P.ParseError a
+run :: Show a => Parser a -> String -> IO ()
+... 
+> 
+#+END_SRC
+
+*File:* _parsecHelpers.hs_
+
+#+BEGIN_SRC haskell :tangle /tmp/parsecHelpers.hs
+  import Text.Parsec.String (Parser)
+  import Text.Parsec ((<|>))
+  import qualified Text.Parsec as P
+  import qualified Text.Parsec.Char as PC
+
+  import Control.Monad (void)
+
+  import Data.Either (isRight, isLeft)
+      
+  import Test.HUnit     
+      
+  :set -XFlexibleContexts
+
+  :{
+  apply :: Parser a -> String -> Either P.ParseError a
+  apply p s =  P.parse p "" s
+  :}
+
+  :{
+  run :: Show a => Parser a -> String -> IO ()
+  run p str =
+      case P.parse p "" str of
+        Left err  -> do putStrLn "Parser Error"
+                        print err
+        Right res -> print res
+  :} 
+
+  -- Parse single letter char
+  :{
+  pLetter :: Parser Char
+  pLetter = P.letter 
+  :}
+
+  -- Parse single char
+  :{ 
+  pChar :: Char -> Parser Char
+  pChar x = P.char x
+  :}
+
+  -- Parse single digit char
+  :{
+  pDigit :: Parser Char
+  pDigit = P.digit
+  :}
+
+  -- Parse string 
+  :{
+  pStr :: String -> Parser String
+  pStr str = P.string str 
+  :}
+
+  -- Parse letter surrounded by parenthesis.
+   
+  :{
+  pParenLetter :: Parser Char
+  pParenLetter = do
+    P.char '('     -- Consume input '(' and discard result 
+    s <- P.letter  -- Consume the letter input and save it to s.
+    P.char ')'     -- Consume input ')' and discard result
+    return s       -- Set parser result to s 
+  :}  
+
+  :{
+  pParenLetter2 :: Parser Char
+  pParenLetter2 = 
+    P.char '(' >>= \_ ->     
+    P.letter   >>= \s -> 
+    P.char ')' >>= \_ ->    
+    return s       
+  :}  
+
+
+  :{
+  pParenLetter3 :: Parser Char
+  pParenLetter3 = 
+    P.char '(' >>
+    P.letter   >>= \s -> 
+    P.char ')' >>
+    return s       
+  :}  
+
+  --- Parser Choice
+  :{
+  pChoice1 :: Parser String
+  pChoice1 = P.string "hello world"
+         <|> P.try (P.string "world")
+         <|> P.try (P.string "Haskell")
+         <|> P.try (P.string "ocaml")
+  :}
+
+   
+  :{
+  pIdentifier1 :: Parser String
+  pIdentifier1 = do
+    x  <- P.letter
+    xs <- P.many (P.letter <|> P.try P.digit)
+    return $ x:xs
+  :}
+     
+
+  :{
+  pNumStr :: Parser String
+  pNumStr = P.many1 P.digit
+  :}          
+
+  :{
+  pNum1 :: Parser Int
+  pNum1 = do
+    s <- P.many1 P.digit
+    return $ read s   
+  :}   
+
+
+  :{
+  pNum2 :: Parser Int
+  pNum2 = fmap read $ P.many1 P.digit
+       -- read <$> P.many P.digit
+  :}         
+
+   
+  :{
+  pTrue :: Parser Bool
+  pTrue = P.string "true" >> return True
+  :}
+
+  :{
+  pFalse :: Parser Bool
+  pFalse = P.string "false" >> return False
+  :}
+
+
+  :{ 
+  pCsvRow1 :: Parser [Int]
+  pCsvRow1 = P.sepBy pCell (pChar ',')
+      where
+        pCell = do
+          P.spaces
+          num <- pNum1
+          P.spaces
+          return num
+
+  :}    
+#+END_SRC
+
+*Running parsers*
+
+This parser recognizes a single letter ('a' to 'z'). When it suceeds
+it returns a letter. 
+
+#+BEGIN_SRC haskell
+:{
+pLetter :: Parser Char
+pLetter = P.letter 
+:}
+
+#+END_SRC
+
+The function _apply_ applies a parser to an input string returning the
+parser result (Result) or failure (Left).
+
+#+BEGIN_SRC haskell
+apply :: Parser a -> String -> Either P.ParseError a
+#+END_SRC
+
+#+BEGIN_SRC haskell
+
+> apply pLetter "1"
+Left (line 1, column 1):
+unexpected "1"
+expecting letter
+it :: Either P.ParseError Char
+
+> apply pLetter ""
+Left (line 1, column 1):
+unexpected end of input
+expecting letter
+it :: Either P.ParseError Char
+> 
+
+> apply pLetter "2323"
+Left (line 1, column 1):
+unexpected "2"
+expecting letter
+it :: Either P.ParseError Char
+
+
+> run pLetter "a"
+'a'
+it :: ()
+
+#+END_SRC
+
+The function run applies a parser to an input string and prints the
+the result. 
+
+#+BEGIN_SRC haskell
+run :: Show a => Parser a -> String -> IO ()
+#+END_SRC
+
+#+BEGIN_SRC haskell
+
+> run pLetter "aa"
+'a'
+it :: ()
+> run pLetter "1aa"
+Parser Error
+(line 1, column 1):
+unexpected "1"
+expecting letter
+it :: ()
+
+> run pLetter " aa"
+Parser Error
+(line 1, column 1):
+unexpected " "
+expecting letter
+it :: ()
+> 
+
+#+END_SRC
+
+** Examples
+*** Primitive Parsers 
+**** Parse Char
+
+#+BEGIN_SRC haskell
+:{
+pChar :: Char -> Parser Char
+pChar x = P.char x
+:}
+#+END_SRC
+
+Running:
+
+#+BEGIN_SRC haskell 
+> run (pChar 'x') "x"
+'x'
+it :: ()
+> run (pChar 'x') "xxxxx"
+'x'
+it :: ()
+> run (pChar 'x') " x"
+Parser Error
+(line 1, column 1):
+unexpected " "
+expecting "x"
+it :: ()
+> run (pChar 'x') "213"
+Parser Error
+(line 1, column 1):
+unexpected "2"
+expecting "x"
+it :: ()
+> run (pChar 'x') "x213"
+'x'
+it :: ()
+> 
+
+#+END_SRC
+
+**** Parse Digit
+
+#+BEGIN_SRC haskell 
+:{
+pDigit :: Parser Char
+pDigit = P.digit
+:}
+#+END_SRC
+
+Running:
+
+#+BEGIN_SRC haskell
+> run pDigit "asd2323"
+Parser Error
+(line 1, column 1):
+unexpected "a"
+expecting digit
+it :: ()
+> run pDigit "1asd2323"
+'1'
+it :: ()
+> run pDigit "1 asd2323"
+'1'
+it :: ()
+> run pDigit " 1 asd2323"
+Parser Error
+(line 1, column 1):
+unexpected " "
+expecting digit
+it :: ()
+> 
+
+#+END_SRC
+
+**** Parse String 
+
+
+#+BEGIN_SRC haskell 
+-- Parse string 
+:{
+pStr :: String -> Parser String
+pStr str = P.string str 
+:}
+#+END_SRC
+
+Running:
+
+#+BEGIN_SRC haskell 
+> run (pStr "ok") "ok"
+"ok"
+it :: ()
+
+> run (pStr "ok") "okResult"
+"ok"
+it :: ()
+> 
+
+> run (pStr "ok") "ok2324"
+"ok"
+it :: ()
+
+> run (pStr "ok") " ok2324"
+Parser Error
+(line 1, column 1):
+unexpected " "
+expecting "ok"
+it :: ()
+> 
+
+> run (pStr "ok") ""
+Parser Error
+(line 1, column 1):
+unexpected end of input
+expecting "ok"
+it :: ()
+> 
+
+
+#+END_SRC
+
+*** Parser Combinators 
+**** Monad do-notation - parse sequence 
+
+It parses a letter surrounded by parenthesis. The do-notation and the
+monad combinators (>>) and (>>=) sequences the parsers ~(P.char ')')~,
+~P.letter~ and ~(P.char ')')~.
+
+#+BEGIN_SRC haskell
+:{
+pParenLetter :: Parser Char
+pParenLetter = do
+  P.char '('     -- Consume input '(' and discard result 
+  s <- P.letter  -- Consume the letter input and save it to s.
+  P.char ')'     -- Consume input ')' and discard result
+  return s       -- Set parser result to s 
+:}  
+
+-- Parsers without syntax sugar.
+-- 
+
+:{
+pParenLetter2 :: Parser Char
+pParenLetter2 = 
+  P.char '(' >>= \_ ->     
+  P.letter   >>= \s -> 
+  P.char ')' >>= \_ ->    
+  return s       
+:}  
+
+
+:{
+pParenLetter3 :: Parser Char
+pParenLetter3 = 
+  P.char '(' >>
+  P.letter   >>= \s -> 
+  P.char ')' >>
+  return s       
+:}  
+#+END_SRC
+
+Running: 
+
+#+BEGIN_SRC haskell
+> run pParenLetter "(x)"
+'x'
+it :: ()
+
+> run pParenLetter "(a)"
+'a'
+it :: ()
+
+> run pParenLetter "(4)"
+Parser Error
+(line 1, column 2):
+unexpected "4"
+expecting letter
+it :: ()
+
+> run pParenLetter "(223)"
+Parser Error
+(line 1, column 2):
+unexpected "2"
+expecting letter
+it :: ()
+
+> run pParenLetter "(twesa223)"
+Parser Error
+(line 1, column 3):
+unexpected "w"
+expecting ")"
+it :: ()
+
+> run pParenLetter3 "(x)"
+'x'
+it :: ()
+> run pParenLetter3 "(ax)"
+Parser Error
+(line 1, column 3):
+unexpected "x"
+expecting ")"
+it :: ()
+> 
+#+END_SRC
+
+**** Monad operators return, (>>=) and >> 
+***** Function return
+
+Creates a parser that always returns the same value regardless of the
+input.
+
+#+BEGIN_SRC haskell
+return :: a -> Parser a
+#+END_SRC
+
+Example: 
+
+#+BEGIN_SRC haskell
+> run (return 10) "hello"
+10
+it :: ()
+> run (return 10) "" 
+10
+it :: ()
+> run (return 10) "world" 
+10
+it :: ()
+> 
+
+> run (return True) "true" 
+True
+it :: ()
+> run (return True) "" 
+True
+it :: ()
+> run (return True) "23123" 
+True
+it :: ()
+> 
+
+#+END_SRC
+
+***** Operator (>>)
+
+Run parserA discarding its result and then run parserB returning its
+result.
+
+#+BEGIN_SRC haskell
+(>>) :: Parser a -> Parser b -> Parser b
+parserA >> parserB
+#+END_SRC
+
+Example:
+
+#+BEGIN_SRC haskell
+   
+:{
+pTrue :: Parser Bool
+pTrue = P.string "true" >> return True
+:}
+
+:{
+pFalse :: Parser Bool
+pFalse = P.string "false" >> return False
+:}
+#+END_SRC
+
+Running:
+
+#+BEGIN_SRC haskell
+  > run pTrue "true"
+  True
+  it :: ()
+  > run pTrue "23true"
+  Parser Error
+  (line 1, column 1):
+  unexpected "2"
+  expecting "true"
+  it :: ()
+  > run pTrue ""
+  Parser Error
+  (line 1, column 1):
+  unexpected end of input
+  expecting "true"
+  it :: ()
+  > 
+
+  > run pFalse "false"
+  False
+  it :: ()
+
+  > run pFalse "falsex"
+  False
+  it :: ()
+
+  > run pFalse "xfalse"
+  Parser Error
+  (line 1, column 1):
+  unexpected "x"
+  expecting "false"
+  it :: ()
+  > 
+
+  > let pBool = pTrue <|> P.try pFalse :: Parser Bool
+  pBool :: Parser Bool
+  > 
+
+  > 
+  > run pBool "true"
+  True
+  it :: ()
+  > run pBool "false"
+  False
+  it :: ()
+  > run pBool "232"
+  Parser Error
+  (line 1, column 1):
+  unexpected "2"
+  expecting "true" or "false"
+  it :: ()
+  > 
+
+  :{
+  pBool2 :: Parser Bool 
+  pBool2 = pTrue <|> P.try pFalse
+      where
+        pTrue  = P.string "true"  >> return True
+        pFalse = P.string "false" >> return False
+  :}
+
+  > run pBool2 "true"
+  True
+  it :: ()
+        
+  > run pBool2 "false"
+  False
+  it :: ()
+
+  > run pBool2 "asdas"
+  Parser Error
+  (line 1, column 1):
+  unexpected "a"
+  expecting "true" or "false"
+  it :: ()
+        
+  > run pBool2 ""
+  Parser Error
+  (line 1, column 1):
+  unexpected end of input
+  expecting "true" or "false"
+  it :: ()
+  > 
+   
+#+END_SRC
+
+***** TODO Operator (>>=) bind
+
+#+BEGIN_SRC haskell
+(>>=) :: Parser a -> (a -> Parser b) -> Parser b
+#+END_SRC
+
+**** Parser choice (<|>)
+
+The parser choice operator (<|>) only will try the second alternative
+parser if the first parser has failed and not consummed any input.
+
+The operator try makes the parser consume any input if it has failed.
+
+#+BEGIN_SRC haskell
+parser1 <|> parser2 
+parser1 <|> parser2 <|> parser3 <|> parser4 ... 
+#+END_SRC
+
+#+BEGIN_SRC haskell
+--- Parser Choice
+:{
+pChoice1 :: Parser String
+pChoice1 = P.string "hello world"
+       <|> P.try (P.string "world")
+       <|> P.try (P.string "Haskell")
+       <|> P.try (P.string "ocaml")
+:}           
+#+END_SRC
+
+Running:
+
+#+BEGIN_SRC haskell 
+> run pChoice1 "world"
+"world"
+it :: ()
+> 
+> run pChoice1 "Haskell"
+"Haskell"
+it :: ()
+> 
+> run pChoice1 "ocaml"
+"ocaml"
+it :: ()
+> 
+> run pChoice1 "ocamlHaskell"
+"ocaml"
+it :: ()
+> 
+
+> run pChoice1 "Haskellocaml"
+"Haskell"
+it :: ()
+> 
+
+> run pChoice1 " Haskellocaml"
+Parser Error
+(line 1, column 1):
+unexpected " "
+expecting "hello world", "world", "Haskell" or "ocaml"
+it :: ()
+
+> run pChoice1 "hello"
+Parser Error
+(line 1, column 1):
+unexpected end of input
+expecting "hello world"
+it :: ()
+> 
+
+#+END_SRC
+
+**** many 
+
+*Simplified signature:*
+
+Applies a parser zero or more times, returning a list of parser results.
+
+#+BEGIN_SRC haskell
+many :: Parser a -> Parser [a]
+#+END_SRC
+
+Example 1: Parse a string with only letters
+
+#+BEGIN_SRC haskell
+> run pLetter "helloworld"
+'h'
+it :: ()
+> run (P.many pLetter) "helloworld"
+"helloworld"
+it :: ()
+> run (P.many pLetter) "helloworld haskell"
+"helloworld"
+it :: ()
+> run (P.many pLetter) "hello2321321"
+"hello"
+it :: ()
+> run (P.many pLetter) ""
+""
+it :: ()
+> run (P.many pLetter) "32423"
+""
+it :: ()
+> run (P.many pLetter) "asdas32423"
+"asdas"
+it :: ()
+> run (P.many pLetter) "0&823asdas32423"
+""
+it :: ()
+> 
+
+#+END_SRC
+
+Example 2: Parse an identifier. Starts with a letter followed by zero
+or more letter or digit.
+
+#+BEGIN_SRC haskell
+:{
+pIdentifier1 :: Parser String
+pIdentifier1 = do
+  x  <- P.letter
+  xs <- P.many (P.letter <|> P.try P.digit)
+  return $ x:xs
+:}  
+#+END_SRC
+
+#+BEGIN_SRC haskell
+> run pIdentifier1 "hello"
+"hello"
+it :: ()
+> run pIdentifier1 "h10"
+"h10"
+it :: ()
+> run pIdentifier1 "a013"
+"a013"
+it :: ()
+> run pIdentifier1 "23a013"
+Parser Error
+(line 1, column 1):
+unexpected "2"
+expecting letter
+it :: ()
+> run pIdentifier1 "-013"
+Parser Error
+(line 1, column 1):
+unexpected "-"
+expecting letter
+it :: ()
+> run pIdentifier1 "a"
+"a"
+it :: ()
+> run pIdentifier1 "a-xf9"
+"a"
+it :: ()
+> 
+
+#+END_SRC
+
+**** many1
+
+*Simplified signature:*
+
+Applies a parser one or more times, returning a list of parser results.
+
+#+BEGIN_SRC haskell
+many1 :: Parser a -> Parser [a]
+#+END_SRC
+
+*Example 1*
+
+#+BEGIN_SRC haskell
+> 
+> run (P.many1 pLetter) "hello"
+"hello"
+it :: ()
+> 
+> run (P.many1 pLetter) "h"
+"h"
+it :: ()
+> run (P.many1 pLetter) "hello"
+"hello"
+it :: ()
+> run (P.many1 pLetter) "hello world"
+"hello"
+it :: ()
+> run (P.many1 pLetter) "hello2321"
+"hello"
+it :: ()
+> run (P.many1 pLetter) ""
+Parser Error
+(line 1, column 1):
+unexpected end of input
+expecting letter
+it :: ()
+> 
+> run (P.many1 pLetter) "2321hello"
+Parser Error
+(line 1, column 1):
+unexpected "2"
+expecting letter
+it :: ()
+> 
+
+#+END_SRC
+
+*Example 2* Parse an integer. 
+
+#+BEGIN_SRC haskell
+:{
+pNumStr :: Parser String
+pNumStr = P.many1 P.digit
+:}          
+
+:{
+pNum1 :: Parser Int
+pNum1 = do
+  s <- P.many1 P.digit
+  return $ read s   
+:}   
+
+
+:{
+pNum2 :: Parser Int
+pNum2 = fmap read $ P.many1 P.digit
+     -- read <$> P.many P.digit
+:}         
+ 
+#+END_SRC
+
+Running:
+
+#+BEGIN_SRC haskell
+> run pNumStr "2300"
+"2300"
+it :: ()
+> run pNumStr "1002"
+"1002"
+it :: ()
+> run pNumStr ""
+Parser Error
+(line 1, column 1):
+unexpected end of input
+expecting digit
+it :: ()
+> run pNumStr "as2323"
+Parser Error
+(line 1, column 1):
+unexpected "a"
+expecting digit
+it :: ()
+> run pNumStr "1000as2323"
+"1000"
+it :: ()
+> 
+
+> run pNum1 ""
+Parser Error
+(line 1, column 1):
+unexpected end of input
+expecting digit
+it :: ()
+> run pNum1 "asa123"
+Parser Error
+(line 1, column 1):
+unexpected "a"
+expecting digit
+it :: ()
+> run pNum1 "134asa"
+134
+it :: ()
+> 
+#+END_SRC
+
+**** sepBy 
+
+Returns zero or more occurences of parser p separated by separator
+sep.
+
+#+BEGIN_SRC haskell
+sepBy :: Parser a -> Parser sep -> Parser [a]
+#+END_SRC
+
+*Example 1:*
+
+#+BEGIN_SRC haskell 
+> run pNum1 "100"
+100
+it :: ()
+
+> run pNum1 "2000"
+2000
+it :: ()
+> 
+
+> run (P.sepBy pNum1 (P.char ',')) "100,200,500,600"
+[100,200,500,600]
+it :: ()
+> 
+> run (P.sepBy pNum1 (P.char ',')) ""
+[]
+it :: ()
+> run (P.sepBy pNum1 (P.char ',')) "asdas"
+[]
+it :: ()
+> run (P.sepBy pNum1 (P.char ',')) "error"
+[]
+it :: ()
+> run (P.sepBy pNum1 (P.char ',')) " 100,200,500,600"
+[]
+it :: ()
+> run (P.sepBy pNum1 (P.char ',')) "100,200,  500,600"
+Parser Error
+(line 1, column 9):
+unexpected " "
+expecting digit
+it :: ()
+> run (P.sepBy pNum1 (P.char ',')) "100,200  ,500,600"
+[100,200]
+it :: ()
+> 
+
+
+
+#+END_SRC
+
+*Example 2:* 
+
+#+BEGIN_SRC haskell
+:{ 
+pCsvRow1 :: Parser [Int]
+pCsvRow1 = P.sepBy pCell (pChar ',')
+    where
+      pCell = do
+        P.spaces
+        num <- pNum1
+        P.spaces
+        return num
+
+:}    
+#+END_SRC
+
+Example: 
+
+#+BEGIN_SRC haskell
+> 
+> run pCsvRow1 "100,200 ,300, 400,    500"
+[100,200,300,400,500]
+it :: ()
+> 
+> run pCsvRow1 "100,200 ,300, 400,    500 aaa bb cc"
+[100,200,300,400,500]
+it :: ()
+> run pCsvRow1 "100,200 ,300, 400  ,    500 , aaa bb cc"
+Parser Error
+(line 1, column 31):
+unexpected "a"
+expecting space or digit
+it :: ()
+> 
+> run pCsvRow1 "100,200 ,300, 400  ,    500"
+[100,200,300,400,500]
+it :: ()
+> run pCsvRow1 "100  , 200 ,300, 400  ,    500"
+[100,200,300,400,500]
+it :: ()
+> 
+
+> run pCsvRow1 ""
+[]
+it :: ()
+> run pCsvRow1 "asdasd"
+[]
+it :: ()
+> run pCsvRow1 "asdasd,"
+[]
+it :: ()
+> run pCsvRow1 "asdasd,566"
+[]
+it :: ()
+> 
+
+#+END_SRC
+
+**** TODO sepBy1 
+** References and Bookmarks 
+
+ - Daan Leijen - *Parsec, a fast combinator parser* Accessed at
+   2017-4-1. Available at
+   <https://web.archive.org/web/20120401040711/http://legacy.cs.uu.nl/daan/download/parsec/parsec.pdf>
+
+ - 
+
+ - 
+
+ - 
