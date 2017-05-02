@@ -6,6 +6,20 @@
    :PROPERTIES:
    :ID:       884b9aaa-aa75-433e-b9f9-9424db4dd588
    :END:
+*** Parsec 
+
+Parsec is parser combinator library that provides parser building
+blocks such as primitive parsers, parser operators and hihger order
+functions to build complex parsers out of simple parsers. Parsec can
+be see as an EDSL - Embedded Domain Specific Language to build
+parsers.
+
+Haskell Parser libraries:
+
+ - Parsec - Parser combinator library for human readable texts.
+
+ - Attoparsec - Parser combinator library for binary formats and binary files.
+
 *** Package Documentation
 
    - [[https://hackage.haskell.org/package/parsec-3.1.11/docs/Text-Parsec.html][Text.Parsec]]
@@ -19,6 +33,9 @@
    - [[https://www.stackage.org/package/parsec][parsec - Stackage Server]]
 
 *** Loader Script
+    :PROPERTIES:
+    :ID:       d377b6bc-e443-4723-8cec-12d2efb973f8
+    :END:
 
 This section will assume that the script _parsecHelpers.hs_ was loaded
 with:
@@ -357,6 +374,8 @@ it :: ()
 
 #+END_SRC
 
+**** TODO oneOf
+**** TODO noneOf
 **** Parse String 
 
 
@@ -1540,6 +1559,298 @@ Running:
   expecting digit
   calc > ^CInterrupted.
   > 
+
+#+END_SRC
+
+*** S-expression serialization 
+    :PROPERTIES:
+    :ID:       bfd7926d-9dcd-46e6-a6f8-efbae7ad30a6
+    :END:
+
+This example shows a s-expression parser that parses a simple
+s-expression AST Abstract Syntax Tree. 
+
+It was based on: 
+
+ - [[https://realworldocaml.org/v1/en/html/data-serialization-with-s-expressions.html][Chapter 17. Data Serialization with S-Expressions / Real World OCaml]]
+
+ - [[https://ocaml.janestreet.com/ocaml-core/111.28.00/doc/sexplib/#Sexp][OCaml Core - sexplib]]
+
+ - [[https://github.com/janestreet/sexplib][janestreet/sexplib: Automated S-expression conversion]]
+
+#+BEGIN_SRC haskell :tangle /tmp/sexpSerial.hs
+  :set -XFlexibleContexts
+
+  import Text.Parsec.String (Parser)
+  import Text.Parsec ((<|>))
+  import qualified Text.Parsec as P
+  import qualified Text.Parsec.Char as PC
+
+  import Control.Monad (void)
+
+  import Data.Either (isRight, isLeft)
+  import Text.Read (readMaybe)
+      
+  import Test.HUnit     
+     
+  import Data.List (intercalate)
+
+  :{
+  data Sexp = Sym   String
+            | Str   String
+            | List [Sexp]
+            deriving (Eq, Read, Show)
+  :}
+
+
+
+  :{
+  apply :: Parser a -> String -> Either P.ParseError a
+  apply p s =  P.parse p "" s
+  :}
+
+  :{
+  applyOpt :: Parser a -> String -> Maybe a
+  applyOpt p s = case P.parse p "" s of
+                 Left _  -> Nothing
+                 Right a -> Just a
+  :}                 
+
+   
+  :{
+  run :: Show a => Parser a -> String -> IO ()
+  run p str =
+      case P.parse p "" str of
+        Left err  -> do putStrLn "Parser Error"
+                        print err
+        Right res -> print res
+  :} 
+
+   
+  :{
+  sexpToStr :: Sexp -> String
+  sexpToStr (Sym s)   = s
+  sexpToStr (Str s)   = "\"" ++ s ++ "\""
+  sexpToStr (List xs) = "( " ++ (intercalate " " $ map sexpToStr xs) ++ " )"
+  :}
+
+  :{ 
+  pStr :: Parser Sexp 
+  pStr = do
+    P.char '"'
+    s <- P.manyTill P.anyChar (P.char '"')
+    return $ Str s
+  :}
+
+  :{
+  pSym :: Parser Sexp 
+  pSym = Sym <$> P.many1 p
+        where
+          pSym = P.oneOf "!$%&|*+-/:<=>?@^_~" 
+          p = P.try P.letter <|> P.try P.digit <|> P.try pSym
+  :}   
+
+  :{
+  pList :: Parser Sexp
+  pList = do
+    P.char '('
+    P.spaces
+    slist <- P.many (P.spaces *> p <* P.spaces)
+    P.spaces          
+    P.char ')'
+    return $ List slist
+        where
+          p = P.try pStr <|> P.try pSym <|> P.try pList
+  :}
+
+  :{ 
+  pSexp :: Parser Sexp
+  pSexp = P.try pSym
+      <|> P.try pStr
+      <|> P.try pList
+  :}        
+
+  :{
+  sexpOfStr :: String -> Maybe Sexp    
+  sexpOfStr = applyOpt pSexp
+  :}
+
+  -- Convert a list of values to s-expression.
+  --
+  :{
+  sexpOfList :: (a -> Sexp) -> [a] -> Sexp
+  sexpOfList fn xs = List $ map fn xs               
+  :}   
+
+  :{
+  sexpOfValue :: Show a => a -> Sexp
+  sexpOfValue v = Sym $ show v
+  :}  
+   
+  -- Tries to extract a list of values form a s-expression.
+  :{
+  sexpToList :: (Sexp -> Maybe a) -> Sexp -> Maybe [a]
+  sexpToList fn (Sym _)   = Nothing
+  sexpToList fn (Str _)   = Nothing
+  sexpToList fn (List xs) = sequence $ map fn xs                    
+  :}
+
+
+  -- Try to extract a single value from a s-expression. 
+  :{
+  sexpToValue :: Read a => Sexp -> Maybe a
+  sexpToValue sp =
+      case sp of
+        Sym s -> readMaybe s
+        _     -> Nothing
+  :}
+
+      
+  :{
+  sexpToInt    = sexpToValue :: Sexp -> Maybe Int
+  sexpToDouble = sexpToValue :: Sexp -> Maybe Double
+  :}
+   
+   
+#+END_SRC
+
+Example: 
+
+#+BEGIN_SRC haskell 
+> :script /tmp/sexpSerial.hs 
+data Sexp = Sym String | Str String | List [Sexp]
+apply :: Parser a -> String -> Either P.ParseError a
+applyOpt :: Parser a -> String -> Maybe a
+run :: Show a => Parser a -> String -> IO ()
+sexpToStr :: Sexp -> String
+pStr :: Parser Sexp
+pSym :: Parser Sexp
+pList :: Parser Sexp
+pSexp :: Parser Sexp
+sexpOfStr :: String -> Maybe Sexp
+sexpOfList :: (a -> Sexp) -> [a] -> Sexp
+sexpOfValue :: Show a => a -> Sexp
+sexpToList :: (Sexp -> Maybe a) -> Sexp -> Maybe [a]
+sexpToValue :: Read a => Sexp -> Maybe a
+sexpToDouble :: Sexp -> Maybe Double
+sexpToInt :: Sexp -> Maybe Int
+> 
+
+
+> sexpToStr $ List [Sym "100", Sym "200", Sym "300"]
+"( 100 200 300 )"
+it :: String
+>
+
+> sexpToStr $ List [Sym "100", List [ Sym "200", Sym "300"], Str "hello world", Sym "x"]
+"( 100 ( 200 300 ) \"hello world\" x )"
+it :: String
+> 
+
+
+>  
+> run pSym "hello"
+Sym "hello"
+it :: ()
+> 
+> run pSym "hello world"
+Sym "hello"
+it :: ()
+> run pSym "3434hello world"
+Sym "3434hello"
+it :: ()
+> 
+
+> run pQuotedStr "\"hello world haskell\""
+Str "hello world haskell"
+it :: ()
+> 
+> run (P.spaces >> pQuotedStr) "  \"hello world haskell\""
+Str "hello world haskell"
+it :: ()
+> run (P.spaces >> pQuotedStr) "  \"hello\""
+Str "hello"
+it :: ()
+> 
+ 
+> 
+> run pList "( 100 200 300)"
+List [Sym "100",Sym "200",Sym "300"]
+it :: ()
+> 
+> run pList "( 100 200 300  )"
+List [Sym "100",Sym "200",Sym "300"]
+it :: ()
+> 
+> run pList "( 100 200 300 hello world \"hello\" \"parsec is amazing\" )"
+List [Sym "100",Sym "200",Sym "300",Sym "hello",Sym "world",Str "hello",Str "parsec is amazing"]
+it :: ()
+> 
+> run pList "( 100 200 (300 hello world \"hello\") ()  \"parsec is amazing\" )"
+List [Sym "100",Sym "200",List [Sym "300",Sym "hello",Sym "world",Str "hello"],List [],Str "parsec is amazing"]
+it :: ()
+> 
+> run pList "(+ 100 200 300  )"
+List [Sym "+",Sym "100",Sym "200",Sym "300"]
+it :: ()
+> 
+
+> 
+> run pSexp "1232"
+Sym "1232"
+it :: ()
+> run pSexp "hello"
+Sym "hello"
+it :: ()
+> run pSexp "(hello world)"
+List [Sym "hello",Sym "world"]
+it :: ()
+> run pSexp "(++ hello world)"
+List [Sym "++",Sym "hello",Sym "world"]
+it :: ()
+> 
+
+> let test1 = "( 100 200 300 400 500 )"
+test1 :: [Char]
+> 
+
+> let test1 = "( 100 200 300 400 500 )"
+test1 :: [Char]
+> 
+> sexpOfStr test1 
+Just (List [Sym "100",Sym "200",Sym "300",Sym "400",Sym "500"])
+it :: Maybe Sexp
+> 
+
+> sexpOfStr test1 >>= sexpToList sexpToInt 
+Just [100,200,300,400,500]
+it :: Maybe [Int]
+> 
+> 
+> sexpOfStr test1 >>= sexpToList sexpToDouble 
+Just [100.0,200.0,300.0,400.0,500.0]
+it :: Maybe [Double]
+> 
+
+> sexpOfList sexpOfValue [100, 200, 300, 5400]
+List [Sym "100",Sym "200",Sym "300",Sym "5400"]
+it :: Sexp
+> 
+
+> let test2 = sexpToStr $ sexpOfList sexpOfValue [100, 200, 300, 5400]
+test2 :: String
+> test2
+"( 100 200 300 5400 )"
+it :: String
+> 
+> sexpOfStr test2
+Just (List [Sym "100",Sym "200",Sym "300",Sym "5400"])
+it :: Maybe Sexp
+> 
+> sexpOfStr test2 >>= sexpToList sexpToInt 
+Just [100,200,300,5400]
+it :: Maybe [Int]
+> 
 
 #+END_SRC
 
