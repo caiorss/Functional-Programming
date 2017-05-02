@@ -9,16 +9,18 @@
 *** Parsec 
 
 Parsec is parser combinator library that provides parser building
-blocks such as primitive parsers, parser operators and hihger order
+blocks such as primitive parsers, parser operators and higher order
 functions to build complex parsers out of simple parsers. Parsec can
 be see as an EDSL - Embedded Domain Specific Language to build
 parsers.
 
+
 Haskell Parser libraries:
 
- - Parsec - Parser combinator library for human readable texts.
+ - [[https://hackage.haskell.org/package/parsec][Parsec]] - Parser combinator library for human readable texts.
 
- - Attoparsec - Parser combinator library for binary formats and binary files.
+ - [[https://hackage.haskell.org/package/attoparsec][Attoparsec]] - Parser combinator library for binary formats and
+   binary files.
 
 *** Package Documentation
 
@@ -2007,22 +2009,34 @@ it :: Maybe [Int]
 
 #+END_SRC
 ** References and Bookmarks 
-*** See also 
-
- - [[http://stackoverflow.com/questions/tagged/parsec][Highest Voted 'parsec' Questions - Stack Overflow]] - Parsec in StackOverflow.
-
- - 
-
- - 
-
- - *Write Yourself a Scheme in 48 Hours.* An Introduction to Haskell
-   through Example <https://upload.wikimedia.org/wikipedia/commons/a/aa/Write_Yourself_a_Scheme_in_48_Hours.pdf>
  
+
+ - Daan Leijen and Erik Meijer. *Parsec: Direct Style Monadic Parser
+   Combinators. For The Real World*
+   <https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/parsec-paper-letter.pdf>
 
  - Daan Leijen - *Parsec, a fast combinator parser* Accessed at
    2017-4-1. Available at
    <https://web.archive.org/web/20120401040711/http://legacy.cs.uu.nl/daan/download/parsec/parsec.pdf>
 
+ - Aurick Qiao - *Applicative and Monadic Parsing Combinators* -
+   <https://cs.uwaterloo.ca/~plragde/842/handouts/app-mon-qiao.pdf>
+
+ - Parissa H.Sadeghi. *Monadic Parser
+   Combinators*. <https://www.informatik.uni-kiel.de/~mh/lehre/seminare/ss04-sem-arbeiten/sadeghi.pdf> 
+
+ - *Write Yourself a Scheme in 48 Hours.* An Introduction to Haskell
+   through Example <https://upload.wikimedia.org/wikipedia/commons/a/aa/Write_Yourself_a_Scheme_in_48_Hours.pdf>
+
+ - Yann Esposito. *Parsec Presentation* <http://yannesposito.com/Scratch/en/blog/Parsec-Presentation/>
+ 
  - [[https://wiki.haskell.org/Parsec][Parsec - HaskellWiki]]
 
- 
+ - [[https://github.com/JakeWheat/intro_to_parsing/][JakeWheat/intro_to_parsing: Introduction to parsing with Haskell and Parsec]]
+
+ - *What's in a parser combinator?* - <https://remusao.github.io/whats-in-a-parser-combinator.html>
+
+Misc 
+
+ - [[http://stackoverflow.com/questions/tagged/parsec][Highest Voted 'parsec' Questions - Stack Overflow]] - Parsec in StackOverflow.
+
