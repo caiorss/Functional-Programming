@@ -70,6 +70,14 @@ run :: Show a => Parser a -> String -> IO ()
   :}
 
   :{
+  applyOpt :: Parser a -> String -> Maybe a
+  applyOpt p s = case P.parse p "" s of
+                 Left _  -> Nothing
+                 Right a -> Just a
+  :}                 
+
+   
+  :{
   run :: Show a => Parser a -> String -> IO ()
   run p str =
       case P.parse p "" str of
@@ -1431,6 +1439,151 @@ it :: ()
 #+END_SRC
 
 ** Examples - Complete Parsers 
+*** Parsing numbers
+    :PROPERTIES:
+    :ID:       56be5da0-fa7d-45b2-adc2-6040e5003582
+    :END:
+
+Parse number with/without sign. 
+
+File: numParser.hs 
+
+#+BEGIN_SRC haskell :tangle /tmp/numParser.hs
+  :set -XFlexibleContexts
+
+  import Text.Parsec.String (Parser)
+  import Text.Parsec ((<|>))
+  import qualified Text.Parsec as P
+  import qualified Text.Parsec.Char as PC
+
+  import Control.Monad (void, forever)
+  import Data.Either (isRight, isLeft)  
+
+  :{
+  run :: Show a => Parser a -> String -> IO ()
+  run p str =
+      case P.parse p "" str of
+        Left err  -> do putStrLn "Parser Error"
+                        print err
+        Right res -> print res
+  :} 
+
+
+  :{
+  pInt :: Parser Int
+  pInt = P.try pPos <|> pNeg
+    where
+      
+      -- Parse positive number
+      pPos = do 
+        s <- P.many1 P.digit 
+        return $ read s
+               
+      -- Parse negative number 
+      pNeg = do
+        P.char '-'
+        n <- pPos
+        return (-n)
+  :}
+
+
+  :{
+  -- | Parse float point numbers
+  -- |
+  pFloat :: Parser Double
+  pFloat = pNan
+     <|> P.try pInfPlus
+     <|> P.try pInfNeg
+     <|> P.try (read <$> pExp)
+     <|> P.try (read <$> pDot)
+     <|> P.try (read <$> pNDot)       
+      where
+      -- Float point constants 
+      pNan     = P.string "nan" >> return (read "NaN")
+      pInfPlus = P.string "inf" >> return (read "Infinity")
+      pInfNeg  = P.string "-inf" >> return (read "-Infinity")
+          
+      -- Parse positive number
+      pPos = do 
+        s <- P.many1 P.digit 
+        return s
+               
+      -- Parse negative number 
+      pNeg = do
+        P.char '-'
+        s <- pPos
+        return $ "-" ++ s
+
+      -- Parse number without dot like 200 or -435
+      pNDot = P.try pPos <|> pNeg
+
+      -- Parse number with dot
+      pDot = do
+        num1 <- P.try pPos <|> pNeg
+        P.char '.'
+        num2 <- pPos
+        return $ num1 ++ "." ++ num2
+
+      -- Parse number with format 10e3 20.23e5
+      pExp = do
+        num1 <- P.try pDot <|> pNDot
+        P.oneOf "eE" -- e or E
+        num2 <- pNDot
+        return $ num1 ++ "E" ++ num2
+      
+  :}   
+   
+
+#+END_SRC
+
+Running:
+
+#+BEGIN_SRC haskell 
+> run pInt "20023"
+20023
+it :: ()
+> run pInt "-20023"
+-20023
+
+> run pInt "223 "
+223
+it :: ()
+> run pInt "223 asa"
+223
+
+> run (pInt <* P.eof) "-223"
+-223
+it :: ()
+> run (pInt <* P.eof) "223"
+223
+it :: ()
+> run (pInt <* P.eof) "223 "
+Parser Error
+(line 1, column 4):
+unexpected ' '
+expecting digit or end of input
+it :: ()
+> 
+
+> mapM_ (run pFloat) ["inf", "nan", "-inf", "100", "0", "-0.0001", "1000e-2", "-100.23", "1e3", "1000", "-0.23e4"]
+Infinity
+NaN
+-Infinity
+100.0
+0.0
+-1.0e-4
+10.0
+-100.23
+1000.0
+1000.0
+-2300.0
+it :: ()
+> 
+> 
+
+
+#+END_SRC
+
 *** Simple Calculator  
 
 #+BEGIN_SRC haskell
@@ -1853,7 +2006,6 @@ it :: Maybe [Int]
 > 
 
 #+END_SRC
-
 ** References and Bookmarks 
 *** See also 
 
