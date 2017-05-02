@@ -18,8 +18,7 @@
 
    - [[https://www.stackage.org/package/parsec][parsec - Stackage Server]]
 
-
-*** Loading Script
+*** Loader Script
 
 This section will assume that the script _parsecHelpers.hs_ was loaded
 with:
@@ -256,7 +255,7 @@ it :: ()
 
 #+END_SRC
 
-** Examples
+** Parser Combinators
 *** Primitive Parsers 
 **** Parse Char
 
@@ -329,6 +328,35 @@ it :: ()
 
 #+END_SRC
 
+**** Parse any character - anychar 
+
+Consume anycharater returning it.
+
+#+BEGIN_SRC haskell
+anyChar :: Char -> Parser Char 
+#+END_SRC
+
+Example: 
+
+#+BEGIN_SRC haskell
+> run P.anyChar "world"
+'w'
+it :: ()
+> run P.anyChar ""
+Parser Error
+(line 1, column 1):
+unexpected end of input
+it :: ()
+> run P.anyChar "x"
+'x'
+it :: ()
+> run P.anyChar "6586"
+'6'
+it :: ()
+> 
+
+#+END_SRC
+
 **** Parse String 
 
 
@@ -375,7 +403,7 @@ it :: ()
 
 #+END_SRC
 
-*** Parser Combinators 
+*** Combinators 
 **** Monad do-notation - parse sequence 
 
 It parses a letter surrounded by parenthesis. The do-notation and the
@@ -457,6 +485,62 @@ unexpected "x"
 expecting ")"
 it :: ()
 > 
+#+END_SRC
+
+**** Functor fmap and operator (<$>)
+
+The function fmap or the operator (<$>) that is a fmap synonym apply a
+function to the parser result.
+
+#+BEGIN_SRC haskell 
+fmap  :: (a -> b) -> Parser a -> Parser b
+(<$>) :: (a -> b) -> Parser a -> Parser b
+#+END_SRC
+
+Example:
+
+#+BEGIN_SRC haskell 
+> let pNumStr = P.many1 P.digit :: Parser String
+pNumStr :: Parser String
+> 
+
+> run (fmap read pNumStr) "2323" 
+ *** Exception: Prelude.read: no parse
+> 
+
+> run (fmap read pNumStr :: Parser Int) "2323"
+2323
+it :: ()
+
+> run (fmap read pNumStr :: Parser Int) ""
+Parser Error
+(line 1, column 1):
+unexpected end of input
+expecting digit
+it :: ()
+
+> run (fmap read pNumStr :: Parser Int) "100"
+100
+it :: ()
+> 
+
+> run (read <$> pNumStr :: Parser Int) "100"
+100
+it :: ()
+> run ((+120) <$> read <$> pNumStr :: Parser Int) "100"
+220
+it :: ()
+
+> run ((*3) <$> (+120) <$> read <$> pNumStr :: Parser Int) "100"
+660
+it :: ()
+> 
+
+> run ((*3) . (+120) . read <$> pNumStr :: Parser Int) "100"
+660
+it :: ()
+> 
+
 #+END_SRC
 
 **** Monad operators return, (>>=) and >> 
@@ -614,78 +698,116 @@ Running:
 #+BEGIN_SRC haskell
 (>>=) :: Parser a -> (a -> Parser b) -> Parser b
 #+END_SRC
+**** Applicative operators (<*), (*>) and (<*>)
+***** Operator (*>)
 
-**** Functor fmap and operator (<$>)
-
-The function fmap or the operator (<$>) that is a fmap synonym apply a
-function to the parser result.
+Run two parsers and returns the result of second one.
 
 #+BEGIN_SRC haskell
-fmap  :: (a -> b) -> Parser a -> Parser b
-(<$>) :: (a -> b) -> Parser a -> Parser b
+(*>) :: Applicative f => f a -> f b -> f b
+(*>) :: Parser a -> Parser b -> Parser b    -- For Parsec 
+resultB = parserA *> parserB                -- Mneumonic
 #+END_SRC
 
-Example:
+Example: Parse the word 'true' followed by number returning it.
 
 #+BEGIN_SRC haskell
-> let pNumStr = P.many1 P.digit :: Parser String
-pNumStr :: Parser String
->
+:{
+pNum :: Parser Int
+pNum = fmap read $ P.many1 P.digit
+:}   
 
-> run (fmap read pNumStr) "2323"
- *** Exception: Prelude.read: no parse
->
-
-> run (fmap read pNumStr :: Parser Int) "2323"
-2323
+> run (P.string "true" *> pNum) "true1003"
+1003
 it :: ()
 
-> run (fmap read pNumStr :: Parser Int) ""
+> run (P.string "true" *> pNum) "tru1003"
+Parser Error
+(line 1, column 1):
+unexpected "1"
+expecting "true"
+it :: ()
+
+> run (P.string "true" *> pNum) "1003"
+Parser Error
+(line 1, column 1):
+unexpected "1"
+expecting "true"
+it :: ()
+> 
+> run (P.string "true" *> pNum) "true"
+Parser Error
+(line 1, column 5):
+unexpected end of input
+expecting digit
+it :: ()
+> 
+
+
+#+END_SRC
+
+***** Operator (<*)
+
+Run two parsers and returns the result of the first one.
+
+#+BEGIN_SRC haskell
+(<*) :: Applicative f => f a -> f b -> f a
+(<*) :: Parser a -> Parser b -> Parser a    -- For Parsec 
+resultA = parserA <* parserB                -- Mneumonic
+#+END_SRC
+
+Example: Parse a number followed by word true returning the number.
+
+#+BEGIN_SRC haskell
+:{
+pNum :: Parser Int
+pNum = fmap read $ P.many1 P.digit
+:}   
+
+> run (pNum <* P.string "true") "100true"
+100
+it :: ()
+
+> run (pNum <* P.string "true") "1200true"
+1200
+it :: ()
+> run ((*3) <$> pNum <* P.string "true") "1200true"
+3600
+it :: ()
+
+> run (pNum <* P.string "true") "1200"
+Parser Error
+(line 1, column 5):
+unexpected end of input
+expecting digit or "true"
+it :: ()
+
+> run (pNum <* P.string "true") ""
 Parser Error
 (line 1, column 1):
 unexpected end of input
 expecting digit
 it :: ()
 
-> run (fmap read pNumStr :: Parser Int) "100"
-100
-it :: ()
->
-
-> run (read <$> pNumStr :: Parser Int) "100"
-100
-it :: ()
-> run ((+120) <$> read <$> pNumStr :: Parser Int) "100"
-220
+> run (pNum <* P.string "true") "9"
+Parser Error
+(line 1, column 2):
+unexpected end of input
+expecting digit or "true"
 it :: ()
 
-> run ((*3) <$> (+120) <$> read <$> pNumStr :: Parser Int) "100"
-660
+> run (pNum <* P.string "true") "true"
+Parser Error
+(line 1, column 1):
+unexpected "t"
+expecting digit
 it :: ()
->
-
-> run ((*3) . (+120) . read <$> pNumStr :: Parser Int) "100"
-660
-it :: ()
->
+> 
 
 #+END_SRC
 
-**** TODO Applicative operators (<*), (*>) and (<*>)
-
-#+BEGIN_SRC haskell
-> :t (*>)
-(*>) :: Applicative f => f a -> f b -> f b
->
-> :t (<*)
-(<*) :: Applicative f => f a -> f b -> f a
->
-> :t (<*>)
-(<*>) :: Applicative f => f (a -> b) -> f a -> f b
->
-#+END_SRC
-
-**** Parser choice (<|>)
+***** TODO Operator (<*>)
+**** Parser choice (<|>) operator
 
 The parser choice operator (<|>) only will try the second alternative
 parser if the first parser has failed and not consummed any input.
@@ -693,6 +815,7 @@ parser if the first parser has failed and not consummed any input.
 The operator try makes the parser consume any input if it has failed.
 
 #+BEGIN_SRC haskell
+(<|>) :: Parser a -> Parser a -> Parser a
 parser1 <|> parser2 
 parser1 <|> parser2 <|> parser3 <|> parser4 ... 
 #+END_SRC
@@ -750,6 +873,7 @@ it :: ()
 
 #+END_SRC
 
+**** TODO choice 
 **** many 
 
 *Simplified signature:*
@@ -950,7 +1074,6 @@ it :: ()
 it :: ()
 > 
 #+END_SRC
-
 **** sepBy 
 
 Returns zero or more occurences of parser p separated by separator
@@ -1060,16 +1183,251 @@ it :: ()
 > 
 
 #+END_SRC
+**** between 
 
+#+BEGIN_SRC haskell
+between :: Parser open -> Parser close -> Parser p -> Parser p 
+#+END_SRC
+
+*Example 1: Parse a number between parenthesis*
+
+#+BEGIN_SRC haskell
+:{
+pNum :: Parser Int
+pNum = read <$> P.many1 P.digit    
+:}  
+#+END_SRC
+
+#+BEGIN_SRC haskell
+  > run (P.between (P.char '(') (P.char ')') pNum) "()"
+  Parser Error
+  (line 1, column 2):
+  unexpected ")"
+  expecting digit
+  it :: ()
+  > run (P.between (P.char '(') (P.char ')') pNum) "(22383)"
+  22383
+  it :: ()
+  > run (P.between (P.char '(') (P.char ')') pNum) "( 22383 )"
+  Parser Error
+  (line 1, column 2):
+  unexpected " "
+  expecting digit
+  it :: ()
+  > 
+
+  > run (P.between (P.char '(') (P.char ')') (P.spaces *> pNum <* P.spaces)) "(  22383)"
+  22383
+  it :: ()
+  > 
+  > run (P.between (P.char '(') (P.char ')') (P.spaces *> pNum <* P.spaces)) "(  22383  )"
+  22383
+  it :: ()
+  > run (P.between (P.char '(') (P.char ')') (P.spaces *> pNum <* P.spaces)) "(22383)"
+  22383
+  it :: ()
+  > 
+
+  :{
+  pExpr :: Parser Int
+  pExpr = P.between (P.char '(') (P.char ')') p
+      where
+        p = P.spaces *> pNum <* P.spaces
+  :}
+
+
+  :{
+  pExpr2 :: Parser Int
+  pExpr2 = P.between (P.char '(') (P.char ')') p
+      where
+        p = do
+          P.spaces
+          num <- pNum
+          P.spaces
+          return num 
+  :}
+   
+
+   > run pExpr "( 100 )"
+  100
+  it :: ()
+  > run pExpr "( 100 2100 )"
+  Parser Error
+  (line 1, column 7):
+  unexpected "2"
+  expecting space or ")"
+  it :: ()
+  > run pExpr "(2023 )"
+  2023
+  it :: ()
+  > run pExpr "( 2023)"
+  2023
+  it :: ()
+  > run pExpr "( 2023)  "
+  2023
+  it :: ()
+  > run pExpr "( 2023)  asdasdas"
+  2023
+  it :: ()
+  > 
+
+
+  > run pExpr2 "(2300)"
+  2300
+  it :: ()
+  > run pExpr2 "(  2300  )"
+  2300
+  it :: ()
+  > 
+
+#+END_SRC
+
+
+*Example 2 : Parse list of numbers between curly brackets.*
+
+#+BEGIN_SRC haskell
+  :{
+  pNum :: Parser Int
+  pNum = read <$> P.many1 P.digit    
+  :}  
+
+
+  :{
+  pNumList :: Parser [Int]
+  pNumList = P.between open close pList
+      where
+        open = P.char '{' >> P.spaces
+        close = P.spaces >> P.char '}'
+        pList = P.sepBy (P.spaces *> pNum <* P.spaces) (P.char ',')        
+  :}
+
+
+  > run pNumList "{100 , 200, 300, 400, 500}"
+  [100,200,300,400,500]
+  it :: ()
+  > run pNumList "{100 , 200, 300, 400, 500  }"
+  [100,200,300,400,500]
+  it :: ()
+  > run pNumList "{  100 , 200, 300, 400, 500  }"
+  [100,200,300,400,500]
+  it :: ()
+  > run pNumList "{  100 }"
+  [100]
+  it :: ()
+  > run pNumList "{100}"
+  [100]
+  it :: ()
+  > run pNumList "{}"
+  []
+  it :: ()
+  > 
+
+
+  > run pNumList ""
+  Parser Error
+  (line 1, column 1):
+  unexpected end of input
+  expecting "{"
+  it :: ()
+        
+  > run pNumList "{"
+  Parser Error
+  (line 1, column 2):
+  unexpected end of input
+  expecting white space, digit or "}"
+  it :: ()
+  > 
+
+    
+#+END_SRC
+
+**** TODO manyTill
 **** TODO sepBy1 
+**** eof 
+
+Only suceeds at the end of input. (EOF - End Of File).
+
+#+BEGIN_SRC haskell 
+eof :: Parser ()
+#+END_SRC
+
+Example: 
+
+#+BEGIN_SRC haskell 
+:{
+pNum :: Parser Int
+pNum = fmap read $ P.many1 P.digit
+:}   
+
+> run pNum "9232"
+9232
+it :: ()
+
+> run pNum "1023  "
+1023
+it :: ()
+> 
+
+> run pNum "9232-sadas"
+9232
+it :: ()
+
+> run pNum ""
+Parser Error
+(line 1, column 1):
+unexpected end of input
+expecting digit
+it :: ()
+
+> run pNum " 3423 "
+Parser Error
+(line 1, column 1):
+unexpected " "
+expecting digit
+it :: ()
+
+> run pNum "23 3423 "
+23
+it :: ()
+> 
+
+> run (pNum <* P.eof) "100"
+100
+it :: ()
+> run (pNum <* P.eof) "100 "
+Parser Error
+(line 1, column 4):
+unexpected ' '
+expecting digit or end of input
+it :: ()
+> run (pNum <* P.eof) "34asd"
+Parser Error
+(line 1, column 3):
+unexpected 'a'
+expecting digit or end of input
+it :: ()
+> 
+
+
+#+END_SRC
+
 ** References and Bookmarks 
+*** See also 
+
+ - [[http://stackoverflow.com/questions/tagged/parsec][Highest Voted 'parsec' Questions - Stack Overflow]] - Parsec in StackOverflow.
+
+ - 
+
+ - 
+
+ - *Write Yourself a Scheme in 48 Hours.* An Introduction to Haskell
+   through Example <https://upload.wikimedia.org/wikipedia/commons/a/aa/Write_Yourself_a_Scheme_in_48_Hours.pdf>
+ 
 
  - Daan Leijen - *Parsec, a fast combinator parser* Accessed at
    2017-4-1. Available at
    <https://web.archive.org/web/20120401040711/http://legacy.cs.uu.nl/daan/download/parsec/parsec.pdf>
 
- - 
+ - [[https://wiki.haskell.org/Parsec][Parsec - HaskellWiki]]
 
- - 
-
- - 
+ 
