@@ -1411,6 +1411,138 @@ it :: ()
 
 #+END_SRC
 
+** Examples - Complete Parsers 
+*** Simple Calculator  
+
+#+BEGIN_SRC haskell
+  import Text.Parsec.String (Parser)
+  import Text.Parsec ((<|>))
+  import qualified Text.Parsec as P
+  import qualified Text.Parsec.Char as PC
+
+  import Control.Monad (void, forever)
+  import Data.Either (isRight, isLeft)
+      
+
+  :{
+  pNum :: Parser Int
+  pNum = read <$> P.many1 P.digit    
+  :} 
+
+  :{
+  pOperation :: Char -> (Int -> Int -> Int) ->  Parser Int 
+  pOperation op fn = do
+    numA <- pNum
+    P.spaces
+    P.char op
+    P.spaces
+    numB <- pNum
+    return $ fn numA numB
+  :}
+
+  :{
+  pAdd = pOperation '+' (+)
+  pSub = pOperation '-' (-)
+  pMul = pOperation '*' (*)
+  pDiv = pOperation '/' div
+  pRem = pOperation '%' rem       
+  :}   
+
+  :{
+  pCalc :: Parser Int
+  pCalc = P.choice [P.try pAdd
+                   ,P.try pSub
+                   ,P.try pMul
+                   ,P.try pDiv
+                   ,P.try pRem
+                   ]         
+  :}
+
+
+  :{
+  runCalculator :: IO ()
+  runCalculator =
+      forever $ do
+        line <- putStr "calc > " >> getLine
+        run pCalc line
+  :}               
+#+END_SRC
+
+Running:
+
+#+BEGIN_SRC haskell 
+                       
+  > run pAdd "100 + 200"
+  300
+  it :: ()
+   
+  > run pAdd "103+200"
+  303
+  it :: ()
+  > run pAdd "103+"
+  Parser Error
+  (line 1, column 5):
+  unexpected end of input
+  expecting white space or digit
+  it :: ()
+  > 
+
+  > run pCalc "2010 / 10"
+  201
+  it :: ()
+  >  
+  > run pCalc "100 % 432"
+  100
+  it :: ()
+  > run pCalc "203 - 126"
+  77
+  it :: ()
+  > run pCalc "203 + 126"
+  329
+  it :: ()
+  > run pCalc "203 * 126"
+  25578
+  it :: ()
+  > run pCalc "203 % 126"
+  77
+  it :: ()
+  > run pCalc "203 % "
+  Parser Error
+  (line 1, column 7):
+  unexpected end of input
+  expecting space or digit
+  it :: ()
+  > 
+
+  > runCalculator -- Run Ctrl + C to exit 
+  calc > 100 * 20
+  2000
+  calc > 89 - 100
+  -11
+  calc > 2323  ^?
+  Parser Error
+  (line 1, column 7):
+  unexpected "\DEL"
+  expecting space, "+", "-", "*", "/" or "%"
+  calc > 232 / 10
+  23
+  calc > 35 * 9
+  315
+  calc > 35 * 
+  Parser Error
+  (line 1, column 6):
+  unexpected end of input
+  expecting space or digit
+  calc > 
+  Parser Error
+  (line 1, column 1):
+  unexpected end of input
+  expecting digit
+  calc > ^CInterrupted.
+  > 
+
+#+END_SRC
+
 ** References and Bookmarks 
 *** See also 
 
