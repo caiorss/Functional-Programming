@@ -1,0 +1,75 @@
+#+TITLE: Functional Programming in Haskell 
+
+ - [[file:Haskell.org][Setting Up Development Environment ]]
+
+ - [[file:Basic_Syntax.org][Basic Syntax]]
+
+ - [[file:Functions.org][Functions]]
+
+ - [[file:Pattern_Matching.org][Pattern Matching]]
+
+ - [[file:List_Comprehension.org][List Comprehension]]  
+
+ - [[file:Algebraic_Data_Types.org][Algebraic Data Type]]  
+
+ - [[file:polymorphism_and_typeclasses.org][Polymorphism and Typeclasses]]
+
+ - [[file:Functors__Monads__Applicatives_and_Monoids.org][Functors and Monads]]
+
+ - [[file:monoids.org][Monoids and Foldables]]
+
+ - [[file:Parsec_parser_combinators.org][Parsec - Parser Combinators]]
+
+ - [[file:haskell_handling_exceptions.org][Exception Handling]]  
+
+ - [[file:DatabaseHDBC.org][Databases - HDBC package]]
+
+ - [[file:UnitTest_Hunit.org][Unit Test with HUNIT]]
+
+ - [[file:Mutable_References.org][Mutable References]]
+
+ - [[file:Useful_Custom_Functions__Iterators_and_Operators.org][Useful Custom Functions/ Iterators and Operators]]
+
+ - [[file:GUI_Graphical_User_Interface_GTK.org][GUI Graphical User Interface with GTK]]
+
+ - [[file:Applications.org][Applications]]
+
+ - [[file:Tips_And_Tricks.org][Tips and Tricks]]
+
+ - [[file:Miscellaneous.org][Miscellaneous]]
+
+ - [[file:Libraries.org][Haskell Libraries]]
+
+ - [[file:Real_World_Haskell.org][Codes and Examples from "Real World Haskell"]]
+
+ - [[file:Documentation_and_Learning_Materials.org][Documentation and Learning Materials]]
+
+ - Modules
+
+   - [[file:control_monad.org][Contro.Monad]]      - Monad Combinators 
+
+   - [[file:package_Data_Text.org][Data.Text]]         - String processing combinators.
+
+   - [[file:system_io_modules.org][System IO Modules]] - Basic System IO Modules
+    
+   - [[file:system_filepath.org][System.FilePath]]   - File path manipulation on all platforms. 
+
+   - [[file:control_exception.org][Control.Exception]] - Exception Handling
+
+   - [[file:data_map.org][Data.Map]]          - Immutable hash map. Implemented with balanced trees.
+
+ - Haskell Bookmarks:
+
+   - [[https://www.haskell.org/onlinereport/haskell2010/][Haskell 2010 Language Report]]
+
+   - [[https://downloads.haskell.org/~ghc/latest/docs/html/libraries/][Haskell Hierarchical Libraries]] - Built-in Haskell libraries.
+
+   - [[https://docs.haskellstack.org/en/stable/README/][Haskell Stack Tool]] - Haskell dependency manager, package manager
+     which can install multiple Haskell versions, library versions per
+     project repository avoiding dependency hell.
+
+   - [[http://cheatsheet.codeslower.com/][The Haskell Cheatsheet]]
+
+   - [[https://www.haskell.org/platform/contents.html][Haskell Platform - Included Packages]]
+
+   - [[https://www.haskell.org/hoogle/][Hoogle]] - Haskell types search engine.
