@@ -1,62 +1,62 @@
 #+TITLE: Functional Programming in Haskell 
 
- - [[file:haskell/Haskell.org][Setting Up Development Environment ]]
+ - [[file:Haskell.org][Setting Up Development Environment ]]
 
- - [[file:haskell/Basic_Syntax.org][Basic Syntax]]
+ - [[file:Basic_Syntax.org][Basic Syntax]]
 
- - [[file:haskell/Functions.org][Functions]]
+ - [[file:Functions.org][Functions]]
 
- - [[file:haskell/Pattern_Matching.org][Pattern Matching]]
+ - [[file:Pattern_Matching.org][Pattern Matching]]
 
- - [[file:haskell/List_Comprehension.org][List Comprehension]]  
+ - [[file:List_Comprehension.org][List Comprehension]]  
 
- - [[file:haskell/Algebraic_Data_Types.org][Algebraic Data Type]]  
+ - [[file:Algebraic_Data_Types.org][Algebraic Data Type]]  
 
- - [[file:haskell/polymorphism_and_typeclasses.org][Polymorphism and Typeclasses]]
+ - [[file:polymorphism_and_typeclasses.org][Polymorphism and Typeclasses]]
 
- - [[file:haskell/Functors__Monads__Applicatives_and_Monoids.org][Functors and Monads]]
+ - [[file:Functors__Monads__Applicatives_and_Monoids.org][Functors and Monads]]
 
- - [[file:haskell/monoids.org][Monoids and Foldables]]
+ - [[file:monoids.org][Monoids and Foldables]]
 
- - [[file:haskell/Parsec_parser_combinators.org][Parsec - Parser Combinators]]
+ - [[file:Parsec_parser_combinators.org][Parsec - Parser Combinators]]
 
- - [[file:haskell/haskell_handling_exceptions.org][Exception Handling]]  
+ - [[file:haskell_handling_exceptions.org][Exception Handling]]  
 
- - [[file:haskell/DatabaseHDBC.org][Databases - HDBC package]]
+ - [[file:DatabaseHDBC.org][Databases - HDBC package]]
 
- - [[file:haskell/UnitTest_Hunit.org][Unit Test with HUNIT]]
+ - [[file:UnitTest_Hunit.org][Unit Test with HUNIT]]
 
- - [[file:haskell/Mutable_References.org][Mutable References]]
+ - [[file:Mutable_References.org][Mutable References]]
 
- - [[file:haskell/Useful_Custom_Functions__Iterators_and_Operators.org][Useful Custom Functions/ Iterators and Operators]]
+ - [[file:Useful_Custom_Functions__Iterators_and_Operators.org][Useful Custom Functions/ Iterators and Operators]]
 
- - [[file:haskell/GUI_Graphical_User_Interface_GTK.org][GUI Graphical User Interface with GTK]]
+ - [[file:GUI_Graphical_User_Interface_GTK.org][GUI Graphical User Interface with GTK]]
 
- - [[file:haskell/Applications.org][Applications]]
+ - [[file:Applications.org][Applications]]
 
- - [[file:haskell/Tips_And_Tricks.org][Tips and Tricks]]
+ - [[file:Tips_And_Tricks.org][Tips and Tricks]]
 
- - [[file:haskell/Miscellaneous.org][Miscellaneous]]
+ - [[file:Miscellaneous.org][Miscellaneous]]
 
- - [[file:haskell/Libraries.org][Haskell Libraries]]
+ - [[file:Libraries.org][Haskell Libraries]]
 
- - [[file:haskell/Real_World_Haskell.org][Codes and Examples from "Real World Haskell"]]
+ - [[file:Real_World_Haskell.org][Codes and Examples from "Real World Haskell"]]
 
- - [[file:haskell/Documentation_and_Learning_Materials.org][Documentation and Learning Materials]]
+ - [[file:Documentation_and_Learning_Materials.org][Documentation and Learning Materials]]
 
  - Modules
 
-   - [[file:haskell/control_monad.org][Contro.Monad]]      - Monad Combinators 
+   - [[file:control_monad.org][Contro.Monad]]      - Monad Combinators 
 
-   - [[file:haskell/package_Data_Text.org][Data.Text]]         - String processing combinators.
+   - [[file:package_Data_Text.org][Data.Text]]         - String processing combinators.
 
-   - [[file:haskell/system_io_modules.org][System IO Modules]] - Basic System IO Modules
+   - [[file:system_io_modules.org][System IO Modules]] - Basic System IO Modules
     
-   - [[file:haskell/system_filepath.org][System.FilePath]]   - File path manipulation on all platforms. 
+   - [[file:system_filepath.org][System.FilePath]]   - File path manipulation on all platforms. 
 
-   - [[file:haskell/control_exception.org][Control.Exception]] - Exception Handling
+   - [[file:control_exception.org][Control.Exception]] - Exception Handling
 
-   - [[file:haskell/data_map.org][Data.Map]]          - Immutable hash map. Implemented with balanced trees.
+   - [[file:data_map.org][Data.Map]]          - Immutable hash map. Implemented with balanced trees.
 
  - Haskell Bookmarks:
 
