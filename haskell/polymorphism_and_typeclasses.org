@@ -523,7 +523,7 @@ function fn to two monad instances.
 
 #+END_SRC
 
-**** Defining a new instance of type class Num.
+**** Defining a new instance of typeclass Num.
 
 #+BEGIN_SRC haskell 
   > :info Num
@@ -1086,6 +1086,67 @@ function fn to two monad instances.
   Vector [-29.0,23.0,228.0,1006.0]
   it :: Vector
   > 
+#+END_SRC
+
+**** Num a => Maybe a as instance of Num typeclass
+
+#+BEGIN_SRC haskell 
+:{
+mapM2 :: Monad m => (a -> b -> c) -> m a -> m b -> m c
+mapM2 fn ma mb = do
+  a <- ma
+  b <- mb
+  return $ fn a b 
+:}
+ 
+:{
+instance Num a => Num (Maybe a) where
+    (+) = mapM2 (+)
+    (-) = mapM2 (-)
+    (*) = mapM2 (*)
+
+    negate = fmap negate
+    abs    = fmap abs
+    signum = fmap signum
+
+    fromInteger x = Just (fromInteger x)
+:}
+#+END_SRC
+
+Running in REPL: 
+
+#+BEGIN_SRC haskell
+> Just 10 + Just 15
+Just 25
+it :: Num a => Maybe a
+
+> Just 10 + Nothing
+Nothing
+it :: Num a => Maybe a
+> 
+
+>  Just 10 + 20 * 5 + 3 * 4 * 5 
+Just 170
+it :: Num a => Maybe a
+
+> Just 10 + 20 * 5 + 3 * 4 * 5 + Nothing
+Nothing
+
+
+> signum $ Just (-10)
+Just (-1)
+it :: Num a => Maybe a
+> 
+> signum $ Just (10)
+Just 1
+it :: Num a => Maybe a
+> 
+
+> signum $ Nothing
+Nothing
+it :: Num a => Maybe a
+> 
+
 #+END_SRC
 
 *** Creating a type class
