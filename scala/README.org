@@ -39,10 +39,6 @@ Features:
    - _Tail Call Optimization_. TCO makes tail-recursive functions not
      consume stack frames avoiding stack overflows.
 
-
-
-
-
 *** Getting Scala 
 *** File Extensions
 
@@ -75,7 +71,6 @@ interactive lerarning about the Java API.
 Scala REPL:
 
 [[file:scala/images/scala-repl-shell1.png][file:scala/images/scala-repl-shell1.png]] 
-
 
 ** Basic Syntax 
 
@@ -133,7 +128,66 @@ scala>
 
 #+END_SRC
 
-*Function definition*
+*Import Java Libraries*
+
+Import namespace java.io
+
+#+BEGIN_SRC scala
+scala> import java.io._
+import java.io._
+
+
+#+END_SRC
+
+Import multiple classes
+
+#+BEGIN_SRC scala
+scala> import javax.swing.JFrame
+import javax.swing.JFrame
+
+scala> import javax.swing.{JFrame, JPanel, JLabel}
+import javax.swing.{JFrame, JPanel, JLabel}
+
+scala> val frame = new JFrame("Hello world Scala")
+
+scala> frame.setSize(300, 400)
+
+scala> frame.setVisible(true)
+
+#+END_SRC
+
+
+or
+
+#+BEGIN_SRC scala
+scala> val frame = new javax.swing.JFrame("Hello world Scala")
+
+scala> frame.setSize(300, 400)
+
+scala> frame.setVisible(true)
+#+END_SRC
+
+*Method Syntax*
+
+#+BEGIN_SRC scala
+scala> Math.log10(1000)
+res16: Double = 3.0
+
+scala> Math log10 1000
+res17: Double = 3.0
+
+scala> List(1.0, 10.0, 100.0, 1000.0, 10000.0).map(Math.log10)
+res20: List[Double] = List(0.0, 1.0, 2.0, 3.0, 4.0)
+
+scala> List(1.0, 10.0, 100.0, 1000.0, 10000.0) map Math.log10
+res21: List[Double] = List(0.0, 1.0, 2.0, 3.0, 4.0)
+
+
+#+END_SRC
+
+
+
+
 
 #+BEGIN_SRC scala 
   def prod(x: Int, y: Int) = x * y
