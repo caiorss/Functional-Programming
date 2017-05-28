@@ -1,7 +1,7 @@
-#+TITLE: Functional Programming in Scala 
+#+TITLE: Functional Programming in Scala
 
-* FP in Scala 
-** Overview 
+* FP in Scala
+** Overview
 *** Features
 
 Scala is a statically typed, functional, object orientated and
@@ -9,7 +9,7 @@ imperative language, or multi-paradigm programming language that runs
 in JVM - Java Virtual Machine that allows type-safe programming with
 high productivity.
 
-Features: 
+Features:
 
  - Interactive - Scala REPL allows the user to do exploratory design and
    test the Java API interactively.
@@ -39,7 +39,7 @@ Features:
    - _Tail Call Optimization_. TCO makes tail-recursive functions not
      consume stack frames avoiding stack overflows.
 
-*** Getting Scala 
+*** Getting Scala
 *** File Extensions
 
 | Extension | Description                   |
@@ -52,7 +52,7 @@ Features:
 |           |                               |
 |           |                               |
 
-*** REPL - Scala Shell 
+*** REPL - Scala Shell
 
 The Scala REPL or Scala shell allows exploratory design and
 interactive lerarning about the Java API.
@@ -70,17 +70,17 @@ interactive lerarning about the Java API.
 
 Scala REPL:
 
-[[file:scala/images/scala-repl-shell1.png][file:scala/images/scala-repl-shell1.png]] 
+[[file:scala/images/scala-repl-shell1.png][file:scala/images/scala-repl-shell1.png]]
 
-** Basic Syntax 
+** Basic Syntax
 
-*Comment* 
+*Comment*
 
-#+BEGIN_SRC scala 
-// A comment 
+#+BEGIN_SRC scala
+// A comment
 
-/* 
-Multiline Comment 
+/*
+Multiline Comment
 
 */
 
@@ -89,7 +89,7 @@ Multiline Comment
 
 *Value (Immutable)*
 
-#+BEGIN_SRC scala 
+#+BEGIN_SRC scala
 
 scala> val x = 10.2323
 x: Double = 10.2323
@@ -101,16 +101,16 @@ scala> x = 1.5354
 scala> val a = "hello world"
 a: String = hello world
 
-val s = """Hello world 
-Scala 
+val s = """Hello world
+Scala
 String
 """
 
 #+END_SRC
 
-*Variable* 
+*Variable*
 
-#+BEGIN_SRC scala 
+#+BEGIN_SRC scala
 
 scala> var x = 10.2334
 x: Double = 10.2334
@@ -124,7 +124,7 @@ s: String = Hello
 scala> s = "world"
 s: String = world
 
-scala> 
+scala>
 
 #+END_SRC
 
@@ -185,11 +185,10 @@ res21: List[Double] = List(0.0, 1.0, 2.0, 3.0, 4.0)
 
 #+END_SRC
 
-
 ** Functions
-*** Function Definition 
+*** Function Definition
 
-#+BEGIN_SRC scala 
+#+BEGIN_SRC scala
   def prod(x: Int, y: Int) = x * y
 
   scala> prod(4, 5)
@@ -199,29 +198,29 @@ res21: List[Double] = List(0.0, 1.0, 2.0, 3.0, 4.0)
   def fun(a: Int, b: Int) = {
     val c = 3 * a + b
     val d = b - a
-    c * d // The return value is the last value 
+    c * d // The return value is the last value
   }
 
-  /** 
+  /**
      a = 4 and b = 5
-     c = 3 * a + b = 3 * 4 + 5 = 17 
+     c = 3 * a + b = 3 * 4 + 5 = 17
      d = b - a     = 5 - 4 = 1
 
   Return value:
-     c * d = 17 * 1 
+     c * d = 17 * 1
 
   --------------- */
   scala> fun(4, 5)
   res8: Int = 17
 
 
-  def showFiles(path: String) = { 
+  def showFiles(path: String) = {
     val file = new java.io.File(path)
     file.listFiles.foreach(println)
   }
 
-  // Pasting in the REPL 
-  scala> def showFiles(path: String) = { 
+  // Pasting in the REPL
+  scala> def showFiles(path: String) = {
        |   val file = new java.io.File(path)
        |   file.listFiles.foreach(println)
        | }
@@ -238,25 +237,25 @@ res21: List[Double] = List(0.0, 1.0, 2.0, 3.0, 4.0)
   /proc
   /boot
   /dev
-  ... ... 
+  ... ...
 #+END_SRC
 
 
-#+BEGIN_SRC scala 
+#+BEGIN_SRC scala
 
 #+END_SRC
-*** Anonymous Functions / Lambda Functions or Function Literals 
+*** Anonymous Functions / Lambda Functions or Function Literals
 
-Simple Anonymous Functions 
+Simple Anonymous Functions
 
-#+BEGIN_SRC scala 
+#+BEGIN_SRC scala
 scala> val mulBy10 = (x: Int) => x * 10
 mulBy10: Int => Int = <function1>
 
 scala> mulBy10(5)
 res25: Int = 50
 
-scala> 
+scala>
 
 scala> val add = (x: Double, y: Double) => x + y
 addV1: (Double, Double) => Double = <function2>
@@ -266,16 +265,16 @@ res26: Double = 30.0
 
 #+END_SRC
 
-Multi line anonymous functions 
+Multi line anonymous functions
 
-#+BEGIN_SRC scala 
-  val func = (a: Double, b: Double) => { 
+#+BEGIN_SRC scala
+  val func = (a: Double, b: Double) => {
     val m = a * b
     val n = a * a * 3 - 4.5 * b
     (m, n, m + n)
   }
 
-  scala> val func = (a: Double, b: Double) => { 
+  scala> val func = (a: Double, b: Double) => {
        |   val m = a * b
        |   val n = a * a * 3 - 4.5 * b
        |   (m, n, m + n)
@@ -288,11 +287,11 @@ Multi line anonymous functions
   scala> func(4, 3)
   res29: (Double, Double, Double) = (12.0,34.5,46.5)
 
-  scala> 
+  scala>
 
 #+END_SRC
 
-*** Curried Functions 
+*** Curried Functions
 
 
 Function in non-curried form (Tuple):
@@ -338,9 +337,9 @@ res38: List[Int] = List(10, 15, 20, 25)
 
 #+END_SRC
 
-Curried anonymous functions 
+Curried anonymous functions
 
-#+BEGIN_SRC scala 
+#+BEGIN_SRC scala
 scala> val mulNonCurried = (x: Int, y: Int) => x * y
 mulNonCurried: (Int, Int) => Int = <function2>
 
@@ -364,20 +363,20 @@ scala> List(1, 2, 3, 4, 5)  map mulCurried(4)
 res35: List[Int] = List(4, 8, 12, 16, 20)
 
 #+END_SRC
-*** Closures 
+*** Closures
 
-#+BEGIN_SRC scala 
+#+BEGIN_SRC scala
 
   def makeMultiplier(factor: Double) = {
     val m = (factor + 1.0) * factor
     val n = factor / 100.0
-    (x: Double) => x * m + n 
+    (x: Double) => x * m + n
   }
 
   scala> def makeMultiplier(factor: Double) = {
        |   val m = (factor + 1.0) * factor
        |   val n = factor / 100.0
-       |   (x: Double) => x * m + n 
+       |   (x: Double) => x * m + n
        | }
   makeMultiplier: (factor: Double)Double => Double
 
@@ -512,9 +511,9 @@ res77: Int = 28
 
 #+END_SRC
 
-*** Higher Order Functions 
+*** Higher Order Functions
 
-#+BEGIN_SRC scala 
+#+BEGIN_SRC scala
 
   def sumFn1(f: Int => Int, g: Int => Int, x: Int) = f(x) + g(x)
 
@@ -582,11 +581,11 @@ res77: Int = 28
   /etc/libreoffice
   /etc/rc_keymaps
   /etc/sensors3.conf
-  ... ... 
+  ... ...
 
 #+END_SRC
-** Imperative Constructs 
-*** While loop 
+** Imperative Constructs
+*** While loop
 
 #+BEGIN_SRC scala
   var i = 0
@@ -617,9 +616,9 @@ res77: Int = 28
 
 #+END_SRC
 
-*** For-loop 
+*** For-loop
 
-#+BEGIN_SRC scala 
+#+BEGIN_SRC scala
 scala> for (i <- 1 to 10) println(i)
 1
 2
@@ -670,8 +669,8 @@ scala> for (file <- (new java.io.File("/").listFiles)) println(file)
 /lost+found
 
 #+END_SRC
-** Collections 
-*** Overview 
+** Collections
+*** Overview
 
 Collection Hierarchy
 
@@ -690,7 +689,7 @@ Collection Hierarchy
 
 *** Immutable Collections
 **** Tuples
-**** List 
+**** List
 
 *Creating a list*
 
@@ -1131,4 +1130,219 @@ java.util.NoSuchElementException: key not found: 100
   ... 32 elided
 
 scala>
+#+END_SRC
+* Java Interoperability
+** Show Java Properties
+
+#+BEGIN_SRC scala
+scala>  System.getProperty ("java.vm.vendor")
+res2: String = Oracle Corporation
+
+scala>  System.getProperty ("java.home")
+res3: String = /usr/lib/jvm/java-8-openjdk/jre
+
+scala>  List("java.vm.vendor", "java.home", "java.runtime.name", "java.vm.name").map(System.getProperty)
+res4: List[String] = List(Oracle Corporation, /usr/lib/jvm/java-8-openjdk/jre, OpenJDK Runtime Environment, OpenJDK 64-Bit Server VM)
+
+scala>  val xs = List("java.vm.vendor", "java.home", "java.runtime.name", "java.vm.name")
+xs: List[String] = List(java.vm.vendor, java.home, java.runtime.name, java.vm.name)
+
+scala>  xs.foreach(p => println ("%s\t%s".format(p, System.getProperty(p))))
+java.vm.vendor	Oracle Corporation
+java.home	/usr/lib/jvm/java-8-openjdk/jre
+java.runtime.name	OpenJDK Runtime Environment
+java.vm.name	OpenJDK 64-Bit Server VM
+
+#+END_SRC
+** Java Reflection
+*** Show Class Method given a class name
+
+See: [[http://gauss.ececs.uc.edu/Courses/c4003/java/Reflection/reflection0.html][Reflection]]
+
+#+BEGIN_SRC scala
+
+scala> Class.forName("java.io.File").getDeclaredMethods().take(10).foreach(println)
+public boolean java.io.File.equals(java.lang.Object)
+public java.lang.String java.io.File.toString()
+public int java.io.File.hashCode()
+public int java.io.File.compareTo(java.lang.Object)
+public int java.io.File.compareTo(java.io.File)
+public java.lang.String java.io.File.getName()
+public long java.io.File.length()
+public java.lang.String java.io.File.getParent()
+public boolean java.io.File.isAbsolute()
+public java.lang.String java.io.File.getCanonicalPath() throws java.io.IOException
+
+def show_class_methods (classname: String) {
+  Class
+    .forName(classname)
+    .getDeclaredMethods()
+    .foreach(println)
+}
+
+show_class_methods: (classname: String)Unit
+
+scala> show_class_constructors("javax.swing.JFrame")
+protected void javax.swing.JFrame.frameInit()
+protected javax.swing.JRootPane javax.swing.JFrame.createRootPane()
+protected void javax.swing.JFrame.processWindowEvent(java.awt.event.WindowEvent)
+public void javax.swing.JFrame.setDefaultCloseOperation(int)
+public int javax.swing.JFrame.getDefaultCloseOperation()
+public void javax.swing.JFrame.setTransferHandler(javax.swing.TransferHandler)
+public javax.swing.TransferHandler javax.swing.JFrame.getTransferHandler()
+public void javax.swing.JFrame.setJMenuBar(javax.swing.JMenuBar)
+public javax.swing.JMenuBar javax.swing.JFrame.getJMenuBar()
+...
+
+def show_class_constructors (classname: String) {
+  Class
+    .forName(classname)
+    .getDeclaredConstructors()
+    .foreach(println)
+}
+
+scala> show_class_constructors("java.io.File")
+public java.io.File(java.lang.String,java.lang.String)
+public java.io.File(java.lang.String)
+private java.io.File(java.lang.String,java.io.File)
+public java.io.File(java.io.File,java.lang.String)
+public java.io.File(java.net.URI)
+private java.io.File(java.lang.String,int)
+
+scala> Class.forName("java.io.File").getDeclaredFields().foreach(println)
+private static final java.io.FileSystem java.io.File.fs
+private final java.lang.String java.io.File.path
+private transient java.io.File$PathStatus java.io.File.status
+private final transient int java.io.File.prefixLength
+public static final char java.io.File.separatorChar
+public static final java.lang.String java.io.File.separator
+public static final char java.io.File.pathSeparatorChar
+public static final java.lang.String java.io.File.pathSeparator
+private static final long java.io.File.PATH_OFFSET
+private static final long java.io.File.PREFIX_LENGTH_OFFSET
+private static final sun.misc.Unsafe java.io.File.UNSAFE
+private static final long java.io.File.serialVersionUID
+private transient volatile java.nio.file.Path java.io.File.filePath
+static final boolean java.io.File.$assertionsDisabled
+
+
+#+END_SRC
+
+*** Show Object Methods
+
+#+BEGIN_SRC scala
+def showObjectMethods(obj: Any) = {
+    obj.getClass().getDeclaredMethods().foreach(println)
+}
+#+END_SRC
+
+Test:
+
+#+BEGIN_SRC scala
+scala> import scala.io.Source
+import scala.io.Source
+
+scala> import java.net.URL
+import java.net.URL
+
+scala> val url = new URL("http://www.httpbin.org/get")
+url: java.net.URL = http://www.httpbin.org/get
+
+
+scala> showObjectMethods(url)
+public boolean java.net.URL.equals(java.lang.Object)
+public java.lang.String java.net.URL.toString()
+public synchronized int java.net.URL.hashCode()
+public final java.io.InputStream java.net.URL.openStream() throws java.io.IOException
+private synchronized void java.net.URL.readObject(java.io.ObjectInputStream) throws java.io.IOException,java.lang.ClassNotFoundException
+private synchronized void java.net.URL.writeObject(java.io.ObjectOutputStream) throws java.io.IOException
+void java.net.URL.set(java.lang.String,java.lang.String,int,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
+void java.net.URL.set(java.lang.String,java.lang.String,int,java.lang.String,java.lang.String)
+private java.lang.Object java.net.URL.readResolve() throws java.io.ObjectStreamException
+public java.lang.String java.net.URL.getPath()
+public java.net.URI java.net.URL.toURI() throws java.net.URISyntaxException
+public java.lang.String java.net.URL.getAuthority()
+public java.lang.String java.net.URL.getQuery()
+public java.net.URLConnection java.net.URL.openConnection(java.net.Proxy) throws java.io.IOException
+public java.net.URLConnection java.net.URL.openConnection() throws java.io.IOException
+public java.lang.String java.net.URL.getProtocol()
+public java.lang.String java.net.URL.getFile()
+public java.lang.String java.net.URL.getHost()
+...
+#+END_SRC
+*** Show Object Public Methods
+
+#+BEGIN_SRC java
+  import java.lang.reflect.Modifier
+
+  def showObjPublicMethods (obj: Any) {
+      for (m <- url.getClass().getDeclaredMethods()
+               if Modifier.isPublic(m.getModifiers)
+           ) println(m)
+  }
+#+END_SRC
+
+Example:
+
+#+BEGIN_SRC scala
+
+scala> import java.net.URL
+import java.net.URL
+
+
+scala> showObjPublicMethods(url)
+
+public boolean java.net.URL.equals(java.lang.Object)
+public java.lang.String java.net.URL.toString()
+public synchronized int java.net.URL.hashCode()
+public final java.io.InputStream java.net.URL.openStream() throws java.io.IOException
+public java.lang.String java.net.URL.getPath()
+public java.net.URI java.net.URL.toURI() throws java.net.URISyntaxException
+public java.lang.String java.net.URL.getAuthority()
+public java.lang.String java.net.URL.getQuery()
+public java.net.URLConnection java.net.URL.openConnection(java.net.Proxy) throws java.io.IOException
+public java.net.URLConnection java.net.URL.openConnection() throws java.io.IOException
+public java.lang.String java.net.URL.getProtocol()
+public java.lang.String java.net.URL.getFile()
+public java.lang.String java.net.URL.getHost()
+public java.lang.String java.net.URL.getUserInfo()
+public int java.net.URL.getPort()
+public int java.net.URL.getDefaultPort()
+public java.lang.String java.net.URL.getRef()
+public boolean java.net.URL.sameFile(java.net.URL)
+public java.lang.String java.net.URL.toExternalForm()
+public final java.lang.Object java.net.URL.getContent(java.lang.Class[]) throws java.io.IOException
+public final java.lang.Object java.net.URL.getContent() throws java.io.IOException
+public static void java.net.URL.setURLStreamHandlerFactory(java.net.URLStreamHandlerFactory)
+#+END_SRC
+*** Show Object's Public Method Names
+
+#+BEGIN_SRC scala
+  import java.lang.reflect.Modifier
+
+  def showObjMethodNames (obj: Any){
+    for (m <- obj.getClass().getDeclaredMethods()
+         if Modifier.isPublic(m.getModifiers)
+    ) println(m.getName())
+  }
+#+END_SRC
+
+Example:
+
+#+BEGIN_SRC scala
+scala> showObjMethodNames(url)
+equals
+toString
+hashCode
+openStream
+getPath
+toURI
+getAuthority
+getQuery
+openConnection
+openConnection
+getProtocol
+getFile
+getHost
+...
 #+END_SRC
