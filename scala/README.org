@@ -1356,3 +1356,21 @@ getFile
 getHost
 ...
 #+END_SRC
+
+** GUI - Graphical User Interface
+*** Messagebox
+
+#+BEGIN_SRC scala
+  def messageBox (title: String, content: String) {
+    javax.swing.JOptionPane.showMessageDialog (
+      null,
+      content,
+      title,
+      javax.swing.JOptionPane.PLAIN_MESSAGE
+    )
+   }
+
+scala> messageBox("Information", "Download of file animation.jar completed")
+#+END_SRC
+
+[[file:images/messageBox1.png][file:images/messageBox1.png]]
