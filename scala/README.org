@@ -670,3 +670,465 @@ scala> for (file <- (new java.io.File("/").listFiles)) println(file)
 /lost+found
 
 #+END_SRC
+** Collections 
+*** Overview 
+
+Collection Hierarchy
+
+ - Iterable
+   - Seq (Sequence)
+     - List
+       - Fundamental operations: head, tail
+     - Vector
+       - indexing
+     - Array (Seq-like, but not subclass of Seq). It is native Java class.)
+     - String (Seq-like, although not subclass of Seq).
+     - Range
+   - Sets (Relational algebra)
+     - Contains
+   - Map (aka Hashmap, Dictionary or hash-table)
+
+*** Immutable Collections
+**** Tuples
+**** List 
+
+*Creating a list*
+
+#+BEGIN_SRC scala
+scala> var xs = List(1.0, 2.0, 3.0, 4.0, 5.0, 6.0)
+xs: List[Double] = List(1.0, 2.0, 3.0, 4.0, 5.0, 6.0)
+
+#+END_SRC
+
+*Map over a list*
+
+#+BEGIN_SRC scala
+scala> xs.map (x => x * 3.0)
+res31: List[Double] = List(3.0, 6.0, 9.0, 12.0, 15.0, 18.0)
+
+scala> xs.map (x => x * 3.0).map (x => x + 5)
+res33: List[Double] = List(8.0, 11.0, 14.0, 17.0, 20.0, 23.0)
+
+#+END_SRC
+
+*Filter a list*
+
+#+BEGIN_SRC scala
+// Filter
+//
+scala> xs.filter ( x => x < 4.0)
+res30: List[Double] = List(1.0, 2.0, 3.0)
+#+END_SRC
+
+*Filter a list / reject*
+
+#+BEGIN_SRC scala
+// FilterNot - Inverse of filter, reject
+//
+scala> xs.filterNot (x => x < 4.0)
+res80: List[Double] = List(4.0, 5.0, 6.0)
+#+END_SRC
+
+*Find a element that matches a predicate function*
+
+#+BEGIN_SRC scala
+// Find the first element that satisfies
+// a predicate.
+//
+//
+scala> xs.find _
+res43: (Double => Boolean) => Option[Double] = <function1>
+
+
+scala> xs.find (x => x > 4.0)
+res42: Option[Double] = Some(5.0)
+
+scala> xs.find (x => x > 14.0)
+res44: Option[Double] = None
+
+#+END_SRC
+
+*Test if list is empty*
+
+#+BEGIN_SRC scala
+// Test if list is empty
+//
+scala> xs.isEmpty
+res85: Boolean = false
+#+END_SRC
+
+*Find the index of an element that satisfies a predicate*
+
+#+BEGIN_SRC scala
+// Find the index of an element that satisfies a predicate.
+//
+//
+scala> xs.indexWhere (x =>  x > 4.0)
+res116: Int = 4
+
+scala> xs.indexWhere (x =>  x > 14.0)
+res117: Int = -1
+#+END_SRC
+
+*Count all elements that matches a predicate*
+
+#+BEGIN_SRC scala
+// Count all elements greater than 3.0
+//
+scala> xs.count (x => x > 3.0)
+res18: Int = 3
+#+END_SRC
+
+*Get max and min elements*
+
+#+BEGIN_SRC scala
+// Max and Min elements
+//
+scala> xs.max
+res19: Double = 6.0
+
+scala> xs.min
+res20: Double = 1.0
+#+END_SRC
+
+*Head (fist) and (last) elements*
+
+#+BEGIN_SRC scala
+// Head and tail of a list.
+
+// First element
+scala> xs.head
+res21: Double = 1.0
+
+// Last element
+scala> xs.last
+res45: Double = 6.0
+
+#+END_SRC
+
+*Tail*
+
+#+BEGIN_SRC scala
+//
+// Tail: Remove first element
+scala> xs.tail
+res22: List[Double] = List(2.0, 3.0, 4.0, 5.0, 6.0)
+
+#+END_SRC
+
+*Reverse a list*
+
+#+BEGIN_SRC scala
+scala> xs.reverse
+res36: List[Double] = List(6.0, 5.0, 4.0, 3.0, 2.0, 1.0)
+#+END_SRC
+
+*Foreach*
+
+
+#+BEGIN_SRC scala
+// Impure Map
+//
+scala> xs.foreach(println)
+1.0
+2.0
+3.0
+4.0
+5.0
+6.0
+
+scala> xs.foreach(x => println( "x = %.3f".format(x)))
+x = 1,000
+x = 2,000
+x = 3,000
+x = 4,000
+x = 5,000
+x = 6,000
+#+END_SRC
+
+*Slice elements*
+
+#+BEGIN_SRC scala
+// Select elements x[2],x[3] and x[4]
+//
+scala> xs.slice(2, 5)
+res40: List[Double] = List(3.0, 4.0, 5.0)
+#+END_SRC
+
+
+*Take n elements*
+
+#+BEGIN_SRC scala
+scala> xs.take(3)
+res68: List[Double] = List(1.0, 2.0, 3.0)
+#+END_SRC
+
+
+*Drop elements*
+
+#+BEGIN_SRC scala
+// Drop elements
+//
+scala> xs.drop _
+res66: Int => List[Double] = <function1>
+
+scala> xs.drop (3)
+res67: List[Double] = List(4.0, 5.0, 6.0)
+#+END_SRC
+
+*Length of a list*
+
+#+BEGIN_SRC scala
+// Length of a list
+//
+scala> xs.length
+res69: Int = 6
+#+END_SRC
+
+*Sum of all list elements*
+
+#+BEGIN_SRC scala
+// Sum of all elements of a list
+//
+scala> xs.sum
+res82: Double = 21.0
+#+END_SRC
+
+*Product of all list elements*
+
+#+BEGIN_SRC scala
+// Product of all elements of a list
+//
+scala> xs.product
+res83: Double = 720.0
+#+END_SRC
+
+*Fold left*
+
+#+BEGIN_SRC scala
+// Fold left
+//
+scala> List(1, 2, 3, 4, 5).foldLeft(0)((acc, x) => 100 * acc + x)
+res107: Int = 102030405
+
+scala> List(1, 2, 3, 4, 5).foldLeft(List[Int] ())((acc, x) => x :: acc)
+res110: List[Int] = List(5, 4, 3, 2, 1)
+
+#+END_SRC
+
+*Fold right*
+
+#+BEGIN_SRC scala
+// Fold right
+//
+scala> List(1, 2, 3, 4, 5).foldRight(0)((x, acc) => 10 * acc + x)
+res111: Int = 54321
+#+END_SRC
+
+*Reduce*
+
+#+BEGIN_SRC scala
+// Reduce. fold left without initial value of accumulator.
+scala> xs.reduce _
+res92: ((Double, Double) => Double) => Double = <function1>
+
+scala> xs.reduce ((acc, x) => 10*acc + x)
+res95: Double = 123456.0
+#+END_SRC
+
+*Max by*
+
+#+BEGIN_SRC scala
+// Returns the element for which the projection function has the
+// maximun value
+//
+// In this case: returns the string which its lenght is maximun.
+//
+scala> var s = List("Hello", "World", "Scala", "is", "amazing")
+s: List[String] = List(Hello, World, Scala, is, amazing)
+
+scala> s.maxBy (x => x.length)
+res74: String = amazing
+
+#+END_SRC
+
+*Min by*
+
+#+BEGIN_SRC scala
+
+//
+//  In this case: returns the string which its length is minimun.
+//
+scala> s.minBy (x => x.length)
+res75: String = is
+
+#+END_SRC
+
+*Sort by*
+
+#+BEGIN_SRC scala
+// Sort the string by the length of each string
+//
+scala> s.sortBy ( x => x.length)
+res78: List[String] = List(is, Hello, World, Scala, amazing)
+
+#+END_SRC
+
+*Group by*
+
+#+BEGIN_SRC scala
+//  groupBy
+// Separate string that have equal number of characters
+//
+scala> s.groupBy(x => x.length)
+res0: scala.collection.immutable.Map[Int,List[String]] = Map(2 -> List(is), 5 -> List(Hello, World, Scala), 7 -> List(amazing))
+
+
+def fileExtension (filename: String) = {
+    val arr = filename.split ('.');
+
+    if (arr.length > 1) {
+       arr.apply(1);
+    }else{
+       "";
+    }
+}
+
+var files =
+List("file1.pdf",
+     "file2.doc",
+     "dummy.pdf",
+     "clojure.jar",
+     "document.zip",
+     "file3.pdf",
+     "scala.jar",
+     "manifest.doc",
+     "unixBsd"
+     )
+
+scala> files.groupBy (fileExtension)
+res17: scala.collection.immutable.Map[String,List[String]]
+= Map("" -> List(unixBsd), zip -> List(document.zip),
+pdf -> List(file1.pdf, dummy.pdf, file3.pdf),
+doc -> List(file2.doc, manifest.doc),
+jar -> List(clojure.jar, scala.jar))
+
+
+scala> files.groupBy (fileExtension).foreach(println)
+(,List(unixBsd))
+(zip,List(document.zip))
+(pdf,List(file1.pdf, dummy.pdf, file3.pdf))
+(doc,List(file2.doc, manifest.doc))
+(jar,List(clojure.jar, scala.jar))
+
+#+END_SRC
+
+*Distinct*
+
+#+BEGIN_SRC scala
+// Distinct elements.
+//
+scala> var a = List(1, 2, 5, 3, 1, 3, 3, 5, 4, 5, 4)
+a: List[Int] = List(1, 2, 5, 3, 1, 3, 3, 5, 4, 5, 4)
+
+scala> a.distinct
+res88: List[Int] = List(1, 2, 5, 3, 4)
+
+#+END_SRC
+
+**** Maps
+
+#+BEGIN_SRC scala
+var capital = Map("US"     -> "Washigton",
+                  "France" -> "Paris",
+                  "Japan"  -> "Tokio")
+
+scala> capital("Japan")
+res8: String = Tokio
+
+scala> capital("US")
+res9: String = Washigton
+
+scala> capital("USsa")
+java.util.NoSuchElementException: key not found: USsa
+  at scala.collection.MapLike$class.default(MapLike.scala:228)
+  at scala.collection.AbstractMap.default(Map.scala:59)
+  at scala.collection.MapLike$class.apply(MapLike.scala:141)
+  at scala.collection.AbstractMap.apply(Map.scala:59)
+  ... 32 elided
+
+
+scala> assert(capital("Japan") == "Tokio")
+
+scala> assert(capital("Japan") == "Tokio2")
+java.lang.AssertionError: assertion failed
+  at scala.Predef$.assert(Predef.scala:156)
+  ... 32 elided
+
+scala> println(capital("France"))
+Paris
+
+scala> println(capital("Japan"))
+Tokio
+
+#+END_SRC
+*** Mutable Collections
+**** Mutable List
+
+#+BEGIN_SRC scala
+scala> import collection.mutable.ListBuffer
+import collection.mutable.ListBuffer
+
+scala> val xs = ListBuffer[Double]()
+xs: scala.collection.mutable.ListBuffer[Double] = ListBuffer()
+
+scala> (1 to 10).foreach(i => xs.append(i.toDouble * 2.5 - 4.0))
+
+scala> xs
+res42: scala.collection.mutable.ListBuffer[Double] = ListBuffer(-1.5, 1.0, 3.5, 6.0, 8.5, 11.0, 13.5, 16.0, 18.5, 21.0)
+
+scala>
+#+END_SRC
+
+**** Mutable Maps                                       :collection:map:hash:
+
+#+BEGIN_SRC scala
+
+scala> import scala.collection.mutable.Map
+import scala.collection.mutable.Map
+
+scala> val hmap1 = Map[Int, String]()
+hmap1: scala.collection.mutable.Map[Int,String] = Map()
+
+scala> hmap1 += (1 -> "Netherlands")
+res49: hmap1.type = Map(1 -> Netherlands)
+
+scala> hmap1 += (2 -> "Mexico")
+res50: hmap1.type = Map(2 -> Mexico, 1 -> Netherland)
+
+scala> hmap1 += (3 -> "Italy")
+res51: hmap1.type = Map(2 -> Mexico, 1 -> Netherland, 3 -> Italy)
+
+scala> hmap1 += (10 -> "Japan")
+
+res52: hmap1.type = Map(2 -> Mexico, 10 -> Japan, 1 -> Netherland, 3 -> Italy)
+
+scala>
+scala> hmap1
+res53: scala.collection.mutable.Map[Int,String] = Map(2 -> Mexico, 10 -> Japan, 1 -> Netherland, 3 -> Italy)
+
+scala> hmap1(3)
+res54: String = Italy
+
+scala> hmap1(10)
+res55: String = Japan
+
+scala> hmap1(100)
+java.util.NoSuchElementException: key not found: 100
+  at scala.collection.MapLike$class.default(MapLike.scala:228)
+  at scala.collection.AbstractMap.default(Map.scala:59)
+  at scala.collection.mutable.HashMap.apply(HashMap.scala:65)
+  ... 32 elided
+
+scala>
+#+END_SRC
