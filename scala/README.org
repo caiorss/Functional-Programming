@@ -69,5 +69,181 @@ interactive lerarning about the Java API.
 | :load =<path-to-file>=  | Load a Scala file into the repl.        |
 | :cp   =<path-to-*.jar>= | Load a Jar file into the REPL.          |
 | :history                | Show command history                    |
+| :quit or Ctrl + c       | Exit REPL                               |
 |                         |                                         |
-|                         |                                         |
+
+Scala REPL:
+
+[[file:scala/images/scala-repl-shell1.png][file:scala/images/scala-repl-shell1.png]] 
+
+
+** Basic Syntax 
+
+*Comment* 
+
+#+BEGIN_SRC scala 
+// A comment 
+
+/* 
+Multiline Comment 
+
+*/
+
+#+END_SRC
+
+
+*Value (Immutable)*
+
+#+BEGIN_SRC scala 
+
+scala> val x = 10.2323
+x: Double = 10.2323
+
+scala> x = 1.5354
+<console>:12: error: reassignment to val
+       x = 1.5354
+
+scala> val a = "hello world"
+a: String = hello world
+
+val s = """Hello world 
+Scala 
+String
+"""
+
+#+END_SRC
+
+*Variable* 
+
+#+BEGIN_SRC scala 
+
+scala> var x = 10.2334
+x: Double = 10.2334
+
+scala> x = 4.5
+x: Double = 4.5
+
+scala> var s = "Hello"
+s: String = Hello
+
+scala> s = "world"
+s: String = world
+
+scala> 
+
+#+END_SRC
+
+*Function definition*
+
+#+BEGIN_SRC scala 
+  def prod(x: Int, y: Int) = x * y
+
+  scala> prod(4, 5)
+  res11: Int = 20
+
+
+  def fun(a: Int, b: Int) = {
+    val c = 3 * a + b
+    val d = b - a
+    c * d // The return value is the last value 
+  }
+
+  /** 
+     a = 4 and b = 5
+     c = 3 * a + b = 3 * 4 + 5 = 17 
+     d = b - a     = 5 - 4 = 1
+
+  Return value:
+     c * d = 17 * 1 
+
+  --------------- */
+  scala> fun(4, 5)
+  res8: Int = 17
+
+
+  def showFiles(path: String) = { 
+    val file = new java.io.File(path)
+    file.listFiles.foreach(println)
+  }
+
+  // Pasting in the REPL 
+  scala> def showFiles(path: String) = { 
+       |   val file = new java.io.File(path)
+       |   file.listFiles.foreach(println)
+       | }
+  showFiles: (path: String)Unit
+
+
+  scala> showFiles("/")
+  /home
+  /var
+  /bin
+  /usr
+  /root
+  /Applications
+  /proc
+  /boot
+  /dev
+  ... ... 
+#+END_SRC
+
+*Import Java Libraries*
+
+Import namespace java.io 
+
+#+BEGIN_SRC scala 
+scala> import java.io._
+import java.io._
+
+
+#+END_SRC
+
+Import multiple classes 
+
+#+BEGIN_SRC scala 
+scala> import javax.swing.JFrame
+import javax.swing.JFrame
+
+scala> import javax.swing.{JFrame, JPanel, JLabel}
+import javax.swing.{JFrame, JPanel, JLabel}
+
+scala> val frame = new JFrame("Hello world Scala")
+
+scala> frame.setSize(300, 400)
+
+scala> frame.setVisible(true)
+
+#+END_SRC
+
+
+or 
+
+#+BEGIN_SRC scala 
+scala> val frame = new javax.swing.JFrame("Hello world Scala")
+
+scala> frame.setSize(300, 400)
+
+scala> frame.setVisible(true)
+#+END_SRC
+
+*Method Syntax* 
+
+#+BEGIN_SRC scala 
+scala> Math.log10(1000)
+res16: Double = 3.0
+
+scala> Math log10 1000 
+res17: Double = 3.0
+
+scala> List(1.0, 10.0, 100.0, 1000.0, 10000.0).map(Math.log10)
+res20: List[Double] = List(0.0, 1.0, 2.0, 3.0, 4.0)
+
+scala> List(1.0, 10.0, 100.0, 1000.0, 10000.0) map Math.log10
+res21: List[Double] = List(0.0, 1.0, 2.0, 3.0, 4.0)
+
+
+#+END_SRC
+
+
+
+
