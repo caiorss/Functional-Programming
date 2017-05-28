@@ -404,3 +404,112 @@ res35: List[Int] = List(4, 8, 12, 16, 20)
 
 
 #+END_SRC
+
+*** Function Composition
+
+*Math Composition*
+
+Computes f.compose(g) = f°g (x) = f(g(x))
+
+ - f°g (3) = f(g(3)) = f(2*3) = f(6) = 6 + 10 = 16 ok.
+
+
+#+BEGIN_SRC
+                       f ° g = f(g(x))
+    ....................................................
+    .  ___________________      ___________________    .
+    .  |                 |      |                 |    .
+    .  |                 |      |                 |    .
+  --+->+ g(x) = x * 2    +-->---+  f(x) = x * 2   +----+-->
+ 4  .  | g(4) = 8        |  8   |  f(8) = 16      |    . 16
+    .  |_________________|      +-----------------+    .
+    .                                                  .
+    ....................................................
+
+       ................
+       .              .
+  4 -->+  (f ° g) (x) +--> 16
+       .  f(g(x))     .
+       ................
+
+#+END_SRC
+
+
+#+BEGIN_SRC scala
+scala> val f = (x: Int) => x + 10
+f: Int => Int = <function1>
+
+scala> val g = (x: Int) => x * 2
+g: Int => Int = <function1>
+
+
+scala> val comp1 = f.compose(g)
+comp1: Int => Int = <function1>
+
+
+scala> comp1(3)
+res70: Int = 16
+
+scala> List(1, 2, 3, 4, 5).map(comp1)
+res71: List[Int] = List(12, 14, 16, 18, 20)
+
+scala>
+
+
+/// It could also be:
+
+scala> val comp11 = f compose g
+comp11: Int => Int = <function1>
+
+scala> List(1, 2, 3, 4, 5).map(comp11)
+res72: List[Int] = List(12, 14, 16, 18, 20)
+
+#+END_SRC
+
+
+*Reverse Composition* (andThen)
+
+ - f.andThen(g) = f >> g = g(f(x))
+ - (f andThen g)(4) = (f >> g)(4) = g(f(4)) = g(14) = 28 . Ok.
+
+#+BEGIN_SRC
+                       f >> g = g ° f = g(f(x))
+    ....................................................
+    .   ___________________      ___________________   .
+    .  |                 |      |                 |    .
+    .  |                 |      |                 |    .
+  ---->+ f(x) = x + 10   +-->---+  g(x) = x * 2   +----+-->
+ 4  .  | f(4) = 14       |  14  |  g(14) = 28     |    . 28
+    .  |_________________|      +-----------------+    .
+    .                                                  .
+    ....................................................
+
+
+       .................
+       .               .
+  4 -->+  (f >> g) (x) +--> 28
+       .  g(f(x))      .
+       .................
+
+#+END_SRC
+
+
+#+BEGIN_SRC scala
+scala> val f = (x: Int) => x + 10
+f: Int => Int = <function1>
+
+scala> val g = (x: Int) => x * 2
+g: Int => Int = <function1>
+
+scala> val f_rcomp_g = f andThen g
+f_rcomp_g: Int => Int = <function1>
+
+scala> f_rcomp_g (4)
+res76: Int = 28
+
+// Or
+scala> f.andThen(g)(4)
+res77: Int = 28
+
+#+END_SRC
+
