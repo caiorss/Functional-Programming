@@ -188,6 +188,8 @@ res21: List[Double] = List(0.0, 1.0, 2.0, 3.0, 4.0)
 
 
 
+** Functions
+*** Function Definition 
 
 #+BEGIN_SRC scala 
   def prod(x: Int, y: Int) = x * y
@@ -241,63 +243,126 @@ res21: List[Double] = List(0.0, 1.0, 2.0, 3.0, 4.0)
   ... ... 
 #+END_SRC
 
-*Import Java Libraries*
-
-Import namespace java.io 
 
 #+BEGIN_SRC scala 
-scala> import java.io._
-import java.io._
 
+#+END_SRC
+*** Anonymous Functions / Lambda Functions or Function Literals 
+
+Simple Anonymous Functions 
+
+#+BEGIN_SRC scala 
+scala> val mulBy10 = (x: Int) => x * 10
+mulBy10: Int => Int = <function1>
+
+scala> mulBy10(5)
+res25: Int = 50
+
+scala> 
+
+scala> val add = (x: Double, y: Double) => x + y
+addV1: (Double, Double) => Double = <function2>
+
+scala> add(10, 20)
+res26: Double = 30.0
 
 #+END_SRC
 
-Import multiple classes 
+Multi line anonymous functions 
 
 #+BEGIN_SRC scala 
-scala> import javax.swing.JFrame
-import javax.swing.JFrame
+  val func = (a: Double, b: Double) => { 
+    val m = a * b
+    val n = a * a * 3 - 4.5 * b
+    (m, n, m + n)
+  }
 
-scala> import javax.swing.{JFrame, JPanel, JLabel}
-import javax.swing.{JFrame, JPanel, JLabel}
+  scala> val func = (a: Double, b: Double) => { 
+       |   val m = a * b
+       |   val n = a * a * 3 - 4.5 * b
+       |   (m, n, m + n)
+       | }
+  func: (Double, Double) => (Double, Double, Double) = <function2>
 
-scala> val frame = new JFrame("Hello world Scala")
+  scala> func(3, 5)
+  res28: (Double, Double, Double) = (15.0,4.5,19.5)
 
-scala> frame.setSize(300, 400)
+  scala> func(4, 3)
+  res29: (Double, Double, Double) = (12.0,34.5,46.5)
 
-scala> frame.setVisible(true)
+  scala> 
 
 #+END_SRC
 
+*** Curried Functions 
 
-or 
 
-#+BEGIN_SRC scala 
-scala> val frame = new javax.swing.JFrame("Hello world Scala")
+Function in non-curried form (Tuple):
 
-scala> frame.setSize(300, 400)
+#+BEGIN_SRC scala
+scala> def mulxy (x: Int, y: Int) = x * y
+mulxy: (x: Int, y: Int)Int
 
-scala> frame.setVisible(true)
-#+END_SRC
+scala> mulxy(3, 4)
+res37: Int = 12
 
-*Method Syntax* 
 
-#+BEGIN_SRC scala 
-scala> Math.log10(1000)
-res16: Double = 3.0
+scala> List(1, 2, 3, 4, 5).map(mulxy(3, _))
+res38: List[Int] = List(3, 6, 9, 12, 15)
 
-scala> Math log10 1000 
-res17: Double = 3.0
 
-scala> List(1.0, 10.0, 100.0, 1000.0, 10000.0).map(Math.log10)
-res20: List[Double] = List(0.0, 1.0, 2.0, 3.0, 4.0)
-
-scala> List(1.0, 10.0, 100.0, 1000.0, 10000.0) map Math.log10
-res21: List[Double] = List(0.0, 1.0, 2.0, 3.0, 4.0)
-
+scala> List(1, 2, 3, 4, 5).map(mulxy(_, 4))
+res39: List[Int] = List(4, 8, 12, 16, 20)
 
 #+END_SRC
 
+Function in Curried Form:
+
+#+BEGIN_SRC scala
+
+scala> def mulxy (x: Int) (y: Int) = x * y
+mulxy: (x: Int)(y: Int)Int
+
+scala> mulxy _
+res89: Int => (Int => Int) = <function1>
+
+scala> mulxy(3)_
+res88: Int => Int = <function1>
+
+scala> mulxy(3)(4)
+res90: Int = 12
+
+scala> List(2, 3, 4, 5).map(mulxy(5))
+res91: List[Int] = List(10, 15, 20, 25)
+
+scala> List(2, 3, 4, 5) map mulxy(5)
+res38: List[Int] = List(10, 15, 20, 25)
+
+#+END_SRC
+
+Curried anonymous functions 
+
+#+BEGIN_SRC scala 
+scala> val mulNonCurried = (x: Int, y: Int) => x * y
+mulNonCurried: (Int, Int) => Int = <function2>
+
+scala> mulNonCurried(3, 5)
+res30: Int = 15
 
 
+scala> val mulCurried = (x: Int) => (y: Int) => x * y
+mulCurried: Int => (Int => Int) = <function1>
 
+scala> mulCurried(5)
+res32: Int => Int = <function1>
+
+scala> mulCurried(5)(4)
+res33: Int = 20
+
+scala> List(1, 2, 3, 4, 5).map(mulCurried(4))
+res34: List[Int] = List(4, 8, 12, 16, 20)
+
+scala> List(1, 2, 3, 4, 5)  map mulCurried(4)
+res35: List[Int] = List(4, 8, 12, 16, 20)
+
+#+END_SRC
