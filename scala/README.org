@@ -186,7 +186,6 @@ res21: List[Double] = List(0.0, 1.0, 2.0, 3.0, 4.0)
 #+END_SRC
 
 
-
 ** Functions
 *** Function Definition 
 
@@ -513,3 +512,76 @@ res77: Int = 28
 
 #+END_SRC
 
+*** Higher Order Functions 
+
+#+BEGIN_SRC scala 
+
+  def sumFn1(f: Int => Int, g: Int => Int, x: Int) = f(x) + g(x)
+
+  scala> def sumFn1(f: Int => Int, g: Int => Int) (x: Int) = f(x) + g(x)
+  sumFn: (f: Int => Int, g: Int => Int)(x: Int)Int
+
+
+  scala>  sumFn1(x => x * 4, a => a + 5, 4)
+  res46: Int = 25
+
+  scala>  sumFn1(x => x * 4, a => a + 5, 5)
+  res47: Int = 30
+
+  scala>  sumFn1(x => x * x, a => a + 5, 5)
+  res48: Int = 35
+
+
+  def sumFn2(f: Int => Int, g: Int => Int) = (x: Int) => f(x) + g(x)
+
+  scala> f1(3)
+  res49: Int = 20
+
+  scala> f1(5)
+  res50: Int = 30
+
+  scala> val f2 = sumFn2(x => x * x, a => a + a)
+  f2: Int => Int = <function1>
+
+  scala> f2(3)
+  res51: Int = 15
+
+  scala> f2(5)
+  res52: Int = 35
+
+
+
+  def iterFiles(fn: String => Unit) = (path: String) => {
+    val f = new java.io.File(path)
+    f.listFiles().foreach(file => fn(file.toString))
+  }
+
+  scala> iterFiles(println)("/")
+  /home
+  /var
+  /bin
+  /usr
+  /root
+  /Applications
+  /proc
+  /boot
+  /dev
+    ...
+
+  scala> val showFiles = iterFiles(println)
+  showFiles: String => Unit = <function1>
+
+
+  scala> showFiles("/etc")
+  /etc/systemd
+  /etc/motd
+  /etc/gemrc
+  /etc/adobe
+  /etc/ld.so.cache
+  /etc/environment
+  /etc/libreoffice
+  /etc/rc_keymaps
+  /etc/sensors3.conf
+  ... ... 
+
+#+END_SRC
