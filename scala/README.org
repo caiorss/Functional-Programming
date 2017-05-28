@@ -44,6 +44,18 @@ Features:
 
 
 *** Getting Scala 
+*** File Extensions
+
+| Extension | Description                   |
+|-----------+-------------------------------|
+| .scala    | Scala source code or script   |
+| .java     | Java source code              |
+|           |                               |
+| .class    | Java bytecode or compile code |
+| .jar      | Java application              |
+|           |                               |
+|           |                               |
+
 *** REPL - Scala Shell 
 
 The Scala REPL or Scala shell allows exploratory design and
