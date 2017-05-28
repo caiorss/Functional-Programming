@@ -1,0 +1,61 @@
+#+TITLE: Functional Programming in Scala 
+
+* FP in Scala 
+** Overview 
+*** Features
+
+Scala is a statically typed, functional, object orientated and
+imperative language, or multi-paradigm programming language that runs
+in JVM - Java Virtual Machine that allows type-safe programming with
+high productivity.
+
+Features: 
+
+ - Interactive - Scala REPL allows the user to do exploratory design and
+   test the Java API interactively.
+
+ - Scripting language. Scala has a fast initialization time what makes
+   it suitable for scripting.
+
+ - Java Integration. As a JVM language Scala allows reuse of all Java
+   libraries and integration with old code bases.
+
+ - Functional:
+
+   - Provides syntax for curried functions
+
+   - _Higher order methods_. Functions can be passed as arguments to methods.
+
+   - _Type Inference_. It frees the developer from declaring typing for
+     all values and functions in a similar way to Haskell, although
+     Scala requires some type anotations.
+
+   - _Algebraic Data Types_. AGDT is useful for represeting AST -
+     Abstract Syntax Trees; write parsers and compilers and perform
+     symbolic computations.
+
+   - _Pattern Matching_
+
+   - _Tail Call Optimization_. TCO makes tail-recursive functions not
+     consume stack frames avoiding stack overflows.
+
+
+
+
+
+*** Getting Scala 
+*** REPL - Scala Shell 
+
+The Scala REPL or Scala shell allows exploratory design and
+interactive lerarning about the Java API.
+
+| Command                 | Description                             |
+|-------------------------+-----------------------------------------|
+| :help                   | Show help                               |
+| :paste                  | Paste a block of code and enter Ctrl+D. |
+| :past =<path-to-file>=  | Load a file.                            |
+| :load =<path-to-file>=  | Load a Scala file into the repl.        |
+| :cp   =<path-to-*.jar>= | Load a Jar file into the REPL.          |
+| :history                | Show command history                    |
+|                         |                                         |
+|                         |                                         |
