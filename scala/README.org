@@ -187,7 +187,6 @@ res21: List[Double] = List(0.0, 1.0, 2.0, 3.0, 4.0)
 
 
 
-
 ** Functions
 *** Function Definition 
 
@@ -364,5 +363,44 @@ res34: List[Int] = List(4, 8, 12, 16, 20)
 
 scala> List(1, 2, 3, 4, 5)  map mulCurried(4)
 res35: List[Int] = List(4, 8, 12, 16, 20)
+
+#+END_SRC
+*** Closures 
+
+#+BEGIN_SRC scala 
+
+  def makeMultiplier(factor: Double) = {
+    val m = (factor + 1.0) * factor
+    val n = factor / 100.0
+    (x: Double) => x * m + n 
+  }
+
+  scala> def makeMultiplier(factor: Double) = {
+       |   val m = (factor + 1.0) * factor
+       |   val n = factor / 100.0
+       |   (x: Double) => x * m + n 
+       | }
+  makeMultiplier: (factor: Double)Double => Double
+
+
+  scala> val fn1 = makeMultiplier(3.0)
+  fn1: Double => Double = <function1>
+
+  scala> val fn2 = makeMultiplier(4.0)
+  fn2: Double => Double = <function1>
+
+  scala> fn1(1)
+  res40: Double = 12.03
+
+  scala> fn1(2)
+  res41: Double = 24.03
+
+  scala> fn2(1)
+  res42: Double = 20.04
+
+  scala> fn1(2)
+  res43: Double = 24.03
+
+
 
 #+END_SRC
