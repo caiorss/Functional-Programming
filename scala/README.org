@@ -687,6 +687,16 @@ Collection Hierarchy
      - Contains
    - Map (aka Hashmap, Dictionary or hash-table)
 
+
+| Scala Collection  | Description                          | Immutable |
+|-------------------+--------------------------------------+-----------|
+| List              | Linked list                          | Yes       |
+| Iterable / Stream | Lazy evaluation                      | Yes       |
+| Array             | Random Access by index               | No        |
+| Map               | Hash table / Dictionary, Index table | Yes       |
+| Set               | Unique items                         | Yes       |
+|                   |                                      |           |
+
 *** Immutable Collections
 **** Tuples
 **** List
