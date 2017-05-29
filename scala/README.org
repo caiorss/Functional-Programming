@@ -40,6 +40,9 @@ Features:
      consume stack frames avoiding stack overflows.
 
 *** Getting Scala
+
+See: [[https://www.scala-lang.org/download/][Download | The Scala Programming Language]]
+
 *** File Extensions
 
 | Extension | Description                   |
@@ -1585,7 +1588,6 @@ listView(properties)
 
 [[file:images/textView1.png][file:images/textView1.png]]
 
-
 *** Clock Display
 
 #+BEGIN_SRC scala
@@ -1621,7 +1623,6 @@ runTimer(1000, () => label.setText(currentTime()))
 
 
 [[file:images/clockDisplayGui.png][file:images/clockDisplayGui.png]]
-
 
 ** Http Get Request
 
@@ -1659,3 +1660,49 @@ Java Code - https://www.mkyong.com/java/how-to-send-http-request-getpost-in-java
   }
 
 #+END_SRC
+* Bookmarks and Resources 
+** Scala API Documentation 
+
+*Scala API*
+
+ - Scala API - Standard Library. [[http://www.scala-lang.org/api/current/][Scala Standard Library 2.12.2]]
+
+
+ - Collections - http://www.scala-lang.org/api/current/scala/collection/index.html
+
+
+ - Math - http://www.scala-lang.org/api/current/scala/math/index.html
+
+
+*Java API*
+
+ - [[https://docs.oracle.com/javase/8/docs/api/][Overview (Java Platform SE 8 )]]
+
+** Learning Resources 
+
+ - [[https://www.scala-lang.org/][The Scala Programming Language]] - https://www.scala-lang.org/
+
+
+ - [[https://twitter.github.io/scala_school/][Scala School]] - Twitter 
+
+
+ - [[http://exercism.io/languages/scala/about][Scala - exercism.io]]
+
+
+ - [[http://alvinalexander.com/scala][scala | alvinalexander.com]]
+
+
+ - [[https://learnxinyminutes.com/docs/scala/][Learn Scala in Y Minutes]]
+
+
+ - http://www.tutorialspoint.com/scala/
+
+** Community 
+
+ - [[https://users.scala-lang.org/][Scala Users]] - Forum 
+
+ - https://stackoverflow.com/questions/tagged/scala
+
+ - https://www.reddit.com/r/scala/
+
+
