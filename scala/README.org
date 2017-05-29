@@ -55,7 +55,7 @@ See: [[https://www.scala-lang.org/download/][Download | The Scala Programming La
 |           |                               |
 |           |                               |
 
-*** REPL - Scala Shell
+** REPL - Scala Shell
 
 The Scala REPL or Scala shell allows exploratory design and
 interactive lerarning about the Java API.
@@ -75,8 +75,21 @@ Scala REPL:
 
 [[file:images/scala-repl-shell1.png][file:images/scala-repl-shell1.png]]
 
+Example: Load a scala script  in the repl. File: [[file:src/clockDisplayGui.scala][file:src/clockDisplayGui.scala]]
 
+#+BEGIN_SRC scala 
+scala> :load clockDisplayGui.scala
+Loading clockDisplayGui.scala...
+runTimer: (interval: Int, taskFn: () => Unit)java.util.Timer
+currentTime: ()String
+frame: javax.swing.JFrame = javax.swing.JFrame[frame0,0,0,0x0,invalid,hidden,layout=java.awt.BorderLayout,title=Java Clock App,resizable,normal,defaultCloseOperation=HIDE_ON_CLOSE,rootPane=javax.swing.JRootPane[,0,0,0x0,invalid,layout=javax.swing.JRootPane$RootLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=16777673,maximumSize=,minimumSize=,preferredSize=],rootPaneCheckingEnabled=true]
+label: javax.swing.JLabel = javax.swing.JLabel[,0,0,0x0,invalid,alignmentX=0.0,alignmentY=0.0,border=,flags=8388608,maximumSize=,minimumSize=,preferredSize=,defaultIcon=,disabledIcon=,horizontalAlignment=LEADING,horizontalTextPosition=TRAILING,iconTextGap=4,labelFor=,text=,verticalAlignment=CENTER,verticalTextPosition=CENTER]
+res0: java.awt.Component = javax.swing.JLabel[,0,0,0x0,invalid,alignmentX=0.0,alignmentY=0.0,border=,flags=8388608,maximumSize=,minimumSize=,preferredSize=,defaultIcon=,disabledIcon=,horizontalAlignment=LEADING,horizontalTextPosition=TRAILING,iconTextGap=4,labelFor=,text=,verticalAlignment=CENTER,verticalTextPosition=CENTER]
+res3: java.util.Timer = java.util.Timer@455b6df1
 
+ob_scala_eol
+
+#+END_SRC
 
 ** Basic Syntax
 
