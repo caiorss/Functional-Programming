@@ -1469,3 +1469,50 @@ onWindowExit(frame){ System.exit(0) }
 [[file:images/passwordGui1.png][file:images/passwordGui1.png]]
 
 [[file:images/passwordGui2.png][file:images/passwordGui2.png]]
+
+*** List View Dialog
+
+The function listView is useful for data vizualization of lists,
+files, numbers and son on.
+
+#+BEGIN_SRC scala
+/// Function to visualize data in List View Mode
+///
+def listView(elements: Array[String]){
+  val frame  = new javax.swing.JFrame("List Data View")
+  val model  = new javax.swing.DefaultListModel[String]()
+  val list   = new javax.swing.JList(model)
+  val scroll = new javax.swing.JScrollPane(list)
+  frame.add(scroll)
+  elements.foreach(model.addElement)
+  frame.setSize(300, 400)
+  frame.setVisible(true)
+}
+
+
+def listFiles(path: String) = {
+  (new java.io.File(path))
+    .listFiles()
+    .map(_.toString)
+}
+
+#+END_SRC
+
+Show the files of directory /etc/
+
+#+BEGIN_SRC scala
+listView(listFiles("/etc"))
+#+END_SRC
+
+[[file:images/listViewFiles.png][file:images/listViewFiles.png]]
+
+
+Show java properties
+
+#+BEGIN_SRC scala
+import scala.collection.JavaConverters._
+val properties = System.getProperties().asScala.toArray.map { case (k, v) => k + " = " + v }
+listView(properties)
+#+END_SRC
+
+[[file:images/listViewJavaProperties.png][file:images/listViewJavaProperties.png]]
