@@ -1573,3 +1573,41 @@ runTimer(1000, () => label.setText(currentTime()))
 
 
 [[file:images/clockDisplayGui.png][file:images/clockDisplayGui.png]]
+
+
+** Http Get Request
+
+Java Code - https://www.mkyong.com/java/how-to-send-http-request-getpost-in-java/
+
+#+BEGIN_SRC scala
+  def httpGetRead(url: String) = {
+    val obj = new java.net.URL(url)
+    val conn = obj.openConnection().asInstanceOf[java.net.HttpURLConnection]
+    conn.setRequestMethod("GET")
+    conn.setRequestProperty("User-Agent", "Scala browser")
+    val respCode = conn.getResponseCode()
+
+    val bf = new java.io.BufferedReader(
+      new java.io.InputStreamReader(conn.getInputStream()))
+
+    val out = Stream.continually(bf.readLine())
+      .takeWhile(_!=null)
+      .mkString("\n")
+    out
+  }
+
+  scala> httpGetRead("http://www.httpbin.org/get")
+  res24: String =
+  {
+    "args": {},
+    "headers": {
+      "Accept": "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2",
+      "Connection": "close",
+      "Host": "www.httpbin.org",
+      "User-Agent": "Scala browser"
+    },
+    "origin": "186.212.135.2",
+    "url": "http://www.httpbin.org/get"
+  }
+
+#+END_SRC
