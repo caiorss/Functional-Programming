@@ -584,6 +584,53 @@ res77: Int = 28
   ... ...
 
 #+END_SRC
+*** Polymorphic Functions
+
+#+BEGIN_SRC scala 
+  def identity[A](x: A) = x
+
+  scala> def identity[A](x: A) = x
+  identity: [A](x: A)A
+
+  scala> identity(100)
+  res4: Int = 100
+
+  scala> identity(Some(300))
+  res5: Some[Int] = Some(300)
+
+  scala> identity("Hello world")
+  res6: String = Hello world
+
+
+  def constantly[A, B](a: A) = (b: B) => a
+
+  scala> constantly(100)
+  res7: Any => Int = <function1>
+
+  scala> constantly(100)("Hello")
+  res8: Int = 100
+
+  scala> constantly(100)("world")
+  res9: Int = 100
+
+  scala> constantly(100)(Some(400))
+  res10: Int = 100
+
+  scala> def show[A](a: A) = a.toString
+  show: [A](a: A)String
+
+
+  scala> show(340.343)
+  res12: String = 340.343
+
+  scala> show(Some(1000))
+  res13: String = Some(1000)
+
+  scala> show(None)
+  res14: String = None
+
+#+END_SRC
+
 ** Imperative Constructs
 *** While loop
 
@@ -1113,18 +1160,18 @@ scala> hmap1 += (1 -> "Netherlands")
 res49: hmap1.type = Map(1 -> Netherlands)
 
 scala> hmap1 += (2 -> "Mexico")
-res50: hmap1.type = Map(2 -> Mexico, 1 -> Netherland)
+res50: hmap1.type = Map(2 -> Mexico, 1 -> Netherlands)
 
 scala> hmap1 += (3 -> "Italy")
-res51: hmap1.type = Map(2 -> Mexico, 1 -> Netherland, 3 -> Italy)
+res51: hmap1.type = Map(2 -> Mexico, 1 -> Netherlands, 3 -> Italy)
 
 scala> hmap1 += (10 -> "Japan")
 
-res52: hmap1.type = Map(2 -> Mexico, 10 -> Japan, 1 -> Netherland, 3 -> Italy)
+res52: hmap1.type = Map(2 -> Mexico, 10 -> Japan, 1 -> Netherlands, 3 -> Italy)
 
 scala>
 scala> hmap1
-res53: scala.collection.mutable.Map[Int,String] = Map(2 -> Mexico, 10 -> Japan, 1 -> Netherland, 3 -> Italy)
+res53: scala.collection.mutable.Map[Int,String] = Map(2 -> Mexico, 10 -> Japan, 1 -> Netherlands, 3 -> Italy)
 
 scala> hmap1(3)
 res54: String = Italy
@@ -1141,6 +1188,7 @@ java.util.NoSuchElementException: key not found: 100
 
 scala>
 #+END_SRC
+
 * Java Interoperability
 ** Show Java Properties
 
