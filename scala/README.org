@@ -73,7 +73,10 @@ interactive lerarning about the Java API.
 
 Scala REPL:
 
-[[file:scala/images/scala-repl-shell1.png][file:scala/images/scala-repl-shell1.png]]
+[[file:images/scala-repl-shell1.png][file:images/scala-repl-shell1.png]]
+
+
+
 
 ** Basic Syntax
 
