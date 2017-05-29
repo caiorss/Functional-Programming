@@ -1516,3 +1516,23 @@ listView(properties)
 #+END_SRC
 
 [[file:images/listViewJavaProperties.png][file:images/listViewJavaProperties.png]]
+
+*** Text View Dialog
+
+#+BEGIN_SRC scala
+  def textView(file: String) = {
+    val frame = new javax.swing.JFrame("Text View App")
+    val textArea = new javax.swing.JTextArea()
+    val scroll = new javax.swing.JScrollPane(textArea)
+    textArea.setText("")
+    frame.add(scroll)
+    frame.setSize(300, 400)
+    frame.setVisible(true)
+    val text = scala.io.Source.fromFile(file).mkString
+    textArea.setText(text)
+  }
+
+  scala> textView("/etc/protocols")
+#+END_SRC
+
+[[file:images/textView1.png][file:images/textView1.png]]
