@@ -52,6 +52,10 @@ This repository is dedicated to public domain.
 
  - [[file:clojure/README.org][Clojure]]  
 
+*Function Programming in Scala*
+
+ - [[file:scala/README.org][Scala]]
+         
 *Papers* 
 
  - [[file:papers/README.org][Papers in this Repository]]

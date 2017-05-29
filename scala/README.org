@@ -1,0 +1,1741 @@
+#+TITLE: Functional Programming in Scala
+
+* FP in Scala
+** Overview
+*** Features
+
+Scala is a statically typed, functional, object orientated and
+imperative language, or multi-paradigm programming language that runs
+in JVM - Java Virtual Machine that allows type-safe programming with
+high productivity.
+
+Features:
+
+ - Interactive - Scala REPL allows the user to do exploratory design and
+   test the Java API interactively.
+
+ - Scripting language. Scala has a fast initialization time what makes
+   it suitable for scripting.
+
+ - Java Integration. As a JVM language Scala allows reuse of all Java
+   libraries and integration with old code bases.
+
+ - Functional:
+
+   - Provides syntax for curried functions
+
+   - _Higher order methods_. Functions can be passed as arguments to methods.
+
+   - _Type Inference_. It frees the developer from declaring typing for
+     all values and functions in a similar way to Haskell, although
+     Scala requires some type anotations.
+
+   - _Algebraic Data Types_. AGDT is useful for represeting AST -
+     Abstract Syntax Trees; write parsers and compilers and perform
+     symbolic computations.
+
+   - _Pattern Matching_
+
+   - _Tail Call Optimization_. TCO makes tail-recursive functions not
+     consume stack frames avoiding stack overflows.
+
+*** Getting Scala
+
+See: [[https://www.scala-lang.org/download/][Download | The Scala Programming Language]]
+
+*** File Extensions
+
+| Extension | Description                   |
+|-----------+-------------------------------|
+| .scala    | Scala source code or script   |
+| .java     | Java source code              |
+|           |                               |
+| .class    | Java bytecode or compile code |
+| .jar      | Java application              |
+|           |                               |
+|           |                               |
+
+** REPL - Scala Shell
+
+The Scala REPL or Scala shell allows exploratory design and
+interactive lerarning about the Java API.
+
+| Command                 | Description                             |
+|-------------------------+-----------------------------------------|
+| :help                   | Show help                               |
+| :paste                  | Paste a block of code and enter Ctrl+D. |
+| :past =<path-to-file>=  | Load a file.                            |
+| :load =<path-to-file>=  | Load a Scala file into the repl.        |
+| :cp   =<path-to-*.jar>= | Load a Jar file into the REPL.          |
+| :history                | Show command history                    |
+| :quit or Ctrl + c       | Exit REPL                               |
+|                         |                                         |
+
+Scala REPL:
+
+[[file:images/scala-repl-shell1.png][file:images/scala-repl-shell1.png]]
+
+Example: Load a scala script  in the repl. File: [[file:src/clockDisplayGui.scala][file:src/clockDisplayGui.scala]]
+
+#+BEGIN_SRC scala 
+scala> :load clockDisplayGui.scala
+Loading clockDisplayGui.scala...
+runTimer: (interval: Int, taskFn: () => Unit)java.util.Timer
+currentTime: ()String
+frame: javax.swing.JFrame = javax.swing.JFrame[frame0,0,0,0x0,invalid,hidden,layout=java.awt.BorderLayout,title=Java Clock App,resizable,normal,defaultCloseOperation=HIDE_ON_CLOSE,rootPane=javax.swing.JRootPane[,0,0,0x0,invalid,layout=javax.swing.JRootPane$RootLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=16777673,maximumSize=,minimumSize=,preferredSize=],rootPaneCheckingEnabled=true]
+label: javax.swing.JLabel = javax.swing.JLabel[,0,0,0x0,invalid,alignmentX=0.0,alignmentY=0.0,border=,flags=8388608,maximumSize=,minimumSize=,preferredSize=,defaultIcon=,disabledIcon=,horizontalAlignment=LEADING,horizontalTextPosition=TRAILING,iconTextGap=4,labelFor=,text=,verticalAlignment=CENTER,verticalTextPosition=CENTER]
+res0: java.awt.Component = javax.swing.JLabel[,0,0,0x0,invalid,alignmentX=0.0,alignmentY=0.0,border=,flags=8388608,maximumSize=,minimumSize=,preferredSize=,defaultIcon=,disabledIcon=,horizontalAlignment=LEADING,horizontalTextPosition=TRAILING,iconTextGap=4,labelFor=,text=,verticalAlignment=CENTER,verticalTextPosition=CENTER]
+res3: java.util.Timer = java.util.Timer@455b6df1
+
+ob_scala_eol
+
+#+END_SRC
+
+** Basic Syntax
+
+*Comment*
+
+#+BEGIN_SRC scala
+// A comment
+
+/*
+Multiline Comment
+
+*/
+
+#+END_SRC
+
+
+*Value (Immutable)*
+
+#+BEGIN_SRC scala
+
+scala> val x = 10.2323
+x: Double = 10.2323
+
+scala> x = 1.5354
+<console>:12: error: reassignment to val
+       x = 1.5354
+
+scala> val a = "hello world"
+a: String = hello world
+
+val s = """Hello world
+Scala
+String
+"""
+
+#+END_SRC
+
+*Variable*
+
+#+BEGIN_SRC scala
+
+scala> var x = 10.2334
+x: Double = 10.2334
+
+scala> x = 4.5
+x: Double = 4.5
+
+scala> var s = "Hello"
+s: String = Hello
+
+scala> s = "world"
+s: String = world
+
+scala>
+
+#+END_SRC
+
+*Import Java Libraries*
+
+Import namespace java.io
+
+#+BEGIN_SRC scala
+scala> import java.io._
+import java.io._
+
+
+#+END_SRC
+
+Import multiple classes
+
+#+BEGIN_SRC scala
+scala> import javax.swing.JFrame
+import javax.swing.JFrame
+
+scala> import javax.swing.{JFrame, JPanel, JLabel}
+import javax.swing.{JFrame, JPanel, JLabel}
+
+scala> val frame = new JFrame("Hello world Scala")
+
+scala> frame.setSize(300, 400)
+
+scala> frame.setVisible(true)
+
+#+END_SRC
+
+
+or
+
+#+BEGIN_SRC scala
+scala> val frame = new javax.swing.JFrame("Hello world Scala")
+
+scala> frame.setSize(300, 400)
+
+scala> frame.setVisible(true)
+#+END_SRC
+
+*Method Syntax*
+
+#+BEGIN_SRC scala
+scala> Math.log10(1000)
+res16: Double = 3.0
+
+scala> Math log10 1000
+res17: Double = 3.0
+
+scala> List(1.0, 10.0, 100.0, 1000.0, 10000.0).map(Math.log10)
+res20: List[Double] = List(0.0, 1.0, 2.0, 3.0, 4.0)
+
+scala> List(1.0, 10.0, 100.0, 1000.0, 10000.0) map Math.log10
+res21: List[Double] = List(0.0, 1.0, 2.0, 3.0, 4.0)
+
+
+#+END_SRC
+
+** Functions
+*** Function Definition
+
+#+BEGIN_SRC scala
+  def prod(x: Int, y: Int) = x * y
+
+  scala> prod(4, 5)
+  res11: Int = 20
+
+
+  def fun(a: Int, b: Int) = {
+    val c = 3 * a + b
+    val d = b - a
+    c * d // The return value is the last value
+  }
+
+  /**
+     a = 4 and b = 5
+     c = 3 * a + b = 3 * 4 + 5 = 17
+     d = b - a     = 5 - 4 = 1
+
+  Return value:
+     c * d = 17 * 1
+
+  --------------- */
+  scala> fun(4, 5)
+  res8: Int = 17
+
+
+  def showFiles(path: String) = {
+    val file = new java.io.File(path)
+    file.listFiles.foreach(println)
+  }
+
+  // Pasting in the REPL
+  scala> def showFiles(path: String) = {
+       |   val file = new java.io.File(path)
+       |   file.listFiles.foreach(println)
+       | }
+  showFiles: (path: String)Unit
+
+
+  scala> showFiles("/")
+  /home
+  /var
+  /bin
+  /usr
+  /root
+  /Applications
+  /proc
+  /boot
+  /dev
+  ... ...
+#+END_SRC
+
+
+#+BEGIN_SRC scala
+
+#+END_SRC
+*** Anonymous Functions / Lambda Functions or Function Literals
+
+Simple Anonymous Functions
+
+#+BEGIN_SRC scala
+scala> val mulBy10 = (x: Int) => x * 10
+mulBy10: Int => Int = <function1>
+
+scala> mulBy10(5)
+res25: Int = 50
+
+scala>
+
+scala> val add = (x: Double, y: Double) => x + y
+addV1: (Double, Double) => Double = <function2>
+
+scala> add(10, 20)
+res26: Double = 30.0
+
+#+END_SRC
+
+Multi line anonymous functions
+
+#+BEGIN_SRC scala
+  val func = (a: Double, b: Double) => {
+    val m = a * b
+    val n = a * a * 3 - 4.5 * b
+    (m, n, m + n)
+  }
+
+  scala> val func = (a: Double, b: Double) => {
+       |   val m = a * b
+       |   val n = a * a * 3 - 4.5 * b
+       |   (m, n, m + n)
+       | }
+  func: (Double, Double) => (Double, Double, Double) = <function2>
+
+  scala> func(3, 5)
+  res28: (Double, Double, Double) = (15.0,4.5,19.5)
+
+  scala> func(4, 3)
+  res29: (Double, Double, Double) = (12.0,34.5,46.5)
+
+  scala>
+
+#+END_SRC
+
+*** Curried Functions
+
+
+Function in non-curried form (Tuple):
+
+#+BEGIN_SRC scala
+scala> def mulxy (x: Int, y: Int) = x * y
+mulxy: (x: Int, y: Int)Int
+
+scala> mulxy(3, 4)
+res37: Int = 12
+
+
+scala> List(1, 2, 3, 4, 5).map(mulxy(3, _))
+res38: List[Int] = List(3, 6, 9, 12, 15)
+
+
+scala> List(1, 2, 3, 4, 5).map(mulxy(_, 4))
+res39: List[Int] = List(4, 8, 12, 16, 20)
+
+#+END_SRC
+
+Function in Curried Form:
+
+#+BEGIN_SRC scala
+
+scala> def mulxy (x: Int) (y: Int) = x * y
+mulxy: (x: Int)(y: Int)Int
+
+scala> mulxy _
+res89: Int => (Int => Int) = <function1>
+
+scala> mulxy(3)_
+res88: Int => Int = <function1>
+
+scala> mulxy(3)(4)
+res90: Int = 12
+
+scala> List(2, 3, 4, 5).map(mulxy(5))
+res91: List[Int] = List(10, 15, 20, 25)
+
+scala> List(2, 3, 4, 5) map mulxy(5)
+res38: List[Int] = List(10, 15, 20, 25)
+
+#+END_SRC
+
+Curried anonymous functions
+
+#+BEGIN_SRC scala
+scala> val mulNonCurried = (x: Int, y: Int) => x * y
+mulNonCurried: (Int, Int) => Int = <function2>
+
+scala> mulNonCurried(3, 5)
+res30: Int = 15
+
+
+scala> val mulCurried = (x: Int) => (y: Int) => x * y
+mulCurried: Int => (Int => Int) = <function1>
+
+scala> mulCurried(5)
+res32: Int => Int = <function1>
+
+scala> mulCurried(5)(4)
+res33: Int = 20
+
+scala> List(1, 2, 3, 4, 5).map(mulCurried(4))
+res34: List[Int] = List(4, 8, 12, 16, 20)
+
+scala> List(1, 2, 3, 4, 5)  map mulCurried(4)
+res35: List[Int] = List(4, 8, 12, 16, 20)
+
+#+END_SRC
+*** Closures
+
+#+BEGIN_SRC scala
+
+  def makeMultiplier(factor: Double) = {
+    val m = (factor + 1.0) * factor
+    val n = factor / 100.0
+    (x: Double) => x * m + n
+  }
+
+  scala> def makeMultiplier(factor: Double) = {
+       |   val m = (factor + 1.0) * factor
+       |   val n = factor / 100.0
+       |   (x: Double) => x * m + n
+       | }
+  makeMultiplier: (factor: Double)Double => Double
+
+
+  scala> val fn1 = makeMultiplier(3.0)
+  fn1: Double => Double = <function1>
+
+  scala> val fn2 = makeMultiplier(4.0)
+  fn2: Double => Double = <function1>
+
+  scala> fn1(1)
+  res40: Double = 12.03
+
+  scala> fn1(2)
+  res41: Double = 24.03
+
+  scala> fn2(1)
+  res42: Double = 20.04
+
+  scala> fn1(2)
+  res43: Double = 24.03
+
+
+
+#+END_SRC
+
+*** Function Composition
+
+*Math Composition*
+
+Computes f.compose(g) = f°g (x) = f(g(x))
+
+ - f°g (3) = f(g(3)) = f(2*3) = f(6) = 6 + 10 = 16 ok.
+
+
+#+BEGIN_SRC
+                       f ° g = f(g(x))
+    ....................................................
+    .  ___________________      ___________________    .
+    .  |                 |      |                 |    .
+    .  |                 |      |                 |    .
+  --+->+ g(x) = x * 2    +-->---+  f(x) = x * 2   +----+-->
+ 4  .  | g(4) = 8        |  8   |  f(8) = 16      |    . 16
+    .  |_________________|      +-----------------+    .
+    .                                                  .
+    ....................................................
+
+       ................
+       .              .
+  4 -->+  (f ° g) (x) +--> 16
+       .  f(g(x))     .
+       ................
+
+#+END_SRC
+
+
+#+BEGIN_SRC scala
+scala> val f = (x: Int) => x + 10
+f: Int => Int = <function1>
+
+scala> val g = (x: Int) => x * 2
+g: Int => Int = <function1>
+
+
+scala> val comp1 = f.compose(g)
+comp1: Int => Int = <function1>
+
+
+scala> comp1(3)
+res70: Int = 16
+
+scala> List(1, 2, 3, 4, 5).map(comp1)
+res71: List[Int] = List(12, 14, 16, 18, 20)
+
+scala>
+
+
+/// It could also be:
+
+scala> val comp11 = f compose g
+comp11: Int => Int = <function1>
+
+scala> List(1, 2, 3, 4, 5).map(comp11)
+res72: List[Int] = List(12, 14, 16, 18, 20)
+
+#+END_SRC
+
+
+*Reverse Composition* (andThen)
+
+ - f.andThen(g) = f >> g = g(f(x))
+ - (f andThen g)(4) = (f >> g)(4) = g(f(4)) = g(14) = 28 . Ok.
+
+#+BEGIN_SRC
+                       f >> g = g ° f = g(f(x))
+    ....................................................
+    .   ___________________      ___________________   .
+    .  |                 |      |                 |    .
+    .  |                 |      |                 |    .
+  ---->+ f(x) = x + 10   +-->---+  g(x) = x * 2   +----+-->
+ 4  .  | f(4) = 14       |  14  |  g(14) = 28     |    . 28
+    .  |_________________|      +-----------------+    .
+    .                                                  .
+    ....................................................
+
+
+       .................
+       .               .
+  4 -->+  (f >> g) (x) +--> 28
+       .  g(f(x))      .
+       .................
+
+#+END_SRC
+
+
+#+BEGIN_SRC scala
+scala> val f = (x: Int) => x + 10
+f: Int => Int = <function1>
+
+scala> val g = (x: Int) => x * 2
+g: Int => Int = <function1>
+
+scala> val f_rcomp_g = f andThen g
+f_rcomp_g: Int => Int = <function1>
+
+scala> f_rcomp_g (4)
+res76: Int = 28
+
+// Or
+scala> f.andThen(g)(4)
+res77: Int = 28
+
+#+END_SRC
+
+*** Higher Order Functions
+
+#+BEGIN_SRC scala
+
+  def sumFn1(f: Int => Int, g: Int => Int, x: Int) = f(x) + g(x)
+
+  scala> def sumFn1(f: Int => Int, g: Int => Int) (x: Int) = f(x) + g(x)
+  sumFn: (f: Int => Int, g: Int => Int)(x: Int)Int
+
+
+  scala>  sumFn1(x => x * 4, a => a + 5, 4)
+  res46: Int = 25
+
+  scala>  sumFn1(x => x * 4, a => a + 5, 5)
+  res47: Int = 30
+
+  scala>  sumFn1(x => x * x, a => a + 5, 5)
+  res48: Int = 35
+
+
+  def sumFn2(f: Int => Int, g: Int => Int) = (x: Int) => f(x) + g(x)
+
+  scala> f1(3)
+  res49: Int = 20
+
+  scala> f1(5)
+  res50: Int = 30
+
+  scala> val f2 = sumFn2(x => x * x, a => a + a)
+  f2: Int => Int = <function1>
+
+  scala> f2(3)
+  res51: Int = 15
+
+  scala> f2(5)
+  res52: Int = 35
+
+
+
+  def iterFiles(fn: String => Unit) = (path: String) => {
+    val f = new java.io.File(path)
+    f.listFiles().foreach(file => fn(file.toString))
+  }
+
+  scala> iterFiles(println)("/")
+  /home
+  /var
+  /bin
+  /usr
+  /root
+  /Applications
+  /proc
+  /boot
+  /dev
+    ...
+
+  scala> val showFiles = iterFiles(println)
+  showFiles: String => Unit = <function1>
+
+
+  scala> showFiles("/etc")
+  /etc/systemd
+  /etc/motd
+  /etc/gemrc
+  /etc/adobe
+  /etc/ld.so.cache
+  /etc/environment
+  /etc/libreoffice
+  /etc/rc_keymaps
+  /etc/sensors3.conf
+  ... ...
+
+#+END_SRC
+*** Polymorphic Functions
+
+#+BEGIN_SRC scala 
+  def identity[A](x: A) = x
+
+  scala> def identity[A](x: A) = x
+  identity: [A](x: A)A
+
+  scala> identity(100)
+  res4: Int = 100
+
+  scala> identity(Some(300))
+  res5: Some[Int] = Some(300)
+
+  scala> identity("Hello world")
+  res6: String = Hello world
+
+
+  def constantly[A, B](a: A) = (b: B) => a
+
+  scala> constantly(100)
+  res7: Any => Int = <function1>
+
+  scala> constantly(100)("Hello")
+  res8: Int = 100
+
+  scala> constantly(100)("world")
+  res9: Int = 100
+
+  scala> constantly(100)(Some(400))
+  res10: Int = 100
+
+  scala> def show[A](a: A) = a.toString
+  show: [A](a: A)String
+
+
+  scala> show(340.343)
+  res12: String = 340.343
+
+  scala> show(Some(1000))
+  res13: String = Some(1000)
+
+  scala> show(None)
+  res14: String = None
+
+#+END_SRC
+
+** Imperative Constructs
+*** While loop
+
+#+BEGIN_SRC scala
+  var i = 0
+  while (i < 10){
+     println ("i = " + i)
+     i = i + 1
+  }
+
+  scala> var i = 0
+  i: Int = 0
+
+  scala> while (i < 10){
+       |    println ("i = " + i)
+       |    i = i + 1
+       | }
+  i = 0
+  i = 1
+  i = 2
+  i = 3
+  i = 4
+  i = 5
+  i = 6
+  i = 7
+  i = 8
+  i = 9
+
+
+
+#+END_SRC
+
+*** For-loop
+
+#+BEGIN_SRC scala
+scala> for (i <- 1 to 10) println(i)
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+scala> for (i <- 1 to 10) println("i = " + i)
+i = 1
+i = 2
+i = 3
+i = 4
+i = 5
+i = 6
+i = 7
+i = 8
+i = 9
+i = 10
+
+scala> for (file <- (new java.io.File("/").listFiles)) println(file)
+/home
+/var
+/bin
+/usr
+/root
+/Applications
+/proc
+/boot
+/dev
+/opt
+/etc
+/mnt
+/tmp
+/run
+/desktopfs-pkgs.txt
+/lib
+/.manjaro-tools
+/srv
+/lib64
+/rootfs-pkgs.txt
+/sys
+/sbin
+/lost+found
+
+#+END_SRC
+** Collections
+*** Overview
+
+Collection Hierarchy
+
+ - Iterable
+   - Seq (Sequence)
+     - List
+       - Fundamental operations: head, tail
+     - Vector
+       - indexing
+     - Array (Seq-like, but not subclass of Seq). It is native Java class.)
+     - String (Seq-like, although not subclass of Seq).
+     - Range
+   - Sets (Relational algebra)
+     - Contains
+   - Map (aka Hashmap, Dictionary or hash-table)
+
+
+| Scala Collection  | Description                          | Immutable |
+|-------------------+--------------------------------------+-----------|
+| List              | Linked list                          | Yes       |
+| Iterable / Stream | Lazy evaluation                      | Yes       |
+| Array             | Random Access by index               | No        |
+| Map               | Hash table / Dictionary, Index table | Yes       |
+| Set               | Unique items                         | Yes       |
+|                   |                                      |           |
+
+*** Immutable Collections
+**** Tuples
+**** List
+
+*Creating a list*
+
+#+BEGIN_SRC scala
+scala> var xs = List(1.0, 2.0, 3.0, 4.0, 5.0, 6.0)
+xs: List[Double] = List(1.0, 2.0, 3.0, 4.0, 5.0, 6.0)
+
+#+END_SRC
+
+*Map over a list*
+
+#+BEGIN_SRC scala
+scala> xs.map (x => x * 3.0)
+res31: List[Double] = List(3.0, 6.0, 9.0, 12.0, 15.0, 18.0)
+
+scala> xs.map (x => x * 3.0).map (x => x + 5)
+res33: List[Double] = List(8.0, 11.0, 14.0, 17.0, 20.0, 23.0)
+
+#+END_SRC
+
+*Filter a list*
+
+#+BEGIN_SRC scala
+// Filter
+//
+scala> xs.filter ( x => x < 4.0)
+res30: List[Double] = List(1.0, 2.0, 3.0)
+#+END_SRC
+
+*Filter a list / reject*
+
+#+BEGIN_SRC scala
+// FilterNot - Inverse of filter, reject
+//
+scala> xs.filterNot (x => x < 4.0)
+res80: List[Double] = List(4.0, 5.0, 6.0)
+#+END_SRC
+
+*Find a element that matches a predicate function*
+
+#+BEGIN_SRC scala
+// Find the first element that satisfies
+// a predicate.
+//
+//
+scala> xs.find _
+res43: (Double => Boolean) => Option[Double] = <function1>
+
+
+scala> xs.find (x => x > 4.0)
+res42: Option[Double] = Some(5.0)
+
+scala> xs.find (x => x > 14.0)
+res44: Option[Double] = None
+
+#+END_SRC
+
+*Test if list is empty*
+
+#+BEGIN_SRC scala
+// Test if list is empty
+//
+scala> xs.isEmpty
+res85: Boolean = false
+#+END_SRC
+
+*Find the index of an element that satisfies a predicate*
+
+#+BEGIN_SRC scala
+// Find the index of an element that satisfies a predicate.
+//
+//
+scala> xs.indexWhere (x =>  x > 4.0)
+res116: Int = 4
+
+scala> xs.indexWhere (x =>  x > 14.0)
+res117: Int = -1
+#+END_SRC
+
+*Count all elements that matches a predicate*
+
+#+BEGIN_SRC scala
+// Count all elements greater than 3.0
+//
+scala> xs.count (x => x > 3.0)
+res18: Int = 3
+#+END_SRC
+
+*Get max and min elements*
+
+#+BEGIN_SRC scala
+// Max and Min elements
+//
+scala> xs.max
+res19: Double = 6.0
+
+scala> xs.min
+res20: Double = 1.0
+#+END_SRC
+
+*Head (fist) and (last) elements*
+
+#+BEGIN_SRC scala
+// Head and tail of a list.
+
+// First element
+scala> xs.head
+res21: Double = 1.0
+
+// Last element
+scala> xs.last
+res45: Double = 6.0
+
+#+END_SRC
+
+*Tail*
+
+#+BEGIN_SRC scala
+//
+// Tail: Remove first element
+scala> xs.tail
+res22: List[Double] = List(2.0, 3.0, 4.0, 5.0, 6.0)
+
+#+END_SRC
+
+*Reverse a list*
+
+#+BEGIN_SRC scala
+scala> xs.reverse
+res36: List[Double] = List(6.0, 5.0, 4.0, 3.0, 2.0, 1.0)
+#+END_SRC
+
+*Foreach*
+
+
+#+BEGIN_SRC scala
+// Impure Map
+//
+scala> xs.foreach(println)
+1.0
+2.0
+3.0
+4.0
+5.0
+6.0
+
+scala> xs.foreach(x => println( "x = %.3f".format(x)))
+x = 1,000
+x = 2,000
+x = 3,000
+x = 4,000
+x = 5,000
+x = 6,000
+#+END_SRC
+
+*Slice elements*
+
+#+BEGIN_SRC scala
+// Select elements x[2],x[3] and x[4]
+//
+scala> xs.slice(2, 5)
+res40: List[Double] = List(3.0, 4.0, 5.0)
+#+END_SRC
+
+
+*Take n elements*
+
+#+BEGIN_SRC scala
+scala> xs.take(3)
+res68: List[Double] = List(1.0, 2.0, 3.0)
+#+END_SRC
+
+
+*Drop elements*
+
+#+BEGIN_SRC scala
+// Drop elements
+//
+scala> xs.drop _
+res66: Int => List[Double] = <function1>
+
+scala> xs.drop (3)
+res67: List[Double] = List(4.0, 5.0, 6.0)
+#+END_SRC
+
+*Length of a list*
+
+#+BEGIN_SRC scala
+// Length of a list
+//
+scala> xs.length
+res69: Int = 6
+#+END_SRC
+
+*Sum of all list elements*
+
+#+BEGIN_SRC scala
+// Sum of all elements of a list
+//
+scala> xs.sum
+res82: Double = 21.0
+#+END_SRC
+
+*Product of all list elements*
+
+#+BEGIN_SRC scala
+// Product of all elements of a list
+//
+scala> xs.product
+res83: Double = 720.0
+#+END_SRC
+
+*Fold left*
+
+#+BEGIN_SRC scala
+// Fold left
+//
+scala> List(1, 2, 3, 4, 5).foldLeft(0)((acc, x) => 100 * acc + x)
+res107: Int = 102030405
+
+scala> List(1, 2, 3, 4, 5).foldLeft(List[Int] ())((acc, x) => x :: acc)
+res110: List[Int] = List(5, 4, 3, 2, 1)
+
+#+END_SRC
+
+*Fold right*
+
+#+BEGIN_SRC scala
+// Fold right
+//
+scala> List(1, 2, 3, 4, 5).foldRight(0)((x, acc) => 10 * acc + x)
+res111: Int = 54321
+#+END_SRC
+
+*Reduce*
+
+#+BEGIN_SRC scala
+// Reduce. fold left without initial value of accumulator.
+scala> xs.reduce _
+res92: ((Double, Double) => Double) => Double = <function1>
+
+scala> xs.reduce ((acc, x) => 10*acc + x)
+res95: Double = 123456.0
+#+END_SRC
+
+*Max by*
+
+#+BEGIN_SRC scala
+// Returns the element for which the projection function has the
+// maximun value
+//
+// In this case: returns the string which its lenght is maximun.
+//
+scala> var s = List("Hello", "World", "Scala", "is", "amazing")
+s: List[String] = List(Hello, World, Scala, is, amazing)
+
+scala> s.maxBy (x => x.length)
+res74: String = amazing
+
+#+END_SRC
+
+*Min by*
+
+#+BEGIN_SRC scala
+
+//
+//  In this case: returns the string which its length is minimun.
+//
+scala> s.minBy (x => x.length)
+res75: String = is
+
+#+END_SRC
+
+*Sort by*
+
+#+BEGIN_SRC scala
+// Sort the string by the length of each string
+//
+scala> s.sortBy ( x => x.length)
+res78: List[String] = List(is, Hello, World, Scala, amazing)
+
+#+END_SRC
+
+*Group by*
+
+#+BEGIN_SRC scala
+//  groupBy
+// Separate string that have equal number of characters
+//
+scala> s.groupBy(x => x.length)
+res0: scala.collection.immutable.Map[Int,List[String]] = Map(2 -> List(is), 5 -> List(Hello, World, Scala), 7 -> List(amazing))
+
+
+def fileExtension (filename: String) = {
+    val arr = filename.split ('.');
+
+    if (arr.length > 1) {
+       arr.apply(1);
+    }else{
+       "";
+    }
+}
+
+var files =
+List("file1.pdf",
+     "file2.doc",
+     "dummy.pdf",
+     "clojure.jar",
+     "document.zip",
+     "file3.pdf",
+     "scala.jar",
+     "manifest.doc",
+     "unixBsd"
+     )
+
+scala> files.groupBy (fileExtension)
+res17: scala.collection.immutable.Map[String,List[String]]
+= Map("" -> List(unixBsd), zip -> List(document.zip),
+pdf -> List(file1.pdf, dummy.pdf, file3.pdf),
+doc -> List(file2.doc, manifest.doc),
+jar -> List(clojure.jar, scala.jar))
+
+
+scala> files.groupBy (fileExtension).foreach(println)
+(,List(unixBsd))
+(zip,List(document.zip))
+(pdf,List(file1.pdf, dummy.pdf, file3.pdf))
+(doc,List(file2.doc, manifest.doc))
+(jar,List(clojure.jar, scala.jar))
+
+#+END_SRC
+
+*Distinct*
+
+#+BEGIN_SRC scala
+// Distinct elements.
+//
+scala> var a = List(1, 2, 5, 3, 1, 3, 3, 5, 4, 5, 4)
+a: List[Int] = List(1, 2, 5, 3, 1, 3, 3, 5, 4, 5, 4)
+
+scala> a.distinct
+res88: List[Int] = List(1, 2, 5, 3, 4)
+
+#+END_SRC
+
+**** Maps
+
+#+BEGIN_SRC scala
+var capital = Map("US"     -> "Washigton",
+                  "France" -> "Paris",
+                  "Japan"  -> "Tokio")
+
+scala> capital("Japan")
+res8: String = Tokio
+
+scala> capital("US")
+res9: String = Washigton
+
+scala> capital("USsa")
+java.util.NoSuchElementException: key not found: USsa
+  at scala.collection.MapLike$class.default(MapLike.scala:228)
+  at scala.collection.AbstractMap.default(Map.scala:59)
+  at scala.collection.MapLike$class.apply(MapLike.scala:141)
+  at scala.collection.AbstractMap.apply(Map.scala:59)
+  ... 32 elided
+
+
+scala> assert(capital("Japan") == "Tokio")
+
+scala> assert(capital("Japan") == "Tokio2")
+java.lang.AssertionError: assertion failed
+  at scala.Predef$.assert(Predef.scala:156)
+  ... 32 elided
+
+scala> println(capital("France"))
+Paris
+
+scala> println(capital("Japan"))
+Tokio
+
+#+END_SRC
+*** Mutable Collections
+**** Mutable List
+
+#+BEGIN_SRC scala
+scala> import collection.mutable.ListBuffer
+import collection.mutable.ListBuffer
+
+scala> val xs = ListBuffer[Double]()
+xs: scala.collection.mutable.ListBuffer[Double] = ListBuffer()
+
+scala> (1 to 10).foreach(i => xs.append(i.toDouble * 2.5 - 4.0))
+
+scala> xs
+res42: scala.collection.mutable.ListBuffer[Double] = ListBuffer(-1.5, 1.0, 3.5, 6.0, 8.5, 11.0, 13.5, 16.0, 18.5, 21.0)
+
+scala>
+#+END_SRC
+
+**** Mutable Maps                                       :collection:map:hash:
+
+#+BEGIN_SRC scala
+
+scala> import scala.collection.mutable.Map
+import scala.collection.mutable.Map
+
+scala> val hmap1 = Map[Int, String]()
+hmap1: scala.collection.mutable.Map[Int,String] = Map()
+
+scala> hmap1 += (1 -> "Netherlands")
+res49: hmap1.type = Map(1 -> Netherlands)
+
+scala> hmap1 += (2 -> "Mexico")
+res50: hmap1.type = Map(2 -> Mexico, 1 -> Netherlands)
+
+scala> hmap1 += (3 -> "Italy")
+res51: hmap1.type = Map(2 -> Mexico, 1 -> Netherlands, 3 -> Italy)
+
+scala> hmap1 += (10 -> "Japan")
+
+res52: hmap1.type = Map(2 -> Mexico, 10 -> Japan, 1 -> Netherlands, 3 -> Italy)
+
+scala>
+scala> hmap1
+res53: scala.collection.mutable.Map[Int,String] = Map(2 -> Mexico, 10 -> Japan, 1 -> Netherlands, 3 -> Italy)
+
+scala> hmap1(3)
+res54: String = Italy
+
+scala> hmap1(10)
+res55: String = Japan
+
+scala> hmap1(100)
+java.util.NoSuchElementException: key not found: 100
+  at scala.collection.MapLike$class.default(MapLike.scala:228)
+  at scala.collection.AbstractMap.default(Map.scala:59)
+  at scala.collection.mutable.HashMap.apply(HashMap.scala:65)
+  ... 32 elided
+
+scala>
+#+END_SRC
+
+* Java Interoperability
+** Show Java Properties
+
+#+BEGIN_SRC scala
+scala>  System.getProperty ("java.vm.vendor")
+res2: String = Oracle Corporation
+
+scala>  System.getProperty ("java.home")
+res3: String = /usr/lib/jvm/java-8-openjdk/jre
+
+scala>  List("java.vm.vendor", "java.home", "java.runtime.name", "java.vm.name").map(System.getProperty)
+res4: List[String] = List(Oracle Corporation, /usr/lib/jvm/java-8-openjdk/jre, OpenJDK Runtime Environment, OpenJDK 64-Bit Server VM)
+
+scala>  val xs = List("java.vm.vendor", "java.home", "java.runtime.name", "java.vm.name")
+xs: List[String] = List(java.vm.vendor, java.home, java.runtime.name, java.vm.name)
+
+scala>  xs.foreach(p => println ("%s\t%s".format(p, System.getProperty(p))))
+java.vm.vendor	Oracle Corporation
+java.home	/usr/lib/jvm/java-8-openjdk/jre
+java.runtime.name	OpenJDK Runtime Environment
+java.vm.name	OpenJDK 64-Bit Server VM
+
+#+END_SRC
+** Java Reflection
+*** Show Class Method given a class name
+
+See: [[http://gauss.ececs.uc.edu/Courses/c4003/java/Reflection/reflection0.html][Reflection]]
+
+#+BEGIN_SRC scala
+
+scala> Class.forName("java.io.File").getDeclaredMethods().take(10).foreach(println)
+public boolean java.io.File.equals(java.lang.Object)
+public java.lang.String java.io.File.toString()
+public int java.io.File.hashCode()
+public int java.io.File.compareTo(java.lang.Object)
+public int java.io.File.compareTo(java.io.File)
+public java.lang.String java.io.File.getName()
+public long java.io.File.length()
+public java.lang.String java.io.File.getParent()
+public boolean java.io.File.isAbsolute()
+public java.lang.String java.io.File.getCanonicalPath() throws java.io.IOException
+
+def show_class_methods (classname: String) {
+  Class
+    .forName(classname)
+    .getDeclaredMethods()
+    .foreach(println)
+}
+
+show_class_methods: (classname: String)Unit
+
+scala> show_class_constructors("javax.swing.JFrame")
+protected void javax.swing.JFrame.frameInit()
+protected javax.swing.JRootPane javax.swing.JFrame.createRootPane()
+protected void javax.swing.JFrame.processWindowEvent(java.awt.event.WindowEvent)
+public void javax.swing.JFrame.setDefaultCloseOperation(int)
+public int javax.swing.JFrame.getDefaultCloseOperation()
+public void javax.swing.JFrame.setTransferHandler(javax.swing.TransferHandler)
+public javax.swing.TransferHandler javax.swing.JFrame.getTransferHandler()
+public void javax.swing.JFrame.setJMenuBar(javax.swing.JMenuBar)
+public javax.swing.JMenuBar javax.swing.JFrame.getJMenuBar()
+...
+
+def show_class_constructors (classname: String) {
+  Class
+    .forName(classname)
+    .getDeclaredConstructors()
+    .foreach(println)
+}
+
+scala> show_class_constructors("java.io.File")
+public java.io.File(java.lang.String,java.lang.String)
+public java.io.File(java.lang.String)
+private java.io.File(java.lang.String,java.io.File)
+public java.io.File(java.io.File,java.lang.String)
+public java.io.File(java.net.URI)
+private java.io.File(java.lang.String,int)
+
+scala> Class.forName("java.io.File").getDeclaredFields().foreach(println)
+private static final java.io.FileSystem java.io.File.fs
+private final java.lang.String java.io.File.path
+private transient java.io.File$PathStatus java.io.File.status
+private final transient int java.io.File.prefixLength
+public static final char java.io.File.separatorChar
+public static final java.lang.String java.io.File.separator
+public static final char java.io.File.pathSeparatorChar
+public static final java.lang.String java.io.File.pathSeparator
+private static final long java.io.File.PATH_OFFSET
+private static final long java.io.File.PREFIX_LENGTH_OFFSET
+private static final sun.misc.Unsafe java.io.File.UNSAFE
+private static final long java.io.File.serialVersionUID
+private transient volatile java.nio.file.Path java.io.File.filePath
+static final boolean java.io.File.$assertionsDisabled
+
+
+#+END_SRC
+
+*** Show Object Methods
+
+#+BEGIN_SRC scala
+def showObjectMethods(obj: Any) = {
+    obj.getClass().getDeclaredMethods().foreach(println)
+}
+#+END_SRC
+
+Test:
+
+#+BEGIN_SRC scala
+scala> import scala.io.Source
+import scala.io.Source
+
+scala> import java.net.URL
+import java.net.URL
+
+scala> val url = new URL("http://www.httpbin.org/get")
+url: java.net.URL = http://www.httpbin.org/get
+
+
+scala> showObjectMethods(url)
+public boolean java.net.URL.equals(java.lang.Object)
+public java.lang.String java.net.URL.toString()
+public synchronized int java.net.URL.hashCode()
+public final java.io.InputStream java.net.URL.openStream() throws java.io.IOException
+private synchronized void java.net.URL.readObject(java.io.ObjectInputStream) throws java.io.IOException,java.lang.ClassNotFoundException
+private synchronized void java.net.URL.writeObject(java.io.ObjectOutputStream) throws java.io.IOException
+void java.net.URL.set(java.lang.String,java.lang.String,int,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
+void java.net.URL.set(java.lang.String,java.lang.String,int,java.lang.String,java.lang.String)
+private java.lang.Object java.net.URL.readResolve() throws java.io.ObjectStreamException
+public java.lang.String java.net.URL.getPath()
+public java.net.URI java.net.URL.toURI() throws java.net.URISyntaxException
+public java.lang.String java.net.URL.getAuthority()
+public java.lang.String java.net.URL.getQuery()
+public java.net.URLConnection java.net.URL.openConnection(java.net.Proxy) throws java.io.IOException
+public java.net.URLConnection java.net.URL.openConnection() throws java.io.IOException
+public java.lang.String java.net.URL.getProtocol()
+public java.lang.String java.net.URL.getFile()
+public java.lang.String java.net.URL.getHost()
+...
+#+END_SRC
+*** Show Object Public Methods
+
+#+BEGIN_SRC java
+  import java.lang.reflect.Modifier
+
+  def showObjPublicMethods (obj: Any) {
+      for (m <- url.getClass().getDeclaredMethods()
+               if Modifier.isPublic(m.getModifiers)
+           ) println(m)
+  }
+#+END_SRC
+
+Example:
+
+#+BEGIN_SRC scala
+
+scala> import java.net.URL
+import java.net.URL
+
+
+scala> showObjPublicMethods(url)
+
+public boolean java.net.URL.equals(java.lang.Object)
+public java.lang.String java.net.URL.toString()
+public synchronized int java.net.URL.hashCode()
+public final java.io.InputStream java.net.URL.openStream() throws java.io.IOException
+public java.lang.String java.net.URL.getPath()
+public java.net.URI java.net.URL.toURI() throws java.net.URISyntaxException
+public java.lang.String java.net.URL.getAuthority()
+public java.lang.String java.net.URL.getQuery()
+public java.net.URLConnection java.net.URL.openConnection(java.net.Proxy) throws java.io.IOException
+public java.net.URLConnection java.net.URL.openConnection() throws java.io.IOException
+public java.lang.String java.net.URL.getProtocol()
+public java.lang.String java.net.URL.getFile()
+public java.lang.String java.net.URL.getHost()
+public java.lang.String java.net.URL.getUserInfo()
+public int java.net.URL.getPort()
+public int java.net.URL.getDefaultPort()
+public java.lang.String java.net.URL.getRef()
+public boolean java.net.URL.sameFile(java.net.URL)
+public java.lang.String java.net.URL.toExternalForm()
+public final java.lang.Object java.net.URL.getContent(java.lang.Class[]) throws java.io.IOException
+public final java.lang.Object java.net.URL.getContent() throws java.io.IOException
+public static void java.net.URL.setURLStreamHandlerFactory(java.net.URLStreamHandlerFactory)
+#+END_SRC
+*** Show Object's Public Method Names
+
+#+BEGIN_SRC scala
+  import java.lang.reflect.Modifier
+
+  def showObjMethodNames (obj: Any){
+    for (m <- obj.getClass().getDeclaredMethods()
+         if Modifier.isPublic(m.getModifiers)
+    ) println(m.getName())
+  }
+#+END_SRC
+
+Example:
+
+#+BEGIN_SRC scala
+scala> showObjMethodNames(url)
+equals
+toString
+hashCode
+openStream
+getPath
+toURI
+getAuthority
+getQuery
+openConnection
+openConnection
+getProtocol
+getFile
+getHost
+...
+#+END_SRC
+
+** GUI - Graphical User Interface (Java Swing)
+*** Messagebox
+    :PROPERTIES:
+    :ID:       5af1203e-51cc-4501-a2a6-a47673ebd8a8
+    :END:
+
+ - File: [[file:src/messageBox.scala][file:src/messageBox.scala]] 
+
+#+BEGIN_SRC scala :tangle src/messageBox.scala
+  def messageBox (title: String, content: String) {
+    javax.swing.JOptionPane.showMessageDialog (
+      null,
+      content,
+      title,
+      javax.swing.JOptionPane.PLAIN_MESSAGE
+    )
+   }
+
+  messageBox("Information", "Download of file animation.jar completed")
+#+END_SRC
+
+[[file:images/messageBox1.png][file:images/messageBox1.png]]
+
+*** Password Dialog
+    :PROPERTIES:
+    :ID:       5a5958a5-88a7-4e65-88a8-0c117f2607fa
+    :END:
+
+ - File: [[file:src/passwordGui.scala][file:src/passwordGui.scala]]
+
+#+BEGIN_SRC scala :tangle src/passwordGui.scala
+import javax.swing.{JFrame, JLabel, JButton, JPanel, JPasswordField}
+
+def getPassword(passwd: javax.swing.JPasswordField) =
+  new String(passwd.getPassword())
+
+/// Register callback function
+///
+def onClick(button: JButton) (handler: => Unit) = {
+  button.addActionListener(
+    new java.awt.event.ActionListener(){
+      def actionPerformed(evt: java.awt.event.ActionEvent) = {
+        handler
+      }
+    }
+  )
+}
+
+
+def onWindowExit(frame: javax.swing.JFrame) (handler: => Unit) = {
+  frame.addWindowListener(
+    new java.awt.event.WindowAdapter(){
+      override def windowClosing(evt: java.awt.event.WindowEvent) = {
+        handler
+      }
+  })
+}
+
+val frame = new JFrame("Scala password entry")
+frame.setSize(400, 200)
+frame.setLayout(new java.awt.GridLayout(2, 1))
+
+// frame.setLayout()
+
+val panel  = new JPanel(new java.awt.FlowLayout())
+val label  = new JLabel("Password")
+val passwd = new JPasswordField(10)
+val btn    = new JButton("Login")
+val status = new JLabel("Safe closed")
+passwd.setEchoChar('*')
+
+
+panel.add(label)
+panel.add(passwd)
+panel.add(btn)
+
+
+frame.add(panel)
+frame.add(status)
+
+frame.setVisible(true)
+
+//--------- Event Handling ----------
+
+def checkPassword(
+  passwd: String,
+  input: String,
+  okHanlder: () => Unit,
+  errHandler: () => Unit ) = {
+
+  if (input == passwd)
+    okHanlder()
+  else
+    errHandler()
+}
+
+onClick(btn){ println("I was clicked")}
+
+onClick(btn) {
+  val pass = getPassword(passwd)
+  if (pass == "thepassword")
+    println("Safe opened")
+  else
+    println("Error: Wrong password")
+}
+
+onClick(btn){
+  checkPassword(
+    "thepassword"
+   ,getPassword(passwd)
+   ,() => status.setText("Safe opened. Ok")
+   ,() => status.setText("Error: Wrong password")
+  )}
+
+onWindowExit(frame){ System.exit(0) }
+
+#+END_SRC
+
+
+[[file:images/passwordGui1.png][file:images/passwordGui1.png]]
+
+[[file:images/passwordGui2.png][file:images/passwordGui2.png]]
+
+*** List View Dialog
+
+The function listView is useful for data vizualization of lists,
+files, numbers and son on.
+
+ - File: [[file:src/listViewGui.scala][file:src/listViewGui.scala]]
+
+#+BEGIN_SRC scala :tanngle src/listViewGui.scala
+/// Function to visualize data in List View Mode
+///
+def listView(elements: Array[String]){
+  val frame  = new javax.swing.JFrame("List Data View")
+  val model  = new javax.swing.DefaultListModel[String]()
+  val list   = new javax.swing.JList(model)
+  val scroll = new javax.swing.JScrollPane(list)
+  frame.add(scroll)
+  elements.foreach(model.addElement)
+  frame.setSize(300, 400)
+  frame.setVisible(true)
+}
+
+
+def listFiles(path: String) = {
+  (new java.io.File(path))
+    .listFiles()
+    .map(_.toString)
+}
+
+#+END_SRC
+
+Show the files of directory /etc/
+
+#+BEGIN_SRC scala
+listView(listFiles("/etc"))
+#+END_SRC
+
+[[file:images/listViewFiles.png][file:images/listViewFiles.png]]
+
+
+Show java properties
+
+#+BEGIN_SRC scala
+import scala.collection.JavaConverters._
+val properties = System.getProperties().asScala.toArray.map { case (k, v) => k + " = " + v }
+listView(properties)
+#+END_SRC
+
+[[file:images/listViewJavaProperties.png][file:images/listViewJavaProperties.png]]
+
+*** Text View Dialog
+
+#+BEGIN_SRC scala
+  def textView(file: String) = {
+    val frame = new javax.swing.JFrame("Text View App")
+    val textArea = new javax.swing.JTextArea()
+    val scroll = new javax.swing.JScrollPane(textArea)
+    textArea.setText("")
+    frame.add(scroll)
+    frame.setSize(300, 400)
+    frame.setVisible(true)
+    val text = scala.io.Source.fromFile(file).mkString
+    textArea.setText(text)
+  }
+
+  scala> textView("/etc/protocols")
+#+END_SRC
+
+[[file:images/textView1.png][file:images/textView1.png]]
+
+*** Clock Display
+    :PROPERTIES:
+    :ID:       76e4cb5a-86e7-481e-972f-b29e41288d7b
+    :END:
+
+ - File: [[file:src/clockDisplayGui.scala][file:src/clockDisplayGui.scala]]
+
+#+BEGIN_SRC scala :tangle src/clockDisplayGui.scala 
+def runTimer(interval: Int, taskFn: () => Unit) = {
+  val task = new java.util.TimerTask() {
+    def run() {
+      taskFn()
+    }
+  }
+
+  val timer = new java.util.Timer()
+
+  // Run the task every 1 second interval (or 1000 milli seconds)
+  timer.schedule(task, 1, interval)
+  timer
+}
+
+def currentTime() = {
+  java.time.LocalDateTime.now.toString
+}
+
+
+val frame = new javax.swing.JFrame("Java Clock App")
+val label = new javax.swing.JLabel("")
+frame.add(label)
+frame.setSize(375, 76)
+frame.setVisible(true)
+
+
+runTimer(1000, () => label.setText(currentTime()))
+
+#+END_SRC
+
+
+[[file:images/clockDisplayGui.png][file:images/clockDisplayGui.png]]
+
+** Http Get Request
+
+Java Code - https://www.mkyong.com/java/how-to-send-http-request-getpost-in-java/
+
+#+BEGIN_SRC scala
+  def httpGetRead(url: String) = {
+    val obj = new java.net.URL(url)
+    val conn = obj.openConnection().asInstanceOf[java.net.HttpURLConnection]
+    conn.setRequestMethod("GET")
+    conn.setRequestProperty("User-Agent", "Scala browser")
+    val respCode = conn.getResponseCode()
+
+    val bf = new java.io.BufferedReader(
+      new java.io.InputStreamReader(conn.getInputStream()))
+
+    val out = Stream.continually(bf.readLine())
+      .takeWhile(_!=null)
+      .mkString("\n")
+    out
+  }
+
+  scala> httpGetRead("http://www.httpbin.org/get")
+  res24: String =
+  {
+    "args": {},
+    "headers": {
+      "Accept": "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2",
+      "Connection": "close",
+      "Host": "www.httpbin.org",
+      "User-Agent": "Scala browser"
+    },
+    "origin": "186.212.135.2",
+    "url": "http://www.httpbin.org/get"
+  }
+
+#+END_SRC
+* Bookmarks and Resources 
+** Scala API Documentation 
+
+*Scala API*
+
+ - Scala API - Standard Library. [[http://www.scala-lang.org/api/current/][Scala Standard Library 2.12.2]]
+
+
+ - Collections - http://www.scala-lang.org/api/current/scala/collection/index.html
+
+
+ - Math - http://www.scala-lang.org/api/current/scala/math/index.html
+
+
+*Java API*
+
+ - [[https://docs.oracle.com/javase/8/docs/api/][Overview (Java Platform SE 8 )]]
+
+** Learning Resources 
+
+ - [[https://www.scala-lang.org/][The Scala Programming Language]] - https://www.scala-lang.org/
+
+
+ - [[https://twitter.github.io/scala_school/][Scala School]] - Twitter 
+
+
+ - [[http://exercism.io/languages/scala/about][Scala - exercism.io]]
+
+
+ - [[http://alvinalexander.com/scala][scala | alvinalexander.com]]
+
+
+ - [[https://learnxinyminutes.com/docs/scala/][Learn Scala in Y Minutes]]
+
+
+ - http://www.tutorialspoint.com/scala/
+
+** Community 
+
+ - [[https://users.scala-lang.org/][Scala Users]] - Forum 
+
+ - https://stackoverflow.com/questions/tagged/scala
+
+ - https://www.reddit.com/r/scala/
+
+
