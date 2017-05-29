@@ -1410,8 +1410,13 @@ getHost
 
 ** GUI - Graphical User Interface (Java Swing)
 *** Messagebox
+    :PROPERTIES:
+    :ID:       5af1203e-51cc-4501-a2a6-a47673ebd8a8
+    :END:
 
-#+BEGIN_SRC scala
+ - File: [[file:src/messageBox.scala][file:src/messageBox.scala]] 
+
+#+BEGIN_SRC scala :tangle src/messageBox.scala
   def messageBox (title: String, content: String) {
     javax.swing.JOptionPane.showMessageDialog (
       null,
@@ -1421,14 +1426,19 @@ getHost
     )
    }
 
-scala> messageBox("Information", "Download of file animation.jar completed")
+  messageBox("Information", "Download of file animation.jar completed")
 #+END_SRC
 
 [[file:images/messageBox1.png][file:images/messageBox1.png]]
 
 *** Password Dialog
+    :PROPERTIES:
+    :ID:       5a5958a5-88a7-4e65-88a8-0c117f2607fa
+    :END:
 
-#+BEGIN_SRC scala
+ - File: [[file:src/passwordGui.scala][file:src/passwordGui.scala]]
+
+#+BEGIN_SRC scala :tangle src/passwordGui.scala
 import javax.swing.{JFrame, JLabel, JButton, JPanel, JPasswordField}
 
 def getPassword(passwd: javax.swing.JPasswordField) =
@@ -1526,7 +1536,9 @@ onWindowExit(frame){ System.exit(0) }
 The function listView is useful for data vizualization of lists,
 files, numbers and son on.
 
-#+BEGIN_SRC scala
+ - File: [[file:src/listViewGui.scala][file:src/listViewGui.scala]]
+
+#+BEGIN_SRC scala :tanngle src/listViewGui.scala
 /// Function to visualize data in List View Mode
 ///
 def listView(elements: Array[String]){
@@ -1589,8 +1601,13 @@ listView(properties)
 [[file:images/textView1.png][file:images/textView1.png]]
 
 *** Clock Display
+    :PROPERTIES:
+    :ID:       76e4cb5a-86e7-481e-972f-b29e41288d7b
+    :END:
 
-#+BEGIN_SRC scala
+ - File: [[file:src/clockDisplayGui.scala][file:src/clockDisplayGui.scala]]
+
+#+BEGIN_SRC scala :tangle src/clockDisplayGui.scala 
 def runTimer(interval: Int, taskFn: () => Unit) = {
   val task = new java.util.TimerTask() {
     def run() {
