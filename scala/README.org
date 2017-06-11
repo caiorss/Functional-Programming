@@ -5,22 +5,30 @@
 *** Features
 
 Scala is a statically typed, functional, object orientated and
-imperative language, or multi-paradigm programming language that runs
-in JVM - Java Virtual Machine that allows type-safe programming with
-high productivity.
+imperative language created by [[https://en.wikipedia.org/wiki/Martin_Odersky][Martin Odersky]] , or multi-paradigm
+programming language that runs in JVM - Java Virtual Machine that
+allows type-safe programming with high productivity.
 
 Features:
 
- - Interactive - Scala REPL allows the user to do exploratory design and
+ - _Interactive_ - Scala REPL allows the user to do exploratory design and
    test the Java API interactively.
 
- - Scripting language. Scala has a fast initialization time what makes
+ - _Scripting language_ Scala has a fast initialization time what makes
    it suitable for scripting.
 
- - Java Integration. As a JVM language Scala allows reuse of all Java
+ - _Java Integration_ As a JVM language Scala allows reuse of all Java
    libraries and integration with old code bases.
 
- - Functional:
+ - Multi Paradigm:
+
+   - Imperative
+
+   - Object Orientated
+
+   - Functional
+
+ - Functional Programming Features
 
    - Provides syntax for curried functions
 
@@ -38,6 +46,11 @@ Features:
 
    - _Tail Call Optimization_. TCO makes tail-recursive functions not
      consume stack frames avoiding stack overflows.
+
+Notes:
+
+ - Scala is also useful to learn quickly about Java API since it is
+   interactive.
 
 *** Getting Scala
 
