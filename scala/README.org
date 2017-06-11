@@ -30,7 +30,9 @@ Features:
 
  - Functional Programming Features
 
-   - Provides syntax for curried functions
+   - Lambda function (aka anonymous function) 
+
+   - Provides short syntax for curried functions
 
    - _Higher order methods_. Functions can be passed as arguments to methods.
 
@@ -47,7 +49,7 @@ Features:
    - _Tail Call Optimization_. TCO makes tail-recursive functions not
      consume stack frames avoiding stack overflows.
 
-Notes:
+Notes: 
 
  - Scala is also useful to learn quickly about Java API since it is
    interactive.
@@ -751,19 +753,28 @@ scala> for (file <- (new java.io.File("/").listFiles)) println(file)
 ** Collections
 *** Overview
 
-Collection Hierarchy
+*Collection Hierarchy*
 
  - Iterable
+
    - Seq (Sequence)
+
      - List
+
        - Fundamental operations: head, tail
+
      - Vector
+
        - indexing
-     - Array (Seq-like, but not subclass of Seq). It is native Java class.)
+
+     - Array. Mutable array, equivalent to Java Array.
+
      - String (Seq-like, although not subclass of Seq).
+
      - Range
-   - Sets (Relational algebra)
-     - Contains
+
+   - Sets (Relational algebra). Contains no duplicated element.
+
    - Map (aka Hashmap, Dictionary or hash-table)
 
 
@@ -1161,6 +1172,605 @@ Tokio
 
 #+END_SRC
 *** Mutable Collections
+**** Array 
+
+#+BEGIN_SRC scala 
+  scala> val arr = Array(1, 2, 3, 4, 5, 6)
+  arr: Array[Int] = Array(1, 2, 3, 4, 5, 6)
+
+  // Type tab after the dot to show the Array methods
+  scala> arr.
+  ++              filterNot            maxBy               span            
+  ++:             find                 min                 splitAt         
+  +:              flatMap              minBy               startsWith      
+  /:              flatten              mkString            stringPrefix    
+  :+              fold                 nonEmpty            sum             
+  :\              foldLeft             orElse              tail            
+  addString       foldRight            padTo               tails           
+  aggregate       forall               par                 take            
+  andThen         foreach              partition           takeRight       
+  apply           genericBuilder       patch               takeWhile       
+  applyOrElse     groupBy              permutations        to              
+  array           grouped              prefixLength        toArray         
+  canEqual        hasDefiniteSize      product             toBuffer        
+  clone           head                 reduce              toIndexedSeq    
+  collect         headOption           reduceLeft          toIterable      
+  collectFirst    indexOf              reduceLeftOption    toIterator      
+  combinations    indexOfSlice         reduceOption        toList          
+  companion       indexWhere           reduceRight         toMap           
+  compose         indices              reduceRightOption   toSeq           
+  contains        init                 repr                toSet           
+  containsSlice   inits                reverse             toStream        
+  copyToArray     intersect            reverseIterator     toTraversable   
+  copyToBuffer    isDefinedAt          reverseMap          toVector        
+  corresponds     isEmpty              runWith             transform       
+  count           isTraversableAgain   sameElements        transpose       
+  deep            iterator             scan                union           
+  diff            last                 scanLeft            unzip           
+  distinct        lastIndexOf          scanRight           unzip3          
+  drop            lastIndexOfSlice     segmentLength       update          
+  dropRight       lastIndexWhere       seq                 updated         
+  dropWhile       lastOption           size                view            
+  elemManifest    length               slice               withFilter      
+  elemTag         lengthCompare        sliding             zip             
+  endsWith        lift                 sortBy              zipAll          
+  exists          map                  sortWith            zipWithIndex    
+  filter          max                  sorted                              
+
+
+#+END_SRC
+
+Get first and last elements.
+
+#+BEGIN_SRC scala 
+scala> val arr = Array(3.4, 2.5, -4.5, 4.0, 5.0, -6.31)
+arr: Array[Double] = Array(3.4, 2.5, -4.5, 4.0, 5.0, -6.31)
+
+scala> arr.head
+res10: Double = 3.4
+
+scala> arr.tail
+res11: Array[Double] = Array(2.5, -4.5, 4.0, 5.0, -6.31)
+
+#+END_SRC
+
+Get array tail (remove first element)
+
+#+BEGIN_SRC scala 
+scala> val arr = Array(3.4, 2.5, -4.5, 4.0, 5.0, -6.31)
+arr: Array[Double] = Array(3.4, 2.5, -4.5, 4.0, 5.0, -6.31)
+
+scala> arr.tail
+res25: Array[Double] = Array(2.5, -4.5, 4.0, 5.0, -6.31)
+
+scala> arr
+res26: Array[Double] = Array(3.4, 2.5, -4.5, 4.0, 5.0, -6.31)
+#+END_SRC
+
+Get nth-element.
+
+#+BEGIN_SRC scala 
+scala> val arr = Array(3.4, 2.5, -4.5, 4.0, 5.0, -6.31)
+arr: Array[Double] = Array(3.4, 2.5, -4.5, 4.0, 5.0, -6.31)
+
+scala> arr(0)
+res12: Double = 3.4
+
+scala> arr(1)
+res13: Double = 2.5
+
+scala> arr(4)
+res14: Double = 5.0
+
+scala> arr(10)
+java.lang.ArrayIndexOutOfBoundsException: 10
+  ... 32 elided
+
+#+END_SRC
+
+Change nth-element. 
+
+#+BEGIN_SRC scala 
+scala> val arr = Array(3.4, 2.5, -4.5, 4.0, 5.0, -6.31)
+arr: Array[Double] = Array(3.4, 2.5, -4.5, 4.0, 5.0, -6.31)
+
+scala> arr(3)
+res0: Double = 4.0
+
+scala> arr(3) = 100.0
+
+scala> arr
+res2: Array[Double] = Array(3.4, 2.5, -4.5, 100.0, 5.0, -6.31)
+
+scala> arr(0)
+res3: Double = 3.4
+
+scala> arr(0) = 5.0
+
+scala> arr
+res5: Array[Double] = Array(5.0, 2.5, -4.5, 100.0, 5.0, -6.31)
+
+scala> arr(0)
+res6: Double = 5.0
+
+#+END_SRC
+
+Get minimum and maximum elements.
+
+#+BEGIN_SRC scala 
+scala> arr
+res18: Array[Double] = Array(3.4, 2.5, -4.5, 4.0, 5.0, -6.31)
+
+scala> arr.max
+res19: Double = 5.0
+
+scala> arr.min
+res20: Double = -6.31
+#+END_SRC
+
+Get array length.
+
+#+BEGIN_SRC scala
+  scala> val arr = Array(1, 2, 3, 4, 5, 6)
+  arr: Array[Int] = Array(1, 2, 3, 4, 5, 6)
+
+  scala> arr.length
+  length   lengthCompare
+
+  scala> arr.length
+  res6: Int = 6
+
+#+END_SRC
+
+Reverse array. 
+
+#+BEGIN_SRC scala 
+scala> val arr = Array(3.4, 2.5, -4.5, 4.0, 5.0, -6.31)
+arr: Array[Double] = Array(3.4, 2.5, -4.5, 4.0, 5.0, -6.31)
+
+scala> arr.reverse
+res16: Array[Double] = Array(-6.31, 5.0, 4.0, -4.5, 2.5, 3.4)
+
+scala> arr
+res17: Array[Double] = Array(3.4, 2.5, -4.5, 4.0, 5.0, -6.31)
+#+END_SRC
+
+Convert Array to List.
+
+#+BEGIN_SRC scala 
+scala> val arr = Array(3.4, 2.5, -4.5, 4.0, 5.0, -6.31)
+arr: Array[Double] = Array(3.4, 2.5, -4.5, 4.0, 5.0, -6.31)
+
+scala> arr.toList
+res21: List[Double] = List(3.4, 2.5, -4.5, 4.0, 5.0, -6.31)
+
+scala> arr
+res22: Array[Double] = Array(3.4, 2.5, -4.5, 4.0, 5.0, -6.31)
+#+END_SRC
+
+Get array sum: 
+
+#+BEGIN_SRC scala 
+  scala> val arr = Array(1, 2, 3, 4, 5, 6)
+  arr: Array[Int] = Array(1, 2, 3, 4, 5, 6)
+
+  scala> arr.sum
+  res7: Int = 21
+
+#+END_SRC
+
+Get array product: 
+
+#+BEGIN_SRC scala 
+  scala> val arr = Array(3.4, 2.5, -4.5, 4.0, 5.0, -6.31)
+  arr: Array[Double] = Array(3.4, 2.5, -4.5, 4.0, 5.0, -6.31)
+
+  scala> arr.product
+  res9: Double = 4827.15
+
+#+END_SRC
+
+Map - Apply a function to all array elements.
+
+#+BEGIN_SRC scala 
+  scala> val arr = Array(3, 2, -4, 4, 5, -6)
+  arr: Array[Int] = Array(3, 2, -4, 4, 5, -6)
+
+  // Map with anonymous function
+  //--------------------------------------------------
+  scala> arr.map (x => x * 3)
+  res30: Array[Int] = Array(9, 6, -12, 12, 15, -18)
+
+  scala> arr map (x => x * 3)
+  res35: Array[Int] = Array(9, 6, -12, 12, 15, -18)
+
+  // Map a function 
+  // 
+  scala> def fn(x: Int) = x * 2 - 5
+  fn: (x: Int)Int
+
+  scala> arr.map(fn)
+  res34: Array[Int] = Array(1, -1, -13, 3, 5, -17)
+
+  scala> arr map fn
+  res36: Array[Int] = Array(1, -1, -13, 3, 5, -17)
+
+
+  // Convert integer to double 
+  scala> 10
+  res41: Int = 10
+
+  scala> 10.toDouble
+  res42: Double = 10.0
+
+  // Map a function that applies a method.
+  //--------------------------------------------------
+  scala> arr map (_.toDouble)
+  res43: Array[Double] = Array(3.0, 2.0, -4.0, 4.0, 5.0, -6.0)
+
+  scala> arr map (_.toString)
+  res54: Array[String] = Array(3, 2, -4, 4, 5, -6)
+
+  scala> arr map (_.toHexString)
+  res58: Array[String] = Array(3, 2, fffffffc, 4, 5, fffffffa)
+
+  // Math syntax sugars 
+  //-----------------------------------------------
+  scala> arr map (_ + 10)
+  res44: Array[Int] = Array(13, 12, 6, 14, 15, 4)
+
+  scala> arr map (_ * 10)
+  res45: Array[Int] = Array(30, 20, -40, 40, 50, -60)
+
+  scala> arr map (_ * 10) map (5 + _)
+  res49: Array[Int] = Array(35, 25, -35, 45, 55, -55)
+
+  scala> arr map (_ * 10) sum
+  res48: Int = 40
+
+  scala> arr
+  res51: Array[Int] = Array(3, 2, -4, 4, 5, -6)
+
+  //  13 = 16 - 3
+  //  14 = 16 - 2
+  //  20 = 16 -(-4) 
+  //  ... ... 
+  scala> arr map (16 - _)
+  res52: Array[Int] = Array(13, 14, 20, 12, 11, 22)
+
+
+#+END_SRC
+
+Filter - an array. Select all array elements that satisfies a
+predicate. 
+
+#+BEGIN_SRC scala 
+  scala> val arr = Array(3, 2, -4, 4, 5, -6)
+  arr: Array[Int] = Array(3, 2, -4, 4, 5, -6)
+
+  scala> arr.filter(x => x > 0)
+  res68: Array[Int] = Array(3, 2, 4, 5
+
+  scala> arr filter (x => x > 0)
+  res70: Array[Int] = Array(3, 2, 4, 5)
+
+  scala> arr filter (x => x > 0) sum
+  res71: Int = 14
+
+  scala> arr filter (x => x > 0) product
+  res72: Int = 120
+
+
+  scala> arr.filter(_ > 0)
+  res74: Array[Int] = Array(3, 2, 4, 5)
+
+  scala> arr.filter(_ < 0)
+  res77: Array[Int] = Array(-4, -6)
+
+  scala> arr filter (_ < 0)
+  res78: Array[Int] = Array(-4, -6)
+
+    
+#+END_SRC
+
+Reduce (fold). It fails for empty arrays. 
+
+ - acc stands for accumulator. 
+
+#+BEGIN_SRC scala 
+scala> val arr = Array(1, 2, 3, 4, 5, 6)
+arr: Array[Int] = Array(1, 2, 3, 4, 5, 6)
+
+// sum of array elements 
+scala> arr.reduce((acc, x) => acc + x)
+res12: Int = 21
+
+scala> arr.sum
+res15: Int = 21
+
+// product of array elements 
+scala> arr.reduce((acc, x) => acc * x)
+res16: Int = 720
+
+scala> arr.product
+res17: Int = 720
+
+scala> arr.reduce((acc, x) => 10 * acc + x)
+res18: Int = 123456
+
+scala> arr reduce((acc, x) => acc * x)
+res21: Int = 720
+
+
+scala> val emptyArr: Array[Double] = Array()
+emptyArr: Array[Double] = Array()
+
+scala> emptyArr.reduce((acc, x) => 10 * acc + x)
+java.lang.UnsupportedOperationException: empty.reduceLeft
+  at scala.collection.TraversableOnce$class.reduceLeft(TraversableOnce.scala:180)
+  at scala.collection.mutable.ArrayOps$ofDouble.scala$collection$IndexedSeqOptimized$$super$reduceLeft(ArrayOps.scala:270)
+  at scala.collection.IndexedSeqOptimized$class.reduceLeft(IndexedSeqOptimized.scala:74)
+  at scala.collection.mutable.ArrayOps$ofDouble.reduceLeft(ArrayOps.scala:270)
+  at scala.collection.TraversableOnce$class.reduce(TraversableOnce.scala:208)
+  at scala.collection.mutable.ArrayOps$ofDouble.reduce(ArrayOps.scala:270)
+  ... 32 elided
+
+
+#+END_SRC
+
+
+foldLeft - Like reduce, but it works for empty arrays. 
+
+#+BEGIN_SRC scala 
+scala> val arr = Array(1, 2, 3, 4, 5, 6)
+arr: Array[Int] = Array(1, 2, 3, 4, 5, 6)
+
+scala> val emptyArr : Array[Int] = Array()
+emptyArr: Array[Int] = Array()
+
+scala> arr.foldLeft(0)((acc, x) => 10 * acc + x)
+res30: Int = 123456
+
+scala> emptyArr.foldLeft(0)((acc, x) => 10 * acc + x)
+res33: Int = 0
+
+
+scala> arr.foldLeft(1)((acc, x) => acc * x)
+res38: Int = 720
+
+scala> emptyArr.foldLeft(1)((acc, x) => acc * x)
+res39: Int = 1
+
+scala> arr.foldLeft(())((_, x) => println(x))
+1
+2
+3
+4
+5
+6
+
+// - '()' - Unit type 
+//
+scala> emptyArr.foldLeft(())((_, x) => println(x))
+
+scala> ()
+
+scala> 
+
+#+END_SRC
+
+foldRight 
+
+#+BEGIN_SRC scala 
+scala> val arr = Array(1, 2, 3, 4, 5, 6)
+arr: Array[Int] = Array(1, 2, 3, 4, 5, 6)
+
+scala> val emptyArr : Array[Int] = Array()
+emptyArr: Array[Int] = Array()
+
+scala> arr.foldRight(0)((x, acc) => 10* acc + x)
+res46: Int = 654321
+
+scala> emptyArr.foldRight(0)((x, acc) => 10* acc + x)
+res47: Int = 0
+
+
+scala> arr.foldRight(0)((x, acc) => acc + x)
+res49: Int = 21
+
+scala> arr.foldRight(1)((x, acc) => acc * x)
+res50: Int = 720
+
+#+END_SRC
+
+Foreach - Apply a function that performs side-effect to each element. 
+
+#+BEGIN_SRC scala 
+  scala> val arr = Array(3, 2, -4, 4, 5, -6)
+  arr: Array[Int] = Array(3, 2, -4, 4, 5, -6)
+
+  scala> arr.foreach(println)
+  3
+  2
+  -4
+  4
+  5
+  -6
+
+  scala> arr foreach println
+  3
+  2
+  -4
+  4
+  5
+  -6
+
+  scala> arr.foreach(x => println("x = " + x))
+  x = 3
+  x = 2
+  x = -4
+  x = 4
+  x = 5
+  x = -6
+
+  scala> arr foreach (x => println("x = " + x))
+  x = 3
+  x = 2
+  x = -4
+  x = 4
+  x = 5
+  x = -6
+
+
+  // More practical example:
+  //
+
+  scala> var files = (new java.io.File("/etc/")).listFiles()
+
+  files: Array[java.io.File] = Array(/etc/systemd, /etc/motd,
+  /etc/gemrc, /etc/adobe, /etc/ld.so.cache, /etc/environment,
+  /etc/libreoffice, /etc/rc_keymaps, /etc/sensors3.conf, /etc/gshadow,
+  /etc/acpi, /etc/pkcs11, /etc/modules-load.d, ... )
+
+  // Get the number of files
+  //--------------------------------
+  scala> files.length
+  res80: Int = 188
+
+  scala> files.size
+  res81: Int = 188
+
+  scala> files.head
+  res82: java.io.File = /etc/systemd
+
+  scala> files.last
+  res83: java.io.File = /etc/rsyncd.conf
+
+  scala> val f = files.head
+  f: java.io.File = /etc/systemd
+
+  scala> f. // Type tab to show class tabs 
+  canExecute      getAbsoluteFile    getTotalSpace    list              setWritable   
+  canRead         getAbsolutePath    getUsableSpace   listFiles         toPath        
+  canWrite        getCanonicalFile   hashCode         mkdir             toString      
+  compareTo       getCanonicalPath   isAbsolute       mkdirs            toURI         
+  createNewFile   getFreeSpace       isDirectory      renameTo          toURL         
+  delete          getName            isFile           setExecutable                   
+  deleteOnExit    getParent          isHidden         setLastModified                 
+  equals          getParentFile      lastModified     setReadOnly                     
+  exists          getPath            length           setReadable
+
+  scala> files.head.getName
+  res84: String = systemd
+
+  scala> files.head.getPath
+  res86: String = /etc/systemd
+
+  scala> files.head.toURL
+  res87: java.net.URL = file:/etc/systemd/
+
+  scala> files.head.toURI
+  res88: java.net.URI = file:/etc/systemd/
+    
+  scala> files.head.isFile
+  res89: Boolean = false
+
+  scala> files.head.isDirectory
+  res90: Boolean = true
+
+  // Filter all file objects that are directory and take 10 directories.
+  scala> files.filter(_.isDirectory).take(10)
+  res94: Array[java.io.File] = Array(/etc/systemd, /etc/adobe, /etc/libreoffice, /etc/rc_keymaps, /etc/acpi, /etc/pkcs11, /etc/modules-load.d, /etc/gufw, /etc/security, /etc/tmpfiles.d)
+    
+
+  // Get directories and print 15.
+  //
+  scala> files.filter(_.isDirectory).take(15).foreach(println)
+  /etc/systemd
+  /etc/adobe
+  /etc/libreoffice
+  /etc/rc_keymaps
+  /etc/acpi
+  /etc/pkcs11
+  /etc/modules-load.d
+  /etc/gufw
+  /etc/security
+  /etc/tmpfiles.d
+  /etc/ppp
+  /etc/iptables
+  /etc/pulse
+  /etc/xinetd.d
+  /etc/ca-certificates
+
+  // Filter 5 files   
+  scala> files.filter(_.isFile).take(5)
+  res96: Array[java.io.File] = Array(/etc/motd, /etc/gemrc, /etc/ld.so.cache, /etc/environment, /etc/sensors3.conf)
+
+  scala> files.filter(_.isFile).take(15).foreach(println)
+  /etc/motd
+  /etc/gemrc
+  /etc/ld.so.cache
+  /etc/environment
+  /etc/sensors3.conf
+  /etc/gshadow
+  /etc/cron.deny
+  /etc/shadow-
+  /etc/vdpau_wrapper.cfg
+  /etc/pacman.conf
+  /etc/cpufreq-bench.conf
+  /etc/makepkg.conf
+  /etc/ld.so.conf
+  /etc/fstab
+  /etc/host.conf
+
+  scala> :paste
+  // Entering paste mode (ctrl-D to finish)
+
+  files
+    .filter(_.isFile)
+    .take(15)
+    .foreach(println)
+
+  // Exiting paste mode, now interpreting.
+
+  /etc/motd
+  /etc/gemrc
+  /etc/ld.so.cache
+  /etc/environment
+  /etc/sensors3.conf
+  /etc/gshadow
+  /etc/cron.deny
+  /etc/shadow-
+  /etc/vdpau_wrapper.cfg
+  /etc/pacman.conf
+  /etc/cpufreq-bench.conf
+  /etc/makepkg.conf
+  /etc/ld.so.conf
+  /etc/fstab
+  /etc/host.conf
+
+    
+  scala> files filter (_.isFile) take 15 foreach println
+  /etc/motd
+  /etc/gemrc
+  /etc/ld.so.cache
+  /etc/environment
+  /etc/sensors3.conf
+  /etc/gshadow
+  /etc/cron.deny
+  /etc/shadow-
+  /etc/vdpau_wrapper.cfg
+  /etc/pacman.conf
+  /etc/cpufreq-bench.conf
+  /etc/makepkg.conf
+  /etc/ld.so.conf
+  /etc/fstab
+  /etc/host.conf
+#+END_SRC
+
+
+
+
 **** Mutable List
 
 #+BEGIN_SRC scala
@@ -1752,3 +2362,9 @@ Java Code - https://www.mkyong.com/java/how-to-send-http-request-getpost-in-java
  - https://www.reddit.com/r/scala/
 
 
+** Reports 
+
+ - *Refactoring a Complex GUI Application: A Case Study with the
+   Auckland Layout Editor* - <https://www.cs.auckland.ac.nz/~lutteroth/publications/theses/ALE-IreneZhang-2014.pdf>
+
+ - 
