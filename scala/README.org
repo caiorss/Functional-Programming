@@ -1583,6 +1583,257 @@ res50: Int = 720
 
 #+END_SRC
 
+Group By 
+
+ - groupBy[k](f: Element => key) : Map[key, Array[Element]]
+
+#+BEGIN_SRC scala 
+
+
+  def getFileExtension(file: String) = {
+    val i = file.lastIndexOf('.')
+    if ( i > 0)
+      file.substring(i+1)
+    else
+      ""
+  }
+
+
+  val flist = List(
+    "/downloads/magazine.pdf"
+   ,"afile.html"
+   ,"file2.html"
+   ,"file3.png"
+   ,"config"
+   ,"imageFun.png"
+   ,"unix.pdf"
+   ,"script10.scala"
+   ,"bashrc"
+    )
+
+
+  scala> val flist = List(
+       |   "/downloads/magazine.pdf"
+       |  ,"afile.html"
+       |  ,"file2.html"
+       |  ,"file3.png"
+       |  ,"config"
+       |  ,"imageFun.png"
+       |  ,"unix.pdf"
+       |  ,"script10.scala"
+       |  ,"bashrc"
+       |   )
+  flist: List[String] = List(/downloads/magazine.pdf, afile.html, file2.html, file3.png, config, imageFun.png, unix.pdf, script10.scala, bashrc)
+
+
+  scala> flist map getFileExtension
+  res63: List[String] = List(pdf, html, html, png, "", png, pdf, scala, "")
+
+
+  scala> val fgroups = flist.groupBy(getFileExtension) fgroups:
+  scala.collection.immutable.Map[String,List[String]] = Map("" ->
+  List(config, bashrc), png -> List(file3.png, imageFun.png), pdf ->
+  List(/downloads/magazine.pdf, unix.pdf), scala ->
+  List(script10.scala), html -> List(afile.html, file2.html))
+
+  // Get extensions
+  //
+  scala> fgroups.keys
+  res74: Iterable[String] = Set("", png, pdf, scala, html)
+
+  scala> fgroups.keys.foreach(println)
+
+  png
+  pdf
+  scala
+  html
+
+  // Get all files without extension
+  //
+  scala> fgroups.get("")
+  res75: Option[List[String]] = Some(List(config, bashrc))
+
+  scala> fgroups.get("").get
+  res79: List[String] = List(config, bashrc)
+
+  scala> fgroups.get("tgz")
+  res81: Option[List[String]] = None
+
+  scala> fgroups.get("tgz").get
+  java.util.NoSuchElementException: None.get
+    at scala.None$.get(Option.scala:347)
+    at scala.None$.get(Option.scala:345)
+    ... 32 elided
+
+
+  // Get all files with extension *.png
+  scala> fgroups.get("png")
+  res76: Option[List[String]] = Some(List(file3.png, imageFun.png))
+
+
+  scala> var files = (new java.io.File("/etc/")).listFiles().filter(_.isFile)
+  files: Array[java.io.File] = Array(/etc/motd, /etc/gemrc,
+  /etc/ld.so.cache, /etc/environment, /etc/sensors3.conf, /etc/gshadow,
+  /etc/cron.deny, /etc/shadow-, /etc/vdpau_wrapper.cfg,
+  /etc/pacman.conf, /etc/cpufreq-bench.conf, /etc/makepkg.conf,
+  /etc/ld.so.conf, /etc/fstab, /etc/host.conf, /etc/rpc,
+  /etc/mime.types, /etc/locale.gen, /etc/passwd, /etc/healthd.conf,
+  /etc/gnome-vfs-mime-magic, /etc/ts.conf, /etc/resolvconf.conf,
+  /etc/passwd-, /etc/logrotate.conf, /etc/locale.conf,
+  /etc/pacman-mirrors.conf.20170402.backup, /etc/login.defs,
+  /etc/sudoers, /etc/request-key.conf, /etc/bash.bashrc,
+  /etc/anacrontab, /etc/nscd.conf, /etc/os-release, /etc/adjtime,
+  /etc/dnsmasq.conf, /etc/netconfig, /etc/mail.rc, /etc/inputrc,
+  /etc/nsswitch.conf, /etc/ntp.conf, /etc/updatedb.conf,
+  /etc/dhcpcd.conf, /e...  scala>
+
+
+  scala> val fileGroups = files.map(_.getPath).groupBy(getFileExtension)
+  fileGroups: scala.collection.immutable.Map[String,Array[String]] =
+  Map("" -> Array(/etc/motd, /etc/gemrc, /etc/environment, /etc/gshadow,
+  /etc/shadow-, /etc/fstab, /etc/rpc, /etc/passwd,
+  /etc/gnome-vfs-mime-magic, /etc/passwd-, /etc/sudoers,
+  /etc/anacrontab, /etc/os-release, /etc/adjtime, /etc/netconfig,
+  /etc/inputrc, /etc/timezone, /etc/shadow, /etc/lsb-release,
+  /etc/shells, /etc/papersize, /etc/drirc, /etc/hostname, /etc/exports,
+  /etc/machine-id, /etc/group-, /etc/nanorc, /etc/hosts, /etc/group,
+  /etc/mtab, /etc/securetty, /etc/services, /etc/protocols,
+  /etc/gshadow-, /etc/localtime, /etc/issue, /etc/ethertypes,
+  /etc/manjaro-release, /etc/yaourtrc, /etc/profile, /etc/printcap,
+  /etc/crypttab), backup ->
+  Array(/etc/pacman-mirrors.conf.20170402.backup), bash_logout ->
+  Array(/etc/bash.bash...  scala>
+
+
+  scala> val fileGroups = files map(_.getPath) groupBy getFileExtension
+  fileGroups: scala.collection.immutable.Map[String,Array[String]] =
+  Map("" -> Array(/etc/motd, /etc/gemrc, /etc/environment, /etc/gshadow,
+  /etc/shadow-, /etc/fstab, /etc/rpc, /etc/passwd,
+  /etc/gnome-vfs-mime-magic, /etc/passwd-, /etc/sudoers,
+  /etc/anacrontab, /etc/os-release, /etc/adjtime, /etc/netconfig,
+  /etc/inputrc, /etc/timezone, /etc/shadow, /etc/lsb-release,
+  /etc/shells, /etc/papersize, /etc/drirc, /etc/hostname, /etc/exports,
+  /etc/machine-id, /etc/group-, /etc/nanorc, /etc/hosts, /etc/group,
+  /etc/mtab, /etc/securetty, /etc/services, /etc/protocols,
+  /etc/gshadow-, /etc/localtime, /etc/issue, /etc/ethertypes,
+  /etc/manjaro-release, /etc/yaourtrc, /etc/profile, /etc/printcap,
+  /etc/crypttab), backup ->
+  Array(/etc/pacman-mirrors.conf.20170402.backup), bash_logout ->
+  Array(/etc/bash.bash...  scala>
+
+  /// Show all file extensions 
+  scala> fileGroups.keys.foreach(println)
+
+  backup
+  bash_logout
+  local
+  pacnew
+  lock
+  conf
+  cache
+  key
+  shutdown
+  updated
+  cfg
+  deny
+  bashrc
+  types
+  rc
+  gen
+  defs
+
+  scala> fileGroups.get("conf")
+  res90: Option[Array[String]] = Some([Ljava.lang.String;@610b9cb3)
+
+  scala> fileGroups.get("conf").get res91: Array[String] =
+  Array(/etc/sensors3.conf, /etc/pacman.conf, /etc/cpufreq-bench.conf,
+  /etc/makepkg.conf, /etc/ld.so.conf, /etc/host.conf, /etc/healthd.conf,
+  /etc/ts.conf, /etc/resolvconf.conf, /etc/logrotate.conf,
+  /etc/locale.conf, /etc/request-key.conf, /etc/nscd.conf,
+  /etc/dnsmasq.conf, /etc/nsswitch.conf, /etc/ntp.conf,
+  /etc/updatedb.conf, /etc/dhcpcd.conf, /etc/krb5.conf,
+  /etc/openswap.conf, /etc/vconsole.conf, /etc/mkinitcpio.conf,
+  /etc/man_db.conf, /etc/mke2fs.conf, /etc/fuse.conf, /etc/asound.conf,
+  /etc/mdadm.conf, /etc/pamac.conf, /etc/nfs.conf, /etc/nfsmount.conf,
+  /etc/resolv.conf, /etc/gai.conf, /etc/pacman-mirrors.conf,
+  /etc/rsyncd.conf)
+
+  scala> fileGroups.get("conf").get.take(10).foreach(println)
+  /etc/sensors3.conf
+  /etc/pacman.conf
+  /etc/cpufreq-bench.conf
+  /etc/makepkg.conf
+  /etc/ld.so.conf
+  /etc/host.conf
+  /etc/healthd.conf
+  /etc/ts.conf
+  /etc/resolvconf.conf
+  /etc/logrotate.conf
+
+  scala> fileGroups.get("cfg").get.take(10).foreach(println)
+  /etc/vdpau_wrapper.cfg
+  /etc/rc_maps.cfg
+
+  /// Show all files without extension 
+  scala> fileGroups.get("").get.take(10).foreach(println)
+  /etc/motd
+  /etc/gemrc
+  /etc/environment
+  /etc/gshadow
+  /etc/shadow-
+  /etc/fstab
+  /etc/rpc
+  /etc/passwd
+  /etc/gnome-vfs-mime-magic
+  /etc/passwd-
+
+  // Get the number of files of each extension 
+  cala> val fileCounts = fileGroups.mapValues(n => n.length)
+  fileCounts: scala.collection.immutable.Map[String,Int] = Map("" -> 42,
+  backup -> 1, bash_logout -> 1, local -> 1, pacnew -> 1, lock -> 1,
+  conf -> 34, cache -> 1, key -> 1, shutdown -> 1, updated -> 1, cfg ->
+  2, deny -> 1, bashrc -> 1, types -> 1, rc -> 2, gen -> 1, defs -> 1)
+
+  // Count the number of *.cfg 
+  scala> fileCounts.get("cfg").get
+  res102: Int = 2
+
+  // Count the number of files without extension
+  scala> fileCounts.get("")
+  res99: Option[Int] = Some(42)
+
+  scala> fileCounts.get("conf")
+  res100: Option[Int] = Some(34)
+
+  scala> fileCounts.get("conf").get
+  res101: Int = 34
+
+  // Show how many files are of each extension.
+  //
+  // - 2 files with *.cfg extension and 42 without extension.
+  //   
+  scala> fileCounts.foreach(println)
+  (,42)
+  (backup,1)
+  (bash_logout,1)
+  (local,1)
+  (pacnew,1)
+  (lock,1)
+  (conf,34)
+  (cache,1)
+  (key,1)
+  (shutdown,1)
+  (updated,1)
+  (cfg,2)
+  (deny,1)
+  (bashrc,1)
+  (types,1)
+  (rc,2)
+  (gen,1)
+  (defs,1)
+
+#+END_SRC
+
 Foreach - Apply a function that performs side-effect to each element. 
 
 #+BEGIN_SRC scala 
