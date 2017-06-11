@@ -1137,6 +1137,8 @@ res88: List[Int] = List(1, 2, 5, 3, 4)
 
 **** Maps
 
+Scala Maps are immutable hash tables or dictionaries.
+
 #+BEGIN_SRC scala
 var capital = Map("US"     -> "Washigton",
                   "France" -> "Paris",
@@ -1171,6 +1173,417 @@ scala> println(capital("Japan"))
 Tokio
 
 #+END_SRC
+
+
+#+BEGIN_SRC scala 
+  def getFileExtension(file: String) = {
+    val i = file.lastIndexOf('.')
+    if ( i > 0)
+      file.substring(i+1)
+    else
+      ""
+  }
+
+  // it creates a Map of file extensions as keys and
+  // all files with given extension as values
+  //
+  val fileGroups = {
+    (new java.io.File("/etc/"))
+      .listFiles()
+      .filter(_.isFile)
+      .map(_.getPath)
+      .groupBy(getFileExtension)
+  }
+
+
+  scala> val fileGroups = {
+       |   (new java.io.File("/etc/"))
+       |     .listFiles()
+       |     .filter(_.isFile)
+       |     .map(_.getPath)
+       |     .groupBy(getFileExtension)
+       | }
+  fileGroups: scala.collection.immutable.Map[String,Array[String]] =
+  Map("" -> Array(/etc/motd, /etc/gemrc, /etc/environment, /etc/gshadow,
+  /etc/shadow-, /etc/fstab, /etc/rpc, /etc/passwd,
+  /etc/gnome-vfs-mime-magic, /etc/passwd-, /etc/sudoers,
+  /etc/anacrontab, /etc/os-release, /etc/adjtime, /etc/netconfig,
+  /etc/inputrc, /etc/timezone, /etc/shadow, /etc/lsb-release,
+  /etc/shells, /etc/papersize, /etc/drirc, /etc/hostname, /etc/exports,
+  /etc/machine-id, /etc/group-, /etc/nanorc, /etc/hosts, /etc/group,
+  /etc/mtab, /etc/securetty, /etc/services, /etc/protocols,
+  /etc/gshadow-, /etc/localtime, /etc/issue, /etc/ethertypes,
+  /etc/manjaro-release, /etc/yaourtrc, /etc/profile, /etc/printcap,
+  /etc/crypttab), backup ->
+  Array(/etc/pacman-mirrors.conf.20170402.backup), bash_logout ->
+  Array(/etc/bash.bash...  scala>
+
+
+  // Get all files with cfg extension 
+  //
+  scala> fileGroups("cfg")
+  res113: Array[String] = Array(/etc/vdpau_wrapper.cfg, /etc/rc_maps.cfg)
+
+  // Get all files with conf extension
+  //
+  cala> fileGroups("conf") res117: Array[String] =
+  Array(/etc/sensors3.conf, /etc/pacman.conf, /etc/cpufreq-bench.conf,
+  /etc/makepkg.conf, /etc/ld.so.conf, /etc/host.conf, /etc/healthd.conf,
+  /etc/ts.conf, /etc/resolvconf.conf, /etc/logrotate.conf,
+  /etc/locale.conf, /etc/request-key.conf, /etc/nscd.conf,
+  /etc/dnsmasq.conf, /etc/nsswitch.conf, /etc/ntp.conf,
+  /etc/updatedb.conf, /etc/dhcpcd.conf, /etc/krb5.conf,
+  /etc/openswap.conf, /etc/vconsole.conf, /etc/mkinitcpio.conf,
+  /etc/man_db.conf, /etc/mke2fs.conf, /etc/fuse.conf, /etc/asound.conf,
+  /etc/mdadm.conf, /etc/pamac.conf, /etc/nfs.conf, /etc/nfsmount.conf,
+  /etc/resolv.conf, /etc/gai.conf, /etc/pacman-mirrors.conf,
+  /etc/rsyncd.conf)
+
+  scala> fileGroups("wrong")
+  java.util.NoSuchElementException: key not found: wrong
+    at scala.collection.MapLike$class.default(MapLike.scala:228)
+    at scala.collection.AbstractMap.default(Map.scala:59)
+    at scala.collection.MapLike$class.apply(MapLike.scala:141)
+    at scala.collection.AbstractMap.apply(Map.scala:59)
+    ... 32 elided
+    
+#+END_SRC
+
+Method: .get -> Get a element with given key, returning None if not
+element is found.
+
+#+BEGIN_SRC scala
+  scala> fileGroups.get("conf")
+  res119: Option[Array[String]] = Some([Ljava.lang.String;@4cb04f41)
+
+  scala> fileGroups.get("conf").map(_.toList) res123:
+  Option[List[String]] = Some(List(/etc/sensors3.conf, /etc/pacman.conf,
+  /etc/cpufreq-bench.conf, /etc/makepkg.conf, /etc/ld.so.conf,
+  /etc/host.conf, /etc/healthd.conf, /etc/ts.conf, /etc/resolvconf.conf,
+  /etc/logrotate.conf, /etc/locale.conf, /etc/request-key.conf,
+  /etc/nscd.conf, /etc/dnsmasq.conf, /etc/nsswitch.conf, /etc/ntp.conf,
+  /etc/updatedb.conf, /etc/dhcpcd.conf, /etc/krb5.conf,
+  /etc/openswap.conf, /etc/vconsole.conf, /etc/mkinitcpio.conf,
+  /etc/man_db.conf, /etc/mke2fs.conf, /etc/fuse.conf, /etc/asound.conf,
+  /etc/mdadm.conf, /etc/pamac.conf, /etc/nfs.conf, /etc/nfsmount.conf,
+  /etc/resolv.conf, /etc/gai.conf, /etc/pacman-mirrors.conf,
+  /etc/rsyncd.conf))
+
+  scala> fileGroups.get("confx")
+  res125: Option[Array[String]] = None
+
+
+
+#+END_SRC
+
+Method: .head -> Get first element of Map 
+
+#+BEGIN_SRC scala 
+  scala> fileGroups.head
+
+  res143: (String, Array[String]) = ("",Array(/etc/motd, /etc/gemrc,
+  /etc/environment, /etc/gshadow, /etc/shadow-, /etc/fstab, /etc/rpc,
+  /etc/passwd, /etc/gnome-vfs-mime-magic, /etc/passwd-, /etc/sudoers,
+  /etc/anacrontab, /etc/os-release, /etc/adjtime, /etc/netconfig,
+  /etc/inputrc, /etc/timezone, /etc/shadow, /etc/lsb-release,
+  /etc/shells, /etc/papersize, /etc/drirc, /etc/hostname, /etc/exports,
+  /etc/machine-id, /etc/group-, /etc/nanorc, /etc/hosts, /etc/group,
+  /etc/mtab, /etc/securetty, /etc/services, /etc/protocols,
+  /etc/gshadow-, /etc/localtime, /etc/issue, /etc/ethertypes,
+  /etc/manjaro-release, /etc/yaourtrc, /etc/profile, /etc/printcap,
+  /etc/crypttab))
+
+#+END_SRC
+
+Method: .last -> Get last element of Map 
+
+#+BEGIN_SRC scala 
+  scala> fileGroups.last
+
+  res145: (String, Array[String]) = (defs,Array(/etc/login.defs))
+#+END_SRC
+
+Method: .key -> Get all keys 
+
+#+BEGIN_SRC scala 
+// Get all  file extensions 
+scala> fileGroups.keys
+res114: Iterable[String] = Set("", backup, bash_logout, local, pacnew, lock, conf, cache, key, shutdown, updated, cfg, deny, bashrc, types, rc, gen, defs)
+
+// Print all file extensions 
+scala> fileGroups.keys.foreach(println)
+
+backup
+bash_logout
+local
+pacnew
+lock
+conf
+cache
+key
+shutdown
+updated
+cfg
+deny
+bashrc
+types
+rc
+gen
+defs
+
+#+END_SRC
+
+Method: .values -> Get all values. 
+
+#+BEGIN_SRC scala 
+  scala> fileGroups.values
+  res126: Iterable[Array[String]] = MapLike(Array(/etc/motd, /etc/gemrc,
+  /etc/environment, /etc/gshadow, /etc/shadow-, /etc/fstab, /etc/rpc,
+  /etc/passwd, /etc/gnome-vfs-mime-magic, /etc/passwd-, /etc/sudoers,
+  /etc/anacrontab, /etc/os-release, /etc/adjtime, /etc/netconfig,
+  /etc/inputrc, /etc/timezone, /etc/shadow, /etc/lsb-release,
+  /etc/shells, /etc/papersize, /etc/drirc, /etc/hostname, /etc/exports,
+  /etc/machine-id, /etc/group-, /etc/nanorc, /etc/hosts, /etc/group,
+  /etc/mtab, /etc/securetty, /etc/services, /etc/protocols,
+  /etc/gshadow-, /etc/localtime, /etc/issue, /etc/ethertypes,
+  /etc/manjaro-release, /etc/yaourtrc, /etc/profile, /etc/printcap,
+  /etc/crypttab), Array(/etc/pacman-mirrors.conf.20170402.backup),
+  Array(/etc/bash.bash_logout), Array(/etc/rc.local),
+    Array(/etc/pacman-mirrors.co...  scala>
+
+  scala> fileGroups.values.head
+  res129: Array[String] = Array(/etc/motd, /etc/gemrc, /etc/environment,
+  /etc/gshadow, /etc/shadow-, /etc/fstab, /etc/rpc, /etc/passwd,
+  /etc/gnome-vfs-mime-magic, /etc/passwd-, /etc/sudoers,
+  /etc/anacrontab, /etc/os-release, /etc/adjtime, /etc/netconfig,
+  /etc/inputrc, /etc/timezone, /etc/shadow, /etc/lsb-release,
+  /etc/shells, /etc/papersize, /etc/drirc, /etc/hostname, /etc/exports,
+  /etc/machine-id, /etc/group-, /etc/nanorc, /etc/hosts, /etc/group,
+  /etc/mtab, /etc/securetty, /etc/services, /etc/protocols,
+  /etc/gshadow-, /etc/localtime, /etc/issue, /etc/ethertypes,
+  /etc/manjaro-release, /etc/yaourtrc, /etc/profile, /etc/printcap,
+    /etc/crypttab)
+
+
+#+END_SRC
+
+Method: .size -> Get the number of Map elements or the number of key,
+value pairs. 
+
+#+BEGIN_SRC scala>
+scala> fileGroups.size
+res148: Int = 18
+
+scala> fileGroups size
+res149: Int = 18
+
+#+END_SRC
+
+Method: .mapValues -> Apply a function to each map value. 
+
+#+BEGIN_SRC scala 
+
+  /// Get a Map with all extension and number of files with a given extension.
+  scala> fileGroups.mapValues(x => x.length)
+
+  res136: scala.collection.immutable.Map[String,Int] = Map("" -> 42,
+  backup -> 1, bash_logout -> 1, local -> 1, pacnew -> 1, lock -> 1,
+  conf -> 34, cache -> 1, key -> 1, shutdown -> 1, updated -> 1, cfg ->
+  2, deny -> 1, bashrc -> 1, types -> 1, rc -> 2, gen -> 1, defs -> 1)
+
+  scala> fileGroups.mapValues(_.length)
+  res137: scala.collection.immutable.Map[String,Int] = Map("" -> 42,
+  backup -> 1, bash_logout -> 1, local -> 1, pacnew -> 1, lock -> 1,
+  conf -> 34, cache -> 1, key -> 1, shutdown -> 1, updated -> 1, cfg ->
+    2, deny -> 1, bashrc -> 1, types -> 1, rc -> 2, gen -> 1, defs -> 1)
+
+  scala> fileGroups.mapValues(_.length).foreach(println)
+  (,42)
+  (backup,1)
+  (bash_logout,1)
+  (local,1)
+  (pacnew,1)
+  (lock,1)
+  (conf,34)
+  (cache,1)
+  (key,1)
+  (shutdown,1)
+  (updated,1)
+  (cfg,2)
+  (deny,1)
+  (bashrc,1)
+  (types,1)
+  (rc,2)
+  (gen,1)
+  (defs,1)
+
+
+#+END_SRC
+
+Method: .map  -> Apply a function to each to each (key, value) pair. 
+
+#+BEGIN_SRC scala 
+
+  scala>  fileGroups.map {case (k, v) => (k, v.length)}
+
+  // Get new Map with (extension, number of files with extension)
+  // pairs.
+  //
+  res160: scala.collection.immutable.Map[String,Int] = Map("" -> 42,
+  backup -> 1, bash_logout -> 1, local -> 1, pacnew -> 1, lock -> 1,
+  conf -> 34, cache -> 1, key -> 1, shutdown -> 1, updated -> 1, cfg ->
+  2, deny -> 1, bashrc -> 1, types -> 1, rc -> 2, gen -> 1, defs -> 1)
+
+
+
+  scala>  fileGroups.map {case (k, v) => (k, v.max)}
+
+  res161: scala.collection.immutable.Map[String,String] = Map("" ->
+  /etc/yaourtrc, backup -> /etc/pacman-mirrors.conf.20170402.backup,
+  bash_logout -> /etc/bash.bash_logout, local -> /etc/rc.local,
+  pacnew -> /etc/pacman-mirrors.conf.pacnew, lock -> /etc/.pwd.lock,
+  conf -> /etc/vconsole.conf, cache -> /etc/ld.so.cache, key ->
+  /etc/trusted-key.key, shutdown -> /etc/rc.local.shutdown, updated ->
+  /etc/.updated, cfg -> /etc/vdpau_wrapper.cfg, deny -> /etc/cron.deny,
+  bashrc -> /etc/bash.bashrc, types -> /etc/mime.types, rc ->
+  /etc/slsh.rc, gen -> /etc/locale.gen, defs -> /etc/login.defs)
+
+#+END_SRC
+
+Method: .foreach -> Apply a function that returns Unit (returns no value or void) to each element. 
+
+#+BEGIN_SRC scala 
+  fileGroups.foreach {case (k, v) => printf("Number of files with extenson\t'%s'\t\t=%d\n", k, v.length)}
+
+  scala>  fileGroups.foreach {case (k, v) => println(k)}
+
+  backup
+  bash_logout
+  local
+  pacnew
+  lock
+  conf
+  cache
+  key
+  shutdown
+  updated
+  cfg
+  deny
+  bashrc
+  types
+  rc
+  gen
+  defs
+
+  scala>  fileGroups.foreach {case (k, v) => println(k, v.length)}
+  (,42)
+  (backup,1)
+  (bash_logout,1)
+  (local,1)
+  (pacnew,1)
+  (lock,1)
+  (conf,34)
+  (cache,1)
+  (key,1)
+  (shutdown,1)
+  (updated,1)
+  (cfg,2)
+  (deny,1)
+  (bashrc,1)
+  (types,1)
+  (rc,2)
+  (gen,1)
+  (defs,1)
+
+  scala>  fileGroups.mapValues(_.length).foreach(println)
+  (,42)
+  (backup,1)
+  (bash_logout,1)
+  (local,1)
+  (pacnew,1)
+  (lock,1)
+  (conf,34)
+  (cache,1)
+  (key,1)
+  (shutdown,1)
+  (updated,1)
+  (cfg,2)
+  (deny,1)
+  (bashrc,1)
+  (types,1)
+  (rc,2)
+  (gen,1)
+  (defs,1)
+
+  scala>  fileGroups.foreach {case (k, v) => printf("Number of files with extenson\t'%s'\t\t=%d\n", k, v.length)}
+  Number of files with extenson   ''      =42
+  Number of files with extenson   'backup'        =1
+  Number of files with extenson   'bash_logout'       =1
+  Number of files with extenson   'local'     =1
+  Number of files with extenson   'pacnew'        =1
+  Number of files with extenson   'lock'      =1
+  Number of files with extenson   'conf'      =34
+  Number of files with extenson   'cache'     =1
+  Number of files with extenson   'key'       =1
+  Number of files with extenson   'shutdown'      =1
+  Number of files with extenson   'updated'       =1
+  Number of files with extenson   'cfg'       =2
+  Number of files with extenson   'deny'      =1
+  Number of files with extenson   'bashrc'        =1
+  Number of files with extenson   'types'     =1
+  Number of files with extenson   'rc'        =2
+  Number of files with extenson   'gen'       =1
+  Number of files with extenson   'defs'      =1
+
+
+#+END_SRC
+
+Method: .isEmpty -> Test if Map is empty. 
+
+#+BEGIN_SRC scala
+scala> fileGroups.isEmpty
+res151: Boolean = false
+
+#+END_SRC
+
+
+Method: .toList -> Convert a Map to a list of key and values. 
+
+#+BEGIN_SRC scala 
+  scala> val fileCounts = fileGroups.mapValues(_.length)
+
+  fileCounts: scala.collection.immutable.Map[String,Int] = Map("" -> 42,
+  backup -> 1, bash_logout -> 1, local -> 1, pacnew -> 1, lock -> 1,
+  conf -> 34, cache -> 1, key -> 1, shutdown -> 1, updated -> 1, cfg ->
+  2, deny -> 1, bashrc -> 1, types -> 1, rc -> 2, gen -> 1, defs -> 1)
+
+
+
+  scala> fileGroups.toList
+
+  scala> fileCounts.toList
+  res140: List[(String, Int)] = List(("",42), (backup,1),
+  (bash_logout,1), (local,1), (pacnew,1), (lock,1), (conf,34),
+  (cache,1), (key,1), (shutdown,1), (updated,1), (cfg,2), (deny,1),
+  (bashrc,1), (types,1), (rc,2), (gen,1), (defs,1))
+
+#+END_SRC
+
+Method: .toArray -> Convert a Map to an array of key and values.
+
+#+BEGIN_SRC scala 
+  scala> val fileCounts = fileGroups.mapValues(_.length)
+
+  scala> fileCounts.toArray
+  res141: Array[(String, Int)] = Array(("",42), (backup,1),
+  (bash_logout,1), (local,1), (pacnew,1), (lock,1), (conf,34),
+  (cache,1), (key,1), (shutdown,1), (updated,1), (cfg,2), (deny,1),
+  (bashrc,1), (types,1), (rc,2), (gen,1), (defs,1))
+
+#+END_SRC
+
+
+
 *** Mutable Collections
 **** Array 
 
@@ -2018,8 +2431,6 @@ Foreach - Apply a function that performs side-effect to each element.
   /etc/fstab
   /etc/host.conf
 #+END_SRC
-
-
 
 
 **** Mutable List
