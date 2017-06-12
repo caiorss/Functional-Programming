@@ -665,6 +665,25 @@ res77: Int = 28
 
 #+END_SRC
 
+*** Function with variable number of arguments
+
+#+BEGIN_SRC scala
+
+  def varfun(inputs: String*) = {
+    println("I got the parameters: ")
+    inputs.foreach(println)
+  }
+
+  scala> varfun("Hello", "World", "Scala", "Rocks")
+  I got the parameters:
+  Hello
+  World
+  Scala
+  Rocks
+
+#+END_SRC
+
+
 ** Imperative Constructs
 *** While loop
 
