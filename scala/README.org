@@ -2494,6 +2494,200 @@ java.util.NoSuchElementException: key not found: 100
 scala>
 #+END_SRC
 
+** Case classes and pattern matching 
+
+Scala case classes are similar to Haskell algebraic data types and
+supports pattern matching. It is useful to represent abstract syntax
+trees and build interpreters and pasers.
+
+*Example 1:* 
+
+ - Sealed class means that it is not possible to define any other
+   sublclass of class Shape. 
+
+#+BEGIN_SRC scala 
+  sealed abstract class Shape
+  case class Square   (side: Double)                    extends Shape
+  case class Rectangle(height: Double, width: Double)   extends Shape
+  case class Circle   (radius: Double)                  extends Shape
+  case class Triangle (a: Double, b: Double, c: Double) extends Shape
+
+
+  def computeArea(shape: Shape) = shape match {
+    case Square(x)       => x * x
+    case Rectangle(w, h) => w * h
+    case Circle(r)       => Math.PI * r * r
+    case _               => error("Error: Not implemented. See Heron's formula.")
+  }
+
+
+  def computePerimiter(shape: Shape) = shape match {
+    case Square(x)         => 4 * x
+    case Rectangle(w, h)   => 2 * (w + h)
+    case Circle(r)         => 2 * Math.PI * r 
+    case Triangle(a, b, c) => a + b + c 
+  }
+
+  def classify(shape: Shape) = shape match {
+    case Square(_)       => "square"
+    case Rectangle(_,_)  => "rectangle"
+    case Circle(_)       => "circle"
+    case Triangle(_,_,_) => "triangle"
+  }
+
+
+  scala> val s = Square(10.0)
+  s: Square = Square(10.0)
+
+  scala> val r = Rectangle(5.0, 10.0)
+  r: Rectangle = Rectangle(5.0,10.0)
+
+  scala> val c = Circle(3.0)
+  c: Circle = Circle(3.0)
+
+  scala> val t = Triangle(2.0, 4.0, 5.0)
+  t: Triangle = Triangle(2.0,4.0,5.0)
+
+  scala> 
+
+
+  scala> computeArea(s)
+  res27: Double = 100.0
+
+  scala> computeArea(r)
+  res28: Double = 50.0
+
+  scala> computeArea(t)
+  java.lang.RuntimeException: Error: Not implemented. See heron formula.
+    at scala.sys.package$.error(package.scala:27)
+    at scala.Predef$.error(Predef.scala:144)
+    at .computeArea(<console>:25)
+    ... 32 elided
+
+  scala> 
+
+
+  scala> List(s, r, t)
+  res30: List[Product with Serializable with Shape] = List(Square(10.0), Rectangle(5.0,10.0), Triangle(2.0,4.0,5.0))
+
+  scala> List(s, r, t).foreach(println)
+  Square(10.0)
+  Rectangle(5.0,10.0)
+  Triangle(2.0,4.0,5.0)
+
+  scala> List(s, r, t).map(classify)
+  res32: List[String] = List(square, rectangle, triangle)
+
+  scala> List(s, r, t).map(computePerimiter)
+  res33: List[Double] = List(40.0, 30.0, 11.0)
+
+
+#+END_SRC
+
+*Example 2: Abstract syntax tree.*
+
+#+BEGIN_SRC scala 
+  sealed abstract class Expr
+  case class Val(x: Int)           extends Expr
+  case class Add(r: Expr, s: Expr) extends Expr
+  case class Sub(r: Expr, s: Expr) extends Expr
+  case class Mul(r: Expr, s: Expr) extends Expr
+
+
+  // It is possible to define multiple interpreters for this AST.
+
+  // This interpreter evaluates the AST 
+  def evalExpr(expr: Expr): Int = expr match {
+    case Val(n)    => n
+    case Add(r, s) => computeExpr(r) + computeExpr(s)
+    case Sub(r, s) => computeExpr(r) - computeExpr(s)
+    case Mul(r, s) => computeExpr(r) * computeExpr(s)
+  }
+
+
+  // This interpreter show the expresion 
+  def showExpr(expr: Expr): String = expr match {
+    case Val(n)    => n.toString
+
+    case Add(Val(x), Val(y)) => x + " + " + y
+    case Sub(Val(x), Val(y)) => x + " - " + y
+    case Mul(Val(x), Val(y)) => x + " * " + y    
+
+    case Add(Val(x), s) => x + " + (" + showExpr(s) + ")"
+    case Sub(Val(x), s) => x + " - (" + showExpr(s) + ")"
+    case Mul(Val(x), s) => x + " * (" + showExpr(s) + ")"    
+
+    case Add(r, Val(y)) => "(" + showExpr(r) + ") + " + y
+    case Sub(r, Val(y)) => "(" + showExpr(r) + ") - " + y
+    case Mul(r, Val(y)) => "(" + showExpr(r) + ") * " + y    
+
+    case Add(r, s) => "(" + showExpr(r) + ") + (" + showExpr(s) + ")"
+    case Sub(r, s) => "(" + showExpr(r) + ") - (" + showExpr(s) + ")"
+    case Mul(r, s) => "(" + showExpr(r) + ") * (" + showExpr(s) + ")"
+  }
+
+  // This interpreter shows the expresion and its value 
+  def showEval(expr: Expr) = {
+    println(showExpr(expr) + " = " + evalExpr(expr))
+  }
+
+
+
+  scala> val e1 = Val(10)
+  e1: Val = Val(10)
+
+  scala> val e2 = Add(Val(10), Val(5))
+  e2: Add = Add(Val(10),Val(5))
+
+  scala> val e3 = Mul(Val(3), e2)
+  e3: Mul = Mul(Val(3),Add(Val(10),Val(5)))
+
+  scala> val e4 = Sub(e3, e1)
+  e4: Sub = Sub(Mul(Val(3),Add(Val(10),Val(5))),Val(10))
+
+
+  scala> evalExpr(e1)
+  res56: Int = 10
+
+  scala> evalExpr(e2)
+  res57: Int = 15
+
+  scala> evalExpr(e3)
+  res58: Int = 45
+
+  scala> evalExpr(e4)
+  res59: Int = 35
+
+
+  scala> showExpr(e1)
+  res60: String = 10
+
+  scala> showExpr(e2)
+  res61: String = 10 + 5
+
+  scala> showExpr(e3)
+  res62: String = 3 * (10 + 5)
+
+  scala> showExpr(e4)
+  res63: String = (3 * (10 + 5)) - 10
+
+  scala> List(e1, e2, e3, e4).foreach(println)
+  Val(10)
+  Add(Val(10),Val(5))
+  Mul(Val(3),Add(Val(10),Val(5)))
+  Sub(Mul(Val(3),Add(Val(10),Val(5))),Val(10))
+
+
+  scala> List(e1, e2, e3, e4).foreach(showEval)
+  10 = 10
+  10 + 5 = 15
+  3 * (10 + 5) = 45
+  (3 * (10 + 5)) - 10 = 35
+
+#+END_SRC
+
+
+
 * OOP - Object Orientated Programming 
 ** Singleton Object 
 
