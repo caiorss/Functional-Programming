@@ -3143,6 +3143,42 @@ instance. It can be used as an ML-module.
   res224: Class[_ <: Module.type] = class Module$
 #+END_SRC
 
+** Case class as record 
+
+Example: Simple record type.
+
+#+BEGIN_SRC scala 
+  scala> case class Person(id: Int, firstName: String, lastName: String)
+  defined class Person
+
+  scala> val p1 = Person(100, "John", "Smith")
+  p1: Person = Person(100,John,Smith)
+
+   scala> val p2 = Person(600, "Isaac", "Newton")
+  p3: Person = Person(600,Isaac,Newton)
+
+  scala> p1.lastName
+  res150: String = Smith
+
+  scala> p1.lastName = ""
+  <console>:16: error: reassignment to val
+         p1.lastName = ""
+                     ^
+
+  scala> List(p1, p2).foreach(println)
+  Person(100,John,Smith)
+  Person(600,Isaac,Newton)
+
+  scala> List(p1, p2).map(_.firstName)
+  res167: List[String] = List(John, Isaac)
+
+  scala> List(p1, p2).map(_.lastName)
+  res168: List[String] = List(Smith, Newton)
+
+  scala> 
+
+#+END_SRC
+
 ** Creating a Class 
 
 #+BEGIN_SRC scala 
@@ -3373,6 +3409,170 @@ Example:
 
   scala> List(circ, rec).map(_.getPerimiter()).sum
   res24: Double = 182.83
+
+#+END_SRC
+** Traits 
+
+Traits are similar to java interfaces. A class can inherit only one
+class, but can mix multiple traits and must implement the methods and
+fields of each trait.
+
+Notes:
+
+ - A trait can have concrete and abstract methods.
+
+ - Traits must not have constructors.
+
+ - Unlike interfaces, traits can have implementation of methods.
+
+
+#+BEGIN_SRC scala 
+
+  trait Shape {
+    def getName(): String
+    def getArea(): Double
+  }
+
+  trait Location {
+    var ox: Double
+    var oy: Double
+    def move(dx: Double, dy: Double): Unit
+    def location(): (Double, Double)
+  }
+
+  class Rectangle(w: Double, h: Double) extends Shape with Location {
+    var ox = 0.0
+    var oy = 0.0 
+    def getName() = "rectangle"
+    def getArea() = w * h
+
+    def move(dx: Double, dy: Double) = {
+      ox = ox + dx
+      oy = oy + dy 
+    }
+
+    def location() = (ox, oy)
+
+  }
+
+  class Circle(radius: Double) extends Shape with Location {
+    var ox = 0.0
+    var oy = 0.0 
+    def getName() = "circle"
+    def getArea() = 3.1415 * radius * radius
+
+    def move(dx: Double, dy: Double) = {
+      ox = ox + dx
+      oy = oy + dy 
+    }
+
+    def location() = (ox, oy)
+
+  }
+
+
+
+
+  scala> val rec = new Rectangle(10.0, 20.0)
+  rec: Rectangle = Rectangle@29526c05
+
+  scala> rec.
+  getArea   getName   location   move   ox   oy
+
+  scala> rec.getArea()
+  res0: Double = 200.0
+
+  scala> rec.getName()
+  res1: String = rectangle
+
+  scala> rec.location()
+  res2: (Double, Double) = (0.0,0.0)
+
+  scala> rec.move(20.0, 30.0)
+
+  scala> rec.location()
+  res4: (Double, Double) = (20.0,30.0)
+
+  scala> rec.move(0.0, 10.0)
+
+  scala> rec.location()
+  res6: (Double, Double) = (20.0,40.0)
+
+  scala> 
+
+
+  scala> val loc: Location = rec
+  loc: Location = Rectangle@29526c05
+
+  scala> loc.
+  location   move   ox   ox_=   oy   oy_=
+
+  scala> loc.location()
+  res7: (Double, Double) = (20.0,40.0)
+
+  scala> loc.ox
+  res8: Double = 20.0
+
+  scala> loc.oy
+  res9: Double = 40.0
+
+  scala> loc.getName()
+  <console>:17: error: value getName is not a member of Location
+         loc.getName()
+             ^
+
+
+  scala> val circ = new Circle(10.0)
+  circ: Circle = Circle@2ecdcfe3
+
+  scala> circ.getArea()
+  res11: Double = 314.15000000000003
+
+  scala> circ.location()
+  res12: (Double, Double) = (0.0,0.0)
+
+  scala> circ.move(10.0, 30.0)
+
+  scala> circ.location()
+  res14: (Double, Double) = (10.0,30.0)
+
+  scala> circ.move(10.0, 30.0)
+
+  scala> circ.location()
+  res16: (Double, Double) = (20.0,60.0)
+
+
+
+  scala> List(circ, rec).map(_.getArea())
+  res17: List[Double] = List(314.15000000000003, 200.0)
+
+  scala> List(circ, rec).map(_.location())
+  res18: List[(Double, Double)] = List((20.0,60.0), (20.0,40.0))
+
+  scala> List(circ, rec).map(_.getName())
+  res19: List[String] = List(circle, rectangle)
+
+
+
+  def getArea(shape: Shape) = shape.getArea()
+
+  scala> getArea(circ)
+  res20: Double = 314.15000000000003
+
+  scala> getArea(rec)
+  res21: Double = 200.0
+
+  def getDistance(loc: Location) = Math.sqrt(loc.ox * loc.ox + loc.oy * loc.oy)
+
+  scala> getDistance(circ)
+  res22: Double = 63.245553203367585
+
+  scala> getDistance(rec)
+  res23: Double = 44.721359549995796
+
+  scala> List(circ, rec).map(getDistance)
+  res24: List[Double] = List(63.245553203367585, 44.721359549995796)
+
 
 #+END_SRC
 * Java Interoperability
