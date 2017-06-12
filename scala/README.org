@@ -1138,6 +1138,8 @@ res88: List[Int] = List(1, 2, 5, 3, 4)
 **** Maps
 
 Scala Maps are immutable hash tables or dictionaries.
+ 
+ - [[https://www.tutorialspoint.com/scala/scala_maps.htm][Scala Maps]] methods signatures.
 
 #+BEGIN_SRC scala
 var capital = Map("US"     -> "Washigton",
@@ -1582,10 +1584,10 @@ Method: .toArray -> Convert a Map to an array of key and values.
 
 #+END_SRC
 
-
-
 *** Mutable Collections
 **** Array 
+
+ - [[https://www.tutorialspoint.com/scala/scala_arrays.htm][Scala Arrays]] methods signatures. 
 
 #+BEGIN_SRC scala 
   scala> val arr = Array(1, 2, 3, 4, 5, 6)
@@ -2432,7 +2434,6 @@ Foreach - Apply a function that performs side-effect to each element.
   /etc/host.conf
 #+END_SRC
 
-
 **** Mutable List
 
 #+BEGIN_SRC scala
@@ -2687,6 +2688,129 @@ instance. It can be used as an ML-module.
 
 #+END_SRC
 
+** Abstract Class 
+
+An abstract class is a class which cannot be instantiated, containing
+abstract methods (methods without implementation) and non-abstract
+methods .It is intended to be a base class or parent class for sub
+classes that will inherit it.
+
+Example: 
+
+#+BEGIN_SRC scala 
+  abstract class Shape {
+    val name: String 
+    def getArea(): Double
+    def getPerimiter(): Double
+    def scaleDimensions(factor: Double): Unit
+  }
+
+  class Rectangle(xx: Double, yy: Double) extends Shape{
+    private var x = xx
+    private var y = yy
+
+    val name = "Rectangle"
+
+    def getArea() = x * y
+
+    def getPerimiter() = 2.0 * (x + y) 
+
+    def scaleDimensions(factor: Double) = {
+      x = factor * x
+      y = factor * y
+    }
+
+    def getX() = x
+    def getY() = y
+    def setX(nx: Double) = { x = nx }
+    def setY(ny: Double) = { y = ny }
+
+  }
+
+
+  class Circle(r: Double) extends Shape{
+    private var radius = r
+    private val pi = 3.1415
+
+    val name = "Circle"
+
+    def getArea() = pi * radius * radius
+
+    def getPerimiter() = 2.0 * pi * radius
+
+    def scaleDimensions(factor: Double) = {
+      radius = factor * radius
+    }
+
+    def getRadius() = radius
+
+    def setRadius(r: Double) = { radius = r}
+  }
+
+
+
+  scala> val rec = new Rectangle(10.0, 20.0)
+  rec: Rectangle = Rectangle@8f2e3e6
+
+  scala> rec.name
+  res9: String = Rectangle
+
+  scala> rec.getX()
+  res5: Double = 10.0
+
+  scala> rec.getY()
+  res6: Double = 20.0
+
+  scala> rec.getArea()
+  res7: Double = 200.0
+
+  scala> rec.getPerimiter()
+  res8: Double = 60.0
+
+  scala> rec.scaleDimensions(2.0)
+
+  scala> rec.getX()
+  res11: Double = 20.0
+
+  scala> rec.getArea()
+  res12: Double = 800.0
+
+
+  scala> val circ = new Circle(10.0)
+  circ: Circle = Circle@169d5567
+
+  scala> circ.name
+  res13: String = Circle
+
+  scala> circ.getArea()
+  res14: Double = 314.15000000000003
+
+  scala> circ.getPerimiter()
+  res15: Double = 62.830000000000005
+
+  scala> circ.getRadius()
+  res17: Double = 10.0
+
+  scala> List(circ, rec)
+  res18: List[Shape] = List(Circle@169d5567, Rectangle@8f2e3e6)
+
+  scala> List(circ, rec).map(_.name)
+  res19: List[String] = List(Circle, Rectangle)
+
+  scala> List(circ, rec).map(_.getArea())
+  res20: List[Double] = List(314.15000000000003, 800.0)
+
+  scala> List(circ, rec).map(_.getArea()).sum
+  res21: Double = 1114.15
+
+
+  scala> List(circ, rec).map(_.getPerimiter())
+  res23: List[Double] = List(62.830000000000005, 120.0)
+
+  scala> List(circ, rec).map(_.getPerimiter()).sum
+  res24: Double = 182.83
+
+#+END_SRC
 * Java Interoperability
 ** Show Java Properties
 
