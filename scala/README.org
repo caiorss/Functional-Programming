@@ -1,6 +1,6 @@
 #+TITLE: Functional Programming in Scala
 
-* FP in Scala
+* Scala
 ** Overview
 *** Features
 
@@ -2491,6 +2491,182 @@ java.util.NoSuchElementException: key not found: 100
   ... 32 elided
 
 scala>
+#+END_SRC
+
+** OOP - Object Orientated Programming 
+*** Singleton Object 
+
+A singleton object is an object without class with a single
+instance. It can be used as an ML-module. 
+
+#+BEGIN_SRC scala 
+  cala> :paste
+  // Entering paste mode (ctrl-D to finish)
+
+
+  object Module {
+
+    val code = "xyzfmnk"
+
+    var amount = 1000 
+
+    def sayHello () = println("Hello world")
+
+    def fn(x: Int, y: Int) = 3 * x + 4 * y
+
+    def showFiles(path: String) = {
+      val files = (new java.io.File(path)).listFiles().filter(_.isFile)
+      files.foreach(println)    
+    }
+
+    def showDirectories(path: String) = {
+      val files = (new java.io.File(path)).listFiles().filter(_.isDirectory)
+      files.foreach(println)    
+    }
+
+
+  }
+
+
+  scala> Module.fn _
+  res204: (Int, Int) => Int = <function2>
+
+  scala> Module.sayHello _
+  res205: () => Unit = <function0>
+
+  scala> Module.showFiles _
+  res206: String => Unit = <function1>
+
+  scala> Module.showFiles("/boot")
+  /boot/initramfs-3.10-x86_64.img
+  /boot/vmlinuz-4.9-x86_64
+  /boot/initramfs-3.10-x86_64-fallback.img
+  /boot/vmlinuz-3.10-x86_64
+  /boot/initramfs-4.9-x86_64-fallback.img
+  /boot/initramfs-4.9-x86_64.img
+  /boot/intel-ucode.img
+  /boot/linux310-x86_64.kver
+  /boot/linux49-x86_64.kver
+
+  scala> Module.showDirectories("/boot/grub")
+  /boot/grub/i386-pc
+  /boot/grub/locale
+  /boot/grub/fonts
+  /boot/grub/themes
+
+  scala> Module.sayHello()
+  Hello world
+
+  scala> Module.code 
+  res219: String = xyzfmnk
+
+  scala> Module.code = "hello"
+  <console>:13: error: reassignment to val
+         Module.code = "hello"
+                     ^
+
+  scala> Module.amount += 300
+
+  scala> Module.amount
+  res223: Int = 1300
+
+
+  scala> Module.amount = 0
+  Module.amount: Int = 0
+
+  scala> Module.getClass()
+  res224: Class[_ <: Module.type] = class Module$
+#+END_SRC
+
+*** Creating a Class 
+
+#+BEGIN_SRC scala 
+
+  class Account(owner: String, id: Int, var balance: Int)  {
+
+    def getBalance() = balance
+
+    def getId() = id
+
+    def getOwner() = owner
+
+    def deposit(amount: Int) = {
+      if (amount < 0)
+        error("Erro: Invalid operation. Negative amount of money")
+      else 
+        balance = balance + amount
+    }
+
+    def withdraw(amount: Int) = amount match {
+      case a if a > balance
+          => error("Error: Not enough funds to withdraw.")
+
+      case a if a < 0
+          => error("Erro: Invalid operation. Negative amount of money")
+
+      case _ => balance = balance - amount
+    }
+
+
+    override def toString() = {
+      s"Account{id = $id, owner = $owner} = $$ $balance" 
+    }
+
+  } // End of class Account
+
+
+  scala> val account = new Account("Joseph Smith", 10234, 4000)
+  account: Account = Account{id = 10234, owner = Joseph Smith} = $ 4000
+
+  scala> account.toString()
+  res180: String = Account{id = 10234, owner = Joseph Smith} = $ 4000
+
+  scala> account.getClass()
+  res181: Class[_ <: Account] = class Account
+
+
+  scala> account.withdraw(300)
+
+  scala> account
+  res188: Account = Account{id = 10234, owner = Joseph Smith} = $ 3700
+
+  scala> account.withdraw(10000)
+  java.lang.RuntimeException: Error: Not enough funds to withdraw.
+    at scala.sys.package$.error(package.scala:27)
+    at scala.Predef$.error(Predef.scala:144)
+    at Account.withdraw(<console>:24)
+    ... 32 elided
+
+  scala> account.withdraw(-100)
+  java.lang.RuntimeException: Erro: Invalid operation. Negative amount of money
+    at scala.sys.package$.error(package.scala:27)
+    at scala.Predef$.error(Predef.scala:144)
+    at Account.withdraw(<console>:27)
+    ... 32 elided
+
+  scala> account
+  res191: Account = Account{id = 10234, owner = Joseph Smith} = $ 3700
+
+  scala> account.deposit(400)
+
+  scala> account
+  res193: Account = Account{id = 10234, owner = Joseph Smith} = $ 4100
+
+  scala> account.deposit(-400)
+  java.lang.RuntimeException: Erro: Invalid operation. Negative amount of money
+    at scala.sys.package$.error(package.scala:27)
+    at scala.Predef$.error(Predef.scala:144)
+    at Account.deposit(<console>:17)
+    ... 32 elided
+
+
+  scala> account.getOwner()
+  res225: String = Joseph Smith
+
+  scala> account.getId()
+  res226: Int = 10234
+
+
 #+END_SRC
 
 * Java Interoperability
