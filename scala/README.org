@@ -2687,6 +2687,357 @@ trees and build interpreters and pasers.
 #+END_SRC
 
 
+** Pattern Matching 
+
+Example 1 - Show month name. 
+
+#+BEGIN_SRC scala 
+
+  def getMonthName(month: Int) = month match {
+    case 1  => "January"
+    case 2  => "February"
+    case 3  => "March"
+    case 4  => "April"
+    case 5  => "May"
+    case 6  => "June"
+    case 7  => "July"
+    case 8  => "August"
+    case 9  => "September"
+    case 10 => "October"
+    case 11 => "November"
+    case 12 => "December"
+    case _  => error("Error: Invalid month")
+  }
+
+
+  scala> getMonthName(1)
+  res75: String = January
+
+  scala> getMonthName(9)
+  res76: String = September
+
+  scala> getMonthName(0)
+  java.lang.RuntimeException: Error: Invalid month
+    at scala.sys.package$.error(package.scala:27)
+    at scala.Predef$.error(Predef.scala:144)
+    at .getMonthName(<console>:26)
+    ... 32 elided
+
+
+  def getMonthName2(month: Int) = month match {
+    case 1  => Some("January")
+    case 2  => Some("February")
+    case 3  => Some("March")
+    case 4  => Some("April")
+    case 5  => Some("May")
+    case 6  => Some("June")
+    case 7  => Some("July")
+    case 8  => Some("August")
+    case 9  => Some("September")
+    case 10 => Some("October")
+    case 11 => Some("November")
+    case 12 => Some("December")
+    case _  => None 
+  }
+
+
+  scala> getMonthName2(1)
+  res78: Option[String] = Some(January)
+
+  scala> getMonthName2(12)
+  res79: Option[String] = Some(December)
+
+  scala> getMonthName2(0)
+  res80: Option[String] = None
+
+  scala> getMonthName2(-10)
+  res81: Option[String] = None
+#+END_SRC
+
+Example 2 - Pattern matching with strings. 
+
+#+BEGIN_SRC scala 
+
+  def showCurrencyName(cur: String) = cur match {
+    case "USD" => "United States Dollar"
+    case "CAD" => "Canadian Dollar"
+    case "EUR" => "Euro"
+    case "AUD" => "Australian Dollar"
+    case "GBP" => "Great Britain Pound"
+    case "JPY" => "Japanese Yen"
+    case "CNY" => "Chinese Yuan / Reminbi"
+    case "HKD" => "Hong Kong Dollar"
+    case "BRL" => "Brazilian Real"
+    case "MXN" => "Mexican Peso"
+    case "CHF" => "Switzerland Franc"
+    case "XBT" => "Bitcoin"
+    case _     => error("Error: I don't the name of this currency. Please teach me it.")
+  }
+
+
+  scala> showCurrencyName("CNY")
+  res102: String = Chinese Yuan / Reminbi
+
+  scala> showCurrencyName("JPY")
+  res103: String = Japanese Yen
+
+  scala> showCurrencyName("HKD")
+  res104: String = Hong Kong Dollar
+
+  scala> showCurrencyName("JPYx")
+  java.lang.RuntimeException: Error: I don't the name of this currency. Please teach me it.
+    at scala.sys.package$.error(package.scala:27)
+    at scala.Predef$.error(Predef.scala:144)
+    at .showCurrencyName(<console>:26)
+    ... 32 elided
+
+
+  scala> List("CNY", "HKD", "AUD", "BRL").map(showCurrencyName).foreach(println)
+  Chinese Yuan / Reminbi
+  Hong Kong Dollar
+  Australian Dollar
+  Brazilian Real
+
+  scala> showCurrencyName("XBT")
+  res109: String = Bitcoin
+#+END_SRC
+
+Example 3 - Pattern with number and case-classes. 
+
+#+BEGIN_SRC scala 
+  abstract sealed class Month
+  case object Jan extends Month
+  case object Feb extends Month
+  case object Mar extends Month
+  case object Apr extends Month
+  case object May extends Month
+  case object Jun extends Month
+  case object Jul extends Month
+  case object Aug extends Month
+  case object Sep extends Month
+  case object Oct extends Month
+  case object Nov extends Month
+  case object Dec extends Month
+
+  def getMonthName(month: Month) = month match {
+    case Jan => "January"
+    case Feb => "February"
+    case Mar => "March"
+    case Apr => "April"
+    case May => "May"
+    case Jun => "June"
+    case Jul => "July"
+    case Aug => "August"
+    case Sep => "September"
+    case Oct => "October"
+    case Nov => "November"
+    case Dec => "December"
+  }
+
+
+  def numberToMonth(n: Int) = n match {
+    case 1  => Jan
+    case 2  => Feb
+    case 3  => Mar
+    case 4  => Apr
+    case 5  => May
+    case 6  => Jun
+    case 7  => Jul
+    case 8  => Aug
+    case 9  => Sep
+    case 10 => Oct
+    case 11 => Nov
+    case 12 => Dec
+    case _  => error("Error: Invalid month number.")
+  }
+
+
+  def numberToMonth2(n: Int) = n match {
+    case 1  => Some(Jan)
+    case 2  => Some(Feb)
+    case 3  => Some(Mar)
+    case 4  => Some(Apr)
+    case 5  => Some(May)
+    case 6  => Some(Jun)
+    case 7  => Some(Jul)
+    case 8  => Some(Aug)
+    case 9  => Some(Sep)
+    case 10 => Some(Oct)
+    case 11 => Some(Nov)
+    case 12 => Some(Dec)
+    case _  => None
+  }
+
+
+  scala> getMonthName(Jan)
+  res85: String = January
+
+  scala> getMonthName(Feb)
+  res86: String = February
+
+  scala> getMonthName(Aug)
+  res87: String = August
+
+  scala> getMonthName(Dec)
+  res88: String = December
+
+
+  scala> numberToMonth(1)
+  res93: Product with Serializable with Month = Jan
+
+  scala> numberToMonth(9)
+  res94: Product with Serializable with Month = Sep
+
+  scala> numberToMonth(-1)
+  java.lang.RuntimeException: Error: Invalid month number.
+    at scala.sys.package$.error(package.scala:27)
+    at scala.Predef$.error(Predef.scala:144)
+    at .numberToMonth(<console>:39)
+    ... 32 elided
+
+
+  scala> numberToMonth2(1)
+  res97: Option[Product with Serializable with Month] = Some(Jan)
+
+  scala> numberToMonth2(2)
+  res98: Option[Product with Serializable with Month] = Some(Feb)
+
+  scala> numberToMonth2(12)
+  res99: Option[Product with Serializable with Month] = Some(Dec)
+
+  scala> numberToMonth2(-1)
+  res100: Option[Product with Serializable with Month] = None
+
+  scala> numberToMonth2(0)
+  res101: Option[Product with Serializable with Month] = None
+#+END_SRC
+
+Example 4 - Pattern matching with conditional. 
+
+#+BEGIN_SRC scala 
+
+  def classifyNumber(n: Int) = n match {
+    case x if x < 0               => println("Negative number")
+    case 0                        => println("zero")
+    case x if x > 0 && x % 2 == 0 => println("Positive even number")
+    case _                        => println("Positive odd number")
+  }
+
+  scala> classifyNumber(-2)
+  Negative number
+
+  scala> classifyNumber(-10)
+  Negative number
+
+  scala> classifyNumber(0)
+  zero
+
+  scala> classifyNumber(2)
+  Positive even number
+
+  scala> classifyNumber(21)
+  Positive odd number
+
+  scala> classifyNumber(210)
+  Positive even number
+
+  scala> classifyNumber(1213)
+  Positive odd number
+
+
+#+END_SRC
+
+Example 5 - Recursive functions. 
+
+#+BEGIN_SRC scala 
+
+  def factorial(n: Int): Int = n match {
+    case a if a < 0 => error("Error: Invalid input.")
+    case 0 | 1      => 1
+    case k          => k * factorial(k - 1)
+  }
+
+
+  scala> factorial(4)
+  res126: Int = 24
+
+  scala> factorial(5)
+  res127: Int = 120
+
+  scala> factorial(-5)
+  java.lang.RuntimeException: Error: Invalid input.
+    at scala.sys.package$.error(package.scala:27)
+    at scala.Predef$.error(Predef.scala:144)
+    at .factorial(<console>:14)
+    ... 32 elided
+
+  scala> factorial(0)
+  res129: Int = 1
+
+  scala> factorial(1)
+  res130: Int = 1
+#+END_SRC
+
+Example 6 - Recursive list functions. 
+
+#+BEGIN_SRC scala 
+  scala> 1::List()
+  res118: List[Int] = List(1)
+
+  scala> 2::1::List()
+  res119: List[Int] = List(2, 1)
+
+  scala> 4::2::1::List()
+  res120: List[Int] = List(4, 2, 1)
+
+
+  def sumList(list: List[Int]): Int = list match {
+    case List() => 0
+    case hd::tl => hd + sumList(tl)
+  }
+
+  scala> sumList(List(1, 2, 3, 4, 5))
+  res121: Int = 15
+
+  scala> 
+
+  def foreach[A](fn: A => Unit)(list: List[A]): Unit = list match {
+    case List() => ()  // Do nothing.
+    case hd::tl => fn(hd) ; foreach(fn)(tl)
+  }
+
+  scala> def foreach[A](fn: A => Unit)(list: List[A]): Unit = list match {
+       |   case List() => ()  // Do nothing.
+       |   case hd::tl => fn(hd) ; foreach(fn)(tl)
+       | }
+  foreach: [A](fn: A => Unit)(list: List[A])Unit
+
+  scala> foreach(println)(List(1, 2, 3, 4))
+  1
+  2
+  3
+  4
+
+
+  scala> val printAll = foreach(println)(_)
+  printAll: List[Any] => Unit = <function1>
+
+
+
+  scala> printAll(List("Hello", "World", "Scala"))
+  Hello
+  World
+  Scala
+
+  scala> printAll(List(1, 2, 3, 4, 5))
+  1
+  2
+  3
+  4
+  5
+
+
+#+END_SRC
 
 * OOP - Object Orientated Programming 
 ** Singleton Object 
