@@ -2493,8 +2493,8 @@ java.util.NoSuchElementException: key not found: 100
 scala>
 #+END_SRC
 
-** OOP - Object Orientated Programming 
-*** Singleton Object 
+* OOP - Object Orientated Programming 
+** Singleton Object 
 
 A singleton object is an object without class with a single
 instance. It can be used as an ML-module. 
@@ -2578,11 +2578,13 @@ instance. It can be used as an ML-module.
   res224: Class[_ <: Module.type] = class Module$
 #+END_SRC
 
-*** Creating a Class 
+** Creating a Class 
 
 #+BEGIN_SRC scala 
 
-  class Account(owner: String, id: Int, var balance: Int)  {
+  class Account(owner: String, id: Int, balanceInit: Int)  {
+
+    private var balance = balanceInit
 
     def getBalance() = balance
 
@@ -2617,6 +2619,22 @@ instance. It can be used as an ML-module.
 
   scala> val account = new Account("Joseph Smith", 10234, 4000)
   account: Account = Account{id = 10234, owner = Joseph Smith} = $ 4000
+
+  // type tab after dot (.) to show all fields and methods
+  //
+  scala> account.
+  deposit   getBalance   getId   getOwner   toString   withdraw
+
+  scala> account.deposit _
+  res228: Int => Unit = <function1>
+
+  scala> account.getBalance _
+  res229: () => Int = <function0>
+
+  scala> account.getId _
+  res230: () => Int = <function0>
+
+
 
   scala> account.toString()
   res180: String = Account{id = 10234, owner = Joseph Smith} = $ 4000
