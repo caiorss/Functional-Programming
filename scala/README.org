@@ -3575,6 +3575,271 @@ Notes:
 
 
 #+END_SRC
+** OO - Design Patterns 
+*** Overview 
+
+GOF - Gang of Four Design Patterns or Design Patterns: Elements of
+Reusable Object-Oriented Software (Addison-Wesley Publishing
+Company, 1995)
+
+*Design Patterns*
+
+ - *Creational Pattern*
+   - Factory pattern
+     - Simple Factory
+     - Factory Method 
+
+ - *Behavioral Patterns*
+   - Strategy Pattern
+
+ - *Structural*
+
+*** Simple factory pattern 
+
+Defined by GOF as: "Define an interface for creating an object, but
+let subclasses decide which class to instantiate. Factory Method lets
+a class defer instantiation to subclasses."
+
+The factory pattern is used to create instances of different
+subclasses of a class. A factory class instantiates a subclass based
+on the input passed to the factory.
+
+Parts: 
+
+ - Product - Parent class which subclasses will be instantiated by the factory.
+
+ - Factory - Class that instantiate product subclasses. 
+
+The class ComputerFactory is used to instantiate classes that
+implements the trait (interface) based on the input passed to the
+factory.
+
+Note: This pattern is not extensible since, the class ComputerFactory
+needs to be modified for every new Computer subclass.
+
+#+BEGIN_SRC scala 
+
+  trait Computer {
+    def getManufacturer(): String
+    def getID(): Int
+    def clockGHZ: Int
+
+    override def toString() = {
+      val m  = getManufacturer()
+      val id = getID()
+      s"{ Manufacturer = $m id = $id clock = $clockGHZ }"
+    }
+  }
+
+  class ComputerA extends Computer {
+    def getManufacturer() = "SunJitsu"
+    def getID()  = 100
+    def clockGHZ = 4
+  }
+
+
+  class ComputerB extends Computer {
+    def getManufacturer() = "some manufacturer"
+    def getID()  = 300
+    def clockGHZ = 100
+  }
+
+
+  class ComputerC extends Computer {
+    def getManufacturer() = "unknown manufacturer"
+    def getID()  = 350
+    def clockGHZ = 4
+  }
+
+  class ComputerFactory() {
+    def getComputer(comp: String) = comp match {
+      case "compA" => new ComputerA()
+      case "compB" => new ComputerB()
+      case "compC" => new ComputerC()
+      case _       => error("Error: This type of computer doesn't exist")
+    }
+  }
+
+
+  scala> val factory = new ComputerFactory()
+  factory: ComputerFactory = ComputerFactory@6acb0d0d
+
+  scala> val compA = factory.getComputer("compA")
+  compA: Computer = { Manufacturer = SunJitsu id = 100 clock = 4 }
+
+  scala> compA.getManufacturer()
+  res29: String = SunJitsu
+
+  scala> compA.getID()
+  res30: Int = 100
+
+  scala> 
+
+
+  scala> val compB = factory.getComputer("compB")
+  compB: Computer = { Manufacturer = some manufacturer id = 300 clock = 100 }
+
+  scala> val compC = factory.getComputer("compC")
+  compC: Computer = { Manufacturer = unknown manufacturer id = 350 clok = 4 }
+
+  scala> factory.getComputer("comp")
+  java.lang.RuntimeException: Error: This type of computer doesn't exist
+    at scala.sys.package$.error(package.scala:27)
+    at scala.Predef$.error(Predef.scala:144)
+    at ComputerFactory.getComputer(<console>:20)
+    ... 32 elided
+
+
+  scala> List(compA, compB, compC)
+  res34: List[Computer] = List({ Manufacturer = SunJitsu id = 100 clok = 4 }, { Manufacturer = some manufacturer id = 300 clok = 100 }, { Manufacturer = unknown manufacturer id = 350 clok = 4 })
+
+
+  scala> List(compA, compB, compC).foreach(println)
+  { Manufacturer = SunJitsu id = 100 clok = 4 }
+  { Manufacturer = some manufacturer id = 300 clok = 100 }
+  { Manufacturer = unknown manufacturer id = 350 clok = 4 }
+
+
+  scala> List(compA, compB, compC).map(_.getID())
+  res42: List[Int] = List(100, 300, 350)
+   
+#+END_SRC
+
+Functional Simplification: The factory class can replaces by a
+function that instantiates the product sub classes. 
+
+#+BEGIN_SRC scala 
+  def getComputer(comp: String) = comp match {
+    case "compA" => new ComputerA()
+    case "compB" => new ComputerB()
+    case "compC" => new ComputerC()
+    case _       => error("Error: This type of computer doesn't exist")
+  }
+
+  scala> getComputer _
+  res46: String => Computer = <function1>
+
+
+  scala> getComputer("compA")
+  res47: Computer = { Manufacturer = SunJitsu id = 100 clock = 4 }
+
+
+#+END_SRC
+
+
+References: 
+
+ - *Exploring the Factory Design Pattern*
+   <https://msdn.microsoft.com/en-us/library/ee817667.aspx>
+
+ - *Design Pattern - Factory Pattern*
+   <https://www.tutorialspoint.com/design_pattern/factory_pattern.htm>
+
+ - *Factory Design Pattern in Java*
+   <http://howtodoinjava.com/design-patterns/creational/implementing-factory-design-pattern-in-java/>
+
+ - *Why should I use a factory class instead of direct object
+   construction?* -
+   <https://softwareengineering.stackexchange.com/questions/253254/why-should-i-use-a-factory-class-instead-of-direct-object-construction>
+
+ - *Factory Pattern* <http://www.oodesign.com/factory-pattern.html>
+*** Factory pattern with factory method 
+
+This variation allows multiple subclasses be added to the factory. 
+
+#+BEGIN_SRC scala 
+
+  trait DatabaseDriver {
+    def dbname: String
+    def connect(Uri: String): Unit
+    def createDriver(): DatabaseDriver
+  }
+
+  class DbSqlite extends DatabaseDriver {
+    val dbname = "sqlite"
+    def connect(uri: String) = {
+      println("Connect to SQlite database: " + uri)
+    }
+
+    def createDriver() = new DbSqlite()
+  }
+
+
+  class DbPostgres extends DatabaseDriver {
+    val dbname = "postgres"
+    def connect(uri: String) = {
+      println("Connect to Postgres database: " + uri)
+    }
+
+    def createDriver() = new DbPostgres()
+  }
+
+
+
+  class DbMysql extends DatabaseDriver {
+    val dbname = "mysql"
+    def connect(uri: String) = {
+      println("Connect to Mysql database: " + uri)
+    }
+
+    def createDriver() = new DbMysql()
+  }
+
+
+  class DabaseFactory {
+    val dbMap: scala.collection.mutable.Map[String, DatabaseDriver] = scala.collection.mutable.Map()
+
+    def register(driver: DatabaseDriver) = {
+      dbMap += (driver.dbname -> driver)
+    }
+
+    def getDatabase(dbname: String) = dbMap(dbname).createDriver()
+  }
+
+
+  val dbFactory = new DabaseFactory()
+
+  /// Register database classe.
+  dbFactory.register(new DbMysql())
+  dbFactory.register(new DbSqlite())
+  dbFactory.register(new DbPostgres())
+
+
+
+
+  scala> val sqliteDriver = dbFactory.getDatabase("sqlite")
+  sqliteDriver: DatabaseDriver = DbSqlite@41a9920d
+
+  scala> val pgsqlDriver = dbFactory.getDatabase("postgres")
+  pgsqlDriver: DatabaseDriver = DbPostgres@1a4b27e1
+
+  scala> val mysqlDriver = dbFactory.getDatabase("mysql")
+  mysqlDriver: DatabaseDriver = DbMysql@4f5a3111
+
+  scala> 
+
+  scala> sqliteDriver.dbname
+  res61: String = sqlite
+
+  scala> sqliteDriver.connect("file://somedb.sqlite")
+  Connect to SQlite database: file://somedb.sqlite
+
+  scala> 
+
+#+END_SRC
+
+Reference: 
+
+  - *Factory Pattern* <http://www.oodesign.com/factory-pattern.html>
+
+
+  - *what's the difference between a simple factory, a factory method
+    design pattern, and an abstract factory?*
+    <https://www.linkedin.com/pulse/20140901184348-90925576-what-s-the-difference-between-a-simple-factory-a-factory-method-design-pattern-and-an-abstract-factory>
+
+
+ - *Simple Factory Vs Factory Method Vs Abstract Factory by Example*
+   <https://vivekcek.wordpress.com/2013/03/17/simple-factory-vs-factory-method-vs-abstract-factory-by-example/>
 * Java Interoperability
 ** Show Java Properties
 
