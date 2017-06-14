@@ -4153,6 +4153,9 @@ References:
    <http://www.ucccs.info/ucc/ucc2/ucc_folder/cs2500/notes/Lecture%2037%20-%20EventHandlers.pdf> 
 
 **** Example in OO way 
+     :PROPERTIES:
+     :ID:       24e96781-f520-491c-9607-5513cd9c738b
+     :END:
 
 Example: A temperature sensor publishes its temperature to 4 observers
 that displays the temperature in Celsius, Kelvin and Fahrenheit. It
@@ -4291,7 +4294,7 @@ Running:
   consoleF: ConsoleFahrenheitObserver = ConsoleFahrenheitObserver@495b0487
   guiObs: GuiCelsiusObserver = GuiCelsiusObserver@55dfcc6
 
-  // Sensor manual simulation 
+  // Manual simulation 
   //-------------------------------
 
   scala> sensor.notifyObservers(20.0)
@@ -4360,6 +4363,184 @@ Running:
 #+END_SRC
 
 **** Example in Functional way 
+     :PROPERTIES:
+     :ID:       50b40ac2-98e9-40cb-ab9e-0984e1ef3c22
+     :END:
+
+As Scala is a functional language, it allows functions be passed
+directly as argument, therefore the observer object be replaced by a
+_callback_ function and _subject_ by a list or set of callbacks. 
+
+File: [[file:src/observerPatternFun.scala][file:src/observerPatternFun.scala]]
+
+#+BEGIN_SRC scala :tangle src/observerPatternFun.scala
+  // Observer object is replace by a callback function 
+  type Observer[A] = A => Unit
+
+  // Record containing functions 
+  case class Subject[A](
+     attach: Observer[A] => Unit
+    ,detach: Observer[A] => Unit
+    ,notifyObservers: A  => Unit
+    ,getState: () => A
+  )
+
+  def createSubject[A](stateInit: A) = {
+    var observers : Set[A => Unit] = Set()  
+    var state = stateInit
+
+    val attach = (obs: Observer[A]) => {
+      observers += obs 
+    }
+
+    val detach = (obs: Observer[A]) => {
+      observers -= obs 
+    }
+
+    val notifyObservers = (a: A) => {
+      state = a 
+      for (obs <- observers) obs(a)
+    }
+
+    val getState = () => state
+
+    Subject(attach, detach, notifyObservers, getState)
+  }
+
+
+  // The observer becomes just a function or callback!!
+  def consoleCelsiusObserver(temp: Double) = {
+    printf("Current temperature is %.3f in °C\n", temp)
+  }
+
+  def consoleKelvinObserver(temp: Double) = {
+      printf("Current temperature is %.3f in °K\n", temp + 273.0)
+  }
+
+  def consoleFahrenheitObserver(temp: Double) = {
+    val tempF = 5.0 / 9.0 * temp + 32.0
+    printf("Current temperature is %.3f in F\n", tempF)
+  }
+
+  // Creates a function that updates the GUI display
+  // 
+  // Note: (Double => Unit) is optional.
+  // The type annotation was added to make reading easier.
+  //
+  def makeGuiObserver(): (Double => Unit) = {
+    val frame = new javax.swing.JFrame()
+    val display = new javax.swing.JLabel()
+    frame.setSize(255, 71)
+    frame.add(display)
+    frame.show()
+    frame.setTitle("Temperature View")
+    (temp: Double) =>  display.setText("Temperature = %.3f C".format(temp))
+  }
+
+  val sensor = createSubject[Double](20.0)
+  sensor.attach(consoleCelsiusObserver)
+  sensor.attach(consoleKelvinObserver)
+  sensor.attach(consoleFahrenheitObserver)
+
+  val guiObserver = makeGuiObserver()
+  sensor.attach(guiObserver)
+#+END_SRC
+
+Running: 
+
+#+BEGIN_SRC scala 
+  scala> :paste src/observerPatternFun.scala
+  Pasting file src/observerPatternFun.scala...
+  warning: there was one deprecation warning; re-run with -deprecation for details
+
+  ob_scala_eoldefined type alias Observer
+  defined class Subject
+  createSubject: [A](stateInit: A)Subject[A]
+  consoleCelsiusObserver: (temp: Double)Unit
+  consoleKelvinObserver: (temp: Double)Unit
+  consoleFahrenheitObserver: (temp: Double)Unit
+  makeGuiObserver: ()Double => Unit
+  sensor: Subject[Double] = Subject(<function1>,<function1>,<function1>,<function0>)
+  guiObserver: Double => Unit = <function1>
+
+
+  // Manual simulation
+  //--------------------------------------
+
+  scala>  sensor.notifyObservers(21.0)
+  Current temperature is 21.000 in °C
+  Current temperature is 294.000 in °K
+  Current temperature is 43.667 in F
+
+  scala>  sensor.notifyObservers(22.0)
+  Current temperature is 22.000 in °C
+  Current temperature is 295.000 in °K
+  Current temperature is 44.222 in F
+
+  scala>  sensor.notifyObservers(23.0)
+  Current temperature is 23.000 in °C
+  Current temperature is 296.000 in °K
+  Current temperature is 44.778 in F
+
+  scala>  sensor.notifyObservers(25.0)
+  Current temperature is 25.000 in °C
+  Current temperature is 298.000 in °K
+  Current temperature is 45.889 in F
+
+
+  // Automatic simulation
+  //--------------------------------------
+
+
+  def runTimer(interval: Int, taskFn: () => Unit) = {
+    val task = new java.util.TimerTask() {
+      def run() {
+        taskFn()
+      }
+    }
+
+    val timer = new java.util.Timer()
+    // Run the task every 1 second interval (or 1000 milli seconds)
+    timer.schedule(task, 1, interval)
+    timer
+  } // End of runTimer
+
+
+  // Generates a random number within an interval
+  // from (mid - delta) to (mid + delta)
+  //
+  def genRandomInterval(mid: Double, delta: Double) = {
+    val rnd = new java.util.Random()
+    () => { val x = rnd.nextDouble()
+            2 * delta * x + (mid - delta) 
+          }
+  }
+
+
+  scala> val genTemp = genRandomInterval(20.0, 3.0)
+  genTemp: () => Double = <function0>
+
+  scala> genTemp()
+  res5: Double = 19.81265553013229
+
+  scala> genTemp()
+  res6: Double = 18.965575803660617
+
+  scala> genTemp()
+  res7: Double = 21.172101549312305
+
+  scala> genTemp()
+  res8: Double = 17.821626339663855
+
+  scala> genTemp()
+  res9: Double = 22.38493758505381
+
+
+  // Update the temperature every 1 second 
+  runTimer(1000, () => sensor.notifyObservers(genTemp()))
+#+END_SRC
+
+
 * Java Interoperability
 ** Show Java Properties
 
