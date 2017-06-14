@@ -4029,6 +4029,246 @@ References:
 
 
 ***
+*** Observer / Publisher Subscriber
+    :PROPERTIES:
+    :ID:       a24d6fd5-1931-4dde-b68d-0873704614fb
+    :END:
+
+The observer pattern is stated by GOF as "Define a one-to-many
+dependency between objects so that when one object changes state, all
+its dependents are notified and updated automatically."
+
+The observer pattern is behavioral pattern defining a one-to-many
+dependency between subject and observer. The observers objects are
+notified about the subject changes.
+
+This pattern is widely used by GUIs toolkits, including Java Swing and
+spreadsheets. It is also a key part of MVC - Model View Controller.
+
+It is also known as:
+
+ - Puhlisher/ Subscriber
+
+ - Observable/ Observer
+
+ - Subject / Observer
+
+Known uses in Frameworks:
+
+ - Java: java.util.Observable
+
+ - .NET: System.IObservable and System.IObserver
+
+Participants:
+
+ - _Subject_  - The _subject_ object maintains references to all
+   subscribed _observers_ and notifies them when an event happens or
+   its state changes.
+
+   - Methods:
+
+     - attach or subscribe           - Attach observer.
+
+     - detach/ unsubscribe or remove - Remove observer.
+
+     - notify - Notify all observers,
+
+ - _Observer_ - Each Observer object has an update or notify method
+   that is called by the subscribed subject when its states
+   changes.
+
+   - Methods:
+
+     - update / notify  - Notify or update observer.
+
+Mechanisms to send data to observers:
+
+ + Pull model. Observer executes Subject.getData() to get data from subject.
+
+ + Push model. The subject pass its data as argument of observers'
+   update method. =for o in observers do o.update(subject.data)=
+
+
+Example: A temperature sensor publishes its temperature to 4 observers
+that displays the temperature in Celsius, Kelvin and Fahrenheit. It
+has also a GUI observer (View) that displays the temperature in
+Celsius. All observers(displays, aka views) are updated when the
+temperature changes.
+
+ - File: [[file:src/observerPattern1.scala][src/observerPattern1.scala]]
+
+#+BEGIN_SRC scala :tangle src/observerPattern1.scala
+  // Observer interface
+  trait Observer[A] {
+    def update(a: A)
+  }
+
+  // Subject interface
+  trait Subject[A] {
+    // Subscribe observer to subject updates
+    def attach(obs: Observer[A]): Unit
+
+    // Remove/ unsubscribe observer from subject updates
+    def detach(obs: Observer[A]): Unit
+
+    // Notify all observers
+    def notifyObservers(a: A): Unit
+  }
+
+  // Concrete: Subject
+  //----------------------------------
+  //
+  // Publishes temperature measurements.
+  class TempSensor extends Subject[Double]{
+    private var temp: Double = 0.0
+    private var observers: Set[Observer[Double]] = Set()
+
+    def attach(obs: Observer[Double]) =
+      observers += obs
+
+    def detach(obs: Observer[Double]) =
+      observers -= obs
+
+    def notifyObservers(tempNew: Double) = {
+      temp = tempNew
+      observers.foreach(_.update(tempNew))
+      // for (obs <- observers) obs.update(tempNew)
+    }
+
+    def getTemp() = temp
+
+  }
+
+
+  // ---------- Concrete Observers ----------------- //
+
+  class ConsoleCelsiusObserver extends Observer[Double]{
+    def update(temp: Double) = {
+      printf("Current temperature is %.3f in °C\n", temp)
+    }
+  } // End of class ConsoleCelsiusObserver
+
+  class ConsoleKelvinObserver extends Observer[Double]{
+    def update(temp: Double) = {
+      printf("Current temperature is %.3f in °K\n", temp + 273.0)
+    }
+  } // End of class ConsoleKelvinObserver
+
+  class ConsoleFahrenheitObserver(subject: Subject[Double]) extends Observer[Double]{
+
+    init()
+
+    def init() {
+      subject.attach(this)
+    }
+
+    def update(temp: Double) = {
+      val tempF = 5.0 / 9.0 * temp + 32.0
+      printf("Current temperature is %.3f in F\n", tempF)
+    }
+  } // End of class ConsoleFahrenheitObserver
+
+
+  /// Java Swing Observer
+  class GuiCelsiusObserver(subject: Subject[Double]) extends Observer[Double] {
+    private var frame   = new javax.swing.JFrame()
+    private var display = new javax.swing.JLabel()
+
+    init()
+
+    def init(){
+      frame.setSize(255, 71)
+      frame.add(display)
+      frame.show()
+      frame.setTitle("Temperature View")
+      subject.attach(this)
+    }
+
+    def update(temp: Double) = {
+      display.setText("Temperature = %.3f C".format(temp))
+    }
+  }
+
+  /// ----------- Classes Instantiation ---------- ///
+
+  val sensor = new TempSensor()
+
+  val consoleC = new ConsoleCelsiusObserver()
+  sensor.attach(consoleC)
+
+  val consoleK = new ConsoleKelvinObserver()
+  sensor.attach(consoleK)
+
+  val consoleF = new ConsoleFahrenheitObserver(sensor)
+
+  val guiObs = new GuiCelsiusObserver(sensor)
+
+#+END_SRC
+
+
+Running:
+
+#+BEGIN_SRC scala
+  scala> :paste src/observerPattern1.scala
+  Pasting file src/observerPattern1.scala...
+  warning: there was one deprecation warning; re-run with -deprecation for details
+
+  ob_scala_eoldefined trait Observer
+  defined trait Subject
+  defined class TempSensor
+  defined class ConsoleCelsiusObserver
+  defined class ConsoleKelvinObserver
+  defined class ConsoleFahrenheitObserver
+  defined class GuiCelsiusObserver
+  sensor: TempSensor = TempSensor@4dd02341
+  consoleC: ConsoleCelsiusObserver = ConsoleCelsiusObserver@3212a8d7
+  consoleK: ConsoleKelvinObserver = ConsoleKelvinObserver@7a1a3478
+  consoleF: ConsoleFahrenheitObserver = ConsoleFahrenheitObserver@495b0487
+  guiObs: GuiCelsiusObserver = GuiCelsiusObserver@55dfcc6
+
+
+  scala> sensor.notifyObservers(20.0)
+  Current temperature is 20.000 in °C
+  Current temperature is 293.000 in °K
+  Current temperature is 43.111 in F
+
+  scala> sensor.notifyObservers(20.1)
+  Current temperature is 20.100 in °C
+  Current temperature is 293.100 in °K
+  Current temperature is 43.167 in F
+
+  scala> sensor.notifyObservers(20.5)
+  Current temperature is 20.500 in °C
+  Current temperature is 293.500 in °K
+  Current temperature is 43.389 in F
+
+  scala> sensor.detach(consoleK)
+
+  scala> sensor.notifyObservers(23.0)
+  Current temperature is 23.000 in °C
+  Current temperature is 44.778 in F
+
+  scala>
+
+#+END_SRC
+
+
+References:
+
+ - *Observer Pattern* <http://www.cs.mcgill.ca/~hv/classes/CS400/01.hchen/doc/observer/observer.html>
+
+ - *Observer Design Pattern* <https://docs.microsoft.com/en-us/dotnet/standard/events/observer-design-pattern>
+
+ - *Exploring the Observer Design Pattern* <https://msdn.microsoft.com/en-us/library/ee817669.aspx>
+
+ - *Introduction to Software Engineering - The Observer Design
+   Pattern* <http://stg-tud.github.io/eise/WS11-EiSE-17-Observer_Design_Pattern.pdf>
+
+ - *Observer* <http://cs.unb.ca/~wdu/cs4015/ch5i.pdf>
+
+ - *Observer design pattern* <https://www.slideshare.net/saratorkey/observer-design-pattern>
+
+ - *Software Development (cs2500)* <http://www.ucccs.info/ucc/ucc2/ucc_folder/cs2500/notes/Lecture%2037%20-%20EventHandlers.pdf>
 * Java Interoperability
 ** Show Java Properties
 
