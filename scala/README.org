@@ -3584,15 +3584,59 @@ Company, 1995)
 
 *Design Patterns*
 
- - *Creational Pattern*
-   - Factory pattern
+ - *Creational Pattern* - Patterns concerned with object
+   instatiation/creation.
+
+   - Factory pattern  
      - Simple Factory
      - Factory Method 
 
- - *Behavioral Patterns*
-   - Strategy Pattern
+ - *Behavioral Patterns* - Patterns that focus on communication
+   between objects.
 
- - *Structural*
+   - Strategy Pattern - Allows switching algorithm/strategy at run-time.
+
+   - Observer / Publisher-Subscriber
+
+ - *Structural* - Patterns fucusing on objects composition to extend
+   its functionality.
+
+*Creational Patterns*
+
+Factory Pattern 
+
+ - Intent: Instantiate classes with a common parent class or interface
+   without specifying a concrete class.
+
+Singleton 
+ 
+ - Intent: Ensure that a class with only one instance. 
+
+*Structural Patterns*
+
+Facade Pattern
+
+ - Provide a unified and simplified interface to a complex subsystem.
+ 
+*Behavioral Patterns*
+
+Strategy Pattern
+
+ - Intent: Encapsulate algorithms with objects and switch them at run-time.
+
+Observer Pattern
+ 
+ - Intent: Define one-to-many dependency between objects.
+
+ - Known uses: Event driven-systems such as GUIs such as Gtk, QT and
+   Java Swing events or Model in model view controller pattern.
+
+Iterator Pattern 
+
+ - Intent: Access elements of a container without exposing its representation.
+
+ - Known uses: Java Iterators, C++ STL iterators.
+
 
 *** Simple factory pattern 
 
