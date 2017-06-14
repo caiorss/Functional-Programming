@@ -3637,7 +3637,6 @@ Iterator Pattern
 
  - Known uses: Java Iterators, C++ STL iterators.
 
-
 *** Simple factory pattern 
 
 Defined by GOF as: "Define an interface for creating an object, but
@@ -4070,13 +4069,11 @@ References:
 
  - Strategy pattern - <https://en.wikipedia.org/wiki/Strategy_pattern>
 
-
-
-***
 *** Observer / Publisher Subscriber
     :PROPERTIES:
     :ID:       a24d6fd5-1931-4dde-b68d-0873704614fb
     :END:
+**** Overview 
 
 The observer pattern is stated by GOF as "Define a one-to-many
 dependency between objects so that when one object changes state, all
@@ -4133,13 +4130,37 @@ Mechanisms to send data to observers:
    update method. =for o in observers do o.update(subject.data)=
 
 
+References:
+
+ - *Observer Pattern*
+   <http://www.cs.mcgill.ca/~hv/classes/CS400/01.hchen/doc/observer/observer.html>
+
+ - *Observer Design Pattern*
+   <https://docs.microsoft.com/en-us/dotnet/standard/events/observer-design-pattern>
+
+ - *Exploring the Observer Design Pattern*
+   <https://msdn.microsoft.com/en-us/library/ee817669.aspx>
+
+ - *Introduction to Software Engineering - The Observer Design
+   Pattern* <http://stg-tud.github.io/eise/WS11-EiSE-17-Observer_Design_Pattern.pdf>
+
+ - *Observer* <http://cs.unb.ca/~wdu/cs4015/ch5i.pdf>
+
+ - *Observer design pattern*
+   <https://www.slideshare.net/saratorkey/observer-design-pattern>
+
+ - *Software Development (cs2500)*
+   <http://www.ucccs.info/ucc/ucc2/ucc_folder/cs2500/notes/Lecture%2037%20-%20EventHandlers.pdf> 
+
+**** Example in OO way 
+
 Example: A temperature sensor publishes its temperature to 4 observers
 that displays the temperature in Celsius, Kelvin and Fahrenheit. It
 has also a GUI observer (View) that displays the temperature in
 Celsius. All observers(displays, aka views) are updated when the
 temperature changes.
 
- - File: [[file:src/observerPattern1.scala][src/observerPattern1.scala]]
+ - File:  [[file:src/observerPattern1.scala][src/observerPattern1.scala]] 
 
 #+BEGIN_SRC scala :tangle src/observerPattern1.scala
   // Observer interface
@@ -4270,6 +4291,8 @@ Running:
   consoleF: ConsoleFahrenheitObserver = ConsoleFahrenheitObserver@495b0487
   guiObs: GuiCelsiusObserver = GuiCelsiusObserver@55dfcc6
 
+  // Sensor manual simulation 
+  //-------------------------------
 
   scala> sensor.notifyObservers(20.0)
   Current temperature is 20.000 in °C
@@ -4292,27 +4315,51 @@ Running:
   Current temperature is 23.000 in °C
   Current temperature is 44.778 in F
 
-  scala>
+  // Automatic simulation
+  //--------------------------------------
 
+  def runTimer(interval: Int, taskFn: () => Unit) = {
+    val task = new java.util.TimerTask() {
+      def run() {
+        taskFn()
+      }
+    }
+
+    val timer = new java.util.Timer()
+    // Run the task every 1 second interval (or 1000 milli seconds)
+    timer.schedule(task, 1, interval)
+    timer
+  } // End of runTimer
+
+
+  // Generates a random number within an interval
+  // from (mid - delta) to (mid + delta)
+  //
+  def genRandomInterval(mid: Double, delta: Double) = {
+    val rnd = new java.util.Random()
+    () => { val x = rnd.nextDouble()
+            2 * delta * x + (mid - delta) 
+          }
+  }
+
+  scala> def genRandomInterval(mid: Double, delta: Double) = {
+       |   val rnd = new java.util.Random()
+       |   () => { val x = rnd.nextDouble()
+       |           2 * delta * x + (mid - delta) 
+       |         }
+       | }
+  genRandomInterval: (mid: Double, delta: Double)() => Double
+
+  // Generates a temperature between 20.0 - 3.0 (17.0 C) and 20.0 + 3.0 (23 °C)
+  scala> val genTemp = genRandomInterval(20.0, 3.0)
+  genTemp: () => Double = <function0>
+
+
+  // Update the temperature every 1 second 
+  runTimer(1000, () => sensor.notifyObservers(genTemp()))
 #+END_SRC
 
-
-References:
-
- - *Observer Pattern* <http://www.cs.mcgill.ca/~hv/classes/CS400/01.hchen/doc/observer/observer.html>
-
- - *Observer Design Pattern* <https://docs.microsoft.com/en-us/dotnet/standard/events/observer-design-pattern>
-
- - *Exploring the Observer Design Pattern* <https://msdn.microsoft.com/en-us/library/ee817669.aspx>
-
- - *Introduction to Software Engineering - The Observer Design
-   Pattern* <http://stg-tud.github.io/eise/WS11-EiSE-17-Observer_Design_Pattern.pdf>
-
- - *Observer* <http://cs.unb.ca/~wdu/cs4015/ch5i.pdf>
-
- - *Observer design pattern* <https://www.slideshare.net/saratorkey/observer-design-pattern>
-
- - *Software Development (cs2500)* <http://www.ucccs.info/ucc/ucc2/ucc_folder/cs2500/notes/Lecture%2037%20-%20EventHandlers.pdf>
+**** Example in Functional way 
 * Java Interoperability
 ** Show Java Properties
 
