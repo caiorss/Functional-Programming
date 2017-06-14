@@ -683,7 +683,6 @@ res77: Int = 28
 
 #+END_SRC
 
-
 ** Imperative Constructs
 *** While loop
 
@@ -2705,7 +2704,6 @@ trees and build interpreters and pasers.
 
 #+END_SRC
 
-
 ** Pattern Matching 
 
 Example 1 - Show month name. 
@@ -3885,6 +3883,7 @@ Reference:
    <https://vivekcek.wordpress.com/2013/03/17/simple-factory-vs-factory-method-vs-abstract-factory-by-example/>
 
 *** Strategy Pattern
+**** Overview 
 
 Strategy pattern allows changing the algorithm (strategy) at
 run-time. The strategy object encapsulates the algorithm, in other
@@ -3904,7 +3903,17 @@ This pattern has three main parts:
  - _Context_: the object holding the Concrete Strategy.
 
 
-Example:
+References:
+
+ - Introduction to Design Patterns <https://www.intertech.com/Downloads/Whitepapers/Intertech-Design-Patterns.pdf>
+
+ - Design Patterns - Strategy Pattern <https://www.tutorialspoint.com/design_pattern/strategy_pattern.htm>
+
+ - CS 635 Advanced Object-Oriented Design & Programming - <http://www.eli.sdsu.edu/courses/spring01/cs635/notes/strategy/strategy.html>
+
+ - Strategy pattern - <https://en.wikipedia.org/wiki/Strategy_pattern>
+
+**** Example in OO way
 
 #+BEGIN_SRC scala
 
@@ -3969,8 +3978,7 @@ Example:
 
 #+END_SRC
 
-
-*Functional Programming approach*
+**** Example in FP way 
 
 In functional programming each _algorithm is just a function_. The
 context object can be replaced by a _higher order function_. By the
@@ -4058,17 +4066,6 @@ Variation 2: With only functions:
 
 #+END_SRC
 
-
-References:
-
- - Introduction to Design Patterns <https://www.intertech.com/Downloads/Whitepapers/Intertech-Design-Patterns.pdf>
-
- - Design Patterns - Strategy Pattern <https://www.tutorialspoint.com/design_pattern/strategy_pattern.htm>
-
- - CS 635 Advanced Object-Oriented Design & Programming - <http://www.eli.sdsu.edu/courses/spring01/cs635/notes/strategy/strategy.html>
-
- - Strategy pattern - <https://en.wikipedia.org/wiki/Strategy_pattern>
-
 *** Observer / Publisher Subscriber
     :PROPERTIES:
     :ID:       a24d6fd5-1931-4dde-b68d-0873704614fb
@@ -4150,7 +4147,9 @@ References:
    <https://www.slideshare.net/saratorkey/observer-design-pattern>
 
  - *Software Development (cs2500)*
-   <http://www.ucccs.info/ucc/ucc2/ucc_folder/cs2500/notes/Lecture%2037%20-%20EventHandlers.pdf> 
+   <http://www.ucccs.info/ucc/ucc2/ucc_folder/cs2500/notes/Lecture%2037%20-%20EventHandlers.pdf>
+
+ - *Observer pattern* <https://en.wikipedia.org/wiki/Observer_pattern>
 
 **** Example in OO way 
      :PROPERTIES:
@@ -4362,7 +4361,7 @@ Running:
   runTimer(1000, () => sensor.notifyObservers(genTemp()))
 #+END_SRC
 
-**** Example in Functional way 
+**** Example in FP way 
      :PROPERTIES:
      :ID:       50b40ac2-98e9-40cb-ab9e-0984e1ef3c22
      :END:
