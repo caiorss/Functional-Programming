@@ -683,7 +683,6 @@ res77: Int = 28
 
 #+END_SRC
 
-
 ** Imperative Constructs
 *** While loop
 
@@ -2705,7 +2704,6 @@ trees and build interpreters and pasers.
 
 #+END_SRC
 
-
 ** Pattern Matching 
 
 Example 1 - Show month name. 
@@ -3575,6 +3573,1336 @@ Notes:
 
 
 #+END_SRC
+** OO - Design Patterns 
+*** Overview 
+
+GOF - Gang of Four Design Patterns or Design Patterns: Elements of
+Reusable Object-Oriented Software (Addison-Wesley Publishing
+Company, 1995)
+
+*Design Patterns*
+
+ - *Creational Pattern* - Patterns concerned with object
+   instatiation/creation.
+
+   - Factory pattern  
+     - Simple Factory
+     - Factory Method 
+
+ - *Behavioral Patterns* - Patterns that focus on communication
+   between objects.
+
+   - Strategy Pattern - Allows switching algorithm/strategy at run-time.
+
+   - Observer / Publisher-Subscriber
+
+ - *Structural* - Patterns fucusing on objects composition to extend
+   its functionality.
+
+*Creational Patterns*
+
+Factory Pattern 
+
+ - Intent: Instantiate classes with a common parent class or interface
+   without specifying a concrete class.
+
+Singleton 
+ 
+ - Intent: Ensure that a class with only one instance. 
+
+*Structural Patterns*
+
+Facade Pattern
+
+ - Provide a unified and simplified interface to a complex subsystem.
+ 
+*Behavioral Patterns*
+
+Strategy Pattern
+
+ - Intent: Encapsulate algorithms with objects and switch them at run-time.
+
+Observer Pattern
+ 
+ - Intent: Define one-to-many dependency between objects.
+
+ - Known uses: Event driven-systems such as GUIs such as Gtk, QT and
+   Java Swing events or Model in model view controller pattern.
+
+Iterator Pattern 
+
+ - Intent: Access elements of a container without exposing its representation.
+
+ - Known uses: Java Iterators, C++ STL iterators.
+
+*** Simple factory pattern 
+
+Defined by GOF as: "Define an interface for creating an object, but
+let subclasses decide which class to instantiate. Factory Method lets
+a class defer instantiation to subclasses."
+
+The factory pattern is used to create instances of different
+subclasses of a class. A factory class instantiates a subclass based
+on the input passed to the factory.
+
+Parts: 
+
+ - Product - Parent class which subclasses will be instantiated by the factory.
+
+ - Factory - Class that instantiate product subclasses. 
+
+The class ComputerFactory is used to instantiate classes that
+implements the trait (interface) based on the input passed to the
+factory.
+
+Note: This pattern is not extensible since, the class ComputerFactory
+needs to be modified for every new Computer subclass.
+
+#+BEGIN_SRC scala 
+
+  trait Computer {
+    def getManufacturer(): String
+    def getID(): Int
+    def clockGHZ: Int
+
+    override def toString() = {
+      val m  = getManufacturer()
+      val id = getID()
+      s"{ Manufacturer = $m id = $id clock = $clockGHZ }"
+    }
+  }
+
+  class ComputerA extends Computer {
+    def getManufacturer() = "SunJitsu"
+    def getID()  = 100
+    def clockGHZ = 4
+  }
+
+
+  class ComputerB extends Computer {
+    def getManufacturer() = "some manufacturer"
+    def getID()  = 300
+    def clockGHZ = 100
+  }
+
+
+  class ComputerC extends Computer {
+    def getManufacturer() = "unknown manufacturer"
+    def getID()  = 350
+    def clockGHZ = 4
+  }
+
+  class ComputerFactory() {
+    def getComputer(comp: String) = comp match {
+      case "compA" => new ComputerA()
+      case "compB" => new ComputerB()
+      case "compC" => new ComputerC()
+      case _       => error("Error: This type of computer doesn't exist")
+    }
+  }
+
+
+  scala> val factory = new ComputerFactory()
+  factory: ComputerFactory = ComputerFactory@6acb0d0d
+
+  scala> val compA = factory.getComputer("compA")
+  compA: Computer = { Manufacturer = SunJitsu id = 100 clock = 4 }
+
+  scala> compA.getManufacturer()
+  res29: String = SunJitsu
+
+  scala> compA.getID()
+  res30: Int = 100
+
+  scala> 
+
+
+  scala> val compB = factory.getComputer("compB")
+  compB: Computer = { Manufacturer = some manufacturer id = 300 clock = 100 }
+
+  scala> val compC = factory.getComputer("compC")
+  compC: Computer = { Manufacturer = unknown manufacturer id = 350 clok = 4 }
+
+  scala> factory.getComputer("comp")
+  java.lang.RuntimeException: Error: This type of computer doesn't exist
+    at scala.sys.package$.error(package.scala:27)
+    at scala.Predef$.error(Predef.scala:144)
+    at ComputerFactory.getComputer(<console>:20)
+    ... 32 elided
+
+
+  scala> List(compA, compB, compC)
+  res34: List[Computer] = List({ Manufacturer = SunJitsu id = 100 clok = 4 }, { Manufacturer = some manufacturer id = 300 clok = 100 }, { Manufacturer = unknown manufacturer id = 350 clok = 4 })
+
+
+  scala> List(compA, compB, compC).foreach(println)
+  { Manufacturer = SunJitsu id = 100 clok = 4 }
+  { Manufacturer = some manufacturer id = 300 clok = 100 }
+  { Manufacturer = unknown manufacturer id = 350 clok = 4 }
+
+
+  scala> List(compA, compB, compC).map(_.getID())
+  res42: List[Int] = List(100, 300, 350)
+   
+#+END_SRC
+
+Functional Simplification: The factory class can replaces by a
+function that instantiates the product sub classes. 
+
+#+BEGIN_SRC scala 
+  def getComputer(comp: String) = comp match {
+    case "compA" => new ComputerA()
+    case "compB" => new ComputerB()
+    case "compC" => new ComputerC()
+    case _       => error("Error: This type of computer doesn't exist")
+  }
+
+  scala> getComputer _
+  res46: String => Computer = <function1>
+
+
+  scala> getComputer("compA")
+  res47: Computer = { Manufacturer = SunJitsu id = 100 clock = 4 }
+
+
+#+END_SRC
+
+
+References: 
+
+ - *Exploring the Factory Design Pattern*
+   <https://msdn.microsoft.com/en-us/library/ee817667.aspx>
+
+ - *Design Pattern - Factory Pattern*
+   <https://www.tutorialspoint.com/design_pattern/factory_pattern.htm>
+
+ - *Factory Design Pattern in Java*
+   <http://howtodoinjava.com/design-patterns/creational/implementing-factory-design-pattern-in-java/>
+
+ - *Why should I use a factory class instead of direct object
+   construction?* -
+   <https://softwareengineering.stackexchange.com/questions/253254/why-should-i-use-a-factory-class-instead-of-direct-object-construction>
+
+ - *Factory Pattern* <http://www.oodesign.com/factory-pattern.html>
+*** Factory pattern with factory method 
+
+This variation allows multiple subclasses be added to the factory. 
+
+#+BEGIN_SRC scala 
+
+  trait DatabaseDriver {
+    def dbname: String
+    def connect(Uri: String): Unit
+    def createDriver(): DatabaseDriver
+  }
+
+  class DbSqlite extends DatabaseDriver {
+    val dbname = "sqlite"
+    def connect(uri: String) = {
+      println("Connect to SQlite database: " + uri)
+    }
+
+    def createDriver() = new DbSqlite()
+  }
+
+
+  class DbPostgres extends DatabaseDriver {
+    val dbname = "postgres"
+    def connect(uri: String) = {
+      println("Connect to Postgres database: " + uri)
+    }
+
+    def createDriver() = new DbPostgres()
+  }
+
+
+
+  class DbMysql extends DatabaseDriver {
+    val dbname = "mysql"
+    def connect(uri: String) = {
+      println("Connect to Mysql database: " + uri)
+    }
+
+    def createDriver() = new DbMysql()
+  }
+
+
+  class DabaseFactory {
+    val dbMap: scala.collection.mutable.Map[String, DatabaseDriver] = scala.collection.mutable.Map()
+
+    def register(driver: DatabaseDriver) = {
+      dbMap += (driver.dbname -> driver)
+    }
+
+    def getDatabase(dbname: String) = dbMap(dbname).createDriver()
+  }
+
+
+  val dbFactory = new DabaseFactory()
+
+  /// Register database classe.
+  dbFactory.register(new DbMysql())
+  dbFactory.register(new DbSqlite())
+  dbFactory.register(new DbPostgres())
+
+
+
+
+  scala> val sqliteDriver = dbFactory.getDatabase("sqlite")
+  sqliteDriver: DatabaseDriver = DbSqlite@41a9920d
+
+  scala> val pgsqlDriver = dbFactory.getDatabase("postgres")
+  pgsqlDriver: DatabaseDriver = DbPostgres@1a4b27e1
+
+  scala> val mysqlDriver = dbFactory.getDatabase("mysql")
+  mysqlDriver: DatabaseDriver = DbMysql@4f5a3111
+
+  scala> 
+
+  scala> sqliteDriver.dbname
+  res61: String = sqlite
+
+  scala> sqliteDriver.connect("file://somedb.sqlite")
+  Connect to SQlite database: file://somedb.sqlite
+
+  scala> 
+
+#+END_SRC
+
+Reference: 
+
+  - *Factory Pattern* <http://www.oodesign.com/factory-pattern.html>
+
+
+  - *what's the difference between a simple factory, a factory method
+    design pattern, and an abstract factory?*
+    <https://www.linkedin.com/pulse/20140901184348-90925576-what-s-the-difference-between-a-simple-factory-a-factory-method-design-pattern-and-an-abstract-factory>
+
+
+ - *Simple Factory Vs Factory Method Vs Abstract Factory by Example*
+   <https://vivekcek.wordpress.com/2013/03/17/simple-factory-vs-factory-method-vs-abstract-factory-by-example/>
+
+*** Strategy Pattern
+**** Overview 
+
+Strategy pattern allows changing the algorithm (strategy) at
+run-time. The strategy object encapsulates the algorithm, in other
+words, implements the strategy to be executed. The context
+object switches its behavior by switching the context object.
+
+
+Intent: Define a family of algorithms, encapsulate each one, and make
+them interchangeable.
+
+This pattern has three main parts:
+
+ - _Strategy_: the interface that defines how the algorithm will be called.
+
+ - _Concrete Strategy_: the implementation of the strategy (algorithm).
+
+ - _Context_: the object holding the Concrete Strategy.
+
+
+References:
+
+ - Introduction to Design Patterns <https://www.intertech.com/Downloads/Whitepapers/Intertech-Design-Patterns.pdf>
+
+ - Design Patterns - Strategy Pattern <https://www.tutorialspoint.com/design_pattern/strategy_pattern.htm>
+
+ - CS 635 Advanced Object-Oriented Design & Programming - <http://www.eli.sdsu.edu/courses/spring01/cs635/notes/strategy/strategy.html>
+
+ - Strategy pattern - <https://en.wikipedia.org/wiki/Strategy_pattern>
+
+**** Example in OO way
+
+#+BEGIN_SRC scala
+
+
+  /// Interface for the Strategy - Algorithm
+  trait Operation {
+    def run(x: Double, y: Double): Double
+  }
+
+  /// -------- Concrete strategies ------- ///
+
+  class AddOp() extends Operation {
+    def run(x: Double, y: Double) = x + y
+  }
+
+
+  class SubOp extends Operation {
+    def run(x: Double, y: Double) = x - y
+  }
+
+  class MulOp extends Operation {
+    def run(x: Double, y: Double) = x * y
+  }
+
+  //----- Context - Class that selects the concrete strategy -- //
+
+  class Context{
+    private var strategy: Operation = null
+
+    def setStrategy(strategyS: Operation) = {
+      strategy = strategyS
+    }
+
+    def runStrategy(x: Double, y: Double) = {
+      strategy.run(x, y)
+    }
+
+  }
+
+
+  // ------- Running -------------- //
+
+  scala> val ctx = new Context()
+  ctx: Context = Context@2f18e88b
+
+  scala> ctx.setStrategy(new AddOp())
+
+  scala> ctx.runStrategy(10.0, 5.0)
+  res69: Double = 15.0
+
+  scala> ctx.setStrategy(new MulOp())
+
+  scala> ctx.runStrategy(63.0, 4.0)
+  res71: Double = 252.0
+
+  scala> ctx.setStrategy(new SubOp())
+
+  scala> ctx.runStrategy(63.0, 4.0)
+  res73: Double = 59.0
+
+  scala>
+
+#+END_SRC
+
+**** Example in FP way 
+
+In functional programming each _algorithm is just a function_. The
+context object can be replaced by a _higher order function_. By the
+changing the function argument of the context (higher order function)
+its changes the behavior.
+
+Variation 1: Each concrete strategy can become just a function.
+
+#+BEGIN_SRC scala
+  type Operation = (Double, Double) => Double
+
+  val addOp: Operation = (x: Double, y: Double) => x + y
+  val subOp: Operation = (x: Double, y: Double) => x - y
+  val mulOp: Operation = (x: Double, y: Double) => x * y
+
+  class Context{
+    private var strategy: Operation = null
+
+    def setStrategy(strategyS: Operation) = {
+      strategy = strategyS
+    }
+
+    def runStrategy(x: Double, y: Double) = {
+      strategy(x, y)
+    }
+  }
+
+
+  scala> val ctx = new Context()
+  ctx: Context = Context@26275bef
+
+  scala> ctx.setStrategy(addOp)
+
+  scala> ctx.runStrategy(10, 5)
+  res1: Double = 15.0
+
+  scala> ctx.setStrategy(mulOp)
+
+  scala> ctx.runStrategy(10, 5)
+  res3: Double = 50.0
+
+  scala> ctx.setStrategy(subOp)
+
+  scala> ctx.runStrategy(10, 5)
+  res5: Double = 5.0
+
+  scala>
+
+#+END_SRC
+
+Variation 2: With only functions:
+
+ - The function runStrategy switches algorithms at run-time. The
+   algorithm is just a function passed as argument.
+
+#+BEGIN_SRC scala
+
+  type Operation = (Double, Double) => Double
+
+  val addOp: Operation = (x: Double, y: Double) => x + y
+  val subOp: Operation = (x: Double, y: Double) => x - y
+  val mulOp: Operation = (x: Double, y: Double) => x * y
+
+  def runStrategy(strategy: Operation) =  (x: Double, y: Double) => strategy(x, y)
+
+
+  scala> def runStrategy(strategy: Operation) =  (x: Double, y: Double) => strategy(x, y)
+  runStrategy: (strategy: Operation)(Double, Double) => Double
+
+  scala> runStrategy _
+  res80: Operation => ((Double, Double) => Double) = <function1>
+
+  scala> runStrategy(addOp)
+  res75: (Double, Double) => Double = <function2>
+
+  scala> runStrategy(addOp)(3, 4)
+  res76: Double = 7.0
+
+  scala> runStrategy(mulOp)(5, 10)
+  res77: Double = 50.0
+
+  scala> runStrategy(subOp)(5, 10)
+  res78: Double = -5.0
+
+
+#+END_SRC
+
+*** Observer / Publisher Subscriber
+    :PROPERTIES:
+    :ID:       a24d6fd5-1931-4dde-b68d-0873704614fb
+    :END:
+**** Overview 
+
+The observer pattern is stated by GOF as "Define a one-to-many
+dependency between objects so that when one object changes state, all
+its dependents are notified and updated automatically."
+
+The observer pattern is behavioral pattern defining a one-to-many
+dependency between subject and observer. The observers objects are
+notified about the subject changes.
+
+This pattern is widely used by GUIs toolkits, including Java Swing and
+spreadsheets. It is also a key part of MVC - Model View Controller.
+
+It is also known as:
+
+ - Puhlisher/ Subscriber
+
+ - Observable/ Observer
+
+ - Subject / Observer
+
+Known uses in Frameworks:
+
+ - Java: java.util.Observable
+
+ - .NET: System.IObservable and System.IObserver
+
+Participants:
+
+ - _Subject_  - The _subject_ object maintains references to all
+   subscribed _observers_ and notifies them when an event happens or
+   its state changes.
+
+   - Methods:
+
+     - attach or subscribe           - Attach observer.
+
+     - detach/ unsubscribe or remove - Remove observer.
+
+     - notify - Notify all observers,
+
+ - _Observer_ - Each Observer object has an update or notify method
+   that is called by the subscribed subject when its states
+   changes.
+
+   - Methods:
+
+     - update / notify  - Notify or update observer.
+
+Mechanisms to send data to observers:
+
+ + Pull model. Observer executes Subject.getData() to get data from subject.
+
+ + Push model. The subject pass its data as argument of observers'
+   update method. =for o in observers do o.update(subject.data)=
+
+
+References:
+
+ - *Observer Pattern*
+   <http://www.cs.mcgill.ca/~hv/classes/CS400/01.hchen/doc/observer/observer.html>
+
+ - *Observer Design Pattern*
+   <https://docs.microsoft.com/en-us/dotnet/standard/events/observer-design-pattern>
+
+ - *Exploring the Observer Design Pattern*
+   <https://msdn.microsoft.com/en-us/library/ee817669.aspx>
+
+ - *Introduction to Software Engineering - The Observer Design
+   Pattern* <http://stg-tud.github.io/eise/WS11-EiSE-17-Observer_Design_Pattern.pdf>
+
+ - *Observer* <http://cs.unb.ca/~wdu/cs4015/ch5i.pdf>
+
+ - *Observer design pattern*
+   <https://www.slideshare.net/saratorkey/observer-design-pattern>
+
+ - *Software Development (cs2500)*
+   <http://www.ucccs.info/ucc/ucc2/ucc_folder/cs2500/notes/Lecture%2037%20-%20EventHandlers.pdf>
+
+ - *Observer pattern* <https://en.wikipedia.org/wiki/Observer_pattern>
+
+**** Example in OO way 
+     :PROPERTIES:
+     :ID:       24e96781-f520-491c-9607-5513cd9c738b
+     :END:
+
+Example: A temperature sensor publishes its temperature to 4 observers
+that displays the temperature in Celsius, Kelvin and Fahrenheit. It
+has also a GUI observer (View) that displays the temperature in
+Celsius. All observers(displays, aka views) are updated when the
+temperature changes.
+
+ - File:  [[file:src/observerPattern1.scala][src/observerPattern1.scala]] 
+
+#+BEGIN_SRC scala :tangle src/observerPattern1.scala
+  // Observer interface
+  trait Observer[A] {
+    def update(a: A)
+  }
+
+  // Subject interface
+  trait Subject[A] {
+    // Subscribe observer to subject updates
+    def attach(obs: Observer[A]): Unit
+
+    // Remove/ unsubscribe observer from subject updates
+    def detach(obs: Observer[A]): Unit
+
+    // Notify all observers
+    def notifyObservers(a: A): Unit
+  }
+
+  // Concrete: Subject
+  //----------------------------------
+  //
+  // Publishes temperature measurements.
+  class TempSensor extends Subject[Double]{
+    private var temp: Double = 0.0
+    private var observers: Set[Observer[Double]] = Set()
+
+    def attach(obs: Observer[Double]) =
+      observers += obs
+
+    def detach(obs: Observer[Double]) =
+      observers -= obs
+
+    def notifyObservers(tempNew: Double) = {
+      temp = tempNew
+      observers.foreach(_.update(tempNew))
+      // for (obs <- observers) obs.update(tempNew)
+    }
+
+    def getTemp() = temp
+
+  }
+
+
+  // ---------- Concrete Observers ----------------- //
+
+  class ConsoleCelsiusObserver extends Observer[Double]{
+    def update(temp: Double) = {
+      printf("Current temperature is %.3f in °C\n", temp)
+    }
+  } // End of class ConsoleCelsiusObserver
+
+  class ConsoleKelvinObserver extends Observer[Double]{
+    def update(temp: Double) = {
+      printf("Current temperature is %.3f in °K\n", temp + 273.0)
+    }
+  } // End of class ConsoleKelvinObserver
+
+  class ConsoleFahrenheitObserver(subject: Subject[Double]) extends Observer[Double]{
+
+    init()
+
+    def init() {
+      subject.attach(this)
+    }
+
+    def update(temp: Double) = {
+      val tempF = 5.0 / 9.0 * temp + 32.0
+      printf("Current temperature is %.3f in F\n", tempF)
+    }
+  } // End of class ConsoleFahrenheitObserver
+
+
+  /// Java Swing Observer
+  class GuiCelsiusObserver(subject: Subject[Double]) extends Observer[Double] {
+    private var frame   = new javax.swing.JFrame()
+    private var display = new javax.swing.JLabel()
+
+    init()
+
+    def init(){
+      frame.setSize(255, 71)
+      frame.add(display)
+      frame.show()
+      frame.setTitle("Temperature View")
+      subject.attach(this)
+    }
+
+    def update(temp: Double) = {
+      display.setText("Temperature = %.3f C".format(temp))
+    }
+  }
+
+  /// ----------- Classes Instantiation ---------- ///
+
+  val sensor = new TempSensor()
+
+  val consoleC = new ConsoleCelsiusObserver()
+  sensor.attach(consoleC)
+
+  val consoleK = new ConsoleKelvinObserver()
+  sensor.attach(consoleK)
+
+  val consoleF = new ConsoleFahrenheitObserver(sensor)
+
+  val guiObs = new GuiCelsiusObserver(sensor)
+
+#+END_SRC
+
+
+Running:
+
+#+BEGIN_SRC scala
+  scala> :paste src/observerPattern1.scala
+  Pasting file src/observerPattern1.scala...
+  warning: there was one deprecation warning; re-run with -deprecation for details
+
+  ob_scala_eoldefined trait Observer
+  defined trait Subject
+  defined class TempSensor
+  defined class ConsoleCelsiusObserver
+  defined class ConsoleKelvinObserver
+  defined class ConsoleFahrenheitObserver
+  defined class GuiCelsiusObserver
+  sensor: TempSensor = TempSensor@4dd02341
+  consoleC: ConsoleCelsiusObserver = ConsoleCelsiusObserver@3212a8d7
+  consoleK: ConsoleKelvinObserver = ConsoleKelvinObserver@7a1a3478
+  consoleF: ConsoleFahrenheitObserver = ConsoleFahrenheitObserver@495b0487
+  guiObs: GuiCelsiusObserver = GuiCelsiusObserver@55dfcc6
+
+  // Manual simulation 
+  //-------------------------------
+
+  scala> sensor.notifyObservers(20.0)
+  Current temperature is 20.000 in °C
+  Current temperature is 293.000 in °K
+  Current temperature is 43.111 in F
+
+  scala> sensor.notifyObservers(20.1)
+  Current temperature is 20.100 in °C
+  Current temperature is 293.100 in °K
+  Current temperature is 43.167 in F
+
+  scala> sensor.notifyObservers(20.5)
+  Current temperature is 20.500 in °C
+  Current temperature is 293.500 in °K
+  Current temperature is 43.389 in F
+
+  scala> sensor.detach(consoleK)
+
+  scala> sensor.notifyObservers(23.0)
+  Current temperature is 23.000 in °C
+  Current temperature is 44.778 in F
+
+  // Automatic simulation
+  //--------------------------------------
+
+  def runTimer(interval: Int, taskFn: () => Unit) = {
+    val task = new java.util.TimerTask() {
+      def run() {
+        taskFn()
+      }
+    }
+
+    val timer = new java.util.Timer()
+    // Run the task every 1 second interval (or 1000 milli seconds)
+    timer.schedule(task, 1, interval)
+    timer
+  } // End of runTimer
+
+
+  // Generates a random number within an interval
+  // from (mid - delta) to (mid + delta)
+  //
+  def genRandomInterval(mid: Double, delta: Double) = {
+    val rnd = new java.util.Random()
+    () => { val x = rnd.nextDouble()
+            2 * delta * x + (mid - delta) 
+          }
+  }
+
+  scala> def genRandomInterval(mid: Double, delta: Double) = {
+       |   val rnd = new java.util.Random()
+       |   () => { val x = rnd.nextDouble()
+       |           2 * delta * x + (mid - delta) 
+       |         }
+       | }
+  genRandomInterval: (mid: Double, delta: Double)() => Double
+
+  // Generates a temperature between 20.0 - 3.0 (17.0 C) and 20.0 + 3.0 (23 °C)
+  scala> val genTemp = genRandomInterval(20.0, 3.0)
+  genTemp: () => Double = <function0>
+
+
+  // Update the temperature every 1 second 
+  runTimer(1000, () => sensor.notifyObservers(genTemp()))
+#+END_SRC
+
+**** Example in FP way 
+     :PROPERTIES:
+     :ID:       50b40ac2-98e9-40cb-ab9e-0984e1ef3c22
+     :END:
+
+As Scala is a functional language, it allows functions be passed
+directly as argument, therefore the observer object be replaced by a
+_callback_ function and _subject_ by a list or set of callbacks. 
+
+File: [[file:src/observerPatternFun.scala][file:src/observerPatternFun.scala]]
+
+#+BEGIN_SRC scala :tangle src/observerPatternFun.scala
+  // Observer object is replace by a callback function 
+  type Observer[A] = A => Unit
+
+  // Record containing functions 
+  case class Subject[A](
+     attach: Observer[A] => Unit
+    ,detach: Observer[A] => Unit
+    ,notifyObservers: A  => Unit
+    ,getState: () => A
+  )
+
+  def createSubject[A](stateInit: A) = {
+    var observers : Set[A => Unit] = Set()  
+    var state = stateInit
+
+    val attach = (obs: Observer[A]) => {
+      observers += obs 
+    }
+
+    val detach = (obs: Observer[A]) => {
+      observers -= obs 
+    }
+
+    val notifyObservers = (a: A) => {
+      state = a 
+      for (obs <- observers) obs(a)
+    }
+
+    val getState = () => state
+
+    Subject(attach, detach, notifyObservers, getState)
+  }
+
+
+  // The observer becomes just a function or callback!!
+  def consoleCelsiusObserver(temp: Double) = {
+    printf("Current temperature is %.3f in °C\n", temp)
+  }
+
+  def consoleKelvinObserver(temp: Double) = {
+      printf("Current temperature is %.3f in °K\n", temp + 273.0)
+  }
+
+  def consoleFahrenheitObserver(temp: Double) = {
+    val tempF = 5.0 / 9.0 * temp + 32.0
+    printf("Current temperature is %.3f in F\n", tempF)
+  }
+
+  // Creates a function that updates the GUI display
+  // 
+  // Note: (Double => Unit) is optional.
+  // The type annotation was added to make reading easier.
+  //
+  def makeGuiObserver(): (Double => Unit) = {
+    val frame = new javax.swing.JFrame()
+    val display = new javax.swing.JLabel()
+    frame.setSize(255, 71)
+    frame.add(display)
+    frame.show()
+    frame.setTitle("Temperature View")
+    (temp: Double) =>  display.setText("Temperature = %.3f C".format(temp))
+  }
+
+  val sensor = createSubject[Double](20.0)
+  sensor.attach(consoleCelsiusObserver)
+  sensor.attach(consoleKelvinObserver)
+  sensor.attach(consoleFahrenheitObserver)
+
+  val guiObserver = makeGuiObserver()
+  sensor.attach(guiObserver)
+#+END_SRC
+
+Running: 
+
+#+BEGIN_SRC scala 
+  scala> :paste src/observerPatternFun.scala
+  Pasting file src/observerPatternFun.scala...
+  warning: there was one deprecation warning; re-run with -deprecation for details
+
+  ob_scala_eoldefined type alias Observer
+  defined class Subject
+  createSubject: [A](stateInit: A)Subject[A]
+  consoleCelsiusObserver: (temp: Double)Unit
+  consoleKelvinObserver: (temp: Double)Unit
+  consoleFahrenheitObserver: (temp: Double)Unit
+  makeGuiObserver: ()Double => Unit
+  sensor: Subject[Double] = Subject(<function1>,<function1>,<function1>,<function0>)
+  guiObserver: Double => Unit = <function1>
+
+
+  // Manual simulation
+  //--------------------------------------
+
+  scala>  sensor.notifyObservers(21.0)
+  Current temperature is 21.000 in °C
+  Current temperature is 294.000 in °K
+  Current temperature is 43.667 in F
+
+  scala>  sensor.notifyObservers(22.0)
+  Current temperature is 22.000 in °C
+  Current temperature is 295.000 in °K
+  Current temperature is 44.222 in F
+
+  scala>  sensor.notifyObservers(23.0)
+  Current temperature is 23.000 in °C
+  Current temperature is 296.000 in °K
+  Current temperature is 44.778 in F
+
+  scala>  sensor.notifyObservers(25.0)
+  Current temperature is 25.000 in °C
+  Current temperature is 298.000 in °K
+  Current temperature is 45.889 in F
+
+
+  // Automatic simulation
+  //--------------------------------------
+
+
+  def runTimer(interval: Int, taskFn: () => Unit) = {
+    val task = new java.util.TimerTask() {
+      def run() {
+        taskFn()
+      }
+    }
+
+    val timer = new java.util.Timer()
+    // Run the task every 1 second interval (or 1000 milli seconds)
+    timer.schedule(task, 1, interval)
+    timer
+  } // End of runTimer
+
+
+  // Generates a random number within an interval
+  // from (mid - delta) to (mid + delta)
+  //
+  def genRandomInterval(mid: Double, delta: Double) = {
+    val rnd = new java.util.Random()
+    () => { val x = rnd.nextDouble()
+            2 * delta * x + (mid - delta) 
+          }
+  }
+
+
+  scala> val genTemp = genRandomInterval(20.0, 3.0)
+  genTemp: () => Double = <function0>
+
+  scala> genTemp()
+  res5: Double = 19.81265553013229
+
+  scala> genTemp()
+  res6: Double = 18.965575803660617
+
+  scala> genTemp()
+  res7: Double = 21.172101549312305
+
+  scala> genTemp()
+  res8: Double = 17.821626339663855
+
+  scala> genTemp()
+  res9: Double = 22.38493758505381
+
+
+  // Update the temperature every 1 second 
+  runTimer(1000, () => sensor.notifyObservers(genTemp()))
+#+END_SRC
+
+*** Iterator Pattern
+**** Overview
+
+The iterator pattern allows tranversing a collection or container
+without expose its internal structure and provides a uniform interface
+interface to tranverse different types of collections.
+
+ - Stated by GOF as "Provide a way to access the elements of an
+   aggregate object sequentially without exposing its underlying
+   representation."
+
+Intent: Provide a way to transverse a collection or container
+sequentially not exposing its internal representation.
+
+
+Also known as:
+
+ - Cursor
+
+
+Iterator Pattern Structure:
+
+ - Iterfaces:
+
+   * Collection
+     - Methods:
+       + createIterator()   -> Creates a new iterator object specific for the underlying collection.
+
+   * Iterator
+     - Methods:
+       + hasNext(): Bool  -> Returns true if iterator has next element.
+       + next()           -> Get next element and advance to next element.
+       + current()        -> Get current element. (Optional)
+       + remove()         -> (Optional)
+
+Known uses:
+
+ - This pattern is widely in Java, C# (.NET) and C++ STL containers.
+
+ - Java
+
+   - java.util.Iterator Interface
+
+   - java.util.Enumerator interface
+
+ - .NET
+
+   - IEnumerable
+
+   - IEnumerator
+
+Java iterator Interface:
+
+#+BEGIN_SRC java
+  public interface java.util.Iterator<E> {
+      boolean hasNext();
+      E next();
+      void remove();
+  }
+#+END_SRC
+
+
+References:
+
+ - *Course Notes — CIS 501: Software Architecture and Design, Fall
+   2014*
+   <http://softwarearch.santoslab.org/12-design-patterns-factories-iterators/index.html>
+
+ - *Supplement: Design Patterns. For Introduction to Java
+   Programming* -
+   <http://www.cs.armstrong.edu/liang/apcs/supplement/Supplement5hDesignpatterns.pdf>
+
+ - *Iterator Pattern Tutorial with Java Examples*
+   <https://dzone.com/articles/design-patterns-iterator>
+
+ - *Iterator* <http://www.oodesign.com/iterator-pattern.html>
+
+ - *Design Patterns - Iterator Pattern*
+   <https://www.tutorialspoint.com/design_pattern/iterator_pattern.htm>
+
+ - *Principles of Software Construction: Objects, Design, and
+   Concurrency; Design Case Study: Stream I/O*
+   <https://www.cs.cmu.edu/~charlie/courses/15-214/2014-fall/slides/14-io.pdf>
+
+ - *The Use of Iterator Iterator in Python* <https://www.codeday.top/2017/03/27/21392.html>
+
+ -
+
+**** Examples
+
+Example 1 - Java built-in iterator.
+
+#+BEGIN_SRC scala
+  scala> import java.util.Arrays
+  import java.util.Arrays
+
+
+  scala> val arr = Arrays.asList(1, 2, 3, 4, 5, 6, 7)
+  arr: java.util.List[Int] = [1, 2, 3, 4, 5, 6, 7]
+
+  scala> val iter = arr.iterator()
+  iter: java.util.Iterator[Int] = java.util.AbstractList$Itr@3030836d
+
+  scala> iter.hasNext _
+  res2: () => Boolean = <function0>
+
+  scala> iter.next _
+  res3: () => Array[Int] = <function0>
+
+  scala> iter.remove _
+  res4: () => Unit = <function0>
+
+  scala> iter.hasNext()
+  res8: Boolean = true
+
+  scala> iter.next()
+  res9: Int = 1
+
+  scala> iter.hasNext()
+  res10: Boolean = true
+
+  scala> iter.next()
+  res11: Int = 2
+
+  scala> iter.next()
+  res12: Int = 3
+
+  scala> iter.next()
+  res13: Int = 4
+
+  scala> iter.next()
+  res14: Int = 5
+
+  scala> iter.hasNext()
+  res15: Boolean = true
+
+  scala> iter.next()
+  res16: Int = 6
+
+  scala> iter.hasNext()
+  res17: Boolean = true
+
+  scala> iter.next()
+  res18: Int = 7
+
+  scala> iter.hasNext()
+  res19: Boolean = false
+
+  scala> iter.next()
+  java.util.NoSuchElementException
+    at java.util.AbstractList$Itr.next(AbstractList.java:364)
+    ... 32 elided
+
+  scala>
+
+#+END_SRC
+
+Example 2 - Print all collection elements
+
+#+BEGIN_SRC scala
+  scala> import java.util.Arrays
+  import java.util.Arrays
+
+  scala> val arr = Arrays.asList(1, 2, 3, 4, 5, 6, 7)
+  arr: java.util.List[Int] = [1, 2, 3, 4, 5, 6, 7]
+
+  scala> val iter = arr.iterator()
+  iter: java.util.Iterator[Int] = java.util.AbstractList$Itr@210d3a42
+
+  while (iter.hasNext()) {
+    println(iter.next())
+  }
+
+  scala> while (iter.hasNext()) {
+       |   println(iter.next())
+       | }
+  1
+  2
+  3
+  4
+  5
+  6
+  7
+#+END_SRC
+
+Example 3: Implementation a range iterator with java.util.iterator interface.
+
+#+BEGIN_SRC scala
+
+  class RangeIterator(from: Double, to: Double, step: Double) extends java.util.Iterator[Double] {
+    private var cursor = from
+
+    def hasNext() = cursor < to
+
+    def next() = {
+      if (!hasNext())
+        error("Error: End of iteration, no more elements available.")
+      else
+      { val ret = cursor
+        cursor = cursor + step
+        ret
+      }
+    }
+
+    def remove() = error("Error: Method not implemented")
+
+  }
+
+
+  scala> val rng = new RangeIterator(0.0, 5.0, 1.0)
+  rng: RangeIterator = RangeIterator@1a6df932
+
+  scala> rng.next()
+  res41: Double = 0.0
+
+  scala> rng.hasNext()
+  res42: Boolean = true
+
+  scala> rng.next()
+  res43: Double = 1.0
+
+  scala> rng.hasNext()
+  res44: Boolean = true
+
+  scala> rng.next()
+  res45: Double = 2.0
+
+  scala> rng.hasNext()
+  res46: Boolean = true
+
+  scala> rng.next()
+  res47: Double = 3.0
+
+  scala> rng.next()
+  res48: Double = 4.0
+
+  scala> rng.hasNext()
+  res49: Boolean = false
+
+  scala> rng.next()
+  java.lang.RuntimeException: Error: End of iteration, no more elements available.
+    at scala.sys.package$.error(package.scala:27)
+    at scala.Predef$.error(Predef.scala:144)
+    at RangeIterator.next(<console>:19)
+    ... 32 elided
+
+  scala>
+
+
+
+  val iter = new RangeIterator(0.0, 10.0, 1.0)
+
+  while (iter.hasNext()) {
+    println(iter.next())
+  }
+
+  scala> while (iter.hasNext()) {
+       |   println(iter.next())
+       | }
+  0.0
+  1.0
+  2.0
+  3.0
+  4.0
+  5.0
+  6.0
+  7.0
+  8.0
+  9.0
+
+#+END_SRC
+
+Example 4: Creating an iterator to iterate over file lines.
+
+#+BEGIN_SRC scala
+
+  class ReadFileLinesIterator(file: String) extends Iterator[String] {
+    private var buf          = new java.io.BufferedReader(new java.io.FileReader(file))
+    private var line: String = ""
+    private var status       = true
+
+    init()
+
+    def init() {
+      line = buf.readLine()
+      status = line != null
+    }
+
+    def hasNext() = status
+
+    def next() = {
+      if (hasNext())
+        {
+          val ret = line
+          line = buf.readLine()
+          status = line != null
+          ret
+        }
+      else
+        error("Error: End of iteration. No more elements available.")
+    }
+
+    def remove() = error("Error: invalid method for this iterator.")
+  }
+
+
+
+  scala> val lineIter = new ReadFileLinesIterator("/etc/lsb-release")
+  lineIter: ReadFileLinesIterator = non-empty iterator
+
+  scala> lineIter.hasNext()
+  res78: Boolean = true
+
+  scala> lineIter.next()
+  res79: String = DISTRIB_ID=ManjaroLinux
+
+  scala> lineIter.hasNext()
+  res80: Boolean = true
+
+
+  scala> lineIter.next()
+  res81: String = DISTRIB_RELEASE=17.0.1
+
+  scala> lineIter.hasNext()
+  res82: Boolean = true
+
+  scala> lineIter.next()
+  res83: String = DISTRIB_CODENAME=Gellivara
+
+  scala> lineIter.hasNext()
+  res84: Boolean = true
+
+  scala> lineIter.next()
+  res85: String = DISTRIB_DESCRIPTION="Manjaro Linux"
+
+  scala> lineIter.next()
+  java.lang.RuntimeException: Error: End of iteration. No more elements available.
+    at scala.sys.package$.error(package.scala:27)
+    at scala.Predef$.error(Predef.scala:144)
+    at ReadFileLinesIterator.next(<console>:35)
+    ... 32 elided
+
+  scala> lineIter.hasNext()
+  res87: Boolean = false
+
+  scala>
+
+  val lineIter = new ReadFileLinesIterator("/etc/lsb-release")
+  while(lineIter.hasNext()){
+    println(lineIter.next())
+  }
+
+
+  scala> while(lineIter.hasNext()){
+       |   println(lineIter.next())
+       | }
+  DISTRIB_ID=ManjaroLinux
+  DISTRIB_RELEASE=17.0.1
+  DISTRIB_CODENAME=Gellivara
+  DISTRIB_DESCRIPTION="Manjaro Linux"
+
+
+#+END_SRC
+
 * Java Interoperability
 ** Show Java Properties
 
