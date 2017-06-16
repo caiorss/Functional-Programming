@@ -4539,6 +4539,108 @@ Running:
   runTimer(1000, () => sensor.notifyObservers(genTemp()))
 #+END_SRC
 
+**** Java built-in Observer Pattern 
+
+Java provides the java.util.Observable and java.util.Observer
+interfaces to help implement the observer pattern. 
+
+The subject/observable class inherits the Observable interface and
+notifies observer objects which implements the Observer interface. 
+
+
+ - API Docs:
+
+   - [[https://docs.oracle.com/javase/7/docs/api/java/util/Observable.html][Observable (Java Platform SE 7 )]]
+
+   - [[https://docs.oracle.com/javase/7/docs/api/java/util/Observer.html][Observer (Java Platform SE 7 )]]
+
+Example: Every time the temperature sensor gets a new temperature, the
+celsius and kelvin displays are updated with the temperature
+measurements. 
+
+#+BEGIN_SRC scala 
+class TemperatureSensor(initTemp: Double) extends java.util.Observable {
+  private var temp = initTemp
+
+  def setValue(t: Double) {
+    temp = t
+    setChanged()
+    notifyObservers()
+  }
+
+  def getValue() = temp 
+}
+
+
+// Observer that displays temperature in Celsius 
+class CelsiusObserver extends java.util.Observer {
+  def update(obs: java.util.Observable, obj: Object){
+    val ov = obs.asInstanceOf[TemperatureSensor]
+    println("Temperature is = %.2f C".format(ov.getValue()))
+  }
+}
+
+// Observer that displays temperature in Kelvin 
+class KelvinObserver extends java.util.Observer {
+  def update(obs: java.util.Observable, obj: Object){
+    val ov = obs.asInstanceOf[TemperatureSensor]
+    val temp = ov.getValue() + 273.0 
+    println("Temperature is = %.2f K".format(temp))
+  }
+}
+
+val sensor = new TemperatureSensor(21.0)
+val celsiusObserver = new CelsiusObserver()
+val kelvinObserver  = new KelvinObserver()
+
+
+sensor.addObserver(celsiusObserver)
+sensor.addObserver(kelvinObserver)
+
+cala> sensor.getValue()
+res19: Double = 21.0
+
+scala> sensor.setValue(21.5)
+Temperature is = 294.50 K
+Temperature is = 21.50 C
+
+scala> sensor.setValue(21.6)
+Temperature is = 294.60 K
+Temperature is = 21.60 C
+
+scala> sensor.setValue(22)
+Temperature is = 295.00 K
+Temperature is = 22.00 C
+
+scala> 
+
+scala> sensor.countObservers()
+res23: Int = 2
+
+scala> sensor.deleteObserver(kelvinObserver)
+
+scala> sensor.setValue(23)
+Temperature is = 23.00 C
+
+
+scala> sensor.deleteObservers()
+
+scala> sensor.setValue(100)
+
+#+END_SRC
+
+
+References: 
+
+ - *Observer and Observable* An introduction to the Observer interface
+   and Observable class using the Model/View/Controller architecture
+   as a guide. <http://www.javaworld.com/article/2077258/learn-java/observer-and-observable.html>
+
+
+ - java.util.Observer Example
+   <https://examples.javacodegeeks.com/core-java/util/observer/java-util-observer-example/>
+
+
 *** Iterator Pattern
 **** Overview
 
