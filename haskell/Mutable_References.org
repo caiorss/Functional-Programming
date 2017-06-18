@@ -217,6 +217,48 @@ Example: Counter.
 
 #+END_SRC
 
+**** Stateful Function
+
+#+BEGIN_SRC haskell
+  import qualified Data.IORef as IORef
+
+  :{
+  makeCounter :: Int -> IO (IO Int)
+  makeCounter init = do
+    c <- IORef.newIORef init
+    let incCounter = do
+          a <- IORef.readIORef c 
+          IORef.writeIORef c (a + 1)
+          return a 
+    return incCounter
+  :}
+
+  > counter <- makeCounter 0
+  counter :: IO Int
+  > counter
+  0
+  it :: Int
+  > counter
+  1
+  it :: Int
+  > counter
+  2
+  it :: Int
+  > counter
+  3
+  it :: Int
+  > counter
+  4
+  it :: Int
+  > counter
+  5
+  it :: Int
+  > counter
+  6
+  it :: Int
+  > 
+#+END_SRC
+
 **** Example: Sum list elements in a imperative way using IORef.
 
 #+BEGIN_SRC haskell 
