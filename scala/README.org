@@ -398,6 +398,7 @@ res35: List[Int] = List(4, 8, 12, 16, 20)
 
 #+END_SRC
 *** Closures
+**** Simple closure example
 
 #+BEGIN_SRC scala
 
