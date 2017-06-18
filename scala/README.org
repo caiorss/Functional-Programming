@@ -438,6 +438,202 @@ res35: List[Int] = List(4, 8, 12, 16, 20)
 
 #+END_SRC
 
+**** Stateful functions
+
+Example 1
+
+#+BEGIN_SRC scala
+  // Version 1
+  //
+  def makeIncrementer1() = {
+    var counter = 0
+    val inc = () => {
+      val c   = counter
+      counter = counter + 1
+      c
+    }
+
+    inc
+  }
+
+  scala> def makeIncrementer1() = {
+       |   var counter = 0
+       |   val inc = () => {
+       |     val c   = counter
+       |     counter = counter + 1
+       |     c
+       |   }
+       |
+       |   inc
+       | }
+  makeIncrementer1: ()() => Int
+
+  scala> val inc = makeIncrementer1()
+  inc: () => Int = <function0>
+
+  scala> inc()
+  res22: Int = 0
+
+  scala> inc()
+  res23: Int = 1
+
+  scala> inc()
+  res24: Int = 2
+
+  scala> inc()
+  res25: Int = 3
+
+  scala> inc()
+  res26: Int = 4
+
+
+  scala> val inc2 = makeIncrementer1()
+  inc2: () => Int = <function0>
+
+  scala> inc2()
+  res27: Int = 0
+
+  scala> inc2()
+  res28: Int = 1
+
+  scala> inc2()
+  res29: Int = 2
+
+  scala> inc2()
+  res30: Int = 3
+
+  ... ...
+
+
+  // Version 2
+  //
+  def makeIncrementer2() = {
+    var counter = 0
+    () => {
+      val c   = counter
+      counter = counter + 1
+      c
+    }
+  }
+
+  scala> def makeIncrementer2() = {
+       |   var counter = 0
+       |   () => {
+       |     val c   = counter
+       |     counter = counter + 1
+       |     c
+       |   }
+       | }
+  makeIncrementer2: ()() => Int
+
+  scala> val inc3 = makeIncrementer
+  makeIncrementer1   makeIncrementer2
+
+  scala> val inc3 = makeIncrementer2()
+  inc3: () => Int = <function0>
+
+  scala> inc3()
+  res31: Int = 0
+
+  scala> inc3()
+  res32: Int = 1
+
+  scala> inc3()
+  res33: Int = 2
+
+  scala> val inc4 = makeIncrementer2()
+  inc4: () => Int = <function0>
+
+  scala> inc4()
+  res34: Int = 0
+
+  scala> inc4()
+  res35: Int = 1
+
+  scala> inc4()
+  res36: Int = 2
+
+  ...
+#+END_SRC
+
+Example 2
+
+#+BEGIN_SRC scala
+
+  def makeCounter() = {
+    var counter = 0
+
+    val inc = () => {
+      val c = counter
+      counter = counter + 1
+      c
+    }
+
+    val dec = () => {
+      val c = counter
+      counter = counter - 1
+      c
+    }
+
+    (inc, dec)
+  }
+
+  scala> def makeCounter() = {
+       |   var counter = 0
+       |
+       |   val inc = () => {
+       |     val c = counter
+       |     counter = counter + 1
+       |     c
+       |   }
+       |
+       |   val dec = () => {
+       |     val c = counter
+       |     counter = counter - 1
+       |     c
+       |   }
+       |
+       |   (inc, dec)
+       | }
+  makeCounter: ()(() => Int, () => Int)
+
+  scala> val (inc, dec) = makeCounter()
+  inc: () => Int = <function0>
+  dec: () => Int = <function0>
+
+  scala> inc()
+  res48: Int = 0
+
+  scala> inc()
+  res49: Int = 1
+
+  scala> inc()
+  res50: Int = 2
+
+  scala> dec()
+  res51: Int = 3
+
+  scala> dec()
+  res52: Int = 2
+
+  scala> dec()
+  res53: Int = 1
+
+  scala> dec()
+  res54: Int = 0
+
+  scala> inc()
+  res55: Int = -1
+
+  scala> inc()
+  res56: Int = 0
+
+  scala> inc()
+  res57: Int = 1
+
+
+#+END_SRC
+
 *** Function Composition
 
 *Math Composition*
