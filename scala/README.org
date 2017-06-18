@@ -4333,6 +4333,111 @@ Variation 2: With only functions:
 
 #+END_SRC
 
+*** Template Method
+
+The templated method design patterns is a behavioral design pattern
+which provides an algorithm, also known as template which defines
+some steps and defers the implementation of some steps to subclasses. 
+
+It is stated by GOF as: "Defines the skeleton of an algorithm in a
+method, deferring some steps to subclasses. Template Method lets
+subclasses redefine certain steps of an algorithm without changing the
+algorithms structure."
+
+ - Intent: Create an algorithm template that allows redefine some
+   steps without changing its structure. 
+
+The parent abstract class has four different types of methods: 
+
+ - Concrete methods: Methods implemented in the abstract class. 
+
+ - Abstract methods: Methods without implementation that must be
+   implemented by subclasses. 
+
+ - Hook methods: Methods with default implementation that can be
+   overriden by subclasses.
+
+ - Template methods: Method that calls concrete methods, abstract
+   methods or hook methods.
+
+
+Example: The method setepFn is a hook method with default
+implementation and the summation is a template method.
+
+#+BEGIN_SRC scala
+  trait IntervalSummation {
+
+    // Summation method with default implementation
+    def stepFn(a: Int) = a 
+
+    // Summation of all numbers in the interval 
+    def summation(lower: Int, upper: Int) = {
+      var result = 0 
+      for (a <- lower to upper) {
+        result = result + stepFn(a)
+      }
+
+      result
+    }
+  }
+
+
+  scala> class IntervalIdentity extends  IntervalSummation
+  defined class IntervalIdentity
+
+  scala> val intervId = new IntervalIdentity()
+  intervId: IntervalIdentity = IntervalIdentity@59ede173
+
+  scala> intervId.summation(0, 10)
+  res14: Int = 55
+
+  scala> intervId.summation(0, 100)
+  res15: Int = 5050
+
+
+
+  class IntervalSquare extends  IntervalSummation {
+    override def stepFn(a: Int) = a * a
+  }
+
+  scala> intervSquare.summation(0, 10)
+  res16: Int = 385
+
+  scala> intervSquare.summation(0, 100)
+  res17: Int = 338350
+
+
+  class IntervalCube extends  IntervalSummation {
+    override def stepFn(a: Int) = a * a * a 
+  }
+
+
+  scala> intervCube.summation(0, 10)
+  res18: Int = 3025
+
+  scala> intervCube.summation(0, 100)
+  res19: Int = 25502500
+
+
+#+END_SRC
+
+
+References: 
+
+ - *The Template Method Pattern* -
+   <http://ima.udg.edu/~sellares/EINF-ES1/TemplateMethodToni.pdf>
+
+ - *Template Method Design Pattern* -
+   <https://www.slideshare.net/srikanthps/template-method-design-pattern>
+
+ - *Template Method Design Pattern in Java* -
+   <https://stacktips.com/tutorials/design-patterns/template-method-design-pattern-in-java>
+
+ - *Design Patterns - Template Pattern*
+   <https://www.tutorialspoint.com/design_pattern/template_pattern.htm>
+
+ - *Template Method Pattern Tutorial with Java Examples*
+   <https://dzone.com/articles/design-patterns-template-method>
 *** Observer / Publisher Subscriber
     :PROPERTIES:
     :ID:       a24d6fd5-1931-4dde-b68d-0873704614fb
@@ -4906,7 +5011,6 @@ References:
 
  - java.util.Observer Example
    <https://examples.javacodegeeks.com/core-java/util/observer/java-util-observer-example/>
-
 
 *** Iterator Pattern
 **** Overview
