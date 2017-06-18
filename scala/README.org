@@ -634,6 +634,76 @@ Example 2
 
 #+END_SRC
 
+**** Emulating Objects with closures
+
+#+BEGIN_SRC scala
+
+  // Record of functions
+  //
+  case class Counter(
+        increment: () => Unit
+       ,decrement: () => Unit
+       ,get:       () => Int
+  )
+
+  // The internal state counter can only be accessed using the "methods" or
+  // functions increment, decrement and get.
+  //
+  def newCounter(init: Int) = {
+    var counter = init
+    Counter(
+         () => { counter = counter + 1}
+        ,() => { counter = counter - 1}
+        ,() => counter
+     )
+  }
+
+  scala> val c = newCounter(0)
+  c: Counter = Counter(<function0>,<function0>,<function0>)
+
+  scala> c.increment _
+  res1: () => () => Unit = <function0>
+
+  scala> c.decrement _
+  res2: () => () => Unit = <function0>
+
+  scala> c.get
+  get   getClass
+
+  scala> c.get _
+  res3: () => () => Int = <function0>
+
+  scala> c.get()
+  res11: Int = 0
+
+  scala> c.increment()
+
+  scala> c.get()
+  res13: Int = 1
+
+  scala> c.increment()
+
+  scala> c.get()
+  res15: Int = 2
+
+  scala> c.increment() ; c.get()
+  res16: Int = 3
+
+  scala> c.increment() ; c.get()
+  res17: Int = 4
+
+  scala> c.increment() ; c.get()
+  res18: Int = 5
+
+  scala> c.decrement() ; c.get()
+  res19: Int = 4
+
+  scala> c.decrement() ; c.get()
+  res20: Int = 3
+
+  scala> c.decrement() ; c.get()
+  res21: Int = 2
+#+END_SRC
 *** Function Composition
 
 *Math Composition*
