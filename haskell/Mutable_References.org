@@ -26,8 +26,7 @@ Module: [[https://hackage.haskell.org/package/base-4.9.1.0/docs/Data-IORef.html]
 |                 |    |                              |                                                           |
 
 *** Examples
-
-Example in Haskell REPL: 
+**** Simple IORef example in Haskell REPL: 
 
 #+BEGIN_SRC haskell
   {- ===== Check The Types ====== -}
@@ -218,7 +217,7 @@ Example: Counter.
 
 #+END_SRC
 
-Example: Sum list elements in a imperative way using IORef.
+**** Example: Sum list elements in a imperative way using IORef.
 
 #+BEGIN_SRC haskell 
   import Data.IORef 
@@ -356,8 +355,7 @@ Example: Ask the number for a number and display the sum in a infinite loop.
          
 #+END_SRC
 
-
-Example: Infinite loop with delay 
+**** Infinite loop with delay 
 
 #+BEGIN_SRC haskell 
   import Data.IORef
@@ -397,6 +395,76 @@ Example: Infinite loop with delay
   Counter is 17
   ... ... ...
       
+#+END_SRC
+**** Simulating objects with closures 
+
+The code below simulates an object counter that has an internal
+integer state. The functions or IO actions incrementCounter,
+decrementcounter and getCounter simulate the object's methods.
+
+#+BEGIN_SRC haskell 
+import qualified Data.IORef as IORef
+
+:{
+data Counter = Counter { incrementCounter :: IO () 
+                       , decrementCounter :: IO () 
+                       , getCounter       :: IO Int                      
+                       }
+:}
+    
+:{
+newCounter :: IO Counter    
+newCounter = do 
+    counter <- IORef.newIORef 0        
+    return $ Counter { incrementCounter = IORef.modifyIORef counter (+1)               
+                     , decrementCounter = IORef.modifyIORef counter (+(-1))
+                     , getCounter       = IORef.readIORef counter
+                     }
+:}
+
+#+END_SRC
+
+Running: 
+
+#+BEGIN_SRC haskell 
+> counter <- newCounter 
+counter :: Counter
+
+> getCounter counter
+0
+it :: Int
+> 
+> incrementCounter counter
+it :: ()
+> getCounter counter
+1
+it :: Int
+> incrementCounter counter
+it :: ()
+> getCounter counter
+2
+it :: Int
+> incrementCounter counter >> getCounter counter
+3
+it :: Int
+> incrementCounter counter >> getCounter counter
+4
+it :: Int
+> 
+> decrementCounter counter >> getCounter counter
+3
+it :: Int
+> decrementCounter counter >> getCounter counter
+2
+it :: Int
+> decrementCounter counter >> getCounter counter
+1
+it :: Int
+> decrementCounter counter >> getCounter counter
+0
+it :: Int
+> 
+
 #+END_SRC
 ** ST Monad - Mutable References Inside Pure Functions 
 *** Overview 
