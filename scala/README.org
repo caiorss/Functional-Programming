@@ -5498,7 +5498,6 @@ History:
 
  - *Open Step* <http://wiki.c2.com?OpenStep>
 
-
 **** Example 
 
 This example shows a simple GUI application with MVC and Java Swing
@@ -5738,7 +5737,7 @@ Counter value is = 4
 ... ... 
 #+END_SRC
 
-[[file:src/counterMvcExample.png][file:src/counterMvcExample.png]]
+[[file:images/counterMvcExample.png][file:images/counterMvcExample.png]]
 * Java Interoperability
 ** Show Java Properties
 
