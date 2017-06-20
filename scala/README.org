@@ -1429,10 +1429,10 @@ Scala Maps are immutable hash tables or dictionaries.
 #+BEGIN_SRC scala
 var capital = Map("US"     -> "Washigton",
                   "France" -> "Paris",
-                  "Japan"  -> "Tokio")
+                  "Japan"  -> "Tokyo")
 
 scala> capital("Japan")
-res8: String = Tokio
+res8: String = Tokyo
 
 scala> capital("US")
 res9: String = Washigton
@@ -1446,9 +1446,9 @@ java.util.NoSuchElementException: key not found: USsa
   ... 32 elided
 
 
-scala> assert(capital("Japan") == "Tokio")
+scala> assert(capital("Japan") == "Tokyo")
 
-scala> assert(capital("Japan") == "Tokio2")
+scala> assert(capital("Japan") == "Tokyo2")
 java.lang.AssertionError: assertion failed
   at scala.Predef$.assert(Predef.scala:156)
   ... 32 elided
@@ -1457,7 +1457,7 @@ scala> println(capital("France"))
 Paris
 
 scala> println(capital("Japan"))
-Tokio
+Tokyo
 
 #+END_SRC
 
@@ -4738,9 +4738,10 @@ Running:
      :ID:       50b40ac2-98e9-40cb-ab9e-0984e1ef3c22
      :END:
 
-As Scala is a functional language, it allows functions be passed
-directly as argument, therefore the observer object be replaced by a
-_callback_ function and _subject_ by a list or set of callbacks. 
+As Scala is a functional language it allows functions be passed
+directly as argument, therefore the observer can objects be replaced
+by a _callbacks_ function and _subject_ by a mutable collection of
+callbacks.
 
 File: [[file:src/observerPatternFun.scala][file:src/observerPatternFun.scala]]
 
