@@ -5377,6 +5377,368 @@ Example 4: Creating an iterator to iterate over file lines.
 
 #+END_SRC
 
+*** Model View Controller - MVC 
+**** Overview 
+
+The MVC - Model-View-Controller pattern was introduced by Trygve
+Reenskaug in a Smalltalk-80 implementation in 1970s to address the
+problem of building GUI - Graphical User Interfaces.
+
+The MVC has three parts: 
+
+ - _View_ - The view is everything the user can see and it is
+   resposible to render the model data. It is built with a hierarchy of
+   widgets of some GUI toolkit such as Gtk, QT, Java Swing and etc.
+
+   + _Manages graphical or textual output._
+
+ - _Controller_ - The controller is a middleware between the view and
+   model. The controller handles the user input or the events
+   triggered by the view updating the model or the view.
+
+   + _Manages user input_ or GUI events such as button click, mouse move
+     and etc.  
+
+ - _Model_ - The model contains data to be displayed by the view and
+   the business logic.
+
+   + _Manages application logic or domain logic._
+
+   + The model must have no knowledge about the view or controller.
+
+   + A model can have multiple views diplaying the model in different
+     ways. Example bar chart, pie chart, table, spreadsheet display
+     and so on. Each view must have an associated controller.
+
+   + When the model is updated, it notifies all views that it has
+     changed and the views query data from the model updating
+     itself. The model is suitable to be implemented with observer
+     pattern. 
+
+   + The MVC is supposed to have only one global model.
+
+[[file:images/mvc-model-view-controller-diagram.png][file:images/mvc-model-view-controller-diagram.png]]
+
+MVC Variation: 
+
+ - Controller as mediator. The model doesn't interact directly with
+   the view. It updates the view through the controller. This MVC
+   variation is widely used in Apple's Cocoa framework.
+
+
+Benefits: 
+
+ - Separate the domain model from the presentation.
+
+ - The same data can be displayed or rendered in many different
+   ways. Multiple views for short.
+
+Drawbacks: 
+
+ - In a GUI it is hard to separate input from output, consequently it
+   is hard to separate  the view from the model. What makes them
+   tightly coupled.
+
+
+References and Bookmarks: 
+
+ - *MVP: Model-View-Presenter. The Taligent Programming Model for C++
+   and Java* <https://web.archive.org/web/20170620100654/http://www.wildcrest.com/Potel/Portfolio/mvp.pdf>
+
+ - *A Description of the Model-View-Controller User Interface Paradigm
+   in the Smalltalk-80 System*
+   <https://web.archive.org/web/20170620095511/http://www.global-webnet.com/Adventures/Files/DescriptionOfMvcUi-KrasnerPope.pdf>
+
+ - *Java SE Application Design With MVC*
+   <https://web.archive.org/web/20070309124616/http://java.sun.com/developer/technicalArticles/javase/mvc/>
+
+ - *ARTICLE TITLE: You’ve got the model-view-controller*
+   <https://web.archive.org/web/20170620142643/http://cs.txstate.edu/~rp31/papers/Model-View-Controller.PDF>
+
+ - *Model View Controller* <http://wiki.c2.com?ModelViewController>
+
+ - *Model-View-Controller paradigm; Observer pattern; Creating
+   Graphical User Interfaces in Java/Swing* -
+   <https://drive.google.com/viewerng/viewer?url=http://faculty.washington.edu/stepp/courses/2005spring/tcss360/lectures/notes/08-gui_mvc_observer.ppt>
+
+ - *Model-View-Controller Pattern* -
+   <http://academic.regis.edu/dbahr/generalpages/softwareengineering/softwareengpart17.pdf>
+
+Apple's "MVC": 
+
+ - *Guides and Samples - Model-View-Controller*
+   <https://developer.apple.com/library/content/documentation/General/Conceptual/DevPedia-CocoaCore/MVC.html>
+
+
+ - *Looking at Model-View-Controller in Cocoa*
+   <https://www.cocoawithlove.com/blog/mvc-and-cocoa.html>
+
+Sample codes and examples:
+
+ - *Model-View-Controller (MVC) Structure*
+   <https://www.leepoint.net/GUI/structure/40mvc.html>
+
+ - *Lecture 6: Coupling and the MVC software architecture*
+   <https://web.archive.org/web/20170620171835/http://people.cs.ksu.edu/~schmidt/501s14/Lectures/Lecture06S.html>
+
+ - *Building Games Using the MVC Pattern – Tutorial and Introduction*
+   <https://www.javacodegeeks.com/2012/02/building-games-using-mvc-pattern.html>
+
+ - *Sliding Clock Using Java Swing* <http://java-articles.info/articles/?p=885>
+ 
+
+Java Swing: 
+
+ - *Java Programming Tutorial. Programming Graphical User Interface
+   (GUI) - Part 2* <https://www3.ntu.edu.sg/home/ehchua/programming/java/J4a_GUI_2.html>
+
+History: 
+
+ - *Next Step* <http://wiki.c2.com?NextStep>
+
+ - *Open Step* <http://wiki.c2.com?OpenStep>
+
+
+**** Example 
+
+This example shows a simple GUI application with MVC and Java Swing
+toolkit using three views, one console view that prints the model
+state and two Java swing GUI views.
+
+File: [[file:src/mvcCounter.scala][file:src/mvcCounter.scala]]
+
+#+BEGIN_SRC scala 
+  import javax.swing.{JFrame, JPanel, JTextField, JButton, JLabel}
+
+
+  //-----------  Observer Pattern Interfaces ----------- //
+
+  // Observer interface 
+  trait Observer {
+    def update(): Unit
+  }
+
+  // Subject or Observable interface 
+  trait Observable {
+
+    private var observers: Set[Observer] = Set()
+
+    // Subscribe observer to subject updates 
+    def attach(obs: Observer) {
+      observers += obs 
+    }
+
+    // Remove/ unsubscribe observer from subject updates 
+    def detach(obs: Observer) {
+      observers -= obs 
+    }
+
+    // Notify all observers 
+    def notifyObservers() {
+      for (obs <- observers) obs.update() 
+    }
+  }
+
+
+  //----------- Helpers to subscribe to events ------------- //
+
+  /// Register callback function
+  ///
+  def onClick(button: JButton) (handler: () => Unit) = {
+    button.addActionListener(
+      new java.awt.event.ActionListener(){
+        def actionPerformed(evt: java.awt.event.ActionEvent) = {
+          handler()
+        }
+      }
+    )
+  }
+
+
+  def onWindowExit(frame: javax.swing.JFrame) (handler: () => Unit) = {
+    frame.addWindowListener(
+      new java.awt.event.WindowAdapter(){
+        override def windowClosing(evt: java.awt.event.WindowEvent) = {
+          handler()
+        }
+    })
+  }
+
+  def showFrameSize(frame: javax.swing.JFrame){
+    println(frame.getSize())
+  }
+
+
+  //--------------- MVC Counter Demo -------------------- // 
+
+
+  class CounterModel(init: Int) extends Observable{
+    private var counter = init
+
+    def getValue() = counter
+
+    def increment() = {
+      counter = counter + 1   // Every time the model state is changed,
+                              // the observers must be notified.
+
+      this.notifyObservers()  // the 'this' prefix is optional.
+    }
+
+    def decrement() = {
+      counter = counter - 1
+      this.notifyObservers()  
+    } 
+  }
+
+  /// This view doesn't need a controller as this doesn't need an input.
+  class ConsoleView(counter: CounterModel) extends Observer{
+    init()
+
+    def init(){
+      // Register observer (this class)
+      counter.attach(this)
+    }
+
+    // updates the view 
+    def update() {
+      println("Counter value is = " + counter.getValue())
+    }
+  }
+
+
+  class GuiView1(counter: CounterModel) extends Observer{
+    private val frame   = new JFrame("Counter MVC App")
+    private val panel   = new JPanel(new java.awt.FlowLayout())
+    private val label   = new JLabel("Counter")
+    private val display = new JTextField(10)
+    private val btnInc  = new JButton("Increment")
+    private val btnDec  = new JButton("Decrement")
+    private val btnExit = new JButton("Exit")
+
+    init()
+
+    def init(){
+      // Register observer (this class)
+      counter.attach(this)
+
+      panel.add(label)
+      panel.add(display)
+      panel.add(btnInc)
+      panel.add(btnDec)
+      panel.add(btnExit)
+
+      display.setEditable(false)
+      frame.add(panel)
+      frame.setSize(600, 100)
+      frame.show()
+
+      // Exit application if user closes window.
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+
+      this.update()
+    }
+
+    // updates the view 
+    def update() {
+      display.setText(counter.getValue().toString())
+    }
+
+    def onIncrement(handler: () => Unit) {
+      onClick(btnInc)(handler)
+    }
+
+    def onDecrement(handler: () => Unit) {
+      onClick(btnDec)(handler)
+    }
+
+    def onExit(handler: () => Unit) = {
+      onClick(btnExit)(handler)
+    }
+
+    def show(){
+      frame.show()
+    }
+  }
+
+  class GuiView1Controller(viewp: GuiView1, modelp: CounterModel){
+    private var view  = viewp
+    private var model = modelp
+    init()
+
+    def init(){
+      
+      //---> Model Manipulation 
+      view.onIncrement(this.increment)
+      view.onDecrement(this.decrement)
+
+      //---> GUI manipulation 
+      view.onExit(() => System.exit(0))
+    }
+
+    def increment(){
+      model.increment()
+    }
+
+    def decrement(){
+      model.decrement()
+    }
+
+  }
+
+  // View without input that only displays the model.
+  // This view doesn't need a controller as it doesn't
+  // have any user input.
+  //
+  class GuiView2(counter: CounterModel) extends Observer{
+    private val frame   = new JFrame("Counter App - Display only view")
+    private val panel   = new JPanel()
+    private val display = new JLabel()
+
+    init()
+
+    def init(){
+      counter.attach(this)
+
+      panel.add(display)
+      frame.setSize(354, 54)
+      frame.add(panel)
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+      frame.show()
+      update()
+    }
+
+    // Method required by Observer interface 
+    def update(){
+      display.setText(counter.getValue().toString())
+      // showFrameSize(frame)
+    }
+  }
+
+
+  val counterModel = new CounterModel(0)
+  val consoleView  = new ConsoleView(counterModel)
+
+  val guiView1           = new GuiView1(counterModel)
+  val guiView1Controller = new GuiView1Controller(guiView1, counterModel)
+
+  val guiView2           = new GuiView2(counterModel)
+
+#+END_SRC
+
+Running: 
+
+#+BEGIN_SRC text 
+$ scala mvcCounter.scala 
+warning: there were three deprecation warnings; re-run with -deprecation for details
+one warning found
+Counter value is = 1
+Counter value is = 2
+Counter value is = 3
+Counter value is = 4
+... ... 
+#+END_SRC
+
+[[file:src/counterMvcExample.png][file:src/counterMvcExample.png]]
 * Java Interoperability
 ** Show Java Properties
 
