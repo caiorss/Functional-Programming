@@ -5421,9 +5421,10 @@ The MVC has three parts:
 
 MVC Variation: 
 
- - Controller as mediator. The model doesn't interact directly with
-   the view. It updates the view through the controller. This MVC
-   variation is widely used in Apple's Cocoa framework.
+ - Controller as mediator or MVP - Model View Presenter. The model
+   doesn't interact directly with the view. It updates the view
+   through the controller. This MVC variation is widely used in
+   Apple's Cocoa framework.
 
 
 Benefits: 
@@ -5738,6 +5739,291 @@ Counter value is = 4
 #+END_SRC
 
 [[file:images/counterMvcExample.png][file:images/counterMvcExample.png]]
+*** Model View Presenter with Passive View - MVP 
+**** Overview 
+
+The MVP - Model-View-Presenter is variation of MVC
+Model-View-Controller which the model doesn't communicate directly
+with the view and it is made passive. This pattern is often designated
+as MVC.
+
+#+BEGIN_SRC text 
+           View event triggered
+           by user.
+           
+           +.....->>>-.......+            +........<<<<..........+
+          /  (User action)    \          /   Model notification   \ 
+         /                     \        /    event                 \   
+      View                     Presenter                          Model
+        \                      /       \                           /
+         \   View update      /         \     Model update        /
+          +----<<<-----------/           +--->>>------>>>--------+
+
+  Legend: 
+   
+   ...... - Event or notification
+   ------ - Method call or action.
+  
+#+END_SRC
+
+
+ - _Model_
+
+   + The model is responsible for the business logic or domain logic
+     and application state.
+
+   + As in the MVC, the model must have no knowledge about the view or
+     presenter.
+
+   + Unlike the MVC, the model must not communicate directly with the
+     view, instead it must notify the presenter that it has
+     changed. It can be done using the observer pattern with the model
+     playing the role of observable or observer and the presenter
+     acting as observer.
+
+ - _View_
+
+   + The view role is display the model.
+
+   + Passive view:
+
+     * The view must not have any knowledge about the model and not
+       access it directly.
+
+     * The view doesn't update itself from the model. It is updated by
+       the presenter.
+
+     * The view delegates use input events to the presenter.
+
+ - _Presenter_
+
+   + The presenter role is to handle the presentation logic and
+     mediate the communication between the model and view updating the
+     view with the model data and also handling view events and model
+     notifications. 
+
+   + Presenter - View communication:
+
+     * The presenter handles events received from the view
+       and manipulates the view or the model.
+
+   + Presenter - Model communication:
+
+     + The presenter receives notifications from the model and updates
+       the view with model data in suitable format to the view. 
+
+
+References and Bookmarks: 
+
+ - Martin Fowler. *Pasive View* <https://martinfowler.com/eaaDev/PassiveScreen.html>
+
+ - Andy Bower and Blair McGlashan. *The evolution of the Dolphin
+   Smalltalk MVP application framework.*
+   <https://web.archive.org/web/20170622165759/http://www.object-arts.com/downloads/papers/TwistingTheTriad.PDF>
+
+ - *Tutorial 5: MVC Patterns*
+   <http://griffon-framework.org/tutorials/5_mvc_patterns.html> or
+   <https://web.archive.org/web/20170622172050/http://griffon-framework.org/tutorials/5_mvc_patterns.html>
+
+ - Yang Zhang and Yanjing Luo *An Architecture and Implement Model for
+   Model-View-Presenter Pattern*
+   <https://web.archive.org/web/20170622174219/http://www.meeting.edu.cn/meeting/UploadPapers/1282707447171.pdf>
+
+ - *Model-View-Presenter: Looking at Passive View* <http://blogs.lessthandot.com/index.php/architect/designingsoftware/model-view-presenter-looking-at-passive/>
+
+ - Aviad Ezra. *Twisting the MVC Triad - Model View Presenter (MVP)
+   Design Pattern*
+   <http://aviadezra.blogspot.com.br/2007/07/twisting-mvp-triad-say-hello-to-mvpc.html>
+   or <https://web.archive.org/web/20170622180300/http://aviadezra.blogspot.com.br/2007/07/twisting-mvp-triad-say-hello-to-mvpc.html>
+
+ - Apple Inc. *Concepts in Objective-C Programming - Model-View-Controller*
+   <https://web.archive.org/web/20170622181821/https://developer.apple.com/library/content/documentation/General/Conceptual/CocoaEncyclopedia/Model-View-Controller/Model-View-Controller.html>
+
+ - *Model-View-Controller rationale, implementation, abstract model
+   widgets* <https://web.archive.org/web/20170622183803/https://www.student.cs.uwaterloo.ca/~cs349/s14/files/04.mvc.3up.pdf>
+**** Example 
+
+This example is similar to the MVC counter example.
+
+File: [[file:src/mvpCounter.scala][file:src/mvpCounter.scala]] 
+
+#+BEGIN_SRC scala :tangle src/mvpCounter.scala
+import javax.swing.{JFrame, JPanel, JTextField, JButton, JLabel}
+
+
+//-----------  Observer Pattern Interfaces ----------- //
+
+// Observer interface 
+trait Observer {
+  def update(): Unit
+}
+
+// Subject or Observable interface 
+trait Observable {
+
+  private var observers: Set[Observer] = Set()
+
+  // Subscribe observer to subject updates 
+  def attach(obs: Observer) {
+    observers += obs 
+  }
+
+  // Remove/ unsubscribe observer from subject updates 
+  def detach(obs: Observer) {
+    observers -= obs 
+  }
+
+  // Notify all observers 
+  def notifyObservers() {
+    for (obs <- observers) obs.update() 
+  }
+}
+
+
+//----------- Helpers to subscribe to events ------------- //
+
+/// Register callback function
+///
+def onClick(button: JButton) (handler: () => Unit) = {
+  button.addActionListener(
+    new java.awt.event.ActionListener(){
+      def actionPerformed(evt: java.awt.event.ActionEvent) = {
+        handler()
+      }
+    }
+  )
+}
+
+
+def onWindowExit(frame: javax.swing.JFrame) (handler: () => Unit) = {
+  frame.addWindowListener(
+    new java.awt.event.WindowAdapter(){
+      override def windowClosing(evt: java.awt.event.WindowEvent) = {
+        handler()
+      }
+  })
+}
+
+
+//--------------- MVP Counter Demo -------------------- //
+
+
+
+class CounterModel(init: Int) extends Observable{
+  private var counter = init
+
+  def getValue() = counter
+
+  def increment() = {
+    counter = counter + 1   // Every time the model state is changed,
+                            // the observers must be notified.
+
+    this.notifyObservers()  // the 'this' prefix is optional.
+  }
+
+  def decrement() = {
+    counter = counter - 1
+    this.notifyObservers()  
+  } 
+}
+
+
+
+class CounterView extends {
+  private val frame   = new JFrame("Counter MVC App")
+  private val panel   = new JPanel(new java.awt.FlowLayout())
+  private val label   = new JLabel("Counter")
+  private val display = new JTextField(10)
+  private val btnInc  = new JButton("Increment")
+  private val btnDec  = new JButton("Decrement")
+  private val btnExit = new JButton("Exit")
+
+  init()
+
+  def init(){
+    panel.add(label)
+    panel.add(display)
+    panel.add(btnInc)
+    panel.add(btnDec)
+    panel.add(btnExit)
+
+    display.setEditable(false)
+    frame.add(panel)
+    frame.setSize(600, 100)
+    // Exit application if user closes window.
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)   
+  }
+
+  // updates the view 
+  def setDisplay(value: String) {
+    display.setText(value)
+  }
+
+  def onIncrement(handler: () => Unit) {
+    onClick(btnInc)(handler)
+  }
+
+  def onDecrement(handler: () => Unit) {
+    onClick(btnDec)(handler)
+  }
+
+  def onExit(handler: () => Unit) = {
+    onClick(btnExit)(handler)
+  }
+
+  def show(){
+    frame.show()
+  }
+}
+
+
+
+class CounterPresenter(model: CounterModel) extends Observer{
+  private val view  = new CounterView()
+
+  init()
+
+  def init(){
+
+    // Subscribe presenter to model updates 
+    model.attach(this)
+
+    //---> Model Manipulation 
+    view.onIncrement(this.increment)
+    view.onDecrement(this.decrement)
+
+    //---> GUI manipulation 
+    view.onExit(() => System.exit(0))
+
+    // Initial model display
+    this.update()
+  }
+
+  def increment(){
+    model.increment()
+  }
+
+  def decrement(){
+    model.decrement()
+  }
+
+  // Method required by Observer interface. It updates the view
+  // when the model notifies the presenter that its state has
+  // changed.
+  def update(){
+    view.setDisplay(model.getValue().toString())
+  }
+
+  def show() = view.show()
+
+}
+
+
+val counterModel = new CounterModel(0)
+val presenter    = new CounterPresenter(counterModel)
+presenter.show()
+
+#+END_SRC
 * Java Interoperability
 ** Show Java Properties
 
