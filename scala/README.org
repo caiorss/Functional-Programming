@@ -127,6 +127,126 @@ ob_scala_eol
 
 #+END_SRC
 
+**** Running Scala Scripts
+     :PROPERTIES:
+     :ID:       8fee2473-9ca4-45f5-b316-84febb5dcb1e
+     :END:
+***** Sample script 
+
+ - file: [[file:src/scalaScript.scala][file:src/scalaScript.scala]]
+
+#+BEGIN_SRC scala :tangle src/scalaScript.scala 
+  import javax.swing.{JFrame, JPanel, JTextArea}
+
+  println("Hello world Scala")
+
+  val frame = new JFrame("Sample scala script")
+  frame.setSize(300, 400)
+  frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE)
+
+  val tarea = new JTextArea()
+  val scroll = new javax.swing.JScrollPane(tarea)
+  frame.add(scroll)
+  frame.setVisible(true)
+
+  tarea.append("Hello world Scala Script")
+  tarea.append("\nHello world! (en)")
+  tarea.append("\nHola mundo!  (es)")
+  tarea.append("\nOla mundo!   (pt)")
+
+
+#+END_SRC
+
+***** Running script from command line: 
+
+#+BEGIN_SRC sh
+  $ scala scalaScript.scala 
+  Hello world Scala
+
+  ob_scala_eol
+
+#+END_SRC
+
+Screenshot: 
+
+[[file:images/scalaScriptRunning.png][file:images/scalaScriptRunning.png]]
+
+***** Running the script command line with faster initialization. 
+
+ - =scala -save scalaScript.scala= 
+
+It will run the script and compile it to scalaScript.jar that will
+speed up the initialization when the scala program is invoked again.
+
+#+BEGIN_SRC sh 
+  $ scala -save scalaScript.scala 
+  Hello world Scala
+
+  $ file scalaScript.jar 
+  scalaScript.jar: Java archive data (JAR)
+
+  $ unzip -l scalaScript.jar 
+  Archive:  scalaScript.jar
+    Length      Date    Time    Name
+  ---------  ---------- -----   ----
+         75  2017-06-30 16:02   META-INF/MANIFEST.MF
+       1691  2017-06-30 16:02   Main$$anon$1.class
+        570  2017-06-30 16:02   Main$.class
+        556  2017-06-30 16:02   Main.class
+  ---------                     -------
+       2892                     4 files
+
+  # Next initialization is faster. 
+  $ scala scalaScript.scala 
+  Hello world Scala
+
+  ob_scala_eol
+
+  # The generated jar file can be executed directly.
+  $ scala scalaScript.jar
+  Hello world Scala
+
+  ob_scala_eol
+
+  # It be executed directly with java and Scala runtime library.
+  $ java -cp /home/archbox/opt/scala-2.11.8/lib/scala-library.jar:scalaScript.jar Main 
+  Hello world Scala
+
+  ob_scala_eol
+      
+#+END_SRC
+
+***** Running script from scala REPL. 
+
+#+BEGIN_SRC sh 
+$ scala
+Welcome to Scala 2.11.8 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_20).
+Type in expressions for evaluation. Or try :help.
+
+scala> :paste scalaScript.scala
+Pasting file scalaScript.scala...
+Hello world Scala
+
+scala> println(tarea.getText())
+Hello world Scala Script
+Hello world! (en)
+Hola mundo!  (es)
+Ola mundo!   (pt)
+
+Write something more. 
+
+Scala allows to write apps with GUIs fast!!
+
+Like in Smalltalk, in Scala all objects 
+and functions are right at your fingers.
+
+scala> tarea.setText("Hello world Java Swing")
+
+scala> 
+#+END_SRC
+
+
+
 ** Basic Syntax
 
 *Comment*
