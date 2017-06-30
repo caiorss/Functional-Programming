@@ -365,7 +365,8 @@ or
 
 #+BEGIN_SRC sh 
 $ cp /home/archbox/opt/scala-2.11.8/lib/scala-library.jar .
-$ java -cp scalaApp.jar:scala-library.jar scalaApp.MainHello world Scala
+$ java -cp scalaApp.jar:scala-library.jar scalaApp.Main
+Hello world Scala
 #+END_SRC
 ** Basic Syntax
 
