@@ -245,8 +245,128 @@ scala> tarea.setText("Hello world Java Swing")
 scala> 
 #+END_SRC
 
+*** Scalac - Scala compiler 
+    :PROPERTIES:
+    :ID:       19e4e984-865a-4dd8-be13-7cc406aa2cca
+    :END:
+**** Sample scala program
 
+ - file: [[file:src/scalaProgram.scala][file:src/scalaProgram.scala]]
 
+#+BEGIN_SRC scala :tangle src/scalaProgram.scala 
+  package scalaApp
+
+  import javax.swing.{JFrame, JPanel, JTextArea}
+
+  object Main{
+
+    def main(arrgs: Array[String]){
+      println("Hello world Scala")
+
+      val frame = new JFrame("Sample scala script")
+      frame.setSize(300, 400)
+      frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE)
+
+      val tarea = new JTextArea()
+      val scroll = new javax.swing.JScrollPane(tarea)
+      frame.add(scroll)
+      frame.setVisible(true)
+
+      tarea.append("Hello world Scala Script")
+      tarea.append("\nHello world! (en)")
+      tarea.append("\nHola mundo!  (es)")
+      tarea.append("\nOla mundo!   (pt)")
+
+    }
+  }
+
+#+END_SRC
+
+**** Compiling  
+
+Compiling: 
+
+#+BEGIN_SRC sh 
+# Compile 
+$ scalac scalaProgram.scala 
+
+# Inspect generated files.
+$ ls scalaApp/
+ Main.class  'Main$.class'
+
+$ file scalaApp/Main.class 
+scalaApp/Main.class: compiled Java class data, version 50.0 (Java 1.6)
+#+END_SRC
+
+Running with scala: 
+
+#+BEGIN_SRC sh 
+$ scala scalaApp.Main 
+Hello world Scala
+
+#+END_SRC
+
+Running directly with java:
+
+#+BEGIN_SRC sh 
+$ java -cp .:/home/archbox/opt/scala-2.11.8/lib/scala-library.jar scalaApp.Main
+Hello world Scala
+#+END_SRC
+
+Screenshot: 
+
+[[file:images/scalaScriptRunning.png][file:images/scalaScriptRunning.png]]
+
+**** Compiling to a jar file 
+
+Compiling:
+
+#+BEGIN_SRC sh 
+  $ scalac scalaProgram.scala -d scalaApp.jar 
+
+  # Inspect generated file.
+  $ file scalaApp.jar 
+  scalaApp.jar: Java archive data (JAR)
+
+  # View package contents with jar tool.
+  $ jar tf scalaApp.jar 
+  META-INF/MANIFEST.MF
+  scalaApp/Main.class
+  scalaApp/Main$.class
+
+  # View package contents with unzip tool.
+  $ unzip -l scalaApp.jar 
+  Archive:  scalaApp.jar
+    Length      Date    Time    Name
+  ---------  ---------- -----   ----
+         84  2017-06-30 16:50   META-INF/MANIFEST.MF
+        586  2017-06-30 16:50   scalaApp/Main.class
+       1369  2017-06-30 16:50   scalaApp/Main$.class
+  ---------                     -------
+       2039                     3 files
+#+END_SRC
+
+Running with scala: 
+
+#+BEGIN_SRC sh 
+$ scala scalaApp.jar 
+Hello world Scala
+#+END_SRC
+
+Running with java: 
+
+#+BEGIN_SRC sh 
+$ java -cp scalaApp.jar:/home/archbox/opt/scala-2.11.8/lib/scala-library.jar scalaApp.Main
+Hello world Scala
+
+#+END_SRC
+
+or 
+
+#+BEGIN_SRC sh 
+$ cp /home/archbox/opt/scala-2.11.8/lib/scala-library.jar .
+$ java -cp scalaApp.jar:scala-library.jar scalaApp.MainHello world Scala
+#+END_SRC
 ** Basic Syntax
 
 *Comment*
