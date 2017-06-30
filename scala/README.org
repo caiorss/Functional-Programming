@@ -75,16 +75,18 @@ See: [[https://www.scala-lang.org/download/][Download | The Scala Programming La
 The Scala REPL or Scala shell allows exploratory design and
 interactive lerarning about the Java API.
 
-| Command                 | Description                             |
-|-------------------------+-----------------------------------------|
-| :help                   | Show help                               |
-| :paste                  | Paste a block of code and enter Ctrl+D. |
-| :past =<path-to-file>=  | Load a file.                            |
-| :load =<path-to-file>=  | Load a Scala file into the repl.        |
-| :cp   =<path-to-*.jar>= | Load a Jar file into the REPL.          |
-| :history                | Show command history                    |
-| :quit or Ctrl + c       | Exit REPL                               |
-|                         |                                         |
+| Command                    | Description                                   |
+|----------------------------+-----------------------------------------------|
+| :help                      | Show help                                     |
+| :paste                     | Paste a block of code and enter Ctrl+D.       |
+| :paste =<path-to-file>=    | Load a file.                                  |
+| :load =<path-to-file>=     | Load a Scala file into the repl.              |
+| :require =<path-to-*.jar>= | Load a Jar file into the REPL.                |
+| :history                   | Show command history                          |
+| :reset                     | Reset repl to its initial state.              |
+| :silent                    | Enable/disable automatic printing of results. |
+| :quit or Ctrl + c          | Exit REPL                                     |
+|                            |                                               |
 
 Scala REPL:
 
