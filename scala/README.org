@@ -70,7 +70,26 @@ See: [[https://www.scala-lang.org/download/][Download | The Scala Programming La
 |           |                               |
 |           |                               |
 
-** REPL - Scala Shell
+** Tooling
+*** Overview
+
+| Program       | Description                                                                      |
+|---------------+----------------------------------------------------------------------------------|
+| *Scala tools* |                                                                                  |
+| scala         | Scala REPL or interactive shell like python or ipython.                          |
+| scalac        | Scala compiler.                                                                  |
+| scaladoc      | Documentation builder similar to Javadoc.                                        |
+| sbt           | Simple Building Tool. Or scala building tool similar to Maven, but less verbose. |
+|               |                                                                                  |
+| *Java tools*  |                                                                                  |
+| java          | Java runtime.                                                                    |
+| javac         | Java compiler.                                                                   |
+| javadoc       | java documentation builder.                                                      |
+|               |                                                                                  |
+|               |                                                                                  |
+
+*** REPL - Scala Shell
+**** REPL Commands
 
 The Scala REPL or Scala shell allows exploratory design and
 interactive lerarning about the Java API.
