@@ -368,6 +368,24 @@ $ cp /home/archbox/opt/scala-2.11.8/lib/scala-library.jar .
 $ java -cp scalaApp.jar:scala-library.jar scalaApp.Main
 Hello world Scala
 #+END_SRC
+**** See also 
+
+ - [[https://docs.oracle.com/javase/tutorial/deployment/jar/appman.html][Setting an Application's Entry Point (The Java™ Tutorials > Deployment > Packaging Programs in JAR Files)]] 
+
+ - [[https://docs.oracle.com/javase/tutorial/deployment/jar/][Lesson: Packaging Programs in JAR Files (The Java™ Tutorials > Deployment)]]
+
+ - [[https://docs.oracle.com/javase/tutorial/deployment/jar/build.html][Creating a JAR File (The Java™ Tutorials > Deployment > Packaging Programs in JAR Files)]]
+
+ - [[http://www.javaworld.com/article/2857714/learn-java/manipulating-jars-wars-and-ears-on-the-command-line.html][Manipulating JARs, WARs, and EARs on the command line | JavaWorld]] 
+
+ - [[https://coderwall.com/p/ssuaxa/how-to-make-a-jar-file-linux-executable][How to make a JAR file Linux executable (Example)]] 
+
+ - [[https://netbeans.org/kb/articles/javase-deploy.html][Packaging and Deploying Desktop Java Applications]]
+
+ - [[http://xmodulo.com/create-desktop-shortcut-launcher-linux.html][How to create desktop shortcut or launcher on Linux - Xmodulo]]
+
+ - [[http://launch4j.sourceforge.net/index.html][Launch4j - Cross-platform Java executable wrapper]] 
+
 ** Basic Syntax
 
 *Comment*
@@ -380,10 +398,17 @@ Multiline Comment
 
 */
 
+/**
+  * Documentation comment.
+  *
+  */
+
 #+END_SRC
 
 
-*Value (Immutable)*
+*Value*
+
+It is not possible to reassign values.
 
 #+BEGIN_SRC scala
 
@@ -405,6 +430,8 @@ String
 #+END_SRC
 
 *Variable*
+
+Unlike values, variables allow reassignment.
 
 #+BEGIN_SRC scala
 
@@ -981,15 +1008,15 @@ Computes f.compose(g) = f°g (x) = f(g(x))
     .  ___________________      ___________________    .
     .  |                 |      |                 |    .
     .  |                 |      |                 |    .
-  --+->+ g(x) = x * 2    +-->---+  f(x) = x * 2   +----+-->
- 4  .  | g(4) = 8        |  8   |  f(8) = 16      |    . 16
+  --+->+ g(x) = x * 2    +-->---+  f(x) = x + 10  +----+-->
+ 4  .  | g(4) = 8        |  8   |  f(8) = 18      |    . 18
     .  |_________________|      +-----------------+    .
     .                                                  .
     ....................................................
 
        ................
        .              .
-  4 -->+  (f ° g) (x) +--> 16
+  4 -->+  (f ° g) (x) +--> 18
        .  f(g(x))     .
        ................
 
