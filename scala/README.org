@@ -1239,6 +1239,34 @@ res77: Int = 28
 
 #+END_SRC
 
+*** Functions with default parameters
+
+#+BEGIN_SRC scala
+
+  /** Free fall speed v(t) = g * t, g in m/s^2 */
+  def freeFallSpeed(time: Double, gravity: Double = 9.81) = time * gravity
+
+  scala> freeFallSpeed(1.0)
+  res30: Double = 9.81
+
+  scala> freeFallSpeed(2.0)
+  res31: Double = 19.62
+
+  scala> freeFallSpeed(2.0, 10.0)
+  res32: Double = 20.0
+
+  scala> freeFallSpeed(2.0, 20.0)
+  res33: Double = 40.0
+
+  scala> freeFallSpeed(2.0, gravity = 10.0)
+  res35: Double = 20.0
+
+  scala> freeFallSpeed(2.0, gravity = 15.0)
+  res36: Double = 30.0
+
+
+#+END_SRC
+
 ** Imperative Constructs
 *** While loop
 
