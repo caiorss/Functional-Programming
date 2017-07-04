@@ -3870,6 +3870,73 @@ Example: Simple record type.
 
 #+END_SRC
 
+** Class with higher order methods 
+
+Scala classes can have methods that accepts functions as parameters or
+higher order methods. Note that Scala's collections like List, Array,
+Map have higher order methods and such as Array.map, Array.foreach and
+so on.
+
+Example: 
+
+#+BEGIN_SRC scala 
+  class Pipe[A](value: A){
+    def p[B](fn: A => B) = new Pipe(fn(value))
+    def get() = value
+  }
+
+
+  scala> val v = new Pipe(100.0)
+  v: Pipe[Double] = Pipe@d8c6f0
+
+  scala> v.p(_+10).get
+  res41: Double = 110.0
+
+  scala> v.p(_+10).p(Math.sin).get
+  res42: Double = -0.044242678085070965
+
+  scala> v.p(_+10).p(Math.sin).p(Math.cos).get
+  res43: Double = 0.9990214523521718
+
+  scala> v.p(_+10).p(Math.sin).p(Math.cos).p(x => x * 3).get
+  res44: Double = 2.9970643570565154
+
+  // Alternative way
+
+  scala> v p(_+10) get
+  res47: Double = 110.0
+
+  scala> v p(_+10) p(Math.sin) p(Math.cos) p(x => x * 3) get
+  res48: Double = 2.9970643570565154
+
+  { v
+    .p(_+10)
+    .p(Math.sin)
+    .p(Math.cos)
+    .p(x => x * 3)
+    .get
+  }
+
+  scala> { v
+       |   .p(_+10)
+       |   .p(Math.sin)
+       |   .p(Math.cos)
+       |   .p(x => x * 3)
+       |   .get
+       | }
+  res49: Double = 2.9970643570565154
+
+  val out = {
+    v
+    .p(_+10)
+    .p(Math.sin)
+    .p(Math.cos)
+    .p(x => x * 3)
+    .get
+  }
+  out: Double = 2.9970643570565154
+
+#+END_SRC
 ** Abstract Class 
 
 An abstract class is a class which cannot be instantiated, containing
