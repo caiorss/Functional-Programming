@@ -1,5 +1,6 @@
 #+INCLUDE: ../theme/style.org
 #+TITLE: Exception Handling 
+#+STARTUP: showall
 
 * Exception Handling 
 ** Overview 
@@ -184,7 +185,7 @@ report error, failure information or invalid data.
       Nothing  -> error "Invalid age. Not a number"
       Just age -> case age of 
                   _ | age < 0    -> error "Error: Invalid age. It must be greater than zero."
-                  _ | age <= 18  -> error "Error: Bellow legal age to sign the contract."
+                  _ | age <= 18  -> error "Error: Below legal age to sign the contract."
                   _ | age > 200  -> error "Error: Invalid age. Impossible age."
                   _              -> age   
   :}
@@ -200,7 +201,7 @@ report error, failure information or invalid data.
     error, called at <interactive>:1085:35 in interactive:Ghci54
 
   > validateAge "16" 
-  ,*** Exception: Error: Bellow legal age to sign the contract.
+  ,*** Exception: Error: Below legal age to sign the contract.
   CallStack (from HasCallStack):
     error, called at <interactive>:1086:35 in interactive:Ghci54
   >
@@ -238,7 +239,7 @@ This function can be refactored to:
       Nothing  -> Left "Invalid input. Not a number"
       Just age -> case age of 
                   _ | age < 0    -> Left "Error: Invalid age. It must be greater than zero."
-                  _ | age <= 18  -> Left "Error: Bellow legal age to sign the contract."
+                  _ | age <= 18  -> Left "Error: Below legal age to sign the contract."
                   _ | age > 200  -> Left "Error: Invalid age. Impossible age."
                   _              -> Right age   
   :}
@@ -247,7 +248,7 @@ This function can be refactored to:
   Left "Error: Invalid age. It must be greater than zero."
   it :: Either String Int
   > validateAge "16"
-  Left "Error: Bellow legal age to sign the contract."
+  Left "Error: Below legal age to sign the contract."
   it :: Either String Int
   > validateAge "300"
   Left "Error: Invalid age. Impossible age."
@@ -268,8 +269,8 @@ This function can be refactored to:
   Left "Error: Invalid age. It must be greater than zero."
   Left "Invalid input. Not a number"
   Left "Error: Invalid age. Impossible age."
-  Left "Error: Bellow legal age to sign the contract."
-  Left "Error: Bellow legal age to sign the contract."
+  Left "Error: Below legal age to sign the contract."
+  Left "Error: Below legal age to sign the contract."
   Right 20
   Right 25
   it :: ()
@@ -287,7 +288,7 @@ strings. So the code above could be refactored to:
 
   :{ 
   data AgeError = AgeInvalidInput
-                | AgeBellowLegalAge
+                | AgeBelowLegalAge
                 | AgeImpossible
                 deriving (Eq, Show, Read)
   :}
@@ -300,15 +301,15 @@ strings. So the code above could be refactored to:
       Nothing  -> Left AgeInvalidInput
       Just age -> case age of 
                   _ | age < 0    -> Left AgeImpossible
-                  _ | age <= 18  -> Left AgeBellowLegalAge
+                  _ | age <= 18  -> Left AgeBelowLegalAge
                   _ | age > 200  -> Left AgeImpossible
                   _              -> Right age   
   :}
 
   > map (\input -> (input, validateAge input)) ["safsdf", "-100", "garbage", "400", "7", "15", "20", "25"]
   [("safsdf",Left AgeInvalidInput),("-100",Left AgeImpossible),("garbage",Left AgeInvalidInput),
-   ("400",Left AgeImpossible),("7",Left AgeBellowLegalAge),
-   ("15",Left AgeBellowLegalAge),("20",Right 20),
+   ("400",Left AgeImpossible),("7",Left AgeBelowLegalAge),
+   ("15",Left AgeBelowLegalAge),("20",Right 20),
    ("25",Right 25)]
   it :: [([Char], Either AgeError Int)]
   > 
@@ -319,8 +320,8 @@ strings. So the code above could be refactored to:
   Left AgeImpossible
   Left AgeInvalidInput
   Left AgeImpossible
-  Left AgeBellowLegalAge
-  Left AgeBellowLegalAge
+  Left AgeBelowLegalAge
+  Left AgeBelowLegalAge
   Right 20
   Right 25
   it :: ()
@@ -330,7 +331,7 @@ strings. So the code above could be refactored to:
   showAgeError :: AgeError -> String
   showAgeError age =
      case age of
-       AgeBellowLegalAge ->  "Error: Bellow legal age to sign the contract."
+       AgeBelowLegalAge ->  "Error: Below legal age to sign the contract."
        AgeImpossible     ->  "Error: Invalid age. Impossible age."
        AgeInvalidInput    ->  "Invalid input. Not a number"
   :}
@@ -362,10 +363,10 @@ strings. So the code above could be refactored to:
   Left "Error: Invalid age. Impossible age."
   it :: Either String Int
   > mapLeft showAgeError $ validateAge "10" 
-  Left "Error: Bellow legal age to sign the contract."
+  Left "Error: Below legal age to sign the contract."
   it :: Either String Int
   > mapLeft showAgeError $ validateAge "15" 
-  Left "Error: Bellow legal age to sign the contract."
+  Left "Error: Below legal age to sign the contract."
   it :: Either String Int
   > mapLeft showAgeError $ validateAge "25" 
   Right 25
@@ -386,7 +387,7 @@ Refactoring the function to validate multiple data:
 
   :{ 
   data AgeError = AgeInvalidInput
-                | AgeBellowLegalAge
+                | AgeBelowLegalAge
                 | AgeImpossible
                 deriving (Eq, Show, Read)
   :}
@@ -418,7 +419,7 @@ Refactoring the function to validate multiple data:
           Nothing  -> Left AgeInvalidInput
           Just age -> case age of 
                       _ | age < 0    -> Left AgeImpossible
-                      _ | age <= 18  -> Left AgeBellowLegalAge
+                      _ | age <= 18  -> Left AgeBelowLegalAge
                       _ | age > 200  -> Left AgeImpossible
                       _              -> Right age   
   :}
@@ -457,7 +458,7 @@ Refactoring the function to validate multiple data:
   Right 25
   it :: Either UserDataError Int
   > validateAge "16" 
-  Left (UserAgeError AgeBellowLegalAge)
+  Left (UserAgeError AgeBelowLegalAge)
   it :: Either UserDataError Int
 
   > validateAge "25" 
@@ -478,7 +479,7 @@ Refactoring the function to validate multiple data:
   Left (UserAgeError AgeImpossible)
   it :: Either UserDataError UserData
   > validateUser "John" "15" 
-  Left (UserAgeError AgeBellowLegalAge)
+  Left (UserAgeError AgeBelowLegalAge)
   it :: Either UserDataError UserData
   > validateUser "John" "-100" 
   Left (UserAgeError AgeImpossible)

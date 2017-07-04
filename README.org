@@ -52,7 +52,7 @@ This repository is dedicated to public domain.
 
  - [[file:clojure/README.org][Clojure]]  
 
-*Function Programming in Scala*
+*Functional Programming in Scala*
 
  - [[file:scala/README.org][Scala]]
          

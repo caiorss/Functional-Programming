@@ -1,9 +1,12 @@
 #+TITLE: Clojure 
+#+STARTUP: showall
 
 * Clojure
 ** Overview
 
-Clojure is a functional programming lisp dialect that leverages the access to all Java platform libraries. It is based on Scheme, Common Lisp, ML and Haskell.
+Clojure is a functional programming lisp dialect that leverages the
+access to all Java platform libraries. It is based on Scheme, Common
+Lisp, ML and Haskell.
 
 Features:
 
@@ -1311,7 +1314,7 @@ Write a file.
     user=> (clojure.inspector/inspect-table '((1 2 3) (a b c) (e f g)))
 #+END_SRC
 
-file:images/Clojure_Inspector.png
+[[file:images/Clojure_Inspector.png][file:images/Clojure_Inspector.png]]
 
 ** Macros 
 
@@ -1437,7 +1440,6 @@ See also:
  - [[http://bryangilbert.com/blog/2013/07/30/anatomy-of-a-clojure-macro/][The Anatomy of a Clojure Macro]]
 
  - [[http://media.pragprog.com/titles/cjclojure/macro.pdf][Mastering Clojure Macros - Write Cleaner, Faster, Smarter Code]]
-
 
 ** Java Interoperability
 
@@ -1627,7 +1629,7 @@ One of greatest advantages of Clojure to other Lisp's dialects is the Java inter
       (.setVisible true))
 #+END_SRC
 
-file:images/simplegui.png
+[[file:images/simplegui.png][file:images/simplegui.png]]
 
 
 **** Java Import 
@@ -1804,7 +1806,7 @@ Print Class Path
     user=> (clojure.inspector/inspect-tree m)
 #+END_SRC
 
-file:images/Clojure_Inspector_methods.png
+[[file:images/Clojure_Inspector_methods.png][file:images/Clojure_Inspector_methods.png]]
 
 #+BEGIN_SRC clojure
 
@@ -2048,8 +2050,6 @@ There is a Clojure library for this: [[https://github.com/dakrone/clj-http][clj-
 
 
 #+END_SRC
-
-
 
 ** Resources
 

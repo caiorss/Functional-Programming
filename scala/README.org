@@ -3874,7 +3874,7 @@ Example: Simple record type.
 
 Scala classes can have methods that accepts functions as parameters or
 higher order methods. Note that Scala's collections like List, Array,
-Map have higher order methods and such as Array.map, Array.foreach and
+Map have higher order methods such as Array.map, Array.foreach and
 so on.
 
 Example: 
