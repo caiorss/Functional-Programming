@@ -1267,6 +1267,225 @@ res77: Int = 28
 
 #+END_SRC
 
+*** Functions with call-by-name parameters 
+**** call-by-value or pass-by-value 
+
+In Scala function parameters are passed by value by default. They are
+evaluated before function application. 
+
+#+BEGIN_SRC scala 
+scala> val rnd = new java.util.Random()
+rnd: java.util.Random = java.util.Random@3198594d
+
+def passByValue(x: Int) = List(x, x, x)
+
+scala> passByValue(rnd.nextInt(10))
+res31: List[Int] = List(2, 2, 2)
+
+scala> passByValue(rnd.nextInt(10))
+res32: List[Int] = List(1, 1, 1)
+
+scala> rnd.nextInt(10)
+res12: Int = 2
+
+scala> rnd.nextInt(10)
+res13: Int = 3
+
+scala> rnd.nextInt(10)
+res14: Int = 4
+#+END_SRC
+**** call-by-name or pass-by-name 
+
+In the call-by-name evaluation strategy the function parameter passed
+by name is not evaluated before the function application such as in
+the pass-by-value strategy and they are evaluated every time they are
+referenced. 
+
+Example 1: The parameter x is passed-by-name and it is evaluated every
+time it appears in the function body. The expression =rnd.nextInt(10)=
+is evaluated every time it appers in the function body.
+
+#+BEGIN_SRC scala 
+def passByName(x: => Int) = List(x, x, x)
+
+scala> passByName(rnd.nextInt(10))
+res33: List[Int] = List(7, 8, 7)
+
+scala> passByName(rnd.nextInt(10))
+res34: List[Int] = List(6, 4, 0)
+
+scala> passByName{rnd.nextInt(10)}
+res35: List[Int] = List(7, 4, 8)
+
+scala> passByName{rnd.nextInt(10)}
+res36: List[Int] = List(5, 9, 8)
+
+#+END_SRC
+
+It is equivalent to: 
+
+#+BEGIN_SRC scala 
+def passByNameSimulation(x: () => Int) = List(x(), x(), x())
+
+scala> passByNameSimulation(() => rnd.nextInt(10))
+res37: List[Int] = List(7, 4, 0)
+
+scala> passByNameSimulation(() => rnd.nextInt(10))
+res38: List[Int] = List(2, 6, 1)
+
+scala> passByNameSimulation(() => rnd.nextInt(10))
+res39: List[Int] = List(1, 0, 7)
+
+#+END_SRC
+
+Example 2: 
+
+#+BEGIN_SRC scala 
+  def do3Times(fn: => Unit){ fn ; fn ; fn }
+
+  scala> do3Times{ println("Hello world") }
+  Hello world
+  Hello world
+  Hello world
+
+#+END_SRC
+
+
+**** Custom control structures with call-by-name 
+
+Pass-by-name parameters are useful for implementing functions that
+works like custom control structures and to pass code blocks as
+function parameters.
+
+Example 1: Some custom "control structures".
+
+#+BEGIN_SRC scala 
+
+  def dotimes(n: Int)(fn: => Unit){
+    for (i <- 1 to n) fn
+  }
+
+  dotimes(3){
+    println("Scala is amazing.")
+    println("Scala's super powers.\n")
+  }
+
+
+  scala> dotimes(3){
+       |   println("Scala is amazing.")
+       |   println("Scala's super powers.\n")
+       | }
+  Scala is amazing.
+  Scala's super powers.
+
+  Scala is amazing.
+  Scala's super powers.
+
+  Scala is amazing.
+  Scala's super powers.
+
+
+  def doWhile(cond: => Boolean)(fn: => Unit){
+    fn 
+    if (cond) doWhile{cond}{fn}
+  }
+
+  var x = 5
+  doWhile(x > 0){
+    println("x = " + x)
+    x = x - 1 
+  }
+
+  scala> var x = 5
+  x: Int = 5
+
+  scala> doWhile(x > 0){
+       |   println("x = " + x)
+       |   x = x - 1 
+       | }
+  x = 5
+  x = 4
+  x = 3
+  x = 2
+  x = 1
+
+
+  // delay in mili seconds. 
+  def doAfterDelay(delay: Int)(action: => Unit) = {
+    java.lang.Thread.sleep(delay)
+    action
+  }
+
+  scala> doAfterDelay(2000){ println("2 seconds delay") }
+  2 seconds delay
+
+
+  def loopDelay(delay: Int)(action: => Unit) {
+    java.lang.Thread.sleep(delay)
+    action
+    loopDelay(delay){action}
+  }
+
+  scala> loopDelay(1000){ println("Print it forever every 1 second") } 
+  Print it forever every 1 second
+  Print it forever every 1 second
+  Print it forever every 1 second
+  Print it forever every 1 second
+
+  ... ... ... 
+
+#+END_SRC
+
+Example 2: Passing code blocks as java swing event handlers.
+
+#+BEGIN_SRC scala 
+
+  /** Function that when executed removes the event handler */
+  type Dispose = () => Unit
+
+  /** Subscribes to button click event */
+  def onButtonClick(button: javax.swing.JButton) (handler: => Unit) : Dispose = {
+    val listener = new java.awt.event.ActionListener(){
+      def actionPerformed(evt: java.awt.event.ActionEvent) = {
+        handler
+      }
+    }
+    button.addActionListener(listener)
+    // Returns function that when executed disposes the event handler 
+    () => button.removeActionListener(listener)
+    }
+
+
+  var n = 0 
+
+  val frame  = new javax.swing.JFrame("Click on the button")
+  val panel  = new javax.swing.JPanel()
+  val button = new javax.swing.JButton("Click me right now!")
+  val label  = new javax.swing.JLabel(s"I was clicked ${n} times.")
+
+  panel.add(button)
+  panel.add(label)
+  frame.add(panel)
+  frame.setSize(300, 400)
+  frame.setVisible(true)
+
+
+  val dispose1 = onButtonClick(button){
+    println(s"The user clicked the button ${n} times.")
+    label.setText(s"I was clicked ${n} times.")
+    n = n + 1
+  }
+
+  scala> val dispose1 = onButtonClick(button){
+       |   println(s"The user clicked the button ${n} times.")
+       |   label.setText(s"I was clicked ${n} times.")
+       |   n = n + 1
+       | }
+  dispose1: Dispose = <function0>
+
+  // Run dispose1 to remove event handler.
+  scala> dispose1() 
+#+END_SRC
 ** Imperative Constructs
 *** While loop
 
