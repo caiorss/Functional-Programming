@@ -1302,8 +1302,7 @@ the pass-by-value strategy and they are evaluated every time they are
 referenced. 
 
 Example 1: The parameter x is passed-by-name and it is evaluated every
-time it appears in the function body. The expression =rnd.nextInt(10)=
-is evaluated every time it appers in the function body.
+time it appears in the function body as the expression =rnd.nextInt(10)=.
 
 #+BEGIN_SRC scala 
 def passByName(x: => Int) = List(x, x, x)
@@ -1349,7 +1348,6 @@ Example 2:
   Hello world
 
 #+END_SRC
-
 
 **** Custom control structures with call-by-name 
 
