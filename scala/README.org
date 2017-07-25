@@ -1,10 +1,11 @@
-#+TITLE: Functional Programming in Scala
+#+TITLE: Functional and OOP Programming in Scala
+#+STARTUP: content
 
 * Scala
 ** Overview
 *** Features
 
-Scala is a statically typed, functional, object orientated and
+Scala is a statically typed, functional, object oriented and
 imperative language created by [[https://en.wikipedia.org/wiki/Martin_Odersky][Martin Odersky]] , or multi-paradigm
 programming language that runs in JVM - Java Virtual Machine that
 allows type-safe programming with high productivity.
@@ -24,7 +25,7 @@ Features:
 
    - Imperative
 
-   - Object Orientated
+   - Object Oriented
 
    - Functional
 
@@ -3857,7 +3858,7 @@ Example 6 - Recursive list functions.
 
 #+END_SRC
 
-* OOP - Object Orientated Programming 
+* OOP - Object Oriented Programming 
 ** Singleton Object 
 
 A singleton object is an object without class with a single
