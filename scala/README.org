@@ -1176,6 +1176,7 @@ res77: Int = 28
 
 #+END_SRC
 *** Polymorphic Functions
+**** Generic Functions - functions with type parameters
 
 #+BEGIN_SRC scala 
   def identity[A](x: A) = x
@@ -1222,6 +1223,43 @@ res77: Int = 28
 
 #+END_SRC
 
+**** Functions with multiple signatures 
+
+Multiple functions can share the same name with different signatures
+if they don't have any default parameter.
+
+#+BEGIN_SRC scala 
+  object Dialog {
+
+    def showAlert(message: String){
+      javax.swing.JOptionPane.showMessageDialog(
+           null
+          ,message
+          ,"Alert"
+          ,javax.swing.JOptionPane.WARNING_MESSAGE
+       )
+    }  
+
+    def showAlert(title: String, message: String){
+      javax.swing.JOptionPane.showMessageDialog(
+           null
+          ,message
+          ,title
+          ,javax.swing.JOptionPane.WARNING_MESSAGE
+       )
+    }  
+  }
+#+END_SRC
+
+Example: 
+
+#+BEGIN_SRC scala 
+
+scala> Dialog.showAlert("Error: Network failure. Could not fetch data")
+
+scala> Dialog.showAlert("Error report", "Error: Network failure. Could not fetch data")
+
+#+END_SRC
 *** Function with variable number of arguments
 
 #+BEGIN_SRC scala
