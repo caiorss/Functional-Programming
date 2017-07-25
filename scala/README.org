@@ -7194,10 +7194,25 @@ Java Code - https://www.mkyong.com/java/how-to-send-http-request-getpost-in-java
 
  - https://www.reddit.com/r/scala/
 
-
 ** Reports 
 
  - *Refactoring a Complex GUI Application: A Case Study with the
-   Auckland Layout Editor* - <https://www.cs.auckland.ac.nz/~lutteroth/publications/theses/ALE-IreneZhang-2014.pdf>
+   Auckland Layout Editor* -
+   <https://www.cs.auckland.ac.nz/~lutteroth/publications/theses/ALE-IreneZhang-2014.pdf>
 
- - 
+ - *How Scala Improved Our Java*
+   <http://spot.colorado.edu/~reids/talks/how-scala-improved-our-java.pdf>
+
+ - *Scala in practice*
+   <https://www.slideshare.net/holograph/scala-in-practice-12803578>
+
+ - *6 Months with Scala - An Experience Report*
+   <https://jtcwang.me/scala-after-6-months>
+
+** Presentations 
+
+ - Martin Odersky. *A Scalable Language* <https://www.slideshare.net/Odersky/fosdem-2009-1013261?qid=1f420201-9524-4f9f-9d9f-20c8cde0c52e&v=&b=&from_search=8> 
+
+ - *Scala - just good for java shops?* <https://www.slideshare.net/snim2/scala-just-goodforjavashops>
+
+
