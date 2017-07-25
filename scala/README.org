@@ -4126,6 +4126,81 @@ Example: Simple record type.
 
 #+END_SRC
 
+** Inheritance 
+
+Inheritance is useful in GUI programming to create new Widgets derived
+from existing ones. 
+
+The Button that inherits JButton below has a better initialization and Scala-friendly
+method to add event handlers (aka Java's listeners).
+
+ - The method onClick returns a function that when executed function
+   with type synonym dispose that when executed removes the event
+   handler. 
+
+#+BEGIN_SRC scala 
+  import javax.swing._ 
+
+  type Dispose = () => Unit
+
+  class Button(
+    text:    String,
+    enabled: Boolean        = true,
+    bgColor: java.awt.Color = null,
+    fgColor: java.awt.Color = null,
+    toolTip: String         = null,
+    onClick: => Unit        = ()
+  ) extends javax.swing.JButton {
+
+    init()
+
+    private def init(){
+      this.setText(text)
+      this.setEnabled(enabled)
+      if (bgColor != null) this.setBackground(bgColor)
+      if (fgColor != null) this.setForeground(fgColor)
+      if (toolTip != null) this.setToolTipText(toolTip)
+      this.onClick{ onClick }
+    }
+
+    def onClick (handler: => Unit): Dispose  = {
+      val listener = new java.awt.event.ActionListener(){
+        def actionPerformed(evt: java.awt.event.ActionEvent) = {
+          handler
+        }
+      }
+      this.addActionListener(listener)
+      () => this.removeActionListener(listener)
+    }
+  }
+
+
+
+  val frame = new JFrame("Hello world")
+  frame.setSize(400, 300)
+  frame.setLayout(new java.awt.FlowLayout())
+
+  val button1 = new Button(
+    "Click me!",
+    // Optional parameters 
+    fgColor = java.awt.Color.RED,  // Foreground color 
+    bgColor = java.awt.Color.GRAY, // Background color 
+    toolTip = "Please click at me"  
+  )
+
+  val button2 = new Button("Button Exit")
+
+  frame.add(button1)
+  frame.add(button2)
+  frame.setVisible(true)
+
+  button1.onClick{
+    println("Button 1 clicked")  
+  }
+
+  button2.onClick{ System.exit(0)}
+
+#+END_SRC
 ** Class with higher order methods 
 
 Scala classes can have methods that accepts functions as parameters or
