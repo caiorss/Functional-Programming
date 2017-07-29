@@ -1724,9 +1724,36 @@ res53: Boolean = false
 @ 
 
 #+END_SRC
+*** String Interpolation
+**** Example 1
 
+#+BEGIN_SRC scala 
+@ "the value of square root of %.3f is equal to %.3f".format(10.0, Math.sqrt(10.0)) 
+res70: String = "the value of square root of 10.000 is equal to 3.162"
+@  
 
+@ printf("the value of square root of %.3f is equal to %.3f\n", 10.0, Math.sqrt(10.0)) 
+the value of square root of 10.000 is equal to 3.162
 
+@ "Sum of array = %d".format(sum(Array(1, 2, 3, 4))) 
+res78: String = "Sum of array = 10"
+@  
+#+END_SRC
+
+**** Example 2
+
+#+BEGIN_SRC scala 
+@ val xs = List(1, 2, 3, 4, 5) 
+xs: List[Int] = List(1, 2, 3, 4, 5)
+@  
+@ val str = "hello world" 
+str: String = "hello world"
+@  
+@ s"xs = ${xs} ; sum(xs) = ${xs sum} ; str = '${str}' ; size(str) = ${str size} " 
+res86: String = "xs = List(1, 2, 3, 4, 5) ; sum(xs) = 15 ; str = 'hello world' ; size(str) = 11 "
+@  
+
+#+END_SRC
 ** Collections
 *** Overview
 
