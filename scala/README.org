@@ -7529,6 +7529,200 @@ Java Code - https://www.mkyong.com/java/how-to-send-http-request-getpost-in-java
   }
 
 #+END_SRC
+** Using a jar files or java library 
+   :PROPERTIES:
+   :ID:       b1d9a671-2678-4147-9c5f-e3f090889b0a
+   :END:
+
+Example: Using JFreeChart chart library. 
+
+ - Official web site: http://www.jfree.org/jfreechart/
+
+ - https://mvnrepository.com/artifact/jfree/jfreechart/1.0.13
+
+ - Download: http://repo1.maven.org/maven2/org/jfree/
+
+ - Tutorial: [[https://drive.google.com/viewerng/viewer?url%3Dhttps://www.if.pw.edu.pl/~ertman/pojava/?download%3Djfreechart_tutorial.pdf][JFreeChart Tutorial]]
+
+
+1. Download JFreeChart 
+
+#+BEGIN_SRC sh 
+  $ mkdir ~/test && cd ~/test 
+  $ mkdir lib
+
+  # Download jars 
+  $ curl -o lib/jfreechart.jar -L http://repo1.maven.org/maven2/org/jfree/jfreechart/1.0.19/jfreechart-1.0.19.jar
+  $ curl -o lib/jcommon.jar -L http://repo1.maven.org/maven2/org/jfree/jcommon/1.0.23/jcommon-1.0.23.jar
+
+  # Download this file to check dependencies
+  $ curl -O http://repo1.maven.org/maven2/org/jfree/jfreechart/1.0.19/jfreechart-1.0.19.pom
+
+
+#+END_SRC
+
+2. Start Scala REPL with: 
+
+#+BEGIN_SRC sh
+$ scala -cp lib/jcommon.jar:lib/jfreechart.jar 
+#+END_SRC
+
+or
+
+#+BEGIN_SRC scala 
+$ scala
+Welcome to Scala 2.11.8 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_20).
+Type in expressions for evaluation. Or try :help.
+
+scala> :require lib/jcommon.jar
+Added '/home/archbox/test/lib/jcommon.jar' to classpath.
+
+scala> :require lib/jfreechart.jar
+Added '/home/archbox/test/lib/jfreechart.jar' to classpath.
+
+
+#+END_SRC
+
+
+2. Plotting a pie chart. It was based on [[https://drive.google.com/viewerng/viewer?url%3Dhttps://www.if.pw.edu.pl/~ertman/pojava/?download%3Djfreechart_tutorial.pdf][JFreeChart Tutorial]].
+
+File: [[file:src/jfreeChart1.scala][file:src/jfreeChart1.scala]] 
+
+The lines below can be pasted in the Scala REPL and the user can and
+manipulate the chart objects and modify it interactively.
+
+#+BEGIN_SRC scala :tangle src/jfreeChart1.scala 
+  import org.jfree.chart.{ChartPanel, ChartFactory, JFreeChart, ChartUtilities}
+  import org.jfree.data.general.DefaultPieDataset
+
+  val dataset = new DefaultPieDataset()
+
+  dataset.setValue("A", 75)
+  dataset.setValue("B", 10)
+  dataset.setValue("C", 10)
+  dataset.setValue("D", 5)
+
+  val chart = ChartFactory.createPieChart(
+    "Sample Pie Chart", // Title
+    dataset,            // Dataset 
+    true,               // Show legend
+    true,               // Tooltips on
+    false 
+  )
+
+  // Save chart to a png file 
+  //---------------------------
+  ChartUtilities.saveChartAsPNG(new java.io.File("mychart.png"), chart, 500, 500)
+
+  // Show Chart in a Java Swing Frame
+  //--------------------------------------
+  val frame = new javax.swing.JFrame()
+  frame.add(new ChartPanel(chart))
+  frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE)
+  frame.setSize(693, 513)
+  frame.setTitle("Sample Pie Chart")
+  frame.setVisible(true)
+
+
+
+#+END_SRC
+
+It will display this chart: 
+
+[[file:images/jfreeChart1.png][file:images/jfreeChart1.png]]
+
+
+3. Running the file  [[file:src/jfreeChart1.scala][file:src/jfreeChart1.scala]] 
+
+#+BEGIN_SRC sh 
+  # It will create the file jfreeChart1.jar 
+  $ scala -cp lib/jcommon.jar:lib/jfreechart.jar -save jfreeChart1.scala 
+
+  # The second time this command is run, it will run the file
+  # jfreeChart1.jar that is a faster than run jfreeChart1.scala.
+  $ scala -cp lib/jcommon.jar:lib/jfreechart.jar -save jfreeChart1.scala 
+
+  # The produced jar file can be run directly with Scala.
+  $ scala -cp lib/jcommon.jar:lib/jfreechart.jar -save jfreeChart1.jar
+
+#+END_SRC
+
+4. Building an uber jar or fat-jar for easier distribution and
+   deployment.  A fat is a jar file bundled with all dependencies and
+   runt-time libraries which makes possible to run the jar-file
+   without Scala or JFree chart be available at the deployment
+   machine. 
+
+This procedure uses the script: [[https://github.com/caiorss/build-fat-jar/blob/master/jar-tools.sh][jar-tools.sh]]
+
+#+BEGIN_SRC sh
+  $ jar-tools.sh -scala-build-jar out/jfreeChart1-fat.jar jfreeChart1.jar lib/*
+
+  At directory /home/archbox/test/out/temp
+  Extracting /home/archbox/test/lib/jcommon.jar
+  Extracting /home/archbox/test/lib/jfreechart.jar
+
+  Manifest Content META-INF/MANIFEST.MF
+
+  Manifest-Version: 1.0
+  Scala-Compiler-Version: 2.11.8
+  Main-Class: Main
+
+  Building fat-jar file ...
+  added manifest
+  adding: com/(in = 0) (out= 0)(stored 0%)
+  adding: com/keypoint/(in = 0) (out= 0)(stored 0%)
+  adding: com/keypoint/PngEncoder.class(in = 9079) (out= 4645)(deflated 48%)
+  adding: library.properties(in = 187) (out= 135)(deflated 27%)
+  adding: Main$$anon$1.class(in = 1967) (out= 1031)(deflated 47%)
+  adding: Main.class(in = 556) (out= 469)(deflated 15%)
+  adding: Main$.class(in = 570) (out= 372)(deflated 34%)
+  ignoring entry META-INF/
+
+  ... ... ... ... ... ... ... ... ... ... ... ... ... ...
+
+  adding: scala/Predef$StringFormat$.class(in = 2107) (out= 1010)(deflated 52%)
+  adding: scala/Tuple5$.class(in = 1805) (out= 768)(deflated 57%)
+  adding: scala/Function2$mcZJD$sp.class(in = 323) (out= 196)(deflated 39%)
+  adding: scala/Char.class(in = 6084) (out= 3604)(deflated 40%)
+  adding: scala/Float.class(in = 5382) (out= 3268)(deflated 39%)
+  adding: scala/Enumeration$ValueSet$$anon$2.class(in = 1673) (out= 668)(deflated 60%)
+  --------------------------------------
+
+  Built file: out/jfreeChart1-fat.jar Ok.
+  Run it with $ java -jar out/jfreeChart1-fat.jar
+
+#+END_SRC
+
+The uber jar can be run by using the line below or by double clicking
+at the jar file if the system is configured properly: 
+
+#+BEGIN_SRC sh
+  $ java -jar out/jfreeChart1-fat.jar
+#+END_SRC
+
+This jar-file can be turned into a Unix executable with: 
+
+#+BEGIN_SRC sh 
+  $ jar-tools.sh -jar-to-sh out/jfreeChart1-fat.jar out/jfreeChart1.sh
+  Build jar-executable out/jfreeChart1.sh
+  Run it with ./out/jfreeChart1.sh
+
+  $ file out/jfreeChart1.sh 
+  out/jfreeChart1.sh: a /usr/bin/env sh  script executable (binary data)
+
+  $ head -n 3 out/jfreeChart1.sh 
+  #!/usr/bin/env sh 
+  java -jar $0
+  exit 0
+
+#+END_SRC
+
+It can be executed with:
+
+#+BEGIN_SRC sh
+$ ./out/jfreeChart1.sh
+#+END_SRC
 * Bookmarks and Resources 
 ** Scala API Documentation 
 
