@@ -1,5 +1,6 @@
 #+TITLE: Functional and OOP Programming in Scala
 #+STARTUP: content
+#+DESCRIPTION: fp oop functional object oriented scala java jvm platform
 
 * Scala
 ** Overview
@@ -1608,6 +1609,124 @@ scala> for (file <- (new java.io.File("/").listFiles)) println(file)
 /lost+found
 
 #+END_SRC
+** String Manipulation 
+*** Basic string operations 
+
+#+BEGIN_SRC scala 
+@ val s = "  Hello world scala  "  
+s: String = "  Hello world scala  "
+#+END_SRC
+
+*Get string length*
+
+#+BEGIN_SRC scala 
+@ s.size 
+res41: Int = 21
+@  
+@ s size 
+res42: Int = 21
+@  
+@ s.length 
+res43: Int = 21
+
+@ s length 
+res44: Int = 21
+@  
+
+#+END_SRC
+
+*Concatenate string* 
+
+#+BEGIN_SRC scala 
+@ "Hello" + " " + "world" + " " + "scala" 
+res45: String = "Hello world scala"
+@  
+
+#+END_SRC
+
+*Trim* 
+
+#+BEGIN_SRC scala 
+@ s  
+res47: String = "  Hello world scala  "
+@ s trim 
+res48: String = "Hello world scala"
+@ s.trim() 
+res49: String = "Hello world scala"
+@ s trim  
+res50: String = "Hello world scala"
+@  
+
+#+END_SRC
+
+*Replace string* 
+
+#+BEGIN_SRC scala 
+@ s.replace("scala", "haskell") 
+res46: String = "  Hello world haskell  "
+@  
+
+#+END_SRC
+
+*Upper and lower case*
+
+#+BEGIN_SRC scala 
+@ s.toUpperCase 
+res60: String = "  HELLO WORLD SCALA  "
+
+@ s.toLowerCase 
+res61: String = "  hello world scala  "
+@  
+#+END_SRC
+
+*Check if string starts with prefix* 
+
+#+BEGIN_SRC scala 
+@ "hello world".startsWith("hello") 
+res65: Boolean = true
+@  
+@ "hello world" startsWith "hello" 
+res66: Boolean = true
+@  
+#+END_SRC
+
+*Check if string ends with suffix*
+
+#+BEGIN_SRC scala 
+@ "hello world".endsWith("hello") 
+res67: Boolean = false
+@  
+@ "hello world".endsWith("world") 
+res68: Boolean = true
+@  
+@ "hello world" endsWith "world" 
+res69: Boolean = true
+@  
+#+END_SRC
+
+*String equality test*
+
+Equality checkign (==) is not type-safe due to interoperability with
+Java. Some libraries such as Scalaz provides a type-safe equality
+check operator (===).
+
+#+BEGIN_SRC scala 
+// Operator (==) is not type-safe: 
+//
+@ "hello" == "world" 
+res51: Boolean = false
+@ "hello" == "hello" 
+res52: Boolean = true
+
+// This inconsistent operation type checks.
+@ "hello" == 100 
+res53: Boolean = false
+@ 
+
+#+END_SRC
+
+
+
 ** Collections
 *** Overview
 
@@ -3510,8 +3629,6 @@ References:
 
  + *Scala Standard Library 2.12.0 - scala.collection.Seq*. Available at
    <http://www.scala-lang.org/api/2.12.0/scala/collection/Seq.html>
-
-
 
 ** Case classes and pattern matching 
 
