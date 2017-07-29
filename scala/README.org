@@ -7542,7 +7542,7 @@ Example: Using JFreeChart chart library.
 
  - Download: http://repo1.maven.org/maven2/org/jfree/
 
- - Tutorial: [[https://drive.google.com/viewerng/viewer?url%3Dhttps://www.if.pw.edu.pl/~ertman/pojava/?download%3Djfreechart_tutorial.pdf][JFreeChart Tutorial]]
+ - Tutorial: [[http://web.archive.org/web/20130904182014/https://www.if.pw.edu.pl/~ertman/pojava/?download%3Djfreechart_tutorial.pdf][JFreeChart Tutorial]]
 
 
 1. Download JFreeChart 
@@ -7584,7 +7584,7 @@ Added '/home/archbox/test/lib/jfreechart.jar' to classpath.
 #+END_SRC
 
 
-2. Plotting a pie chart. It was based on [[https://drive.google.com/viewerng/viewer?url%3Dhttps://www.if.pw.edu.pl/~ertman/pojava/?download%3Djfreechart_tutorial.pdf][JFreeChart Tutorial]].
+2. Plotting a pie chart. It was based on [[https://www.if.pw.edu.pl/~ertman/pojava/?download%3Djfreechart_tutorial.pdf][JFreeChart Tutorial]].
 
 File: [[file:src/jfreeChart1.scala][file:src/jfreeChart1.scala]] 
 
@@ -7648,9 +7648,9 @@ It will display this chart:
 #+END_SRC
 
 4. Building an uber jar or fat-jar for easier distribution and
-   deployment.  A fat is a jar file bundled with all dependencies and
+   deployment. A fat is a jar file bundled with all dependencies and
    runt-time libraries which makes possible to run the jar-file
-   without Scala or JFree chart be available at the deployment
+   without Scala or JFree chart available at the deployment
    machine. 
 
 This procedure uses the script: [[https://github.com/caiorss/build-fat-jar/blob/master/jar-tools.sh][jar-tools.sh]]
