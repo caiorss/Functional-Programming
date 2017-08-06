@@ -4201,6 +4201,584 @@ Example 6 - Recursive list functions.
 
 #+END_SRC
 
+** Option type 
+*** Overview 
+
+Scala's Option type is similar to Haskell's Maybe and to OCaml's
+Option type which allows to deal with null values, avoid nested null
+checkings and also lots of null exceptions or null pointer exception.
+
+*** Basic operations 
+
+#+BEGIN_SRC scala 
+  scala> Some(100)
+  res0: Some[Int] = Some(100)
+
+  scala> None
+  res1: None.type = None
+
+  scala> Option(100)
+  res2: Option[Int] = Some(100)
+
+  scala> Option(null)
+  res3: Option[Null] = None
+
+  scala> Option("opt")
+  res4: Option[String] = Some(opt)
+
+  scala> Option(null) : Option[String]
+  res5: Option[String] = None
+
+  scala> None : Option[String]
+  res6: Option[String] = None
+
+#+END_SRC
+
+*** Pattern matching
+
+Pattern matching an Option value 
+
+#+BEGIN_SRC scala 
+
+  def testPatternMatching(opt: Option[String]) = opt match {
+      case Some(x) => println("Received: " + x)
+      case None    => println("Received: None")
+  }
+
+  scala> def testPatternMatching(opt: Option[String]) = opt match {
+       |     case Some(x) => println("Received: " + x)
+       |     case None    => println("Received: None")
+       | }
+  testPatternMatching: (opt: Option[String])Unit
+
+
+  scala> testPatternMatching(Some("avoiding null exceptions"))
+  Received: avoiding null exceptions
+
+  scala> testPatternMatching(None)
+  Received: None
+
+  scala> testPatternMatching(Option("avoiding null exceptions"))
+  Received: avoiding null exceptions
+
+  scala> testPatternMatching(Option(null))
+  Received: None
+
+#+END_SRC
+
+Pattern matching an option tuple: 
+
+#+BEGIN_SRC scala 
+
+  def safeSum(optA: Option[Double], optB: Option[Double]) = (optA, optB) match {
+    case (Some(a), Some(b)) => Some(a + b)
+    case _                  => None 
+  }
+
+  scala> safeSum(Some(10), Some(20))
+  res16: Option[Double] = Some(30.0)
+
+  scala> safeSum(None, Some(20))
+  res17: Option[Double] = None
+
+  scala> safeSum(Some(10), None)
+  res18: Option[Double] = None
+
+  scala> safeSum(None, None)
+  res19: Option[Double] = None
+
+#+END_SRC
+*** Option type as a collection
+
+The Scala's option is similar to Scala's collections like List, Array
+and Map with lots of useful higher order methods that accepts
+functions as argument. 
+
+*Get* - Get the value of wrapped by the option type, but throws an
+exception if it is None.
+
+#+BEGIN_SRC scala 
+  scala> val x1 = Some("Hello")
+  x1: Some[String] = Some(Hello)
+
+  scala> val x2 = Option("World")
+  x2: Option[String] = Some(World)
+
+  scala> val x3 = None
+  x3: None.type = None
+
+  scala> val x4: Option[String] = Option(null)
+  x4: Option[String] = None
+
+
+  scala> x1.get
+  res50: String = Hello
+
+  scala> x2.get
+  res51: String = World
+
+  scala> x3.get
+  java.util.NoSuchElementException: None.get
+    at scala.None$.get(Option.scala:349)
+    ... 29 elided
+
+  scala> x4.get
+  java.util.NoSuchElementException: None.get
+    at scala.None$.get(Option.scala:349)
+    at scala.None$.get(Option.scala:347)
+    ... 29 elided
+
+  scala> 
+
+#+END_SRC
+
+
+*GetOrElse* 
+
+#+BEGIN_SRC scala
+  scala> None.getOrElse _
+  res111: (=> Nothing) => Nothing
+
+  scala> Some(20).getOrElse(4)
+  res112: Int = 20
+
+  scala> (None: Option[Int]).getOrElse(4)
+  res113: Int = 4
+
+  scala> Some("hello").getOrElse("world")
+  res114: String = hello
+
+  scala> Option(null).getOrElse("world")
+  res115: String = world
+
+  scala> None.getOrElse("world")
+  res116: String = world
+
+#+END_SRC
+
+*Map:* - Apply a function to the option value wrapped by the option type.
+
+#+BEGIN_SRC scala 
+  scala> val o1 = Some(10)
+  o1: Some[Int] = Some(10)
+
+  // Test with Some value
+  //
+  scala> val o2: Option[Int] = None
+  o2: Option[Int] = None
+
+  scala> o1.map(x => x * 3)
+  res24: Option[Int] = Some(30)
+
+  scala> o1.map(x => x * 3).map(x => x + 10)
+  res26: Option[Int] = Some(40)
+
+  // Test with None values 
+  //
+  scala> o2 
+  res27: Option[Int] = None
+
+  scala> o2 map (x => x * 3)
+  res28: Option[Int] = None
+
+  scala> o2 map (x => x * 3) map (x => x + 10)
+  res29: Option[Int] = None
+#+END_SRC
+
+*Flatmap* - It is similar to Haskell bind operator (>>=). But in
+Scala it is method, not a function as in Haskell. 
+
+#+BEGIN_SRC scala 
+  scala> Option(10) map (x => if (x > 5) Some(10) else None)
+  res32: Option[Option[Int]] = Some(Some(10))
+
+  scala> Option(3) map (x => if (x > 5) Some(10) else None)
+  res33: Option[Option[Int]] = Some(None)
+
+  scala> (None: Option[Int]) map (x => if (x > 5) Some(10) else None)
+  res35: Option[Option[Int]] = None
+
+
+  scala> Some(10) flatMap (x => if (x > 5) Some(10) else None)
+  res36: Option[Int] = Some(10)
+
+  scala> Some(2) flatMap (x => if (x > 5) Some(10) else None)
+  res37: Option[Int] = None
+
+  scala> (None: Option[Int]) flatMap (x => if (x > 5) Some(10) else None)
+  res38: Option[Int] = None
+
+#+END_SRC
+
+*Flatten* 
+
+#+BEGIN_SRC scala 
+  scala> Some(Some(10)).flatten
+  res143: Option[Int] = Some(10)
+
+  scala> Some(None).flatten
+  res144: Option[Nothing] = None
+
+  scala> None.flatten
+  res145: Option[Nothing] = None
+
+  scala> (Some(None): Option[Option[Int]]).flatten 
+  res146: Option[Int] = None
+
+  scala> (None: Option[Option[Int]]).flatten 
+  res147: Option[Int] = None
+
+#+END_SRC
+
+*Foreach* - Apply a function that performs some action to the value
+wrapped by the option type.
+
+#+BEGIN_SRC scala 
+  scala> Some("Scala Option") foreach {s => println("Message = " + s)}
+  Message = Scala Option
+
+  scala> None foreach {s => println("Message = " + s)}
+
+  scala> Option("Scala Option") foreach {s => println("Message = " + s)}
+  Message = Scala Option
+
+  scala> Option(null) foreach {s => println("Message = " + s)}
+
+  scala> 
+
+#+END_SRC
+
+*Find* 
+
+#+BEGIN_SRC scala 
+  scala> Some(100).find(a => a < 10)
+  res122: Option[Int] = None
+
+  scala> Some(4).find(a => a < 10)
+  res123: Option[Int] = Some(4)
+
+  scala> Some(4) find (a => a < 10)
+  res126: Option[Int] = Some(4)
+
+  scala> (None: Option[Int]).find(a => a < 10)
+  res125: Option[Int] = None
+
+
+#+END_SRC
+
+*Filter* 
+
+#+BEGIN_SRC scala 
+  scala> Some(3).filter (a => a > 10)
+  res131: Option[Int] = None
+
+  scala> Some(100).filter (a => a > 10)
+  res132: Option[Int] = Some(100)
+
+  scala> (None: Option[Int]).filter (a => a > 10)
+  res133: Option[Int] = None
+
+  scala> Some(3).filter (_ > 10)
+  res137: Option[Int] = None
+
+  scala> Some(100).filter (_ > 10)
+  res138: Option[Int] = Some(100)
+
+  scala> (None: Option[Int]).filter (_ > 10)
+  res139: Option[Int] = None
+
+#+END_SRC
+
+*Conversions* 
+
+#+BEGIN_SRC scala 
+  scala> Some("Scala").toArray
+  res160: Array[String] = Array(Scala)
+
+  scala> (None: Option[String]).toArray
+  res161: Array[String] = Array()
+
+  scala> Option("Scala").toArray
+  res162: Array[String] = Array(Scala)
+
+  scala> (Option(null): Option[String]).toArray
+  res163: Array[String] = Array()
+
+  scala> Option("Scala").toList
+  res164: List[String] = List(Scala)
+
+  scala> (None: Option[String]).toList
+  res165: List[String] = List()
+
+  scala> Some("Scala").toList
+  res166: List[String] = List(Scala)
+
+  scala> 
+
+#+END_SRC
+*** For-loop 
+
+For-loop: Option's for-loop is similar to Array's or list for-loop.
+
+#+BEGIN_SRC scala 
+scala> for(s <- List(1, 2, 3, 4)) println("x = " + s)
+x = 1
+x = 2
+x = 3
+x = 4
+
+scala> for(s <- Some("scala")) println("Message = " + s)
+Message = scala
+
+scala> for(s <- None) println("Message = " + s)
+
+scala> 
+
+#+END_SRC
+
+*** For-comprehensions 
+
+Scala's for comprehension are very similar to Haskell's do-notation
+for Monad. 
+
+*Example 1:*
+
+Scala:
+
+#+BEGIN_SRC scala 
+
+  def safeSum(sa: Option[Int], sb: Option[Int]) = {
+    for {
+      a <- sa
+      b <- sb 
+    } yield a + b
+  }
+
+  scala> safeSum(Some(10), Some(20))
+  res170: Option[Int] = Some(30)
+
+  scala> safeSum(Some(10), None)
+  res171: Option[Int] = None
+
+  scala> safeSum(None, None)
+  res172: Option[Int] = None
+
+#+END_SRC
+
+Haskell: 
+
+#+BEGIN_SRC haskell 
+  :{
+  safeSum :: Maybe Int -> Maybe Int -> Maybe Int
+  safeSum sa sb = do
+    a <- sa
+    b <- sb
+    return ( a + b)
+  :}
+
+  > safeSum (Just 10) (Just 20)
+  Just 30
+  it :: Maybe Int
+  > safeSum (Just 10) Nothing
+  Nothing
+  it :: Maybe Int
+  > safeSum Nothing Nothing
+  Nothing
+  it :: Maybe Int
+  > 
+   
+#+END_SRC
+
+*Example 2:*
+
+#+BEGIN_SRC scala 
+  def both[A, B](oa: Option[A], ob: Option[B]) =
+    for {
+      a <- oa
+      b <- ob
+      c = (a, b)
+    } yield c
+
+  scala> both(Some(10), Some("hello"))
+  res214: Option[(Int, String)] = Some((10,hello))
+
+  scala> both(Some(10), None: Option[String])
+  res215: Option[(Int, String)] = None
+
+
+  def both2[A, B](oa: Option[A], ob: Option[B]) =
+    for {
+      a <- oa
+      b <- ob
+    } yield (a, b)
+
+  scala> both2(Some(10), Some("hello"))
+  res216: Option[(Int, String)] = Some((10,hello))
+
+  scala> both2(None: Option[Int], Some("hello"))
+  res217: Option[(Int, String)] = None
+
+  scala> both2(None: Option[Int], None: Option[String])
+  res218: Option[(Int, String)] = None
+
+
+#+END_SRC
+
+*** Avoiding null checking and null pointer exceptions
+
+The function getClibpoardText gets a string from clibpoard. It is
+non-safe and error prone as it is full of null checking and returns a
+_null_ _value_. If the developer forgets to check for null at the
+point of use, it may lead the unexpected null-pointer exceptions at
+runtime that cannot be spot at compile-time or spot by the type
+system. 
+
+It may get worse if the return value of this function is passed to
+other functions that dont't check for null values.
+
+ - Situation 1: getClibpoardText will null checking and with
+   possibility of returning null value.
+
+#+BEGIN_SRC scala 
+  import java.awt.Toolkit
+  import java.awt.datatransfer.{Clipboard, DataFlavor, Transferable}
+
+  def getClipboardText() = {
+    val clip = Toolkit.getDefaultToolkit().getSystemClipboard()
+    if (clip == null)
+      null
+    else {
+      val data = clip.getContents(null)
+      if (data != null  && data.isDataFlavorSupported(DataFlavor.getTextPlainUnicodeFlavor()))
+        data.getTransferData(DataFlavor.stringFlavor).asInstanceOf[String]
+      else 
+        null    
+    }
+  }
+
+  /// User copies some text and run this function
+  ///
+  scala> val text1 = getClipboardText()
+  text1: String =
+  "A class that implements a mechanism to transfer data using cut/copy/paste operations.
+  FlavorListeners may be registered on an instance of the Clipboard class to be notified about changes to the set of DataFlavors available on this clipboard (see addFlavorListener(java.awt.datatransfer.FlavorListener)).
+
+  "
+
+  scala> text1.length
+  res188: Int = 305
+
+
+  /// User copies some image and run this function
+  ///
+  scala> val text2 = getClipboardText()
+  text2: String = null
+
+  scala> text2.length
+  java.lang.NullPointerException
+    ... 29 elided
+
+  scala> { val text3 = getClipboardText() ; if (text3 != null) text3.length else null }
+  res190: Any = null
+
+  def tellSize1(s: String) = println("String size is = " + s.length)
+
+  /// User copies some text 
+  scala> tellSize1(getClipboardText())
+  String size is = 305
+
+  /// User copies some image. The function getClibpoardtext returns null.
+  scala> tellSize1(getClipboardText())
+  java.lang.NullPointerException
+    at .tellSize1(<console>:21)
+    ... 29 elided
+
+
+  def tellSize2(s: String) = {
+    if (s != null)
+       println("String size is = " + s.length)
+  }
+
+  scala> tellSize2(getClipboardText())
+  String size is = 94
+
+  scala> tellSize2(getClipboardText())
+
+
+
+#+END_SRC
+
+By refactoring the aforementioned code to use option type instead of
+null values, it leads to a more concise and type-safe code where it is
+no longer necessary to check for null values and there is no more risk
+of unexpected null exceptions at run-time.
+
+ - Situation 2: getClibpoardText with Option type.
+
+#+BEGIN_SRC scala 
+  import java.awt.Toolkit
+  import java.awt.datatransfer.{Clipboard, DataFlavor, Transferable}
+
+  def getClipboardText() = for {
+    clip <- Option(Toolkit.getDefaultToolkit().getSystemClipboard())
+    data <- Option(clip.getContents(null))
+    if data.isDataFlavorSupported(DataFlavor.getTextPlainUnicodeFlavor())
+    text = data.getTransferData(DataFlavor.stringFlavor).asInstanceOf[String]
+  } yield text
+
+
+  scala> getClipboardText _
+  res200: () => Option[String]
+
+  //----------------------------
+  //
+  // User copies some text 
+  scala> getClipboardText()
+  res201: Option[String] = Some(JGoodies Binding: Property Adapter Example 3 : Data Binding « Swing Components « Java)
+
+  // User copies an image
+  scala> getClipboardText()
+  res202: Option[String] = None
+
+  //----------------------------
+  //
+  // User copies some text 
+  scala> getClipboardText() foreach println
+  def error(message: String) = throw new Exception(message)
+
+  // User copies an image
+  scala> getClipboardText() foreach println
+
+
+  //----------------------------
+  //
+  // User copies some text 
+  scala> getClipboardText() map (_.length)
+  res207: Option[Int] = Some(23)
+
+  scala> getClipboardText().map(_.length).get
+  res211: Int = 68
+
+  // User copies an image
+  scala> getClipboardText() map (_.length)
+  res208: Option[Int] = None
+
+  scala> getClipboardText().map(_.length).get
+  java.util.NoSuchElementException: None.get
+    at scala.None$.get(Option.scala:349)
+    at scala.None$.get(Option.scala:347)
+    ... 29 elided
+
+
+  scala> def tellSize1(s: String) = println("String size is = " + s.length)
+  tellSize1: (s: String)Unit
+
+  scala> getClipboardText() foreach tellSize1
+  String size is = 101
+
+
+#+END_SRC
+
 * OOP - Object Oriented Programming 
 ** Singleton Object 
 
