@@ -4779,6 +4779,23 @@ of unexpected null exceptions at run-time.
 
 #+END_SRC
 
+It can be refactored to more sef-contained code.
+
+#+BEGIN_SRC scala 
+  def getClipboardText() = {
+    import java.awt.Toolkit
+    import java.awt.datatransfer.{Clipboard, DataFlavor, Transferable}
+
+    for {
+      clip <- Option(Toolkit.getDefaultToolkit().getSystemClipboard())
+      data <- Option(clip.getContents(null))
+      if data.isDataFlavorSupported(DataFlavor.getTextPlainUnicodeFlavor())
+      text = data.getTransferData(DataFlavor.stringFlavor).asInstanceOf[String]
+    } yield text
+  }
+#+END_SRC
+
+
 * OOP - Object Oriented Programming 
 ** Singleton Object 
 
