@@ -4899,6 +4899,291 @@ It can be refactored to more sef-contained code.
   }
 #+END_SRC
 
+** Exception Handling 
+*** Overview 
+
+An exception is an event that happens during the execution of a
+programs which disrupts the normal flow of execution or an unexpected
+runtime error that terminates the execution abnormally. Handling them
+is necessary to create robust programs resilient that can react to
+failures, invalid input, network error and so on.
+
+*Exception Hierarchy*
+
+ - Throwable
+
+   - _Error_ - System errors or fatal error thrown by JVM that ends the program
+     execution and should not be handled by the application.
+
+     - LinkageError
+
+     - VirtualMachineError
+
+     - AWTError
+
+     - _AssertionError_
+
+       + Cause: Assertion errors happens when the program assumptions
+         are wrong, for instance, ~assert (10 == 0, "The result should be 10")~
+
+     - ... ... ... ...
+
+   - _Exception_ - Errors that can be handled by the program.
+
+     - ClassNotFoundException
+
+     - SQLException 
+
+     - IOException
+
+       - FileNotFoundException
+
+       - MalformedURLException
+
+       - SocketException
+
+       - EOFException
+
+       - InterruptedIOException 
+
+     - _RuntimeException_
+
+       - ArtithmeticException 
+         + Case: Division by zero.
+
+       - _NullPointerException_
+         + Cause: Calling a method or accessing a field of a class
+           which the value is set to null.  
+
+       - IndexOutofBoundsException 
+         + Cause: Accessing out-of-bounds array elements.
+
+       - IllegalArgumentException
+         + Cause: Sending illegal argument to a method like sending a
+           negative number to the method .runWithDelay(time: Int).
+
+       - IllegalStateException
+
+       - NumberFormatException
+         + Cause: Attempt to convert a bad-formatted string to some
+           value. Example: =Integer.parseInt("xyz")=
+
+       - ClassCastException
+         + Cause: Invalid casting.
+
+       - ... ... ... ... ... 
+
+
+*Exception Methods:*
+
+ - .getMessage() - Get exception Message.
+
+ - .getStackTrace() 
+
+ - .getStackTraceString()
+
+ - .printStackTrace()
+
+*** Throwing Exceptions 
+
+#+BEGIN_SRC scala 
+  scala> throw new IllegalArgumentException("Error: Amount to withdraw cannot excede balance")
+  java.lang.IllegalArgumentException: Error: Amount to withdraw cannot excede balance
+    ... 29 elided
+
+  scala> throw new Exception("Error: Invalid user input. Fatal kernel failure.")
+  java.lang.Exception: Error: Invalid user input. Fatal kernel failure.
+    ... 29 elided
+
+  scala> throw new java.lang.ArrayIndexOutOfBoundsException()
+  java.lang.ArrayIndexOutOfBoundsException
+    ... 29 elided
+
+  scala> throw new NullPointerException()
+  java.lang.NullPointerException
+    ... 29 elided
+
+  scala> throw new AssertionError("The result should be 10")
+  java.lang.AssertionError: The result should be 10
+    ... 29 elided
+
+  scala> throw new Error("Fatal failure. Aborting exectution")
+  java.lang.Error: Fatal failure. Aborting exectution
+    ... 29 elided
+
+
+#+END_SRC
+
+*** Catching exceptions without finally block.
+
+Example 1
+
+#+BEGIN_SRC scala  
+  def testException1(block: => Unit) = { 
+      try block 
+      catch {  
+        case ex: IllegalArgumentException         => println("Error: Illegal exception") 
+        case ex: IllegalStateException            => println("Error: Illegal state exception") 
+        case ex: java.io.FileNotFoundException    => println("Error: File not found exception ")
+          
+        case ex: Exception                        => println("Error: Unknown exception")
+      } 
+  } 
+
+
+  scala> testException1{ println("It is not gonna fail.") }
+  It is not gonna fail.
+
+  scala> testException1{ new java.io.FileReader("/etc/somefile") }
+  Error: File not found exception 
+
+  scala> testException1{ assert(10 == 0) }
+  java.lang.AssertionError: assertion failed
+    at scala.Predef$.assert(Predef.scala:204)
+    at .$anonfun$res41$1(<console>:13)
+    at .testException1(<console>:12)
+    ... 29 elided
+
+
+#+END_SRC
+
+Example 2: Catching exceptions with try block.
+
+#+BEGIN_SRC scala  
+
+  def showException(label: String, ex: Exception) = {
+    println(label)
+    println(ex)
+    println(ex.printStackTrace())
+  }
+
+  def testException2(block: => Unit) = {
+      try block 
+      catch {  
+
+        case ex: java.io.FileNotFoundException
+            => showException("Error: File not found exception", ex)
+
+        case ex: java.io.IOException
+            => showException("Error: IO Exception", ex)
+
+        case ex: NullPointerException
+            => showException("Error: Null exception", ex)
+
+        case ex: IllegalArgumentException
+            => showException("Error: Illegal Argument exception.", ex)
+
+        case ex: IllegalStateException
+            => showException("Error: Illegal state exception", ex)
+
+        case ex: Exception
+            => showException("Error: Unknown exception", ex) 
+
+      } finally {
+        println("After 'finally' statement this piece of code always runs.")
+      }
+  } 
+
+  scala> testException2{ println("This code will not throw an exception") }
+  This code will not throw an exception
+  After 'finally' statement this piece of code always runs.
+
+  scala>  testException2{ println(10/ 0) }
+  Error: Unknown exception
+  java.lang.ArithmeticException: / by zero
+  java.lang.ArithmeticException: / by zero
+      at $line86.$read$$iw$$iw$.$anonfun$res30$1(<console>:13)
+      at $line85.$read$$iw$$iw$.testException2(<pastie>:20)
+      at $line86.$read$$iw$$iw$.<init>(<console>:13)
+      at $line86.$read$$iw$$iw$.<clinit>(<console>)
+      at $line86.$eval$.$print$lzycompute(<console>:7)
+      at $line86.$eval$.$print(<console>:6)
+
+  ... ...
+  ()
+  After 'finally' statement this piece of code always runs.
+
+
+  scala> testException2{ val x: String = null ; println(x.length) }
+  Error: Null exception
+  java.lang.NullPointerException
+  java.lang.NullPointerException
+      at $line87.$read$$iw$$iw$.$anonfun$res31$1(<console>:14)
+      at $line85.$read$$iw$$iw$.testException2(<pastie>:20)
+        ... ... ... ...
+  ()
+  After 'finally' statement this piece of code always runs.
+
+
+  scala> testException2{ new java.io.FileReader("/etc/fstabx") }
+  Error: File not found exception
+  java.io.FileNotFoundException: /etc/fstabx (No such file or directory)
+  java.io.FileNotFoundException: /etc/fstabx (No such file or directory)
+      at java.io.FileInputStream.open0(Native Method)
+      at java.io.FileInputStream.open(FileInputStream.java:195)
+      at java.io.FileInputStream.<init>(FileInputStream.java:138)
+        ... ... ... ...
+  ()
+  After 'finally' statement this piece of code always runs.
+
+
+  // Exception not handled.
+  //
+  scala> testException2{ assert(10 == 5, "Result should be 10") }
+  After 'finally' statement this piece of code always runs.
+  java.lang.AssertionError: assertion failed: Result should be 10
+    at scala.Predef$.assert(Predef.scala:219)
+    at .$anonfun$res32$1(<console>:13)
+    at .testException2(<pastie>:20)
+    ... 29 elided
+
+#+END_SRC
+
+Example 3: Catching exception and releasing resources.
+
+#+BEGIN_SRC scala 
+
+  def displayFile(file: String) = {
+    var fd: java.io.FileReader = null
+    try {
+      fd = new java.io.FileReader(file)
+      val in = new java.util.Scanner(fd)
+      while(in.hasNextLine()){
+        println(in.nextLine())
+      }
+    } catch {
+      case ex: java.io.FileNotFoundException => println("Error: File not found: ")
+    } finally {
+      if (fd != null) fd.close()
+    }
+  }
+
+  scala> displayFile("/etc/lsb-release")
+  DISTRIB_ID=ManjaroLinux
+  DISTRIB_RELEASE=17.0.2
+  DISTRIB_CODENAME=Gellivara
+  DISTRIB_DESCRIPTION="Manjaro Linux"
+
+  scala> displayFile("/etc/lsb-releaseq")
+  Error: File not found: 
+
+
+
+#+END_SRC
+
+*** References
+
+ - *Chapter 14 - Exception Handling and Text Files* -
+   <http://grail.cba.csuohio.edu/~matos/notes/cis-265/lecture-notes/03-13slide-Exceptions.pdf>
+
+
+ - *CSC 102 Lecture Notes Week 5 Shallowness and Deepness Exceptions
+   File I/O* <http://users.csc.calpoly.edu/~gfisher/classes/102/lectures/5.html>
+
+
+ - *Java Programming - Exception Handling & Assertion* -
+   <https://www3.ntu.edu.sg/home/ehchua/programming/java/J5a_ExceptionAssert.html>
+
 * OOP - Object Oriented Programming 
 ** Everything is an object 
 
