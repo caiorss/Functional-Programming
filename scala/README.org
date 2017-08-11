@@ -1858,7 +1858,6 @@ String to Double (64-bits IEEE Float Point)
 
 #+END_SRC
 
-
 ** Collections
 *** Overview
 
@@ -4900,8 +4899,90 @@ It can be refactored to more sef-contained code.
   }
 #+END_SRC
 
-
 * OOP - Object Oriented Programming 
+** Everything is an object 
+
+In Scala everything is an object: 
+
+ - Tuples are objects. 
+
+#+BEGIN_SRC scala 
+  scala> val t1 = (10, "20.2")
+  t1: (Int, String) = (10,20.2)
+
+  scala> t1._1
+  res47: Int = 10
+
+  scala> t1._2
+  res48: String = 20.2
+
+
+  scala> val t2 = new Tuple2(10, "20.2")
+  t2: (Int, String) = (10,20.2)
+
+  scala> t2._1
+  res49: Int = 10
+
+  scala> t2._2
+  res50: String = 20.2
+
+  scala> t1 == t2
+  res51: Boolean = true
+
+#+END_SRC
+
+ - Functions are objects 
+
+#+BEGIN_SRC scala 
+
+
+  val f1 = new Function1[Int, String]{
+    def apply(x: Int) = (2 * x + 10).toString
+  }
+
+  scala> val f1 = new Function1[Int, String]{
+       |   def apply(x: Int) = (2 * x + 10).toString
+       | }
+  f1: Int => String = <function1>
+
+  scala> f1(10)
+  res52: String = 30
+
+  scala> f1(6)
+  res53: String = 22
+
+
+  val f2 = new Function2[Double, Double, Double]{
+    def apply(x: Double,  y: Double) = 2 * x + y
+  }
+
+  scala> val f2 = new Function2[Double, Double, Double]{
+       |   def apply(x: Double,  y: Double) = 2 * x + y
+       | }
+  f2: (Double, Double) => Double = <function2>
+
+  scala> f2(2.0, 5.0)
+  res54: Double = 9.0
+
+  scala> f2(5.0, 2.0)
+  res55: Double = 12.0
+
+#+END_SRC
+
+ - Numbers are objects and operators (+), (-), (/) are not
+   operators, they are methods. 
+
+#+BEGIN_SRC scala 
+  scala> 10 + 5
+  res56: Int = 15
+
+  scala> 10.+(5)
+  res57: Int = 15
+
+  scala> List(1, 2, 3, 4).map(a => 10.+(a))
+  res58: List[Int] = List(11, 12, 13, 14)
+
+#+END_SRC
 ** Singleton Object 
 
 A singleton object is an object without class with a single
