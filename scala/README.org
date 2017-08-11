@@ -4929,6 +4929,20 @@ In Scala everything is an object:
   scala> t1 == t2
   res51: Boolean = true
 
+
+  scala> val t3 = new Tuple3(10, "aa", 20.4)
+  t3: (Int, String, Double) = (10,aa,20.4)
+
+  scala> t3._1
+  res59: Int = 10
+
+  scala> t3._2
+  res60: String = aa
+
+  scala> t3._3
+  res61: Double = 20.4
+
+
 #+END_SRC
 
  - Functions are objects 
