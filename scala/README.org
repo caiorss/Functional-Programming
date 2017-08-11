@@ -1754,6 +1754,111 @@ res86: String = "xs = List(1, 2, 3, 4, 5) ; sum(xs) = 15 ; str = 'hello world' ;
 @  
 
 #+END_SRC
+*** String conversion 
+
+String to Boolean 
+
+#+BEGIN_SRC scala 
+  scala> "true".toBoolean
+  res27: Boolean = true
+
+  scala> "false".toBoolean
+  res28: Boolean = false
+
+  scala> "f".toBoolean
+  java.lang.IllegalArgumentException: For input string: "f"
+    at scala.collection.immutable.StringLike.parseBoolean(StringLike.scala:324)
+#+END_SRC
+
+String to signed Byte (8 bits from -128 to 127)
+
+#+BEGIN_SRC scala 
+  scala> "-128".toByte
+  res37: Byte = -128
+
+  scala> "127".toByte
+  res38: Byte = 127
+
+  scala> "128".toByte
+  java.lang.NumberFormatException: Value out of range. Value:"128" Radix:10
+    at java.lang.Byte.parseByte(Byte.java:151)
+
+  scala> "1df28".toByte
+  java.lang.NumberFormatException: For input string: "1df28"
+    at java.lang.NumberFormatException.forInputString(NumberFormatException.java:65)
+    at java.lang.Integer.parseInt(Integer.java:580)
+    at java.lang.Byte.parseByte(Byte.java:149)
+    at java.lang.Byte.parseByte(Byte.java:175)
+#+END_SRC
+
+String to Int 
+
+#+BEGIN_SRC scala 
+  scala> "200".toInt
+  res11: Int = 200
+
+  scala> "200".toInt * 3
+  res4: Int = 600
+
+  scala> 3 * "200".toInt 
+  res5: Int = 600
+
+  scala> 3 * "2ac00".toInt 
+  java.lang.NumberFormatException: For input string: "2ac00"
+  .... ... 
+#+END_SRC
+
+String to Long (64 bits Integer) 
+
+#+BEGIN_SRC scala 
+  scala> "100".toLong
+  res24: Long = 100
+
+  scala> "100fail!".toLong
+  java.lang.NumberFormatException: For input string: "100fail!"
+    at java.lang.NumberFormatException.forInputString(NumberFormatException.java:65)
+    at java.lang.Long.parseLong(Long.java:589)
+  ... ... 
+#+END_SRC
+
+String to Float (32-bits IEEE Float Point)
+
+#+BEGIN_SRC scala 
+  scala> "100".toFloat
+  res21: Float = 100.0
+
+  scala> "100a".toFloat
+  java.lang.NumberFormatException: For input string: "100a"
+    at sun.misc.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:2043)
+    at sun.misc.FloatingDecimal.parseFloat(FloatingDecimal.java:122)
+    at java.lang.Float.parseFloat(Float.java:451) 
+#+END_SRC
+
+String to Double (64-bits IEEE Float Point)
+
+#+BEGIN_SRC scala 
+  scala> "300".toDouble
+  res7: Double = 300.0
+
+  scala> "300" toDouble
+  res8: Double = 300.0
+
+  scala> Math.log10("100".toDouble)
+  res10: Double = 2.0
+
+  scala> Math.log10("100It is gonna fail!".toDouble)
+  java.lang.NumberFormatException: For input string: "100It is gonna fail!"
+    at sun.misc.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:2043)
+    at sun.misc.FloatingDecimal.parseDouble(FloatingDecimal.java:110)
+    at java.lang.Double.parseDouble(Double.java:538)
+    at scala.collection.immutable.StringLike.toDouble(StringLike.scala:318)
+    at scala.collection.immutable.StringLike.toDouble$(StringLike.scala:318)
+    at scala.collection.immutable.StringOps.toDouble(StringOps.scala:29)
+    ... 29 elided
+
+#+END_SRC
+
+
 ** Collections
 *** Overview
 
