@@ -1858,6 +1858,174 @@ String to Double (64-bits IEEE Float Point)
 
 #+END_SRC
 
+*** Regex - Regular Expressions 
+**** Pattern Matching Regex 
+
+#+BEGIN_SRC scala 
+  scala> val dateRegex = """(\d\d\d\d)-(\d\d)-(\d\d)""".r
+  dateRegex: scala.util.matching.Regex = (\d\d\d\d)-(\d\d)-(\d\d)
+
+
+
+  "2010-10-15" match {
+    case dateRegex(_*) => "It matches the date regex."
+  }
+
+  scala> "2010-10-15" match {
+       |   case dateRegex(_*) => "It matches the date regex."
+       | }
+  res1: String = It matches the date regex.
+
+
+
+  "2010-10-15" match {
+    case dateRegex(y, m, d) => s"The year = $y month = $m day = $d"
+  }
+
+  scala> "2010-10-15" match {
+       |   case dateRegex(y, m, d) => s"The year = $y month = $m day = $d"
+       | }
+  res0: String = The year = 2010 month = 10 day = 15
+
+#+END_SRC
+**** Extracting Regex 
+
+#+BEGIN_SRC scala 
+scala> val dateRegex = """(\d\d\d\d)-(\d\d)-(\d\d)""".r
+dateRegex: scala.util.matching.Regex = (\d\d\d\d)-(\d\d)-(\d\d)
+
+scala> val dateRegex(y, m, d) = "2010-10-15"
+y: String = 2010
+m: String = 10
+d: String = 15
+
+scala> y
+res2: String = 2010
+
+scala> m
+res3: String = 10
+
+scala> d
+res4: String = 15
+
+scala> m.toInt + 2
+res5: Int = 12
+
+scala> s"The year = $y month = $m day = $d"
+res6: String = The year = 2010 month = 10 day = 15
+
+scala> println(s"The year = $y month = $m day = $d")
+The year = 2010 month = 10 day = 15
+
+#+END_SRC
+**** Find all strings that matching a regex
+
+#+BEGIN_SRC scala 
+  val dateRegex = """(\d\d\d\d)-(\d\d)-(\d\d)""".r
+
+  scala> val dateList = "2004-01-20 1998-02-12  2003-04-15"
+  dateList: String = 2004-01-20 1998-02-12  2003-04-15
+
+  scala> dateRegex.findFirstIn(dateList)
+  res6: Option[String] = Some(2004-01-20)
+
+  scala> m.next
+  res9: scala.util.matching.Regex.Match = 2004-01-20
+
+  scala> m.next
+  res10: scala.util.matching.Regex.Match = 1998-02-12
+
+  scala> m.next
+  res11: scala.util.matching.Regex.Match = 2003-04-15
+
+  scala> m.hasNext
+  res12: Boolean = false
+
+  scala> m.next
+  java.util.NoSuchElementException
+    at scala.util.matching.Regex$MatchIterator.next(Regex.scala:753)
+    at scala.util.matching.Regex$$anon$4.next(Regex.scala:374)
+    at scala.util.matching.Regex$$anon$4.next(Regex.scala:371)
+      ... 32 elided
+
+
+  scala> val m = dateRegex.findAllMatchIn(dateList)
+  m: Iterator[scala.util.matching.Regex.Match] = non-empty iterator
+
+  scala> m.toList
+  res14: List[scala.util.matching.Regex.Match] = List(2004-01-20, 1998-02-12, 2003-04-15)
+#+END_SRC
+**** Replace text 
+
+#+BEGIN_SRC scala 
+  scala> val dateRegex = """(\d\d\d\d)-(\d\d)-(\d\d)""".r
+  dateRegex: scala.util.matching.Regex = (\d\d\d\d)-(\d\d)-(\d\d)
+
+  scala> val dateList = "2004-01-20 1998-02-12  2003-04-15"
+  dateList: String = 2004-01-20 1998-02-12  2003-04-15
+
+  scala> dateRegex.replaceAllIn(dateList, "xxxx-xx-xx")
+  res16: String = xxxx-xx-xx xxxx-xx-xx  xxxx-xx-xx
+
+#+END_SRC
+
+**** Regex use case for extracting color from string 
+
+#+BEGIN_SRC scala 
+  val rgbRegex = """rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)""".r
+
+  def getColor(color: String) = color match {
+    case "blue"    => java.awt.Color.blue
+    case "cyan"    => java.awt.Color.cyan
+    case "red"     => java.awt.Color.red
+    case "green"   => java.awt.Color.green
+    case "yellow"  => java.awt.Color.yellow
+    case "white"   => java.awt.Color.white
+    case "pink"    => java.awt.Color.pink
+    case "black"   => java.awt.Color.black
+    case "magenta" => java.awt.Color.magenta
+    case "orange"  => java.awt.Color.orange
+    case "gray"    => java.awt.Color.gray
+    case rgbRegex(r, g, b) => new java.awt.Color(r.toInt, g.toInt, b.toInt)
+    case  _        => throw new IllegalArgumentException("Error invalid color name.")
+  }
+
+
+  @ getColor("blue") 
+  res2: java.awt.Color = java.awt.Color[r=0,g=0,b=255]
+  @  
+  @ getColor("rgb(255, 0, 0)") 
+  res3: java.awt.Color = java.awt.Color[r=255,g=0,b=0]
+  @  
+  @ getColor("rgb(10, 121, 25)") 
+  res4: java.awt.Color = java.awt.Color[r=10,g=121,b=25]
+  @  
+  @ getColor("rgb(10, 121, 25) error") 
+  java.lang.IllegalArgumentException: Error invalid color name.
+    ammonite.$sess.cmd1$.getColor(cmd1.sc:14)
+    ammonite.$sess.cmd5$.<init>(cmd5.sc:1)
+    ammonite.$sess.cmd5$.<clinit>(cmd5.sc)
+
+  @ getColor("red") 
+  res6: java.awt.Color = java.awt.Color[r=255,g=0,b=0]
+  @  
+  @ getColor("invalid color") 
+  java.lang.IllegalArgumentException: Error invalid color name.
+    ammonite.$sess.cmd1$.getColor(cmd1.sc:14)
+    ammonite.$sess.cmd7$.<init>(cmd7.sc:1)
+    ammonite.$sess.cmd7$.<clinit>(cmd7.sc)
+
+#+END_SRC
+
+**** Documentation and References 
+
+ - [[http://www.scala-lang.org/api/2.12.1/scala/util/matching/Regex.html][Scala Standard Library 2.12.1 - scala.util.matching.Regex]]
+
+ - [[http://www.scala-lang.org/api/2.9.3/scala/util/matching/Regex.html][scala.util.matching.Regex]]
+
+ - [[https://www.tutorialspoint.com/scala/scala_regular_expressions.htm][Scala Regular Expressions]]
+
+ - [[http://www.javaworld.com/article/2075410/core-java/matchmaking-with-regular-expressions.html][Matchmaking with regular expressions | JavaWorld]]
 ** Collections
 *** Overview
 
@@ -8425,7 +8593,6 @@ operator (|>).
   /dev
   ... .... ... 
 #+END_SRC
-
 
 * Java Interoperability
 ** Show Java Properties
