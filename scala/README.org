@@ -5184,8 +5184,8 @@ Example 3: Catching exception and releasing resources.
  - *Java Programming - Exception Handling & Assertion* -
    <https://www3.ntu.edu.sg/home/ehchua/programming/java/J5a_ExceptionAssert.html>
 
-* OOP - Object Oriented Programming 
-** Everything is an object 
+** OOP - Object Oriented Programming 
+*** Everything is an object 
 
 In Scala everything is an object: 
 
@@ -5282,7 +5282,7 @@ In Scala everything is an object:
   res58: List[Int] = List(11, 12, 13, 14)
 
 #+END_SRC
-** Singleton Object 
+*** Singleton Object 
 
 A singleton object is an object without class with a single
 instance. It can be used as an ML-module. 
@@ -5366,7 +5366,7 @@ instance. It can be used as an ML-module.
   res224: Class[_ <: Module.type] = class Module$
 #+END_SRC
 
-** Case class as record 
+*** Case class as record 
 
 Example: Simple record type.
 
@@ -5402,7 +5402,7 @@ Example: Simple record type.
 
 #+END_SRC
 
-** Creating a Class 
+*** Creating a Class 
 
 #+BEGIN_SRC scala 
 
@@ -5511,7 +5511,7 @@ Example: Simple record type.
 
 #+END_SRC
 
-** Inheritance 
+*** Inheritance 
 
 Inheritance is useful in GUI programming to create new Widgets derived
 from existing ones. 
@@ -5586,7 +5586,7 @@ method to add event handlers (aka Java's listeners).
   button2.onClick{ System.exit(0)}
 
 #+END_SRC
-** Class with higher order methods 
+*** Class with higher order methods 
 
 Scala classes can have methods that accepts functions as parameters or
 higher order methods. Note that Scala's collections like List, Array,
@@ -5653,7 +5653,7 @@ Example:
   out: Double = 2.9970643570565154
 
 #+END_SRC
-** Abstract Class 
+*** Abstract Class 
 
 An abstract class is a class which cannot be instantiated, containing
 abstract methods (methods without implementation) and non-abstract
@@ -5776,7 +5776,7 @@ Example:
   res24: Double = 182.83
 
 #+END_SRC
-** Traits 
+*** Traits 
 
 Traits are similar to java interfaces. A class can inherit only one
 class, but can mix multiple traits and must implement the methods and
@@ -5940,8 +5940,8 @@ Notes:
 
 
 #+END_SRC
-** OO - Design Patterns 
-*** Overview 
+*** OO - Design Patterns 
+**** Overview 
 
 GOF - Gang of Four Design Patterns or Design Patterns: Elements of
 Reusable Object-Oriented Software (Addison-Wesley Publishing
@@ -6002,7 +6002,7 @@ Iterator Pattern
 
  - Known uses: Java Iterators, C++ STL iterators.
 
-*** Simple factory pattern 
+**** Simple factory pattern 
 
 Defined by GOF as: "Define an interface for creating an object, but
 let subclasses decide which class to instantiate. Factory Method lets
@@ -6151,7 +6151,7 @@ References:
    <https://softwareengineering.stackexchange.com/questions/253254/why-should-i-use-a-factory-class-instead-of-direct-object-construction>
 
  - *Factory Pattern* <http://www.oodesign.com/factory-pattern.html>
-*** Factory pattern with factory method 
+**** Factory pattern with factory method 
 
 This variation allows multiple subclasses be added to the factory. 
 
@@ -6249,8 +6249,8 @@ Reference:
  - *Simple Factory Vs Factory Method Vs Abstract Factory by Example*
    <https://vivekcek.wordpress.com/2013/03/17/simple-factory-vs-factory-method-vs-abstract-factory-by-example/>
 
-*** Strategy Pattern
-**** Overview 
+**** Strategy Pattern
+***** Overview 
 
 Strategy pattern allows changing the algorithm (strategy) at
 run-time. The strategy object encapsulates the algorithm, in other
@@ -6280,7 +6280,7 @@ References:
 
  - Strategy pattern - <https://en.wikipedia.org/wiki/Strategy_pattern>
 
-**** Example in OO way
+***** Example in OO way
 
 #+BEGIN_SRC scala
 
@@ -6345,7 +6345,7 @@ References:
 
 #+END_SRC
 
-**** Example in FP way 
+***** Example in FP way 
 
 In functional programming each _algorithm is just a function_. The
 context object can be replaced by a _higher order function_. By the
@@ -6433,7 +6433,7 @@ Variation 2: With only functions:
 
 #+END_SRC
 
-*** Template Method
+**** Template Method
 
 The templated method design patterns is a behavioral design pattern
 which provides an algorithm, also known as template which defines
@@ -6538,11 +6538,11 @@ References:
 
  - *Template Method Pattern Tutorial with Java Examples*
    <https://dzone.com/articles/design-patterns-template-method>
-*** Observer / Publisher Subscriber
-    :PROPERTIES:
-    :ID:       a24d6fd5-1931-4dde-b68d-0873704614fb
-    :END:
-**** Overview 
+**** Observer / Publisher Subscriber
+     :PROPERTIES:
+     :ID:       a24d6fd5-1931-4dde-b68d-0873704614fb
+     :END:
+***** Overview 
 
 The observer pattern is stated by GOF as "Define a one-to-many
 dependency between objects so that when one object changes state, all
@@ -6623,7 +6623,7 @@ References:
 
  - *Observer pattern* <https://en.wikipedia.org/wiki/Observer_pattern>
 
-**** Example in OO way 
+***** Example in OO way 
      :PROPERTIES:
      :ID:       24e96781-f520-491c-9607-5513cd9c738b
      :END:
@@ -6833,7 +6833,7 @@ Running:
   runTimer(1000, () => sensor.notifyObservers(genTemp()))
 #+END_SRC
 
-**** Example in FP way 
+***** Example in FP way 
      :PROPERTIES:
      :ID:       50b40ac2-98e9-40cb-ab9e-0984e1ef3c22
      :END:
@@ -7012,7 +7012,7 @@ Running:
   runTimer(1000, () => sensor.notifyObservers(genTemp()))
 #+END_SRC
 
-**** Java built-in Observer Pattern 
+***** Java built-in Observer Pattern 
 
 Java provides the java.util.Observable and java.util.Observer
 interfaces to help implement the observer pattern. 
@@ -7113,8 +7113,8 @@ References:
  - java.util.Observer Example
    <https://examples.javacodegeeks.com/core-java/util/observer/java-util-observer-example/>
 
-*** Iterator Pattern
-**** Overview
+**** Iterator Pattern
+***** Overview
 
 The iterator pattern allows tranversing a collection or container
 without expose its internal structure and provides a uniform interface
@@ -7201,7 +7201,7 @@ References:
 
  -
 
-**** Examples
+***** Examples
 
 Example 1 - Java built-in iterator.
 
@@ -7477,8 +7477,8 @@ Example 4: Creating an iterator to iterate over file lines.
 
 #+END_SRC
 
-*** Model View Controller - MVC 
-**** Overview 
+**** Model View Controller - MVC 
+***** Overview 
 
 The MVC - Model-View-Controller pattern was introduced by Trygve
 Reenskaug in a Smalltalk-80 implementation in 1970s to address the
@@ -7599,7 +7599,7 @@ History:
 
  - *Open Step* <http://wiki.c2.com?OpenStep>
 
-**** Example 
+***** Example 
 
 This example shows a simple GUI application with MVC and Java Swing
 toolkit using three views, one console view that prints the model
@@ -7839,8 +7839,8 @@ Counter value is = 4
 #+END_SRC
 
 [[file:images/counterMvcExample.png][file:images/counterMvcExample.png]]
-*** Model View Presenter with Passive View - MVP 
-**** Overview 
+**** Model View Presenter with Passive View - MVP 
+***** Overview 
 
 The MVP - Model-View-Presenter is variation of MVC
 Model-View-Controller which the model doesn't communicate directly
@@ -7941,7 +7941,7 @@ References and Bookmarks:
 
  - *Model-View-Controller rationale, implementation, abstract model
    widgets* <https://web.archive.org/web/20170622183803/https://www.student.cs.uwaterloo.ca/~cs349/s14/files/04.mvc.3up.pdf>
-**** Example 
+***** Example 
 
 This example is similar to the MVC counter example.
 
@@ -8124,10 +8124,10 @@ val presenter    = new CounterPresenter(counterModel)
 presenter.show()
 
 #+END_SRC
-** Scala Implicit
-*** Use Cases
+** Scala Implicit 
+*** Use Cases 
 
-Use Cases:
+Use Cases: 
 
  + _Implict type conversion_. Allows the compiler to implict convert a
    type A to another B where the type B is needed and a type A is
@@ -8138,11 +8138,11 @@ Use Cases:
    with extension methods. It is useful to add new functionality to
    code defined in libraries and sources that cannot be modified.
 
- + _Type Classes_
+ + _Type Classes_ 
 
-*** Implicit type conversion
+*** Implicit type conversion 
 
-#+BEGIN_SRC scala
+#+BEGIN_SRC scala 
 
   object DateTuple {
 
@@ -8157,7 +8157,7 @@ Use Cases:
 
   //---------- Before importing DateTuple object / module ---------- //
 
-  /// Java 8 Date API
+  /// Java 8 Date API 
   scala> java.time.LocalDate.of(2010, 10, 1)
   res83: java.time.LocalDate = 2010-10-01
 
@@ -8182,7 +8182,7 @@ Use Cases:
   scala> (2010, 10, 1)
   res22: (Int, Int, Int) = (2010,10,1)
 
-  // Compiler converts triple tuple to local date
+  // Compiler converts triple tuple to local date 
   scala> (2010, 10, 1): java.time.LocalDate
   res6: java.time.LocalDate = 2010-10-01
 
@@ -8204,7 +8204,7 @@ Use Cases:
 
 
 
-  scala> import java.time.LocalDate
+  scala> import java.time.LocalDate 
   import java.time.LocalDate
 
   scala> val d1 = (2001, 10, 1): LocalDate
@@ -8240,19 +8240,19 @@ Use Cases:
 
 #+END_SRC
 
-*** Class Extension
-**** String class extension to parse Dates
+*** Class Extension 
+**** String class extension to parse Dates 
 
 The String class extension, DateStr defines the methods toDate,
 toDateMDY and toDateMDY that can parse date strings.
 
-#+BEGIN_SRC scala
-  object DateParsers {
+#+BEGIN_SRC scala 
+  object DateParsers { 
 
     // International - ISO 8601 standard Date Format
     val dateFormatYMD = new java.text.SimpleDateFormat("yyyy-mm-dd")
 
-    // American Date Format
+    // American Date Format 
     val dateFormatMDY = new java.text.SimpleDateFormat("mm-dd-yyyy")
 
     val dateFormatDMY = new java.text.SimpleDateFormat("dd-mm-yyyy")
@@ -8291,10 +8291,10 @@ toDateMDY and toDateMDY that can parse date strings.
   Tue Jun 25 00:10:00 BRT 15
 
 
-  scala> val s : DateStr = "2001-10-01"
+  scala> val s : DateStr = "2001-10-01" 
   s: DateParsers.DateStr = DateParsers$DateStr@32d87fe1
 
-  scala> s.toDate // Type Tab to complete
+  scala> s.toDate // Type Tab to complete 
   toDate   toDateDMY   toDateMDY
 
   scala> s.toDate
@@ -8305,7 +8305,7 @@ toDateMDY and toDateMDY that can parse date strings.
 
 **** Extension to print elements.
 
-#+BEGIN_SRC scala
+#+BEGIN_SRC scala 
   object PrintHelpers {
     implicit class Printable (x: Any) {
       def printn() = println(x)
@@ -8364,11 +8364,11 @@ toDateMDY and toDateMDY that can parse date strings.
   /usr
   /root
   /Applications
-  ... ...
+  ... ... 
 
 #+END_SRC
 
-**** Reverse function application
+**** Reverse function application 
 
 The implicit class Apply allows the compiler convert any Scala object
 to this class whenever the method _ap_ is invoked. The class Apply can
@@ -8376,7 +8376,7 @@ be used to peform reverse function application like the F# and OCaml
 operator (|>).
 
 
-#+BEGIN_SRC scala
+#+BEGIN_SRC scala 
 
   object ApplyHelper{
     implicit class Apply[A](x: A){
@@ -8423,7 +8423,7 @@ operator (|>).
   /proc
   /boot
   /dev
-  ... .... ...
+  ... .... ... 
 #+END_SRC
 
 
