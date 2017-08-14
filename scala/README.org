@@ -995,6 +995,169 @@ Example 2
   scala> c.decrement() ; c.get()
   res21: Int = 2
 #+END_SRC
+*** Nested Functions
+
+As Scala has closures or lexical scope, it is possible to define
+functions inside functions which avoids code repetition and polluting
+the local scope.
+
+#+BEGIN_SRC scala 
+
+/**  Pretty print a collection of tuples as a table. 
+  Parameters: 
+  @rows     - Collection of tuples to be printed.  
+  @title    - Tuple containing the titles of left and right side. 
+  @line     - Flag that if set to true, prints a new line between each row.
+  @margin   - Margin from left side of screen as number of spaces.
+  @sep      - Number of spaces between left side and right side 
+  @maxRside - Maximum number of characters to printed on right side.
+  */ 
+def printTupleAsTable(
+  rows:   Seq[(String, String)],
+  title:  (String, String) = ("", ""),
+  line:   Boolean = false,
+  margin: Int = 0,
+  sep:    Int = 4,
+  maxRside: Int = 100
+) = {
+
+  def printRow(wmax1: Int, clamp: Boolean = true) = (row: (String, String)) => {
+    val (lside, rside) = row
+
+    // print left margin 
+    for (a <- 0 to margin) print(' ')
+
+    print(lside)
+
+    // Print spaces 
+    for (a <- 0 to wmax1 - lside.length + sep) print(' ')
+
+    if (rside.length <= maxRside) {
+      println(rside)
+    } else if (clamp){
+      val dots = "..."
+      println(rside.take(maxRside - dots.length) + dots)
+    } else {
+      println(rside.take(maxRside))
+    }
+
+    // Print line between rows 
+    if (line) println()
+  }
+
+  def printDashes(wmax1: Int) = {
+    printRow(wmax1, false)("-" * wmax1, "-" * maxRside)
+  }
+
+  val (title1, title2) = title
+
+  // Maximum length of left side column 
+  val wmax1 = title1.length max rows.map(row => row._1.length).max
+
+  printRow(wmax1)(title)
+  printDashes(wmax1)
+  rows foreach printRow(wmax1)
+  printDashes(wmax1)
+}
+#+END_SRC
+
+Running: 
+
+#+BEGIN_SRC scala 
+  import scala.collection.JavaConverters._
+
+  scala> System.getProperties.asScala.toSeq foreach println
+  (env.emacs,)
+  (java.runtime.name,OpenJDK Runtime Environment)
+  (sun.boot.library.path,/usr/lib/jvm/java-8-openjdk/jre/lib/amd64)
+  (java.vm.version,25.141-b15)
+  (java.vm.vendor,Oracle Corporation)
+  (java.vendor.url,http://java.oracle.com/)
+  (path.separator,:)
+  (java.vm.name,OpenJDK 64-Bit Server VM)
+  (file.encoding.pkg,sun.io)
+  (user.country,US)
+  (sun.java.launcher,SUN_STANDARD)
+  ... ... ... ... ... ... ... ... ... ... ... ... ... ... 
+
+
+  scala> printTupleAsTable(System.getProperties.asScala.toSeq, title = ("Java Property", "Value"), maxRside = 60)
+   Java Property                     Value
+   -----------------------------     ------------------------------------------------------------
+   env.emacs                         
+   java.runtime.name                 OpenJDK Runtime Environment
+   sun.boot.library.path             /usr/lib/jvm/java-8-openjdk/jre/lib/amd64
+   java.vm.version                   25.141-b15
+   java.vm.vendor                    Oracle Corporation
+   java.vendor.url                   http://java.oracle.com/
+   path.separator                    :
+   java.vm.name                      OpenJDK 64-Bit Server VM
+   file.encoding.pkg                 sun.io
+   user.country                      US
+   sun.java.launcher                 SUN_STANDARD
+   sun.os.patch.level                unknown
+   java.vm.specification.name        Java Virtual Machine Specification
+   user.dir                          /home/archbox/test
+
+  ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... .
+
+   java.vm.info                      mixed mode
+   java.version                      1.8.0_141
+   java.ext.dirs                     /usr/lib/jvm/java-8-openjdk/jre/lib/ext:/usr/java/package...
+   sun.boot.class.path               /usr/lib/jvm/java-8-openjdk/jre/lib/resources.jar:/usr/li...
+   java.vendor                       Oracle Corporation
+   file.separator                    /
+   java.vendor.url.bug               http://bugreport.sun.com/bugreport/
+   sun.io.unicode.encoding           UnicodeLittle
+   sun.cpu.endian                    little
+   sun.cpu.isalist                   
+   -----------------------------     ------------------------------------------------------------
+
+
+
+  printTupleAsTable(
+    rows = System.getenv.asScala.toSeq,
+    title = ("Environment Variables", "Value"),
+    margin = 5,
+    maxRside = 60
+  )
+
+  scala> printTupleAsTable(
+       |   rows = System.getenv.asScala.toSeq,
+       |   title = ("Environment Variables", "Value"),
+       |   margin = 5,
+       |   maxRside = 60
+       | )
+        Environment Variables        Value
+        ------------------------     ------------------------------------------------------------
+        PATH                         /usr/local/sbin:/usr/local/bin:/usr/bin:/usr/lib/jvm/defa...
+        XAUTHORITY                   /home/archbox/.Xauthority
+        LC_MEASUREMENT               pt_BR.UTF-8
+        LC_TELEPHONE                 pt_BR.UTF-8
+        GDMSESSION                   xfce
+        XDG_DATA_DIRS                /usr/local/share:/usr/share
+        LC_TIME                      pt_BR.UTF-8
+        DBUS_SESSION_BUS_ADDRESS     unix:path=/run/user/1001/bus
+        XDG_CURRENT_DESKTOP          XFCE
+        MAIL                         /var/spool/mail/archbox
+        SSH_AGENT_PID                29199
+        MOZ_PLUGIN_PATH              /usr/lib/mozilla/plugins
+        COLORTERM                    truecolor
+        SESSION_MANAGER              local/ghostpc:@/tmp/.ICE-unix/29194,unix/ghostpc:/tmp/.IC...
+        LC_PAPER                     pt_BR.UTF-8
+        LOGNAME                      archbox
+        PWD                          /home/archbox/test
+
+       ... .... ...   ... .... ...   ... .... ...   ... .... ...   ... .... ...   ... .... ...
+
+        EDITOR                       emacs -Q -nw --no-site -eval "(progn (setq  inhibit-start...
+        NLSPATH                      /usr/dt/lib/nls/msg/%L/%N.cat
+        QT_QPA_PLATFORMTHEME         qt5ct
+        XDG_RUNTIME_DIR              /run/user/1001
+        XDG_VTNR                     7
+        HOME                         /home/archbox
+        ------------------------     ------------------------------------------------------------  
+#+END_SRC
 *** Function Composition
 
 *Math Composition*
