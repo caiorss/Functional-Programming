@@ -8571,7 +8571,210 @@ Use Cases:
 
 #+END_SRC
 
+*** Implicit conversions of Functions to Single-Method Interfaces
+**** Overview
+
+Java has many single method-interfaces such as ActionListener,
+Runnable, Callable and etc which require a verbose instantiation of
+anonymous classes of those interfaces.
+
+Scala implicit type conversion can make the code shorter by
+eliminating the need for instatiation of single-method interface
+through implicit converting a function to an anonymous class which
+implementing this single-method interface. For instance, it allows a
+function be passed as an argument to a method that requires an
+ActionListener or a Runnable interface.
+
+**** Converting Functions to Java Swing Event Listener
+
+In the code below, the object (module) FunctionToListener provides
+functions that converts click event handler functions to
+ActionListener required by the JButton method addActionListener.
+
+
+#+BEGIN_SRC scala
+  object FunctionToListener{
+    import java.awt.event.{ActionEvent, ActionListener}
+
+    implicit def funToActionListener1(handler: ActionEvent => Unit) = {
+      new ActionListener(){
+        def actionPerformed(evt: ActionEvent) = handler(evt)
+      }
+    }
+
+    implicit def funToActionListener2(handler: () => Unit) = {
+      new ActionListener(){
+        def actionPerformed(evt: ActionEvent) = handler()
+      }
+    }
+
+    implicit def funToActionListener3(handler: => Unit) = {
+      new ActionListener(){
+        def actionPerformed(evt: ActionEvent) = handler
+      }
+    }
+
+  } //------- End of object FunctionToListener ------- //
+
+
+  import javax.swing.{JFrame, JButton}
+  import java.awt.event.{ActionEvent, ActionListener}
+
+  val btn = new JButton("Click me")
+  val frame = new JFrame("Hello world")
+  frame.setSize(400, 500)
+  frame.setLayout(new java.awt.FlowLayout())
+  frame.add(btn)
+  frame.setVisible(true)
+
+  // -------- Before importing FunctionToListener  --------- //
+
+
+  scala> btn.addActionListener _
+  res6: java.awt.event.ActionListener => Unit = $$Lambda$1404/1838333871@a23b96b
+
+  // Error!
+  scala> btn.addActionListener(() => println("I was clicked"))
+  <console>:14: error: type mismatch;
+   found   : () => Unit
+   required: java.awt.event.ActionListener
+         btn.addActionListener(() => println("I was clicked"))
+
+  // Error!
+  scala>  btn.addActionListener{ println("I was clicked")}
+  <console>:15: error: type mismatch;
+   found   : Unit
+   required: java.awt.event.ActionListener
+          btn.addActionListener{ println("I was clicked")}
+
+
+  // -------- After importing FunctionToListener  --------- //
+
+  import FunctionToListener._
+
+  btn.addActionListener(() => println("Handler1: I was clicked"))
+
+  btn.addActionListener{
+    println("Handler2: I was clicked")
+  }
+
+  btn.addActionListener{ (evt: ActionEvent) =>
+    println("Handler3: I was clicked ")
+  }
+
+  // User clicks at the button ...
+  scala> Handler3: I was clicked
+  Handler2: I was clicked
+  Handler1: I was clicked
+  Handler3: I was clicked
+  Handler2: I was clicked
+  Handler1: I was clicked
+  Handler3: I was clicked
+  Handler2: I was clicked
+    ... ... ... ...
+
+
+  scala> val hnd: ActionListener = println("Hello Java")
+  hnd: java.awt.event.ActionListener = FunctionToListener$$anon$3@28dd038f
+
+  scala> val hnd2: ActionListener = () => println("Hello Java")
+  hnd2: java.awt.event.ActionListener = FunctionToListener$$anon$2@4ca6f587
+
+
+#+END_SRC
+
+**** Converting code block to Runnable
+
+#+BEGIN_SRC scala
+object BlockToRunnable {
+
+  /** Converts a code block to a Runnable instance */
+  implicit def funToRunnable(action: => Unit) = {
+    new Runnable(){
+      def run() = action
+    }
+  }
+
+}
+
+
+//--------- Before Import the Helper object -------------- //
+//
+
+val th = new Thread(
+  while(true){
+    println("I will run every 1 second")
+    Thread.sleep(1000)
+})
+
+
+scala> val th = new Thread(
+     |   while(true){
+     |     println("I will run every 1 second")
+     |     Thread.sleep(1000)
+     | })
+<console>:11: error: overloaded method constructor Thread with alternatives:
+  (x$1: String)Thread <and>
+  (x$1: Runnable)Thread
+ cannot be applied to (Unit)
+       val th = new Thread(
+
+
+//--------- After Import the Helper object -------------- //
+//
+
+scala> import BlockToRunnable._
+import BlockToRunnable._
+
+// Now it works!!
+scala> val th = new Thread(
+     |   while(true){
+     |     println("I will run every 1 second")
+     |     Thread.sleep(1000)
+     | })
+th: Thread = Thread[Thread-4,5,main]
+
+
+scala> th.start()
+
+scala> I will run every 1 second
+I will run every 1 second
+I will run every 1 second
+I will run every 1 second
+I will run every 1 second
+I will run every 1 second
+I will run every 1 second
+  ... ... ... ...
+
+
+// A code block can be cast to runnable
+val block : Runnable = {
+  while(true){
+    println("I will run every 1 second")
+    Thread.sleep(1000)
+  }
+}
+
+scala> block.run _
+res0: () => Unit = $$Lambda$1311/1798538641@277474fc
+
+scala> block.run()
+I will run every 1 second
+I will run every 1 second
+I will run every 1 second
+I will run every 1 second
+
+
+
+
+#+END_SRC
+
 *** Class Extension 
+**** Overview
+
+It is useful to add new functionality to code defined in libraries and
+sources that cannot be modified in a type-safe way.
+
 **** String class extension to parse Dates 
 
 The String class extension, DateStr defines the methods toDate,
