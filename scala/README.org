@@ -8460,18 +8460,23 @@ presenter.show()
 
 Use Cases: 
 
- + _Implict type conversion_. Allows the compiler to implict convert a
-   type A to another B where the type B is needed and a type A is
-   supplied. Example: convert a integer 3 values tuple to Date object
-   wherever is necessary a data object.
+ + Implict type conversion. 
 
- + _Class Extension_ - Convert objects of class to another adapter class
-   with extension methods. It is useful to add new functionality to
-   code defined in libraries and sources that cannot be modified.
+ + Implicit conversions of Functions to Single-Method Interfaces
 
- + _Type Classes_ 
+ + Class Extension
+
+ + Type Classes
+
 
 *** Implicit type conversion 
+**** Overview 
+
+Allows the compiler to implict convert a type A to another B where the
+type B is needed and a type A is supplied. Example: convert a integer
+3 values tuple to Date object wherever is necessary a data object.
+
+**** Converting Tuple to LocalDate 
 
 #+BEGIN_SRC scala 
 
@@ -8572,7 +8577,7 @@ Use Cases:
 #+END_SRC
 
 *** Implicit conversions of Functions to Single-Method Interfaces
-**** Overview
+**** Overview 
 
 Java has many single method-interfaces such as ActionListener,
 Runnable, Callable and etc which require a verbose instantiation of
@@ -8585,14 +8590,14 @@ implementing this single-method interface. For instance, it allows a
 function be passed as an argument to a method that requires an
 ActionListener or a Runnable interface.
 
-**** Converting Functions to Java Swing Event Listener
+**** Converting Functions to Java Swing Event Listener 
 
 In the code below, the object (module) FunctionToListener provides
 functions that converts click event handler functions to
 ActionListener required by the JButton method addActionListener.
 
 
-#+BEGIN_SRC scala
+#+BEGIN_SRC scala 
   object FunctionToListener{
     import java.awt.event.{ActionEvent, ActionListener}
 
@@ -8630,7 +8635,7 @@ ActionListener required by the JButton method addActionListener.
   // -------- Before importing FunctionToListener  --------- //
 
 
-  scala> btn.addActionListener _
+  scala> btn.addActionListener _ 
   res6: java.awt.event.ActionListener => Unit = $$Lambda$1404/1838333871@a23b96b
 
   // Error!
@@ -8640,13 +8645,13 @@ ActionListener required by the JButton method addActionListener.
    required: java.awt.event.ActionListener
          btn.addActionListener(() => println("I was clicked"))
 
-  // Error!
+  // Error! 
   scala>  btn.addActionListener{ println("I was clicked")}
   <console>:15: error: type mismatch;
    found   : Unit
    required: java.awt.event.ActionListener
           btn.addActionListener{ println("I was clicked")}
-
+                 
 
   // -------- After importing FunctionToListener  --------- //
 
@@ -8663,13 +8668,13 @@ ActionListener required by the JButton method addActionListener.
   }
 
   // User clicks at the button ...
-  scala> Handler3: I was clicked
+  scala> Handler3: I was clicked 
   Handler2: I was clicked
   Handler1: I was clicked
-  Handler3: I was clicked
+  Handler3: I was clicked 
   Handler2: I was clicked
   Handler1: I was clicked
-  Handler3: I was clicked
+  Handler3: I was clicked 
   Handler2: I was clicked
     ... ... ... ...
 
@@ -8685,7 +8690,7 @@ ActionListener required by the JButton method addActionListener.
 
 **** Converting code block to Runnable
 
-#+BEGIN_SRC scala
+#+BEGIN_SRC scala 
 object BlockToRunnable {
 
   /** Converts a code block to a Runnable instance */
@@ -8726,7 +8731,7 @@ scala> val th = new Thread(
 scala> import BlockToRunnable._
 import BlockToRunnable._
 
-// Now it works!!
+// Now it works!!         
 scala> val th = new Thread(
      |   while(true){
      |     println("I will run every 1 second")
@@ -8747,7 +8752,7 @@ I will run every 1 second
   ... ... ... ...
 
 
-// A code block can be cast to runnable
+// A code block can be cast to runnable                  
 val block : Runnable = {
   while(true){
     println("I will run every 1 second")
@@ -8770,7 +8775,7 @@ I will run every 1 second
 #+END_SRC
 
 *** Class Extension 
-**** Overview
+**** Overview 
 
 It is useful to add new functionality to code defined in libraries and
 sources that cannot be modified in a type-safe way.
