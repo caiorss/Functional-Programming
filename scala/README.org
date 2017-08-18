@@ -8590,6 +8590,28 @@ implementing this single-method interface. For instance, it allows a
 function be passed as an argument to a method that requires an
 ActionListener or a Runnable interface.
 
+
+As can be seen in the codes below all single-methods interfaces could
+be replaced by functions. 
+
+Runnable Interface: 
+
+#+BEGIN_SRC java 
+  interface Runnable{ 
+      public void run();
+  }
+#+END_SRC
+
+ActionListener
+
+#+BEGIN_SRC java 
+  interface ActionListener{
+      public void actionPerformed(ActionEvent e);
+  }
+#+END_SRC
+
+
+
 **** Converting Functions to Java Swing Event Listener 
 
 In the code below, the object (module) FunctionToListener provides
