@@ -32,30 +32,25 @@ The website of this repository is:
 
 This repository is dedicated to public domain.
 
-*Concepts*
+*General*
 
  - [[file:haskell/Functional_Programming_Concepts.org][Functional Programming Concepts]]
 
-*Functional Programming in Haskell*
+*Statically Typed Programming Languages with Type Inference*
 
  - [[file:haskell/README.org][Haskell]]
 
-*Functional Programming in OCaml*
-
  - [[file:ocaml/README.org][OCaml]]
 
-*Functional Programming in Scheme*
+ - [[file:scala/README.org][Scala]] (JVM / Java Platform)
 
- - [[file:scheme/README.org][Scheme]]
+*Dynamically Typed Programming Languages*
 
-*Functional Programming in Clojure*
+ - [[file:scheme/README.org][Scheme]] 
 
- - [[file:clojure/README.org][Clojure]]  
-
-*Functional Programming in Scala*
-
- - [[file:scala/README.org][Scala]]
-         
+ - [[file:clojure/README.org][Clojure]] (JVM / Java Platform) 
+        
 *Papers* 
 
  - [[file:papers/README.org][Papers in this Repository]]
+
