@@ -4285,6 +4285,7 @@ trees and build interpreters and pasers.
 #+END_SRC
 
 ** Pattern Matching 
+*** Pattern matching numbers 
 
 Example 1 - Show month name. 
 
@@ -4350,6 +4351,7 @@ Example 1 - Show month name.
   scala> getMonthName2(-10)
   res81: Option[String] = None
 #+END_SRC
+*** Pattern matching with strings. 
 
 Example 2 - Pattern matching with strings. 
 
@@ -4398,6 +4400,7 @@ Example 2 - Pattern matching with strings.
   scala> showCurrencyName("XBT")
   res109: String = Bitcoin
 #+END_SRC
+*** Pattern with number and case-classes. 
 
 Example 3 - Pattern with number and case-classes. 
 
@@ -4508,6 +4511,7 @@ Example 3 - Pattern with number and case-classes.
   scala> numberToMonth2(0)
   res101: Option[Product with Serializable with Month] = None
 #+END_SRC
+*** Pattern matching with conditional. 
 
 Example 4 - Pattern matching with conditional. 
 
@@ -4543,6 +4547,7 @@ Example 4 - Pattern matching with conditional.
 
 
 #+END_SRC
+*** Recursive functions
 
 Example 5 - Recursive functions. 
 
@@ -4635,7 +4640,132 @@ Example 6 - Recursive list functions.
 
 
 #+END_SRC
+*** Destructuring 
+**** Destructuring tules 
 
+#+BEGIN_SRC scala 
+scala> val (a, b) = (10, 20)
+a: Int = 10
+b: Int = 20
+
+scala> a + b
+res0: Int = 30
+
+scala> val tpl = (10, "hello", 'x')
+tpl: (Int, String, Char) = (10,hello,x)
+
+scala> val (x, y, z) = tpl
+x: Int = 10
+y: String = hello
+z: Char = x
+
+scala> x
+res1: Int = 10
+
+scala> y
+res2: String = hello
+
+scala> z
+res3: Char = x
+
+
+#+END_SRC
+**** Destructuring List, Arrays and other collections
+
+#+BEGIN_SRC scala 
+scala> val List(a, b, c) = List(1, 2, 3)
+a: Int = 1
+b: Int = 2
+c: Int = 3
+
+scala> val List(a, b, c) = List(1, 2, 3, 4, 5, 6)
+scala.MatchError: List(1, 2, 3, 4, 5, 6) (of class scala.collection.immutable.$colon$colon)
+  ... 29 elided
+
+
+scala> val Array(x, y, z) = Array(1, 2, 3)
+x: Int = 1
+y: Int = 2
+z: Int = 3
+
+scala> x + y + z
+res7: Int = 6
+
+
+#+END_SRC
+**** Destructuring case classes 
+
+#+BEGIN_SRC scala 
+
+  case class Product(
+    id:       Int,
+    name:     String,
+    price:    BigDecimal,
+    quantity: Int
+  )
+
+  val inventory = List(
+    Product(100, "Sugar", 1.24, 100),
+    Product(201, "Carton of Milk", 2.25, 200),
+    Product(300, "Carton of fresh orange juice", 4.5, 300),
+  )
+
+  def showProduct(product: Product) = {
+    val Product(id, name, price, qnt) = product
+    println(s"""
+  name     = ${name}
+  id       = ${id}
+  price    = ${price}
+  quantity = ${qnt}
+  """.trim() + "\n"
+    )
+  }
+
+  // Alternative way without destructuring
+  def showProduct2(product: Product) = {
+    println(s"""
+  name     = ${product.name}
+  id       = ${product.id}
+  price    = ${prodcut.price}
+  quantity = ${product.quantity}
+  """.trim() + "\n"
+    )
+  }
+
+  def getInventoryValue(inventory: List[Product]) = {
+    inventory.foldLeft(0: BigDecimal){ (acc, product) =>
+      val Product(_, _, price, qnt) = product
+      acc + price * qnt 
+    }
+  }
+
+#+END_SRC
+
+Running: 
+
+#+BEGIN_SRC scala 
+scala>  inventory foreach showProduct
+name     = Sugar
+id       = 100
+price    = 1.24
+quantity = 100
+
+name     = Carton of Milk
+id       = 201
+price    = 2.25
+quantity = 200
+
+name     = Carton of fresh orange juice
+id       = 300
+price    = 4.5
+quantity = 300
+
+
+scala> getInventoryValue(inventory)
+res11: BigDecimal = 1924.00
+
+
+#+END_SRC
 ** Option type 
 *** Overview 
 
