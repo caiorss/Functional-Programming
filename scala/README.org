@@ -5482,11 +5482,12 @@ dessugarized to flatMap, map, filter and foreach method calls.
 |------------+------------------------|
 | (>>=) bind | .flatMap               |
 | return     |                        |
-| map        | .map                   |
+| fmap       | .map                   |
 | forM_      | .foreach               |
 | guard      | .filter or .withFilter |
 |            |                        |
 
+ - Note: .flatMap, .map, .foreach and .filter are methods.
 
 #+BEGIN_SRC scala 
   @ for (a <- 1 to 5) yield a 
@@ -5734,8 +5735,8 @@ Haskell Equivalent code:
 
 *Example 2* 
 
-Get all pythagorean numbers from 1 to 100. A Pythagorean numbers are
-three integers that satisfies the equation c^2 = a^2 + b^2
+Get all pythagorean numbers from 1 to 100. Pythagorean numbers are
+integers that satisfies the equation c^2 = a^2 + b^2
 
 #+BEGIN_SRC scala 
   val pty = for { 
