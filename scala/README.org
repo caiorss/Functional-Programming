@@ -5175,6 +5175,29 @@ Scala:
   scala> safeSum(None, None)
   res172: Option[Int] = None
 
+
+  /// -- Expanding to for-notation  -------
+
+  def safeSum2(sa: Option[Int], sb: Option[Int]) = {
+    sa.flatMap { a =>
+    sb.map     { b => a + b}
+    }
+  }
+
+  @ safeSum2 _
+  res22: (Option[Int], Option[Int]) => Option[Int]
+
+
+  @ safeSum2(Some(10), Some(2))
+  res23: Option[Int] = Some(12)
+
+  @ safeSum2(Some(10), None)
+  res24: Option[Int] = None
+
+  @ safeSum2(None, None)
+  res25: Option[Int] = None
+
+
 #+END_SRC
 
 Haskell: 
@@ -5397,7 +5420,6 @@ It can be refactored to more sef-contained code.
   def getClipboardText() = {
     import java.awt.Toolkit
     import java.awt.datatransfer.{Clipboard, DataFlavor, Transferable}
-
     for {
       clip <- Option(Toolkit.getDefaultToolkit().getSystemClipboard())
       data <- Option(clip.getContents(null))
