@@ -5429,6 +5429,525 @@ It can be refactored to more sef-contained code.
   }
 #+END_SRC
 
+** For comprehensions
+*** Scala For-comprehensions and Haskell do-notation
+**** For-loop 
+
+#+BEGIN_SRC scala 
+@ for (a <- 1 to 5) println(a) 
+1
+2
+3
+4
+5
+
+@ for (a <- List(1, 2, 3, 4, 5))  println(a)  
+1
+2
+3
+4
+5
+
+@ for {a <- List(1, 2, 3, 4, 5)}{ 
+     println("a = " + a) 
+  } 
+a = 1
+a = 2
+a = 3
+a = 4
+a = 5
+
+@ for (file <- new java.io.File("/").listFiles) println("file = " + file) 
+file = /lost+found
+file = /boot
+file = /run
+file = /usr
+file = /etc
+file = /sbin
+file = /tmp
+file = /mnt
+... ... ... ... 
+
+#+END_SRC
+
+**** For-yield 
+
+Scala's for-yield or for comprehension is similar to Haskell's monad
+do-notation. However unlike Haskell do-notation, which is dessugarized
+to (>>=) bind and return functions, Scala's for-yield notation is
+dessugarized to flatMap, map, filter and foreach method calls. 
+
+| Haskell    | Scala                  |
+|            |                        |
+|------------+------------------------|
+| (>>=) bind | .flatMap               |
+| return     |                        |
+| map        | .map                   |
+| forM_      | .foreach               |
+| guard      | .filter or .withFilter |
+|            |                        |
+
+
+#+BEGIN_SRC scala 
+  @ for (a <- 1 to 5) yield a 
+  res30: collection.immutable.IndexedSeq[Int] = Vector(1, 2, 3, 4, 5)
+
+  @ for (a <- 1.to(5)) yield a  
+  res44: collection.immutable.IndexedSeq[Int] = Vector(1, 2, 3, 4, 5)
+
+  @ for (a <- 1 to 5) yield (2 * a) 
+  res31: collection.immutable.IndexedSeq[Int] = Vector(2, 4, 6, 8, 10)
+
+  @ for (file <- new java.io.File("/etc").listFiles) yield file.getName 
+  res33: Array[String] = Array(
+    "bash.bash_logout",
+    "papersize",
+    "exports.d",
+    "apparmor.d",
+    "shadow",
+  ...
+
+
+  @ for {
+      file <- new java.io.File("/etc").listFiles
+      val data = (file.getPath, file.getName, file.length)
+  } yield data
+    
+  res47: Array[(String, String, Long)] = Array(
+    ("/etc/bash.bash_logout", "bash.bash_logout", 28L),
+    ("/etc/papersize", "papersize", 68L),
+    ("/etc/exports.d", "exports.d", 4096L),
+    ("/etc/apparmor.d", "apparmor.d", 4096L),
+    ("/etc/shadow", "shadow", 1001L),
+  ...
+
+
+  //  
+  //  Get the name of all directories in /etc/.
+  @ for {
+      file <- new java.io.File("/etc").listFiles
+      if file.isDirectory // Rejects entries that aren't file.
+    } yield file.getName() 
+
+  res58: Array[String] = Array(
+    "exports.d",
+    "apparmor.d",
+    "cron.weekly",
+    "pulse",
+    "iptables",
+  ...
+
+
+  @ val files = for {
+      file <- new java.io.File("/etc").listFiles
+      if file.isFile
+  } yield file.getName()
+
+    
+  files: Array[String] = Array(
+    "bash.bash_logout",
+    "papersize",
+    "shadow",
+    "adjtime",
+    "resolv.conf",
+  ...
+
+  @ files take 5 foreach println 
+  bash.bash_logout
+  papersize
+  shadow
+  adjtime
+  resolv.conf
+
+    
+#+END_SRC
+
+*Example 1* 
+
+Get all combinations between numbers 1, 2, 3, 4 and letters 'a' and 'b'.
+
+#+BEGIN_SRC scala 
+
+  val c = for {
+    a <- List(1, 2, 3, 4)
+    b <- List('a', 'b')
+  } yield (a, b)
+
+
+  @ val c = for {
+      a <- List(1, 2, 3, 4)
+      b <- List('a', 'b')
+  } yield (a, b)
+
+  c: List[(Int, Char)] = List(
+    (1, 'a'),
+    (1, 'b'),
+    (2, 'a'),
+    (2, 'b'),
+    (3, 'a'),
+  ...
+
+  @ c foreach println 
+  (1,a)
+  (1,b)
+  (2,a)
+  (2,b)
+  (3,a)
+  (3,b)
+  (4,a)
+  (4,b)
+
+
+#+END_SRC
+
+Dessugarizing for-comprehension: 
+
+#+BEGIN_SRC scala 
+  val c = {
+    List(1, 2, 3, 4).flatMap { a =>
+    List('a', 'b').map       { b => (a, b) }}
+  }
+
+  @ val c = {
+      List(1, 2, 3, 4).flatMap { a =>
+      List('a', 'b').map       { b => (a, b) }}
+    } 
+  c: List[(Int, Char)] = List(
+    (1, 'a'),
+    (1, 'b'),
+    (2, 'a'),
+    (2, 'b'),
+    (3, 'a'),
+  ...
+
+  @ c foreach println 
+  (1,a)
+  (1,b)
+  (2,a)
+  (2,b)
+  (3,a)
+  (3,b)
+  (4,a)
+  (4,b)
+#+END_SRC
+
+Haskell Equivalent code: 
+
+#+BEGIN_SRC haskell 
+  > import Control.Monad(forM_)
+
+  :{
+  xs = do
+    a <- [1, 2, 3, 4]
+    b <- ['a', 'b']
+    return (a, b)     
+  :}
+
+
+  > :{
+  - xs = do
+  -   a <- [1, 2, 3, 4]
+  -   b <- ['a', 'b']
+  -   return (a, b)     
+  - :}
+  xs :: Num t => [(t, Char)]
+
+  >  xs
+  [(1,'a'),(1,'b'),(2,'a'),(2,'b'),(3,'a'),(3,'b'),(4,'a'),(4,'b')]
+  it :: Num t => [(t, Char)]
+  >
+
+
+  > mapM_ print xs
+  (1,'a')
+  (1,'b')
+  (2,'a')
+  (2,'b')
+  (3,'a')
+  (3,'b')
+  (4,'a')
+  (4,'b')
+  it :: ()
+  > 
+
+  > forM_ xs print
+  (1,'a')
+  (1,'b')
+  (2,'a')
+  (2,'b')
+  (3,'a')
+  (3,'b')
+  (4,'a')
+  (4,'b')
+  it :: ()
+  > 
+
+
+  -- Do-notation dessugarized
+  --
+  :{
+  xs2 = 
+    [1, 2, 3, 4] >>= \ a ->
+    ['a', 'b']   >>= \ b ->
+    return (a, b)     
+  :}
+
+  > :{
+  - xs2 = 
+  -   [1, 2, 3, 4] >>= \ a ->
+  -   ['a', 'b']   >>= \ b ->
+  -   return (a, b)     
+  - :}
+  xs2 :: Num t => [(t, Char)]
+  > 
+  > xs2
+  [(1,'a'),(1,'b'),(2,'a'),(2,'b'),(3,'a'),(3,'b'),(4,'a'),(4,'b')]
+  it :: Num t => [(t, Char)]
+  > 
+
+  > mapM_ print xs2
+  (1,'a')
+  (1,'b')
+  (2,'a')
+  (2,'b')
+  (3,'a')
+  (3,'b')
+  (4,'a')
+  (4,'b')
+  it :: ()
+  >
+
+  > forM_ xs2 print
+  (1,'a')
+  (1,'b')
+  (2,'a')
+  (2,'b')
+  (3,'a')
+  (3,'b')
+  (4,'a')
+  (4,'b')
+  it :: ()
+  > 
+
+
+#+END_SRC
+
+*Example 2* 
+
+Get all pythagorean numbers from 1 to 100. A Pythagorean numbers are
+three integers that satisfies the equation c^2 = a^2 + b^2
+
+#+BEGIN_SRC scala 
+  val pty = for { 
+    a <- 1 to 100
+    b <- 1 to 100
+    c <- 1 to 100
+    if (a * a + b * b == c * c)
+  } yield (a, b, c)
+
+  @ pty.take(10).foreach(println) 
+  (3,4,5)
+  (4,3,5)
+  (5,12,13)
+  (6,8,10)
+  (7,24,25)
+  (8,6,10)
+  (8,15,17)
+  (9,12,15)
+  (9,40,41)
+  (10,24,26)
+
+  @ pty take 10 foreach println 
+  (3,4,5)
+  (4,3,5)
+  (5,12,13)
+  (6,8,10)
+  (7,24,25)
+  (8,6,10)
+  (8,15,17)
+  (9,12,15)
+  (9,40,41)
+  (10,24,26)
+
+
+#+END_SRC 
+
+Dessugarizing for-comprehension: 
+
+#+BEGIN_SRC scala 
+  val pty = (1 to 100).flatMap     { a =>
+            (1 to 100).flatMap     { b =>
+            (1 to 100).filter      { c => 
+             a * a + b * b == c * c
+            }.map{ c => (a, b, c)}
+            }}
+
+  pty: collection.immutable.IndexedSeq[(Int, Int, Int)] = Vector(
+    (3, 4, 5),
+    (4, 3, 5),
+    (5, 12, 13),
+    (6, 8, 10),
+    (7, 24, 25),
+  ...
+
+
+  @ pty take 10 foreach println 
+  (3,4,5)
+  (4,3,5)
+  (5,12,13)
+  (6,8,10)
+  (7,24,25)
+  (8,6,10)
+  (8,15,17)
+  (9,12,15)
+  (9,40,41)
+  (10,24,26)
+
+#+END_SRC
+
+Haskell equivalent code: 
+
+#+BEGIN_SRC haskell 
+
+  > import Control.Monad (guard)
+  >
+  > :t guard
+  guard :: GHC.Base.Alternative f => Bool -> f ()
+  > 
+
+  :{
+  pty = do
+    a <- [1 .. 100]
+    b <- [1 .. 100]
+    c <- [1 .. 100]
+    guard (a * a + b * b == c * c)
+    return (a, b, c)
+  :}
+
+   > :{
+  - pty = do
+  -   a <- [1 .. 100]
+  -   b <- [1 .. 100]
+  -   c <- [1 .. 100]
+  -   guard (a * a + b * b == c * c)
+  -   return (a, b, c)
+  - :}
+  pty :: (Eq t, Enum t, Num t) => [(t, t, t)]
+  >
+
+  > take 5 pty
+  [(3,4,5),(4,3,5),(5,12,13),(6,8,10),(7,24,25)]
+  it :: (Num t, Enum t, Eq t) => [(t, t, t)]
+  > 
+
+  > mapM_ print (take 10 pty)
+  (3,4,5)
+  (4,3,5)
+  (5,12,13)
+  (6,8,10)
+  (7,24,25)
+  (8,6,10)
+  (8,15,17)
+  (9,12,15)
+  (9,40,41)
+  (10,24,26)
+  it :: ()
+  > 
+   
+  :{
+  pty2 = 
+    [1 .. 100]                       >>= \ a ->
+    [1 .. 100]                       >>= \ b ->
+    [1 .. 100]                       >>= \ c ->
+    guard (a * a + b * b == c * c)   >>= \ _ ->
+    return (a, b, c)
+  :}
+
+  > take 5 pty2 
+  [(3,4,5),(4,3,5),(5,12,13),(6,8,10),(7,24,25)]
+  it :: (Num t, Enum t, Eq t) => [(t, t, t)]
+  > 
+
+  > mapM_ print (take 10 pty)
+  (3,4,5)
+  (4,3,5)
+  (5,12,13)
+  (6,8,10)
+  (7,24,25)
+  (8,6,10)
+  (8,15,17)
+  (9,12,15)
+  (9,40,41)
+  (10,24,26)
+  it :: ()
+  > 
+
+
+  > :t (>>=)
+  (>>=) :: Monad m => m a -> (a -> m b) -> m b
+  >
+
+  > let bind ma fn = ma >>= fn
+  bind :: Monad m => m a -> (a -> m b) -> m b
+  > 
+
+  :{
+  pty3 = 
+    bind [1 .. 100]                        (\ a ->
+    bind [1 .. 100]                        (\ b ->
+    bind [1 .. 100]                        (\ c ->
+    bind (guard (a * a + b * b == c * c))  (\ _ ->
+    return (a, b, c)
+                                           ))))
+  :}
+
+  > :{
+  - pty3 = 
+  -   bind [1 .. 100]                        (\ a ->
+  -   bind [1 .. 100]                        (\ b ->
+  -   bind [1 .. 100]                        (\ c ->
+  -   bind (guard (a * a + b * b == c * c))  (\ _ ->
+  -   return (a, b, c)
+  -                                          ))))
+  - :}
+  pty3 :: (Eq t, Enum t, Num t) => [(t, t, t)]
+  >
+
+  > take 5 pty3 
+  [(3,4,5),(4,3,5),(5,12,13),(6,8,10),(7,24,25)]
+  it :: (Num t, Enum t, Eq t) => [(t, t, t)]
+  > 
+
+  :{
+  pty4 = 
+    [1 .. 100]                      `bind` \ a ->
+    [1 .. 100]                      `bind` \ b ->
+    [1 .. 100]                      `bind` \ c ->
+    guard (a * a + b * b == c * c)  `bind` \ _ ->
+    return (a, b, c)
+  :}
+
+  > :{
+  - pty4 = 
+  -   [1 .. 100]                      `bind` \ a ->
+  -   [1 .. 100]                      `bind` \ b ->
+  -   [1 .. 100]                      `bind` \ c ->
+  -   guard (a * a + b * b == c * c)  `bind` \ _ ->
+  -   return (a, b, c)
+  - :}
+  pty4 :: (Eq t, Enum t, Num t) => [(t, t, t)]
+  > 
+
+  > take 5 pty4 
+  [(3,4,5),(4,3,5),(5,12,13),(6,8,10),(7,24,25)]
+  it :: (Num t, Enum t, Eq t) => [(t, t, t)]
+  > 
+
+
+
+    
+#+END_SRC
+*** TODO Options for comprehensions
 ** Exception Handling 
 *** Overview 
 
