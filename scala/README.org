@@ -492,6 +492,53 @@ scala> frame.setSize(300, 400)
 scala> frame.setVisible(true)
 #+END_SRC
 
+Import members / functions from a static class. 
+
+#+BEGIN_SRC scala 
+@ import Math.{PI, sin, cos, tan, exp} 
+import Math.{PI, sin, cos, tan, exp}
+
+@ Math.sin(Math.PI) 
+res7: Double = 1.2246467991473532E-16
+
+@ sin(PI) 
+res4: Double = 1.2246467991473532E-16
+
+@ cos(PI) 
+res5: Double = -1.0
+
+@ exp(-2.0) 
+res6: Double = 0.1353352832366127
+
+#+END_SRC
+
+Import from singletons / objects 
+
+#+BEGIN_SRC scala 
+@ object Module{ 
+    def fn(x: Int) = x * 3
+    def fxy(a: Int, b: Int) = a + b 
+    val gravity = 9.81 
+  } 
+defined object Module
+
+@ Module.fn(4) 
+res9: Int = 12
+
+@ Module.fxy(10, 12) 
+res10: Int = 22
+
+@ import Module.{fn, fxy} 
+import Module.{fn, fxy}
+
+@ fn(4) 
+res12: Int = 12
+
+@ fxy(10, 12) 
+res13: Int = 22
+
+#+END_SRC
+
 *Method Syntax*
 
 #+BEGIN_SRC scala
