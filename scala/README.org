@@ -6013,6 +6013,15 @@ Haskell equivalent code:
   res71: Identity[Int] = Identity(35)
 
 #+END_SRC
+*** Alternative Option implementation 
+
+#+BEGIN_SRC scala 
+
+#+END_SRC
+*** References 
+
+ - [[[https://docs.scala-lang.org/tutorials/FAQ/yield.html][H|SD]]] - *How does yield work? | Scala Documentation*. Available at
+   <https://docs.scala-lang.org/tutorials/FAQ/yield.html>
 ** Exception Handling 
 *** Overview 
 
@@ -10468,6 +10477,10 @@ $ ./out/jfreeChart1.sh
  - [[https://docs.oracle.com/javase/8/docs/api/][Overview (Java Platform SE 8 )]]
 
 ** Learning Resources 
+
+
+ - *A tour of Scala* - <https://docs.scala-lang.org/tutorials/>
+
 
  - [[https://www.scala-lang.org/][The Scala Programming Language]] - https://www.scala-lang.org/
 
