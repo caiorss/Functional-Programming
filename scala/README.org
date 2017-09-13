@@ -90,6 +90,26 @@ See: [[https://www.scala-lang.org/download/][Download | The Scala Programming La
 |               |                                                                                  |
 |               |                                                                                  |
 
+Other Tools:
+
+ - [[http://www.scala-sbt.org/][Scala SBT]] - SBT Building Tool
+
+ - [[http://ammonite.io/][Ammonite REPL]] - Ammonite REPL is an enhanced Scala REPL with syntax
+   highlighting, multi-line editing and more.
+
+ - [[https://www.guardsquare.com/en/proguard][Proguard]] - Tool for shrinking, optmizing and obfuscating Java
+   Applications. It also can reduce the size of jar files and make the
+   initialization time faster.
+
+ - [[http://launch4j.sourceforge.net/index.html][Launch4j - Cross-platform Java executable wrapper]]
+
+ - IDEs
+
+   - Eclipse
+
+   - Intelij
+
+
 *** REPL - Scala Shell
 **** REPL Commands
 
