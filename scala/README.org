@@ -5949,6 +5949,50 @@ Haskell equivalent code:
     
 #+END_SRC
 *** TODO Options for comprehensions
+*** Identity Monad Implementation 
+
+#+BEGIN_SRC scala 
+
+  case class Identity[A](value: A) {
+    def flatMap[B](fn: A => Identity[B]): Identity[B] = {
+      fn(value)
+    }
+
+    def map[B](fn: A => B): Identity[B] = {
+      Identity(fn(value))
+    }
+
+    def foreach[B](fn: A => Unit): Unit = fn(value)
+  }
+
+
+  @ Identity(10) 
+  res65: Identity[Int] = Identity(10)
+
+  @ Identity(10) map (x => x * 4) 
+  res66: Identity[Int] = Identity(40)
+
+  @ Identity(10) flatMap (x => Identity(x * 4)) 
+  res67: Identity[Int] = Identity(40)
+
+    
+  @ for (x <- Identity(10)) println(x) 
+  10
+
+  @ for (x <- Identity("Hello world")) println(x) 
+  Hello world
+
+  @ for (x <- Identity(5)) yield 4 * x 
+  res70: Identity[Int] = Identity(20)
+
+
+  @ for {
+      a <- Identity(10)
+      b <- Identity(25)
+    } yield a + b 
+  res71: Identity[Int] = Identity(35)
+
+#+END_SRC
 ** Exception Handling 
 *** Overview 
 
