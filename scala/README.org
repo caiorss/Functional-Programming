@@ -5968,7 +5968,112 @@ Haskell equivalent code:
 
     
 #+END_SRC
-*** TODO Options for comprehensions
+*** Options for comprehensions
+
+For - comprehension is equivalent to method .foreach
+
+#+BEGIN_SRC scala
+  scala> val ma : Option[Int] = Some(100)
+  ma: Option[Int] = Some(100)
+
+  scala> val mb : Option[Int] = None
+  mb: Option[Int] = None
+
+  scala> ma foreach println
+  100
+
+  scala> mb foreach println
+
+  scala> for (x <- ma) println("x = " + x)
+  x = 100
+
+  scala> for (x <- mb) println("x = " + x)
+
+  scala>
+
+
+
+  scala> for {a <- Option(System.getProperty("java.home"))} println("Java Home = " + a)
+  Java Home = /home/archbox/opt/jdk1.8.0_144/jre
+
+  scala> for {a <- Option(System.getProperty("java.home error"))} println("Java Home = " + a)
+
+
+  scala> Option(System.getProperty("java.home")) foreach { a => println("Java Home = " + a) }
+  Java Home = /home/archbox/opt/jdk1.8.0_144/jre
+
+  scala> Option(System.getProperty("java.home error")) foreach { a => println("Java Home = " + a) }
+
+#+END_SRC
+
+For-yield equivalence to map
+
+#+BEGIN_SRC scala
+  scala> val ma : Option[Int] = Some(100)
+  ma: Option[Int] = Some(100)
+
+  scala> val mb : Option[Int] = None
+  mb: Option[Int] = None
+
+
+  scala> for (x <- ma) yield 5 * x
+  res34: Option[Int] = Some(500)
+
+  scala> for (x <- mb) yield 5 * x
+  res35: Option[Int] = None
+
+
+  scala> ma map (x => 5 * x)
+  res36: Option[Int] = Some(500)
+
+  scala> mb map (x => 5 * x)
+  res37: Option[Int] = None
+
+
+#+END_SRC
+
+For-yield expressions for Option type are a syntax sugar for nested
+flatMaps and maps method calls similar to Haskell's Maybe monad.
+
+#+BEGIN_SRC scala
+
+  def addSafe1(ma: Option[Int], mb: Option[Int]) = {
+    for {
+      a <- ma
+      b <- mb
+    } yield a + b
+  }
+
+  def addSafe2(ma: Option[Int], mb: Option[Int]) = {
+    ma.flatMap { a =>
+    mb.map     { b =>
+      a + b
+    }}
+  }
+
+
+  scala> addSafe1(Some(10), Some(15))
+  res43: Option[Int] = Some(25)
+
+  scala> addSafe1(Some(10), None)
+  res44: Option[Int] = None
+
+  scala> addSafe1(None, None)
+  res45: Option[Int] = None
+
+
+  scala> addSafe2(Some(10), Some(15))
+  res46: Option[Int] = Some(25)
+
+  scala> addSafe2(Some(10), None)
+  res47: Option[Int] = None
+
+  scala> addSafe2(None, None)
+  res48: Option[Int] = None
+
+
+#+END_SRC
+
 *** Identity Monad Implementation 
 
 #+BEGIN_SRC scala 
