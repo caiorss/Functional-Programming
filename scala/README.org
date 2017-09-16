@@ -6118,9 +6118,229 @@ flatMaps and maps method calls similar to Haskell's Maybe monad.
   res71: Identity[Int] = Identity(35)
 
 #+END_SRC
-*** Alternative Option implementation 
+*** Maybe/Option implementation 
+    :PROPERTIES:
+    :ID:       0ce71f62-789c-4b6d-9ce6-98e062f7f6d1
+    :END:
+
+This example shows an Option type monad and collection implementation.
+It was named Maybe in order to avoid conflict with Scala's built in
+Option type. 
+
+file: [[file:src/maybe-collection.scala][file:src/maybe-collection.scala]]
+
+#+BEGIN_SRC scala :tangle src/maybe-collection.scala 
+
+  // Sealed trait means that is not possible to add more
+  // implementation of this trait/interface out of this file.
+  // 
+  sealed trait Maybe[+A]{
+    def get(): A
+
+    // Haskell's forM_ - Apply a function that returns nothing to a
+    // collection. 
+    //
+    def foreach(a: A => Unit): Unit
+
+    // Haskell's fmap
+    //
+    def map[B](fn: A => B): Maybe[B]
+
+    // Haskell's (>>=) bind 
+    // 
+    def flatMap[B](fn: A => Maybe[B]): Maybe[B]
+
+    // Haskell's guard 
+    // 
+    def withFilter(fn: A => Boolean): Maybe[A]
+
+    def filter(fn: A => Boolean) = withFilter(fn)
+
+  }
+
+
+  // Equivalent to Haskell's Nothing or Scala's None.
+  //
+  //
+  case object Empty extends Maybe[Nothing]{
+    def get() = throw new RuntimeException("Error: Attemp to get data from Empty value")
+
+    def foreach(fn: Nothing => Unit) = ()
+
+    def map[B](fn: Nothing => B) = Empty
+
+    def flatMap[B](fn: Nothing => Maybe[B]) = Empty
+
+    def withFilter(fn: Nothing => Boolean) = Empty
+
+  }
+
+  // Similar to Haskell's Just or Scala's Some. 
+  //
+  //
+  case class  Just[+A](value: A) extends Maybe[A]{
+    def get() = value
+
+    def foreach(fn: A => Unit) = fn(value)
+
+    def map[B](fn: A => B) = Just(fn(value))
+
+    def flatMap[B](fn: A => Maybe[B]) = fn(value)
+
+    def withFilter(fn: A => Boolean): Maybe[A] = {
+      if(fn(value))
+        Just(value)
+      else
+        Empty
+    }
+  }
+
+  // Companion object
+  //
+  object Maybe{
+    def apply[A](value: A) = {
+      if (value != null)
+        Just(value)
+      else
+        Empty
+    }
+
+    def makeMaybeFn[A, B](fn: A => B) = (x: A) => {
+      apply(fn(x))
+    }
+
+    def mapM2[A, B, C](fn: (A, B) => C, ma: Maybe[A], mb: Maybe[B]) = {
+      for {
+        a <- ma
+        b <- mb 
+      } yield fn(a, b)
+    }
+
+  }
+
+
+  def addSafe(sa: Maybe[Int], sb: Maybe[Int]) = {
+    for {
+      a <- sa 
+      b <- sb 
+    } yield a + b 
+  }
+
+  def readNumber(prompt: String) = {
+    try  {
+      print(prompt)
+      val sc = new java.util.Scanner(System.in)
+      val n  = Just(sc.nextInt)
+      print("\n")
+      n
+    } catch {
+      case ex: java.util.InputMismatchException
+          => Empty
+    }
+  }
+
+  def parseInt(str: String): Maybe[Int] =  {
+    try Just(str.toInt)
+    catch {
+      case ex: java.lang.NumberFormatException
+          => Empty
+    }
+  }
+
+
+#+END_SRC
+
+Test: 
 
 #+BEGIN_SRC scala 
+  scala> :paste src/maybe-collection.scala
+  Pasting file src/maybe-collection.scala...
+  defined trait Maybe
+  defined object Empty
+  defined class Just
+  defined object Maybe
+  addSafe: (sa: Maybe[Int], sb: Maybe[Int])Maybe[Int]
+  readNumber: (prompt: String)Product with Serializable with Maybe[Int]
+  parseInt: (str: String)Maybe[Int]
+
+
+  //------- Test function apply ----------------
+  //
+  scala> Maybe(null) : Maybe[String] 
+  res5: Maybe[String] = Empty
+
+  scala> (Maybe(null) : Maybe[String]) foreach println
+
+  scala> Maybe("Hello")  foreach println
+  Hello
+
+  scala> 
+
+
+  //------ tet map, foreach, and get ------ // 
+
+  scala> val ma: Maybe[Int] = Empty
+  ma: Maybe[Int] = Empty
+
+  scala> val mb: Maybe[Int] = Just(100)
+  mb: Maybe[Int] = Just(100)
+
+
+  scala> for (x <- ma) println("x = " + x)
+
+  scala> for (x <- mb) println("x = " + x)
+  x = 100
+
+
+  scala> for (x <- ma) yield 5 * x
+  res15: Maybe[Int] = Empty
+
+  scala> for (x <- mb) yield 5 * x
+  res16: Maybe[Int] = Just(500)
+
+
+  scala> ma map (x => x * 5)
+  res18: Maybe[Int] = Empty
+
+  scala> mb map (x => x * 5)
+  res19: Maybe[Int] = Just(500)
+
+  //------- Test makeMaybeFn ---------- //
+
+  // This static method, that can be regarded as function, returns null
+  // which can unexpectedly crash the program. 
+  //
+  scala> System.getProperty("java.home")
+  res21: String = /home/archbox/opt/jdk1.8.0_144/jre
+
+  scala> System.getProperty("java.homex")
+  res22: String = null
+
+  scala> val getPropertySafe = Maybe.makeMaybeFn(System.getProperty)
+
+  scala> getPropertySafe("java.homex")
+  res23: Product with Serializable with Maybe[String] = Empty
+
+  scala> getPropertySafe("java.home")
+  res24: Product with Serializable with Maybe[String] = Just(/home/archbox/opt/jdk1.8.0_144/jre)
+
+  scala> getPropertySafe("java.home") foreach println
+  /home/archbox/opt/jdk1.8.0_144/jre
+
+  scala> getPropertySafe("java.homex") foreach println
+
+
+  //-------- Test function addSafe ---------
+
+  scala> addSafe(parseInt("200"), parseInt("300"))
+  res27: Maybe[Int] = Just(500)
+
+  scala> addSafe(parseInt("200"), parseInt("300x"))
+  res28: Maybe[Int] = Empty
+
+  scala> addSafe(parseInt("20s0"), parseInt("300x"))
+  res29: Maybe[Int] = Empty
+
 
 #+END_SRC
 *** References 
