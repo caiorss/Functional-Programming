@@ -109,7 +109,6 @@ Other Tools:
 
    - Intelij
 
-
 *** REPL - Scala Shell
 **** REPL Commands
 
@@ -10823,6 +10822,162 @@ $ ./out/jfreeChart1.sh
 
 
  - http://www.tutorialspoint.com/scala/
+** Java and Scala Libraries 
+*** Scala Libraries 
+
+Selection of third party Scala libraries. 
+
+ + Database
+
+   + [[http://slick.lightbend.com][Slick]]
+
+   + [[http://squeryl.org][Squerly]] - "A Scala ORM and DSL for talking with Databases with
+     minimum verbosity and maximum type safety". 
+
+ + Category Theory and Functional Programming
+
+   + [[https://typelevel.org/cats/][Cats]] - Provides abstractions for functional programming such as
+     type clases, monads, monoids, functor and so on. 
+
+   + [[https://github.com/scalaz/scalaz][Scalaz]] - Extension of core Scala library for functional
+     programming based on Haskell with many category theory
+     abstractions such as functor, monad, monoid and etc.
+
+ + Reactive Programming - (Event-driven programming)
+
+   + [[http://reactivex.io/rxscala/][RxScala]] - Reactive Extensions for Scala. Based on .NET
+
+   + [[https://github.com/lihaoyi/scala.rx][Rx.Scala]] - "An experimental library for Functional Reactive
+     Programming in Scala" 
+
+ + Actor Model
+
+   + [[http://doc.akka.io/docs/akka/2.0/scala/actors.html][Scala - Akka]] - Actor model library for Scala based on Erlan's Actor
+     model implementation.
+
+ + Testing
+
+   + [[http://etorreborre.github.io/specs2/][Spec2]] - "Software specification for Scala"
+
+   + [[http://www.scalacheck.org][ScalaCheck]] - Propery-based testing for Scala based on Haskell's
+     QuickCheck. 
+
+ + RPC  - Remote Procedure Call
+
+   + [[https://twitter.github.io/finagle/][Finagle]] - "Finagle is an extensible RPC system for the JVM, used
+     to construct high-concurrency servers. Finagle implements uniform
+     client and server APIs for several protocols, and is designed for
+     high performance and concurrency. Most of Finagle’s code is
+     protocol agnostic, simplifying the implementation of new
+     protocols."
+
+ + Web Framework - Libraries or Frameworks to build Web Sites, Web
+   applications or Web Servers. 
+
+   + [[https://www.playframework.com][Play Framework]]
+
+   + http://scalatra.org
+
+ + Math
+
+   + [[https://github.com/non/spire][Spire]] - "Powerful new number types and numeric abstractions for
+     Scala." - 
+
+
+See also:
+
+ + [[https://github.com/lauris/awesome-scala][Awesome Scala]] - "A community driven list of useful Scala libraries,
+   frameworks and software. This is not a catalog of all the
+   libraries, just a starting point for your explorations."
+*** Java Libraries
+
+Selection of useful Java third party libraries.
+
+ + Parsers 
+
+   + HTML Parser
+
+     + [[https://jsoup.org/][Jsoup]]
+
+   + Json parser and serialization
+
+     + [[https://github.com/google/gson][Google-Gson]]
+
+ + Http Client
+
+   + [[https://hc.apache.org/httpcomponents-client-ga][Apache HTTP Client]]
+
+ + Date and Time
+
+   - [[http://www.joda.org/joda-time/][Joda-Time]] - Facilities for date and time manipulation. It is
+     already incorporated in Java 8.
+
+ + Utilities 
+
+   + [[https://commons.apache.org/][Apache Commons]] - Enhancements over Java Collections.
+
+   + [[http://commons.apache.org/proper/commons-io/][Apache IO]] - Library to perform stream and file operations.
+
+   + Logging
+
+     + http://www.slf4j.org/
+
+     + http://logging.apache.org/log4j/2.x/
+
+   + Testing
+
+     + [[http://junit.org/junit5/][JUnit]] 
+
+ + Chart 
+
+   + [[http://www.jfree.org/jfreechart/][JfreeChart]] - Chart library to plot bar chart, line chart and so on. 
+
+ + Math 
+
+   + [[http://commons.apache.org/proper/commons-math/][Apache Math]] - "Commons Math is a library of lightweight,
+     self-contained mathematics and statistics components addressing
+     the most common problems not available in the Java programming
+     language or Commons Lang"
+
+   + [[http://math.nist.gov/javanumerics/jama/][JAMA]] - Java Matrix Package for linear algebra - 
+
+
+See also: 
+
+ + [[http://blog.takipi.com/the-top-100-java-libraries-in-2016-after-analyzing-47251-dependencies/][Top 100 Java Libraries]]
+
+ + [[http://www.fromdev.com/2014/10/most-widely-used-java-libraries.html][45+ Most Useful Java Libraries]]
+
+ + [[https://github.com/akullpp/awesome-java][Awesome Java]]
+*** Sites to find Libraries 
+
+  - https://search.maven.org/
+
+  - https://mvnrepository.com/ 
+
+  - Site for automated download of Java or Scala libraries.
+
+    - http://repo1.maven.org/
+
+    - Java Library - commons-io/commons-io/2.5 
+
+      - http://repo1.maven.org/maven2/commons-io/commons-io/
+
+      - http://repo1.maven.org/maven2/commons-io/commons-io/2.5/
+
+      - http://repo1.maven.org/maven2/commons-io/commons-io/2.5/commons-io-2.5.jar
+
+      - http://repo1.maven.org/maven2/commons-io/commons-io/2.5/commons-io-2.5.pom
+
+    - Scalaz
+
+      - http://repo1.maven.org/maven2/org/scalaz/scalaz-core_2.12/
+
+      - http://repo1.maven.org/maven2/org/scalaz/scalaz-core_2.12/maven-metadata.xml
+
+      - http://repo1.maven.org/maven2/org/scalaz/scalaz-core_2.12/7.2.9/scalaz-core_2.12-7.2.9.pom
+
+      - http://repo1.maven.org/maven2/org/scalaz/scalaz-core_2.12/7.2.9/scalaz-core_2.12-7.2.9.jar
 
 ** Community 
 
