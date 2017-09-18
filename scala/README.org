@@ -5447,6 +5447,780 @@ It can be refactored to more sef-contained code.
     } yield text
   }
 #+END_SRC
+** Exception Handling with try-catch
+*** Overview 
+
+An exception is an event that happens during the execution of a
+programs which disrupts the normal flow of execution or an unexpected
+runtime error that terminates the execution abnormally. Handling them
+is necessary to create robust programs resilient that can react to
+failures, invalid input, network error and so on.
+
+*Exception Hierarchy*
+
+ - Throwable
+
+   - _Error_ - System errors or fatal error thrown by JVM that ends the program
+     execution and should not be handled by the application.
+
+     - LinkageError
+
+     - VirtualMachineError
+
+     - AWTError
+
+     - _AssertionError_
+
+       + Cause: Assertion errors happens when the program assumptions
+         are wrong, for instance, ~assert (10 == 0, "The result should be 10")~
+
+     - ... ... ... ...
+
+   - _Exception_ - Errors that can be handled by the program.
+
+     - ClassNotFoundException
+
+     - SQLException 
+
+     - IOException
+
+       - FileNotFoundException
+
+       - MalformedURLException
+
+       - SocketException
+
+       - EOFException
+
+       - InterruptedIOException 
+
+     - _RuntimeException_
+
+       - ArtithmeticException 
+         + Case: Division by zero.
+
+       - _NullPointerException_
+         + Cause: Calling a method or accessing a field of a class
+           which the value is set to null.  
+
+       - IndexOutofBoundsException 
+         + Cause: Accessing out-of-bounds array elements.
+
+       - IllegalArgumentException
+         + Cause: Sending illegal argument to a method like sending a
+           negative number to the method .runWithDelay(time: Int).
+
+       - IllegalStateException
+
+       - NumberFormatException
+         + Cause: Attempt to convert a bad-formatted string to some
+           value. Example: =Integer.parseInt("xyz")=
+
+       - ClassCastException
+         + Cause: Invalid casting.
+
+       - ... ... ... ... ... 
+
+
+*Exception Methods:*
+
+ - .getMessage() - Get exception Message.
+
+ - .getStackTrace() 
+
+ - .getStackTraceString()
+
+ - .printStackTrace()
+
+*** Throwing Exceptions 
+
+#+BEGIN_SRC scala 
+  scala> throw new IllegalArgumentException("Error: Amount to withdraw cannot excede balance")
+  java.lang.IllegalArgumentException: Error: Amount to withdraw cannot excede balance
+    ... 29 elided
+
+  scala> throw new Exception("Error: Invalid user input. Fatal kernel failure.")
+  java.lang.Exception: Error: Invalid user input. Fatal kernel failure.
+    ... 29 elided
+
+  scala> throw new java.lang.ArrayIndexOutOfBoundsException()
+  java.lang.ArrayIndexOutOfBoundsException
+    ... 29 elided
+
+  scala> throw new NullPointerException()
+  java.lang.NullPointerException
+    ... 29 elided
+
+  scala> throw new AssertionError("The result should be 10")
+  java.lang.AssertionError: The result should be 10
+    ... 29 elided
+
+  scala> throw new Error("Fatal failure. Aborting exectution")
+  java.lang.Error: Fatal failure. Aborting exectution
+    ... 29 elided
+
+
+#+END_SRC
+
+*** Catching exceptions without finally block.
+
+Example 1
+
+#+BEGIN_SRC scala  
+  def testException1(block: => Unit) = { 
+      try block 
+      catch {  
+        case ex: IllegalArgumentException         => println("Error: Illegal exception") 
+        case ex: IllegalStateException            => println("Error: Illegal state exception") 
+        case ex: java.io.FileNotFoundException    => println("Error: File not found exception ")
+          
+        case ex: Exception                        => println("Error: Unknown exception")
+      } 
+  } 
+
+
+  scala> testException1{ println("It is not gonna fail.") }
+  It is not gonna fail.
+
+  scala> testException1{ new java.io.FileReader("/etc/somefile") }
+  Error: File not found exception 
+
+  scala> testException1{ assert(10 == 0) }
+  java.lang.AssertionError: assertion failed
+    at scala.Predef$.assert(Predef.scala:204)
+    at .$anonfun$res41$1(<console>:13)
+    at .testException1(<console>:12)
+    ... 29 elided
+
+
+#+END_SRC
+
+Example 2: Catching exceptions with try block.
+
+#+BEGIN_SRC scala  
+
+  def showException(label: String, ex: Exception) = {
+    println(label)
+    println(ex)
+    println(ex.printStackTrace())
+  }
+
+  def testException2(block: => Unit) = {
+      try block 
+      catch {  
+
+        case ex: java.io.FileNotFoundException
+            => showException("Error: File not found exception", ex)
+
+        case ex: java.io.IOException
+            => showException("Error: IO Exception", ex)
+
+        case ex: NullPointerException
+            => showException("Error: Null exception", ex)
+
+        case ex: IllegalArgumentException
+            => showException("Error: Illegal Argument exception.", ex)
+
+        case ex: IllegalStateException
+            => showException("Error: Illegal state exception", ex)
+
+        case ex: Exception
+            => showException("Error: Unknown exception", ex) 
+
+      } finally {
+        println("After 'finally' statement this piece of code always runs.")
+      }
+  } 
+
+  scala> testException2{ println("This code will not throw an exception") }
+  This code will not throw an exception
+  After 'finally' statement this piece of code always runs.
+
+  scala>  testException2{ println(10/ 0) }
+  Error: Unknown exception
+  java.lang.ArithmeticException: / by zero
+  java.lang.ArithmeticException: / by zero
+      at $line86.$read$$iw$$iw$.$anonfun$res30$1(<console>:13)
+      at $line85.$read$$iw$$iw$.testException2(<pastie>:20)
+      at $line86.$read$$iw$$iw$.<init>(<console>:13)
+      at $line86.$read$$iw$$iw$.<clinit>(<console>)
+      at $line86.$eval$.$print$lzycompute(<console>:7)
+      at $line86.$eval$.$print(<console>:6)
+
+  ... ...
+  ()
+  After 'finally' statement this piece of code always runs.
+
+
+  scala> testException2{ val x: String = null ; println(x.length) }
+  Error: Null exception
+  java.lang.NullPointerException
+  java.lang.NullPointerException
+      at $line87.$read$$iw$$iw$.$anonfun$res31$1(<console>:14)
+      at $line85.$read$$iw$$iw$.testException2(<pastie>:20)
+        ... ... ... ...
+  ()
+  After 'finally' statement this piece of code always runs.
+
+
+  scala> testException2{ new java.io.FileReader("/etc/fstabx") }
+  Error: File not found exception
+  java.io.FileNotFoundException: /etc/fstabx (No such file or directory)
+  java.io.FileNotFoundException: /etc/fstabx (No such file or directory)
+      at java.io.FileInputStream.open0(Native Method)
+      at java.io.FileInputStream.open(FileInputStream.java:195)
+      at java.io.FileInputStream.<init>(FileInputStream.java:138)
+        ... ... ... ...
+  ()
+  After 'finally' statement this piece of code always runs.
+
+
+  // Exception not handled.
+  //
+  scala> testException2{ assert(10 == 5, "Result should be 10") }
+  After 'finally' statement this piece of code always runs.
+  java.lang.AssertionError: assertion failed: Result should be 10
+    at scala.Predef$.assert(Predef.scala:219)
+    at .$anonfun$res32$1(<console>:13)
+    at .testException2(<pastie>:20)
+    ... 29 elided
+
+#+END_SRC
+
+Example 3: Catching exception and releasing resources.
+
+#+BEGIN_SRC scala 
+
+  def displayFile(file: String) = {
+    var fd: java.io.FileReader = null
+    try {
+      fd = new java.io.FileReader(file)
+      val in = new java.util.Scanner(fd)
+      while(in.hasNextLine()){
+        println(in.nextLine())
+      }
+    } catch {
+      case ex: java.io.FileNotFoundException => println("Error: File not found: ")
+    } finally {
+      if (fd != null) fd.close()
+    }
+  }
+
+  scala> displayFile("/etc/lsb-release")
+  DISTRIB_ID=ManjaroLinux
+  DISTRIB_RELEASE=17.0.2
+  DISTRIB_CODENAME=Gellivara
+  DISTRIB_DESCRIPTION="Manjaro Linux"
+
+  scala> displayFile("/etc/lsb-releaseq")
+  Error: File not found: 
+
+
+
+#+END_SRC
+
+*** References
+
+ - *Chapter 14 - Exception Handling and Text Files* -
+   <http://grail.cba.csuohio.edu/~matos/notes/cis-265/lecture-notes/03-13slide-Exceptions.pdf>
+
+
+ - *CSC 102 Lecture Notes Week 5 Shallowness and Deepness Exceptions
+   File I/O* <http://users.csc.calpoly.edu/~gfisher/classes/102/lectures/5.html>
+
+
+ - *Java Programming - Exception Handling & Assertion* -
+   <https://www3.ntu.edu.sg/home/ehchua/programming/java/J5a_ExceptionAssert.html>
+** Exception Handling with Try (scala.utils.Try)
+*** Overview 
+
+Scala provides [[http://www.scala-lang.org/files/archive/api/current/scala/util/Try.html][scala.util.Try]] which is similar to Option type and
+allows failures to be dealt in higher level way than try-catch
+blocks. 
+
+The benefits of using Try type insted of using try-catch blocks are
+explicit faluire in the type system lots of useful combinators to
+handle failures such as map, flatMap, foreach and also
+for-comprehensions.
+
+The Try algebraic data type has two type constructors, Success which
+holds a result or successful computation and Failure which holds a
+failure or exception, which is a subtype of Trowable.
+
+#+BEGIN_SRC scala 
+sealed abstract class Try[+T]                extends AnyRef
+case class Success[+T](value: T)             extends Try[T]
+case class Failure[+T](exception: Throwable) extends Try[T] 
+#+END_SRC
+
+*Documentation*
+
+ - [[http://www.scala-lang.org/files/archive/api/current/scala/util/Try.html][scala.util.Try]] 
+
+ - [[http://www.scala-lang.org/files/archive/api/current/scala/util/Success.html][scala.util.Success]]
+
+ - [[http://www.scala-lang.org/files/archive/api/current/scala/util/Failure.html][scala.util.Failure]] 
+
+*** Examples
+**** Example 1: basic operations. 
+
+#+BEGIN_SRC scala 
+  import scala.util.{Try, Success, Failure}
+
+  cala> val ma = Try{ 10 / 2}
+  ma: scala.util.Try[Int] = Success(5)
+
+  scala> val mb = Try{ 10 / 0}
+  mb: scala.util.Try[Int] = Failure(java.lang.ArithmeticException: / by zero)
+
+  //---- Map ------------
+
+  scala> ma map { x => x + 10 }
+  res2: scala.util.Try[Int] = Success(15)
+
+  scala> mb map { x => x + 10 }
+  res3: scala.util.Try[Int] = Failure(java.lang.ArithmeticException: / by zero)
+
+  //----- Foreach --------
+
+
+  scala> ma foreach {res => println("Result = " + res) }
+  Result = 5
+
+  scala> mb foreach {res => println("Result = " + res) }
+
+  //------ Check if it is success ---------- //
+
+  scala> ma.isSuccess
+  res16: Boolean = true
+
+  scala> mb.isSuccess
+  res17: Boolean = false
+
+
+  //------ Check if it is failure ---------- //
+
+  scala> ma.isFailure
+  res10: Boolean = false
+
+  scala> mb.isFailure
+  res11: Boolean = true
+
+
+  //-------- Turn result into option type ------ //
+
+  scala> ma.toOption
+  res18: Option[Int] = Some(5)
+
+  scala> mb.toOption
+  res19: Option[Int] = None
+
+
+  //------ Get the result or failure -----------//
+
+  scala> ma.get
+  res12: Int = 5
+
+  scala> mb.get
+  java.lang.ArithmeticException: / by zero
+    at .$anonfun$mb$1(<console>:12)
+    at scala.runtime.java8.JFunction0$mcI$sp.apply(JFunction0$mcI$sp.java:12)
+    at scala.util.Try$.apply(Try.scala:209)
+    ... 29 elided
+
+
+  //----- Handling Result with pattern matching -------//
+
+  ma match {
+    case Success(a)
+        => println("Successful result " + a)
+    case Failure(e)
+        => {
+          println("Failure happend")
+          println(e)
+        }
+  }
+
+
+  scala> ma match {
+       |   case Success(a)
+       |       => println("Successful result " + a)
+       |   case Failure(e)
+       |       => {
+       |         println("Failure happend")
+       |         println(e)
+       |       }
+       | }
+  Successful result 5
+
+
+  mb match {
+    case Success(a)
+        => println("Successful result " + a)
+    case Failure(e)
+        => {
+          println("Failure happend")
+          println(e)
+        }
+  }
+
+  scala> mb match {
+       |   case Success(a)
+       |       => println("Successful result " + a)
+       |   case Failure(e)
+       |       => {
+       |         println("Failure happend")
+       |         println(e)
+       |       }
+       | }
+  Failure happend
+  java.lang.ArithmeticException: / by zero
+
+#+END_SRC
+
+**** Example 2: for-comprehensions.
+
+#+BEGIN_SRC scala 
+  import scala.util.{Try, Success, Failure}
+
+  def parseAndDivide1(strA: String, strB: String) = {
+    for {
+      a <- Try(strA.toInt)
+      b <- Try(strB.toInt)
+      c <- Try (a / b)
+    } yield c 
+  }
+
+  scala> def parseAndDivide1(strA: String, strB: String) = {
+       |   for {
+       |     a <- Try(strA.toInt)
+       |     b <- Try(strB.toInt)
+       |     c <- Try (a / b)
+       |   } yield c 
+       | }
+  parseAndDivide1: (strA: String, strB: String)scala.util.Try[Int]
+
+  scala> parseAndDivide1("100", "20")
+  res20: scala.util.Try[Int] = Success(5)
+
+  scala> parseAndDivide1("100", "20x")
+  res21: scala.util.Try[Int] = Failure(java.lang.NumberFormatException: For input string: "20x")
+
+  scala> parseAndDivide1("10s0", "0")
+  res22: scala.util.Try[Int] = Failure(java.lang.NumberFormatException: For input string: "10s0")
+
+  scala> parseAndDivide1("100", "0")
+  res23: scala.util.Try[Int] = Failure(java.lang.ArithmeticException: / by zero)
+
+
+
+  scala> parseAndDivide1("100", "20") foreach { r => println("Result is equal to " + r)}
+  Result is equal to 5
+
+  scala> parseAndDivide1("100", "20a") foreach { r => println("Result is equal to " + r)}
+
+  scala> parseAndDivide1("100", "0") foreach { r => println("Result is equal to " + r)}
+
+
+  scala> parseAndDivide1("100", "20") map { x => x * 5 }
+  res27: scala.util.Try[Int] = Success(25)
+
+  scala> parseAndDivide1("100", "0") map { x => x * 5 }
+  res28: scala.util.Try[Int] = Failure(java.lang.ArithmeticException: / by zero)
+
+  scala> parseAndDivide1("4", "a") map { x => x * 5 }
+  res30: scala.util.Try[Int] = Failure(java.lang.NumberFormatException: For input string: "a")
+
+#+END_SRC
+
+**** Example 3: Pattern matching result.
+
+#+BEGIN_SRC scala 
+
+def parseAndDivide2(strA: String, strB: String) = {
+  val res = for {
+    a <- Try(strA.toInt)
+    b <- Try(strB.toInt)
+    c <- Try (a / b)
+  } yield c
+
+  res match {
+    case Success(a) => {
+      println("Successful result = " + a)
+    }
+    case Failure(e) => {
+      println("Failure, try again! Game over!")
+      println(e)
+    }
+  }
+}
+
+
+scala> parseAndDivide2("500", "10")
+Successful result = 50
+
+scala> parseAndDivide2("50d0", "10")
+Failure, try again! Game over!
+java.lang.NumberFormatException: For input string: "50d0"
+
+scala> parseAndDivide2("500", "0")
+Failure, try again! Game over!
+java.lang.ArithmeticException: / by zero
+
+#+END_SRC
+
+**** Example 4: Pattern matching specific exceptions.
+
+#+BEGIN_SRC scala 
+  def parseAndDivide3(strA: String, strB: String) = {
+    val res = for {
+      a <- Try(strA.toInt)
+      b <- Try(strB.toInt)
+      c <- Try (a / b)
+    } yield c
+
+    res match {
+      case Success(a) => {
+        println("Successful result = " + a)
+      }
+      case Failure(ex: java.lang.ArithmeticException) => {
+        println("Failure was arithmetic exception")
+      }
+      case Failure(ex: java.lang.NumberFormatException) => {
+        println("Failure was user bad input")
+      }
+      case Failure(e) => {
+        println("I don't know how to deal with this kind of failure")
+        println("Failure was \n" + e)
+      }
+    }
+  }
+
+
+  scala> parseAndDivide3("200", "50")
+  Successful result = 4
+
+  scala> parseAndDivide3("200a", "50")
+  Failure was user bad input
+
+  scala> parseAndDivide3("200", "50x")
+  Failure was user bad input
+
+  scala> parseAndDivide3("200", "0")
+  Failure was arithmetic exception
+
+
+
+  def parseAndDivide4(strA: String, strB: String) = {
+    val res = for {
+      a <- Try(strA.toInt)
+      b <- Try(strB.toInt)
+      c <- Try (a / b)
+    } yield c
+
+    res match {
+      case Success(a) => {
+        println("Successful result = " + a)
+      }
+      case Failure(e)
+          => e match {
+            case ex: java.lang.ArithmeticException
+                => {
+                  println("Failure cause was arithmetic exception.")
+                  println(e)
+                  e.printStackTrace()
+                }
+
+            case ex: java.lang.NumberFormatException
+                => {
+                  println("Failure was user bad input.")
+                  println(ex.getMessage())
+                }
+
+            case e
+                => {
+                  println("Error: I don't know how to deal with this failure")
+                  println(e)
+                }
+      }
+    }
+  }
+
+
+
+  scala> parseAndDivide4("200", "20")
+  Successful result = 10
+
+  scala> parseAndDivide4("200a", "20")
+  Failure was user bad input.
+  For input string: "200a"
+
+  scala> parseAndDivide4("200", "20x")
+  Failure was user bad input.
+  For input string: "20x"
+
+  scala> parseAndDivide4("200", "0")
+  Failure cause was arithmetic exception.
+  java.lang.ArithmeticException: / by zero
+  java.lang.ArithmeticException: / by zero
+      at $line91.$read$$iw$$iw$$iw$$iw$.$anonfun$parseAndDivide4$5(<pastie>:20)
+      at scala.runtime.java8.JFunction0$mcI$sp.apply(JFunction0$mcI$sp.java:12)
+      at scala.util.Try$.apply(Try.scala:209)
+      at $line91.$read$$iw$$iw$$iw$$iw$.$anonfun$parseAndDivide4$4(<pastie>:20)
+      at $line91.$read$$iw$$iw$$iw$$iw$.$anonfun$parseAndDivide4$4$adapted(<pastie>:19)
+      at scala.util.Success.flatMap(Try.scala:247)
+
+   .... ... ... ... .... ... ... ... 
+
+#+END_SRC
+
+Possibilities: 
+
+#+BEGIN_SRC scala 
+  case e
+      => {
+        println("Error: I don't know how to deal with this failure")
+
+        // Print exception
+        println(e)
+
+        // Print exception stack trace 
+        e.printStackTrace()
+
+        // Print exception message
+        println(e.getMessage())
+
+        // Throw exception again
+        throw e 
+      }
+#+END_SRC
+
+**** Example 5: Try with http request 
+
+#+BEGIN_SRC scala 
+  import scala.util.{Try, Success, Failure}
+
+  /** Read string from byte input source InputStream and its sub classes. 
+
+     Note: This function doesn't close the input stream. It is supposed
+     to be done by the caller.
+
+     @param input - Byte input source 
+     @param size  - Buffer size (default 1024 bytes or 1kb)
+     @return        String.
+    ,*/
+  def readInputToString(input: java.io.InputStream, size: Int = 1024): String = {
+    val out = new java.io.ByteArrayOutputStream()
+    // char[] buffer = new char[bufferSize]
+    val buffer = new Array[Byte](size)
+    // Number of bytes read 
+    var rd = 0
+    while( input.available() > 0){
+      rd = input.read(buffer)
+      out.write(buffer, 0, rd)
+    }
+    out.toString("UTF-8")
+  }
+
+
+  def httpGetRequest(url: String): Try[String] = {
+    import java.net.{URL, HttpURLConnection}
+    for {
+      urlo <- Try{new URL(url)}
+      conn <- Try{
+        val c = urlo
+          .openConnection()
+          .asInstanceOf[java.net.HttpURLConnection]
+
+        c.setRequestMethod("GET")
+        c
+      }
+      is  <- Try{conn.getInputStream()}
+      out <- Try{readInputToString(is)}
+      _   <- Try{is.close()}
+    } yield out 
+  }
+
+
+  def showResult[A](result: Try[A]): Unit = result match {
+    case Success(x) => println(x)
+    case Failure(e) => {
+      println("Failure")
+      println(e)
+    }
+  }
+
+  scala> httpGetRequest("http://www.httpbin.org/get")
+  res63: scala.util.Try[String] =
+  Success({
+    "args": {},
+    "headers": {
+      "Accept": "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2",
+      "Connection": "close",
+      "Host": "www.httpbin.org",
+      "User-Agent": "Java/1.8.0_144"
+    },
+    "origin": "176.18.51.232",
+    "url": "http://www.httpbin.org/get"
+  }
+  )
+
+  scala> httpGetRequest("https://www.httpbin.org/get")
+  res66: scala.util.Try[String] =
+  Success({
+    "args": {},
+    "headers": {
+      "Accept": "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2",
+      "Connection": "close",
+      "Host": "www.httpbin.org",
+      "User-Agent": "Java/1.8.0_144"
+    },
+    "origin": "176.18.51.232",
+    "url": "https://www.httpbin.org/get"
+  }
+  )
+
+  scala> httpGetRequest("http://www.httpbin.org/getx")
+  res64: scala.util.Try[String] = Failure(java.io.FileNotFoundException: http://www.httpbin.org/getx)
+
+  scala> httpGetRequest("httpa://www.httpbin.org/get")
+  res65: scala.util.Try[String] = Failure(java.net.MalformedURLException: unknown protocol: httpa)
+
+  scala> httpGetRequest("http://www.fail.this.url")
+  res67: scala.util.Try[String] = Failure(java.net.UnknownHostException: www.fail.this.url)
+
+  // User disconnects in order to simulate a connection failure 
+  //
+  scala> httpGetRequest("http://www.httpbin.org/get")
+  res69: scala.util.Try[String] = Failure(java.net.UnknownHostException: www.httpbin.org)
+
+
+  scala>  showResult(httpGetRequest("httpx://www.httpbin.org"))
+  Failure
+  java.net.MalformedURLException: unknown protocol: httpx
+
+  scala>  showResult(httpGetRequest("http://www.httpErrorbin.org"))
+  Failure
+  java.net.UnknownHostException: www.httpErrorbin.org
+
+  scala>  showResult(httpGetRequest("http://www.httpbin.org/get"))
+  {
+    "args": {}, 
+    "headers": {
+      "Accept": "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2", 
+      "Connection": "close", 
+      "Host": "www.httpbin.org", 
+      "User-Agent": "Java/1.8.0_144"
+    }, 
+    "origin": "176.18.51.232", 
+    "url": "http://www.httpbin.org/get"
+  }
+
+
+
+
+#+END_SRC
+
 
 ** For comprehensions
 *** Scala For-comprehensions and Haskell do-notation
@@ -6346,290 +7120,6 @@ Test:
 
  - [[[https://docs.scala-lang.org/tutorials/FAQ/yield.html][H|SD]]] - *How does yield work? | Scala Documentation*. Available at
    <https://docs.scala-lang.org/tutorials/FAQ/yield.html>
-** Exception Handling 
-*** Overview 
-
-An exception is an event that happens during the execution of a
-programs which disrupts the normal flow of execution or an unexpected
-runtime error that terminates the execution abnormally. Handling them
-is necessary to create robust programs resilient that can react to
-failures, invalid input, network error and so on.
-
-*Exception Hierarchy*
-
- - Throwable
-
-   - _Error_ - System errors or fatal error thrown by JVM that ends the program
-     execution and should not be handled by the application.
-
-     - LinkageError
-
-     - VirtualMachineError
-
-     - AWTError
-
-     - _AssertionError_
-
-       + Cause: Assertion errors happens when the program assumptions
-         are wrong, for instance, ~assert (10 == 0, "The result should be 10")~
-
-     - ... ... ... ...
-
-   - _Exception_ - Errors that can be handled by the program.
-
-     - ClassNotFoundException
-
-     - SQLException 
-
-     - IOException
-
-       - FileNotFoundException
-
-       - MalformedURLException
-
-       - SocketException
-
-       - EOFException
-
-       - InterruptedIOException 
-
-     - _RuntimeException_
-
-       - ArtithmeticException 
-         + Case: Division by zero.
-
-       - _NullPointerException_
-         + Cause: Calling a method or accessing a field of a class
-           which the value is set to null.  
-
-       - IndexOutofBoundsException 
-         + Cause: Accessing out-of-bounds array elements.
-
-       - IllegalArgumentException
-         + Cause: Sending illegal argument to a method like sending a
-           negative number to the method .runWithDelay(time: Int).
-
-       - IllegalStateException
-
-       - NumberFormatException
-         + Cause: Attempt to convert a bad-formatted string to some
-           value. Example: =Integer.parseInt("xyz")=
-
-       - ClassCastException
-         + Cause: Invalid casting.
-
-       - ... ... ... ... ... 
-
-
-*Exception Methods:*
-
- - .getMessage() - Get exception Message.
-
- - .getStackTrace() 
-
- - .getStackTraceString()
-
- - .printStackTrace()
-
-*** Throwing Exceptions 
-
-#+BEGIN_SRC scala 
-  scala> throw new IllegalArgumentException("Error: Amount to withdraw cannot excede balance")
-  java.lang.IllegalArgumentException: Error: Amount to withdraw cannot excede balance
-    ... 29 elided
-
-  scala> throw new Exception("Error: Invalid user input. Fatal kernel failure.")
-  java.lang.Exception: Error: Invalid user input. Fatal kernel failure.
-    ... 29 elided
-
-  scala> throw new java.lang.ArrayIndexOutOfBoundsException()
-  java.lang.ArrayIndexOutOfBoundsException
-    ... 29 elided
-
-  scala> throw new NullPointerException()
-  java.lang.NullPointerException
-    ... 29 elided
-
-  scala> throw new AssertionError("The result should be 10")
-  java.lang.AssertionError: The result should be 10
-    ... 29 elided
-
-  scala> throw new Error("Fatal failure. Aborting exectution")
-  java.lang.Error: Fatal failure. Aborting exectution
-    ... 29 elided
-
-
-#+END_SRC
-
-*** Catching exceptions without finally block.
-
-Example 1
-
-#+BEGIN_SRC scala  
-  def testException1(block: => Unit) = { 
-      try block 
-      catch {  
-        case ex: IllegalArgumentException         => println("Error: Illegal exception") 
-        case ex: IllegalStateException            => println("Error: Illegal state exception") 
-        case ex: java.io.FileNotFoundException    => println("Error: File not found exception ")
-          
-        case ex: Exception                        => println("Error: Unknown exception")
-      } 
-  } 
-
-
-  scala> testException1{ println("It is not gonna fail.") }
-  It is not gonna fail.
-
-  scala> testException1{ new java.io.FileReader("/etc/somefile") }
-  Error: File not found exception 
-
-  scala> testException1{ assert(10 == 0) }
-  java.lang.AssertionError: assertion failed
-    at scala.Predef$.assert(Predef.scala:204)
-    at .$anonfun$res41$1(<console>:13)
-    at .testException1(<console>:12)
-    ... 29 elided
-
-
-#+END_SRC
-
-Example 2: Catching exceptions with try block.
-
-#+BEGIN_SRC scala  
-
-  def showException(label: String, ex: Exception) = {
-    println(label)
-    println(ex)
-    println(ex.printStackTrace())
-  }
-
-  def testException2(block: => Unit) = {
-      try block 
-      catch {  
-
-        case ex: java.io.FileNotFoundException
-            => showException("Error: File not found exception", ex)
-
-        case ex: java.io.IOException
-            => showException("Error: IO Exception", ex)
-
-        case ex: NullPointerException
-            => showException("Error: Null exception", ex)
-
-        case ex: IllegalArgumentException
-            => showException("Error: Illegal Argument exception.", ex)
-
-        case ex: IllegalStateException
-            => showException("Error: Illegal state exception", ex)
-
-        case ex: Exception
-            => showException("Error: Unknown exception", ex) 
-
-      } finally {
-        println("After 'finally' statement this piece of code always runs.")
-      }
-  } 
-
-  scala> testException2{ println("This code will not throw an exception") }
-  This code will not throw an exception
-  After 'finally' statement this piece of code always runs.
-
-  scala>  testException2{ println(10/ 0) }
-  Error: Unknown exception
-  java.lang.ArithmeticException: / by zero
-  java.lang.ArithmeticException: / by zero
-      at $line86.$read$$iw$$iw$.$anonfun$res30$1(<console>:13)
-      at $line85.$read$$iw$$iw$.testException2(<pastie>:20)
-      at $line86.$read$$iw$$iw$.<init>(<console>:13)
-      at $line86.$read$$iw$$iw$.<clinit>(<console>)
-      at $line86.$eval$.$print$lzycompute(<console>:7)
-      at $line86.$eval$.$print(<console>:6)
-
-  ... ...
-  ()
-  After 'finally' statement this piece of code always runs.
-
-
-  scala> testException2{ val x: String = null ; println(x.length) }
-  Error: Null exception
-  java.lang.NullPointerException
-  java.lang.NullPointerException
-      at $line87.$read$$iw$$iw$.$anonfun$res31$1(<console>:14)
-      at $line85.$read$$iw$$iw$.testException2(<pastie>:20)
-        ... ... ... ...
-  ()
-  After 'finally' statement this piece of code always runs.
-
-
-  scala> testException2{ new java.io.FileReader("/etc/fstabx") }
-  Error: File not found exception
-  java.io.FileNotFoundException: /etc/fstabx (No such file or directory)
-  java.io.FileNotFoundException: /etc/fstabx (No such file or directory)
-      at java.io.FileInputStream.open0(Native Method)
-      at java.io.FileInputStream.open(FileInputStream.java:195)
-      at java.io.FileInputStream.<init>(FileInputStream.java:138)
-        ... ... ... ...
-  ()
-  After 'finally' statement this piece of code always runs.
-
-
-  // Exception not handled.
-  //
-  scala> testException2{ assert(10 == 5, "Result should be 10") }
-  After 'finally' statement this piece of code always runs.
-  java.lang.AssertionError: assertion failed: Result should be 10
-    at scala.Predef$.assert(Predef.scala:219)
-    at .$anonfun$res32$1(<console>:13)
-    at .testException2(<pastie>:20)
-    ... 29 elided
-
-#+END_SRC
-
-Example 3: Catching exception and releasing resources.
-
-#+BEGIN_SRC scala 
-
-  def displayFile(file: String) = {
-    var fd: java.io.FileReader = null
-    try {
-      fd = new java.io.FileReader(file)
-      val in = new java.util.Scanner(fd)
-      while(in.hasNextLine()){
-        println(in.nextLine())
-      }
-    } catch {
-      case ex: java.io.FileNotFoundException => println("Error: File not found: ")
-    } finally {
-      if (fd != null) fd.close()
-    }
-  }
-
-  scala> displayFile("/etc/lsb-release")
-  DISTRIB_ID=ManjaroLinux
-  DISTRIB_RELEASE=17.0.2
-  DISTRIB_CODENAME=Gellivara
-  DISTRIB_DESCRIPTION="Manjaro Linux"
-
-  scala> displayFile("/etc/lsb-releaseq")
-  Error: File not found: 
-
-
-
-#+END_SRC
-
-*** References
-
- - *Chapter 14 - Exception Handling and Text Files* -
-   <http://grail.cba.csuohio.edu/~matos/notes/cis-265/lecture-notes/03-13slide-Exceptions.pdf>
-
-
- - *CSC 102 Lecture Notes Week 5 Shallowness and Deepness Exceptions
-   File I/O* <http://users.csc.calpoly.edu/~gfisher/classes/102/lectures/5.html>
-
-
- - *Java Programming - Exception Handling & Assertion* -
-   <https://www3.ntu.edu.sg/home/ehchua/programming/java/J5a_ExceptionAssert.html>
 
 ** OOP - Object Oriented Programming 
 *** Everything is an object 
