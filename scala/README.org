@@ -6221,7 +6221,6 @@ Possibilities:
 
 #+END_SRC
 
-
 ** For comprehensions
 *** Scala For-comprehensions and Haskell do-notation
 **** For-loop 
@@ -7116,6 +7115,269 @@ Test:
 
 
 #+END_SRC
+*** IO Monad Implementation 
+    :PROPERTIES:
+    :ID:       55ca2cd1-e1db-404e-860e-502a894925a1
+    :END:
+ 
+File: [[file:src/iomonad.scala][file:src/iomonad.scala]]
+
+#+BEGIN_SRC scala :tangle src/iomonad.scala 
+  class IO[A](action: => A){
+
+    import scala.util.{Try, Success, Failure}
+
+    def run() = action
+
+    def map[B](fn: A => B): IO[B] = {
+      new IO(fn(action))
+    }
+
+    def flatMap[B](fn: A => IO[B]): IO[B] = {
+      new IO(fn(action).run())
+    }
+
+    // Retry until successful 
+    def retry() = {
+      def aux(): A = {
+        Try{action} match {
+          case Success(a)
+              => a
+          case _
+              => aux()          
+        }
+      }
+      new IO(aux())
+    }
+
+
+    def forever() = {
+      def aux(){
+        this.run()
+        aux()
+      }
+      new IO(aux())
+    }
+
+    def doTimes(n: Int) = {
+      val io = this 
+      new IO(for (i <- 1 to n) this.run())
+    }
+
+  } // ---- End of class IO ----- // 
+
+
+  object IO{
+    def apply[A](action: => A) = new IO(action)
+
+    val readLine   = new IO(scala.io.StdIn.readLine())
+    val readDouble = new IO(scala.io.StdIn.readDouble())
+    val readInt    = new IO(scala.io.StdIn.readInt())
+
+    def printn[A](a: A) = new IO(Predef.println(a))
+    def print[A](a: A)  = new IO(Predef.print(a))
+
+
+    def prompt(msg: String): IO[String] = for {
+      _    <- print(msg)
+      line <- readLine   
+    } yield line 
+  }
+
+
+  def promptParse[A](msg: String, fn: String => A): IO[A] = 
+    for {
+      _    <- IO.print(msg)
+      line <- IO.readLine
+      _    <- IO.printn("")
+    } yield fn(line)
+
+
+  val getNumAndSum: IO[Int] =
+    for {
+      x <- promptParse("Enter x: ", _.toInt).retry
+      y <- promptParse("Enter y: ", _.toInt).retry
+    } yield x + y
+
+
+  val main =
+    for {
+      _ <- IO.printn("\nTesting IO action getNumAndSum")
+      x <- getNumAndSum
+      _ <- IO.print("The result is = " + x)
+    } yield ()
+
+
+  // Uncomment the line below to run the program.
+  main.forever().run()
+
+#+END_SRC
+
+Running: 
+
+#+BEGIN_SRC sh 
+  $ scala -save  iomonad.scala 
+
+  Testing IO action getNumAndSum
+  Enter x: 200
+  Enter y: sadsa
+  Enter y: 300
+  The result is = 500
+  Testing IO action getNumAndSum
+  Enter x: 500
+  Enter y: 200
+  The result is = 700
+  Testing IO action getNumAndSum
+  Enter x: sadsa
+  Enter x: xhss
+  Enter x: 
+  Enter x:   
+  Enter x: 89
+  Enter y: 34
+  The result is = 123
+  Testing IO action getNumAndSum
+  Enter x: 100
+  Enter y: 200
+  The result is = 300  # Enter Ctrl + C to end the program 
+   
+#+END_SRC
+
+Experiment in the REPL: 
+
+ - This step requires the last line of the file to commented.
+
+#+BEGIN_SRC scala 
+  scala> :paste iomonad.scala 
+  Pasting file iomonad.scala...
+  defined class IO
+  defined object IO
+  promptParse: [A](msg: String, fn: String => A)IO[A]
+  getNumAndSum: IO[Int] = IO@388623ad
+  main: IO[Unit] = IO@91f565d
+
+
+  scala> IO.printn("Testing IO monad")
+  res1: IO[Unit] = IO@3434a4f0
+
+  scala> IO.printn("Testing IO monad") doTimes(5)
+  res2: IO[Unit] = IO@53ea380b
+
+  scala> IO.printn("Testing IO monad") doTimes(5) run()
+  Testing IO monad
+  Testing IO monad
+  Testing IO monad
+  Testing IO monad
+  Testing IO monad
+
+
+  scala> val action = promptParse("Enter a valid double: ", _.toDouble)
+  action: IO[Double] = IO@2336cd91
+
+  // User types 12345
+  //-------------------
+  scala> action.run()
+  Enter a valid double: res10: Double = 12345.0
+
+  // User types "error" 
+  //-----------------
+  scala> action.run()
+  Enter a valid double: java.lang.NumberFormatException: For input string: "error"
+    at sun.misc.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:2043)
+    at sun.misc.FloatingDecimal.parseDouble(FloatingDecimal.java:110)
+    at java.lang.Double.parseDouble(Double.java:538)    
+    ... ... ... ... 
+
+  // Keep running IO action until user provides a valid input 
+  //-----------------------
+  scala> action.retry()
+  res4: IO[Double] = IO@6bd28e4a
+
+  scala> action.retry().run()
+  Enter a valid double: 
+  Enter a valid double: 
+  Enter a valid double: 
+  res5: Double = 12345.0
+
+  // User types 100 
+  //-----------------------------
+  scala> action.retry() map (x => x * 4.0) run()
+  Enter a valid double: 
+  res7: Double = 400.0
+
+
+  scala> action.map((x: Double) => x * 4.0).flatMap{ n => IO.printn("Result = " + n)}
+  res12: IO[Unit] = IO@37e0614e
+
+  scala> val action2 = action.map((x: Double) => x * 4.0).flatMap{ n => IO.printn("Result = " + n)}
+  action2: IO[Unit] = IO@3e5d10fc
+
+  // User types 45
+  scala> action2.run()
+  Enter a valid double: 
+  Result = 180.0
+
+  // User types 'error' in order to crash the program. 
+  scala> action2.run()
+  Enter a valid double: 
+  java.lang.NumberFormatException: For input string: "error"
+    at sun.misc.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:2043)
+    at sun.misc.FloatingDecimal.parseDouble(FloatingDecimal.java:110)
+    at java.lang.Double.parseDouble(Double.java:538)
+
+  // The IO action runs until user provides a valid input.
+  //------------------------------
+  scala> action2 retry() run()
+  Enter a valid double: 
+  Enter a valid double: 
+  Enter a valid double: 
+  Result = 60.0
+
+
+  val action3 = for {
+    x <- action
+    n =  4.0 * x
+    _ <- IO.printn("Result = " + n)
+  } yield()
+
+
+  scala> val action3 = for {
+       |   x <- action
+       |   n =  4.0 * x
+       |   _ <- IO.printn("Result = " + n)
+       | } yield()
+  action3: IO[Unit] = IO@22b9f45f
+
+
+  scala> action3.run()
+  Enter a valid double: 
+  Result = 48.0
+
+  scala> action3.run()
+  Enter a valid double: 
+  java.lang.NumberFormatException: For input string: "crash"
+    at sun.misc.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:2043)
+    at sun.misc.FloatingDecimal.parseDouble(FloatingDecimal.java:110)
+    at java.lang.Double.parseDouble(Double.java:538)
+
+
+  // Run IO action forever until user types Ctrl+C
+  // ending the execution.
+  //
+  scala> action3 retry() forever() run()
+  Enter a valid double: 
+  Enter a valid double: 
+  Enter a valid double: 
+  Result = 496.0
+  Enter a valid double: 
+  Result = 140.0
+  Enter a valid double: 
+  Result = 48.0
+  Enter a valid double: 
+  Result = 20.0
+
+#+END_SRC
+
+
 *** References 
 
  - [[[https://docs.scala-lang.org/tutorials/FAQ/yield.html][H|SD]]] - *How does yield work? | Scala Documentation*. Available at
