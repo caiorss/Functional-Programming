@@ -10633,6 +10633,13 @@ transformer, this section will use a more simple implementation
 similar to the old one for the sake of making the concept easier to
 understand. 
 
+ -  Documentation of [[https://hackage.haskell.org/package/mtl-2.2.1/docs/Control-Monad-Reader.html][Control.Monad.Reader]] - the reader monad in the
+    doc. is implemented as a monad transformer.
+
+
+ - File: [[file:src/readerMonad.hs]]
+
+
 Signaures:
 
 |            | Signature                                | Description                                                                    |
@@ -10658,8 +10665,6 @@ Signaures:
 | local      | (r -> r) -> Reader r a -> Reader r a     | Modify environment by applying a function to it.                               |
 |            |                                          |                                                                                |
 
-
- - File: [[file:src/readerMonad.hs]]
 
 #+BEGIN_SRC haskell :tangle src/readerMonad.hs
   newtype Reader r a = Reader {runReader :: r -> a}
@@ -10830,7 +10835,7 @@ Ok, modules loaded: Main.
 
 #+END_SRC
 
-**** Configuration problem example - Modular Arithmetic 
+**** Example: Configuration problem example - Arithmetic
 
 The goal of this example is to perform mudular arithmetic computations
 to be used with multiple moduli hiding the modulus parameter as much
@@ -10849,49 +10854,54 @@ Configurations <http://okmij.org/ftp/Haskell/tr-15-04.pdf>
 
 
 #+BEGIN_SRC haskell 
-> add1 m a b = mod (a + b) m 
-add1 :: Integral a => a -> a -> a -> a
-> 
+  >  
+  > :load src/readerMonad.hs
+  [1 of 1] Compiling Main             ( src/readerMonad.hs, interpreted )
+  Ok, modules loaded: Main.
 
-> mul1 m a b = mod (a * b) m
-mul1 :: Integral a => a -> a -> a -> a
-> 
+  > add1 m a b = mod (a + b) m 
+  add1 :: Integral a => a -> a -> a -> a
+  > 
 
-> test1 m a b = add1 m (mul1 m a a) (mul1 m b b)
-test1 :: Integral a => a -> a -> a -> a
-> 
+  > mul1 m a b = mod (a * b) m
+  mul1 :: Integral a => a -> a -> a -> a
+  > 
 
--- Modulus set to 120 
--- 
-> add1 120 975 873
-48
-it :: Integral a => a
-> 
-> mul1 120 975 873
-15
-it :: Integral a => a
-> 
+  > test1 m a b = add1 m (mul1 m a a) (mul1 m b b)
+  test1 :: Integral a => a -> a -> a -> a
+  > 
 
-> test1 120 975 873
-114
-it :: Integral a => a
-> 
+  -- Modulus set to 120 
+  -- 
+  > add1 120 975 873
+  48
+  it :: Integral a => a
+  > 
+  > mul1 120 975 873
+  15
+  it :: Integral a => a
+  > 
+
+  > test1 120 975 873
+  114
+  it :: Integral a => a
+  > 
 
 
--- Modulus set to 327 
---
-> add1 327 975 873 
-213
-it :: Integral a => a
-> 
-> mul1 327 975 873 
-321
-it :: Integral a => a
-> 
-> test1 327 975 873
-255
-it :: Integral a => a
-> 
+  -- Modulus set to 327 
+  --
+  > add1 327 975 873 
+  213
+  it :: Integral a => a
+  > 
+  > mul1 327 975 873 
+  321
+  it :: Integral a => a
+  > 
+  > test1 327 975 873
+  255
+  it :: Integral a => a
+  > 
 
 #+END_SRC
 
@@ -10905,7 +10915,12 @@ be defined from previous computations with implicit modulus parameter.
 
 
 #+BEGIN_SRC haskell 
+  >  
+  > :load src/readerMonad.hs
+  [1 of 1] Compiling Main             ( src/readerMonad.hs, interpreted )
+  Ok, modules loaded: Main.
 
+    
   -- Reader a a => Reader [modulus] [result]
   --
 
@@ -10973,7 +10988,15 @@ be defined from previous computations with implicit modulus parameter.
 Example 4: The modular arithmetic can be made less verbose if an
 instance of type class Num is defined for the type synonym Modulus. 
 
+ - Note: The code below works with Control.Monad.Read too. Just
+   replace the =:load src/readerMonad.hs= with =import Control.Monad.Read=.  
+
 #+BEGIN_SRC haskell 
+  >  
+  > :load src/readerMonad.hs
+  [1 of 1] Compiling Main             ( src/readerMonad.hs, interpreted )
+  Ok, modules loaded: Main.
+
   :set -XRankNTypes
   type Modulus m = forall a. Integral a => Reader a a 
 
@@ -11114,6 +11137,9 @@ instance of type class Num is defined for the type synonym Modulus.
 #+END_SRC
 
 **** References
+
+ - *Control.Monad.Read* Documentation
+   https://hackage.haskell.org/package/mtl-2.2.1/docs/Control-Monad-Reader.html
 
  - Oleg Kiselyov and Chung-Chien Shan - *Functional Peral: Implicit Configturation or Type
    Classes Reflect the Value of Types* - <http://okmij.org/ftp/Haskell/tr-15-04.pdf>
