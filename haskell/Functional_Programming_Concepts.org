@@ -10633,9 +10633,8 @@ transformer, this section will use a more simple implementation
 similar to the old one for the sake of making the concept easier to
 understand. 
 
- -  Documentation of [[https://hackage.haskell.org/package/mtl-2.2.1/docs/Control-Monad-Reader.html][Control.Monad.Reader]] - the reader monad in the
-    doc. is implemented as a monad transformer.
-
+ - Too see an example with Reader monad transformer and databases
+   check out  [[file:DatabaseHDBC.org][Databases - HDBC package]].
 
  - File: [[file:src/readerMonad.hs]]
 
