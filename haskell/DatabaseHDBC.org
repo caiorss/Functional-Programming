@@ -105,8 +105,9 @@ $ stack install HDBC-postgresql
 # Run Haskell REPL
 $ stack ghci 
 #+END_SRC
-
-** Example
+ 
+** Examples 
+*** Example - Simple Database Query 
 
 Connect to sqlite3 database 
 
@@ -522,4 +523,321 @@ Disconnect
 
  
 
+
+*** Example - Datbase query with ReaderT monad transformer. 
+
+Note: The type of the monad is =ReaderT r m= without the parameter of
+return value a.
+
+ - Documentation: [[https://hackage.haskell.org/package/mtl-2.2.1/docs/Control-Monad-Reader.html][Control.Monad.Reader]]
+
+|               | Signature                                      | Description                                                           |
+|---------------+------------------------------------------------+-----------------------------------------------------------------------|
+|               |                                                |                                                                       |
+| ReaderT r m a |                                                | Encapsulates a function or computation (a -> m b) where m is a monad. |
+| ReaderT       | (r -> m a) -> ReaderT r m a                    |                                                                       |
+|               |                                                |                                                                       |
+| runReaderT    | ReaderT r m a -> r -> m a                      | Run computation and get its value.                                    |
+|               |                                                |                                                                       |
+|               |                                                |                                                                       |
+| return        | a -> (ReaderT r m) a                           | Monad return function.                                                |
+| (>>=)         | a -> (ReaderT r m) b -> (ReaderT r m) b        | Monad bind function.                                                  |
+|               |                                                |                                                                       |
+|               |                                                |                                                                       |
+| fmap          | (a -> b) -> (ReaderT r m) a -> (ReaderT r m) b | Apply a function (a -> b) to the result of computation Reader r a.    |
+|               |                                                |                                                                       |
+|               |                                                |                                                                       |
+| ask           | m r                                            | Read environment or configuration.                                    |
+|               |                                                |                                                                       |
+|               |                                                |                                                                       |
+| local         | (r -> r) -> m a -> m a                         | Modify environment by applying a function to it.                      |
+|               |                                                |                                                                       |
+|               |                                                |                                                                       |
+| liftIO        | MonadIO m => IO a -> m a                       |                                                                       |
+| liftIO        | IO a -> (Reader r m) a                         |                                                                       |
+|               |                                                |                                                                       |
+|               |                                                |                                                                       |
+
+Example: This example will need the database and the haskell packages
+shown in  [[file:DatabaseHDBC.org][Databases - HDBC package]]
+
+
+#+BEGIN_SRC haskell 
+  import Control.Monad (mapM_, forM_)
+  import Control.Monad.Reader 
+
+  import qualified Database.HDBC as HDBC
+  import Database.HDBC.Sqlite3 
+
+  -- In file add the lines
+  {-# LANGUAGE OverloadedStrings #-}
+  {-# LANGUAGE RankNTypes #-}
+  {-# LANGUAGE FlexibleContexts #-}
+
+  -- In the REPL
+  :set -XOverloadedStrings
+  :set -XRankNTypes
+      
+  :{
+  fromSqlToInt :: HDBC.SqlValue -> Int
+  fromSqlToInt  sv = HDBC.fromSql sv  
+  :}
+
+  :{ 
+  fromSqlToString :: HDBC.SqlValue -> String
+  fromSqlToString sv = HDBC.fromSql sv 
+  :}
+
+  :{
+  {- | Convert number to HDBC value -}
+  fromIntToHDBC :: Int -> HDBC.SqlValue
+  fromIntToHDBC n = HDBC.SqlInt64 $ fromIntegral n                 
+  :}
+
+   {- | Convert string to HDBC string -}                  
+  fromStrToHDBC s = HDBC.SqlString s                 
+     
+   
+  conn <- connectSqlite3 "zotero.sqlite" 
+
+
+  :{
+  queryItemByIDRaw ::  HDBC.IConnection conn => Int -> conn -> IO [(String, String)]
+  queryItemByIDRaw itemID conn = do
+    stmt <- HDBC.prepare conn query
+    HDBC.execute stmt [HDBC.toSql itemID]
+    rows <- HDBC.fetchAllRows stmt 
+    return $ map projection rows 
+    where
+      projection row = (fromSqlToString $ row !! 0, fromSqlToString $ row !! 1)
+                       
+      query = unlines $ [ "SELECT fieldName, value FROM itemDataValues, itemData, fields WHERE", 
+                          "itemDataValues.valueID = itemData.valueID", 
+                          "and itemData.itemID = ?",
+                          "and fields.fieldID = itemData.fieldID"
+                        ]
+  :}
+
+   
+  > :t queryItemByIDRaw 10 conn
+  queryItemByIDRaw 10 conn :: IO [(String, String)]
+  > 
+  > queryItemByIDRaw 10 conn
+  [("url","http://fsharp.org/specs/language-spec/4.0/FSharpSpec-4.0-latest.pdf"),("accessDate","2016-11-07 22:00:06"),("title","FSharpSpec-4.0-latest.pdf")]
+  it :: [(String, String)]
+
+  > queryItemByIDRaw 10 conn >>= mapM_ print
+  ("url","http://fsharp.org/specs/language-spec/4.0/FSharpSpec-4.0-latest.pdf")
+  ("accessDate","2016-11-07 22:00:06")
+  ("title","FSharpSpec-4.0-latest.pdf")
+  it :: ()
+  > 
+  > queryItemByIDRaw 16 conn >>= mapM_ print
+  ("url","http://www.digilife.be/quickreferences/QRC/LINUX%20Admin%20Quick%20Reference.pdf")
+  ("accessDate","2016-11-07 22:06:48")
+  ("title","linux_quickref.PDF - LINUX Admin Quick Reference.pdf")
+  it :: ()
+
+        
+  {- | Transform this computation to ReaderT monad with database connection as the 
+       implicit parameter or configuration. 
+   -}
+  :{
+  queryItemByID1 ::  HDBC.IConnection conn => Int -> ReaderT conn IO [(String, String)]
+  queryItemByID1 itemID = ReaderT $ \ conn -> do                      
+    stmt <- liftIO $ HDBC.prepare conn query
+    liftIO $ HDBC.execute stmt [HDBC.toSql itemID]
+    rows <- liftIO $ HDBC.fetchAllRows stmt 
+    return $ map projection rows 
+    where
+      projection row = (fromSqlToString $ row !! 0, fromSqlToString $ row !! 1)
+                       
+      query = unlines $ [ "SELECT fieldName, value FROM itemDataValues, itemData, fields WHERE", 
+                          "itemDataValues.valueID = itemData.valueID", 
+                          "and itemData.itemID = ?",
+                          "and fields.fieldID = itemData.fieldID"
+                        ]
+  :}
+
+
+  > :t runReaderT
+  runReaderT :: ReaderT r m a -> r -> m a
+
+  > :t queryItemByID1 10
+  queryItemByID1 10
+    :: IConnection conn => ReaderT conn IO [(String, String)]
+  > 
+
+  > :t runReaderT (queryItemByID1 10) conn 
+  runReaderT (queryItemByID1 10) conn :: IO [(String, String)]
+  > 
+
+  > runReaderT (queryItemByID1 10) conn
+  [("url","http://fsharp.org/specs/language-spec/4.0/FSharpSpec-4.0-latest.pdf"),("accessDate","2016-11-07 22:00:06"),("title","FSharpSpec-4.0-latest.pdf")]
+  it :: [(String, String)]
+  > 
+
+  > runReaderT (queryItemByID1 10) conn >>= mapM_ print
+  ("url","http://fsharp.org/specs/language-spec/4.0/FSharpSpec-4.0-latest.pdf")
+  ("accessDate","2016-11-07 22:00:06")
+  ("title","FSharpSpec-4.0-latest.pdf")
+  it :: ()
+  > 
+  > 
+
+  -- =======================================================================      
+  {- |  Variation 2 - Simplify - ReaderT conn IO [(String, String)]  -}
+
+  {- | Database Connection -> DbConn a = ReaderT conn IO a = conn -> IO a -}
+  type DBConn a = forall conn. (HDBC.IConnection conn) =>  ReaderT conn IO a
+
+
+  :{
+  queryItemByID2 :: Int -> DBConn [(String, String)]
+  queryItemByID2 itemID = ReaderT $ \ conn -> do                      
+    stmt <- liftIO $ HDBC.prepare conn query
+    liftIO $ HDBC.execute stmt [HDBC.toSql itemID]
+    rows <- liftIO $ HDBC.fetchAllRows stmt 
+    return $ map projection rows 
+    where
+      projection row = (fromSqlToString $ row !! 0, fromSqlToString $ row !! 1)                    
+      query = unlines $ [ "SELECT fieldName, value FROM itemDataValues, itemData, fields WHERE", 
+                          "itemDataValues.valueID = itemData.valueID", 
+                          "and itemData.itemID = ?",
+                          "and fields.fieldID = itemData.fieldID"
+                        ]
+  :}
+
+   
+  > :t queryItemByID2 10
+  queryItemByID2 10
+    :: IConnection conn => ReaderT conn IO [(String, String)]
+  > 
+
+  > runReaderT (queryItemByID2 10) conn
+  [("url","http://fsharp.org/specs/language-spec/4.0/FSharpSpec-4.0-latest.pdf"),("accessDate","2016-11-07 22:00:06"),("title","FSharpSpec-4.0-latest.pdf")]
+  it :: [(String, String)]
+  > 
+  > runReaderT (queryItemByID2 10) conn >>= mapM_ print
+  ("url","http://fsharp.org/specs/language-spec/4.0/FSharpSpec-4.0-latest.pdf")
+  ("accessDate","2016-11-07 22:00:06")
+  ("title","FSharpSpec-4.0-latest.pdf")
+  it :: ()
+  > 
+
+
+  -- =======================================================================      
+  {- |  Variation 3 - It can be simplified and generalized even further. -}
+
+  type SQL = String
+  type DBConn a = forall conn. (HDBC.IConnection conn) =>  ReaderT conn IO a
+
+  :{    
+  sqlQueryAll :: SQL -> [HDBC.SqlValue] -> ([HDBC.SqlValue] -> b) -> DBConn [b]     
+  sqlQueryAll sql sqlvals projection = do
+    con     <- ask 
+    stmt    <- liftIO $ HDBC.prepare con sql
+    liftIO  $  HDBC.execute stmt sqlvals  
+    rows    <- liftIO $ HDBC.fetchAllRows stmt
+    return (fmap projection rows)
+  :}
+
+   
+
+  :{
+  queryItemByID3 :: Int -> DBConn [(String, String)]
+  queryItemByID3 itemID = sqlQueryAll query [fromIntToHDBC itemID] projection
+    where
+      projection row = (fromSqlToString $ row !! 0, fromSqlToString $ row !! 1)                    
+      query = unlines $ [ "SELECT fieldName, value FROM itemDataValues, itemData, fields WHERE", 
+                          "itemDataValues.valueID = itemData.valueID", 
+                          "and itemData.itemID = ?",
+                          "and fields.fieldID = itemData.fieldID"
+                        ]
+  :}
+
+
+  > runReaderT (queryItemByID3 10) conn
+  [("url","http://fsharp.org/specs/language-spec/4.0/FSharpSpec-4.0-latest.pdf"),("accessDate","2016-11-07 22:00:06"),("title","FSharpSpec-4.0-latest.pdf")]
+  it :: [(String, String)]
+  > 
+  > runReaderT (queryItemByID3 10) conn >>= mapM_ print
+  ("url","http://fsharp.org/specs/language-spec/4.0/FSharpSpec-4.0-latest.pdf")
+  ("accessDate","2016-11-07 22:00:06")
+  ("title","FSharpSpec-4.0-latest.pdf")
+  it :: ()
+  > 
+  >
+
+  -- | Get all tags associated with a given item
+  :{
+  getItemTags :: Int -> DBConn [(Int, String)]
+  getItemTags itemID = do  
+    sqlQueryAll sql [fromIntToHDBC itemID] projection
+    where
+      sql = unlines ["SELECT  tags.tagID, tags.name",
+                     "FROM    itemTags, tags", 
+                     "WHERE   itemTags.tagID = tags.tagID", 
+                     "AND     itemID = ?"
+                     ]
+
+      projection xs = (fromSqlToInt (xs !! 0), fromSqlToString (xs !! 1))
+  :}
+
+
+  > runReaderT (getItemTags 12) conn
+  [(2,"fp"),(3,"fsharp"),(4,"doc"),(5,"overview")]
+  it :: [(Int, String)]
+  > 
+  > runReaderT (getItemTags 13) conn
+  [(2,"fp"),(3,"fsharp"),(4,"doc")]
+  it :: [(Int, String)]
+  > 
+
+
+  :{
+  showItem :: Int -> DBConn ()
+  showItem itemID = do
+    itemData <- queryItemByID3 itemID  
+    tags   <- getItemTags itemID
+
+    -- liftIO :: IO () => DBConn ()          
+    liftIO $ do
+      putStrLn "Item Data"
+      putStrLn "---------------------------"             
+      forM_ itemData print
+      putStrLn "Item Tags"
+      putStrLn "---------------------------"
+      forM_ tags print     
+  :}   
+
+  > runReaderT (showItem 12) conn
+  Item Data
+  ---------------------------
+  ("url","http://tomasp.net/articles/fsharp-i-introduction/article.pdf")
+  ("accessDate","2016-11-07 22:01:04")
+  ("title","F# Language Overview")
+  Item Tags
+  ---------------------------
+  (2,"fp")
+  (3,"fsharp")
+  (4,"doc")
+  (5,"overview")
+  it :: ()
+  > 
+  > 
+
+  > runReaderT (showItem 13) conn
+  Item Data
+  ---------------------------
+  ("url","http://fsharp.org/specs/language-spec/4.0/FSharpSpec-4.0-latest.pdf")
+  ("accessDate","2016-11-07 22:00:06")
+  ("title","The F# 4.0 Language Specification")
+  Item Tags
+  ---------------------------
+  (2,"fp")
+  (3,"fsharp")
+  (4,"doc")
+  it :
+#+END_SRC
 
