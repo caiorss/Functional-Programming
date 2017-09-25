@@ -10599,6 +10599,546 @@ val stackStuff : (stack, unit) State.state = State.ST <fun>
 #   
 #+END_SRC
 
+*** Reader Monad 
+**** Overview 
+
+A common problem in software development is propagate configuration,
+or global immutable state throughout the code. For instance, modular
+arithmetic needs the modulus configuration; numerical code needs the
+tolerance and maximum number of iterations and a web server needs at
+least the database configuration and the directory which contains
+static files.
+
+The problem of propagating and supporting multiple configurations (aka
+run-time preferences) is known as the _configuration problem_.
+
+In many programming languages, a naive solution to the configuration
+problem would be global variables, however this approach doesn't allow
+multiple sets of configurations to coexist and also a global
+variable may be changed by any part of the program make it
+unpredictable and hard to understand. An alternative solution to this
+problem is to bundle all configuration parameters into a single
+configuration parameter and pass it around explicitly as a function
+argument or pass the configuration bundle implicitly with the Reader
+monad.
+
+**** Reader Monad
+
+The reader monad solves the configuration problem by making the
+configuration (aka enviroment) or global immutable state implicit and
+hiding it.
+
+As the new implementation of the Reader monad is based on monad
+transformer, this section will use a more simple implementation
+similar to the old one for the sake of making the concept easier to
+understand. 
+
+Signaures:
+
+|            | Signature                                | Description                                                                    |
+|------------+------------------------------------------+--------------------------------------------------------------------------------|
+|            |                                          |                                                                                |
+| Reader r a | -                                        | Encapsulates a function or computation from a to b.                            |
+|            |                                          |                                                                                |
+| Reader     | (a -> b) -> Reader r a                   |                                                                                |
+|            |                                          |                                                                                |
+| runReader  | Reader r a -> r -> a                     | Run computation encapsulated by Reader r a applying it to the configuration r. |
+|            |                                          |                                                                                |
+|            |                                          |                                                                                |
+|            |                                          |                                                                                |
+| return     | a -> (Reader r) a                        | Returns a constant function wrapped by Reader that always returns a            |
+|            |                                          | ,no matter the value r.                                                        |
+|            |                                          |                                                                                |
+| (>>=)      | a -> (Reader r) b -> (Reader r) b        | Monad bind function.                                                           |
+|            |                                          |                                                                                |
+| fmap       | (a -> b) -> (Reader r) a -> (Reader r) b | Apply a function (a -> b) to the result of computation Reader r a.             |
+|            |                                          |                                                                                |
+| ask        | Reader r r                               | Read environment or configuration. Ask wraps an identity function.             |
+|            |                                          |                                                                                |
+| local      | (r -> r) -> Reader r a -> Reader r a     | Modify environment by applying a function to it.                               |
+|            |                                          |                                                                                |
+
+
+ - File: [[file:src/readerMonad.hs]]
+
+#+BEGIN_SRC haskell :tangle src/readerMonad.hs
+  newtype Reader r a = Reader {runReader :: r -> a}
+
+  instance Functor (Reader r) where
+      -- 
+      -- fmap is the function compsition between function fn and
+      -- the function wrapped by the reader monad.
+      --
+      -- fmap :: (a -> b) -> (Reader r) a -> (Reader r) b 
+      --
+      fmap fn (Reader rToA) = Reader $ \ r -> fn $ rToA r
+
+
+
+  instance Applicative (Reader r) where    
+      {- | 
+          pure :: Applicative f => a -> f a
+          pure :: a -> (Reader r) a
+      -}
+      pure a = Reader $ \_ -> a
+
+      {- | (<*>) :: Applicative f => f (a -> b) -> f a -> f b
+           (<*>) :: Reader r (a -> b) -> (Reader r) a -> (Reader r) b
+      -}
+      (Reader fn) <*> (Reader rToA) =
+          Reader $ (\r -> let a     = rToA r in
+                          let fAtoB = fn r   in
+                          fAtoB a
+                   )
+
+  instance Monad (Reader r) where
+      
+      {- | return :: a -> (Reader r) a  -}
+      return a = Reader $ \ _ -> a
+
+      {- |
+
+        (>>=) :: (Monad m) => m a -> (a -> m b) -> m b 
+
+        (Reader r) a >>= (a -> (Reader r) b) -> (Reader r) b
+      -}
+      (Reader rToA) >>= fn =
+          Reader $ \ r -> let a = rToA r
+                          in  runReader (fn a) r 
+
+
+  {- | Read environment, aka configuration. -}
+  ask :: Reader r r
+  ask = Reader (\ r -> r)
+
+
+  local :: (r -> r) -> Reader r a -> Reader r a
+  local fn (Reader rToA) = Reader $ \ r -> rToA (fn r)
+      
+#+END_SRC
+
+**** Testing old Reader monad code 
+
+Load the code in the REPL:
+
+#+BEGIN_SRC haskell 
+>  
+> :load src/readerMonad.hs
+[1 of 1] Compiling Main             ( src/readerMonad.hs, interpreted )
+Ok, modules loaded: Main.
+#+END_SRC
+
+
+ - Encapsulating computation with reader
+
+#+BEGIN_SRC haskell 
+  > :t Reader
+  Reader :: (r -> a) -> Reader r a
+  > 
+
+  {- 
+     The function _return_ implementation for Read monad takes a value and
+     returns a constant function which, regardless of the input, always
+     returns the same value. 
+  -}
+
+  > let x = return 10 :: Reader Int Int
+  x :: Reader Int Int
+  > 
+  > runReader x 15
+  10
+  it :: Int
+  > runReader x 25
+  10
+  it :: Int
+  > runReader x 35
+  10
+  it :: Int
+  > 
+
+
+  let greetUser1 user =  "Hello " ++ user ++ "! Welcome to the FP world!" 
+
+  > greetUser1 "John"
+  "Hello John! Welcome to the FP world!"
+  it :: [Char]
+  > 
+
+
+  :{
+  greetUser2  :: Reader String String 
+  greetUser2  =  Reader (\ user ->
+                             "Hello " ++ user ++ "! Welcome to the FP world!"
+                        )
+  :}
+
+
+  > runReader greetUser2 "Beowulf"
+  "Hello Beowulf! Welcome to the FP world!"
+  it :: String
+  > 
+
+  :{
+  greetUser3 :: Reader String String 
+  greetUser3 = do
+    user <- ask 
+    return $ "Hello " ++ user ++ "! Welcome to the FP world!"
+  :}
+
+  > runReader greetUser3 "Beowulf"
+  "Hello Beowulf! Welcome to the FP world!"
+  it :: String
+  > 
+
+
+  :{
+  talkToUser :: Reader String (IO())
+  talkToUser = do
+    user <- ask 
+    msga <- greetUser2
+    msgb <- greetUser3
+    return $ do
+      putStrLn $ "User name is " ++ user 
+      putStrLn msga
+      putStrLn msgb 
+  :}   
+
+  > runReader talkToUser "John"
+  User name is John
+  Hello John! Welcome to the FP world!
+  Hello John! Welcome to the FP world!
+  it :: ()
+  > 
+
+  -- Apply the function length to the output of greetUser3 computation 
+  -- 
+  > runReader greetUser3 "John"
+  "Hello John! Welcome to the FP world!"
+  it :: String
+  > length $ runReader greetUser3 "John"
+  36
+  it :: Int
+  > 
+
+  > runReader (fmap length greetUser2) "John"
+  36
+  it :: Int
+  > runReader (fmap length greetUser3) "John"
+  36
+  it :: Int
+  > 
+
+#+END_SRC
+
+**** Configuration problem example - Modular Arithmetic 
+
+The goal of this example is to perform mudular arithmetic computations
+to be used with multiple moduli hiding the modulus parameter as much
+as possible.
+
+ - [[https://en.wikipedia.org/wiki/Modular_arithmetic][Modular Arithmetic]]
+
+ - [[https://www.doc.ic.ac.uk/~mrh/330tutor/ch03.html][Chapter 3. Modular Arithmetic]]
+
+Example 1: Configuration problem with parameter passing approach. 
+
+The configuration modulus which all computations depends on is passed
+as function argument instead of being passed as a global value or
+variable. Example taken from - Functional Pearl: Implicit
+Configurations <http://okmij.org/ftp/Haskell/tr-15-04.pdf>
+
+
+#+BEGIN_SRC haskell 
+> add1 m a b = mod (a + b) m 
+add1 :: Integral a => a -> a -> a -> a
+> 
+
+> mul1 m a b = mod (a * b) m
+mul1 :: Integral a => a -> a -> a -> a
+> 
+
+> test1 m a b = add1 m (mul1 m a a) (mul1 m b b)
+test1 :: Integral a => a -> a -> a -> a
+> 
+
+-- Modulus set to 120 
+-- 
+> add1 120 975 873
+48
+it :: Integral a => a
+> 
+> mul1 120 975 873
+15
+it :: Integral a => a
+> 
+
+> test1 120 975 873
+114
+it :: Integral a => a
+> 
+
+
+-- Modulus set to 327 
+--
+> add1 327 975 873 
+213
+it :: Integral a => a
+> 
+> mul1 327 975 873 
+321
+it :: Integral a => a
+> 
+> test1 327 975 873
+255
+it :: Integral a => a
+> 
+
+#+END_SRC
+
+
+Example 2: Configuration problem with parameter passing with Reader
+monad. 
+
+This approach allows the computation results to be reused easily with
+multiple modulus or configurations. In addition, new computations can
+be defined from previous computations with implicit modulus parameter.
+
+
+#+BEGIN_SRC haskell 
+
+  -- Reader a a => Reader [modulus] [result]
+  --
+
+  :{
+  add2 :: Integral a => a -> a -> Reader a a
+  add2 a b = Reader (\m -> mod (a + b) m)
+  :}
+
+  :{
+  mul2 :: Integral a => a -> a -> Reader a a 
+  mul2 a b = do
+    m     <- ask
+    return $  mod (a * b) m
+  :}   
+
+  -- The configuration modulus is passed implicitly.
+  -- 
+  :{ 
+  test2 :: Integral a => a -> a -> Reader a a
+  test2 a b = do
+    x <- mul2 a a
+    y <- mul2 b b
+    s <- add2 x y
+    return s
+  :}
+
+  -- The result of the computations r1, r2 and r3 can be reused with
+  -- multiple modulus or multiple configurations.
+  -- 
+  > r1 = add2 975 873
+  r1 :: Integral a => Reader a a
+
+
+  > runReader r1 120
+  48
+  it :: Integral a => a
+
+  > runReader r1 327
+  213
+  it :: Integral a => a
+  > 
+
+  > map (runReader r1) [120, 327, 28, 17]
+  [48,213,0,12]
+  it :: Integral b => [b]
+  > 
+
+  > r2 = mul2 975 873
+  r2 :: Integral a => Reader a a
+  > 
+
+  > r3 = test2 975 873
+  r3 :: Integral a => Reader a a
+  > 
+
+  > map (runReader r3) [127, 327, 28, 17, 97]
+  [32,255,22,4,25]
+  it :: Integral b => [b]
+  > 
+
+
+#+END_SRC
+
+
+Example 4: The modular arithmetic can be made less verbose if an
+instance of type class Num is defined for the type synonym Modulus. 
+
+#+BEGIN_SRC haskell 
+  :set -XRankNTypes
+  type Modulus m = forall a. Integral a => Reader a a 
+
+
+  :{ 
+  normalize :: Integral a => a -> Reader a a 
+  normalize x = do
+    m <- ask 
+    return $ mod x m
+  :}
+
+   
+  -- Modular arithmetic equality
+  --
+  :{
+  (===) :: (Integral a) => Modulus a -> Modulus a -> Reader a Bool
+  (===) ma mb = do
+    a <- ma
+    b <- mb
+    return $ a == b 
+  :}
+
+   
+  {-
+
+     > :info Num
+     class Num a where
+       (+) :: a -> a -> a
+       (-) :: a -> a -> a
+       (*) :: a -> a -> a
+       negate :: a -> a
+       abs :: a -> a
+       signum :: a -> a
+       fromInteger :: Integer -> a
+       {-# MINIMAL (+), (*), abs, signum, fromInteger, (negate | (-)) #-}
+
+  -}
+
+  :{
+  instance (Integral a) => Num (Reader a a) where
+      fromInteger x = normalize (fromIntegral x)
+        
+      ma + mb = do
+        a <- ma
+        b <- mb
+        normalize (a + b)
+
+      ma - mb = do
+        a <- ma
+        b <- mb
+        normalize (a - b)
+
+      ma * mb = do
+        a <- ma
+        b <- mb
+        normalize (a * b)
+                  
+      signum = error "Not implemented"
+      abs    = error "Not implemented"                
+  :}
+
+
+  {- | --------- Tests ----------- -}
+
+  > let x = 38 :: Modulus a
+  x :: Integral a => Reader a a
+
+  > let y = 23 :: Modulus a
+  y :: Integral a => Reader a a
+   
+  > runReader x 15
+  8
+  it :: Integral a => a
+        
+  > runReader y 15
+  8
+  it :: Integral a => a
+  > 
+
+
+  > m = 38 === 23 
+  m :: Integral a => Reader a Bool
+  > 
+  > runReader m 15
+  True
+  it :: Bool
+  > 
+  > runReader (8 === 3) 5
+  True
+  it :: Bool
+  > 
+   
+  > let x = 975 + 873 :: Integral a => Reader a a
+  x :: Integral a => Reader a a
+  > 
+  > runReader x 120
+  48
+  it :: Integral a => a
+  > runReader x 327
+  213
+  it :: Integral a => a
+  > 
+
+  > let r1 = 975 + 873 :: Modulus a
+  r1 :: Integral a => Reader a a
+  > 
+  > runReader r1 120
+  48
+  it :: Integral a => a
+  > runReader r1 327
+  213
+  it :: Integral a => a
+  > 
+
+
+  :{
+  test3 :: Modulus a -> Modulus a -> Modulus a
+  test3 a b = a * a + b * b     
+  :}   
+
+  > let r3 = test3 975 873
+  r3 :: Integral a => Reader a a
+  > 
+
+  > runReader r3 120
+  114
+  it :: Integral a => a
+  > 
+  > runReader r3 327
+  255
+  it :: Integral a => a
+  > 
+  >  map (runReader r3) [127, 327, 28, 17, 97]
+  [32,255,22,4,25]
+  it :: Integral b => [b]
+  > 
+
+#+END_SRC
+
+**** References
+
+ - Oleg Kiselyov and Chung-Chien Shan - *Functional Peral: Implicit Configturation or Type
+   Classes Reflect the Value of Types* - <http://okmij.org/ftp/Haskell/tr-15-04.pdf>
+
+ - Hakkell Wiki - *Global Variable* - <https://wiki.haskell.org/Global_variables>
+
+ - Joachim Bach. *A Solution to the Configuration Problem in
+   Haskell* - <https://www.joachim-breitner.de/blog/443-A_Solution_to_the_Configuration_Problem_in_Haskell>
+
+*Additional Readings*
+
+Solutions to Configuration Problem 
+
+ - *The reflection package* - <https://hackage.haskell.org/package/reflection>
+
+Global Variables 
+
+ - *Why global variables are evil* -
+   <http://www.learncpp.com/cpp-tutorial/4-2a-why-global-variables-are-evil/>
+
+ - *Global Variables are Bad* -
+   <http://wiki.c2.com/?GlobalVariablesAreBad>
+
+ - *Are global variables bad?* - <https://stackoverflow.com/questions/484635/are-global-variables-bad>
+
 *** Writer Monad 
 
 The writer monad makes possible to compose functions which returns
