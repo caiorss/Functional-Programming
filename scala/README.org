@@ -7852,6 +7852,234 @@ Example:
   out: Double = 2.9970643570565154
 
 #+END_SRC
+*** "Operator overloading"
+    :PROPERTIES:
+    :ID:       f8bd284c-3347-4d14-95cd-df2f128dee25
+    :END:
+
+Note: Scala doesn't have operator overloading since (+), (-) and other
+math operators are just methods. 
+
+Example: Complex number arithmetic. 
+
+ - [[file:src/complex.scala][file:src/complex.scala]]
+
+#+BEGIN_SRC scala :tangle src/complex.scala 
+  package complex
+
+  case class Cpl(re: Double, img: Double){
+
+    override def toString() =
+      s"${re} + ${img}j"
+
+    def unary_-() = 
+      Cpl(-this.re, -this.img)
+
+    def +(that: Double) = 
+      Cpl(this.re + that, this.img)
+
+
+    def +(that: Cpl) = 
+      Cpl(this.re + that.img, this.img + that.img)
+
+
+    def -(that: Double) = 
+      Cpl(this.re - that, this.img)
+    
+
+    def -(that: Cpl) = 
+      Cpl(this.re - that.re, this.img - that.img)
+    
+
+    def *(that: Double) =
+      Cpl(that * this.re, that * this.img)
+
+    def *(that: Cpl) = {
+      val x = this.re * that.re - this.img * that.img
+      val y = this.re * that.img + this.img * that.re 
+      Cpl(x, y)
+      }
+
+
+    def /(that: Double) =
+      Cpl(this.re / that, this.img / that)
+
+    def /(that: Cpl) = {
+      val r = that.re * that.re + that.img * that.img
+      val x = this.re * that.re + this.img * that.img
+      val y = - this.re * that.img + this.img * that.re
+      Cpl(x / r, y / r)
+    }
+      
+    // Conjugate 
+    def conj =
+      Cpl(this.re, -this.img)
+
+    def norm = Math.sqrt(re * re + img * img)
+
+    // Angle in radians 
+    def angle = Math.atan2(img, re)
+
+    // Angle in degrees 
+    def angled = Math.atan2(img, re) * 180.0 / Math.PI 
+
+  }
+
+
+  object Complex{
+
+    val j = Cpl(0, 1)
+
+    implicit class DoubleToCpl(k: Double) {
+
+      //def j = Cpl(0, k)
+
+      def polr = Cpl(Math.cos(k), Math.sin(k))
+
+      def pold = {
+        val a = k / 180.0 * Math.PI
+        Cpl(Math.cos(a), Math.sin(a))
+      }
+
+      // k + that
+      def +(that: Cpl) = Cpl(that.re + k, that.img)
+
+      // k * that 
+      def *(that: Cpl) = Cpl(k * that.re, k * that.img)
+
+      def -(that: Cpl) = Cpl(k - that.re, -that.img)
+
+      // k / that    
+      def /(that: Cpl) = {
+        val c = that.re * that.re + that.img * that.img
+        Cpl( k * that.re / c, - k * that.img / c)
+      }
+    }
+  }
+
+#+END_SRC
+
+Testing in the REPL by loading the script.
+
+#+BEGIN_SRC scala 
+  scala> :paste src/complex.scala
+  Pasting file src/complex.scala...
+
+  import complex.Cpl
+  import complex.Complex._
+  import scala.language.postfixOps
+
+
+  // Imaginary unit
+  //------------------------
+  //
+  scala> j
+  res0: complex.Cpl = 0.0 + 1.0j
+
+  scala> j * j
+  res1: complex.Cpl = -1.0 + 0.0j
+
+  scala> - j
+  res2: complex.Cpl = -0.0 + -1.0j
+
+  scala> 6 + 8 * j
+  res3: complex.Cpl = 6.0 + 8.0j
+
+
+  scala> val c = 6 + 8 * j
+  c: complex.Cpl = 6.0 + 8.0j
+
+  scala> c.re
+  res4: Double = 6.0
+
+  scala> c.img
+  res5: Double = 8.0
+
+  scala> -c
+  res9: complex.Cpl = -6.0 + -8.0j
+
+  scala> c.conj
+  res10: complex.Cpl = 6.0 + -8.0j
+
+  scala> c * c.conj
+  res12: complex.Cpl = 100.0 + 0.0j
+
+  scala> 5 * c
+  res14: complex.Cpl = 30.0 + 40.0j
+
+  scala> c / 2
+  res15: complex.Cpl = 3.0 + 4.0j
+
+  scala> Cpl(3.0, 4.0)
+  res16: complex.Cpl = 3.0 + 4.0j
+
+  scala> Cpl(3.0, 4.0).img
+  res17: Double = 4.0
+
+  scala> Cpl(3.0, 4.0).norm
+  res18: Double = 5.0
+
+  scala> Cpl(3.0, 4.0).img
+  res17: Double = 4.0
+
+  scala> Cpl(3.0, 4.0).norm
+  res18: Double = 5.0
+
+
+  scala> c / c
+  res21: complex.Cpl = 1.0 + 0.0j
+#+END_SRC
+
+Testing in the REPL by compiling the script.
+
+1. Compile [[file:src/complex.scala][file:src/complex.scala]] to a jar file.
+
+#+BEGIN_SRC sh 
+$ scalac src/complex.scala  -d complex.jar 
+
+$ file complex.jar 
+complex.jar: Java archive data (JAR)
+
+$ unzip -l complex.jar
+Archive:  complex.jar
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+       57  2017-09-26 02:22   META-INF/MANIFEST.MF
+     7057  2017-09-26 02:22   complex/Cpl.class
+     1726  2017-09-26 02:22   complex/Cpl$.class
+      951  2017-09-26 02:22   complex/Complex.class
+      840  2017-09-26 02:22   complex/Complex$.class
+     1411  2017-09-26 02:22   complex/Complex$DoubleToCpl.class
+---------                     -------
+    12042                     6 files
+#+END_SRC
+
+2. Load in the REPL
+
+#+BEGIN_SRC scala 
+$ scala  -cp complex.jar 
+Welcome to Scala 2.12.3 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_144).
+Type in expressions for evaluation. Or try :help.
+
+import complex.Cpl
+import complex.Complex._
+import scala.language.postfixOps
+
+scala> 6 + 8 * j
+res0: complex.Cpl = 6.0 + 8.0j
+
+scala> 6 + 8 * j
+res1: complex.Cpl = 6.0 + 8.0j
+
+scala> (6 + 8 * j) conj
+res2: complex.Cpl = 6.0 + -8.0j
+
+scala> (6 + 8 * j) norm 
+res3: Double = 10.0
+
+#+END_SRC
+
+
 *** Abstract Class 
 
 An abstract class is a class which cannot be instantiated, containing
