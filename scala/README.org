@@ -266,6 +266,73 @@ scala> tarea.setText("Hello world Java Swing")
 scala> 
 #+END_SRC
 
+***** Scala script as Unix executable
+      :PROPERTIES:
+      :ID:       0116b6d8-cf29-43db-8ecb-b3217ed78472
+      :END:
+
+Scala scripts can be executed as ordinary *nix shell scripts like bash
+scripts with ./scala-script.scala
+
+Example:
+
+file: [[file:src/scalaNix.scala][file:src/scalaNix.scala]] - This script shows all arguments passed
+by the user and displays a file in GUI (Graphical User Interface)
+passed as first argument arg(0).
+
+#+BEGIN_SRC scala  :tangle src/scalaNix.scala   :tangle-mode (identity #o755) :padline no
+  #!/bin/sh
+  exec scala -save "$0" "$@"
+  !#
+
+  // Display text in a GUI
+  def displayText(text: String) = {
+    import javax.swing.{JFrame, JTextArea, JScrollPane}
+    val tarea = new JTextArea()
+    val frame = new JFrame()
+    frame.add(new JScrollPane(tarea))
+    frame.setSize(400, 500)
+    frame.setVisible(true)
+    frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE)
+    tarea.setText(text)
+  }
+
+
+  def readFile(file: String) = {
+    val src = scala.io.Source.fromFile(file)
+    val txt = src.mkString
+    src.close()
+    txt
+  }
+
+  println("Testing Scala script")
+
+  println("Arguments passed by user")
+
+  args.foldLeft(0){(acc, a) =>
+    println(s"arg[${acc}] = ${a}")
+    acc + 1
+  }
+
+
+  displayText(readFile(args(0)))
+#+END_SRC
+
+Running it: It will display the file file:/etc/protocols in a
+Linux-based distribution passed as first argument arg(0).
+
+#+BEGIN_SRC sh
+$ src/scalaNix.scala /etc/protocols arg1 arg2 arg3 arg4
+
+Testing Scala script
+Arguments passed by user
+arg[0] = /etc/protocols
+arg[1] = arg1
+arg[2] = arg2
+arg[3] = arg3
+arg[4] = arg4
+#+END_SRC
+
 *** Scalac - Scala compiler 
     :PROPERTIES:
     :ID:       19e4e984-865a-4dd8-be13-7cc406aa2cca
