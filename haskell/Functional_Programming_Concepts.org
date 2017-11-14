@@ -2838,6 +2838,48 @@ val it : int list = [5; 9; 11]
 
 #+END_SRC 
 
+**** Scala
+
+In Scala, this function is encoded as a higher order method common to
+many collections.
+
+#+BEGIN_SRC scala
+  scala> List(1, 2, 3, 4, 5, 6).foldLeft(0)((acc, x) => 10 * acc + x)
+  res17: Int = 123456
+
+  scala> List(1, 2, 3, 4, 5, 6).foldRight(0)((x, acc) => 10 * acc + x)
+  res19: Int = 654321
+
+  scala> val files = new java.io.File("/").listFiles()
+  files: Array[java.io.File] = Array(/lost+found, /boot,  ...)
+
+  // Count the number of files in the root / *nix, Linux directory
+  //
+  scala> files.foldLeft(0)((acc, x) => acc + 1)
+  res21: Int = 22
+
+  // Dictionary Collection
+  //
+  scala> val dict = Map("x" -> 20.24, "y" -> 30.5, "z" -> 100.23)
+  dict: scala.collection.immutable.Map[String,Double] = Map(x -> 20.24, y -> 30.5, z -> 100.23)
+
+  /// Get the sum of hash table values
+  ///
+  scala> dict.foldLeft(0.0){ case (acc, (k, v)) => acc + v }
+  res34: Double = 150.97
+
+  scala> 20.24 + 30.5 + 100.23
+  res36: Double = 150.97
+
+  /// Print hash table values
+  ///
+  scala> dict.foldLeft(()){ case (acc, (k, v)) => println(v)}
+  20.24
+  30.5
+  100.23
+
+#+END_SRC
+
 **** Python
 
 In Python 3 the function reduce is not default anymore, however it can
