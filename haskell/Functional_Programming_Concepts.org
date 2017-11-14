@@ -2033,6 +2033,127 @@ fs :: [Integer] -> [Integer]
 > 
 #+END_SRC
 
+***** Map in Scala 
+
+In Scala the higher order function map is encoded as a higher order
+method, a method that accept a function as argument. Many Scala's
+data structures, also known as collections, provide the method .map to
+apply a function to its elements.
+
+Examples: 
+
+#+BEGIN_SRC scala 
+scala> List(1, 2, 3, 4, 5).map(x => x * 3)
+res0: List[Int] = List(3, 6, 9, 12, 15)
+
+scala> Array(1, 2, 3, 4, 5).map(x => x * 3)
+res1: Array[Int] = Array(3, 6, 9, 12, 15)
+
+// Dictionary or Hash map 
+//
+scala> val dict =  Map("x" -> 1,  "y" -> 2,  "z" -> 3)
+dict: scala.collection.immutable.Map[String,Int] = Map(x -> 1, y -> 2, z -> 3)
+
+scala> dict("x")
+res7: Int = 1
+
+scala> dict("y")
+res8: Int = 2
+
+scala> dict.map{ case (k, v) => (k, v * 3) }
+res9: scala.collection.immutable.Map[String,Int] = Map(x -> 3, y -> 6, z -> 9)
+
+scala> dict2("z")
+res10: Int = 9
+
+scala> dict2("x")
+res11: Int = 3
+
+
+#+END_SRC
+
+***** Map in Dynamically Typed Languages 
+
+In dynamic typed languages like Python, Clojure and Scheme the function map
+can take multiple arguments. In typed languages the function 
+takes only one argument.
+
+Map in Python:
+
+#+BEGIN_SRC python 
+
+>>> list(map (lambda a, b, c: 100 * a + 10 * b + c, [1, 2, 3, 4, 5], [8, 9, 10, 11, 12], [3, 4, 7, 8, 10]))
+[183, 294, 407, 518, 630]
+>>> 
+
+#+END_SRC
+
+
+Map in Scheme: 
+
+#+BEGIN_SRC scheme 
+(map (lambda (a b c) (+ (* 100 a) (* 10 b) c)) 
+      '(1 2 3 4 5) 
+      '(8 9 10 11 12) 
+      '(3 4 7 8 10))
+
+$1 = (183 294 407 518 630)
+#+END_SRC
+
+Map in Clojure:
+
+#+BEGIN_SRC clojure
+
+;; f a b c = 100 * a + 10 * b + c
+;; 
+;; 183 = f 1 8 3 
+;; 294 = f 2 9 4 
+;; ...
+;; 630 = f 6 3 0
+;;
+user=> (map (fn [a b c] (+ (* 100 a) (* 10 b) c)) [1 2 3 4 5] [8 9 10 11 12] [3 4 7 8 10])
+(183 294 407 518 630)
+user=> 
+
+;;
+;; The Clojure map is Polymorphic it can be applied to any collection 
+;; of seq abstraction like lists, vectors and hash maps.
+;;
+
+;; Map applied to a list  
+;;
+user=> (map inc '(1 2 3 4 5 6))
+(2 3 4 5 6 7)
+user=> 
+
+;; Map applied to a vector 
+;;
+user=> (map inc [1 2 3 4 5 6])
+(2 3 4 5 6 7)
+user=> 
+
+;; Map applied to a hash map 
+;;
+user=> (map identity {:a 10 :b 20 :c "hello world"})
+([:a 10] [:b 20] [:c "hello world"])
+user=> 
+
+;; The function mapv is similar to map, but returns a vector: 
+;;
+user=> (mapv identity {:a 10 :b 20 :c "hello world"})
+[[:a 10] [:b 20] [:c "hello world"]]
+user=> 
+
+
+;; Clojure also has destructuring 
+;;
+user=> (map (fn [[[a b] c]] (+ (* 100 a ) (* 10 b) c))  [[[1 2] 3] [[3 4] 5] [[1 2] 4]])
+(123 345 124)
+user=>
+
+
+#+END_SRC
+
 ***** Map in Python
 
 In Python 3 map and filter are lazy evaluated, they return a
@@ -2136,88 +2257,6 @@ curry2 = lambda f: lambda x: lambda y: f(x, y)
 >>> fun1_xs ([1, 2, 3, 4])
 [9, 12, 15, 18]
 >>>  
-#+END_SRC
-
-***** Map in Dynamic Typed Languages 
-
-In dynamic typed languages like Python, Clojure and Scheme the function map
-can take multiple arguments. In typed languages the function 
-takes only one argument.
-
-Map in Python:
-
-#+BEGIN_SRC python 
-
->>> list(map (lambda a, b, c: 100 * a + 10 * b + c, [1, 2, 3, 4, 5], [8, 9, 10, 11, 12], [3, 4, 7, 8, 10]))
-[183, 294, 407, 518, 630]
->>> 
-
-#+END_SRC
-
-
-Map in Scheme: 
-
-#+BEGIN_SRC scheme 
-(map (lambda (a b c) (+ (* 100 a) (* 10 b) c)) 
-      '(1 2 3 4 5) 
-      '(8 9 10 11 12) 
-      '(3 4 7 8 10))
-
-$1 = (183 294 407 518 630)
-#+END_SRC
-
-Map in Clojure:
-
-#+BEGIN_SRC clojure
-
-;; f a b c = 100 * a + 10 * b + c
-;; 
-;; 183 = f 1 8 3 
-;; 294 = f 2 9 4 
-;; ...
-;; 630 = f 6 3 0
-;;
-user=> (map (fn [a b c] (+ (* 100 a) (* 10 b) c)) [1 2 3 4 5] [8 9 10 11 12] [3 4 7 8 10])
-(183 294 407 518 630)
-user=> 
-
-;;
-;; The Clojure map is Polymorphic it can be applied to any collection 
-;; of seq abstraction like lists, vectors and hash maps.
-;;
-
-;; Map applied to a list  
-;;
-user=> (map inc '(1 2 3 4 5 6))
-(2 3 4 5 6 7)
-user=> 
-
-;; Map applied to a vector 
-;;
-user=> (map inc [1 2 3 4 5 6])
-(2 3 4 5 6 7)
-user=> 
-
-;; Map applied to a hash map 
-;;
-user=> (map identity {:a 10 :b 20 :c "hello world"})
-([:a 10] [:b 20] [:c "hello world"])
-user=> 
-
-;; The function mapv is similar to map, but returns a vector: 
-;;
-user=> (mapv identity {:a 10 :b 20 :c "hello world"})
-[[:a 10] [:b 20] [:c "hello world"]]
-user=> 
-
-
-;; Clojure also has destructuring 
-;;
-user=> (map (fn [[[a b] c]] (+ (* 100 a ) (* 10 b) c))  [[[1 2] 3] [[3 4] 5] [[1 2] 4]])
-(123 345 124)
-user=>
-
-
 #+END_SRC
 
 *** Filter
@@ -3098,7 +3137,7 @@ val it : int list = [5; 9; 11]
 - 
 
 
-#+END_SRC
+#+END_SRC 
 
 *** For Each, Imperative map
 
@@ -3316,7 +3355,6 @@ nil
 user=> 
 
 #+END_SRC
- 
 *** Apply 
 
 The function _apply_ applies a function to a list or array of
