@@ -3140,12 +3140,13 @@ val it : int list = [5; 9; 11]
 #+END_SRC 
 
 *** For Each, Imperative map
+**** Overview 
 
 For each is an _impure higher order function_ which performs
 side-effect on each element of a list, array or sequence. Unlike map
-this function neither have a standard name or return anything.
+this function neither have a standard name nor returns anything.
 
-*Scheme*
+**** Scheme
 
 #+BEGIN_SRC scheme
 > (for-each (lambda (i) (display i) (newline))  '(1 2 3 4 5 6))
@@ -3175,7 +3176,7 @@ f6k
 
 #+END_SRC
 
-*Haskell*
+**** Haskell
 
 #+BEGIN_SRC haskell 
 > import qualified Control.Monad as M
@@ -3205,7 +3206,7 @@ string 3
 
 #+END_SRC
 
-*Common Lisp*
+**** Common Lisp
 
 #+BEGIN_SRC lisp
 > (mapc #'print '(1 2 3 3 4))
@@ -3218,30 +3219,68 @@ string 3
 
 #+END_SRC
 
-*Scala*
+**** Scala
+
+In Scala, this the higher order function is encoded as method of many
+Scala's data structures or collections. 
 
 #+BEGIN_SRC scala 
-scala> var xs = List(1.0, 2.0, 3.0, 4.0, 5.0, 6.0)
-xs: List[Double] = List(1.0, 2.0, 3.0, 4.0, 5.0, 6.0)
+  // Collection List
+  //
+  scala> var xs = List(1.0, 2.0, 3.0, 4.0, 5.0, 6.0)
+  xs: List[Double] = List(1.0, 2.0, 3.0, 4.0, 5.0, 6.0)
 
-scala> xs.foreach(println)
-1.0
-2.0
-3.0
-4.0
-5.0
-6.0
+  scala> xs.foreach(println)
+  1.0
+  2.0
+  3.0
+  4.0
+  5.0
+  6.0
 
-scala> xs.foreach(x => println( "x = %.3f".format(x)))
-x = 1,000
-x = 2,000
-x = 3,000
-x = 4,000
-x = 5,000
-x = 6,000
+  scala> xs.foreach(x => println( "x = %.3f".format(x)))
+  x = 1,000
+  x = 2,000
+  x = 3,000
+  x = 4,000
+  x = 5,000
+  x = 6,000
+
+  // Collection Map, Hash map, Hashtable or dictionary.
+  // 
+  scala> val dict =  Map("x" -> 1,  "y" -> 2,  "z" -> 3)
+  dict: scala.collection.immutable.Map[String,Int] = Map(x -> 1, y -> 2, z -> 3)
+
+  scala> dict.foreach(println)
+  (x,1)
+  (y,2)
+  (z,3)
+
+  scala> dict.foreach{ case (k, v) => println(s"key = $k, value = $v") }
+  key = x, value = 1
+  key = y, value = 2
+  key = z, value = 3
+
+
+  // A more practical Scala example:
+  //
+  scala> val files = new java.io.File("/").listFiles()
+  files: Array[java.io.File] = Array(/lost+found, /boot, /run, ...)
+
+
+  scala> files.foreach(println)
+  /lost+found
+  /boot
+  /run
+  /usr
+  /etc
+  /sbin
+  /tmp
+  /mnt
+  ... ... .... .. 
 #+END_SRC
 
-*Ocaml*
+**** Ocaml
 
 #+BEGIN_SRC ocaml
 > List.iter ;;
@@ -3256,8 +3295,7 @@ x = 6,000
 - : unit = ()
 #+END_SRC
 
-
-*F#*
+**** F# or FSharp
 
 #+BEGIN_SRC fsharp
 > List.iter ;;
@@ -3299,7 +3337,7 @@ val it : unit = ()
 
 #+END_SRC
 
-*Python*
+**** Python
 
 This function is not in Python standard library however, it can be
 defined as this.
