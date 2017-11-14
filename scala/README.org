@@ -8026,6 +8026,27 @@ Example: Complex number arithmetic.
 
 #+END_SRC
 
+Explanation:
+
+The expression 4.56 + (10 + 4j) is equivalent to 4.56.add(10 + 4j),
+that is a Double class method invocation. But implementing the method
+.add(<complex>) would require modifying the source code of the class
+Double. As it is not possible, the only way to implement this method
+is by creating an implicit class "DoubleToCpl" that works as follow:
+whenever the compiler finds the expression 4.50 + (10 + 4j), it
+converts the number 4.50, that is an instance of Double class, to the
+class DoubleTocpl that has a method to carry out complex number
+addition.
+
+ - (10 + 4j) + 3.50 is the same as:
+
+   + (10 + 4j) add 3.50 or (10 + 4j).add(3.50)
+
+ - 4.56 + (10 + 4j) is the same as:
+
+   + 4.56 add (10 + 4j) or 4.56.add(10 + 4j)
+
+
 Testing in the REPL by loading the script.
 
 #+BEGIN_SRC scala 
