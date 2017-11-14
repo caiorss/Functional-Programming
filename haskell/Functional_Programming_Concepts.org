@@ -4184,9 +4184,9 @@ Misc
 ** Terminology 
 *** Predicate
 
-Any function that returns a bool value. It is often used as argument
-to higher order functions that peforms selection, decision and
-filtering.
+Any function that returns a boolean value, true or false. It is often
+used as argument to higher order functions that perform selection,
+decision and filtering.
 
 Example in Scala:
 
