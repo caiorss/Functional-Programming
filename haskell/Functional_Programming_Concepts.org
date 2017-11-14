@@ -4182,7 +4182,7 @@ Misc
    <https://www.cs.rice.edu/~taha/publications/conference/sml98.pdf>
 
 ** Terminology 
-*** Predicate
+*** Predicates
 
 Any function that returns a boolean value, true or false. It is often
 used as argument to higher order functions that perform selection,
@@ -4300,7 +4300,50 @@ Example in Scala:
 
 #+END_SRC
 
-*** Thunk
+*** Thunks
+
+A thunk is a function without any arguments that is used to delay the
+execution of some expression or action. Thunks allows to create higher
+order functions that works as control structures.
+
+Example in Scala: 
+
+#+BEGIN_SRC scala 
+
+  def doTimes(n: Int, fn: () => Unit) =
+    for(i <- 1 to n) fn()
+
+  scala> doTimesV1(5, () => println("Functional programming is awesome!"))
+  Functional programming is awesome!
+  Functional programming is awesome!
+  Functional programming is awesome!
+  Functional programming is awesome!
+  Functional programming is awesome!
+
+
+  def doIf[A](ifTrueFn: () => Unit, ifFalseFn: () => Unit) =
+    (flag: Boolean) => if(flag)
+      ifTrueFn()
+    else
+      ifFalseFn()
+
+  scala> val action = doIf(() => println("Received true"), () => println("Received false"))
+  action: Boolean => Unit = $$Lambda$1461/1941122645@3d400897
+
+  scala> action(true)
+  Received true
+
+  scala> action(false)
+  Received false
+
+  scala>  doIf(() => println("Received true"), () => println("Received false"))(true)
+  Received true
+
+  scala>  doIf(() => println("Received true"), () => println("Received false"))(false)
+  Received false
+
+#+END_SRC
+
 *** Identity Function 
 
 The identity function is a polymorphic function which returns the
