@@ -9353,10 +9353,14 @@ Running:
      :ID:       50b40ac2-98e9-40cb-ab9e-0984e1ef3c22
      :END:
 
-As Scala is a functional language it allows functions be passed
-directly as argument, therefore the observer can objects be replaced
-by a _callbacks_ function and _subject_ by a mutable collection of
-callbacks.
+As Scala is also a functional language, it allows functions be passed
+directly as argument, therefore the observer objects can be replaced
+by _callbacks_ functions and the _subject_ by some object with a
+mutable collection of callbacks.
+
+The subject or observable class was replaced by a record of stateful
+functions created with a closure, but it could remain as class as
+well.
 
 File: [[file:src/observerPatternFun.scala][file:src/observerPatternFun.scala]]
 
