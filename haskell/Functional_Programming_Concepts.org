@@ -2330,6 +2330,11 @@ StopIteration
 *** Reduce or Fold
 **** Overview 
 
+The function fold or reduce is one of the most important higher order
+functions as it can be used to implement many other higher order
+functions, eliminate recursion and operate over many data structures
+or collections. 
+
 *Fold Left*
 
 The  function fold left is tail recursive, whereas the function fold
@@ -2517,313 +2522,7 @@ S4   = f x1 S3     = f 2  543  = 10 * 543  + 2 = 5432
 S5   = f x0 S4     = f 1  5432 = 10 * 5432 + 1 = 54321
 #+END_SRC
 
-**** Python
-
-In Python 3 the function reduce is not default anymore, however it can
-be found in the native library functools, that has a lot of built-in
-functions for functional programming. The function reduce is equivalent
-to Haskell function foldl (fold left) which is tail recursive.
-
-#+BEGIN_SRC
-reduce(function, sequence[, initial]) -> value
-
-reduce :: (acc -> x -> acc) -> [x] ?acc0  -> acc
-#+END_SRC
-
-#+BEGIN_SRC python
->>> from functools import reduce
->>> 
-
->>> reduce (lambda acc, x: 10 *  acc + x , [1, 2, 3, 4, 5], 0)
-12345
->>> 
-
->>> f = lambda acc, x: 10 *  acc + x
->>> 
->>> f(0, 1)
-1
->>> f( f(0, 1), 2)
-12
->>> f( f( f(0, 1), 2), 3)
-123
->>> f( f( f( f(0, 1), 2), 3), 4)
-1234
->>> f( f( f( f( f(0, 1), 2), 3), 4), 5)
-12345
->>> 
-
-def my_reduce (f, xs, acc0=None):
-    "Non recursive implementation of reduce (fold_left)
-     with optional initial accumulator value.
-    "
-
-    if acc0 is None:
-        acc = xs[0]   
-        xss = xs[1:]
-    else:
-        acc = acc0
-        xss = xs
-        
-    for x in xss:
-        acc = f (acc, x)
-        
-    return acc
-
-
->>> 
->>> my_reduce(lambda acc, x: 10 * acc + x, [1, 2, 3, 4, 5], 0)
-12345
->>> my_reduce(lambda acc, x: 10 * acc + x, [1, 2, 3, 4, 5])
-12345
->>> my_reduce(lambda acc, x:  acc + x, [1, 2, 3, 4, 5], 0)
-15
->>> my_reduce(lambda acc, x:  acc * x, [1, 2, 3, 4, 5], 1)
-120
->>> 
- 
- #
- # Implementation without recursion.
- #
-
-def fold_left (f_acc_x_to_acc, acc0, xs):
-    "Haskell-like fold left function
-    
-    fold_left :: (acc -> x -> acc) -> acc -> [x]
-    "
-    acc = acc0
-    
-    for x in xs:
-        acc = f_acc_x_to_acc (acc, x)
-        
-    return acc
-      
->>> fold_left (lambda acc, x: 10 * acc + x, 0, [1, 2, 3, 4, 5])
-12345
->>>       
-
-
-def fold_right (f, acc0, xs):
-    return fold_left ((lambda acc, x: f(x, acc)), acc0, reversed(xs))
-
->>> fold_right (lambda x, acc: 10 * acc + x, 0, [1, 2, 3, 4, 5])
-54321
->>>
-
-def fold_right2 (f, acc0, xs):
-    acc = acc0
-    
-    for x in reversed(xs):
-        acc = f(x, acc)
-        
-    return acc
-
->>> fold_right2 (lambda x, acc: 10 * acc + x, 0, [1, 2, 3, 4, 5])
-54321
->>>     
-
-#+END_SRC
-
-*Usefulness of Fold*
-
-Many functions and recursive algorithms can be implemented using the
-fold function, including map, filter, sum, product and others.
-
-It is based in the paper:  
-
-   - [[http://www.cs.nott.ac.uk/~pszgmh/fold.pdf][A tutorial on the universality and expressiveness of fold. GRAHAM HUTTON]]
-
-In the paper was used fold right, here was used fold left. 
-
-#+BEGIN_SRC python 
-
-def fold_left (f_acc_x_to_acc, acc0, xs):
-    "Haskell-like fold left function
-    
-    fold_left :: (acc -> x -> acc) -> acc -> [x]
-    "
-    acc = acc0
-    
-    for x in xs:
-        acc = f_acc_x_to_acc (acc, x)
-        
-    return acc
-    
-    
-    ;;; Function fold in curried form 
-    
-curry3 = lambda f: lambda x: lambda y: lambda z: f(x, y, z)
-
-fold = curry3(fold_left)
-
->>> summation = fold(lambda acc, x: acc + x)(0)
->>> 
->>> summation([1, 2, 3, 4, 5, 6])
-21
->>> 
-
->>> product = fold(lambda acc, x: acc * x)(1)
->>> product([1, 2, 3, 4, 5])
-120
->>> 
-
->>> f_or = fold(lambda acc, x: acc or x)(False)
->>> f_or([False, False, False])
-False
->>> 
->>> f_or([False, False, True])
-True
->>> 
-
->>> f_and = fold(lambda acc, x: acc and x)(True)
->>> 
->>> f_and([False, True, True])
-False
->>> f_and([True, True, True])
-True
->>> 
-
->>> length = fold(lambda acc, x: acc + 1)(0)
->>> length ([1, 2, 3, 4, 5])
-5
-
->>> _map = lambda f, xs: fold(lambda acc, x: acc + [f(x)] )([])(xs)
->>> _map (lambda x: x * 3, [1, 2, 3, 4])
-[3, 6, 9, 12]
->>> 
-
->>> _filter = lambda p, xs: fold(lambda acc, x: (acc + [x]) if p(x) else  acc )([])(xs)
->>> 
->>> _filter(lambda x: x > 10, [10, 3, 8, 2, 20, 30])
-[20, 30]
->>> 
-
-
- #
- # Function composition
- # 
- #  (f3 (f2 (f1 (f0 x))))
- #
- #  (f3 . f2 . f1 . f0) x
- #
- #  or using, forward composition:
- # 
- #  (f0 >> f2 >> f1 >> f0) x
- #
- 
->>> f1 = lambda x: 3 * x
->>> f2 = lambda x: 5 + x
->>> f3 = lambda x: 2 ** x
-
-
->>> _fcomp = lambda functions: lambda x: fold(lambda acc, f: f(acc)) (x) (functions)
-
->>> _fcomp([f1, f2, f3])(3)
-16384
-
->>> (f3 (f2 (f1 (3))))
-16384
->>>  
-#+END_SRC
-
-**** Clojure
-
-The function reduce is similar to Haskell _fold left_ and Python
-reduce. This function is Polymorphic. It works on any collection of
-seq abstraction: lists, vectors and hash maps. 
-
-Signature:
-
-#+BEGIN_SRC 
-(reduce f coll)      -> reduce :: (f :: acc -> x -> acc) -> [x]
-
-Or 
-
-(reduce f val coll)  -> reduce :: (f :: acc -> x -> acc) -> acc -> [x] 
-
-f :: acc -> x -> acc 
-#+END_SRC
-
-
-#+BEGIN_SRC clojure
-
-;; Applying fold/reduce to a list 
-;;
-;;
-user=> (reduce (fn [acc x] (+ (* 10 acc) x)) 0 '(1 2 3 4 5))
-12345
-
-
-;; Applying fold/reduce to a vector 
-;;
-user=> (reduce (fn [acc x] (+ (* 10 acc) x))  0 [1 2 3 4 5])
-12345
-user=> 
-
-user=> (reduce (fn [acc x] (+ (* 10 acc) x)) 0 [])
-0
-
-;; Applyind fold/reduce to a Hash map 
-;;
-user=> (reduce (fn [acc x] (cons x  acc )) '()  { :a 10 :b 20 :c 30 })
-([:c 30] [:b 20] [:a 10])
-user=>
-
-;; Without Initial value of accumulator it will fail on a empty list. 
-;; 
-user=> (reduce (fn [acc x] (+ (* 10 acc) x)) [1 2 3 4 5])
-12345
-
-user=> (reduce (fn [acc x] (+ (* 10 acc) x)) [])
-ArityException Wrong number of args (0) passed to: user/eval44/fn--45  clojure.lang.AFn.throwArity (AFn.java:429)
-user=> 
-
-;; Implementing fold right  
-;;
-(defn foldr 
-   ([f xs]       (reduce (fn [acc x] (f x acc))     (reverse xs)))
-   ([f acc xs]   (reduce (fn [acc x] (f x acc)) acc (reverse xs)))
-  )
-
-user=> (foldr (fn [x acc] (+ (* 10 acc) x)) 0 [1 2 3 4 5])
-54321
-
-
-;; Clojure has destructuring 
-;;
-user=> (reduce (fn [acc [a b]] (conj acc (+ (* 10 a) b) )) '[] [[1 2] [3 4] [5 8]] )
-[12 34 58]
-user=> 
-
-;; Implementing map with fold left (reduce)
-;;
-user=> (defn map2 [f xs] 
-          (reverse (reduce (fn [acc x] (cons (f x) acc)) 
-                        () 
-                        xs)))
-#'user/map2
-user=> 
-user=> (map2 inc '(1 2 3 3 4 5))
-(2 3 4 4 5 6)
-user=> 
-
-;; Implementing map with fold right 
-;;
-;;
-
-(defn map2 [f xs] 
-   (foldr (fn [x acc] (cons (f x) acc)) 
-          ()
-          xs
-   ))
-
-user=> (map2 inc '(1 2 3 4 5 6))
-(2 3 4 5 6 7)
-user=> 
-
-
-#+END_SRC 
-
-**** Fsharp 
+**** F# Fsharp 
 
 #+BEGIN_SRC fsharp 
 // Fold left for Lists 
@@ -3135,6 +2834,312 @@ val it : int list = [5; 9; 11]
 val it : int list = [5; 9; 11]
 > 
 - 
+
+
+#+END_SRC 
+
+**** Python
+
+In Python 3 the function reduce is not default anymore, however it can
+be found in the native library functools, that has a lot of built-in
+functions for functional programming. The function reduce is equivalent
+to Haskell function foldl (fold left) which is tail recursive.
+
+#+BEGIN_SRC
+reduce(function, sequence[, initial]) -> value
+
+reduce :: (acc -> x -> acc) -> [x] ?acc0  -> acc
+#+END_SRC
+
+#+BEGIN_SRC python
+>>> from functools import reduce
+>>> 
+
+>>> reduce (lambda acc, x: 10 *  acc + x , [1, 2, 3, 4, 5], 0)
+12345
+>>> 
+
+>>> f = lambda acc, x: 10 *  acc + x
+>>> 
+>>> f(0, 1)
+1
+>>> f( f(0, 1), 2)
+12
+>>> f( f( f(0, 1), 2), 3)
+123
+>>> f( f( f( f(0, 1), 2), 3), 4)
+1234
+>>> f( f( f( f( f(0, 1), 2), 3), 4), 5)
+12345
+>>> 
+
+def my_reduce (f, xs, acc0=None):
+    "Non recursive implementation of reduce (fold_left)
+     with optional initial accumulator value.
+    "
+
+    if acc0 is None:
+        acc = xs[0]   
+        xss = xs[1:]
+    else:
+        acc = acc0
+        xss = xs
+        
+    for x in xss:
+        acc = f (acc, x)
+        
+    return acc
+
+
+>>> 
+>>> my_reduce(lambda acc, x: 10 * acc + x, [1, 2, 3, 4, 5], 0)
+12345
+>>> my_reduce(lambda acc, x: 10 * acc + x, [1, 2, 3, 4, 5])
+12345
+>>> my_reduce(lambda acc, x:  acc + x, [1, 2, 3, 4, 5], 0)
+15
+>>> my_reduce(lambda acc, x:  acc * x, [1, 2, 3, 4, 5], 1)
+120
+>>> 
+ 
+ #
+ # Implementation without recursion.
+ #
+
+def fold_left (f_acc_x_to_acc, acc0, xs):
+    "Haskell-like fold left function
+    
+    fold_left :: (acc -> x -> acc) -> acc -> [x]
+    "
+    acc = acc0
+    
+    for x in xs:
+        acc = f_acc_x_to_acc (acc, x)
+        
+    return acc
+      
+>>> fold_left (lambda acc, x: 10 * acc + x, 0, [1, 2, 3, 4, 5])
+12345
+>>>       
+
+
+def fold_right (f, acc0, xs):
+    return fold_left ((lambda acc, x: f(x, acc)), acc0, reversed(xs))
+
+>>> fold_right (lambda x, acc: 10 * acc + x, 0, [1, 2, 3, 4, 5])
+54321
+>>>
+
+def fold_right2 (f, acc0, xs):
+    acc = acc0
+    
+    for x in reversed(xs):
+        acc = f(x, acc)
+        
+    return acc
+
+>>> fold_right2 (lambda x, acc: 10 * acc + x, 0, [1, 2, 3, 4, 5])
+54321
+>>>     
+
+#+END_SRC
+
+*Usefulness of Fold*
+
+Many functions and recursive algorithms can be implemented using the
+fold function, including map, filter, sum, product and others.
+
+It is based in the paper:  
+
+   - [[http://www.cs.nott.ac.uk/~pszgmh/fold.pdf][A tutorial on the universality and expressiveness of fold. GRAHAM HUTTON]]
+
+In the paper was used fold right, here was used fold left. 
+
+#+BEGIN_SRC python 
+
+def fold_left (f_acc_x_to_acc, acc0, xs):
+    "Haskell-like fold left function
+    
+    fold_left :: (acc -> x -> acc) -> acc -> [x]
+    "
+    acc = acc0
+    
+    for x in xs:
+        acc = f_acc_x_to_acc (acc, x)
+        
+    return acc
+    
+    
+    ;;; Function fold in curried form 
+    
+curry3 = lambda f: lambda x: lambda y: lambda z: f(x, y, z)
+
+fold = curry3(fold_left)
+
+>>> summation = fold(lambda acc, x: acc + x)(0)
+>>> 
+>>> summation([1, 2, 3, 4, 5, 6])
+21
+>>> 
+
+>>> product = fold(lambda acc, x: acc * x)(1)
+>>> product([1, 2, 3, 4, 5])
+120
+>>> 
+
+>>> f_or = fold(lambda acc, x: acc or x)(False)
+>>> f_or([False, False, False])
+False
+>>> 
+>>> f_or([False, False, True])
+True
+>>> 
+
+>>> f_and = fold(lambda acc, x: acc and x)(True)
+>>> 
+>>> f_and([False, True, True])
+False
+>>> f_and([True, True, True])
+True
+>>> 
+
+>>> length = fold(lambda acc, x: acc + 1)(0)
+>>> length ([1, 2, 3, 4, 5])
+5
+
+>>> _map = lambda f, xs: fold(lambda acc, x: acc + [f(x)] )([])(xs)
+>>> _map (lambda x: x * 3, [1, 2, 3, 4])
+[3, 6, 9, 12]
+>>> 
+
+>>> _filter = lambda p, xs: fold(lambda acc, x: (acc + [x]) if p(x) else  acc )([])(xs)
+>>> 
+>>> _filter(lambda x: x > 10, [10, 3, 8, 2, 20, 30])
+[20, 30]
+>>> 
+
+
+ #
+ # Function composition
+ # 
+ #  (f3 (f2 (f1 (f0 x))))
+ #
+ #  (f3 . f2 . f1 . f0) x
+ #
+ #  or using, forward composition:
+ # 
+ #  (f0 >> f2 >> f1 >> f0) x
+ #
+ 
+>>> f1 = lambda x: 3 * x
+>>> f2 = lambda x: 5 + x
+>>> f3 = lambda x: 2 ** x
+
+
+>>> _fcomp = lambda functions: lambda x: fold(lambda acc, f: f(acc)) (x) (functions)
+
+>>> _fcomp([f1, f2, f3])(3)
+16384
+
+>>> (f3 (f2 (f1 (3))))
+16384
+>>>  
+#+END_SRC
+
+**** Clojure
+
+The function reduce is similar to Haskell _fold left_ and Python
+reduce. This function is Polymorphic. It works on any collection of
+seq abstraction: lists, vectors and hash maps. 
+
+Signature:
+
+#+BEGIN_SRC 
+(reduce f coll)      -> reduce :: (f :: acc -> x -> acc) -> [x]
+
+Or 
+
+(reduce f val coll)  -> reduce :: (f :: acc -> x -> acc) -> acc -> [x] 
+
+f :: acc -> x -> acc 
+#+END_SRC
+
+
+#+BEGIN_SRC clojure
+
+;; Applying fold/reduce to a list 
+;;
+;;
+user=> (reduce (fn [acc x] (+ (* 10 acc) x)) 0 '(1 2 3 4 5))
+12345
+
+
+;; Applying fold/reduce to a vector 
+;;
+user=> (reduce (fn [acc x] (+ (* 10 acc) x))  0 [1 2 3 4 5])
+12345
+user=> 
+
+user=> (reduce (fn [acc x] (+ (* 10 acc) x)) 0 [])
+0
+
+;; Applyind fold/reduce to a Hash map 
+;;
+user=> (reduce (fn [acc x] (cons x  acc )) '()  { :a 10 :b 20 :c 30 })
+([:c 30] [:b 20] [:a 10])
+user=>
+
+;; Without Initial value of accumulator it will fail on a empty list. 
+;; 
+user=> (reduce (fn [acc x] (+ (* 10 acc) x)) [1 2 3 4 5])
+12345
+
+user=> (reduce (fn [acc x] (+ (* 10 acc) x)) [])
+ArityException Wrong number of args (0) passed to: user/eval44/fn--45  clojure.lang.AFn.throwArity (AFn.java:429)
+user=> 
+
+;; Implementing fold right  
+;;
+(defn foldr 
+   ([f xs]       (reduce (fn [acc x] (f x acc))     (reverse xs)))
+   ([f acc xs]   (reduce (fn [acc x] (f x acc)) acc (reverse xs)))
+  )
+
+user=> (foldr (fn [x acc] (+ (* 10 acc) x)) 0 [1 2 3 4 5])
+54321
+
+
+;; Clojure has destructuring 
+;;
+user=> (reduce (fn [acc [a b]] (conj acc (+ (* 10 a) b) )) '[] [[1 2] [3 4] [5 8]] )
+[12 34 58]
+user=> 
+
+;; Implementing map with fold left (reduce)
+;;
+user=> (defn map2 [f xs] 
+          (reverse (reduce (fn [acc x] (cons (f x) acc)) 
+                        () 
+                        xs)))
+#'user/map2
+user=> 
+user=> (map2 inc '(1 2 3 3 4 5))
+(2 3 4 4 5 6)
+user=> 
+
+;; Implementing map with fold right 
+;;
+;;
+
+(defn map2 [f xs] 
+   (foldr (fn [x acc] (cons (f x) acc)) 
+          ()
+          xs
+   ))
+
+user=> (map2 inc '(1 2 3 4 5 6))
+(2 3 4 5 6 7)
+user=> 
 
 
 #+END_SRC 
