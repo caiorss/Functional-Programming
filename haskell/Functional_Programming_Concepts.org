@@ -4183,6 +4183,123 @@ Misc
 
 ** Terminology 
 *** Predicate
+
+Any function that returns a bool value. It is often used as argument
+to higher order functions that peforms selection, decision and
+filtering.
+
+Example in Scala:
+
+#+BEGIN_SRC scala
+  // Some predicates
+
+  val isEven = (x: Int) => (x % 2) == 0
+
+  val isOdd = (x: Int) => (x % 2) != 0
+
+  scala> List(1, 2, 4, 5, 6, 7, 9, 10).filter(isOdd)
+  res1: List[Int] = List(1, 5, 7, 9)
+
+  scala> List(1, 2, 4, 5, 6, 7, 9, 10).filter(isEven)
+  res2: List[Int] = List(2, 4, 6, 10)
+
+
+
+  //  Example: traversing a directory.
+  //
+  import java.nio.file.{Files, Paths, Path}
+  import java.util.stream.{Stream => JStream}
+
+  def walkDirectory(path: String, pred: Path => Boolean)(action: Path => Unit) =
+    Files.walk(Paths.get(path))
+      .filter(p => pred(p))
+      .forEach(p => action(p))
+
+  // Sample predicates for directory navigation
+  //
+  scala> val isDirectory = (p: Path) => p.toFile.isDirectory()
+  isDirectory: java.nio.file.Path => Boolean = $$Lambda$1387/1448675410@3562b3f
+
+  scala> val isFile = (p: Path) => p.toFile.isFile()
+  isFile: java.nio.file.Path => Boolean = $$Lambda$1388/696602804@29ed425e
+
+  scala> val pAll = (p: Path) => true
+  pAll: java.nio.file.Path => Boolean = $$Lambda$1393/1337725291@705ea29
+
+  scala> def hasExtension(ext: String) = (p: Path) => p.toFile.getName.endsWith(ext)
+  hasExtension: (ext: String)java.nio.file.Path => Boolean
+
+
+
+  // Print only directories
+  //
+  scala> walkDirectory("/boot", isDir){ println}
+  /boot
+  /boot/grub
+  /boot/grub/locale
+  /boot/grub/themes
+  /boot/grub/themes/starfield
+  /boot/grub/i386-pc
+  /boot/grub/fonts
+  /boot/memtest86+
+
+  // Print only files
+  //
+  scala> walkDirectory("/boot", isFile){ println}
+  /boot/initramfs-4.11-rt-x86_64-fallback.img
+  /boot/intel-ucode.img
+  /boot/linux316-x86_64.kver
+  /boot/vmlinuz-3.16-x86_64
+  /boot/grub/locale/zh_CN.mo
+  /boot/grub/locale/ru.mo
+  /boot/grub/locale/hu.mo
+  /boot/grub/locale/de@hebrew.mo
+  /boot/grub/locale/nl.mo
+  /boot/grub/locale/it.mo
+  ... ... ... ... ... ... .. .
+
+  // Print all entries
+  //
+  scala> walkDirectory("/boot", pAll){ println}
+  /boot
+  /boot/initramfs-4.11-rt-x86_64-fallback.img
+  /boot/intel-ucode.img
+  /boot/linux316-x86_64.kver
+  /boot/vmlinuz-3.16-x86_64
+  /boot/grub
+  /boot/grub/locale
+  /boot/grub/locale/zh_CN.mo
+  /boot/grub/locale/ru.mo
+  /boot/grub/locale/hu.mo
+  /boot/grub/locale/de@hebrew.mo
+  /boot/grub/locale/nl.mo
+  /boot/grub/locale/it.mo
+    ... ... ... ... ... ... .. .
+
+  // Print all files with a given extension
+  //
+  scala> walkDirectory("/boot", hasExtension(".img")) { file => println(s"file = $file") }
+  file = /boot/initramfs-4.11-rt-x86_64-fallback.img
+  file = /boot/intel-ucode.img
+  file = /boot/grub/i386-pc/core.img
+  file = /boot/grub/i386-pc/boot.img
+  file = /boot/initramfs-3.16-x86_64-fallback.img
+  file = /boot/initramfs-4.9-x86_64-fallback.img
+  file = /boot/initramfs-3.16-x86_64.img
+  file = /boot/initramfs-4.9-x86_64.img
+  file = /boot/initramfs-4.11-rt-x86_64.img
+
+  scala> walkDirectory("/boot", hasExtension(".png")) { file => println(s"file = $file") }
+  file = /boot/grub/themes/starfield/boot_menu_nw.png
+  file = /boot/grub/themes/starfield/terminal_box_n.png
+  file = /boot/grub/themes/starfield/slider_c.png
+  file = /boot/grub/themes/starfield/starfield.png
+  file = /boot/grub/themes/starfield/terminal_box_nw.png
+  file = /boot/grub/themes/starfield/boot_menu_sw.png
+  ... ... ... ... ... ... ... ... ...
+
+#+END_SRC
+
 *** Thunk
 *** Identity Function 
 
