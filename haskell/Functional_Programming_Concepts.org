@@ -4308,12 +4308,31 @@ order functions that works as control structures.
 
 Example in Scala: 
 
+In the example below, the function doTimes has a thunk as the second
+argument and executes the thunk function n times.
+
 #+BEGIN_SRC scala 
 
   def doTimes(n: Int, fn: () => Unit) =
     for(i <- 1 to n) fn()
 
-  scala> doTimesV1(5, () => println("Functional programming is awesome!"))
+  // Thunk:
+  //
+  // It delays the execution of the <<expression>> 
+  // () => <<expression>>
+  //
+  scala> val thunk1 = () => println("Functional programming is awesome!")
+  thunk1: () => Unit = $$Lambda$1470/249666914@79d07834
+
+  scala> doTimes(5, thunk1)
+  Functional programming is awesome!
+  Functional programming is awesome!
+  Functional programming is awesome!
+  Functional programming is awesome!
+  Functional programming is awesome
+
+
+  scala> doTimes(5, () => println("Functional programming is awesome!"))
   Functional programming is awesome!
   Functional programming is awesome!
   Functional programming is awesome!
