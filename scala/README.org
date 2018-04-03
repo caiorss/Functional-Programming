@@ -6288,7 +6288,7 @@ Possibilities:
 
 #+END_SRC
 
-** For comprehensions
+** For comprehensions and Monads 
 *** Scala For-comprehensions and Haskell do-notation
 **** For-loop 
 
@@ -7444,7 +7444,48 @@ Experiment in the REPL:
 
 #+END_SRC
 
+*** Reader Monad Implementation 
 
+#+BEGIN_SRC scala :paste src/reader.scala 
+case class Reader[R, A](run: R => A){
+  
+  // Haskell fmap or <$> operator
+  //
+  def map[B](fn: A => B): Reader[R, B] = 
+    Reader(r => fn(this.run(r)))
+
+  // Haskell bind (>>=)
+  //
+  def flatMap[B](fn: A => Reader[R, B]): Reader[R, B] =
+    Reader(r => fn(this.run(r)).run(r))
+
+  def withReader[Z](fn: Z => R): Reader[Z, A] =
+    Reader(z => this.run(fn(z)))
+
+  def local(fn: R => R): Reader[R, A] =
+    Reader(r => this.run(fn(r)))
+
+  def foreach(fn: A => Unit): Reader[R, Unit] =
+    Reader(r => fn(this.run(r)))
+
+  // Haskell - runReader 
+  def apply(x: R): A = run(x)  
+}
+
+object Reader{
+
+  // Equivalent of Haskell return :: a -> (Reader r) a
+  def pure[R, A](x: A) = Reader((_: R) => x)
+
+  def ask[R] = Reader[R, R]((r: R) => r)
+}
+#+END_SRC
+
+Testing: 
+
+#+BEGIN_SRC scala 
+
+#+END_SRC
 *** References 
 
  - [[[https://docs.scala-lang.org/tutorials/FAQ/yield.html][H|SD]]] - *How does yield work? | Scala Documentation*. Available at
@@ -8026,7 +8067,7 @@ Example: Complex number arithmetic.
 
 #+END_SRC
 
-Explanation:
+Explanation: 
 
 The expression 4.56 + (10 + 4j) is equivalent to 4.56.add(10 + 4j),
 that is a Double class method invocation. But implementing the method
@@ -8764,6 +8805,199 @@ Reference:
  - *Simple Factory Vs Factory Method Vs Abstract Factory by Example*
    <https://vivekcek.wordpress.com/2013/03/17/simple-factory-vs-factory-method-vs-abstract-factory-by-example/>
 
+**** Static Factory Method 
+
+The static factory method is a design pattern that uses private
+constructor and static methods to create instances of the class,
+instead of public constructors and constructor overload. The benefits
+of this methods are: 
+
+ + Unlike constructors, static methods can have meaningful names.
+ + It allows the private constructor to be changed without breaking
+   client code.
+ + Multiple constructors cannot have have different type
+   signature. Static methods, doesn't have those limitations.
+ + Allows multiple ways to instantiate a class.
+
+Note: It should not be confused with GOF's factory design pattern. 
+
+ *Example 1:*
+
+The class Interval uses milliseconds as its internal data
+representation and can be instantiated as an interval of seconds,
+minutes, hours or days.
+
+As Scala doesn't have static methods, this pattern is implemented
+using an companion-object which is a singleton with the same name of
+the class. The companion-object Interval can access any private
+method, field or constructor of the class Interval. 
+
+#+BEGIN_SRC scala 
+  // Constructor is private and it is only accessible from 
+  // companion object
+  class Interval private (timeMs: Double){  
+    def getSeconds()  = timeMs / 1000.0 
+    def getMinutes()  = timeMs / 60000.0
+    def getHours()    = timeMs / 3600000.0
+    def getDays()     = timeMs / 86400000.0
+  }
+
+  // The companion-object can access the class'
+  // with same name private methods and data.
+  //
+  object Interval{
+    def ofSeconds(time: Int) =
+      new Interval(time * 1000)
+
+    def ofMinutes(time: Int) =
+      new Interval(time * 60000)
+
+    def ofHours(time: Int) =
+      new Interval(time * 3600000)
+
+    def ofDays(time: Int) =
+      new Interval(time *  86400000)
+  }
+#+END_SRC
+ 
+Testing in the REPL: 
+
+#+BEGIN_SRC scala 
+  scala> val i0 = new Interval(1000)
+  <console>:13: error: constructor Interval in class Interval cannot be accessed in object $iw
+         val i0 = new Interval(1000)
+                  ^
+  scala> val i1 = Interval.ofSeconds(600)
+  i1: Interval = Interval@1da074ef
+
+  scala> i1.getSeconds()
+  res10: Double = 600.0
+
+  scala> i1.getMinutes()
+  res11: Double = 10.0
+
+  scala> i1.getHours()
+  res12: Double = 0.16666666666666666
+
+
+  scala> val i2 = Interval.ofHours(3)
+  i2: Interval = Interval@23d5ada9
+
+  scala> i2.getSeconds()
+  res13: Double = 10800.0
+
+  scala> i2.getMinutes()
+  res14: Double = 180.0
+
+  scala> i2.getHours()
+  res15: Double = 3.0
+
+  scala> i2.getDays()
+  res16: Double = 0.125
+
+
+#+END_SRC
+
+ *Example 2:*
+
+#+BEGIN_SRC scala 
+
+  class Coordinate private (x: Double, y: Double) {
+    import Math.{sqrt, atan2, PI}
+    def getX() = x
+    def getY() = y
+    def getRadius() = sqrt(x * x + y * y)
+    def getAngle()  = atan2(y, x) * 180.0 / PI
+    // Get rectangular coordinates representation
+    def getRec() = (x, y)
+    // Get polar coordinates representation
+    def getPol() = (getRadius(), getAngle())
+  }
+
+  object Coordinate{
+    import Math.{sqrt, atan2, PI, sin, cos}
+
+    // Default "constructor"
+    def apply(x: Double, y: Double) =
+      new Coordinate(x, y)
+
+    // Create a coordinate in rectangular coordinate
+    def ofRec(x: Double, y: Double) =
+      new Coordinate(x, y)
+
+     // Create a coordinate in polar coordinates
+    def ofPol(radius: Double, angle: Double) = {
+      // Angle "a" in Radians 
+      val a = angle / 180.0 * PI
+      new Coordinate(radius * cos(a), radius * sin(a))
+    }
+  }
+
+
+#+END_SRC
+
+Repl test: 
+
+#+BEGIN_SRC scala 
+  scala> val c1 = new Coordinate(3.0, 5.0)
+  <console>:13: error: constructor Coordinate in class Coordinate cannot be accessed in object $iw
+         val c1 = new Coordinate(3.0, 5.0)
+                  ^
+  // Apply method 
+  scala> val c1 = Coordinate(3.0, 5.0)
+  c1: Coordinate = Coordinate@a9f946f
+
+  scala> val c1 = Coordinate(5.0, 5.0)
+  c1: Coordinate = Coordinate@2b86d46b
+
+  scala> val c1 = Coordinate(0.0, 5.0)
+  c1: Coordinate = Coordinate@de96d10
+
+  scala> c1.getX()
+  res19: Double = 0.0
+
+  scala> c1.getY()
+  res20: Double = 5.0
+
+  scala> c1.getPol()
+  res21: (Double, Double) = (5.0,90.0)
+
+
+  scala> val c2 = Coordinate.apply(0.0, 5.0)
+  c2: Coordinate = Coordinate@17d2221f
+
+  scala> c2.getRec()
+  res23: (Double, Double) = (0.0,5.0)
+
+  scala> c2.getPol()
+  res24: (Double, Double) = (5.0,90.0)
+
+
+  // Create coordinate given in Polar Coordinates 
+  scala> val c3 = Coordinate.ofPol(10.0, 45.0)
+  c3: Coordinate = Coordinate@1f53e98
+
+  scala> c3.getRec()
+  res25: (Double, Double) = (7.0710678118654755,7.071067811865475)
+
+  scala> c2.getPol()
+  res27: (Double, Double) = (5.0,90.0)
+
+
+#+END_SRC
+
+
+Futher Reading: 
+
+ + *5 Difference between Constructor and Static Factory method in Java-
+   Pros and Cons* -
+   <http://javarevisited.blogspot.com.br/2017/02/5-difference-between-constructor-and-factory-method-in-java.html>
+
+ + *Replace Constructor with Factory Method* -
+   <https://refactoring.guru/replace-constructor-with-factory-method>
+
+ + *Java Static Factory Method* -
+   <https://www.slideshare.net/mysky14/java-static-factory-methods> 
 **** Strategy Pattern
 ***** Overview 
 
@@ -9356,7 +9590,7 @@ Running:
 As Scala is also a functional language, it allows functions be passed
 directly as argument, therefore the observer objects can be replaced
 by _callbacks_ functions and the _subject_ by some object with a
-mutable collection of callbacks.
+mutable collection of callbacks. 
 
 The subject or observable class was replaced by a record of stateful
 functions created with a closure, but it could remain as class as
