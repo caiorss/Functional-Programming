@@ -7764,6 +7764,85 @@ The Scala Apply-method is used to create callable objects similar to
 C++'s "functor" (aka function-object) or an object that behaves like
 function.  
 
+ *Example 1* - The apply method can be overloaded as a long as each
+ version has a unique type signature. 
+
+#+BEGIN_SRC scala 
+
+  class ApplyTest{
+    def apply(x: Int) =
+      println("Apply called with integer - x = " + x)
+
+    def apply(s: String) =
+      println(s"Apply called with string - s = '$s' ")
+
+    def apply(x: Double, y: Double) =
+      println("x + y = " + (x + y))
+  }
+
+  scala> obj1(10)
+  Apply called with integer - x = 10
+
+  scala> obj1.apply(10)
+  Apply called with integer - x = 10
+
+  scala> obj1("hello world Scala, C++ functor function object")
+  Apply called with string - s = 'hello world Scala, C++ functor function object'
+
+  scala> obj1 apply "hello world Scala, C++ functor function object"
+  Apply called with string - s = 'hello world Scala, C++ functor function object'
+
+  scala> obj1(5.6, 2.435)
+  x + y = 8.035
+
+  scala> obj1 apply (5.6, 2.435)
+  x + y = 8.035
+
+  scala> obj1.apply(5.6, 2.435)
+  x + y = 8.035
+
+
+#+END_SRC
+
+
+ *Example 2* - Singleton objects can also have apply method and be
+ called like functions. 
+ 
+#+BEGIN_SRC scala 
+  object SingletonModule {
+    def apply(x: Int) =
+      println("Apply called with integer - x = " + x)
+
+    def apply(s: String) =
+      println(s"Apply called with string - s = '$s' ")
+
+    def apply(x: Double, y: Double) =
+      println("x + y = " + (x + y))
+  }
+
+  scala> SingletonModule.apply(5)
+  Apply called with integer - x = 5
+
+  scala> SingletonModule.apply("C++'s function object")
+  Apply called with string - s = 'C++'s function object'
+
+  scala> SingletonModule("C++'s function object")
+  Apply called with string - s = 'C++'s function object'
+
+  scala> SingletonModule(3.5, 9.343)
+  x + y = 12.843
+
+  scala> SingletonModule.apply(3.5, 9.343)
+  x + y = 12.843
+
+  scala> SingletonModule apply (3.5, 9.343)
+  x + y = 12.843
+
+
+#+END_SRC
+
+ *Example 3*
+
 #+BEGIN_SRC scala 
   class LinearEquation(a: Double = 0, b: Double = 0){
     private var (_a, _b) = (a, b)
@@ -7932,7 +8011,6 @@ top-level function.
     }
   }
 
-
   def makeLinearEqFn(a: Double, b: Double) = {
     type D = Double
     var (_a, _b) = (a, b)
@@ -7966,6 +8044,9 @@ top-level function.
   scala> lineqEsoteric.setA(5.0)
 
   scala> lineqEsoteric.setB(0.0)
+
+  scala> lineqEsoteric compute 5.0
+  res90: Double = 25.0
 
   scala> List(1.0, 2.0, 3.0, 4.0) map lineqEsoteric.compute
   res89: List[Double] = List(5.0, 10.0, 15.0, 20.0)
