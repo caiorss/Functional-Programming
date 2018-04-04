@@ -7722,8 +7722,7 @@ Singletons can implement interfaces or traits.
 
 #+END_SRC
 
-
-*** Case class as record 
+*** Case classes as records
 
 Example: Simple record type.
 
