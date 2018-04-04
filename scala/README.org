@@ -6336,15 +6336,15 @@ do-notation. However unlike Haskell do-notation, which is dessugarized
 to (>>=) bind and return functions, Scala's for-yield notation is
 dessugarized to flatMap, map, filter and foreach method calls. 
 
-| Haskell    | Scala                  |
-|            |                        |
-|------------+------------------------|
-| (>>=) bind | .flatMap               |
-| return     |                        |
-| fmap       | .map                   |
-| forM_      | .foreach               |
-| guard      | .filter or .withFilter |
-|            |                        |
+| Haskell       | Scala                                                                               |
+|               |                                                                                     |
+|---------------+-------------------------------------------------------------------------------------|
+| (>>=) or bind | .flatMap                                                                            |
+| return        | - Equivalent to object constructor. Option(10), Option(null), List(), List(1, 2, 3) |
+| fmap          | .map                                                                                |
+| forM_         | .foreach                                                                            |
+| guard         | .filter or .withFilter                                                              |
+|               |                                                                                     |
 
  - Note: .flatMap, .map, .foreach and .filter are methods.
 
