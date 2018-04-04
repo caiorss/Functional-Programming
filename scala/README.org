@@ -7722,7 +7722,7 @@ Singletons can implement interfaces or traits.
 
 #+END_SRC
 
-*** Case classes as records
+*** Case classes as records 
 
 Example: Simple record type.
 
@@ -7757,7 +7757,221 @@ Example: Simple record type.
   scala> 
 
 #+END_SRC
+*** Special Methods - Update and Apply
+**** Apply method - Callable objects 
 
+The Scala Apply-method is used to create callable objects similar to
+C++'s "functor" (aka function-object) or an object that behaves like
+function.  
+
+#+BEGIN_SRC scala 
+  class LinearEquation(a: Double = 0, b: Double = 0){
+    private var (_a, _b) = (a, b)
+    
+    override def toString() =
+      f"Linear equation = ${_a}%.3f * x + ${_b}%.3f "
+
+    def setA(a: Double) =
+      _a = a
+
+    def setB(b: Double) =
+      _b = b 
+
+    // Compute the equation Y(x) = A * x + B at point x
+    def compute(x: Double) =
+      _a * x + _b
+
+    def apply(x: Double) =
+      _a * x + _b
+  }
+#+END_SRC
+
+The object lineq can be called as it was a function which is a syntax
+sugar for the apply method.
+
+#+BEGIN_SRC scala 
+
+  // Equation 3 * x + 4
+  scala> val lineq = new LinearEquation(3, 4)
+  lineq: LinearEquation = Linear equation = 3.000 * x + 4.000
+
+  // 3 * 0 + 4 = 0
+  // --> It is a syntax sugar for the method apply.
+  //-------------------------------------------
+  scala> lineq(0)
+  res40: Double = 4.0
+
+  scala> lineq.apply(0)
+  res50: Double = 4.0
+
+  scala> lineq.compute(0.0)
+  res47: Double = 4.0
+
+  // 3 * 1 + 4 = 7
+  //-------------------------------------------
+  scala> lineq(1)
+  res41: Double = 7.0
+
+  scala> lineq.apply(1.0)
+  res51: Double = 7.0
+
+  scala> lineq.compute(1)
+  res48: Double = 7.0
+
+  // 3 * 2 + 4 = 6
+  //-------------------------------------------
+  scala> lineq(2)
+  res42: Double = 10.0
+
+  scala> lineq.apply(2)
+  res52: Double = 10.0
+
+  scala> lineq.compute(2)
+  res49: Double = 10.0
+
+
+  scala> List(1.0, 2.0, 3.0, 4.0) map lineq
+  <console>:13: error: type mismatch;
+   found   : LinearEquation
+   required: Double => ?
+         List(1.0, 2.0, 3.0, 4.0) map lineq
+
+  scala> List(1.0, 2.0, 3.0, 4.0) map {lineq (_)}
+  res64: List[Double] = List(7.0, 10.0, 13.0, 16.0)
+
+  scala> List(1.0, 2.0, 3.0, 4.0) map lineq.compute
+  res65: List[Double] = List(7.0, 10.0, 13.0, 16.0)
+
+  // Change the coefficients to Y(x) = 5 * x + 0
+  scala> lineq.setA(5)
+  scala> lineq.setB(0)
+  scala> List(1.0, 2.0, 3.0, 4.0) map {lineq(_)}
+  res68: List[Double] = List(5.0, 10.0, 15.0, 20.0)
+
+
+#+END_SRC
+
+**** Callable object comparison with closures
+
+A closure function could be used instead of a callable object
+providing the same results. The difference is that the objects can
+update their internal state at run-time while a closures cannot.
+
+#+BEGIN_SRC scala 
+
+  def makeLinearEq(a: Double, b: Double) =
+    (x: Double) => a * x + b
+
+  scala> def makeLinearEq(a: Double, b: Double) =
+       |   (x: Double) => a * x + b
+  makeLinearEq: (a: Double, b: Double)Double => Double
+
+  // Equation: Y(x) = 3 * x + 4 generated with closure 
+  scala> val lineqClosure = makeLinearEq(3.0, 4.0)
+  lineqClosure: Double => Double = $$Lambda$1577/1928574577@1ccc5740
+
+
+  scala> lineqClosure(1.0)
+  res70: Double = 7.0
+
+  scala> lineqClosure(2.0)
+  res72: Double = 10.0
+
+  scala> List(1.0, 2.0, 3.0, 4.0) map lineqClosure
+  res71: List[Double] = List(7.0, 10.0, 13.0, 16.0)
+
+  // There is no way to update a and b to a = 5 and b = 0
+  // keeping the original lambda function. The only way to accomplish this
+  // is to generate a new function.
+  scala> val lineqClosure2 = makeLinearEq(5.0, 0.0)
+  lineqClosure2: Double => Double = $$Lambda$1577/1928574577@36715f68
+
+  scala>  List(1.0, 2.0, 3.0, 4.0) map lineqClosure2
+  res73: List[Double] = List(5.0, 10.0, 15.0, 20.0)
+
+
+  scala> val lineq = new LinearEquation(3, 4)
+  lineq: LinearEquation = Linear equation = 3.000 * x + 4.000
+
+  scala>  List(1.0, 2.0, 3.0, 4.0) map { lineq (_) }
+  res74: List[Double] = List(7.0, 10.0, 13.0, 16.0)
+
+  // A Callable object can update its internal state at run-time.
+  //
+  scala> lineq.setA(5)
+  scala> lineq.setB(0)
+  scala> lineq
+  res79: LinearEquation = Linear equation = 5.000 * x + 0.000
+
+  scala>  List(1.0, 2.0, 3.0, 4.0) map { lineq (_) }
+  res80: List[Double] = List(5.0, 10.0, 15.0, 20.0)
+
+  scala>  List(1.0, 2.0, 3.0, 4.0) map lineq.compute
+  res82: List[Double] = List(5.0, 10.0, 15.0, 20.0)
+
+
+#+END_SRC
+
+Despite the closure limitations, the callable-object approach could be
+emulated with closures by returning multiple functions from the
+top-level function.
+
+#+BEGIN_SRC scala 
+
+  // Case class is used here to emulate a record type 
+  case class LinearEquationFn(
+    setA: Double => Unit,
+    getA: () => Double,  
+    setB: Double => Unit,
+    getB: () => Double,
+    compute: Double => Double  
+  ) {
+    override def toString() =  {
+      val (_a, _b) = (getA(), getB())
+       f"Linear equation = ${_a}%.3f * x + ${_b}%.3f "
+    }
+  }
+
+
+  def makeLinearEqFn(a: Double, b: Double) = {
+    type D = Double
+    var (_a, _b) = (a, b)
+
+    val setB = (b: D) => {_b = b}
+
+    LinearEquationFn(
+      setA = (a: D) => {_a = a },
+      getA = () => _a,
+      setB = setB,
+      getB = () => _b,
+      compute = (x: D) => _a * x + _b
+    )
+  }
+
+  scala> val lineqEsoteric = makeLinearEqFn(3.0, 4.0)
+  lineqEsoteric: LinearEquationFn = Linear equation = 3.000 * x + 4.000
+
+  scala> lineqEsoteric.getA()
+  res83: Double = 3.0
+
+  scala> lineqEsoteric.getB()
+  res84: Double = 4.0
+
+  scala> lineqEsoteric.compute(2)
+  res85: Double = 10.0
+
+  scala> List(1.0, 2.0, 3.0, 4.0) map lineqEsoteric.compute
+  res86: List[Double] = List(7.0, 10.0, 13.0, 16.0)
+
+  scala> lineqEsoteric.setA(5.0)
+
+  scala> lineqEsoteric.setB(0.0)
+
+  scala> List(1.0, 2.0, 3.0, 4.0) map lineqEsoteric.compute
+  res89: List[Double] = List(5.0, 10.0, 15.0, 20.0)
+
+
+#+END_SRC
 *** Creating a Class 
 
 #+BEGIN_SRC scala 
@@ -8257,8 +8471,7 @@ res3: Double = 10.0
 
 #+END_SRC
 
-
-*** Abstract Class 
+*** Abstract Classs 
 
 An abstract class is a class which cannot be instantiated, containing
 abstract methods (methods without implementation) and non-abstract
