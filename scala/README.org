@@ -7591,8 +7591,9 @@ In Scala everything is an object:
 #+END_SRC
 *** Singleton Object 
 
-A singleton object is an object without class with a single
-instance. It can be used as an ML-module. 
+A singleton object is an object of a class with a single instance
+implementing the singleton design pattern. A singletion object can be
+used as an ML-module which is a container grouping functions. 
 
 #+BEGIN_SRC scala 
   cala> :paste
@@ -7618,7 +7619,6 @@ instance. It can be used as an ML-module.
       val files = (new java.io.File(path)).listFiles().filter(_.isDirectory)
       files.foreach(println)    
     }
-
 
   }
 
@@ -7672,6 +7672,56 @@ instance. It can be used as an ML-module.
   scala> Module.getClass()
   res224: Class[_ <: Module.type] = class Module$
 #+END_SRC
+
+Singletons can implement interfaces or traits.
+
+#+BEGIN_SRC scala 
+  trait Observer{
+    def onChange(): Unit
+    def onError():  Unit  
+  }
+
+  class Observer1 extends Observer{
+    def onChange() =
+      println("I received a change event.")
+
+    def onError() =
+      println("I received an error event.")
+  }
+
+  object SingleTonObserver extends Observer{
+    def onChange() =
+      println("Singleton: I received a change event.")
+
+    def onError() =
+      println("Singleton: I received an error event.")
+  }
+
+  scala> obs1.onChange()
+  I received a change event.
+
+  scala> obs1.onError()
+  I received an error event.
+
+  scala> SingleTonObserver.onChange()
+  Singleton: I received a change event.
+
+  scala> SingleTonObserver.onError()
+  Singleton: I received an error event.
+
+  def generateErrorEvent(obs: Observer) =
+    obs.onError()
+
+  scala> generateErrorEvent(obs1)
+  I received an error event.
+
+  scala> generateErrorEvent(SingleTonObserver)
+  Singleton: I received an error event.
+
+
+
+#+END_SRC
+
 
 *** Case class as record 
 
