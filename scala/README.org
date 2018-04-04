@@ -8126,6 +8126,194 @@ Testing:
   scala> u.update("character.gui", new javax.swing.JFrame())
   Key character.gui of hash table set to value = javax.swing.JFrame ... ... .  
 #+END_SRC
+**** Implementing C#-like properties 
+
+The update and apply method can be used to create C#-like properties
+which are shorthands for get and set methods. A motivation to use
+property or get or setters instead of public fields is the
+encapsulation as making the internal data private allows changing the
+class code, the data representation, memory layout; adding validation
+logic to setters and firing events to GUIs without changing the client
+code or breaking third-party code. 
+
+#+BEGIN_SRC scala 
+  // Only the get and set abstract methods needs to be defined.
+  trait IProperty[A]{
+    def get(): A
+    def set(x: A): Unit
+    def apply() = get()
+    def update(x: A) = set(x)
+    def :=(x: A) = set(x)
+    override def toString() = get().toString   
+  }
+
+  object Property{
+    def simple[A](init: A) = {
+      var _x = init
+      new IProperty[A]{      
+        def get()     = _x
+        def set(x: A) = {_x  = x}
+      }
+    }
+
+    def fromGS[A](getter: => A, setter: A => Unit) = 
+      new IProperty[A]{      
+        def get()     = getter
+        def set(x: A) = setter(x)
+      } 
+
+    def readOnly[A](getter: => A) =
+      new IProperty[A]{      
+        def get()     =
+          getter      
+        def set(x: A) =
+          throw new java.lang.IllegalArgumentException("Error: Read-only property.")
+      }
+
+    def validate(cond: Boolean, msg: String = "Error invalid argument")(action: => Unit) =
+      if(cond)
+        action
+      else
+        throw new java.lang.IllegalArgumentException(msg)
+  }
+
+#+END_SRC
+
+Testing and use-case:
+
+#+BEGIN_SRC scala 
+  class Product{
+    private var _name  = "unnamed"
+    private var _price = 0.0
+
+    val id = Property.simple(0)
+
+    val name = Property.fromGS(
+      getter = _name,
+      setter = (name: String) =>  Property.validate(name != "", "Name cannot be empty"){
+        println("Name set to " + name)
+        _name = name
+      }
+    )
+
+    val price = Property.fromGS(
+      getter = _price,
+      setter = (price: Double) =>  {
+        Property.validate(price > 0 , "Price cannot be negative"){
+          println("Price set to " + price)
+          _price = price
+        }
+      }    
+    )
+  }
+
+
+  scala> val product = new Product()
+  product: Product = Product@209f6b54
+
+  scala> product.id
+  res20: IProperty[Int] = 0
+
+  scala> product.id()
+  res21: Int = 0
+
+  scala> product.id() = 10
+
+  scala> product.id
+  res23: IProperty[Int] = 10
+
+  scala> product.id := 20
+
+  scala> product.id
+  res25: IProperty[Int] = 20
+
+  // ----- Name property 
+
+  scala> product.name
+  res18: IProperty[String] = unnamed
+
+  cala> product.name() = "coffee"
+  Name set to coffee
+
+  scala> product.name.get()
+  res32: String = coffee
+
+  scala> product.name.set("fresh orange juice")
+  Name set to fresh orange juice
+
+  scala> product.name := "Chilean wine"
+  Name set to Chilean wine 
+
+  scala> product.name() = ""
+  java.lang.IllegalArgumentException: Name cannot be empty
+    at Property$.validate(<pastie>:49)
+    at Product.$anonfun$name$2(<pastie>:
+
+  //---- Price property 
+
+  scala> product.price
+   res19: IProperty[Double] = 0.0
+
+
+  scala> product.price() = 10.0
+  Price set to 10.0
+
+  scala> product.price := 20.0
+  Price set to 20.0
+
+  scala> product.price.set(15.0)
+  Price set to 15.0
+
+  scala> product.price() * 10
+  res42: Double = 150.0
+
+  scala> product.price.get * 10.0
+  res47: Double = 150.0
+
+  scala> product.price := -10.0
+  java.lang.IllegalArgumentException: Price cannot be negative
+    at Property$.validate(<pastie>:49)
+    at Product.$anonfun$price$2(<pastie>:29)
+    at scala.runtime.java8.JFunction1$mcVD$sp.apply(JFunction1$mcVD$sp.java:12)
+    at Property$$anon$2.set(<pastie>:34)
+    at IProperty.$colon$eq(<pastie>:18)
+    at IProperty.$colon$eq$(<pastie>:18)
+    at Property$$anon$2.$colon$eq(<pastie>:32)
+    ... 28 elided
+
+
+  def showProduct(prod: Product) = {
+    println("Product info")
+    println("  id    = " + prod.id)
+    println("  name  = " + prod.name)
+    println("  price = " + prod.price)
+  }
+
+
+  scala> showProduct(product)
+  Product info
+    id    = 20
+    name  = Chilean wine
+    price = 15.0
+
+  def updateProperty[A](prop: IProperty[A], fn: A => A) = 
+    prop() = fn(prop())
+
+  // Adjust price to inflation rate 6.5%
+  scala> updateProperty(product.price, (x: Double) => (100.0 + 6.5) / 100.0 * x)
+  Price set to 15.975
+
+#+END_SRC
+
+See also: 
+
+ + [[https://medium.com/omarelgabrys-blog/properties-vs-fields-in-c-6cec86c59dc9][Property X Fields in C#]]
+
+ + [[https://stackoverflow.com/questions/26996901/how-exactly-are-the-get-and-set-methods-used-and-implemented-in-c-sharp][oop - How exactly are the Get and Set methods used and implemented in c# - Stack Overflow]]
+
+ + [[http://benjiweber.co.uk/blog/2014/03/20/c-style-properties-in-java/][C# style properties in Java | Benji's Blog -]]
+
+ + [[https://www.rhyous.com/2016/04/04/10-reasons-why-java-needs-csharps-property-syntax/][10+ Reasons why Java needs C#'s property syntax | Rhyous]]
 *** Creating a Class 
 
 #+BEGIN_SRC scala 
