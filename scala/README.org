@@ -7757,7 +7757,7 @@ Example: Simple record type.
   scala> 
 
 #+END_SRC
-*** Special Methods - Update and Apply
+*** Special Methods - Apply and Update 
 **** Apply method - Callable objects 
 
 The Scala Apply-method is used to create callable objects similar to
@@ -8052,6 +8052,79 @@ top-level function.
   res89: List[Double] = List(5.0, 10.0, 15.0, 20.0)
 
 
+#+END_SRC 
+**** Update method 
+
+The update method provides an assignment syntax sugar which can be
+useful for DSLs.
+
+ *Example*
+
+#+BEGIN_SRC scala 
+  class TestUpdate{
+    private var _x = 0
+
+    def apply() =
+      println("Value of x is = " + _x)
+
+    def update(x: Int) = {
+      _x = x 
+      println("x set to " + _x)
+    }
+    def update(x: Int, y: Int) = {
+      _x = x + y
+      println("x set to " + _x)
+    }
+    def update(s: String, value: Object) = {
+      println(s"Key $s of hash table set to value = $value")
+    }
+  }
+
+#+END_SRC
+
+Testing: 
+
+#+BEGIN_SRC scala 
+  scala> val u = new TestUpdate()
+  u: TestUpdate = TestUpdate@16f1cb2d
+
+  scala> u()
+  Value of x is = 0
+
+  scala> u() = 10
+  x set to 10
+
+  scala> u()
+  Value of x is = 10
+
+  scala> u.update(35)
+  x set to 35
+
+  scala> u()
+  Value of x is = 35
+
+  scala> u.apply()
+  Value of x is = 35
+
+  scala>
+
+  scala> u.update(5, 10)
+  x set to 15
+
+  scala> u()
+  Value of x is = 15
+
+  scala> u("database.url") = "blob"
+  Key database.url of hash table set to value = blob
+
+  scala> u.update("database.url", "blob")
+  Key database.url of hash table set to value = blob
+
+  u("character.gui") = new javax.swing.JFrame()
+  Key character.gui of hash table set to value = javax.swing.JFrame[frame0 ...
+
+  scala> u.update("character.gui", new javax.swing.JFrame())
+  Key character.gui of hash table set to value = javax.swing.JFrame ... ... .  
 #+END_SRC
 *** Creating a Class 
 
