@@ -9162,6 +9162,187 @@ Iterator Pattern
 
  - Known uses: Java Iterators, C++ STL iterators.
 
+**** Singleton Design Pattern 
+
+Singleton is a creational design pattern where there is only a single
+instance of a class and the client code is not allowed to create more
+instances.
+
+Example: As the singleton pattern is already a language feature of
+Scala, it will be shown first the Java implementation of the pattern
+and then the Scala implementation. 
+
+File: Singleton.java 
+
+#+BEGIN_SRC java 
+  public class Singleton{
+      private static Singleton _instance = new Singleton();
+      private String _name = "unnamed";
+
+      public void setName(String name){
+          _name = name;
+      }
+      
+      public void service1(){
+          System.out.println("Hello world user: " + _name);
+          System.out.println("Scala is much better than Java!");
+      }
+          
+      public static Singleton getInstance(){
+          return _instance;
+      }
+  }
+
+#+END_SRC
+
+ - Compiling and running: 
+
+#+BEGIN_SRC sh 
+  # Compile Singleton.java to generate Singleton.class
+  #
+  $ javac Singleton.java
+
+  # Run Scala REPL and play with compiled Java code.
+  #
+  $ scala
+  Welcome to Scala 2.12.4 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_162).
+  Type in expressions for evaluation. Or try :help.
+
+  scala> val s = new Singleton()
+  <console>:11: error: trait Singleton is abstract; cannot be instantiated
+         val s = new Singleton()
+                 ^
+
+  scala> val s = Singleton.getInstance()
+  s: Singleton = Singleton@517a2b0
+
+  scala> s.service1()
+  Hello world user: unnamed
+  Scala is much better than Java!
+
+  scala> s.setName("Somebody else")
+
+  scala> s.service1()
+  Hello world user: Somebody else
+  Scala is much better than Java!
+
+  scala> val s2 = Singleton.getInstance()
+  s2: Singleton = Singleton@517a2b0
+
+  scala> s2.service1()
+  Hello world user: Somebody else
+  Scala is much better than Java!
+
+  # Check if s2 and s have the same reference, point to the same 
+  # memory location. 
+  scala> s2 == s
+  res3: Boolean = true
+
+  scala> s2.service1()
+  Hello world user: Somebody else
+  Scala is much better than Java!
+
+#+END_SRC
+
+Scala way: In Scala, there are no static methods or static classes
+(classes only with static methods), however they can be replaced by
+the singleton created with the "object" keyword.
+
+#+BEGIN_SRC scala 
+  object SingletonScala{
+    // It could be: private var _name = "unnamed"
+    private var _name: String = "unnamed"
+
+    def setName(name: String) =
+      _name = name
+
+    def service1() = {
+      println("Hello world user: " + _name)
+      System.out.println("Scala is much better than Java!")
+    }
+  }
+
+#+END_SRC
+
+Testing in REPL:
+
+#+BEGIN_SRC scala 
+  scala> SingletonScala.service1()
+  Hello world user: unnamed
+  Scala is much better than Java!
+
+  scala> SingletonScala.setName("Thor")
+
+  scala> val ss1 = SingletonScala
+  ss1: SingletonScala.type = SingletonScala$@12811f95
+
+  scala> ss1.service1()
+  Hello world user: Thor
+  Scala is much better than Java!
+
+  // Reference equality, aka identity equality 
+  scala> ss1 == SingletonScala
+  res9: Boolean = true
+#+END_SRC
+
+The Java code mentioned before could be emulated in this way:
+
+#+BEGIN_SRC scala 
+  class Singleton2 private {
+    private var _name: String = "unnamed"
+
+    def setName(name: String) =
+        _name = name
+
+    def service1() = {
+      println("Hello world user: " + _name)
+      System.out.println("Scala is much better than Java!")
+    }
+  }
+
+  object Singleton2{
+    private val instance =
+      new Singleton2()
+
+    def getInstance() =
+      instance
+  }
+
+#+END_SRC
+
+Testing: 
+
+#+BEGIN_SRC scala 
+  //  Copy class Singleton2 and companion object Singleton2 paste them together 
+  //  with command (:paste) in Scala REPL.
+  //
+  :paste
+
+  scala> val ssa = new Singleton2()
+  <console>:13: error: constructor Singleton2 in class Singleton2 cannot be accessed in object $iw
+         val ssa = new Singleton2()
+                   ^
+
+  scala> val ssa = Singleton2.getInstance()
+  ssa: Singleton2 = Singleton2@71d6e503
+
+  scala> ssa.service1()
+  Hello world user: unnamed
+  Scala is much better than Java!
+
+  scala> ssa.setName("Someone")
+
+  scala> ssa.service1()
+  Hello world user: Someone
+  Scala is much better than Java!
+
+  scala> val ssb = Singleton2.getInstance()
+  ssb: Singleton2 = Singleton2@71d6e503
+
+  scala> ssb.service1()
+  Hello world user: Someone
+  Scala is much better than Java!
+#+END_SRC
 **** Simple factory pattern 
 
 Defined by GOF as: "Define an interface for creating an object, but
