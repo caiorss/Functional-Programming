@@ -4959,7 +4959,7 @@ Example 6 - Recursive list functions.
 
 #+END_SRC
 *** Destructuring 
-**** Destructuring tules 
+**** Destructuring tuples 
 
 #+BEGIN_SRC scala 
 scala> val (a, b) = (10, 20)
