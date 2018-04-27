@@ -654,6 +654,45 @@ scala>
 
 #+END_SRC
 
+Variables can be declared with type annotation too:
+
+#+BEGIN_SRC scala
+  scala> var x: Double = 10.0
+  x: Double = 10.0
+
+  scala> x = 2
+  x: Double = 2.0
+
+  scala> x = 45.43
+  x: Double = 45.43
+
+
+  // Declare a variable holding a reference to a function
+  // with default NULL value.
+  // WARNING. Null should be used with caution.
+  scala> var action: String => Unit = null
+  action: String => Unit = null
+
+  scala> action("testing Scala")
+  java.lang.NullPointerException
+    ... 28 elided
+
+  scala> action = s => println("Message = " + s)
+  action: String => Unit = $$Lambda$1171/1365490452@2865c8db
+
+  scala> action("testing Scala")
+  Message = testing Scala
+
+  // Print to stderr - Store reference to method (.println) of System.err object.
+  scala> action = System.err.println
+  action: String => Unit = $$Lambda$1172/1358395794@2f533bd1
+
+  scala> action("testing Scala")
+  testing Scala
+
+#+END_SRC
+
+
 *Import Java Libraries*
 
 Import namespace java.io
