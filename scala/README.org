@@ -479,20 +479,41 @@ Hello world Scala
 *Comment*
 
 #+BEGIN_SRC scala
-// A comment
+  // Single line comment
 
-/*
-Multiline Comment
+  /*
+  Multiline Comment
 
-*/
+  ,*/
 
-/**
-  * Documentation comment.
-  *
-  */
+  /**
+    ,* Documentation comment.
+    ,*
+    ,*/
 
 #+END_SRC
 
+Cooment with Scala-Doc markup. It allows Scaladoc to extract the
+documentation from comment and produce an html documentation such as
+Doxygen for C or C++ and Javadoc for Java do.
+
+#+BEGIN_SRC scala
+  /** This function computes the distance from origin (0, 0) to point (x, y)
+    ,*
+    ,*  Usage Example:
+    ,*
+    ,*  {{{
+    ,*     scala> distancePoint(30.0, 40.0)
+    ,*     res11: Double = 50.0
+    ,*  }}}
+    ,*
+    ,*  @param x  - X coordinate of point
+    ,*  @param y  - Y coordinate of point
+    ,*  @return  Distance from origin to point (x, y)
+    ,*/
+  def distancePoint(x: Double, y: Double) =
+    Math.sqrt(x * x + y * y)
+#+END_SRC
 
 *Value*
 
