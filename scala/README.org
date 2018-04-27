@@ -531,16 +531,110 @@ scala> x = 1.5354
 scala> val a = "hello world"
 a: String = hello world
 
-val s = """Hello world
-Scala
-String
-"""
+  // Scala has multi-line string, unlike Java.
+  val s = """Hello world
+  Scala
+  String
+  """
 
 #+END_SRC
 
+It is not possible to change a _reference to object stored_ in a
+value. For instance, the reference to the object of class/type JFrame
+with title "Hello World" cannot be changed, although the the object
+can be changed.
+
+#+BEGIN_SRC scala
+  scala> val frame = new javax.swing.JFrame("Hello world")
+  frame: javax.swing.JFrame = javax.swing.JFrame[frame0,0,27,0x0,invalid,hidden ...]
+
+  // --- Try to change the reference stored in the value.
+  //
+  scala> val frame2 = new javax.swing.JFrame("Hello world")
+  frame2: javax.swing.JFrame = javax.swing.JFrame[frame1,0,27 ...]
+
+  scala> frame = frame2
+  <console>:13: error: reassignment to val
+         frame = frame2
+
+  // A copy of the object previously defined is not created,
+  // only the reference (pointer) of this object is copied.
+  //
+  scala> val frameCopy = frame
+  frameCopy: javax.swing.JFrame = javax.swing.JFrame[frame3,0,2 ... ..
+
+  scala> frame.getTitle
+  res18: String = Hello world
+
+  scala> frameCopy.getTitle
+  res12: String = Hello world
+
+  scala> frame.setTitle("Scalability and growth")
+
+  scala> frameCopy.setTitle("Scalability and growth")
+
+  scala> frame.getTitle
+  res22: String = Scalability and growth
+
+  scala> frame.setTitle("Scalable scalable scalable ...")
+
+  scala> frameCopy.getTitle
+  res24: String = Scalable scalable scalable ...
+
+  // Eq - Method checks for reference equality. So, if the references (pointer to object) to
+  // objects are equal, then the return value should be true.
+  //
+  scala> frameCopy eq frame
+  res15: Boolean = true
+
+  scala> frameCopy.eq(frame)
+  res16: Boolean = true
+
+  scala> frame.eq(frameCopy)
+  res17: Boolean = true
+
+
+#+END_SRC
+
+Values declared with explicit type annotation:
+
+#+BEGIN_SRC scala
+  scala> val x: Double = 20.03
+  x: Double = 20.03
+
+  scala> val y: Double = "hello world"
+  <console>:11: error: type mismatch;
+   found   : String("hello world")
+   required: Double
+         val y: Double = "hello world"
+                         ^
+
+  scala> val point: (Int, Int) = (100, 200)
+  point: (Int, Int) = (100,200)
+
+  scala> val point2: (Int, Int) = -100.34
+  <console>:11: error: type mismatch;
+   found   : Double(-100.34)
+   required: (Int, Int)
+         val point2: (Int, Int) = -100.34
+
+
+  scala> type Action = () => Unit
+  defined type alias Action
+
+  scala> val act1: Action = () => println("Print to screen1")
+  act1: Action = $$Lambda$1109/363103401@b56c222
+
+  scala> printer1("hello world Scala is super scalable!!")
+  hello world Scala is super scalable!!
+
+#+END_SRC
+
+
 *Variable*
 
-Unlike values, variables allow reassignment.
+Unlike a value, a variable allows reassignment and change the
+reference to the pointed object.
 
 #+BEGIN_SRC scala
 
