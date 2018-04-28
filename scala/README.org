@@ -1742,6 +1742,190 @@ scala> Dialog.showAlert("Error: Network failure. Could not fetch data")
 scala> Dialog.showAlert("Error report", "Error: Network failure. Could not fetch data")
 
 #+END_SRC
+*** Storing Functions in Data Structures 
+
+As in any language with first class functions, functions can be stored
+in data structures such as lists, arrays, maps and also stored in objects. 
+
+ + Storing functions in variables: 
+
+#+BEGIN_SRC scala 
+  scala> var printer: (String) => Unit = s => ()
+  printer: String => Unit = $$Lambda$1031/1414431049@7fb66650
+
+  scala> printer("Test printer")
+
+  scala> printer = println
+  printer: String => Unit = $$Lambda$1060/1256918571@648c5fb3
+
+  scala> printer("Test printer")
+  Test printer
+
+  // Print to stdout
+  scala> printer = System.err.println
+  printer: String => Unit = $$Lambda$1092/1353172779@54c11750
+
+  scala> printer("Test printer")
+  Test printer
+
+#+END_SRC
+
+ + References to methods can also be stored in variables of function
+   type. In this example, the variable action stores a reference to
+   the method _.showInventory of an instance of the class
+   ProductInventory. 
+
+#+BEGIN_SRC scala 
+  scala> var action: () => Unit = () => ()
+  action: () => Unit
+
+  scala> action()
+
+
+  scala> val printMe = () => println("Print me right now")
+  printMe: () => Unit
+
+  scala> action = printMe
+  action: () => Unit 
+
+  scala> action()
+  Print me right now
+
+  object Utils{
+    def showLinuxRootFiles() =
+      for(f <- new java.io.File("/").listFiles)
+        println(f)
+  }
+
+
+  scala> action = Utils.showLinuxRootFiles _
+  action: () => Unit 
+
+  scala> action()
+  /etc
+  /tmp
+  /sbin
+  /sys
+  /opt
+  /media
+  /boot
+   ... ... ... ... ... ... ... ...
+
+
+  class ProductInventory{
+    private val lst = new java.util.ArrayList[String]
+
+    def addProduct(product: String) = {
+      println("Logger -> Added " + product)    
+      lst.add(product)
+    }
+
+    def showInventory() =
+      lst.forEach{ p => println("Product = " + p)}
+  }
+
+
+
+  scala> val myShopInventory = new ProductInventory()
+  myShopInventory: ProductInventory = ProductInventory@5a6dbab7
+
+  scala> myShopInventory.addProduct("Orange")
+  Logger -> Added Orange
+  res11: Boolean = true
+
+  scala> myShopInventory.addProduct("Apple")
+  Logger -> Added Apple
+  res12: Boolean = true
+
+  scala> myShopInventory.addProduct("Coffee beans")
+  Logger -> Added Coffee beans
+  res13: Boolean = true
+
+  scala> myShopInventory.showInventory()
+  Product = Orange
+  Product = Apple
+  Product = Coffee beans
+
+  scala> action = myShopInventory.showInventory _
+  action: () => Unit = $$Lambda$1369/801054059@4f4a6252
+
+  scala> action()
+  Product = Orange
+  Product = Apple
+  Product = Coffee beans
+
+  scala> myShopInventory.addProduct("Strawberry")
+  Logger -> Added Strawberry
+  res18: Boolean = true
+
+  scala> action()
+  Product = Orange
+  Product = Apple
+  Product = Coffee beans
+  Product = Strawberry
+
+#+END_SRC
+
+ + Store functions in arrays, hash maps (dictionaries) and lists: 
+
+#+BEGIN_SRC scala 
+  // Dummy - do anything 
+  scala> val action0 = () => ()
+  action0: () => Unit = $$Lambda$1375/1357073725@74ddf6f8
+
+  scala> val action1 = () => println("Get product from inventory")
+  action1: () => Unit = $$Lambda$1373/1589324702@6bfa9cf5
+
+  scala> val action2 = () => println("Order more replacement parts from the manufacturer X inc.")
+  action2: () => Unit = $$Lambda$1374/180387583@1c9eb283
+
+  def action3() = 
+    println("Check company's balance sheet.")
+
+  class CompanyData(name: String){
+    def printStatements() = {
+      println("Print Balance Sheet of company       = " + name)
+      println("Print Cash Flow statement of company = " + name)
+    }
+  }
+
+  scala> val company = new CompanyData("XZYZW Solution. Inc.")
+  company: CompanyData = CompanyData@249318e7
+
+  //------ Register functions --------------- //
+
+  scala> import scala.collection.mutable.ListBuffer
+  import scala.collection.mutable.ListBuffer
+
+  scala> val actionList = ListBuffer[() => Unit]()
+  actionList: scala.collection.mutable.ListBuffer[() => Unit] = ListBuffer()
+
+  scala> actionList.append(action0)
+  scala> actionList.append(action1)
+  scala> actionList.append(action2)
+
+  scala> for (act <- actionList) act()
+  Get product from inventory
+  Order more replacement parts from the fanufacterer X inc.
+
+  actionList.append(action3 _)
+
+  scala> for (act <- actionList) act()
+  Get product from inventory
+  Order more replacement parts from the fanufacterer X inc.
+  Check company's balance sheet.
+
+  // Register method to be called 
+  scala> actionList.append(company.printStatements _)
+
+  scala> for (act <- actionList) act()
+  Get product from inventory
+  Order more replacement parts from the fanufacterer X inc.
+  Check company's balance sheet.
+  Print Balance Sheet of company       = XZYZW Solution. Inc.
+  Print Cash Flow statement of company = XZYZW Solution. Inc.
+
+#+END_SRC
 *** Function with variable number of arguments
 
 #+BEGIN_SRC scala
