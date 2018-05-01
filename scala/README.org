@@ -9531,7 +9531,8 @@ Iterator Pattern
 
  - Known uses: Java Iterators, C++ STL iterators.
 
-*** Singleton Design Pattern 
+*** Creational Design Patterns
+**** Singleton Design Pattern 
 
 Singleton is a creational design pattern where there is only a single
 instance of a class and the client code is not allowed to create more
@@ -9712,7 +9713,7 @@ Testing:
   Hello world user: Someone
   Scala is much better than Java!
 #+END_SRC
-*** Simple factory pattern 
+**** Simple factory pattern 
 
 Defined by GOF as: "Define an interface for creating an object, but
 let subclasses decide which class to instantiate. Factory Method lets
@@ -9861,7 +9862,7 @@ References:
    <https://softwareengineering.stackexchange.com/questions/253254/why-should-i-use-a-factory-class-instead-of-direct-object-construction>
 
  - *Factory Pattern* <http://www.oodesign.com/factory-pattern.html>
-*** Factory pattern with factory method 
+**** Factory pattern with factory method 
 
 This variation allows multiple subclasses be added to the factory. 
 
@@ -9959,7 +9960,7 @@ Reference:
  - *Simple Factory Vs Factory Method Vs Abstract Factory by Example*
    <https://vivekcek.wordpress.com/2013/03/17/simple-factory-vs-factory-method-vs-abstract-factory-by-example/>
 
-*** Static Factory Method 
+**** Static Factory Method 
 
 The static factory method is a design pattern that uses private
 constructor and static methods to create instances of the class,
@@ -10152,8 +10153,9 @@ Futher Reading:
 
  + *Java Static Factory Method* -
    <https://www.slideshare.net/mysky14/java-static-factory-methods> 
-*** Strategy Pattern
-**** Overview 
+*** Behavioral Patterns 
+**** Strategy Pattern
+***** Overview 
 
 Strategy pattern allows changing the algorithm (strategy) at
 run-time. The strategy object encapsulates the algorithm, in other
@@ -10183,7 +10185,7 @@ References:
 
  - Strategy pattern - <https://en.wikipedia.org/wiki/Strategy_pattern>
 
-**** Example in OO way
+***** Example in OO way
 
 #+BEGIN_SRC scala
 
@@ -10248,7 +10250,7 @@ References:
 
 #+END_SRC
 
-**** Example in FP way 
+***** Example in FP way 
 
 In functional programming each _algorithm is just a function_. The
 context object can be replaced by a _higher order function_. By the
@@ -10567,7 +10569,7 @@ Compiling and Running:
   Running strategy = mul( x = 3, y = 5) = 15
 
 #+END_SRC
-*** Template Method
+**** Template Method
 
 The templated method design patterns is a behavioral design pattern
 which provides an algorithm, also known as template which defines
@@ -10673,8 +10675,8 @@ References:
  - *Template Method Pattern Tutorial with Java Examples*
    <https://dzone.com/articles/design-patterns-template-method>
 
-*** Iterator Pattern
-**** Overview
+**** Iterator Pattern
+***** Overview
 
 The iterator pattern allows tranversing a collection or container
 without expose its internal structure and provides a uniform interface
@@ -10761,7 +10763,7 @@ References:
 
  -
 
-**** Examples
+***** Examples
 
 Example 1 - Java built-in iterator.
 
@@ -11036,11 +11038,459 @@ Example 4: Creating an iterator to iterate over file lines.
 
 
 #+END_SRC
-*** Observer / Publisher Subscriber
-    :PROPERTIES:
-    :ID:       a24d6fd5-1931-4dde-b68d-0873704614fb
-    :END:
-**** Overview 
+**** Command Design Pattern 
+***** Overview 
+
+Intent from GOF: "Encapsulate a request as an object, thereby letting
+you parametrize clients with different requests, queue or log
+requests, and support undoable operations."
+
+ * Also known as: Action or transaction pattern.
+
+ * Encapsulate method invocations as objects called commands, which
+   can be stored and executed later by one or multiple invoker object
+   which don't know anything about the method invocation or about the
+   operation being performed.
+
+   - Features: 
+
+  + Encapsulates method-calls as commands.
+  + Provide a common interface for method calls.
+
+Participants:
+
+  + _Receiver_ - Object whose methods will be invoked indirectly by
+    the objects implementing the ICommand interface. This name
+    "receiver" comes from Smalltalk and means the object which
+    receives the message (method call).
+
+  + _Invoker(s)_ - (Could also be called Sender). One or more object
+    that store the command objects and executes them later. The
+    invoker must have no knowledge about how to perform the method
+    call.
+
+    + The invoker objects can be a list of commands to be run; a stack
+      of commands; user interface elements such as buttons, menus and
+      etc, where each element stores a command that performs a
+      application invocation such as App.print(),
+      App.hidePanel(panel1).
+
+  + _ICommand_ - Command interface - Interface encapsulating the
+    request or method invocation.
+
+  + _Client_ - Client means any code using a particular code, api,
+    interface or object, in this case any code using this code. The
+    client's role is to create the concrete commands setting their
+    requests (methods of receiver that they invoke) and store the
+    commands in the invoker(s).
+
+Use cases:
+
+  + _Grapical User Interfaces_: Input UI elements such as buttons,
+    menus and key bindings could act as invokers storing a high
+    level application command such as "save document", "print
+    document", "exit application" and so on. This approach allows
+    to a separate the user interface from the application by
+    decoupling the UI element that executes the command from the
+    logic performed by the command and also allows a single command
+    to be executed by multiple UI elements. For instance, an action
+    such as "save document" could be encapsulated as a command
+    object bound to many UI sources such the key binding ctr-s, a
+    save button and a save menu item, as a result, any changes in
+    the user interface code would not break the main application
+    code.
+
+  + _Allow redo/undo_
+
+  + _Transactions_
+
+  + _Replace switch statements_
+
+Possible Variations
+
+  - Single invoker
+  - Multiple invokers
+  - Single receiver 
+  - Multiple receivers
+
+ *References and further reading*
+
+ + *Command Pattern Tutorial with Java Examples* -
+   https://dzone.com/articles/design-patterns-command
+
+ + Toni Sellarès - *The Command Pattern*
+   <http://ima.udg.edu/~sellares/EINF-ES1/CommandToni.pdf> 
+
+ + Hans Vangheluwe and Alexandre Denault *Design Patters - Command Pattern* 
+    <http://msdl.cs.mcgill.ca/people/hv/teaching/SoftwareDesign/lectures/lecture.command/lecture.command.pdf>
+
+ + [[https://www.cs.mcgill.ca/~hv/classes/CS400/01.hchen/doc/command/command.html][Command Pattern with Undo/Redo]]
+
+ + [[https://www.codeproject.com/Articles/15207/Design-Patterns-Command-Pattern][Design Patterns: Command Pattern - CodeProject]]
+
+ + Examples of Command Design pattern in .NET WPF Frameworks:
+
+   + [[https://docs.microsoft.com/en-us/dotnet/framework/wpf/advanced/commanding-overview][Commanding Overview | Microsoft Docs]]
+   + [[https://www.codeproject.com/Articles/238657/How-to-use-Commands-in-WPF][How to use Commands in WPF - CodeProject]]
+   + [[https://www.codeproject.com/Articles/25445/WPF-Command-Pattern-Applied][WPF Command Pattern Applied - CodeProject]]
+   + [[https://visualstudiomagazine.com/articles/2012/04/10/command-pattern-in-net.aspx][The Command Pattern in .NET -- Visual Studio Magazine]]
+
+***** Example 1 - Canvas drawing application with animation
+
+In this example, a graphical 2D animation application has tree main
+parts, a canvas where 2D shapes can be drawn, a scheduler that can
+that allows to schedule drawing commands to be executed in a given
+time interval and a command interface which encapsulates request to
+the canvas.
+
+It is clear that, the canvas plays the role of the receiver and
+scheduler plays the role of the invoker. The client code role in this
+case is create the concrete commands and pass the to the scheduler in
+order to create 2D animations.
+
+ *OOP Approach*
+
+#+BEGIN_SRC scala 
+
+  /** Receiver object */
+  class Canvas {
+    def drawLine(x1: Int, y1: Int, x2: Int, y2: Int) = 
+      println(s"Draw line from p1 = (x1: $x1, y1: $y1)  to p2 = (x2: $x2, y2: $y2)")
+
+    def drawCircle(x: Int, y: Int, radius: Int) =
+      println(s"Draw ellipse at (x = $x, y = $y) with radius = $radius")
+
+    def drawSquare(x: Int, y: Int, size: Int) = {
+      println(s"Draw square at center ($x, $y) with size = $size")
+    }
+
+    def clear() =
+      println("Clear canvas")  
+  }
+
+  /** Command Interface */
+  trait ICommand{ 
+    def execute(): Unit
+  }
+
+  class Scheduler{
+    import scala.collection.mutable.ListBuffer
+    private val _cmdlist = ListBuffer[(Int, ICommand)]()
+
+    // Delay in milliseconds 
+    def addCommand(delayMs: Int, cmd: ICommand) = {
+      _cmdlist.append((delayMs, cmd))
+    }
+
+    def clearCommands() = 
+      _cmdlist.clear()  
+
+    def playCommands() =
+      for ((time, cmd) <- _cmdlist){
+        Thread.sleep(time)
+        cmd.execute()
+      }
+  }
+
+
+  /* ============== Concrete commands ============== */
+  class DrawLine(
+    canvas: Canvas,
+    x1: Int, y1: Int, x2: Int, y2: Int
+   ) extends ICommand {
+    def execute() =
+      canvas.drawLine(x1, y1, x2, y2)  
+  }
+
+  // Possible to write arguments in many styles,
+  // including this quasi-tabular style.
+  class DrawCircle(
+    canvas: Canvas,
+    x:      Int,
+    y:      Int,
+    radius: Int
+  ) extends ICommand {  
+    def execute() =
+      canvas.drawCircle(x, y, radius)
+  }
+
+  class DrawSquare(canvas: Canvas, x: Int, y: Int, size: Int) extends ICommand{
+    def execute() =
+      canvas.drawSquare(x, y, size)
+  }
+
+  /** =============== Client Code =============== */
+  // Creates animation by setting the commands and scheduler
+  // 
+  val canvas = new Canvas()
+  val invoker = new Scheduler()
+
+  val drawCmd1 = new DrawLine(canvas, 2, 10, 5, 6);
+  val drawCmd2 = new DrawCircle(canvas, 5, 6, 20);
+  val drawCmd3 = new DrawSquare(canvas, 9, 8, 34);
+     
+  invoker.addCommand(1500, drawCmd1)  // Execute command 1 after 1.5 seconds 
+  invoker.addCommand(1000, drawCmd2)  // Execute command 2 after 2 seconds 
+  invoker.addCommand(2000, drawCmd3)  // Execute command 3 after 3 seconds 
+
+  scala> invoker.playCommands()
+  Draw line from p1 = (x1: 2, y1: 10)  to p2 = (x2: 5, y2: 6)
+  Draw ellipse at (x = 5, y = 6) with radius = 20
+  Draw square at center (9, 8) with size = 34
+
+#+END_SRC
+
+ *FP Approach*
+
+ - The disadvantage of the OO code is that it is necessary to create a
+   new class for every method of the receiver object what will result
+   in many files and lots of boilerplate code. 
+
+Approach 1: Replace the interface ICommand with a function:
+
+#+BEGIN_SRC scala 
+  /** Receiver object */
+  class Canvas {
+    def drawLine(x1: Int, y1: Int, x2: Int, y2: Int) = 
+      println(s"Draw line from p1 = (x1: $x1, y1: $y1)  to p2 = (x2: $x2, y2: $y2)")
+
+    def drawCircle(x: Int, y: Int, radius: Int) =
+      println(s"Draw ellipse at (x = $x, y = $y) with radius = $radius")
+
+    def drawSquare(x: Int, y: Int, size: Int) = {
+      println(s"Draw square at center ($x, $y) with size = $size")
+    }
+
+    def clear() =
+      println("Clear canvas")  
+  }
+
+  object ICommandTypes{
+    type ICommand = () => Unit
+  }
+
+  import ICommandTypes._
+
+  class Scheduler{
+
+    import scala.collection.mutable.ListBuffer
+    private val _cmdlist = ListBuffer[(Int, ICommand)]()
+
+    // Delay in milliseconds 
+    def addCommand(delayMs: Int, cmd: ICommand) = {
+      _cmdlist.append((delayMs, cmd))
+    }
+
+    def clearCommands() = 
+      _cmdlist.clear()  
+
+    def playCommands() =
+      for ((time, cmd) <- _cmdlist){
+        Thread.sleep(time)
+        cmd()
+      }
+  }
+
+  /** =============== Client Code =============== */
+  // 
+  // Creates animation by setting the commands and the scheduler
+  //
+
+  val canvas = new Canvas()
+  val invoker = new Scheduler()
+  invoker.addCommand(1500, () => canvas.drawLine(2, 10, 5, 6))
+  invoker.addCommand(1000, () => canvas.drawCircle(5, 6, 20))
+  invoker.addCommand(2000, () => canvas.drawSquare(9 ,8 , 34))
+
+  scala> invoker.playCommands()
+  Draw line from p1 = (x1: 2, y1: 10)  to p2 = (x2: 5, y2: 6)
+  Draw ellipse at (x = 5, y = 6) with radius = 20
+  Draw square at center (9, 8) with size = 34
+
+
+  // ---> Or it could also be <----
+  // 
+  val canvas = new Canvas()
+  val invoker = new Scheduler()
+  val cmd1 = () => canvas.drawLine(2, 10, 5, 6)
+  val cmd2 = () => canvas.drawCircle(5, 6, 20)
+  val cmd3 = () => canvas.drawSquare(9 ,8 , 34)
+  invoker.addCommand(1500, cmd1)
+  invoker.addCommand(1000, cmd2)
+  invoker.addCommand(2000, cmd3)
+
+  scala> invoker.playCommands()
+  Draw line from p1 = (x1: 2, y1: 10)  to p2 = (x2: 5, y2: 6)
+  Draw ellipse at (x = 5, y = 6) with radius = 20
+  Draw square at center (9, 8) with size = 34
+
+  // ---> Or it could also be <----
+  //
+  def makeCmdDrawCircle(canvas: Canvas, x: Int, y: Int, radius: Int) =
+    () => canvas.drawCircle(x, y, radius)
+
+  scala> val drawCircleAtOrigin = makeCmdDrawCircle(canvas, 0, 0, 25)
+  drawCircleAtOrigin: () => Unit
+
+  scala> invoker.addCommand(4000, drawCircleAtOrigin)
+
+
+#+END_SRC
+
+
+
+***** Example 2 - Graphical user interface with FP approach 
+      :PROPERTIES:
+      :ID:       9bccd5c0-53f5-4925-b58b-a989d28cfe70
+      :END:
+
+In this example, every GUI button works as an invoker and main
+application as a receiver. The command pattern here can decouple the
+application from the GUI. 
+
+ - Running: The sample code can be run directly from the REPL
+   with :paste and pasting the source code or loading the file
+   with :paste src/commandGUIPattern.scala.
+
+#+BEGIN_SRC scala 
+  scala> :paste src/commandGUIPattern.scala
+
+  // User clicks at buttons or menu items. 
+  scala> Save document to file file1.txt
+  Save document to file file1.txt
+  Save document to file file1.txt
+  Open file = /data/fileTest.csv
+  Open file = /data/fileTest.csv
+  Fake command. DO NOT EXIT during test.
+  Fake command. DO NOT EXIT during test.
+  Fake command. DO NOT EXIT during test.
+
+  // Run command directly 
+  scala> cmdSave.execute()
+  Save document to file file1.txt
+
+  scala> cmdOpen.execute()
+  Open file = /data/fileTest.csv
+
+#+END_SRC
+
+ - Screenshot: 
+
+[[file:images/commandGUIPattern.png][file:images/commandGUIPattern.png]]
+
+ - File: [[file:src/commandGUIPattern.scala][file:src/commandGUIPattern.scala]]
+
+#+BEGIN_SRC scala :tangle src/commandGUIPattern.scala 
+  import javax.swing.{JFrame, JButton, JMenuItem, JMenuBar, JMenu}
+  import java.awt.event.{ActionListener, ActionEvent}
+
+  class Application{
+    def saveDocument(file: String, data: String) =
+      println(s"Save document to file $file")
+
+    def openFile(file: String) = 
+      println(s"Open file = $file")
+
+    def printDocument() =
+      println("Printing document ...")
+
+    def exit() = {
+      println("Shutdown systems ...")
+      System.exit(0)
+    }
+  }
+
+  trait ICommand extends ActionListener{
+    // Abstract method 
+    def execute(): Unit
+
+    // Concrete method 
+    def actionPerformed(evt: ActionEvent) =
+      execute()
+  }
+
+  class MainGUI extends JFrame{
+    private val btSave    = new JButton("Save")
+    private val btOpen    = new JButton("Open")
+    private val btClose   = new JButton("Close")
+    private val menuSave  = new JMenuItem("Save")
+    private val menuOpen  = new JMenuItem("Open")
+    private val menuClose = new JMenuItem("Close")
+
+    init()
+    def init(){
+      setLayout(new java.awt.FlowLayout())
+      setTitle("FP - Command Design Pattern for GUIs")
+      // Can be without this, but explicit is better than implicit!
+      // this.settSize(300, 276)
+      setSize(300, 276)   
+      // Add buttons
+      //==============
+      this.add(btSave)
+      this.add(btOpen)
+      this.add(btClose)
+      // Add menu bar
+      //================
+      val menu = new JMenu("Save")
+      menu.add(menuOpen)        
+      menu.add(menuSave)
+      menu.add(menuClose)
+      val menuBar = new JMenuBar()
+      menuBar.add(menu)
+      setJMenuBar(menuBar)
+    }
+
+    def setSaveCommand(cmd: ICommand) = {
+      btSave.addActionListener(cmd)
+      menuSave.addActionListener(cmd)
+      this // return this for method chaining
+    }
+
+    def setOpenCommand(cmd: ICommand) = { 
+      btOpen.addActionListener(cmd)
+      menuOpen.addActionListener(cmd)
+      this
+    }
+
+    def setExitCommand(cmd: ICommand) = { 
+      btClose.addActionListener(cmd)
+      menuClose.addActionListener(cmd)
+      this
+    }
+  } //--- End of class MainGUI ---- // 
+
+
+
+  // Approach 1: The function generates anonymous 
+  // classes implementing the interface.
+  //
+  def makeCommand(action: => Unit) =
+    new ICommand{
+      def execute() = action
+    }
+
+  def makeOpenComand(app: Application, file: String) =
+    new ICommand{
+      def execute() = app.openFile(file)
+    }
+
+  val app = new Application()
+  val gui = new MainGUI()
+  gui.setVisible(true)
+  val cmdSave = makeCommand{ app.saveDocument("file1.txt", "some data") }
+  val cmdOpen = makeOpenComand(app, "/data/fileTest.csv")
+  val cmdExit = makeCommand{ println("Fake command. DO NOT EXIT during test.")}
+  gui.setSaveCommand(cmdSave)
+  gui.setOpenCommand(cmdOpen)
+  gui.setExitCommand(cmdExit)
+
+
+#+END_SRC
+**** Observer / Publisher Subscriber
+     :PROPERTIES:
+     :ID:       a24d6fd5-1931-4dde-b68d-0873704614fb
+     :END:
+***** Overview 
 
 The observer pattern is stated by GOF as "Define a one-to-many
 dependency between objects so that when one object changes state, all
@@ -11121,7 +11571,7 @@ References:
 
  - *Observer pattern* <https://en.wikipedia.org/wiki/Observer_pattern>
 
-**** Example in OO way 
+***** Example in OO way 
      :PROPERTIES:
      :ID:       24e96781-f520-491c-9607-5513cd9c738b
      :END:
@@ -11331,7 +11781,7 @@ Running:
   runTimer(1000, () => sensor.notifyObservers(genTemp()))
 #+END_SRC
 
-**** Example in FP way 
+***** Example in FP way 
      :PROPERTIES:
      :ID:       50b40ac2-98e9-40cb-ab9e-0984e1ef3c22
      :END:
@@ -11514,7 +11964,7 @@ Running:
   runTimer(1000, () => sensor.notifyObservers(genTemp()))
 #+END_SRC
 
-**** Java built-in Observer Pattern 
+***** Java built-in Observer Pattern 
 
 Java provides the java.util.Observable and java.util.Observer
 interfaces to help implement the observer pattern. 
@@ -11615,8 +12065,8 @@ References:
  - java.util.Observer Example
    <https://examples.javacodegeeks.com/core-java/util/observer/java-util-observer-example/>
 
-*** Model View Controller - MVC 
-**** Overview 
+**** Model View Controller - MVC 
+***** Overview 
 
 The MVC - Model-View-Controller pattern was introduced by Trygve
 Reenskaug in a Smalltalk-80 implementation in 1970s to address the
@@ -11737,7 +12187,7 @@ History:
 
  - *Open Step* <http://wiki.c2.com?OpenStep>
 
-**** Example 
+***** Example 
 
 This example shows a simple GUI application with MVC and Java Swing
 toolkit using three views, one console view that prints the model
@@ -11977,8 +12427,8 @@ Counter value is = 4
 #+END_SRC
 
 [[file:images/counterMvcExample.png][file:images/counterMvcExample.png]]
-*** Model View Presenter with Passive View - MVP 
-**** Overview 
+**** Model View Presenter with Passive View - MVP 
+***** Overview 
 
 The MVP - Model-View-Presenter is variation of MVC
 Model-View-Controller which the model doesn't communicate directly
@@ -12079,7 +12529,7 @@ References and Bookmarks:
 
  - *Model-View-Controller rationale, implementation, abstract model
    widgets* <https://web.archive.org/web/20170622183803/https://www.student.cs.uwaterloo.ca/~cs349/s14/files/04.mvc.3up.pdf>
-**** Example 
+***** Example 
 
 This example is similar to the MVC counter example.
 
