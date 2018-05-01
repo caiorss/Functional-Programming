@@ -10672,6 +10672,370 @@ References:
 
  - *Template Method Pattern Tutorial with Java Examples*
    <https://dzone.com/articles/design-patterns-template-method>
+
+*** Iterator Pattern
+**** Overview
+
+The iterator pattern allows tranversing a collection or container
+without expose its internal structure and provides a uniform interface
+interface to tranverse different types of collections.
+
+ - Stated by GOF as "Provide a way to access the elements of an
+   aggregate object sequentially without exposing its underlying
+   representation."
+
+Intent: Provide a way to transverse a collection or container
+sequentially not exposing its internal representation.
+
+
+Also known as:
+
+ - Cursor
+
+
+Iterator Pattern Structure:
+
+ - Iterfaces:
+
+   * Collection
+     - Methods:
+       + createIterator()   -> Creates a new iterator object specific for the underlying collection.
+
+   * Iterator
+     - Methods:
+       + hasNext(): Bool  -> Returns true if iterator has next element.
+       + next()           -> Get next element and advance to next element.
+       + current()        -> Get current element. (Optional)
+       + remove()         -> (Optional)
+
+Known uses:
+
+ - This pattern is widely in Java, C# (.NET) and C++ STL containers.
+
+ - Java
+
+   - java.util.Iterator Interface
+
+   - java.util.Enumerator interface
+
+ - .NET
+
+   - IEnumerable
+
+   - IEnumerator
+
+Java iterator Interface:
+
+#+BEGIN_SRC java
+  public interface java.util.Iterator<E> {
+      boolean hasNext();
+      E next();
+      void remove();
+  }
+#+END_SRC
+
+
+References:
+
+ - *Course Notes — CIS 501: Software Architecture and Design, Fall
+   2014*
+   <http://softwarearch.santoslab.org/12-design-patterns-factories-iterators/index.html>
+
+ - *Supplement: Design Patterns. For Introduction to Java
+   Programming* -
+   <http://www.cs.armstrong.edu/liang/apcs/supplement/Supplement5hDesignpatterns.pdf>
+
+ - *Iterator Pattern Tutorial with Java Examples*
+   <https://dzone.com/articles/design-patterns-iterator>
+
+ - *Iterator* <http://www.oodesign.com/iterator-pattern.html>
+
+ - *Design Patterns - Iterator Pattern*
+   <https://www.tutorialspoint.com/design_pattern/iterator_pattern.htm>
+
+ - *Principles of Software Construction: Objects, Design, and
+   Concurrency; Design Case Study: Stream I/O*
+   <https://www.cs.cmu.edu/~charlie/courses/15-214/2014-fall/slides/14-io.pdf>
+
+ - *The Use of Iterator Iterator in Python* <https://www.codeday.top/2017/03/27/21392.html>
+
+ -
+
+**** Examples
+
+Example 1 - Java built-in iterator.
+
+#+BEGIN_SRC scala
+  scala> import java.util.Arrays
+  import java.util.Arrays
+
+
+  scala> val arr = Arrays.asList(1, 2, 3, 4, 5, 6, 7)
+  arr: java.util.List[Int] = [1, 2, 3, 4, 5, 6, 7]
+
+  scala> val iter = arr.iterator()
+  iter: java.util.Iterator[Int] = java.util.AbstractList$Itr@3030836d
+
+  scala> iter.hasNext _
+  res2: () => Boolean = <function0>
+
+  scala> iter.next _
+  res3: () => Array[Int] = <function0>
+
+  scala> iter.remove _
+  res4: () => Unit = <function0>
+
+  scala> iter.hasNext()
+  res8: Boolean = true
+
+  scala> iter.next()
+  res9: Int = 1
+
+  scala> iter.hasNext()
+  res10: Boolean = true
+
+  scala> iter.next()
+  res11: Int = 2
+
+  scala> iter.next()
+  res12: Int = 3
+
+  scala> iter.next()
+  res13: Int = 4
+
+  scala> iter.next()
+  res14: Int = 5
+
+  scala> iter.hasNext()
+  res15: Boolean = true
+
+  scala> iter.next()
+  res16: Int = 6
+
+  scala> iter.hasNext()
+  res17: Boolean = true
+
+  scala> iter.next()
+  res18: Int = 7
+
+  scala> iter.hasNext()
+  res19: Boolean = false
+
+  scala> iter.next()
+  java.util.NoSuchElementException
+    at java.util.AbstractList$Itr.next(AbstractList.java:364)
+    ... 32 elided
+
+  scala>
+
+#+END_SRC
+
+Example 2 - Print all collection elements
+
+#+BEGIN_SRC scala
+  scala> import java.util.Arrays
+  import java.util.Arrays
+
+  scala> val arr = Arrays.asList(1, 2, 3, 4, 5, 6, 7)
+  arr: java.util.List[Int] = [1, 2, 3, 4, 5, 6, 7]
+
+  scala> val iter = arr.iterator()
+  iter: java.util.Iterator[Int] = java.util.AbstractList$Itr@210d3a42
+
+  while (iter.hasNext()) {
+    println(iter.next())
+  }
+
+  scala> while (iter.hasNext()) {
+       |   println(iter.next())
+       | }
+  1
+  2
+  3
+  4
+  5
+  6
+  7
+#+END_SRC
+
+Example 3: Implementation a range iterator with java.util.iterator interface.
+
+#+BEGIN_SRC scala
+
+  class RangeIterator(from: Double, to: Double, step: Double) extends java.util.Iterator[Double] {
+    private var cursor = from
+
+    def hasNext() = cursor < to
+
+    def next() = {
+      if (!hasNext())
+        error("Error: End of iteration, no more elements available.")
+      else
+      { val ret = cursor
+        cursor = cursor + step
+        ret
+      }
+    }
+
+    def remove() = error("Error: Method not implemented")
+
+  }
+
+
+  scala> val rng = new RangeIterator(0.0, 5.0, 1.0)
+  rng: RangeIterator = RangeIterator@1a6df932
+
+  scala> rng.next()
+  res41: Double = 0.0
+
+  scala> rng.hasNext()
+  res42: Boolean = true
+
+  scala> rng.next()
+  res43: Double = 1.0
+
+  scala> rng.hasNext()
+  res44: Boolean = true
+
+  scala> rng.next()
+  res45: Double = 2.0
+
+  scala> rng.hasNext()
+  res46: Boolean = true
+
+  scala> rng.next()
+  res47: Double = 3.0
+
+  scala> rng.next()
+  res48: Double = 4.0
+
+  scala> rng.hasNext()
+  res49: Boolean = false
+
+  scala> rng.next()
+  java.lang.RuntimeException: Error: End of iteration, no more elements available.
+    at scala.sys.package$.error(package.scala:27)
+    at scala.Predef$.error(Predef.scala:144)
+    at RangeIterator.next(<console>:19)
+    ... 32 elided
+
+  scala>
+
+
+
+  val iter = new RangeIterator(0.0, 10.0, 1.0)
+
+  while (iter.hasNext()) {
+    println(iter.next())
+  }
+
+  scala> while (iter.hasNext()) {
+       |   println(iter.next())
+       | }
+  0.0
+  1.0
+  2.0
+  3.0
+  4.0
+  5.0
+  6.0
+  7.0
+  8.0
+  9.0
+
+#+END_SRC
+
+Example 4: Creating an iterator to iterate over file lines.
+
+#+BEGIN_SRC scala
+
+  class ReadFileLinesIterator(file: String) extends Iterator[String] {
+    private var buf          = new java.io.BufferedReader(new java.io.FileReader(file))
+    private var line: String = ""
+    private var status       = true
+
+    init()
+
+    def init() {
+      line = buf.readLine()
+      status = line != null
+    }
+
+    def hasNext() = status
+
+    def next() = {
+      if (hasNext())
+        {
+          val ret = line
+          line = buf.readLine()
+          status = line != null
+          ret
+        }
+      else
+        error("Error: End of iteration. No more elements available.")
+    }
+
+    def remove() = error("Error: invalid method for this iterator.")
+  }
+
+
+
+  scala> val lineIter = new ReadFileLinesIterator("/etc/lsb-release")
+  lineIter: ReadFileLinesIterator = non-empty iterator
+
+  scala> lineIter.hasNext()
+  res78: Boolean = true
+
+  scala> lineIter.next()
+  res79: String = DISTRIB_ID=ManjaroLinux
+
+  scala> lineIter.hasNext()
+  res80: Boolean = true
+
+
+  scala> lineIter.next()
+  res81: String = DISTRIB_RELEASE=17.0.1
+
+  scala> lineIter.hasNext()
+  res82: Boolean = true
+
+  scala> lineIter.next()
+  res83: String = DISTRIB_CODENAME=Gellivara
+
+  scala> lineIter.hasNext()
+  res84: Boolean = true
+
+  scala> lineIter.next()
+  res85: String = DISTRIB_DESCRIPTION="Manjaro Linux"
+
+  scala> lineIter.next()
+  java.lang.RuntimeException: Error: End of iteration. No more elements available.
+    at scala.sys.package$.error(package.scala:27)
+    at scala.Predef$.error(Predef.scala:144)
+    at ReadFileLinesIterator.next(<console>:35)
+    ... 32 elided
+
+  scala> lineIter.hasNext()
+  res87: Boolean = false
+
+  scala>
+
+  val lineIter = new ReadFileLinesIterator("/etc/lsb-release")
+  while(lineIter.hasNext()){
+    println(lineIter.next())
+  }
+
+
+  scala> while(lineIter.hasNext()){
+       |   println(lineIter.next())
+       | }
+  DISTRIB_ID=ManjaroLinux
+  DISTRIB_RELEASE=17.0.1
+  DISTRIB_CODENAME=Gellivara
+  DISTRIB_DESCRIPTION="Manjaro Linux"
+
+
+#+END_SRC
 *** Observer / Publisher Subscriber
     :PROPERTIES:
     :ID:       a24d6fd5-1931-4dde-b68d-0873704614fb
@@ -11250,370 +11614,6 @@ References:
 
  - java.util.Observer Example
    <https://examples.javacodegeeks.com/core-java/util/observer/java-util-observer-example/>
-
-*** Iterator Pattern
-**** Overview
-
-The iterator pattern allows tranversing a collection or container
-without expose its internal structure and provides a uniform interface
-interface to tranverse different types of collections.
-
- - Stated by GOF as "Provide a way to access the elements of an
-   aggregate object sequentially without exposing its underlying
-   representation."
-
-Intent: Provide a way to transverse a collection or container
-sequentially not exposing its internal representation.
-
-
-Also known as:
-
- - Cursor
-
-
-Iterator Pattern Structure:
-
- - Iterfaces:
-
-   * Collection
-     - Methods:
-       + createIterator()   -> Creates a new iterator object specific for the underlying collection.
-
-   * Iterator
-     - Methods:
-       + hasNext(): Bool  -> Returns true if iterator has next element.
-       + next()           -> Get next element and advance to next element.
-       + current()        -> Get current element. (Optional)
-       + remove()         -> (Optional)
-
-Known uses:
-
- - This pattern is widely in Java, C# (.NET) and C++ STL containers.
-
- - Java
-
-   - java.util.Iterator Interface
-
-   - java.util.Enumerator interface
-
- - .NET
-
-   - IEnumerable
-
-   - IEnumerator
-
-Java iterator Interface:
-
-#+BEGIN_SRC java
-  public interface java.util.Iterator<E> {
-      boolean hasNext();
-      E next();
-      void remove();
-  }
-#+END_SRC
-
-
-References:
-
- - *Course Notes — CIS 501: Software Architecture and Design, Fall
-   2014*
-   <http://softwarearch.santoslab.org/12-design-patterns-factories-iterators/index.html>
-
- - *Supplement: Design Patterns. For Introduction to Java
-   Programming* -
-   <http://www.cs.armstrong.edu/liang/apcs/supplement/Supplement5hDesignpatterns.pdf>
-
- - *Iterator Pattern Tutorial with Java Examples*
-   <https://dzone.com/articles/design-patterns-iterator>
-
- - *Iterator* <http://www.oodesign.com/iterator-pattern.html>
-
- - *Design Patterns - Iterator Pattern*
-   <https://www.tutorialspoint.com/design_pattern/iterator_pattern.htm>
-
- - *Principles of Software Construction: Objects, Design, and
-   Concurrency; Design Case Study: Stream I/O*
-   <https://www.cs.cmu.edu/~charlie/courses/15-214/2014-fall/slides/14-io.pdf>
-
- - *The Use of Iterator Iterator in Python* <https://www.codeday.top/2017/03/27/21392.html>
-
- -
-
-**** Examples
-
-Example 1 - Java built-in iterator.
-
-#+BEGIN_SRC scala
-  scala> import java.util.Arrays
-  import java.util.Arrays
-
-
-  scala> val arr = Arrays.asList(1, 2, 3, 4, 5, 6, 7)
-  arr: java.util.List[Int] = [1, 2, 3, 4, 5, 6, 7]
-
-  scala> val iter = arr.iterator()
-  iter: java.util.Iterator[Int] = java.util.AbstractList$Itr@3030836d
-
-  scala> iter.hasNext _
-  res2: () => Boolean = <function0>
-
-  scala> iter.next _
-  res3: () => Array[Int] = <function0>
-
-  scala> iter.remove _
-  res4: () => Unit = <function0>
-
-  scala> iter.hasNext()
-  res8: Boolean = true
-
-  scala> iter.next()
-  res9: Int = 1
-
-  scala> iter.hasNext()
-  res10: Boolean = true
-
-  scala> iter.next()
-  res11: Int = 2
-
-  scala> iter.next()
-  res12: Int = 3
-
-  scala> iter.next()
-  res13: Int = 4
-
-  scala> iter.next()
-  res14: Int = 5
-
-  scala> iter.hasNext()
-  res15: Boolean = true
-
-  scala> iter.next()
-  res16: Int = 6
-
-  scala> iter.hasNext()
-  res17: Boolean = true
-
-  scala> iter.next()
-  res18: Int = 7
-
-  scala> iter.hasNext()
-  res19: Boolean = false
-
-  scala> iter.next()
-  java.util.NoSuchElementException
-    at java.util.AbstractList$Itr.next(AbstractList.java:364)
-    ... 32 elided
-
-  scala>
-
-#+END_SRC
-
-Example 2 - Print all collection elements
-
-#+BEGIN_SRC scala
-  scala> import java.util.Arrays
-  import java.util.Arrays
-
-  scala> val arr = Arrays.asList(1, 2, 3, 4, 5, 6, 7)
-  arr: java.util.List[Int] = [1, 2, 3, 4, 5, 6, 7]
-
-  scala> val iter = arr.iterator()
-  iter: java.util.Iterator[Int] = java.util.AbstractList$Itr@210d3a42
-
-  while (iter.hasNext()) {
-    println(iter.next())
-  }
-
-  scala> while (iter.hasNext()) {
-       |   println(iter.next())
-       | }
-  1
-  2
-  3
-  4
-  5
-  6
-  7
-#+END_SRC
-
-Example 3: Implementation a range iterator with java.util.iterator interface.
-
-#+BEGIN_SRC scala
-
-  class RangeIterator(from: Double, to: Double, step: Double) extends java.util.Iterator[Double] {
-    private var cursor = from
-
-    def hasNext() = cursor < to
-
-    def next() = {
-      if (!hasNext())
-        error("Error: End of iteration, no more elements available.")
-      else
-      { val ret = cursor
-        cursor = cursor + step
-        ret
-      }
-    }
-
-    def remove() = error("Error: Method not implemented")
-
-  }
-
-
-  scala> val rng = new RangeIterator(0.0, 5.0, 1.0)
-  rng: RangeIterator = RangeIterator@1a6df932
-
-  scala> rng.next()
-  res41: Double = 0.0
-
-  scala> rng.hasNext()
-  res42: Boolean = true
-
-  scala> rng.next()
-  res43: Double = 1.0
-
-  scala> rng.hasNext()
-  res44: Boolean = true
-
-  scala> rng.next()
-  res45: Double = 2.0
-
-  scala> rng.hasNext()
-  res46: Boolean = true
-
-  scala> rng.next()
-  res47: Double = 3.0
-
-  scala> rng.next()
-  res48: Double = 4.0
-
-  scala> rng.hasNext()
-  res49: Boolean = false
-
-  scala> rng.next()
-  java.lang.RuntimeException: Error: End of iteration, no more elements available.
-    at scala.sys.package$.error(package.scala:27)
-    at scala.Predef$.error(Predef.scala:144)
-    at RangeIterator.next(<console>:19)
-    ... 32 elided
-
-  scala>
-
-
-
-  val iter = new RangeIterator(0.0, 10.0, 1.0)
-
-  while (iter.hasNext()) {
-    println(iter.next())
-  }
-
-  scala> while (iter.hasNext()) {
-       |   println(iter.next())
-       | }
-  0.0
-  1.0
-  2.0
-  3.0
-  4.0
-  5.0
-  6.0
-  7.0
-  8.0
-  9.0
-
-#+END_SRC
-
-Example 4: Creating an iterator to iterate over file lines.
-
-#+BEGIN_SRC scala
-
-  class ReadFileLinesIterator(file: String) extends Iterator[String] {
-    private var buf          = new java.io.BufferedReader(new java.io.FileReader(file))
-    private var line: String = ""
-    private var status       = true
-
-    init()
-
-    def init() {
-      line = buf.readLine()
-      status = line != null
-    }
-
-    def hasNext() = status
-
-    def next() = {
-      if (hasNext())
-        {
-          val ret = line
-          line = buf.readLine()
-          status = line != null
-          ret
-        }
-      else
-        error("Error: End of iteration. No more elements available.")
-    }
-
-    def remove() = error("Error: invalid method for this iterator.")
-  }
-
-
-
-  scala> val lineIter = new ReadFileLinesIterator("/etc/lsb-release")
-  lineIter: ReadFileLinesIterator = non-empty iterator
-
-  scala> lineIter.hasNext()
-  res78: Boolean = true
-
-  scala> lineIter.next()
-  res79: String = DISTRIB_ID=ManjaroLinux
-
-  scala> lineIter.hasNext()
-  res80: Boolean = true
-
-
-  scala> lineIter.next()
-  res81: String = DISTRIB_RELEASE=17.0.1
-
-  scala> lineIter.hasNext()
-  res82: Boolean = true
-
-  scala> lineIter.next()
-  res83: String = DISTRIB_CODENAME=Gellivara
-
-  scala> lineIter.hasNext()
-  res84: Boolean = true
-
-  scala> lineIter.next()
-  res85: String = DISTRIB_DESCRIPTION="Manjaro Linux"
-
-  scala> lineIter.next()
-  java.lang.RuntimeException: Error: End of iteration. No more elements available.
-    at scala.sys.package$.error(package.scala:27)
-    at scala.Predef$.error(Predef.scala:144)
-    at ReadFileLinesIterator.next(<console>:35)
-    ... 32 elided
-
-  scala> lineIter.hasNext()
-  res87: Boolean = false
-
-  scala>
-
-  val lineIter = new ReadFileLinesIterator("/etc/lsb-release")
-  while(lineIter.hasNext()){
-    println(lineIter.next())
-  }
-
-
-  scala> while(lineIter.hasNext()){
-       |   println(lineIter.next())
-       | }
-  DISTRIB_ID=ManjaroLinux
-  DISTRIB_RELEASE=17.0.1
-  DISTRIB_CODENAME=Gellivara
-  DISTRIB_DESCRIPTION="Manjaro Linux"
-
-
-#+END_SRC
 
 *** Model View Controller - MVC 
 **** Overview 
