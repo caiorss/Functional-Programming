@@ -10255,7 +10255,7 @@ context object can be replaced by a _higher order function_. By the
 changing the function argument of the context (higher order function)
 its changes the behavior.
 
-Variation 1: Each concrete strategy can become just a function.
+Variation 1: Each concrete strategy can become just a binary function.
 
 #+BEGIN_SRC scala
   type Operation = (Double, Double) => Double
@@ -10299,7 +10299,7 @@ Variation 1: Each concrete strategy can become just a function.
 
 #+END_SRC
 
-Variation 2: With only functions:
+Variation 2: Only with functions:
 
  - The function runStrategy switches algorithms at run-time. The
    algorithm is just a function passed as argument.
@@ -10336,6 +10336,237 @@ Variation 2: With only functions:
 
 #+END_SRC
 
+
+Variation 3: An alternative way to avoid defining many classes and
+using an mixed OOP and FP approach is to create a function that
+returns an anonymous class implementing the interface/trait
+operation. This method is useful when it is not possible to modify the
+code of the Operation trait/interface and class Context. This approach
+is also helpful in the case that many external codes, libraries and
+programs could be disrupted if the mentioned codes are modified.
+
+#+BEGIN_SRC scala 
+  /// Interface for the Strategy - Algorithm
+  trait Operation {
+    def run(x: Double, y: Double): Double
+  }
+
+  //----- Context - Class that selects the concrete strategy -- //
+
+  class Context{
+    private var strategy: Operation = null
+
+    def setStrategy(strategyS: Operation) = {
+      strategy = strategyS
+    }
+
+    def runStrategy(x: Double, y: Double) = {
+      strategy.run(x, y)
+    }
+  }
+
+  // Converts a function to the interface "Operation"
+  def makeStrategy(operation: (Double, Double) => Double) =
+    new Operation{
+      def run(x: Double, y: Double) = operation(x, y)
+    }
+
+  scala> val addOp = makeStrategy{(x, y) => x + y}
+  addOp: Operation = $anon$1@6f0a4e30
+
+  scala> val subOp = makeStrategy{(x, y) => x - y}
+  subOp: Operation = $anon$1@5e020dd1
+
+  scala> val mulOp = makeStrategy{(x, y) => x * y}
+  mulOp: Operation = $anon$1@2a0ce342
+
+  scala> val ctx = new Context()
+  ctx: Context = Context@1e160a9e
+
+  // Algorithm changed at run-time
+  scala> ctx.setStrategy(addOp)
+
+  scala> ctx.runStrategy(3.5, 4.5)
+  res1: Double = 8.0
+
+  scala> ctx.setStrategy(mulOp)
+
+  scala> ctx.runStrategy(10, 3.5)
+  res3: Double = 35.0
+
+#+END_SRC
+
+
+Alternative 4: Languages like C++ and C# don't support anonymous
+classes like Java and Scala, so an alternative approach in this case
+is to create a classe implemeting the interface Operation that takes a
+lambda function as constructor argument and delegates the execution of
+the method defined in the interface to the lambda. 
+
+#+BEGIN_SRC scala 
+  /// Interface for the Strategy - Algorithm
+  trait Operation {
+    def run(x: Double, y: Double): Double
+  }
+
+  //----- Context - Class that selects the concrete strategy -- //
+
+  class Context{
+    private var strategy: Operation = null
+
+    def setStrategy(strategyS: Operation) = {
+      strategy = strategyS
+    }
+
+    def runStrategy(x: Double, y: Double) = {
+      strategy.run(x, y)
+    }
+  }
+
+  class FunctionToStrategy(operation: (Double, Double) => Double) extends Operation {
+    def run(x: Double, y: Double) = operation(x, y)
+  }
+
+  scala> val addOp = new FunctionToStrategy((x, y) => x + y)
+  addOp: FunctionToStrategy = FunctionToStrategy@43874120
+
+  scala> val subOp = new FunctionToStrategy((x, y) => x - y)
+  subOp: FunctionToStrategy = FunctionToStrategy@282506e1
+
+  scala> val mulOp = new FunctionToStrategy((x, y) => x * y)
+  mulOpt: FunctionToStrategy = FunctionToStrategy@7dbcbc7b
+
+
+  scala> val ctx = new Context()
+  ctx: Context = Context@7f53c24c
+
+  // Algorithm changed at run-time
+  scala> ctx.setStrategy(addOp)
+
+  scala> ctx.runStrategy(3.5, 4.5)
+  res1: Double = 8.0
+
+  scala> ctx.setStrategy(mulOp)
+
+  scala> ctx.runStrategy(10, 3.5)
+  res3: Double = 35.0
+
+#+END_SRC
+
+The alternative 4 could be also implemented in C++11: 
+
+ - File: strategyPattern.cpp
+
+#+BEGIN_SRC cpp
+  #include <iostream>
+  #include <functional>
+
+  using std::string;
+  using std::function;
+
+  // Type synonym to function
+  // type FOperation = (double, double) => double 
+  using FOperation = function<double (double, double)>;
+
+  // Class with only with pure virtual methods is equivalent to an interface.
+  class IOperation{
+  public:
+      virtual string getName() = 0;
+      virtual double run(double x, double y) = 0;
+  };
+
+  class Context{
+  private:
+      IOperation* _strategy = nullptr;
+
+  public:
+
+      void setStrategy(IOperation* strategy){
+          _strategy = strategy;
+      }
+
+      double runStrategy(double x, double y){
+          double result = _strategy->run(x, y);
+          std::cout << "Running strategy = "
+                    << _strategy->getName()
+                    << "( x = " << x
+                    << ", y = " << y
+                    << ") = " << result
+                    << std::endl;
+          return _strategy->run(x, y);
+      }       
+  };
+
+  // Turns a lambda function into a "Strategy" object
+  class FunctionToStrategy: public IOperation{
+  private:
+      string     _name;
+      FOperation  _oper;
+  public: 
+      FunctionToStrategy(string name, FOperation oper): _name(name), _oper(oper){}    
+      string getName(){
+          return _name;
+      }
+      double run(double x, double y){
+          return _oper(x, y);
+      }
+  };
+      
+  int main(int argc, char** argv, char **environ){
+      std::cout << "Testing mixed FP and OOP strategy pattern in C++" << std::endl;
+
+      FunctionToStrategy strategyAdd = FunctionToStrategy(
+          "add",
+          [](double x, double y){ return x + y; }
+          );
+
+      FunctionToStrategy strategyMul = FunctionToStrategy(
+          "mul",
+          [](double x, double y){ return x * y; }
+          );
+      
+      Context ctx;
+
+      std::cout << std::endl;
+      std::cout << "Testing operation add" << std::endl;
+      std::cout << "---------------------" << std::endl;
+      ctx.setStrategy(&strategyAdd);  
+      double res0 = ctx.runStrategy(10.0, 20.0);
+      std::cout << "Add result = " << res0 << std::endl;
+      ctx.runStrategy(15.0, 20.0);
+
+      std::cout << std::endl;
+      std::cout << "Testing operation mul" << std::endl;
+      std::cout << "---------------------" << std::endl;
+      ctx.setStrategy(&strategyMul);
+      double res1 = ctx.runStrategy(10.0, 20.0);
+      std::cout << "Mul result = " << res1  << std::endl; 
+      ctx.runStrategy(3, 5);
+      
+      // return zero status code
+      return EXIT_SUCCESS;
+  }
+#+END_SRC
+
+Compiling and Running:
+
+#+BEGIN_SRC sh 
+  $ clang++ strategyPattern.cpp -std=c++11 -o strategyPattern.bin && ./strategyPattern.bin 
+  Testing mixed FP and OOP strategy pattern in C++
+
+  Testing operation add
+  ---------------------
+  Running strategy = add( x = 10, y = 20) = 30
+  Add result = 30
+  Running strategy = add( x = 15, y = 20) = 35
+
+  Testing operation mul
+  ---------------------
+  Running strategy = mul( x = 10, y = 20) = 200
+  Mul result = 200
+  Running strategy = mul( x = 3, y = 5) = 15
+
+#+END_SRC
 **** Template Method
 
 The templated method design patterns is a behavioral design pattern
