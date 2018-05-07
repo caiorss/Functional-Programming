@@ -4,10 +4,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Useful Custom Functions/ Iterators and Operators</title>
-<!-- 2017-03-12 dom 16:48 -->
+<!-- 2018-05-07 Mon 10:12 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
-<meta  name="author" content="Caio Rodrigues" />
+<meta  name="author" content="nobody" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   .title  { text-align: center; }
@@ -88,80 +88,9 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
-<link href='/theme/style.css' rel='stylesheet'>
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
 <link href="/Functional-Programming/theme/style.css" rel="stylesheet">
-
-<script type="text/javascript" src="/theme/org-info.js">
-/**
- *
- * @source: /theme/org-info.js
- *
- * @licstart  The following is the entire license notice for the
- *  JavaScript code in /theme/org-info.js.
- *
- * Copyright (C) 2012-2013 Free Software Foundation, Inc.
- *
- *
- * The JavaScript code in this tag is free software: you can
- * redistribute it and/or modify it under the terms of the GNU
- * General Public License (GNU GPL) as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version.  The code is distributed WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
- *
- * As additional permission under GNU GPL version 3 section 7, you
- * may distribute non-source (e.g., minimized or compacted) forms of
- * that code without the copy of the GNU GPL normally required by
- * section 4, provided you include this license notice and a URL
- * through which recipients can access the Corresponding Source.
- *
- * @licend  The above is the entire license notice
- * for the JavaScript code in /theme/org-info.js.
- *
- */
-</script>
-
-<script type="text/javascript">
-
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2013 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
-
-<!--/*--><![CDATA[/*><!--*/
-org_html_manager.set("TOC_DEPTH", "4");
-org_html_manager.set("LINK_HOME", "");
-org_html_manager.set("LINK_UP", "");
-org_html_manager.set("LOCAL_TOC", "1");
-org_html_manager.set("VIEW_BUTTONS", "0");
-org_html_manager.set("MOUSE_HINT", "underline");
-org_html_manager.set("FIXED_TOC", "0");
-org_html_manager.set("TOC", "1");
-org_html_manager.set("VIEW", "info");
-org_html_manager.setup();  // activate after the parameters are set
-/*]]>*///-->
-</script>
+<script src="/Functional-Programming/theme/org-nav-theme.js"></script>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -380,7 +309,7 @@ Development:
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> pairs alist <span class="org-haskell-operator">=</span> zip alist (tail alist)
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t pairs
-<span class="org-haskell-definition">pairs</span> <span class="org-haskell-operator">::</span> [b] <span class="org-haskell-operator">-&gt;</span> [(b, b)]
+<span class="org-function-name">pairs</span> <span class="org-haskell-operator">::</span> [b] <span class="org-haskell-operator">-&gt;</span> [(b, b)]
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t (<span class="org-haskell-operator">-</span>)
 (<span class="org-haskell-definition">-</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
@@ -415,7 +344,7 @@ uncurry(<span class="org-haskell-operator">-</span>) <span class="org-haskell-op
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> lagdiff series <span class="org-haskell-operator">=</span> map (uncurry ( flip (<span class="org-haskell-operator">-</span>))) <span class="org-haskell-operator">$</span> pairs series
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t lagdiff 
-<span class="org-haskell-definition">lagdiff</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> b <span class="org-haskell-operator">=&gt;</span> [b] <span class="org-haskell-operator">-&gt;</span> [b]
+<span class="org-function-name">lagdiff</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> b <span class="org-haskell-operator">=&gt;</span> [b] <span class="org-haskell-operator">-&gt;</span> [b]
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">lagdiff</span> [10.3, 20.5, 5.6, 8.23, 40.3]
@@ -491,7 +420,7 @@ Example:
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t triples 
-<span class="org-haskell-definition">triples</span> <span class="org-haskell-operator">::</span> [c] <span class="org-haskell-operator">-&gt;</span> [(c, c, c)]
+<span class="org-function-name">triples</span> <span class="org-haskell-operator">::</span> [c] <span class="org-haskell-operator">-&gt;</span> [(c, c, c)]
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span>
 </pre>
@@ -562,7 +491,7 @@ Definition:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-haskell-definition">enumerate</span> <span class="org-haskell-operator">::</span> [b] <span class="org-haskell-operator">-&gt;</span> [(<span class="org-haskell-type">Int</span>, b)]
+<pre class="src src-haskell"><span class="org-function-name">enumerate</span> <span class="org-haskell-operator">::</span> [b] <span class="org-haskell-operator">-&gt;</span> [(<span class="org-haskell-type">Int</span>, b)]
 <span class="org-haskell-definition">enumerate</span> alist <span class="org-haskell-operator">=</span> zip [0<span class="org-haskell-operator">..</span>(length(alist)<span class="org-haskell-operator">-</span>1)] alist
 </pre>
 </div>
@@ -709,7 +638,7 @@ Example:
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> f <span class="org-haskell-operator">=</span> juxt2 ((<span class="org-haskell-operator">&gt;</span>100), (<span class="org-haskell-operator">+</span>100))
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t f
-<span class="org-haskell-definition">f</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Integer</span> <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">Bool</span>, <span class="org-haskell-type">Integer</span>)
+<span class="org-function-name">f</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Integer</span> <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">Bool</span>, <span class="org-haskell-type">Integer</span>)
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">f</span> 30
 (<span class="org-haskell-constructor">False</span>,130)
@@ -735,7 +664,7 @@ Example:
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> analytics <span class="org-haskell-operator">=</span> juxt3 (length, maximum, minimum)
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t analytics 
-<span class="org-haskell-definition">analytics</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-constructor">()</span>] <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">Int</span>, <span class="org-haskell-constructor">()</span>, <span class="org-haskell-constructor">()</span>)
+<span class="org-function-name">analytics</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-constructor">()</span>] <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">Int</span>, <span class="org-haskell-constructor">()</span>, <span class="org-haskell-constructor">()</span>)
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">analytics</span> [100.23, 23.23, 12.33, <span class="org-haskell-operator">-</span>123.23, <span class="org-haskell-operator">-</span>1000.23, 4000.5]
 
@@ -750,7 +679,7 @@ Example:
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> analytics <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">Double</span>] <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">Int</span>, <span class="org-haskell-type">Double</span>, <span class="org-haskell-type">Double</span>)  ; analytics <span class="org-haskell-operator">=</span> juxt3 (length, maximum, minimum)
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t analytics 
-<span class="org-haskell-definition">analytics</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">Double</span>] <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">Int</span>, <span class="org-haskell-type">Double</span>, <span class="org-haskell-type">Double</span>)
+<span class="org-function-name">analytics</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">Double</span>] <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">Int</span>, <span class="org-haskell-type">Double</span>, <span class="org-haskell-type">Double</span>)
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">analytics</span> [100.23, 23.23, 12.33, <span class="org-haskell-operator">-</span>123.23, <span class="org-haskell-operator">-</span>1000.23, 4000.5]
@@ -761,7 +690,7 @@ Example:
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> f <span class="org-haskell-operator">=</span> juxt3 (succ, pred, ord)
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t f
-<span class="org-haskell-definition">f</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Char</span> <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">Char</span>, <span class="org-haskell-type">Char</span>, <span class="org-haskell-type">Int</span>)
+<span class="org-function-name">f</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Char</span> <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">Char</span>, <span class="org-haskell-type">Char</span>, <span class="org-haskell-type">Int</span>)
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> a <span class="org-haskell-operator">=</span> map f <span class="org-string">"haskell is fun"</span>
 <span class="org-haskell-operator">&gt;</span> a
@@ -933,9 +862,9 @@ Example: if(x) &gt; 10 then 30 else x
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2017-03-12 dom 16:48</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="author">Author: nobody</p>
+<p class="date">Created: 2018-05-07 Mon 10:12</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

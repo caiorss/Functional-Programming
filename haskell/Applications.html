@@ -4,10 +4,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Applications</title>
-<!-- 2017-03-12 dom 16:47 -->
+<!-- 2018-05-07 Mon 10:12 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
-<meta  name="author" content="arch" />
+<meta  name="author" content="nobody" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   .title  { text-align: center; }
@@ -88,79 +88,9 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
-<link href='/theme/style.css' rel='stylesheet'>
-
-<script type="text/javascript" src="/theme/org-info.js">
-/**
- *
- * @source: /theme/org-info.js
- *
- * @licstart  The following is the entire license notice for the
- *  JavaScript code in /theme/org-info.js.
- *
- * Copyright (C) 2012-2013 Free Software Foundation, Inc.
- *
- *
- * The JavaScript code in this tag is free software: you can
- * redistribute it and/or modify it under the terms of the GNU
- * General Public License (GNU GPL) as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version.  The code is distributed WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
- *
- * As additional permission under GNU GPL version 3 section 7, you
- * may distribute non-source (e.g., minimized or compacted) forms of
- * that code without the copy of the GNU GPL normally required by
- * section 4, provided you include this license notice and a URL
- * through which recipients can access the Corresponding Source.
- *
- * @licend  The above is the entire license notice
- * for the JavaScript code in /theme/org-info.js.
- *
- */
-</script>
-
-<script type="text/javascript">
-
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2013 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
-
-<!--/*--><![CDATA[/*><!--*/
-org_html_manager.set("TOC_DEPTH", "3");
-org_html_manager.set("LINK_HOME", "");
-org_html_manager.set("LINK_UP", "");
-org_html_manager.set("LOCAL_TOC", "1");
-org_html_manager.set("VIEW_BUTTONS", "0");
-org_html_manager.set("MOUSE_HINT", "underline");
-org_html_manager.set("FIXED_TOC", "0");
-org_html_manager.set("TOC", "1");
-org_html_manager.set("VIEW", "info");
-org_html_manager.setup();  // activate after the parameters are set
-/*]]>*///-->
-</script>
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+<link href="/Functional-Programming/theme/style.css" rel="stylesheet">
+<script src="/Functional-Programming/theme/org-nav-theme.js"></script>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -235,12 +165,24 @@ for the JavaScript code in this tag.
 </li>
 <li><a href="#sec-1-5">1.5. Vectors</a></li>
 <li><a href="#sec-1-6">1.6. Tax Brackets</a></li>
-<li><a href="#sec-1-7">1.7. Small DSL Domain Specific Language</a></li>
+<li><a href="#sec-1-7">1.7. Small DSL Domain Specific Language</a>
+<ul>
+<li>
+<ul>
+<li><a href="#sec-1-7-0-1">1.7.0.1. String Processing</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
+<lu> 
+  <li><a href="/Functional-Programming/index.html">Index</a></li>
+  <li><a href="https://github.com/caiorss/Functional-Programming">Repository</a></li>
+</lu>
 
 <div id="outline-container-sec-1" class="outline-2">
 <h2 id="sec-1"><span class="section-number-2">1</span> Applications</h2>
@@ -392,10 +334,10 @@ Polynomial evaluation by the horner method.
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-haskell-definition">polyval</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Fractional</span> a <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
+<pre class="src src-haskell"><span class="org-function-name">polyval</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Fractional</span> a <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
 <span class="org-haskell-definition">polyval</span> coeffs x <span class="org-haskell-operator">=</span> foldr (<span class="org-haskell-operator">\</span>b c <span class="org-haskell-operator">-&gt;</span> b <span class="org-haskell-operator">+</span> x<span class="org-haskell-operator">*</span>c) 0 coeffs
 
-<span class="org-haskell-definition">polyderv</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Fractional</span> a <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> [a] 
+<span class="org-function-name">polyderv</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Fractional</span> a <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> [a] 
 <span class="org-haskell-definition">polyderv</span> coeffs <span class="org-haskell-operator">=</span> zipWith (<span class="org-haskell-operator">*</span>) (map fromIntegral [1<span class="org-haskell-operator">..</span>n]) (tail coeffs )
     <span class="org-haskell-keyword">where</span>
     n <span class="org-haskell-operator">=</span> (length coeffs) <span class="org-haskell-operator">-</span> 1
@@ -490,7 +432,7 @@ See also:
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-haskell-definition">bisection_iterator</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Floating</span> a, <span class="org-haskell-type">Floating</span> a1, <span class="org-haskell-type">Ord</span> a1) <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> a1) <span class="org-haskell-operator">-&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> [a]
+<pre class="src src-haskell"><span class="org-function-name">bisection_iterator</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Floating</span> a, <span class="org-haskell-type">Floating</span> a1, <span class="org-haskell-type">Ord</span> a1) <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> a1) <span class="org-haskell-operator">-&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> [a]
 <span class="org-haskell-definition">bisection_iterator</span> f guesslist <span class="org-haskell-operator">=</span> newguess
     <span class="org-haskell-keyword">where</span>
     a <span class="org-haskell-operator">=</span>  guesslist <span class="org-haskell-operator">!!</span> 0
@@ -554,7 +496,7 @@ See also:
 <span class="org-comment">     t -&gt; Int -&gt; (t -&gt; t) -&gt; (t -&gt; t) -&gt; t -&gt; (t, t, Int)</span>
 <span class="org-comment">-----------------------------------------------------------------------</span>
 <span class="org-comment">-}</span>
-<span class="org-haskell-definition">newtonSolver</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Floating</span> t, <span class="org-haskell-type">Ord</span> t) <span class="org-haskell-operator">=&gt;</span> t <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> (t <span class="org-haskell-operator">-&gt;</span> t) <span class="org-haskell-operator">-&gt;</span> (t <span class="org-haskell-operator">-&gt;</span> t) <span class="org-haskell-operator">-&gt;</span> t <span class="org-haskell-operator">-&gt;</span> (t, t, <span class="org-haskell-type">Int</span>)
+<span class="org-function-name">newtonSolver</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Floating</span> t, <span class="org-haskell-type">Ord</span> t) <span class="org-haskell-operator">=&gt;</span> t <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> (t <span class="org-haskell-operator">-&gt;</span> t) <span class="org-haskell-operator">-&gt;</span> (t <span class="org-haskell-operator">-&gt;</span> t) <span class="org-haskell-operator">-&gt;</span> t <span class="org-haskell-operator">-&gt;</span> (t, t, <span class="org-haskell-type">Int</span>)
 <span class="org-haskell-definition">newtonSolver</span> eps itmax f df guess <span class="org-haskell-operator">=</span> (root, error, iterations)
     <span class="org-haskell-keyword">where</span>
     check_root x <span class="org-haskell-operator">=</span> abs(f(x)) <span class="org-haskell-operator">&gt;</span> eps                                  
@@ -599,7 +541,7 @@ See also:
 <pre class="src src-haskell">(<span class="org-haskell-definition">|&gt;</span>) x f <span class="org-haskell-operator">=</span> f x
 (<span class="org-haskell-definition">|&gt;&gt;</span>) x f <span class="org-haskell-operator">=</span> map f x
 
-<span class="org-haskell-definition">secant_iterator</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Floating</span> t <span class="org-haskell-operator">=&gt;</span> (t <span class="org-haskell-operator">-&gt;</span> t) <span class="org-haskell-operator">-&gt;</span> [t] <span class="org-haskell-operator">-&gt;</span> [t]
+<span class="org-function-name">secant_iterator</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Floating</span> t <span class="org-haskell-operator">=&gt;</span> (t <span class="org-haskell-operator">-&gt;</span> t) <span class="org-haskell-operator">-&gt;</span> [t] <span class="org-haskell-operator">-&gt;</span> [t]
 <span class="org-haskell-definition">secant_iterator</span> f guesslist <span class="org-haskell-operator">=</span> [x, xnext]
     <span class="org-haskell-keyword">where</span>
     x <span class="org-haskell-operator">=</span>  guesslist <span class="org-haskell-operator">!!</span> 0
@@ -670,7 +612,7 @@ Solve differential equation by the Euler's Method.
                     xnew <span class="org-haskell-operator">=</span> x <span class="org-haskell-operator">+</span> step
                     ynew <span class="org-haskell-operator">=</span> y <span class="org-haskell-operator">+</span> step <span class="org-haskell-operator">*</span> (f (x, y))
 
-<span class="org-haskell-definition">euler</span> <span class="org-haskell-operator">::</span> ((<span class="org-haskell-type">Double</span>, <span class="org-haskell-type">Double</span>) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> [(<span class="org-haskell-type">Double</span>, <span class="org-haskell-type">Double</span>)]
+<span class="org-function-name">euler</span> <span class="org-haskell-operator">::</span> ((<span class="org-haskell-type">Double</span>, <span class="org-haskell-type">Double</span>) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> [(<span class="org-haskell-type">Double</span>, <span class="org-haskell-type">Double</span>)]
 <span class="org-haskell-definition">euler</span> f x0 xf y0 step <span class="org-haskell-operator">=</span> xypairs
                      <span class="org-haskell-keyword">where</span>
                      iterator <span class="org-haskell-operator">=</span> iterate <span class="org-haskell-operator">$</span> eulerStep f step
@@ -718,7 +660,7 @@ See also: <a href="http://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">Run
                       xnext <span class="org-haskell-operator">=</span> x <span class="org-haskell-operator">+</span> h
                       ynext <span class="org-haskell-operator">=</span> y <span class="org-haskell-operator">+</span> h<span class="org-haskell-operator">/</span>6<span class="org-haskell-operator">*</span>(k1<span class="org-haskell-operator">+</span>2<span class="org-haskell-operator">*</span>k2<span class="org-haskell-operator">+</span>2<span class="org-haskell-operator">*</span>k3<span class="org-haskell-operator">+</span>k4)
 
-<span class="org-haskell-definition">rk4</span> <span class="org-haskell-operator">::</span> ((<span class="org-haskell-type">Double</span>, <span class="org-haskell-type">Double</span>) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> [(<span class="org-haskell-type">Double</span>, <span class="org-haskell-type">Double</span>)]
+<span class="org-function-name">rk4</span> <span class="org-haskell-operator">::</span> ((<span class="org-haskell-type">Double</span>, <span class="org-haskell-type">Double</span>) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> [(<span class="org-haskell-type">Double</span>, <span class="org-haskell-type">Double</span>)]
 <span class="org-haskell-definition">rk4</span> f x0 xf y0 h <span class="org-haskell-operator">=</span> xypairs
                      <span class="org-haskell-keyword">where</span>
                      iterator <span class="org-haskell-operator">=</span> iterate <span class="org-haskell-operator">$</span> rk4Step f h
@@ -894,14 +836,14 @@ File: coinSimulator.hs
 
 <span class="org-comment">-}</span>
 
-<span class="org-haskell-definition">flipCoin</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">Integer</span>
+<span class="org-function-name">flipCoin</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">Integer</span>
 <span class="org-haskell-definition">flipCoin</span> <span class="org-haskell-operator">=</span> randomRIO (0, 1)
 
 <span class="org-haskell-definition">flipCoinNtimes</span> n <span class="org-haskell-operator">=</span> replicateM n flipCoin
 
 <span class="org-haskell-definition">frequency</span> elem alist <span class="org-haskell-operator">=</span> length <span class="org-haskell-operator">$</span> filter (<span class="org-haskell-operator">==</span>elem) alist
 
-<span class="org-haskell-definition">relativeFreq</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Integer</span> <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">Integer</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
+<span class="org-function-name">relativeFreq</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Integer</span> <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">Integer</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
 <span class="org-haskell-definition">relativeFreq</span> elem alist <span class="org-haskell-operator">=</span> 
     fromIntegral (frequency elem alist) <span class="org-haskell-operator">/</span> fromIntegral (length alist)
 
@@ -1166,7 +1108,7 @@ Solution:
 <span class="org-comment">-}</span>
 <span class="org-haskell-definition">taxrate</span> taxfunction income <span class="org-haskell-operator">=</span> 100.0<span class="org-haskell-operator">*</span>(taxfunction income)<span class="org-haskell-operator">/</span>income
 
-<span class="org-haskell-definition">progressivetax</span> <span class="org-haskell-operator">::</span> [[<span class="org-haskell-type">Double</span>]] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
+<span class="org-function-name">progressivetax</span> <span class="org-haskell-operator">::</span> [[<span class="org-haskell-type">Double</span>]] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
 <span class="org-haskell-definition">progressivetax</span> taxtable income <span class="org-haskell-operator">=</span> amount
             <span class="org-haskell-keyword">where</span> 
             rates <span class="org-haskell-operator">=</span> taxtable <span class="org-haskell-operator">|&gt;&gt;</span> (<span class="org-haskell-operator">!!</span>1) <span class="org-haskell-operator">|&gt;&gt;</span> (<span class="org-haskell-operator">/</span>100.0)  <span class="org-haskell-operator">|&gt;</span> tail
@@ -1236,7 +1178,7 @@ Solution:
 
 <span class="org-comment">    Returns true if in all test cases  error_i &lt; tol</span>
 <span class="org-comment">-}</span>
-<span class="org-haskell-definition">testCaseNumeric</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Num</span> a, <span class="org-haskell-type">Ord</span> a) <span class="org-haskell-operator">=&gt;</span> [a1] <span class="org-haskell-operator">-&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> (a1 <span class="org-haskell-operator">-&gt;</span> a) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
+<span class="org-function-name">testCaseNumeric</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Num</span> a, <span class="org-haskell-type">Ord</span> a) <span class="org-haskell-operator">=&gt;</span> [a1] <span class="org-haskell-operator">-&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> (a1 <span class="org-haskell-operator">-&gt;</span> a) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
 <span class="org-haskell-definition">testCaseNumeric</span> input expected tol f <span class="org-haskell-operator">=</span> all (<span class="org-haskell-operator">\</span>t <span class="org-haskell-operator">-&gt;</span> t <span class="org-haskell-operator">&amp;&amp;</span> <span class="org-haskell-constructor">True</span>) ( zipWith (<span class="org-haskell-operator">\</span>x y <span class="org-haskell-operator">-&gt;</span> abs(x<span class="org-haskell-operator">-</span>y) <span class="org-haskell-operator">&lt;</span> tol) (map f input) expected )
 
 <span class="org-haskell-definition">testIsraelTaxes</span> <span class="org-haskell-operator">=</span> testCaseNumeric  
@@ -1331,7 +1273,7 @@ starbuck_dsl.hs
     ]    
 
 
-<span class="org-haskell-definition">extraPrice</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Extra</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
+<span class="org-function-name">extraPrice</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Extra</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
 <span class="org-haskell-definition">extraPrice</span> <span class="org-haskell-constructor">Syrup</span> <span class="org-haskell-operator">=</span> 0.59
 <span class="org-haskell-definition">extraPrice</span> <span class="org-haskell-constructor">Shot</span>  <span class="org-haskell-operator">=</span> 0.39
 
@@ -1407,14 +1349,16 @@ Example:
 </div>
 </div>
 
-<ol class="org-ol"><li><a id="sec-1-7-0-1" name="sec-1-7-0-1"></a>String Processing<br  /></li></ol>
+<div id="outline-container-sec-1-7-0-1" class="outline-5">
+<h5 id="sec-1-7-0-1"><span class="section-number-5">1.7.0.1</span> String Processing</h5>
+</div>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: arch</p>
-<p class="date">Created: 2017-03-12 dom 16:47</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="author">Author: nobody</p>
+<p class="date">Created: 2018-05-07 Mon 10:12</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

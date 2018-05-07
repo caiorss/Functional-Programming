@@ -1,0 +1,1055 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Mutable References</title>
+<!-- 2018-05-07 Mon 10:10 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="Caio Rodrigues Soares Silva" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Mutable References</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Mutable References</a>
+<ul>
+<li><a href="#sec-1-1">1.1. IORef - Mutable References Inside IO Monad</a>
+<ul>
+<li><a href="#sec-1-1-1">1.1.1. Overview</a></li>
+<li><a href="#sec-1-1-2">1.1.2. Examples</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-2">1.2. ST Monad - Mutable References Inside Pure Functions</a>
+<ul>
+<li><a href="#sec-1-2-1">1.2.1. Overview</a></li>
+<li><a href="#sec-1-2-2">1.2.2. Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Mutable References</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> IORef - Mutable References Inside IO Monad</h3>
+<div class="outline-text-3" id="text-1-1">
+</div><div id="outline-container-sec-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1"><span class="section-number-4">1.1.1</span> Overview</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+The IORef type provides mutable references in the IO Monad. It allows
+Haskell to perform computations with mutability like imperative languages.
+</p>
+
+<p>
+Module: <a href="https://hackage.haskell.org/package/base-4.9.1.0/docs/Data-IORef.html">Data.IORef</a>
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Function / Type</th>
+<th scope="col" class="left">&#xa0;</th>
+<th scope="col" class="left">Signature</th>
+<th scope="col" class="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left"><b>Types</b></td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">data IORef a</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left"><b>Functions</b></td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">newIORef</td>
+<td class="left">::</td>
+<td class="left">a -&gt; IO (IORef a)</td>
+<td class="left">Create new IORef</td>
+</tr>
+
+<tr>
+<td class="left">readIORef</td>
+<td class="left">::</td>
+<td class="left">IORef a -&gt; IO a</td>
+<td class="left">Read IORef</td>
+</tr>
+
+<tr>
+<td class="left">writeIORef</td>
+<td class="left">::</td>
+<td class="left">IORef a -&gt; a -&gt; IO ()</td>
+<td class="left">Update IORef</td>
+</tr>
+
+<tr>
+<td class="left">modifyIORef</td>
+<td class="left">::</td>
+<td class="left">IORef a -&gt; (a -&gt; a) -&gt; IO ()</td>
+<td class="left">Apply a function to the value in the IORef and update it.</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-sec-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2"><span class="section-number-4">1.1.2</span> Examples</h4>
+<div class="outline-text-4" id="text-1-1-2">
+</div><ol class="org-ol"><li><a id="sec-1-1-2-1" name="sec-1-1-2-1"></a>Simple IORef example in Haskell REPL:<br  /><div class="outline-text-5" id="text-1-1-2-1">
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-comment-delimiter">{- </span><span class="org-comment">===== Check The Types ====== -}</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.IORef</span> 
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>info <span class="org-haskell-constructor">IORef</span>
+<span class="org-haskell-keyword">newtype</span> <span class="org-haskell-type">IORef</span> a
+  <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">GHC.IORef.IORef</span> (<span class="org-haskell-constructor">GHC.STRef.STRef</span> <span class="org-haskell-constructor">GHC.Prim.RealWorld</span> a)
+        <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.IORef&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Eq</span> (<span class="org-haskell-type">IORef</span> a) <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.IORef&#8217;</span>
+<span class="org-haskell-operator">&gt;</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t newIORef 
+<span class="org-function-name">newIORef</span> <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">IORef</span> a)
+<span class="org-haskell-operator">&gt;</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t readIORef 
+<span class="org-function-name">readIORef</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IORef</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> a
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t modifyIORef
+<span class="org-function-name">modifyIORef</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IORef</span> a <span class="org-haskell-operator">-&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> a) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-comment-delimiter">{- </span><span class="org-comment">=== Experiment 1 - IORef within the REPL ========== -}</span>
+
+<span class="org-doc">{- | Extract IO a -&gt; a is only possible in the REPL due to it be inside an IO monad. -}</span>
+<span class="org-haskell-operator">&gt;</span> cell <span class="org-haskell-operator">&lt;-</span> newIORef (100.0 <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>)
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t cell
+<span class="org-function-name">cell</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IORef</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">readIORef</span> cell
+100.0
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t readIORef cell
+<span class="org-haskell-definition">readIORef</span> cell <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Apply a function to value returned from reading the cell </span>
+<span class="org-comment-delimiter">--</span><span class="org-comment">-------------------------------------------------------------</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">fmap</span> ((<span class="org-haskell-operator">+</span>)100) <span class="org-haskell-operator">$</span> readIORef cell
+200.0
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> (<span class="org-haskell-operator">*</span>3) <span class="org-haskell-operator">&lt;$&gt;</span> ((<span class="org-haskell-operator">+</span>)100) <span class="org-haskell-operator">&lt;$&gt;</span> readIORef cell
+600.0
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> (<span class="org-haskell-operator">+</span>5) <span class="org-haskell-operator">&lt;$&gt;</span> (<span class="org-haskell-operator">*</span>3) <span class="org-haskell-operator">&lt;$&gt;</span> ((<span class="org-haskell-operator">+</span>)100) <span class="org-haskell-operator">&lt;$&gt;</span> readIORef cell
+605.0
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> (<span class="org-haskell-operator">+</span>5) <span class="org-haskell-operator">.</span> (<span class="org-haskell-operator">*</span>3) <span class="org-haskell-operator">.</span> ((<span class="org-haskell-operator">+</span>)100) <span class="org-haskell-operator">&lt;$&gt;</span> readIORef cell
+605.0
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">fmap</span> ((<span class="org-haskell-operator">+</span>5) <span class="org-haskell-operator">.</span> (<span class="org-haskell-operator">*</span>3) <span class="org-haskell-operator">.</span> ((<span class="org-haskell-operator">+</span>)100)) <span class="org-haskell-operator">$</span> readIORef cell
+605.0
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Update </span>
+<span class="org-comment-delimiter">--</span><span class="org-comment">----------------------------------------------------------</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t writeIORef 
+<span class="org-function-name">writeIORef</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IORef</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">writeIORef</span> cell 500.322
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">readIORef</span> cell
+500.322
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span>  fmap ((<span class="org-haskell-operator">+</span>5) <span class="org-haskell-operator">.</span> (<span class="org-haskell-operator">*</span>3) <span class="org-haskell-operator">.</span> ((<span class="org-haskell-operator">+</span>)100)) <span class="org-haskell-operator">$</span> readIORef cell
+1805.966
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Modify </span>
+<span class="org-comment-delimiter">--</span><span class="org-comment">--------------------------------------------------------</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">writeIORef</span> cell 200.0
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">readIORef</span> cell
+200.0
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t modifyIORef 
+<span class="org-function-name">modifyIORef</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IORef</span> a <span class="org-haskell-operator">-&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> a) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>
+
+<span class="org-haskell-operator">&gt;</span>  modifyIORef cell (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> 3.0 <span class="org-haskell-operator">*</span> x )
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">readIORef</span> cell
+600.0
+
+<span class="org-haskell-operator">&gt;</span>  modifyIORef cell (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> 3.0 <span class="org-haskell-operator">*</span> x )
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">readIORef</span> cell
+1800.0
+
+<span class="org-haskell-operator">&gt;</span>  modifyIORef cell (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> 3.0 <span class="org-haskell-operator">*</span> x )
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">readIORef</span> cell
+5400.0
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+
+<p>
+Example: Counter.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.IORef</span> 
+
+<span class="org-haskell-constructor">:</span>{    
+<span class="org-function-name">counter</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">IORef</span> <span class="org-haskell-type">Int</span>)
+<span class="org-haskell-definition">counter</span> <span class="org-haskell-operator">=</span> newIORef 0
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-constructor">:</span>{ 
+<span class="org-function-name">incrCounter</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IORef</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">incrCounter</span> cell <span class="org-haskell-operator">=</span> modifyIORef cell (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">+</span> 1) 
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-haskell-definition">showCounter</span> cell <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  value <span class="org-haskell-operator">&lt;-</span> readIORef cell
+  putStrLn <span class="org-haskell-operator">$</span> <span class="org-string">"The counter value is "</span> <span class="org-haskell-operator">++</span> show value
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t showCounter 
+<span class="org-function-name">showCounter</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Show</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">IORef</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> counter <span class="org-haskell-definition">&gt;&gt;=</span> showCounter 
+<span class="org-haskell-constructor">The</span> counter value is 0
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-haskell-definition">testCounter1</span> c <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>  
+  incrCounter c
+  incrCounter c
+  incrCounter c
+  showCounter c
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t testCounter1 
+<span class="org-function-name">testCounter1</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IORef</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>  
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">testCounter1</span> <span class="org-haskell-definition">=&lt;&lt;</span> counter 
+<span class="org-haskell-constructor">The</span> counter value is 3
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">showCounter</span> <span class="org-haskell-definition">=&lt;&lt;</span> counter
+<span class="org-haskell-constructor">The</span> counter value is 0
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> counter <span class="org-haskell-definition">&gt;&gt;=</span> showCounter 
+<span class="org-haskell-constructor">The</span> counter value is 0
+<span class="org-haskell-operator">&gt;</span> 
+
+
+
+<span class="org-haskell-operator">&gt;</span> c <span class="org-haskell-operator">&lt;-</span> counter 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t c
+<span class="org-function-name">c</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IORef</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">showCounter</span> c
+<span class="org-haskell-constructor">The</span> counter value is 0
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">incrCounter</span> c
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">showCounter</span> c
+<span class="org-haskell-constructor">The</span> counter value is 1
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">incrCounter</span> c <span class="org-haskell-operator">&gt;&gt;</span> showCounter c
+<span class="org-haskell-constructor">The</span> counter value is 2
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">incrCounter</span> c <span class="org-haskell-operator">&gt;&gt;</span> showCounter c
+<span class="org-haskell-constructor">The</span> counter value is 3
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">incrCounter</span> c <span class="org-haskell-operator">&gt;&gt;</span> showCounter c
+<span class="org-haskell-constructor">The</span> counter value is 4
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">incrCounter</span> c <span class="org-haskell-operator">&gt;&gt;</span> showCounter c
+<span class="org-haskell-constructor">The</span> counter value is 5
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">incrCounter</span> c <span class="org-haskell-operator">&gt;&gt;</span> showCounter c
+<span class="org-haskell-constructor">The</span> counter value is 6
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">incrCounter</span> c <span class="org-haskell-operator">&gt;&gt;</span> showCounter c
+<span class="org-haskell-constructor">The</span> counter value is 7
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">incrCounter</span> c <span class="org-haskell-operator">&gt;&gt;</span> showCounter c
+<span class="org-haskell-constructor">The</span> counter value is 8
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-1-2-2" name="sec-1-1-2-2"></a>Stateful Function<br  /><div class="outline-text-5" id="text-1-1-2-2">
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-keyword">qualified</span> <span class="org-haskell-constructor">Data.IORef</span> <span class="org-haskell-keyword">as</span> <span class="org-haskell-constructor">IORef</span>
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">makeCounter</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">IO</span> <span class="org-haskell-type">Int</span>)
+<span class="org-haskell-definition">makeCounter</span> init <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  c <span class="org-haskell-operator">&lt;-</span> IORef.newIORef init
+  <span class="org-haskell-keyword">let</span> incCounter <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+        a <span class="org-haskell-operator">&lt;-</span> IORef.readIORef c 
+        IORef.writeIORef c (a <span class="org-haskell-operator">+</span> 1)
+        return a 
+  return incCounter
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-operator">&gt;</span> counter <span class="org-haskell-operator">&lt;-</span> makeCounter 0
+<span class="org-function-name">counter</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span> counter
+0
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span> counter
+1
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span> counter
+2
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span> counter
+3
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span> counter
+4
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span> counter
+5
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span> counter
+6
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-1-2-3" name="sec-1-1-2-3"></a>Example: Sum list elements in a imperative way using IORef.<br  /><div class="outline-text-5" id="text-1-1-2-3">
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.IORef</span> 
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Monad</span> (forever, forM_)           
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">sumList</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> a
+<span class="org-haskell-definition">sumList</span> xs <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+ acc    <span class="org-haskell-operator">&lt;-</span> newIORef 0
+ forM_ xs <span class="org-haskell-operator">$</span> <span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> modifyIORef acc (<span class="org-haskell-operator">\</span>val <span class="org-haskell-operator">-&gt;</span> val <span class="org-haskell-operator">+</span> x)
+ result <span class="org-haskell-operator">&lt;-</span> readIORef acc
+ return result 
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t sumList 
+<span class="org-function-name">sumList</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> a
+<span class="org-haskell-operator">&gt;</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sumList</span> [1, 2, 3, 4, 5, 6]
+21
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sumList</span> [1, 2, 3, 4, 5, 6, 10]
+31
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sumList</span> [1, 2, 3, 4, 5, 6, 10, 11]
+42
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sumList</span> [1, 2, 3.23, 4.0, 5, 6, 10, 11]
+42.230000000000004
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-haskell-constructor">:</span>set <span class="org-haskell-operator">+</span>s 
+
+<span class="org-comment-delimiter">--</span><span class="org-comment">- SumList simplified</span>
+<span class="org-comment-delimiter">--</span><span class="org-comment">- </span>
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">sumList</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> a
+<span class="org-haskell-definition">sumList</span> xs <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+ acc    <span class="org-haskell-operator">&lt;-</span> newIORef 0
+ forM_ xs <span class="org-haskell-operator">$</span> <span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> modifyIORef acc (<span class="org-haskell-operator">\</span>val <span class="org-haskell-operator">-&gt;</span> val <span class="org-haskell-operator">+</span> x)
+ readIORef acc 
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sumList</span> [1, 2, 3, 4, 5, 6]
+21
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sumList</span> [1, 2, 3.34, 4.7567, 5, 6]
+22.0967
+<span class="org-haskell-operator">&gt;</span>  
+
+
+<span class="org-doc">{- | ==========  Testing Space Leaks ============= -}</span>
+<span class="org-comment-delimiter">--</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sumList</span> [1<span class="org-haskell-operator">..</span>10000]
+50005000
+(0.03 secs, 3,770,264 bytes)
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sumList</span> [1<span class="org-haskell-operator">..</span>10000000]
+50000005000000
+(6.70 secs, 3,696,483,880 bytes)
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">WARNING: Don't try it or the computer may freeze because it consumes a huge amount of memory</span>
+<span class="org-comment-delimiter">-- </span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sumList</span> [1<span class="org-haskell-operator">..</span>1000000000]
+
+<span class="org-haskell-definition">fSegmentation</span> fault  <span class="org-comment-delimiter">-- </span><span class="org-comment">Stop with linux emergency keys - Ctrl + SysRq + f </span>
+
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Solution to the space leak issue: Use the strict version of modifyIORef ( modifyIORef')</span>
+<span class="org-comment-delimiter">--</span>
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-haskell-definition">sumList'</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> a
+<span class="org-haskell-definition">sumList'</span> xs <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+ acc    <span class="org-haskell-operator">&lt;-</span> newIORef 0
+ forM_ xs <span class="org-haskell-operator">$</span> <span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> modifyIORef' acc (<span class="org-haskell-operator">\</span>val <span class="org-haskell-operator">-&gt;</span> val <span class="org-haskell-operator">+</span> x)
+ result <span class="org-haskell-operator">&lt;-</span> readIORef acc
+ return result 
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sumList'</span>  [1<span class="org-haskell-operator">..</span>10000]
+50005000
+(0.03 secs, 3,120,456 bytes)
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">This implementation is faster. </span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sumList'</span> [1<span class="org-haskell-operator">..</span>10000000]
+50000005000000
+(3.64 secs, 3,040,086,304 bytes)
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+
+
+<p>
+Example: Ask the number for a number and display the sum in a infinite loop. 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.IORef</span> 
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Monad</span> (forever, forM_)           
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">sumLoop</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">sumLoop</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  cell <span class="org-haskell-operator">&lt;-</span> newIORef (0 <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>)
+  forever <span class="org-haskell-operator">$</span> <span class="org-haskell-keyword">do</span> putStr <span class="org-string">"Enter the next number to sum: "</span>
+               nextNum <span class="org-haskell-operator">&lt;-</span> fmap read getLine <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">Int</span>
+               modifyIORef cell (<span class="org-haskell-operator">\</span>value<span class="org-haskell-operator">-&gt;</span> value <span class="org-haskell-operator">+</span> nextNum)
+               sumval  <span class="org-haskell-operator">&lt;-</span> readIORef cell             
+               putStrLn <span class="org-haskell-operator">$</span> <span class="org-string">"sum = "</span> <span class="org-haskell-operator">++</span> show sumval  
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-operator">&gt;</span> sumLoop 
+<span class="org-haskell-constructor">Enter</span> the next number to sum<span class="org-haskell-constructor">:</span> 100
+<span class="org-haskell-definition">sum</span> <span class="org-haskell-operator">=</span> 100
+<span class="org-haskell-constructor">Enter</span> the next number to sum<span class="org-haskell-constructor">:</span> 200
+<span class="org-haskell-definition">sum</span> <span class="org-haskell-operator">=</span> 300
+<span class="org-haskell-constructor">Enter</span> the next number to sum<span class="org-haskell-constructor">:</span> 300
+<span class="org-haskell-definition">sum</span> <span class="org-haskell-operator">=</span> 600
+<span class="org-haskell-constructor">Enter</span> the next number to sum<span class="org-haskell-constructor">:</span> 45
+<span class="org-haskell-definition">sum</span> <span class="org-haskell-operator">=</span> 645
+<span class="org-haskell-constructor">Enter</span> the next number to sum<span class="org-haskell-constructor">:</span> 78
+<span class="org-haskell-definition">sum</span> <span class="org-haskell-operator">=</span> 723
+<span class="org-haskell-constructor">Enter</span> the next number to sum<span class="org-haskell-constructor">:</span> <span class="org-haskell-operator">-</span>458
+<span class="org-haskell-definition">sum</span> <span class="org-haskell-operator">=</span> 265
+<span class="org-haskell-constructor">Enter</span> the next number to sum<span class="org-haskell-constructor">:</span> 200
+<span class="org-haskell-definition">sum</span> <span class="org-haskell-operator">=</span> 465
+<span class="org-haskell-constructor">Enter</span> the next number to sum<span class="org-haskell-constructor">:</span> 300
+<span class="org-haskell-definition">sum</span> <span class="org-haskell-operator">=</span> 765
+<span class="org-haskell-constructor">Enter</span> the next number to sum<span class="org-haskell-constructor">:</span> <span class="org-haskell-operator">^</span>CInterrupted. <span class="org-comment-delimiter">--</span><span class="org-comment">- Type Ctrl+C to exit the Loop</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-1-2-4" name="sec-1-1-2-4"></a>Infinite loop with delay<br  /><div class="outline-text-5" id="text-1-1-2-4">
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.IORef</span>
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Concurrent</span> (threadDelay)
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Monad</span> (forever)    
+
+<span class="org-haskell-definition">delay1Second</span> <span class="org-haskell-operator">=</span> 1000000 <span class="org-comment-delimiter">-- </span><span class="org-comment">1 million us = 1 second </span>
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-haskell-definition">runLoop</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>     
+  count <span class="org-haskell-operator">&lt;-</span> newIORef 0
+  forever <span class="org-haskell-operator">$</span> <span class="org-haskell-keyword">do</span> val <span class="org-haskell-operator">&lt;-</span> readIORef count
+               putStrLn <span class="org-haskell-operator">$</span> <span class="org-string">"Counter is "</span> <span class="org-haskell-operator">++</span> show val
+               modifyIORef count (<span class="org-haskell-operator">+</span>1)
+               threadDelay delay1Second
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-operator">&gt;</span>  runLoop 
+<span class="org-haskell-constructor">Counter</span> is 0
+<span class="org-haskell-constructor">Counter</span> is 1
+<span class="org-haskell-constructor">Counter</span> is 2
+<span class="org-haskell-constructor">Counter</span> is 3
+<span class="org-haskell-constructor">Counter</span> is 4
+<span class="org-haskell-constructor">Counter</span> is 5
+<span class="org-haskell-constructor">Counter</span> is 6
+<span class="org-haskell-constructor">Counter</span> is 7
+<span class="org-haskell-constructor">Counter</span> is 8
+<span class="org-haskell-constructor">Counter</span> is 9
+<span class="org-haskell-constructor">Counter</span> is 10
+<span class="org-haskell-constructor">Counter</span> is 11
+<span class="org-haskell-constructor">Counter</span> is 12
+<span class="org-haskell-constructor">Counter</span> is 13
+<span class="org-haskell-constructor">Counter</span> is 14
+<span class="org-haskell-constructor">Counter</span> is 15
+<span class="org-haskell-constructor">Counter</span> is 16
+<span class="org-haskell-constructor">Counter</span> is 17
+<span class="org-haskell-operator">...</span> <span class="org-haskell-operator">...</span> <span class="org-haskell-operator">...</span>
+</pre>
+</div>
+</div>
+</li>
+<li><a id="sec-1-1-2-5" name="sec-1-1-2-5"></a>Simulating objects with closures<br  /><div class="outline-text-5" id="text-1-1-2-5">
+<p>
+The code below simulates an object counter that has an internal
+integer state. The functions or IO actions incrementCounter,
+decrementcounter and getCounter simulate the object's methods.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-keyword">qualified</span> <span class="org-haskell-constructor">Data.IORef</span> <span class="org-haskell-keyword">as</span> <span class="org-haskell-constructor">IORef</span>
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Counter</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Counter</span> { incrementCounter <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span> 
+                       , decrementCounter <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span> 
+                       , getCounter       <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">Int</span>                      
+                       }
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">newCounter</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">Counter</span>    
+<span class="org-haskell-definition">newCounter</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span> 
+    counter <span class="org-haskell-operator">&lt;-</span> IORef.newIORef 0        
+    return <span class="org-haskell-operator">$</span> <span class="org-haskell-constructor">Counter</span> { incrementCounter <span class="org-haskell-operator">=</span> IORef.modifyIORef counter (<span class="org-haskell-operator">+</span>1)               
+                     , decrementCounter <span class="org-haskell-operator">=</span> IORef.modifyIORef counter (<span class="org-haskell-operator">+</span>(<span class="org-haskell-operator">-</span>1))
+                     , getCounter       <span class="org-haskell-operator">=</span> IORef.readIORef counter
+                     }
+<span class="org-haskell-constructor">:</span>}
+</pre>
+</div>
+
+<p>
+Running: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> counter <span class="org-haskell-operator">&lt;-</span> newCounter 
+<span class="org-function-name">counter</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Counter</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">getCounter</span> counter
+0
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">incrementCounter</span> counter
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">getCounter</span> counter
+1
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">incrementCounter</span> counter
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">getCounter</span> counter
+2
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">incrementCounter</span> counter <span class="org-haskell-operator">&gt;&gt;</span> getCounter counter
+3
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">incrementCounter</span> counter <span class="org-haskell-operator">&gt;&gt;</span> getCounter counter
+4
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">decrementCounter</span> counter <span class="org-haskell-operator">&gt;&gt;</span> getCounter counter
+3
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">decrementCounter</span> counter <span class="org-haskell-operator">&gt;&gt;</span> getCounter counter
+2
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">decrementCounter</span> counter <span class="org-haskell-operator">&gt;&gt;</span> getCounter counter
+1
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">decrementCounter</span> counter <span class="org-haskell-operator">&gt;&gt;</span> getCounter counter
+0
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li></ol>
+</div>
+</div>
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> ST Monad - Mutable References Inside Pure Functions</h3>
+<div class="outline-text-3" id="text-1-2">
+</div><div id="outline-container-sec-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1"><span class="section-number-4">1.2.1</span> Overview</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<p>
+The ST monad is used to perform local mutability. The mutability
+happens only inside the function. 
+</p>
+
+<p>
+Modules: 
+</p>
+
+<ul class="org-ul">
+<li><a href="https://hackage.haskell.org/package/base-4.9.1.0/docs/Data-STRef.html">Data.STRef</a>
+</li>
+
+<li><a href="https://hackage.haskell.org/package/base-4.8.2.0/docs/Control-Monad-ST.html">Control.Monad.ST</a>
+</li>
+
+<li><a href="https://hackage.haskell.org/package/base-4.9.1.0/docs/Data-STRef-Lazy.html">Data.STRef.Lazy</a>
+</li>
+</ul>
+
+<p>
+Functions: 
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Function</th>
+<th scope="col" class="left">&#xa0;</th>
+<th scope="col" class="left">Signature</th>
+<th scope="col" class="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left"><b>Module</b> Data.STRef</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">newSTRef</td>
+<td class="left">::</td>
+<td class="left">a -&gt; ST s (STRef s a)</td>
+<td class="left">Create a new STRef in the current state thread</td>
+</tr>
+
+<tr>
+<td class="left">readSTRef</td>
+<td class="left">::</td>
+<td class="left">STRef s a -&gt; ST s a</td>
+<td class="left">Read the value of an STRef</td>
+</tr>
+
+<tr>
+<td class="left">writeSTRef</td>
+<td class="left">::</td>
+<td class="left">STRef s a -&gt; a -&gt; ST s ()</td>
+<td class="left">Write a new value into an STRef</td>
+</tr>
+
+<tr>
+<td class="left">modifySTRef</td>
+<td class="left">::</td>
+<td class="left">STRef s a -&gt; (a -&gt; a) -&gt; ST s ()</td>
+<td class="left">Mutate the contents of an STRef.</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left"><b>Module</b> Control.Monad.ST</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">runST</td>
+<td class="left">::</td>
+<td class="left">(forall s. ST s a) -&gt; a</td>
+<td class="left">Extract content</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">Monad and Functor signatures</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">(&gt;&gt;=)</td>
+<td class="left">::</td>
+<td class="left">ST s a -&gt; (a -&gt; ST s b) -&gt; ST s b</td>
+<td class="left">Monad bind operator</td>
+</tr>
+
+<tr>
+<td class="left">return</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">Monad return function</td>
+</tr>
+
+<tr>
+<td class="left">(&gt;&gt;)</td>
+<td class="left">::</td>
+<td class="left">ST s a -&gt; ST s b -&gt; ST s b</td>
+<td class="left">Monad (&gt;&gt;) operator</td>
+</tr>
+
+<tr>
+<td class="left">fmap</td>
+<td class="left">::</td>
+<td class="left">(a -&gt; b) -&gt; ST s a -&gt; ST s b</td>
+<td class="left">Functor operator</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-sec-1-2-2" class="outline-4">
+<h4 id="sec-1-2-2"><span class="section-number-4">1.2.2</span> Examples</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+Example 1: Sum all list elements.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Monad.ST</span>
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.STRef</span>    
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Monad</span> (forM_)
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">sumST</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> a
+<span class="org-haskell-definition">sumST</span> xs <span class="org-haskell-operator">=</span> runST <span class="org-haskell-operator">$</span> <span class="org-haskell-keyword">do</span>           <span class="org-comment-delimiter">-- </span><span class="org-comment">Extract value from ST Monad </span>
+
+    n <span class="org-haskell-operator">&lt;-</span> newSTRef 0             <span class="org-comment-delimiter">-- </span><span class="org-comment">Create an STRef mutable reference (aka variable)</span>
+
+    forM_ xs <span class="org-haskell-operator">$</span> <span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-keyword">do</span>         <span class="org-comment-delimiter">-- </span><span class="org-comment">For each element of xs, add it to n </span>
+        modifySTRef n (<span class="org-haskell-operator">+</span>x)      
+
+    readSTRef n                 <span class="org-comment-delimiter">-- </span><span class="org-comment">read value from mutable reference n and return it</span>
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sumST</span> [1, 2, 3, 4, 5, 6]
+21
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sum</span> [1, 2, 3, 4, 5, 6]
+21
+
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sumST</span> [1<span class="org-haskell-operator">..</span>100]
+5050
+<span class="org-haskell-operator">&gt;</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sumST</span> [1<span class="org-haskell-operator">..</span>1000000]
+500000500000
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+
+
+
+<p>
+Example: Alternative fold implementation in a imperative-like way.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">foldST</span> <span class="org-haskell-operator">::</span> (acc <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">-&gt;</span> acc) <span class="org-haskell-operator">-&gt;</span> acc <span class="org-haskell-operator">-&gt;</span> [x] <span class="org-haskell-operator">-&gt;</span> acc 
+<span class="org-haskell-definition">foldST</span> step acc0 xs <span class="org-haskell-operator">=</span>
+    runST <span class="org-haskell-operator">$</span> <span class="org-haskell-keyword">do</span> accum <span class="org-haskell-operator">&lt;-</span> newSTRef acc0
+               forM_ xs <span class="org-haskell-operator">$</span> <span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> modifySTRef accum (<span class="org-haskell-operator">\</span>a <span class="org-haskell-operator">-&gt;</span> step a x)
+               readSTRef accum
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">foldl</span> (<span class="org-haskell-operator">\</span>acc x <span class="org-haskell-operator">-&gt;</span> 10<span class="org-haskell-operator">*</span>acc <span class="org-haskell-operator">+</span> x) 0 [1, 2, 3, 4, 5]
+12345
+<span class="org-haskell-operator">&gt;</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">foldl</span> (<span class="org-haskell-operator">\</span>acc x <span class="org-haskell-operator">-&gt;</span> 10<span class="org-haskell-operator">*</span>acc <span class="org-haskell-operator">+</span> x) 0 [1, 2, 3, 4, 5, 6]
+123456
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">foldST</span> (<span class="org-haskell-operator">\</span>acc x <span class="org-haskell-operator">-&gt;</span> 10<span class="org-haskell-operator">*</span>acc <span class="org-haskell-operator">+</span> x) 0 [1, 2, 3, 4, 5]
+12345
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">foldST</span> (<span class="org-haskell-operator">\</span>acc x <span class="org-haskell-operator">-&gt;</span> 10<span class="org-haskell-operator">*</span>acc <span class="org-haskell-operator">+</span> x) 0 [1, 2, 3, 4, 5, 6]
+123456
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+
+<p>
+It is equivalent to the code below in Python. This function is a pure
+fucntion like foldST despite it has local mutability.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">def</span> <span class="org-function-name">foldl</span>(step, acc0, xs):
+    <span class="org-variable-name">accum</span> = acc0 
+    <span class="org-keyword">for</span> x <span class="org-keyword">in</span> xs:
+        <span class="org-variable-name">accum</span> = step(accum, x)
+    <span class="org-keyword">return</span> accum
+
+
+&gt;&gt;&gt; <span class="org-keyword">def</span> <span class="org-function-name">foldl</span>(step, acc0, xs):
+...     <span class="org-variable-name">accum</span> = acc0 
+...     <span class="org-keyword">for</span> x <span class="org-keyword">in</span> xs:
+...         <span class="org-variable-name">accum</span> = step(accum, x)
+...     <span class="org-keyword">return</span> accum
+... 
+&gt;&gt;&gt; 
+
+&gt;&gt;&gt; foldl(<span class="org-keyword">lambda</span> a, x: 10 * a + x, 0, [1, 2, 3, 4, 5])
+12345
+&gt;&gt;&gt;
+&gt;&gt;&gt; foldl(<span class="org-keyword">lambda</span> a, x: 10 * a + x, 0, [1, 2, 3, 4, 5, 6])
+123456
+&gt;&gt;&gt;
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Caio Rodrigues Soares Silva</p>
+<p class="date">Created: 2018-05-07 Mon 10:10</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

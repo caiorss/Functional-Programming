@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Functional Programming in Haskell</title>
+<!-- 2018-05-07 Mon 10:12 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="nobody" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+<link href="/Functional-Programming/theme/style.css" rel="stylesheet">
+<script src="/Functional-Programming/theme/org-nav-theme.js"></script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Functional Programming in Haskell</h1>
+<lu> 
+  <li><a href="/Functional-Programming/index.html">Index</a></li>
+  <li><a href="https://github.com/caiorss/Functional-Programming">Repository</a></li>
+</lu>
+<ul class="org-ul">
+<li><a href="Haskell.html">Setting Up Development Environment </a>
+</li>
+
+<li><a href="Basic_Syntax.html">Basic Syntax</a>
+</li>
+
+<li><a href="Functions.html">Functions</a>
+</li>
+
+<li><a href="Pattern_Matching.html">Pattern Matching</a>
+</li>
+
+<li><a href="List_Comprehension.html">List Comprehension</a>  
+</li>
+
+<li><a href="Algebraic_Data_Types.html">Algebraic Data Type</a>  
+</li>
+
+<li><a href="polymorphism_and_typeclasses.html">Polymorphism and Typeclasses</a>
+</li>
+
+<li><a href="Functors__Monads__Applicatives_and_Monoids.html">Functors and Monads</a>
+</li>
+
+<li><a href="monoids.html">Monoids and Foldables</a>
+</li>
+
+<li><a href="Parsec_parser_combinators.html">Parsec - Parser Combinators</a>
+</li>
+
+<li><a href="haskell_handling_exceptions.html">Exception Handling</a>  
+</li>
+
+<li><a href="DatabaseHDBC.html">Databases - HDBC package</a>
+</li>
+
+<li><a href="UnitTest_Hunit.html">Unit Test with HUNIT</a>
+</li>
+
+<li><a href="Mutable_References.html">Mutable References</a>
+</li>
+
+<li><a href="Useful_Custom_Functions__Iterators_and_Operators.html">Useful Custom Functions/ Iterators and Operators</a>
+</li>
+
+<li><a href="GUI_Graphical_User_Interface_GTK.html">GUI Graphical User Interface with GTK</a>
+</li>
+
+<li><a href="Applications.html">Applications</a>
+</li>
+
+<li><a href="Tips_And_Tricks.html">Tips and Tricks</a>
+</li>
+
+<li><a href="Miscellaneous.html">Miscellaneous</a>
+</li>
+
+<li><a href="Libraries.html">Haskell Libraries</a>
+</li>
+
+<li><a href="Real_World_Haskell.html">Codes and Examples from "Real World Haskell"</a>
+</li>
+
+<li><a href="Documentation_and_Learning_Materials.html">Documentation and Learning Materials</a>
+</li>
+
+<li>Modules
+
+<ul class="org-ul">
+<li><a href="control_monad.html">Contro.Monad</a>      - Monad Combinators 
+</li>
+
+<li><a href="package_Data_Text.html">Data.Text</a>         - String processing combinators.
+</li>
+
+<li><a href="system_io_modules.html">System IO Modules</a> - Basic System IO Modules
+</li>
+
+<li><a href="system_filepath.html">System.FilePath</a>   - File path manipulation on all platforms. 
+</li>
+
+<li><a href="control_exception.html">Control.Exception</a> - Exception Handling
+</li>
+
+<li><a href="data_map.html">Data.Map</a>          - Immutable hash map. Implemented with balanced trees.
+</li>
+</ul>
+</li>
+
+<li>Haskell Bookmarks:
+
+<ul class="org-ul">
+<li><a href="https://www.haskell.org/onlinereport/haskell2010/">Haskell 2010 Language Report</a>
+</li>
+
+<li><a href="https://downloads.haskell.org/~ghc/latest/docs/html/libraries/">Haskell Hierarchical Libraries</a> - Built-in Haskell libraries.
+</li>
+
+<li><a href="https://docs.haskellstack.org/en/stable/README/">Haskell Stack Tool</a> - Haskell dependency manager, package manager
+which can install multiple Haskell versions, library versions per
+project repository avoiding dependency hell.
+</li>
+
+<li><a href="http://cheatsheet.codeslower.com/">The Haskell Cheatsheet</a>
+</li>
+
+<li><a href="https://www.haskell.org/platform/contents.html">Haskell Platform - Included Packages</a>
+</li>
+
+<li><a href="https://www.haskell.org/hoogle/">Hoogle</a> - Haskell types search engine.
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: nobody</p>
+<p class="date">Created: 2018-05-07 Mon 10:12</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

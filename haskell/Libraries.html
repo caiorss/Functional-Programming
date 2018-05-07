@@ -4,10 +4,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Libraries</title>
-<!-- 2017-03-12 dom 16:47 -->
+<!-- 2018-05-07 Mon 10:11 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
-<meta  name="author" content="Caio Rodrigues" />
+<meta  name="author" content="nobody" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   .title  { text-align: center; }
@@ -88,80 +88,9 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
-<link href='/theme/style.css' rel='stylesheet'>
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
 <link href="/Functional-Programming/theme/style.css" rel="stylesheet">
-
-<script type="text/javascript" src="/theme/org-info.js">
-/**
- *
- * @source: /theme/org-info.js
- *
- * @licstart  The following is the entire license notice for the
- *  JavaScript code in /theme/org-info.js.
- *
- * Copyright (C) 2012-2013 Free Software Foundation, Inc.
- *
- *
- * The JavaScript code in this tag is free software: you can
- * redistribute it and/or modify it under the terms of the GNU
- * General Public License (GNU GPL) as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version.  The code is distributed WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
- *
- * As additional permission under GNU GPL version 3 section 7, you
- * may distribute non-source (e.g., minimized or compacted) forms of
- * that code without the copy of the GNU GPL normally required by
- * section 4, provided you include this license notice and a URL
- * through which recipients can access the Corresponding Source.
- *
- * @licend  The above is the entire license notice
- * for the JavaScript code in /theme/org-info.js.
- *
- */
-</script>
-
-<script type="text/javascript">
-
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2013 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
-
-<!--/*--><![CDATA[/*><!--*/
-org_html_manager.set("TOC_DEPTH", "4");
-org_html_manager.set("LINK_HOME", "");
-org_html_manager.set("LINK_UP", "");
-org_html_manager.set("LOCAL_TOC", "1");
-org_html_manager.set("VIEW_BUTTONS", "0");
-org_html_manager.set("MOUSE_HINT", "underline");
-org_html_manager.set("FIXED_TOC", "0");
-org_html_manager.set("TOC", "1");
-org_html_manager.set("VIEW", "info");
-org_html_manager.setup();  // activate after the parameters are set
-/*]]>*///-->
-</script>
+<script src="/Functional-Programming/theme/org-nav-theme.js"></script>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -287,7 +216,7 @@ Change Current Directory
 <span class="org-haskell-operator">&gt;</span> getCurrentDirectory 
 <span class="org-string">"/"</span>
 <span class="org-haskell-operator">&gt;</span> 
-<span class="org-haskell-definition">getCurrentDirectory</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">FilePath</span>
+<span class="org-function-name">getCurrentDirectory</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">FilePath</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">fmap</span> (<span class="org-haskell-operator">==</span><span class="org-string">"/"</span>) getCurrentDirectory 
@@ -310,7 +239,7 @@ List Directory Contents
 [<span class="org-string">"."</span>,<span class="org-string">"include"</span>,<span class="org-string">"src"</span>,<span class="org-string">"local"</span>,<span class="org-string">"bin"</span>,<span class="org-string">"games"</span>,<span class="org-string">"share"</span>,<span class="org-string">"sbin"</span>,<span class="org-string">"lib"</span>,<span class="org-string">".."</span>]
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t getDirectoryContents 
-<span class="org-haskell-definition">getDirectoryContents</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> [<span class="org-haskell-type">FilePath</span>]
+<span class="org-function-name">getDirectoryContents</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> [<span class="org-haskell-type">FilePath</span>]
 <span class="org-haskell-operator">&gt;</span>
 </pre>
 </div>
@@ -341,7 +270,7 @@ Special Directories Location
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">System.Cmd</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t rawSystem
-<span class="org-haskell-definition">rawSystem</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">String</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">GHC.IO.Exception.ExitCode</span>
+<span class="org-function-name">rawSystem</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">String</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">GHC.IO.Exception.ExitCode</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">rawSystem</span> <span class="org-string">"ls"</span> [<span class="org-string">"-l"</span>, <span class="org-string">"/usr"</span>]
 <span class="org-haskell-definition">total</span> 260
@@ -376,7 +305,7 @@ This command executes ls -la and gets the output.
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> test <span class="org-haskell-operator">=</span> readProcess <span class="org-string">"ls"</span> [<span class="org-string">"-a"</span>] <span class="org-string">""</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t test
-<span class="org-haskell-definition">test</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">String</span>
+<span class="org-function-name">test</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">String</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> test <span class="org-haskell-definition">&gt;&gt;=</span> putStrLn 
 <span class="org-haskell-operator">.</span>
@@ -490,7 +419,7 @@ It is also possible to get your current local time using your system’s default
 <pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.Time</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t getCurrentTime
-<span class="org-haskell-definition">getCurrentTime</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">UTCTime</span>
+<span class="org-function-name">getCurrentTime</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">UTCTime</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 
@@ -500,14 +429,14 @@ It is also possible to get your current local time using your system’s default
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t t
-<span class="org-haskell-definition">t</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">UTCTime</span>
+<span class="org-function-name">t</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">UTCTime</span>
 
 
 <span class="org-haskell-operator">&gt;</span> today <span class="org-haskell-operator">&lt;-</span> fmap utctDay getCurrentTime 
 <span class="org-haskell-operator">&gt;</span> today
 2015<span class="org-haskell-operator">-</span>03<span class="org-haskell-operator">-</span>04
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t today
-<span class="org-haskell-definition">today</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Day</span>
+<span class="org-function-name">today</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Day</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> 
 
@@ -613,7 +542,7 @@ It is also possible to get your current local time using your system’s default
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">System.Locale</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t fromGregorian
-<span class="org-haskell-definition">fromGregorian</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Integer</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Day</span>
+<span class="org-function-name">fromGregorian</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Integer</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Day</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> (year, month, day) <span class="org-haskell-operator">=</span> (1981, 6, 16) <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Integer</span> , <span class="org-haskell-type">Int</span> , <span class="org-haskell-type">Int</span> )
 <span class="org-haskell-operator">&gt;</span> 
@@ -642,7 +571,7 @@ It is also possible to get your current local time using your system’s default
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t defaultTimeLocale 
-<span class="org-haskell-definition">defaultTimeLocale</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">TimeLocale</span>
+<span class="org-function-name">defaultTimeLocale</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">TimeLocale</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> defaultTimeLocale 
 <span class="org-haskell-constructor">TimeLocale</span> {wDays <span class="org-haskell-operator">=</span> [(<span class="org-string">"Sunday"</span>,<span class="org-string">"Sun"</span>),(<span class="org-string">"Monday"</span>,<span class="org-string">"Mon"</span>),(<span class="org-string">"Tuesday"</span>,<span class="org-string">"Tue"</span>),(<span class="org-string">"Wednesday"</span>,<span class="org-string">"Wed"</span>),(<span class="org-string">"Thursday"</span>,<span class="org-string">"Thu"</span>),(<span class="org-string">"Friday"</span>,<span class="org-string">"Fri"</span>),(<span class="org-string">"Saturday"</span>,<span class="org-string">"Sat"</span>)], months <span class="org-haskell-operator">=</span> [(<span class="org-string">"January"</span>,<span class="org-string">"Jan"</span>),(<span class="org-string">"February"</span>,<span class="org-string">"Feb"</span>),(<span class="org-string">"March"</span>,<span class="org-string">"Mar"</span>),(<span class="org-string">"April"</span>,<span class="org-string">"Apr"</span>),(<span class="org-string">"May"</span>,<span class="org-string">"May"</span>),(<span class="org-string">"June"</span>,<span class="org-string">"Jun"</span>),(<span class="org-string">"July"</span>,<span class="org-string">"Jul"</span>),(<span class="org-string">"August"</span>,<span class="org-string">"Aug"</span>),(<span class="org-string">"September"</span>,<span class="org-string">"Sep"</span>),(<span class="org-string">"October"</span>,<span class="org-string">"Oct"</span>),(<span class="org-string">"November"</span>,<span class="org-string">"Nov"</span>),(<span class="org-string">"December"</span>,<span class="org-string">"Dec"</span>)], intervals <span class="org-haskell-operator">=</span> [(<span class="org-string">"year"</span>,<span class="org-string">"years"</span>),(<span class="org-string">"month"</span>,<span class="org-string">"months"</span>),(<span class="org-string">"day"</span>,<span class="org-string">"days"</span>),(<span class="org-string">"hour"</span>,<span class="org-string">"hours"</span>),(<span class="org-string">"min"</span>,<span class="org-string">"mins"</span>),(<span class="org-string">"sec"</span>,<span class="org-string">"secs"</span>),(<span class="org-string">"usec"</span>,<span class="org-string">"usecs"</span>)], amPm <span class="org-haskell-operator">=</span> (<span class="org-string">"AM"</span>,<span class="org-string">"PM"</span>), dateTimeFmt <span class="org-haskell-operator">=</span> <span class="org-string">"%a %b %e %H:%M:%S %Z %Y"</span>, dateFmt <span class="org-haskell-operator">=</span> <span class="org-string">"%m/%d/%y"</span>, timeFmt <span class="org-haskell-operator">=</span> <span class="org-string">"%H:%M:%S"</span>, time12Fmt <span class="org-haskell-operator">=</span> <span class="org-string">"%I:%M:%S %p"</span>}
@@ -684,7 +613,7 @@ It is also possible to get your current local time using your system’s default
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> now <span class="org-haskell-operator">&lt;-</span> getCurrentTime
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t now
-<span class="org-haskell-definition">now</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">UTCTime</span>
+<span class="org-function-name">now</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">UTCTime</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">formatTime</span> defaultTimeLocale <span class="org-string">"The date is %A (%a) %d/%m/%Y"</span> now
 <span class="org-string">"The date is Wednesday (Wed) 04/03/2015"</span>
@@ -1244,16 +1173,16 @@ This section will show how to parse the windows executable, PE32 executable.
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t BL.readFile 
-BL<span class="org-haskell-definition">.</span>readFile <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">BL.ByteString</span>
+<span class="org-function-name">BL.readFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">BL.ByteString</span>
 
 <span class="org-haskell-operator">&gt;</span> fdata <span class="org-haskell-operator">&lt;-</span> BL.readFile <span class="org-string">"notepad.exe"</span> 
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t fdata
-<span class="org-haskell-definition">fdata</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">BL.ByteString</span>
+<span class="org-function-name">fdata</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">BL.ByteString</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t BL.take 
-BL<span class="org-haskell-definition">.</span>take <span class="org-haskell-operator">::</span> <span class="org-haskell-type">GHC.Int.Int64</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">BL.ByteString</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">BL.ByteString</span>
+<span class="org-function-name">BL.take</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">GHC.Int.Int64</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">BL.ByteString</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">BL.ByteString</span>
 
 
 <span class="org-comment-delimiter">{- </span><span class="org-comment">Read File Signare 2 bytes, always 0x5A4D OR ("MZ")</span>
@@ -1303,7 +1232,7 @@ From:
 
 <div class="org-src-container">
 
-<pre class="src src-C"><span class="org-keyword">typedef</span> <span class="org-keyword">struct</span> <span class="org-type">_IMAGE_DOS_HEADER</span> {      <span class="org-comment-delimiter">// </span><span class="org-comment">DOS .EXE header</span>
+<pre class="src src-C"><span class="org-keyword">typedef</span> <span class="org-keyword">struct</span> <span class="org-type">_IMAGE_DOS_HEADER</span> <span class="org-rainbow-delimiters-depth-1">{</span>      <span class="org-comment-delimiter">// </span><span class="org-comment">DOS .EXE header</span>
     <span class="org-type">WORD</span>   <span class="org-variable-name">e_magic</span>;                     <span class="org-comment-delimiter">// </span><span class="org-comment">Magic number</span>
     <span class="org-type">WORD</span>   <span class="org-variable-name">e_cblp</span>;                      <span class="org-comment-delimiter">// </span><span class="org-comment">Bytes on last page of file</span>
     <span class="org-type">WORD</span>   <span class="org-variable-name">e_cp</span>;                        <span class="org-comment-delimiter">// </span><span class="org-comment">Pages in file</span>
@@ -1318,12 +1247,12 @@ From:
     <span class="org-type">WORD</span>   <span class="org-variable-name">e_cs</span>;                        <span class="org-comment-delimiter">// </span><span class="org-comment">Initial (relative) CS value</span>
     <span class="org-type">WORD</span>   <span class="org-variable-name">e_lfarlc</span>;                    <span class="org-comment-delimiter">// </span><span class="org-comment">File address of relocation table</span>
     <span class="org-type">WORD</span>   <span class="org-variable-name">e_ovno</span>;                      <span class="org-comment-delimiter">// </span><span class="org-comment">Overlay number</span>
-    <span class="org-type">WORD</span>   <span class="org-variable-name">e_res</span>[4];                    <span class="org-comment-delimiter">// </span><span class="org-comment">Reserved words</span>
+    <span class="org-type">WORD</span>   <span class="org-variable-name">e_res</span><span class="org-rainbow-delimiters-depth-2">[</span>4<span class="org-rainbow-delimiters-depth-2">]</span>;                    <span class="org-comment-delimiter">// </span><span class="org-comment">Reserved words</span>
     <span class="org-type">WORD</span>   <span class="org-variable-name">e_oemid</span>;                     <span class="org-comment-delimiter">// </span><span class="org-comment">OEM identifier (for e_oeminfo)</span>
     <span class="org-type">WORD</span>   <span class="org-variable-name">e_oeminfo</span>;                   <span class="org-comment-delimiter">// </span><span class="org-comment">OEM information; e_oemid specific</span>
-    <span class="org-type">WORD</span>   <span class="org-variable-name">e_res2</span>[10];                  <span class="org-comment-delimiter">// </span><span class="org-comment">Reserved words</span>
+    <span class="org-type">WORD</span>   <span class="org-variable-name">e_res2</span><span class="org-rainbow-delimiters-depth-2">[</span>10<span class="org-rainbow-delimiters-depth-2">]</span>;                  <span class="org-comment-delimiter">// </span><span class="org-comment">Reserved words</span>
     <span class="org-type">LONG</span>   <span class="org-variable-name">e_lfanew</span>;                    <span class="org-comment-delimiter">// </span><span class="org-comment">File address of new exe header</span>
-  } <span class="org-type">IMAGE_DOS_HEADER</span>, *<span class="org-type">PIMAGE_DOS_HEADER</span>;
+  <span class="org-rainbow-delimiters-depth-1">}</span> <span class="org-type">IMAGE_DOS_HEADER</span>, *<span class="org-type">PIMAGE_DOS_HEADER</span>;
 </pre>
 </div>
 
@@ -1400,9 +1329,9 @@ Examples:
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2017-03-12 dom 16:47</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="author">Author: nobody</p>
+<p class="date">Created: 2018-05-07 Mon 10:11</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

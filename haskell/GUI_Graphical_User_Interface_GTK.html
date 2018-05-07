@@ -1,0 +1,1558 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Graphical User Interface with Gtk</title>
+<!-- 2018-05-07 Mon 10:11 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="Caio Rodrigues Soares Silva" />
+<meta  name="description" content="Graphical User Interface with GTK"
+ />
+<meta  name="keywords" content="gui, haskell, gtk, fp, gtk" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Graphical User Interface with Gtk</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Graphical User Interface with GTK</a>
+<ul>
+<li><a href="#sec-1-1">1.1. Overview</a></li>
+<li><a href="#sec-1-2">1.2. GUI Terminology</a></li>
+<li><a href="#sec-1-3">1.3. Gtk3 functions and types</a></li>
+<li><a href="#sec-1-4">1.4. Examples</a>
+<ul>
+<li><a href="#sec-1-4-1">1.4.1. Simple GUI</a></li>
+<li><a href="#sec-1-4-2">1.4.2. GUI with long running task - Clock display</a></li>
+<li><a href="#sec-1-4-3">1.4.3. Build Interface with Glade</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-5">1.5. References and Bookmarks</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Graphical User Interface with GTK</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Overview</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+GTK is cross-platform GUI toolkit written in C available for Linux,
+Mac Osx and Windows. The Haskell package Gtk2HS provides bindings to
+it through the foreign function interface FFI.
+</p>
+
+<p>
+<b>Installation</b> 
+</p>
+
+<ul class="org-ul">
+<li>1. Install GTK libraries: 
+</li>
+</ul>
+
+<p>
+Linux: (Manjaro / Arch Linux)
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ sudo pacman -S gobject-introspection gobject-introspection-runtime gtksourceview3 webkitgtk webkit2gtk
+</pre>
+</div>
+
+
+<p>
+Install gtk2hs (gtk 2.0) package and Haskell 7.10.2
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack --resolver lts-3.22 --install-ghc install gtk datetime  <span class="org-comment-delimiter"># </span><span class="org-comment">Install gtk 2.0 bindings</span>
+$ stack --resolver lts-3.22 --install-ghc install gtk3 datetime <span class="org-comment-delimiter"># </span><span class="org-comment">Install gtk 3.0 bindings</span>
+</pre>
+</div>
+
+<p>
+This section will use gtk3 (gtk 3.0) package due to it support glade3 generated
+layout files unlike the gtk (gtk 2.0), despite most of documentation and examples be available
+for gtk 2.0.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> GUI Terminology</h3>
+<div class="outline-text-3" id="text-1-2">
+<ul class="org-ul">
+<li><span class="underline">Widget</span> - GUI component or item such as button, text box, entry,
+menu and etc.
+</li>
+
+<li><span class="underline">Container</span> - Widget that can allocate space for other widgets and
+contain them such as Window, hbox, vbox and so on.
+
+<ul class="org-ul">
+<li>hbox - aligns widgets in a horizontal way.
+</li>
+
+<li>vbox - aligns widgets in a vertical way
+</li>
+</ul>
+</li>
+
+<li><span class="underline">Event loop</span> - Infinite loop generally running in a single thread
+which scans for inputs and calls the registered callbacks (aka
+event handling) when some event happens. The event loop is
+generally not exposed to the application developer.
+</li>
+
+<li><span class="underline">Event</span> - Notification provided by the GUI event-loop which can call
+an callback function (aka event-handling) registered by the
+application programmer.
+</li>
+
+<li><span class="underline">Callback or event handler</span> - Function provided by the application
+programmer that will be called by the GUI event loop when some
+event happens. Example: function called when the user clicks in a
+button.
+</li>
+
+<li><span class="underline">Event driven or asyncrhonous</span> - GUI Programming is <span class="underline">event-driven</span>
+or <span class="underline">asyncrhonous</span>. The program doesn't wait for some input to
+arrive or poll some input. Instead of doing that the program only
+needs to <span class="underline">register the event handlers</span> to the events that it will
+react. The event loop calls the event handlers associated to an
+event when it happens. The drawback of this approach is the loss of
+control and the possibility of callback hell.
+</li>
+</ul>
+
+
+<p>
+GUI Challenges:
+</p>
+
+<ul class="org-ul">
+<li>GUI design, look and feel are hard to specify programatically
+because the code must be recompiled if the GUI is modified, changes
+in the GUI may break the GUI code and end-users may want to change
+it to fit better their needs. So it is hard to develop a complex GUI
+without a GUI builder such as Glade for Gtk, QT Designer for QT and
+so on. 
+</li>
+
+<li>The event handlers or callbacks execution must finish as soon as
+possible and avoid <span class="underline">blocking IO</span> or perform any task that operation
+that blocks GUI event loop thread.
+</li>
+
+<li>Any long running computation like run Haskell getLine that waits
+the user enter an input or an http request or anything that does
+not finish soon or blocks the GUI event loop thread must run in
+another thread in order to avoid the GUI crashing or freezing and
+it becoming unresponsive.
+</li>
+
+<li>Callbacks are written in continuation passing style what makes it
+hard to reason about and to compose and it can also lead to
+callback-hell, when there is multiple nested callback function.
+</li>
+
+<li>Many GUI toolkits like GTK are not thread-safe. The GUI functions
+can only be called from the GUI event loop thread.
+</li>
+
+<li>The communication between callbacks requires global variables or
+global mutable references what can lead to race conditions and
+make the code hard to understand and debug.
+</li>
+</ul>
+
+<p>
+See: 
+</p>
+
+<ul class="org-ul">
+<li><a href="http://stackoverflow.com/questions/2548200/how-do-i-access-gui-gtk-from-multi-threads">c# - How do I access GUI (GTK) from multi threads? - Stack Overflow</a>  
+</li>
+
+<li><a href="http://trampster.blogspot.com.br/2012/10/invoking-on-ui-thread-in-gtk.html">Before Humanity: Invoking on the UI thread in GTK#</a>
+</li>
+
+<li><a href="http://softwareengineering.stackexchange.com/questions/165663/thread-safe-gui-programming">multithreading - Thread safe GUI programming - Software Engineering Stack Exchange</a>
+</li>
+
+<li><a href="https://blogs.oracle.com/swinger/entry/on_gui_multithreading">On GUI Multithreading (Let's Swing!)</a>
+</li>
+
+<li><a href="http://wiki.c2.com/?TheGuiThreadIsTheMainThread">The Gui Thread Is The Main Thread</a>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> Gtk3 functions and types</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+<b>Package Documentation</b> 
+</p>
+
+<p>
+Package Gtk2
+</p>
+
+<ul class="org-ul">
+<li><a href="https://hackage.haskell.org/package/gtk">gtk Binding to the Gtk+ graphical user interface library.</a>
+</li>
+</ul>
+
+<p>
+Package Gtk3
+</p>
+
+<ul class="org-ul">
+<li><a href="https://hackage.haskell.org/package/gtk3">gtk3 Binding to the Gtk+ 3 graphical user interface library</a>
+</li>
+</ul>
+
+<p>
+<b>Useful Functions for Gtk</b>
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Function / type</th>
+<th scope="col" class="left">&#xa0;</th>
+<th scope="col" class="left">Signature</th>
+<th scope="col" class="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left"><b>Module</b> Data.IORef</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">newIORef</td>
+<td class="left">::</td>
+<td class="left">a -&gt; IO (IORef a)</td>
+<td class="left">Create new IO Reference initialized with some value.</td>
+</tr>
+
+<tr>
+<td class="left">readIORef</td>
+<td class="left">::</td>
+<td class="left">IORef a -&gt; IO a</td>
+<td class="left">Read IO reference.</td>
+</tr>
+
+<tr>
+<td class="left">writeIORef</td>
+<td class="left">::</td>
+<td class="left">writeIORef :: IORef a -&gt; a -&gt; IO ()</td>
+<td class="left">Update IO reference</td>
+</tr>
+
+<tr>
+<td class="left">modifyIORef</td>
+<td class="left">::</td>
+<td class="left">IORef a -&gt; (a -&gt; a) -&gt; IO ()</td>
+<td class="left">Apply function to IO reference value and update it.</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left"><b>Module</b> Control.Concurrent</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">forkIO</td>
+<td class="left">::</td>
+<td class="left">IO () -&gt; IO ThreadId</td>
+<td class="left">Run IO action in a new lightweight thread</td>
+</tr>
+
+<tr>
+<td class="left">forkIOS</td>
+<td class="left">::</td>
+<td class="left">IO () -&gt; IO ThreadId</td>
+<td class="left">Run IO action in a new os (aka native) thread</td>
+</tr>
+
+<tr>
+<td class="left">killThread</td>
+<td class="left">::</td>
+<td class="left">ThreadId -&gt; IO ()</td>
+<td class="left">Stop a thread given its ID</td>
+</tr>
+
+<tr>
+<td class="left">threadDelay</td>
+<td class="left">::</td>
+<td class="left">threadDelay :: Int -&gt; IO ()</td>
+<td class="left">Pause current thread for N micro seconds (us) or N x 1e-6 seconds.</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+<b>Gtk Functions</b>
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Function / type</th>
+<th scope="col" class="left">&#xa0;</th>
+<th scope="col" class="left">Singature</th>
+<th scope="col" class="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">initGUI</td>
+<td class="left">::</td>
+<td class="left">IO ()</td>
+<td class="left">Initialize Gtk</td>
+</tr>
+
+<tr>
+<td class="left">mainGUI</td>
+<td class="left">::</td>
+<td class="left">IO ()</td>
+<td class="left">Run Gtk event loop.</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">widgetShowAll</td>
+<td class="left">::</td>
+<td class="left">WidgetClass self =&gt; self -&gt; IO ()</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left"><b>Widget Layout</b></td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">vBoxNew</td>
+<td class="left">::</td>
+<td class="left">Bool -&gt; Int IO -&gt; VBox</td>
+<td class="left">Create new VBox container</td>
+</tr>
+
+<tr>
+<td class="left">hBoxNew</td>
+<td class="left">::</td>
+<td class="left">Bool -&gt; Int IO -&gt; HBox</td>
+<td class="left">Create new HBox container</td>
+</tr>
+
+<tr>
+<td class="left">containerAdd</td>
+<td class="left">::</td>
+<td class="left">(WidgetClass widget, ContainerClass self) =&gt; self -&gt; widget -&gt; IO ()</td>
+<td class="left">Add widget to a container widget like Window.</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left"><b>Widget Constructors</b></td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">windowNew</td>
+<td class="left">::</td>
+<td class="left">IO Window</td>
+<td class="left">Create new window</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">buttonNew</td>
+<td class="left">::</td>
+<td class="left">IO Button</td>
+<td class="left">Create new button</td>
+</tr>
+
+<tr>
+<td class="left">buttonNewWithLabel</td>
+<td class="left">::</td>
+<td class="left">string -&gt; IO Button</td>
+<td class="left">Create button with label</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">drawingAreaNew</td>
+<td class="left">::</td>
+<td class="left">IO DrawingArea</td>
+<td class="left">Create new drawing area (canvas)</td>
+</tr>
+
+<tr>
+<td class="left">labelNew</td>
+<td class="left">::</td>
+<td class="left">Maybe string -&gt; IO Label</td>
+<td class="left">Create new label</td>
+</tr>
+
+<tr>
+<td class="left">entryNew</td>
+<td class="left">::</td>
+<td class="left">IO Entry</td>
+<td class="left">Create new entry (single-line text input)</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left"><b>Window Functions</b></td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">windowSetDefaultSize</td>
+<td class="left">::</td>
+<td class="left">WindowClass self =&gt; self -&gt; Int -&gt; Int -&gt; IO ()</td>
+<td class="left">Set default window size - window, width, height</td>
+</tr>
+
+<tr>
+<td class="left">windowGetDefaultSize</td>
+<td class="left">::</td>
+<td class="left">WindowClass self =&gt; self -&gt; IO (Int, Int)</td>
+<td class="left">Get window default size - (width, height)</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left"><b>Event Handling</b></td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">on</td>
+<td class="left">::</td>
+<td class="left">object -&gt; Signal object callback -&gt; callback -&gt; IO (ConnectId object)</td>
+<td class="left">Register callback</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>
+Note: The type <span class="underline">string</span> is:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">&gt; :t Gtk.labelNew
+Gtk.labelNew
+  :: System.Glib.UTFString.GlibString string =&gt;
+     Maybe string -&gt; IO Label
+&gt;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-4" class="outline-3">
+<h3 id="sec-1-4"><span class="section-number-3">1.4</span> Examples</h3>
+<div class="outline-text-3" id="text-1-4">
+</div><div id="outline-container-sec-1-4-1" class="outline-4">
+<h4 id="sec-1-4-1"><a id="ID-cbd3ba2f-35c2-492e-88aa-98e6bae4571e" name="ID-cbd3ba2f-35c2-492e-88aa-98e6bae4571e"></a><span class="section-number-4">1.4.1</span> Simple GUI</h4>
+<div class="outline-text-4" id="text-1-4-1">
+
+<p>
+Screenshot: 
+</p>
+
+
+<div class="figure">
+<p><a href="images/haskell_gtk_gui1.png"><img src="images/haskell_gtk_gui1.png" alt="haskell_gtk_gui1.png" /></a>
+</p>
+</div>
+
+<p>
+File: gui1.hs
+</p>
+
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Graphics.UI.Gtk</span>
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Graphics.UI.Gtk.Gdk.EventM</span>
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-keyword">qualified</span> <span class="org-haskell-constructor">Graphics.UI.Gtk.Gdk.Events</span> <span class="org-haskell-keyword">as</span> <span class="org-haskell-constructor">E</span>
+
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Monad.Trans</span> 
+
+<span class="org-function-name">main</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>    
+<span class="org-haskell-definition">main</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  initGUI  <span class="org-comment-delimiter">-- </span><span class="org-comment">Start Gtk. Must be called before creating the widgets</span>
+
+  <span class="org-comment-delimiter">-- </span><span class="org-comment">Create Widgets </span>
+  window  <span class="org-haskell-operator">&lt;-</span> windowNew
+
+  btn     <span class="org-haskell-operator">&lt;-</span> buttonNew                       
+  set btn [ buttonLabel <span class="org-haskell-constructor">:=</span> <span class="org-string">"Click me!"</span> ]
+
+  containerAdd window btn 
+
+  widgetShowAll window
+
+  <span class="org-comment-delimiter">-- </span><span class="org-comment">Set up events and register callbacks (aka event handlers)</span>
+  <span class="org-comment-delimiter">--                 </span>
+  on btn buttonPressEvent <span class="org-haskell-operator">$</span> tryEvent <span class="org-haskell-operator">$</span> liftIO <span class="org-haskell-operator">$</span> putStrLn <span class="org-string">"I was clicked"</span>
+
+  <span class="org-comment-delimiter">-- </span><span class="org-comment">Exit application if the user click on exit button </span>
+  on window deleteEvent <span class="org-haskell-operator">$</span> liftIO mainQuit <span class="org-haskell-operator">&gt;&gt;</span> return <span class="org-haskell-constructor">False</span>   
+
+  mainGUI  <span class="org-comment-delimiter">-- </span><span class="org-comment">Start GTK event loop and and react to events.</span>
+</pre>
+</div>
+
+
+<p>
+<b>Running:</b>
+</p>
+
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack --resolver lts-3.22 runhaskell /tmp/gui1.hs    <span class="org-comment-delimiter"># </span><span class="org-comment">Now it works</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-4-2" class="outline-4">
+<h4 id="sec-1-4-2"><span class="section-number-4">1.4.2</span> GUI with long running task - Clock display</h4>
+<div class="outline-text-4" id="text-1-4-2">
+<p>
+Screenshot: 
+</p>
+
+
+<div class="figure">
+<p><a href="images/haskell_gtk_clock_display.png"><img src="images/haskell_gtk_clock_display.png" alt="haskell_gtk_clock_display.png" /></a>
+</p>
+</div>
+
+
+<p>
+File: clockDisplay.hs 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Concurrent</span> (forkIO,  forkOS, threadDelay)    
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.IORef</span> 
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Monad</span> (forever)
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Monad.Trans</span> (liftIO)
+
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-keyword">qualified</span> <span class="org-haskell-constructor">Data.DateTime</span> <span class="org-haskell-keyword">as</span> <span class="org-haskell-constructor">Date</span>
+
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Graphics.UI.Gtk</span>
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">1 second dealy = 1 million us = 1 sec   </span>
+<span class="org-haskell-definition">delay1sec</span> <span class="org-haskell-operator">=</span> 1000000 
+
+<span class="org-function-name">ignore</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">ignore</span> ioAction <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  <span class="org-haskell-keyword">_</span> <span class="org-haskell-operator">&lt;-</span> ioAction
+  return <span class="org-haskell-constructor">()</span>
+
+<span class="org-doc">{-| Run IO action in infinite loop in a new thread, </span>
+<span class="org-doc">    without block Gtk main thread.  </span>
+
+<span class="org-doc">threadLopp delayMilliSeconds GtkIOAction </span>
+
+<span class="org-doc">-}</span>         
+<span class="org-function-name">threadLoop</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">threadLoop</span> delay ioAction <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+    forkIO <span class="org-haskell-operator">$</span> forever <span class="org-haskell-operator">$</span> <span class="org-haskell-keyword">do</span>  
+      threadsEnter         <span class="org-comment-delimiter">-- </span><span class="org-comment">Acquire the global Gtk lock</span>
+      ioAction             <span class="org-comment-delimiter">-- </span><span class="org-comment">Perform Gtk interaction like update widget </span>
+      threadsLeave         <span class="org-comment-delimiter">-- </span><span class="org-comment">Release the global Gtk lock</span>
+      threadDelay delay    <span class="org-comment-delimiter">-- </span><span class="org-comment">Delay in us               </span>
+    return <span class="org-haskell-constructor">()</span>
+
+<span class="org-function-name">driveDisplay</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Entry</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">driveDisplay</span> entry <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+    acc <span class="org-haskell-operator">&lt;-</span> newIORef 0 
+    ignore <span class="org-haskell-operator">$</span> forkIO <span class="org-haskell-operator">$</span> forever <span class="org-haskell-operator">$</span> <span class="org-haskell-keyword">do</span>
+      counter <span class="org-haskell-operator">&lt;-</span> readIORef acc             
+      entrySetText entry <span class="org-haskell-operator">$</span> show counter
+      writeIORef acc (counter <span class="org-haskell-operator">+</span> 1)
+      threadDelay delay1sec
+
+
+<span class="org-function-name">driveDisplayClock</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Entry</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">driveDisplayClock</span> entry <span class="org-haskell-operator">=</span>
+    threadLoop delay1sec <span class="org-haskell-operator">$</span> <span class="org-haskell-keyword">do</span>
+      localTime <span class="org-haskell-operator">&lt;-</span> show <span class="org-haskell-operator">.</span> Date.toClockTime <span class="org-haskell-operator">&lt;$&gt;</span> Date.getCurrentTime
+      entrySetText entry <span class="org-haskell-operator">$</span> localTime      
+
+
+<span class="org-function-name">main</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">main</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  initGUI <span class="org-comment-delimiter">-- </span><span class="org-comment">Init Gtk </span>
+
+  <span class="org-comment-delimiter">-- </span><span class="org-comment">Create main window </span>
+  window  <span class="org-haskell-operator">&lt;-</span> windowNew
+
+  <span class="org-comment-delimiter">-- </span><span class="org-comment">Create new user input or entry            </span>
+  display <span class="org-haskell-operator">&lt;-</span> entryNew
+
+
+  set window  [ windowTitle           <span class="org-haskell-constructor">:=</span> <span class="org-string">"Clock time App"</span>
+               ,windowDefaultWidth    <span class="org-haskell-constructor">:=</span> 300
+               ,windowDefaultHeight   <span class="org-haskell-constructor">:=</span> 100
+               ,windowResizable       <span class="org-haskell-constructor">:=</span> <span class="org-haskell-constructor">True</span>
+               ,containerBorderWidth <span class="org-haskell-constructor">:=</span> 2  
+              ]
+
+  <span class="org-comment-delimiter">-- </span><span class="org-comment">Add entry to window </span>
+  containerAdd window display              
+
+  <span class="org-comment-delimiter">-- </span><span class="org-comment">entrySetText display "Display Message"</span>
+  <span class="org-comment-delimiter">-- </span><span class="org-comment">driveDisplay display</span>
+  driveDisplayClock display
+
+  <span class="org-comment-delimiter">--</span><span class="org-comment">-------------------------------------------</span>
+  <span class="org-comment-delimiter">-- </span><span class="org-comment">Set Signals or Events callbacks         --</span>
+  <span class="org-comment-delimiter">--</span><span class="org-comment">-------------------------------------------</span>
+
+  <span class="org-comment-delimiter">-- </span><span class="org-comment">Exit app when the window is deleted (User clicks exit button).</span>
+  on window deleteEvent <span class="org-haskell-operator">$</span> liftIO mainQuit <span class="org-haskell-operator">&gt;&gt;</span> return <span class="org-haskell-constructor">False</span>
+
+  <span class="org-comment-delimiter">-- </span><span class="org-comment">Display Widget </span>
+  widgetShowAll window
+
+  <span class="org-comment-delimiter">-- </span><span class="org-comment">Start GUI Event loop </span>
+  mainGUI
+</pre>
+</div>
+
+<p>
+Running as script:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack --resolver lts-3.22 --install-ghc runhaskell clockDisplay.hs
+</pre>
+</div>
+
+<p>
+Compiling: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack --resolver lts-3.22 --install-ghc exec -- ghc -threaded clockDisplay.hs  
+Linking clockDisplay ...
+
+$ ./clockDisplay
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-4-3" class="outline-4">
+<h4 id="sec-1-4-3"><span class="section-number-4">1.4.3</span> Build Interface with Glade</h4>
+<div class="outline-text-4" id="text-1-4-3">
+<p>
+Specifying a GUI pragmatically is not viable for a complex GUI
+application because each layout change will require the code to be
+changed and recompiled. The Glade 3 (glade for gtk3) GUI builder
+generate a XML layout containing the GUI specifications. The GUI
+library can read it, build the widgets automatically and display the
+user interface.
+</p>
+
+<p>
+<b>Screenshot:</b>
+</p>
+
+<p>
+Glade Gtk Builder 
+</p>
+
+
+<div class="figure">
+<p><a href="images/glade_builder_screenshot.png"><img src="images/glade_builder_screenshot.png" alt="glade_builder_screenshot.png" /></a>
+</p>
+</div>
+
+<p>
+<b>GUI application</b>
+</p>
+
+
+<div class="figure">
+<p><a href="images/haskell_gtk_glade1.png"><img src="images/haskell_gtk_glade1.png" alt="haskell_gtk_glade1.png" /></a>
+</p>
+</div>
+
+<p>
+<b>How it works ?</b>
+</p>
+
+<p>
+The displayed exchange rate BRL/USD (USD to BRL - Brazilian Reals) or
+Brazilian Reals per USD is a random number updated every 2 seconds
+within the range 3.0 +- 2.0 or 1.0 (3.0 - 2.0) to 5.0 (3.0 + 2.0).
+</p>
+
+<p>
+The user enters the amount of USD and the equivalent BRL amount is
+displayed every time the user changes in input or the exchange rate is
+updated. Example: If the current exchange rate is BRL/USD is 2.0 and
+the "amount in USD" is 100.0 the 'Total in BRL' will be 200.0.
+</p>
+
+<p>
+When the user press the button 'Sum' current amount in BRL 'Total in BRL' is 
+add to the reference totalSumRef and the current sum is displayed in
+the field 'Total Sum'.
+</p>
+
+
+<p>
+File: Converter.hs 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-pragma">{-# language PackageImports #-}</span>
+
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Concurrent</span> (forkIO,  forkOS, threadDelay)    
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.IORef</span> 
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Monad</span> (forever)
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Monad.Trans</span>
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-keyword">qualified</span> <span class="org-haskell-constructor">Data.DateTime</span> <span class="org-haskell-keyword">as</span> <span class="org-haskell-constructor">Date</span>
+
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Graphics.UI.Gtk</span>
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Graphics.UI.Gtk.Builder</span>
+
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">System.Random</span> (randomRIO)    
+
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Text.Read</span> (readMaybe)
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Text.Printf</span> (printf)
+
+
+<span class="org-function-name">parseDouble</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">Double</span> 
+<span class="org-haskell-definition">parseDouble</span> text <span class="org-haskell-operator">=</span> readMaybe text 
+
+<span class="org-function-name">formatDouble</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> 
+<span class="org-haskell-definition">formatDouble</span> <span class="org-haskell-operator">=</span> printf <span class="org-string">"%.3f"</span>
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">1 second dealy = 1 million us = 1 sec   </span>
+<span class="org-haskell-definition">delay1sec</span> <span class="org-haskell-operator">=</span> 1000000 
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Execute an IO action in a infinite loop and</span>
+<span class="org-comment-delimiter">-- </span><span class="org-comment">in a regular time interval given in us.</span>
+<span class="org-comment-delimiter">--</span>
+<span class="org-function-name">clockUpdate</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">clockUpdate</span> delay ioAction <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+    forkIO <span class="org-haskell-operator">$</span> forever <span class="org-haskell-operator">$</span> <span class="org-haskell-keyword">do</span>  
+      threadsEnter         <span class="org-comment-delimiter">-- </span><span class="org-comment">Acquire the global Gtk lock</span>
+      ioAction             <span class="org-comment-delimiter">-- </span><span class="org-comment">Perform Gtk interaction like update widget </span>
+      threadsLeave         <span class="org-comment-delimiter">-- </span><span class="org-comment">Release the global Gtk lock</span>
+      threadDelay delay    <span class="org-comment-delimiter">-- </span><span class="org-comment">Delay in us               </span>
+    return <span class="org-haskell-constructor">()</span>
+
+<span class="org-function-name">driveClockDisplays</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Entry</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Entry</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Entry</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">driveClockDisplays</span> amountEntry rateDisplay totalSumDisplay <span class="org-haskell-operator">=</span> undefined 
+
+
+<span class="org-function-name">getAmount</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Entry</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IORef</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">Double</span>)
+<span class="org-haskell-definition">getAmount</span> amountEntry rateRef <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  rate     <span class="org-haskell-operator">&lt;-</span> readIORef rateRef
+  amount   <span class="org-haskell-operator">&lt;-</span> parseDouble <span class="org-haskell-operator">&lt;$&gt;</span> entryGetText amountEntry
+  return <span class="org-haskell-operator">$</span> fmap (<span class="org-haskell-operator">\</span> x <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">*</span> rate) amount            
+
+<span class="org-function-name">clockUpdateGUI</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Entry</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Entry</span> <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">IORef</span> <span class="org-haskell-type">Double</span>) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">clockUpdateGUI</span> delay timeDisplay rateDisplay rateRef action <span class="org-haskell-operator">=</span>
+    clockUpdate delay <span class="org-haskell-operator">$</span> <span class="org-haskell-keyword">do</span>
+      rnd <span class="org-haskell-operator">&lt;-</span> randomRIO (<span class="org-haskell-operator">-</span>2.0, 2.0)
+      <span class="org-haskell-keyword">let</span> nextRate <span class="org-haskell-operator">=</span> rnd <span class="org-haskell-operator">+</span> 3.0
+      writeIORef rateRef nextRate
+      action   
+
+
+<span class="org-function-name">updateAmount</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Entry</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Entry</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IORef</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">updateAmount</span> amountEntry totalDisplay rateRef <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  rate     <span class="org-haskell-operator">&lt;-</span> readIORef rateRef  
+  amount   <span class="org-haskell-operator">&lt;-</span> getAmount amountEntry rateRef              
+  <span class="org-haskell-keyword">case</span> amount <span class="org-haskell-keyword">of</span>
+    <span class="org-haskell-constructor">Nothing</span>      <span class="org-haskell-operator">-&gt;</span> entrySetText totalDisplay <span class="org-string">"Error: Invalid input"</span>
+
+    <span class="org-haskell-constructor">Just</span> amount' <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-keyword">do</span> <span class="org-haskell-keyword">let</span> total <span class="org-haskell-operator">=</span> rate <span class="org-haskell-operator">*</span> amount'
+                       entrySetText totalDisplay (formatDouble total)
+
+<span class="org-function-name">updateRate</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Entry</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Entry</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Entry</span> <span class="org-haskell-operator">-&gt;</span>  <span class="org-haskell-type">IORef</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">updateRate</span> delay rateDisplay amountEntry totalDisplay rateRef <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  clockUpdate delay <span class="org-haskell-operator">$</span> <span class="org-haskell-keyword">do</span> 
+    rnd <span class="org-haskell-operator">&lt;-</span> randomRIO (<span class="org-haskell-operator">-</span>2.0, 2.0)
+    <span class="org-haskell-keyword">let</span> nextRate <span class="org-haskell-operator">=</span> rnd <span class="org-haskell-operator">+</span> 3.0
+    writeIORef rateRef nextRate                
+    entrySetText rateDisplay <span class="org-haskell-operator">$</span> formatDouble nextRate
+    updateAmount amountEntry totalDisplay rateRef
+
+<span class="org-function-name">updateTimeDisplay</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Entry</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">updateTimeDisplay</span> entry <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  clockUpdate delay1sec <span class="org-haskell-operator">$</span> <span class="org-haskell-keyword">do</span>
+    localTime <span class="org-haskell-operator">&lt;-</span> show <span class="org-haskell-operator">.</span> Date.toClockTime <span class="org-haskell-operator">&lt;$&gt;</span> Date.getCurrentTime
+    entrySetText entry <span class="org-haskell-operator">$</span> localTime        
+
+<span class="org-function-name">clearTotalSum</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Entry</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IORef</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">clearTotalSum</span> totalSumDisplay totalSumRef <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  writeIORef totalSumRef 0.0
+  entrySetText totalSumDisplay <span class="org-string">"0.0"</span>  
+  putStrLn <span class="org-string">"Total sum set to 0.0"</span>
+
+<span class="org-function-name">updateTotalSum</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Entry</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Entry</span> <span class="org-haskell-operator">-&gt;</span>  <span class="org-haskell-type">IORef</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IORef</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">updateTotalSum</span> amountEntry totalSumDisplay rateRef totalSumRef <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  amount   <span class="org-haskell-operator">&lt;-</span> getAmount amountEntry rateRef
+  totalSum <span class="org-haskell-operator">&lt;-</span> readIORef totalSumRef
+  <span class="org-haskell-keyword">case</span> amount <span class="org-haskell-keyword">of</span>
+    <span class="org-haskell-constructor">Nothing</span>       <span class="org-haskell-operator">-&gt;</span> return <span class="org-haskell-constructor">()</span>
+    <span class="org-haskell-constructor">Just</span> amount'  <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-keyword">do</span> <span class="org-haskell-keyword">let</span> nextTotal <span class="org-haskell-operator">=</span> amount' <span class="org-haskell-operator">+</span> totalSum
+                        writeIORef totalSumRef nextTotal
+                        entrySetText totalSumDisplay (formatDouble nextTotal)  
+
+<span class="org-function-name">main</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>    
+<span class="org-haskell-definition">main</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  initGUI <span class="org-comment-delimiter">-- </span><span class="org-comment">Start Gtk </span>
+
+  <span class="org-comment-delimiter">-- </span><span class="org-comment">Application State - (Mutable references )</span>
+  rateRef     <span class="org-haskell-operator">&lt;-</span> newIORef 2.5
+  totalSumRef <span class="org-haskell-operator">&lt;-</span> newIORef 0.0      
+
+  <span class="org-comment-delimiter">{- </span><span class="org-comment">========= Set up widgets and GUI layout ========= -}</span>
+
+  <span class="org-comment-delimiter">-- </span><span class="org-comment">Load GUI layout from XML file built by glade2 GUI builder.</span>
+  <span class="org-comment-delimiter">--</span>
+  builder         <span class="org-haskell-operator">&lt;-</span> builderNew
+  builderAddFromFile builder <span class="org-string">"converter2.glade"</span>
+
+
+  <span class="org-haskell-keyword">let</span> getEntry objID   <span class="org-haskell-operator">=</span>  builderGetObject builder castToEntry objID
+  <span class="org-haskell-keyword">let</span> getButton objID  <span class="org-haskell-operator">=</span>  builderGetObject builder castToButton objID  
+
+  window          <span class="org-haskell-operator">&lt;-</span> builderGetObject builder castToWindow <span class="org-string">"mainWindow"</span>
+  buttonSum       <span class="org-haskell-operator">&lt;-</span> getButton <span class="org-string">"buttonSum"</span>       <span class="org-comment-delimiter">-- </span><span class="org-comment">Sum total amount in BRL to total sum</span>
+  buttonClear     <span class="org-haskell-operator">&lt;-</span> getButton <span class="org-string">"buttonClear"</span>     <span class="org-comment-delimiter">-- </span><span class="org-comment">Clear total sum </span>
+
+  amountEntry     <span class="org-haskell-operator">&lt;-</span> getEntry <span class="org-string">"amountEntry"</span>      <span class="org-comment-delimiter">-- </span><span class="org-comment">USD amount entry          </span>
+  rateDisplay     <span class="org-haskell-operator">&lt;-</span> getEntry <span class="org-string">"rateDisplay"</span>      <span class="org-comment-delimiter">-- </span><span class="org-comment">Display exchange rate in USD/BRL</span>
+  totalDisplay    <span class="org-haskell-operator">&lt;-</span> getEntry <span class="org-string">"totalDisplay"</span>     <span class="org-comment-delimiter">-- </span><span class="org-comment">Display total amount in BRL</span>
+  totalSumDisplay <span class="org-haskell-operator">&lt;-</span> getEntry <span class="org-string">"totalSumDisplay"</span>  <span class="org-comment-delimiter">-- </span><span class="org-comment">Display total sum in BRL               </span>
+  timeDisplay     <span class="org-haskell-operator">&lt;-</span> getEntry <span class="org-string">"timeDisplay"</span>      <span class="org-comment-delimiter">-- </span><span class="org-comment">Display user local time</span>
+
+  widgetShowAll window
+
+  <span class="org-comment-delimiter">{- </span><span class="org-comment">======= Initialize Widget ====== -}</span>
+
+  entrySetText amountEntry <span class="org-string">"3.0"</span>
+  clearTotalSum totalSumDisplay totalSumRef               
+
+  <span class="org-comment-delimiter">{- </span><span class="org-comment">======= Set up events  ========== -}</span>
+
+  on window deleteEvent <span class="org-haskell-operator">$</span> liftIO mainQuit <span class="org-haskell-operator">&gt;&gt;</span> return <span class="org-haskell-constructor">False</span>
+
+
+  <span class="org-comment-delimiter">-- </span><span class="org-comment">let updateGUIHandler     = updateGUI amountEntry rateDisplay totalDisplay totalSumDisplay rateRef </span>
+  <span class="org-haskell-keyword">let</span> updateTotalSumHandler <span class="org-haskell-operator">=</span> updateTotalSum amountEntry totalSumDisplay rateRef totalSumRef
+  <span class="org-haskell-keyword">let</span> updateAmountHandler   <span class="org-haskell-operator">=</span> updateAmount amountEntry totalDisplay rateRef
+
+  on buttonSum buttonReleaseEvent <span class="org-haskell-operator">$</span> tryEvent <span class="org-haskell-operator">$</span> liftIO <span class="org-haskell-operator">$</span> updateTotalSumHandler
+
+  on buttonClear buttonReleaseEvent <span class="org-haskell-operator">$</span> tryEvent <span class="org-haskell-operator">$</span> liftIO <span class="org-haskell-operator">$</span> clearTotalSum totalSumDisplay totalSumRef
+
+  on amountEntry keyReleaseEvent <span class="org-haskell-operator">$</span> tryEvent <span class="org-haskell-operator">$</span> liftIO <span class="org-haskell-operator">$</span> updateAmountHandler
+
+  <span class="org-comment-delimiter">{- </span><span class="org-comment">===== Run long-running background tasks ====== -}</span>
+
+  <span class="org-comment-delimiter">-- </span><span class="org-comment">Update time display every 1 second    </span>
+  updateTimeDisplay timeDisplay
+
+  <span class="org-comment-delimiter">-- </span><span class="org-comment">Update exchange rate each 2 seconds </span>
+  updateRate (2 <span class="org-haskell-operator">*</span> delay1sec) rateDisplay amountEntry totalDisplay rateRef
+
+  <span class="org-comment-delimiter">-- </span><span class="org-comment">on window deleteEvent $ liftIO mainQuit &gt;&gt; return False</span>
+
+  putStrLn <span class="org-string">"GUI application started. Up and running. OK."</span>
+  mainGUI <span class="org-comment-delimiter">-- </span><span class="org-comment">Start Gtk Event loop</span>
+</pre>
+</div>
+
+<p>
+File: converter2.glade - Generated by glade3 GUI builder. This file
+can be edited in Glade.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-xml"><span class="org-nxml-processing-instruction-delimiter">&lt;?</span><span class="org-nxml-processing-instruction-target">xml</span> <span class="org-nxml-attribute-local-name">version</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">1.0</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">encoding</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">UTF-8</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-processing-instruction-delimiter">?&gt;</span>
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> Generated with glade 3.20.0 </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">interface</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">requires</span> <span class="org-nxml-attribute-local-name">lib</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">gtk+</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">version</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">3.20</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">object</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">GtkWindow</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">id</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">mainWindow</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">can_focus</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">False</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">default_width</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">500</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+      <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">object</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">GtkGrid</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">width_request</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">400</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">height_request</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">300</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">visible</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">True</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">can_focus</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">False</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">margin_top</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">1</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">margin_bottom</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">1</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">hexpand</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">False</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">vexpand</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">False</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">row_spacing</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">5</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">column_homogeneous</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">True</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">object</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">GtkLabel</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">visible</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">True</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">can_focus</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">False</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">margin_right</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">30</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">label</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">translatable</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">yes</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">Exchange Rate BRL/USD</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">object</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">packing</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">left_attach</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">0</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">top_attach</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">0</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">packing</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">object</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">GtkLabel</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">visible</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">True</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">can_focus</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">False</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">margin_right</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">77</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">label</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">translatable</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">yes</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">Amount in USD</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">object</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">packing</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">left_attach</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">0</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">top_attach</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">1</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">packing</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">object</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">GtkLabel</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">visible</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">True</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">can_focus</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">False</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">margin_right</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">80</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">label</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">translatable</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">yes</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">Total in BRL</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">object</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">packing</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">left_attach</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">0</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">top_attach</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">2</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">packing</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">object</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">GtkButton</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">id</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">buttonSum</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">label</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">translatable</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">yes</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">Sum</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">visible</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">True</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">can_focus</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">True</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">receives_default</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">True</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">object</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">packing</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">left_attach</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">0</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">top_attach</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">3</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">packing</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">object</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">GtkButton</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">id</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">buttonClear</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">label</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">translatable</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">yes</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">Clear</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">visible</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">True</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">can_focus</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">True</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">receives_default</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">True</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">object</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">packing</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">left_attach</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">1</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">top_attach</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">3</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">packing</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">object</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">GtkLabel</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">visible</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">True</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">can_focus</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">False</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">margin_right</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">80</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">label</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">translatable</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">yes</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">Total Sum</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">object</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">packing</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">left_attach</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">0</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">top_attach</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">4</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">packing</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">object</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">GtkEntry</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">id</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">rateDisplay</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">visible</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">True</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">can_focus</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">True</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">object</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">packing</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">left_attach</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">1</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">top_attach</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">0</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">packing</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">object</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">GtkEntry</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">id</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">amountEntry</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">visible</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">True</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">can_focus</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">True</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">object</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">packing</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">left_attach</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">1</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">top_attach</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">1</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">packing</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">object</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">GtkEntry</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">id</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">totalDisplay</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">visible</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">True</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">can_focus</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">True</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">object</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">packing</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">left_attach</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">1</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">top_attach</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">2</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">packing</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">object</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">GtkEntry</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">id</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">totalSumDisplay</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">visible</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">True</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">can_focus</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">True</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">object</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">packing</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">left_attach</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">1</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">top_attach</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">4</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">packing</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">object</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">GtkEntry</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">id</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">timeDisplay</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">visible</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">True</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">can_focus</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">True</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">object</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">packing</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">left_attach</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">1</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">top_attach</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">5</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">packing</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">object</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">GtkLabel</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">visible</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">True</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">can_focus</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">False</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">margin_right</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">80</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">label</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">translatable</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">yes</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">Time</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">object</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">packing</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">left_attach</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">0</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+            <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">top_attach</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">5</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+          <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">packing</span><span class="org-nxml-tag-delimiter">&gt;</span>
+        <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+      <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">object</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+      <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">placeholder</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">child</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">object</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">interface</span><span class="org-nxml-tag-delimiter">&gt;</span>
+</pre>
+</div>
+
+<p>
+Run as script:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack --resolver lts-3.22 --install-ghc runhaskell Converter.hs 
+Total sum set to 0.0
+GUI application started. Up and running. OK.
+</pre>
+</div>
+
+<p>
+Compile: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack --resolver lts-3.22 --install-ghc exec -- ghc -threaded Converter.hs 
+[1 of 1] Compiling Main             ( Converter.hs, Converter.o )
+Linking Converter ...
+
+
+$ ./Converter 
+Total sum set to 0.0
+GUI application started. Up and running. OK.
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-1-5" class="outline-3">
+<h3 id="sec-1-5"><span class="section-number-3">1.5</span> References and Bookmarks</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+<b>Package Documentations</b>
+</p>
+
+<ul class="org-ul">
+<li><a href="https://hackage.haskell.org/package/gtk">gtk: Binding to the Gtk+ graphical user interface library.</a>
+</li>
+
+<li><a href="https://hackage.haskell.org/package/gtk3">gtk3: Binding to the Gtk+ 3 graphical user interface library</a>
+</li>
+
+<li><a href="https://github.com/gtk2hs/gtk2hs">GitHub - gtk2hs/gtk2hs: GUI library for Haskell based on GTK+</a> (Github)
+</li>
+</ul>
+
+<p>
+<b>GTK Libraries for Windows</b>
+</p>
+
+<ul class="org-ul">
+<li><a href="https://sourceforge.net/projects/gtk-win/">GTK+ for Windows Runtime Environment download | SourceForge.net</a>
+</li>
+
+<li><a href="https://sourceforge.net/projects/gtk-mingw/">GTK+ for Windows (MinGW) download | SourceForge.net</a>
+</li>
+
+<li><a href="https://tschoonj.github.io/blog/2014/09/29/gtk2-64-bit-windows-runtime-environment-installer-now-on-github/">Gtk2 64-bit Windows Runtime Environment Installer: now on GitHub! - The Code Dungeon</a>
+</li>
+</ul>
+
+
+<p>
+<b>Misc</b>
+</p>
+
+<ul class="org-ul">
+<li><a href="http://book.realworldhaskell.org/read/gui-programming-with-gtk-hs.html">Chapter 23. GUI Programming with gtk2hs</a>
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li>Kenneth Hoste. <b>An Introduction to Gtk2Hs, a Haskell GUI
+Library</b>. Available at
+<a href="https://pdfs.semanticscholar.org/dd9a/8d3986630da6dea10c504c907681fdb3c322.pdf">https://pdfs.semanticscholar.org/dd9a/8d3986630da6dea10c504c907681fdb3c322.pdf</a>
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li><a href="https://wiki.haskell.org/Gtk2Hs/Tutorials">Gtk2Hs/Tutorials - HaskellWiki</a>
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li>Krasimir Angelov. <b>Gtk2Hs Tutorial</b>
+   <a href="http://www.cse.chalmers.se/edu/year/2010/course/TDA451_Functional_Programming/FPLectures/06A-gtk2hs.pdf">http://www.cse.chalmers.se/edu/year/2010/course/TDA451_Functional_Programming/FPLectures/06A-gtk2hs.pdf</a>
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li><a href="http://tab.snarc.org/posts/haskell/2010-11-13-webkit_part1.html">Vincent Hanquez 2010-11-13-webkit_part1</a>
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li><a href="http://rickardlindberg.me/writing/reflections-on-programming/2012-02-11-hello-world-haskell-gtk/">Hello world in Haskell and GTK | Rickard's personal homepage</a>
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li><a href="http://berlinbrownresearch.blogspot.com.br/2011/03/first-example-ever-on-gtk-and-haskell.html">Berlin Research Code Posts: First example EVER on GTK and Haskell, Render Primitives</a>
+</li>
+</ul>
+
+
+<p>
+<b>Papers</b> 
+</p>
+
+<ul class="org-ul">
+<li>Thomas Van Noort. <b>Building GUIs in Haskell - Comparing Gtk2Hs and
+wxHaskell</b>. Available at <a href="http://foswiki.cs.uu.nl/foswiki/pub/Stc/BuildingGUIsInHaskell/GUI-paper.pdf">http://foswiki.cs.uu.nl/foswiki/pub/Stc/BuildingGUIsInHaskell/GUI-paper.pdf</a>
+or <a href="https://archive.is/8VRgN">https://archive.is/8VRgN</a>
+</li>
+</ul>
+
+
+
+<ul class="org-ul">
+<li>John Peterson, Antony Courtney and Bart Robinson. <b>Can GUI
+Programming Be Liberated From The IO Monad</b>. Available at
+<a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.112.2186&rep=rep1&type=pdf">http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.112.2186&rep=rep1&type=pdf</a>
+</li>
+</ul>
+
+
+
+<ul class="org-ul">
+<li>Beatriz Alarcón, Salvador Lucas <b>Building .NET GUIs for Haskell
+applications</b>. Available at
+<a href="http://s3.amazonaws.com/academia.edu.documents/41680191/NET06.pdf?AWSAccessKeyId=AKIAIWOWYYGZ2Y53UL3A&Expires=1489302403&Signature=W5tajDKres/v1dgCxuuyyLyK6as=&response-content-disposition=inline;%20filename=Building_.NET_GUIs_for_Haskell_applicati.pdf">http://s3.amazonaws.com/academia.edu.documents/41680191/NET06.pdf?AWSAccessKeyId=AKIAIWOWYYGZ2Y53UL3A&Expires=1489302403&Signature=W5tajDKres/v1dgCxuuyyLyK6as=&response-content-disposition=inline;%20filename=Building_.NET_GUIs_for_Haskell_applicati.pdf</a>
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li>Daan Leijen. <b>wxHaskell - A Portable and Concise GUI Library for
+Haskell</b>. Available at
+<a href="http://www.inf.ufpr.br/andrey/ci062/wxhaskell.pdf">http://www.inf.ufpr.br/andrey/ci062/wxhaskell.pdf</a>
+</li>
+
+<li>Sebastiaan la Fleur. <b>Outsourcing the Graphical Input/Output using
+Streams and Haskell</b> <a href="http://referaat.cs.utwente.nl/conference/20/paper/7418/outsourcing-the-graphical-input-output-using-streams-and-haskell.pdf">http://referaat.cs.utwente.nl/conference/20/paper/7418/outsourcing-the-graphical-input-output-using-streams-and-haskell.pdf</a>
+</li>
+</ul>
+
+
+<p>
+<b>Wikipedia</b>
+</p>
+
+<ul class="org-ul">
+<li><a href="https://en.wikipedia.org/wiki/GTK+">GTK+ - Wikipedia</a>
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li><a href="https://en.wikipedia.org/wiki/Continuation-passing_style">Continuation-passing style - Wikipedia</a>
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li><a href="https://en.wikipedia.org/wiki/Event_loop">Event loop - Wikipedia</a>
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li><a href="https://en.wikipedia.org/wiki/Event_(computing)#Event_handler">Event (computing) - Wikipedia</a>
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li><a href="https://en.wikipedia.org/wiki/Asynchronous_I/O">Asynchronous I/O - Wikipedia</a>
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li><a href="https://en.wikipedia.org/wiki/Event-driven_programming">Event-driven programming - Wikipedia</a>
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li><a href="https://en.wikipedia.org/wiki/Polling_(computer_science)">Polling (computer science) - Wikipedia</a>
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li><a href="https://en.wikipedia.org/wiki/Interrupt_handler">Interrupt handler - Wikipedia</a>
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li><a href="https://en.wikipedia.org/wiki/Callback_(computer_programming)">Callback (computer programming) - Wikipedia</a>
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li><a href="https://en.wikipedia.org/wiki/Windowing_system">Windowing system - Wikipedia</a>
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li><a href="https://en.wikipedia.org/wiki/Observer_pattern">Observer pattern - Wikipedia</a>
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li><a href="https://en.wikipedia.org/wiki/Event-driven_architecture">Event-driven architecture - Wikipedia</a>
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li><a href="https://en.wikipedia.org/wiki/Inversion_of_control">Inversion of control - Wikipedia</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Caio Rodrigues Soares Silva</p>
+<p class="date">Created: 2018-05-07 Mon 10:11</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

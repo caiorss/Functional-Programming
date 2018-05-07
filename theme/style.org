@@ -1,11 +1,14 @@
-#+INFOJS_OPT: view:showall toc:t ltoc:t ftoc:nil mouse:underline button:nil path:/Functional-Programming/theme/org-info.js
-#+HTML_HEAD: <link href="/Functional-Programming/theme/style.css" rel="stylesheet"> 
-#+AUTHOR: Caio Rodrigues
-#+EMAIL:  <caiorss.rodrigues@gmail.com>
+#+AUTHOR: nobody 
+#+EMAIL:  nobody
 #+LINK_HOME: /Functional-Programming/index.html
-#+LINK_UO:   /Functional-Programming/index.html
+#+LINK_UP:   /Functional-Programming/index.html
 #+LANGUAGE: en
 #+OPTIONS:   H:4
+
+#+HTML_HEAD: <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+#+HTML_HEAD: <link href="/Functional-Programming/theme/style.css" rel="stylesheet">
+#+HTML_HEAD: <script src="/Functional-Programming/theme/org-nav-theme.js"></script>
+
 
 #+BEGIN_HTML
 <lu> 

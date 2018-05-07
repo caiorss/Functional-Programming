@@ -1,0 +1,2478 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Parsec - Parser Combinators</title>
+<!-- 2018-05-07 Mon 10:12 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="Caio Rodrigues Soares Silva" />
+<meta  name="description" content="Parsec parser combinators"
+ />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Parsec - Parser Combinators</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Parsec - Parser Combinators</a>
+<ul>
+<li><a href="#sec-1-1">1.1. Overview</a>
+<ul>
+<li><a href="#sec-1-1-1">1.1.1. Parsec</a></li>
+<li><a href="#sec-1-1-2">1.1.2. Package Documentation</a></li>
+<li><a href="#sec-1-1-3">1.1.3. Loader Script</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-2">1.2. Parser Combinators</a>
+<ul>
+<li><a href="#sec-1-2-1">1.2.1. Primitive Parsers</a></li>
+<li><a href="#sec-1-2-2">1.2.2. Combinators</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-3">1.3. Examples - Complete Parsers</a>
+<ul>
+<li><a href="#sec-1-3-1">1.3.1. Parsing numbers</a></li>
+<li><a href="#sec-1-3-2">1.3.2. Simple Calculator</a></li>
+<li><a href="#sec-1-3-3">1.3.3. S-expression serialization</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">1.4. References and Bookmarks</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Parsec - Parser Combinators</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><a id="ID-884b9aaa-aa75-433e-b9f9-9424db4dd588" name="ID-884b9aaa-aa75-433e-b9f9-9424db4dd588"></a><span class="section-number-3">1.1</span> Overview</h3>
+<div class="outline-text-3" id="text-1-1">
+</div>
+<div id="outline-container-sec-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1"><span class="section-number-4">1.1.1</span> Parsec</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+Parsec is parser combinator library that provides parser building
+blocks such as primitive parsers, parser operators and higher order
+functions to build complex parsers out of simple parsers. Parsec can
+be see as an EDSL - Embedded Domain Specific Language to build
+parsers.
+</p>
+
+
+<p>
+Haskell Parser libraries:
+</p>
+
+<ul class="org-ul">
+<li><a href="https://hackage.haskell.org/package/parsec">Parsec</a> - Parser combinator library for human readable texts.
+</li>
+
+<li><a href="https://hackage.haskell.org/package/attoparsec">Attoparsec</a> - Parser combinator library for binary formats and
+binary files.
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2"><span class="section-number-4">1.1.2</span> Package Documentation</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<ul class="org-ul">
+<li><a href="https://hackage.haskell.org/package/parsec-3.1.11/docs/Text-Parsec.html">Text.Parsec</a>
+</li>
+
+<li><a href="https://hackage.haskell.org/package/parsec-3.1.11/docs/Text-Parsec-Combinator.html">Text.Parsec.Combinator</a>
+</li>
+
+<li><a href="https://hackage.haskell.org/package/parsec-3.1.11/docs/Text-Parsec-Char.html">Text.Parsec.Char</a>
+</li>
+
+<li><a href="https://hackage.haskell.org/package/parsec-3.1.11/docs/Text-ParserCombinators-Parsec-Prim.html">Text.ParserCombinators.Parsec.Prim</a>
+</li>
+
+<li><a href="https://www.stackage.org/package/parsec">parsec - Stackage Server</a>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3"><a id="ID-d377b6bc-e443-4723-8cec-12d2efb973f8" name="ID-d377b6bc-e443-4723-8cec-12d2efb973f8"></a><span class="section-number-4">1.1.3</span> Loader Script</h4>
+<div class="outline-text-4" id="text-1-1-3">
+
+<p>
+This section will assume that the script <span class="underline">parsecHelpers.hs</span> was loaded
+with:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>script <span class="org-haskell-operator">/</span>tmp<span class="org-haskell-operator">/</span>parsecHelpers<span class="org-haskell-operator">.</span>hs 
+<span class="org-function-name">apply</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Either</span> <span class="org-haskell-type">P.ParseError</span> a
+<span class="org-function-name">run</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Show</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">...</span> 
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+
+<p>
+<b>File:</b> <span class="underline">parsecHelpers.hs</span>
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Text.Parsec.String</span> (<span class="org-haskell-constructor">Parser</span>)
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Text.Parsec</span> ((<span class="org-haskell-operator">&lt;|&gt;</span>))
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-keyword">qualified</span> <span class="org-haskell-constructor">Text.Parsec</span> <span class="org-haskell-keyword">as</span> <span class="org-haskell-constructor">P</span>
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-keyword">qualified</span> <span class="org-haskell-constructor">Text.Parsec.Char</span> <span class="org-haskell-keyword">as</span> <span class="org-haskell-constructor">PC</span>
+
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Monad</span> (void)
+
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.Either</span> (isRight, isLeft)
+
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Test.HUnit</span>     
+
+<span class="org-haskell-constructor">:</span>set <span class="org-haskell-operator">-</span><span class="org-haskell-constructor">XFlexibleContexts</span>
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">apply</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Either</span> <span class="org-haskell-type">P.ParseError</span> a
+<span class="org-haskell-definition">apply</span> p s <span class="org-haskell-operator">=</span>  P.parse p <span class="org-string">""</span> s
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">applyOpt</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a
+<span class="org-haskell-definition">applyOpt</span> p s <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">case</span> P.parse p <span class="org-string">""</span> s <span class="org-haskell-keyword">of</span>
+               <span class="org-haskell-constructor">Left</span> <span class="org-haskell-keyword">_</span>  <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Nothing</span>
+               <span class="org-haskell-constructor">Right</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Just</span> a
+<span class="org-haskell-constructor">:</span>}                 
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">run</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Show</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">run</span> p str <span class="org-haskell-operator">=</span>
+    <span class="org-haskell-keyword">case</span> P.parse p <span class="org-string">""</span> str <span class="org-haskell-keyword">of</span>
+      <span class="org-haskell-constructor">Left</span> err  <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-keyword">do</span> putStrLn <span class="org-string">"Parser Error"</span>
+                      print err
+      <span class="org-haskell-constructor">Right</span> res <span class="org-haskell-operator">-&gt;</span> print res
+<span class="org-haskell-constructor">:</span>} 
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Parse single letter char</span>
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pLetter</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Char</span>
+<span class="org-haskell-definition">pLetter</span> <span class="org-haskell-operator">=</span> P.letter 
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Parse single char</span>
+<span class="org-haskell-constructor">:</span>{ 
+<span class="org-function-name">pChar</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Char</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Char</span>
+<span class="org-haskell-definition">pChar</span> x <span class="org-haskell-operator">=</span> P.char x
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Parse single digit char</span>
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pDigit</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Char</span>
+<span class="org-haskell-definition">pDigit</span> <span class="org-haskell-operator">=</span> P.digit
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Parse string </span>
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pStr</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-definition">pStr</span> str <span class="org-haskell-operator">=</span> P.string str 
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Parse letter surrounded by parenthesis.</span>
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pParenLetter</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Char</span>
+<span class="org-haskell-definition">pParenLetter</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  P.char <span class="org-string">'('</span>     <span class="org-comment-delimiter">-- </span><span class="org-comment">Consume input '(' and discard result </span>
+  s <span class="org-haskell-operator">&lt;-</span> P.letter  <span class="org-comment-delimiter">-- </span><span class="org-comment">Consume the letter input and save it to s.</span>
+  P.char <span class="org-string">')'</span>     <span class="org-comment-delimiter">-- </span><span class="org-comment">Consume input ')' and discard result</span>
+  return s       <span class="org-comment-delimiter">-- </span><span class="org-comment">Set parser result to s </span>
+<span class="org-haskell-constructor">:</span>}  
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pParenLetter2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Char</span>
+<span class="org-haskell-definition">pParenLetter2</span> <span class="org-haskell-operator">=</span> 
+  P.char <span class="org-string">'('</span> <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span><span class="org-haskell-keyword">_</span> <span class="org-haskell-operator">-&gt;</span>     
+  P.letter   <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>s <span class="org-haskell-operator">-&gt;</span> 
+  P.char <span class="org-string">')'</span> <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span><span class="org-haskell-keyword">_</span> <span class="org-haskell-operator">-&gt;</span>    
+  return s       
+<span class="org-haskell-constructor">:</span>}  
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pParenLetter3</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Char</span>
+<span class="org-haskell-definition">pParenLetter3</span> <span class="org-haskell-operator">=</span> 
+  P.char <span class="org-string">'('</span> <span class="org-haskell-operator">&gt;&gt;</span>
+  P.letter   <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>s <span class="org-haskell-operator">-&gt;</span> 
+  P.char <span class="org-string">')'</span> <span class="org-haskell-operator">&gt;&gt;</span>
+  return s       
+<span class="org-haskell-constructor">:</span>}  
+
+<span class="org-comment-delimiter">--</span><span class="org-comment">- Parser Choice</span>
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pChoice1</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-definition">pChoice1</span> <span class="org-haskell-operator">=</span> P.string <span class="org-string">"hello world"</span>
+       <span class="org-haskell-operator">&lt;|&gt;</span> P.try (P.string <span class="org-string">"world"</span>)
+       <span class="org-haskell-operator">&lt;|&gt;</span> P.try (P.string <span class="org-string">"Haskell"</span>)
+       <span class="org-haskell-operator">&lt;|&gt;</span> P.try (P.string <span class="org-string">"ocaml"</span>)
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pIdentifier1</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-definition">pIdentifier1</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  x  <span class="org-haskell-operator">&lt;-</span> P.letter
+  xs <span class="org-haskell-operator">&lt;-</span> P.many (P.letter <span class="org-haskell-operator">&lt;|&gt;</span> P.try P.digit)
+  return <span class="org-haskell-operator">$</span> x<span class="org-haskell-constructor">:</span>xs
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pNumStr</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-definition">pNumStr</span> <span class="org-haskell-operator">=</span> P.many1 P.digit
+<span class="org-haskell-constructor">:</span>}          
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pNum1</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">pNum1</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  s <span class="org-haskell-operator">&lt;-</span> P.many1 P.digit
+  return <span class="org-haskell-operator">$</span> read s   
+<span class="org-haskell-constructor">:</span>}   
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pNum2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">pNum2</span> <span class="org-haskell-operator">=</span> fmap read <span class="org-haskell-operator">$</span> P.many1 P.digit
+     <span class="org-comment-delimiter">-- </span><span class="org-comment">read &lt;$&gt; P.many P.digit</span>
+<span class="org-haskell-constructor">:</span>}         
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pTrue</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Bool</span>
+<span class="org-haskell-definition">pTrue</span> <span class="org-haskell-operator">=</span> P.string <span class="org-string">"true"</span> <span class="org-haskell-operator">&gt;&gt;</span> return <span class="org-haskell-constructor">True</span>
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pFalse</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Bool</span>
+<span class="org-haskell-definition">pFalse</span> <span class="org-haskell-operator">=</span> P.string <span class="org-string">"false"</span> <span class="org-haskell-operator">&gt;&gt;</span> return <span class="org-haskell-constructor">False</span>
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-constructor">:</span>{ 
+<span class="org-function-name">pCsvRow1</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> [<span class="org-haskell-type">Int</span>]
+<span class="org-haskell-definition">pCsvRow1</span> <span class="org-haskell-operator">=</span> P.sepBy pCell (pChar <span class="org-string">','</span>)
+    <span class="org-haskell-keyword">where</span>
+      pCell <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+        P.spaces
+        num <span class="org-haskell-operator">&lt;-</span> pNum1
+        P.spaces
+        return num
+
+<span class="org-haskell-constructor">:</span>}
+</pre>
+</div>
+
+<p>
+<b>Running parsers</b>
+</p>
+
+<p>
+This parser recognizes a single letter ('a' to 'z'). When it suceeds
+it returns a letter. 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pLetter</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Char</span>
+<span class="org-haskell-definition">pLetter</span> <span class="org-haskell-operator">=</span> P.letter 
+<span class="org-haskell-constructor">:</span>}
+</pre>
+</div>
+
+<p>
+The function <span class="underline">apply</span> applies a parser to an input string returning the
+parser result (Result) or failure (Left).
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-function-name">apply</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Either</span> <span class="org-haskell-type">P.ParseError</span> a
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">apply</span> pLetter <span class="org-string">"1"</span>
+<span class="org-haskell-constructor">Left</span> (line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">"1"</span>
+<span class="org-haskell-definition">expecting</span> letter
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Either</span> <span class="org-haskell-type">P.ParseError</span> <span class="org-haskell-type">Char</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">apply</span> pLetter <span class="org-string">""</span>
+<span class="org-haskell-constructor">Left</span> (line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> end <span class="org-haskell-keyword">of</span> input
+<span class="org-haskell-definition">expecting</span> letter
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Either</span> <span class="org-haskell-type">P.ParseError</span> <span class="org-haskell-type">Char</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">apply</span> pLetter <span class="org-string">"2323"</span>
+<span class="org-haskell-constructor">Left</span> (line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">"2"</span>
+<span class="org-haskell-definition">expecting</span> letter
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Either</span> <span class="org-haskell-type">P.ParseError</span> <span class="org-haskell-type">Char</span>
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pLetter <span class="org-string">"a"</span>
+<span class="org-string">'a'</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+</pre>
+</div>
+
+<p>
+The function run applies a parser to an input string and prints the
+the result. 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-function-name">run</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Show</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pLetter <span class="org-string">"aa"</span>
+<span class="org-string">'a'</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pLetter <span class="org-string">"1aa"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">"1"</span>
+<span class="org-haskell-definition">expecting</span> letter
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pLetter <span class="org-string">" aa"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">" "</span>
+<span class="org-haskell-definition">expecting</span> letter
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> Parser Combinators</h3>
+<div class="outline-text-3" id="text-1-2">
+</div><div id="outline-container-sec-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1"><span class="section-number-4">1.2.1</span> Primitive Parsers</h4>
+<div class="outline-text-4" id="text-1-2-1">
+</div><ol class="org-ol"><li><a id="sec-1-2-1-1" name="sec-1-2-1-1"></a>Parse Char<br  /><div class="outline-text-5" id="text-1-2-1-1">
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pChar</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Char</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Char</span>
+<span class="org-haskell-definition">pChar</span> x <span class="org-haskell-operator">=</span> P.char x
+<span class="org-haskell-constructor">:</span>}
+</pre>
+</div>
+
+<p>
+Running:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (pChar <span class="org-string">'x'</span>) <span class="org-string">"x"</span>
+<span class="org-string">'x'</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (pChar <span class="org-string">'x'</span>) <span class="org-string">"xxxxx"</span>
+<span class="org-string">'x'</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (pChar <span class="org-string">'x'</span>) <span class="org-string">" x"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">" "</span>
+<span class="org-haskell-definition">expecting</span> <span class="org-string">"x"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (pChar <span class="org-string">'x'</span>) <span class="org-string">"213"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">"2"</span>
+<span class="org-haskell-definition">expecting</span> <span class="org-string">"x"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (pChar <span class="org-string">'x'</span>) <span class="org-string">"x213"</span>
+<span class="org-string">'x'</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-2-1-2" name="sec-1-2-1-2"></a>Parse Digit<br  /><div class="outline-text-5" id="text-1-2-1-2">
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pDigit</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Char</span>
+<span class="org-haskell-definition">pDigit</span> <span class="org-haskell-operator">=</span> P.digit
+<span class="org-haskell-constructor">:</span>}
+</pre>
+</div>
+
+<p>
+Running:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pDigit <span class="org-string">"asd2323"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">"a"</span>
+<span class="org-haskell-definition">expecting</span> digit
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pDigit <span class="org-string">"1asd2323"</span>
+<span class="org-string">'1'</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pDigit <span class="org-string">"1 asd2323"</span>
+<span class="org-string">'1'</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pDigit <span class="org-string">" 1 asd2323"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">" "</span>
+<span class="org-haskell-definition">expecting</span> digit
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-2-1-3" name="sec-1-2-1-3"></a>Parse any character - anychar<br  /><div class="outline-text-5" id="text-1-2-1-3">
+<p>
+Consume anycharater returning it.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-function-name">anyChar</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Char</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Char</span>
+</pre>
+</div>
+
+<p>
+Example: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> P.anyChar <span class="org-string">"world"</span>
+<span class="org-string">'w'</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> P.anyChar <span class="org-string">""</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> end <span class="org-haskell-keyword">of</span> input
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> P.anyChar <span class="org-string">"x"</span>
+<span class="org-string">'x'</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> P.anyChar <span class="org-string">"6586"</span>
+<span class="org-string">'6'</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-2-1-4" name="sec-1-2-1-4"></a><span class="todo TODO">TODO</span> oneOf<br  /></li>
+<li><a id="sec-1-2-1-5" name="sec-1-2-1-5"></a><span class="todo TODO">TODO</span> noneOf<br  /></li>
+<li><a id="sec-1-2-1-6" name="sec-1-2-1-6"></a>Parse String<br  /><div class="outline-text-5" id="text-1-2-1-6">
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-comment-delimiter">-- </span><span class="org-comment">Parse string </span>
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pStr</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-definition">pStr</span> str <span class="org-haskell-operator">=</span> P.string str 
+<span class="org-haskell-constructor">:</span>}
+</pre>
+</div>
+
+<p>
+Running:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (pStr <span class="org-string">"ok"</span>) <span class="org-string">"ok"</span>
+<span class="org-string">"ok"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (pStr <span class="org-string">"ok"</span>) <span class="org-string">"okResult"</span>
+<span class="org-string">"ok"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (pStr <span class="org-string">"ok"</span>) <span class="org-string">"ok2324"</span>
+<span class="org-string">"ok"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (pStr <span class="org-string">"ok"</span>) <span class="org-string">" ok2324"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">" "</span>
+<span class="org-haskell-definition">expecting</span> <span class="org-string">"ok"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (pStr <span class="org-string">"ok"</span>) <span class="org-string">""</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> end <span class="org-haskell-keyword">of</span> input
+<span class="org-haskell-definition">expecting</span> <span class="org-string">"ok"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li></ol>
+</div>
+
+<div id="outline-container-sec-1-2-2" class="outline-4">
+<h4 id="sec-1-2-2"><span class="section-number-4">1.2.2</span> Combinators</h4>
+<div class="outline-text-4" id="text-1-2-2">
+</div><ol class="org-ol"><li><a id="sec-1-2-2-1" name="sec-1-2-2-1"></a>Monad do-notation - parse sequence<br  /><div class="outline-text-5" id="text-1-2-2-1">
+<p>
+It parses a letter surrounded by parenthesis. The do-notation and the
+monad combinators (&gt;&gt;) and (&gt;&gt;=) sequences the parsers <code>(P.char ')')</code>,
+<code>P.letter</code> and <code>(P.char ')')</code>.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pParenLetter</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Char</span>
+<span class="org-haskell-definition">pParenLetter</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  P.char <span class="org-string">'('</span>     <span class="org-comment-delimiter">-- </span><span class="org-comment">Consume input '(' and discard result </span>
+  s <span class="org-haskell-operator">&lt;-</span> P.letter  <span class="org-comment-delimiter">-- </span><span class="org-comment">Consume the letter input and save it to s.</span>
+  P.char <span class="org-string">')'</span>     <span class="org-comment-delimiter">-- </span><span class="org-comment">Consume input ')' and discard result</span>
+  return s       <span class="org-comment-delimiter">-- </span><span class="org-comment">Set parser result to s </span>
+<span class="org-haskell-constructor">:</span>}  
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Parsers without syntax sugar.</span>
+<span class="org-comment-delimiter">-- </span>
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pParenLetter2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Char</span>
+<span class="org-haskell-definition">pParenLetter2</span> <span class="org-haskell-operator">=</span> 
+  P.char <span class="org-string">'('</span> <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span><span class="org-haskell-keyword">_</span> <span class="org-haskell-operator">-&gt;</span>     
+  P.letter   <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>s <span class="org-haskell-operator">-&gt;</span> 
+  P.char <span class="org-string">')'</span> <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span><span class="org-haskell-keyword">_</span> <span class="org-haskell-operator">-&gt;</span>    
+  return s       
+<span class="org-haskell-constructor">:</span>}  
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pParenLetter3</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Char</span>
+<span class="org-haskell-definition">pParenLetter3</span> <span class="org-haskell-operator">=</span> 
+  P.char <span class="org-string">'('</span> <span class="org-haskell-operator">&gt;&gt;</span>
+  P.letter   <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>s <span class="org-haskell-operator">-&gt;</span> 
+  P.char <span class="org-string">')'</span> <span class="org-haskell-operator">&gt;&gt;</span>
+  return s       
+<span class="org-haskell-constructor">:</span>}
+</pre>
+</div>
+
+<p>
+Running: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pParenLetter <span class="org-string">"(x)"</span>
+<span class="org-string">'x'</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pParenLetter <span class="org-string">"(a)"</span>
+<span class="org-string">'a'</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pParenLetter <span class="org-string">"(4)"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 2)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">"4"</span>
+<span class="org-haskell-definition">expecting</span> letter
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pParenLetter <span class="org-string">"(223)"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 2)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">"2"</span>
+<span class="org-haskell-definition">expecting</span> letter
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pParenLetter <span class="org-string">"(twesa223)"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 3)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">"w"</span>
+<span class="org-haskell-definition">expecting</span> <span class="org-string">")"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pParenLetter3 <span class="org-string">"(x)"</span>
+<span class="org-string">'x'</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pParenLetter3 <span class="org-string">"(ax)"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 3)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">"x"</span>
+<span class="org-haskell-definition">expecting</span> <span class="org-string">")"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-2-2-2" name="sec-1-2-2-2"></a>Functor fmap and operator (&lt;$&gt;)<br  /><div class="outline-text-5" id="text-1-2-2-2">
+<p>
+The function fmap or the operator (&lt;$&gt;) that is a fmap synonym apply a
+function to the parser result.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-function-name">fmap</span>  <span class="org-haskell-operator">::</span> (a <span class="org-haskell-operator">-&gt;</span> b) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> b
+(<span class="org-haskell-definition">&lt;$&gt;</span>) <span class="org-haskell-operator">::</span> (a <span class="org-haskell-operator">-&gt;</span> b) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> b
+</pre>
+</div>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> pNumStr <span class="org-haskell-operator">=</span> P.many1 P.digit <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">String</span>
+<span class="org-function-name">pNumStr</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (fmap read pNumStr) <span class="org-string">"2323"</span> 
+ <span class="org-haskell-operator">***</span> <span class="org-haskell-type">Exception:</span> Prelude.read<span class="org-haskell-type">:</span> no parse
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (fmap read pNumStr <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Int</span>) <span class="org-string">"2323"</span>
+2323
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (fmap read pNumStr <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Int</span>) <span class="org-string">""</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> end <span class="org-haskell-keyword">of</span> input
+<span class="org-haskell-definition">expecting</span> digit
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (fmap read pNumStr <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Int</span>) <span class="org-string">"100"</span>
+100
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (read <span class="org-haskell-operator">&lt;$&gt;</span> pNumStr <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Int</span>) <span class="org-string">"100"</span>
+100
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> ((<span class="org-haskell-operator">+</span>120) <span class="org-haskell-operator">&lt;$&gt;</span> read <span class="org-haskell-operator">&lt;$&gt;</span> pNumStr <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Int</span>) <span class="org-string">"100"</span>
+220
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> ((<span class="org-haskell-operator">*</span>3) <span class="org-haskell-operator">&lt;$&gt;</span> (<span class="org-haskell-operator">+</span>120) <span class="org-haskell-operator">&lt;$&gt;</span> read <span class="org-haskell-operator">&lt;$&gt;</span> pNumStr <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Int</span>) <span class="org-string">"100"</span>
+660
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> ((<span class="org-haskell-operator">*</span>3) <span class="org-haskell-operator">.</span> (<span class="org-haskell-operator">+</span>120) <span class="org-haskell-operator">.</span> read <span class="org-haskell-operator">&lt;$&gt;</span> pNumStr <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Int</span>) <span class="org-string">"100"</span>
+660
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-2-2-3" name="sec-1-2-2-3"></a>Monad operators return, (&gt;&gt;=) and &gt;&gt;<br  /><ol class="org-ol"><li><a id="sec-1-2-2-3-1" name="sec-1-2-2-3-1"></a>Function return<br  /><div class="outline-text-6" id="text-1-2-2-3-1">
+<p>
+Creates a parser that always returns the same value regardless of the
+input.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-function-name">return</span> <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> a
+</pre>
+</div>
+
+<p>
+Example: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (return 10) <span class="org-string">"hello"</span>
+10
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (return 10) <span class="org-string">""</span> 
+10
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (return 10) <span class="org-string">"world"</span> 
+10
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (return <span class="org-haskell-type">True</span>) <span class="org-string">"true"</span> 
+<span class="org-haskell-constructor">True</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (return <span class="org-haskell-type">True</span>) <span class="org-string">""</span> 
+<span class="org-haskell-constructor">True</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (return <span class="org-haskell-type">True</span>) <span class="org-string">"23123"</span> 
+<span class="org-haskell-constructor">True</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-2-2-3-2" name="sec-1-2-2-3-2"></a>Operator (&gt;&gt;)<br  /><div class="outline-text-6" id="text-1-2-2-3-2">
+<p>
+Run parserA discarding its result and then run parserB returning its
+result.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell">(<span class="org-haskell-definition">&gt;&gt;</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> b <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> b
+parserA <span class="org-haskell-definition">&gt;&gt;</span> parserB
+</pre>
+</div>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pTrue</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Bool</span>
+<span class="org-haskell-definition">pTrue</span> <span class="org-haskell-operator">=</span> P.string <span class="org-string">"true"</span> <span class="org-haskell-operator">&gt;&gt;</span> return <span class="org-haskell-constructor">True</span>
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pFalse</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Bool</span>
+<span class="org-haskell-definition">pFalse</span> <span class="org-haskell-operator">=</span> P.string <span class="org-string">"false"</span> <span class="org-haskell-operator">&gt;&gt;</span> return <span class="org-haskell-constructor">False</span>
+<span class="org-haskell-constructor">:</span>}
+</pre>
+</div>
+
+<p>
+Running:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pTrue <span class="org-string">"true"</span>
+<span class="org-haskell-constructor">True</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pTrue <span class="org-string">"23true"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">"2"</span>
+<span class="org-haskell-definition">expecting</span> <span class="org-string">"true"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pTrue <span class="org-string">""</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> end <span class="org-haskell-keyword">of</span> input
+<span class="org-haskell-definition">expecting</span> <span class="org-string">"true"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pFalse <span class="org-string">"false"</span>
+<span class="org-haskell-constructor">False</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pFalse <span class="org-string">"falsex"</span>
+<span class="org-haskell-constructor">False</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pFalse <span class="org-string">"xfalse"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">"x"</span>
+<span class="org-haskell-definition">expecting</span> <span class="org-string">"false"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> pBool <span class="org-haskell-operator">=</span> pTrue <span class="org-haskell-operator">&lt;|&gt;</span> P.try pFalse <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Bool</span>
+<span class="org-function-name">pBool</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Bool</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pBool <span class="org-string">"true"</span>
+<span class="org-haskell-constructor">True</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pBool <span class="org-string">"false"</span>
+<span class="org-haskell-constructor">False</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pBool <span class="org-string">"232"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">"2"</span>
+<span class="org-haskell-definition">expecting</span> <span class="org-string">"true"</span> or <span class="org-string">"false"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-type">:</span>{
+<span class="org-function-name">pBool2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Bool</span> 
+<span class="org-haskell-definition">pBool2</span> <span class="org-haskell-operator">=</span> pTrue <span class="org-haskell-operator">&lt;|&gt;</span> P.try pFalse
+    <span class="org-haskell-keyword">where</span>
+      pTrue  <span class="org-haskell-operator">=</span> P.string <span class="org-string">"true"</span>  <span class="org-haskell-operator">&gt;&gt;</span> return <span class="org-haskell-constructor">True</span>
+      pFalse <span class="org-haskell-operator">=</span> P.string <span class="org-string">"false"</span> <span class="org-haskell-operator">&gt;&gt;</span> return <span class="org-haskell-constructor">False</span>
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pBool2 <span class="org-string">"true"</span>
+<span class="org-haskell-constructor">True</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pBool2 <span class="org-string">"false"</span>
+<span class="org-haskell-constructor">False</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pBool2 <span class="org-string">"asdas"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">"a"</span>
+<span class="org-haskell-definition">expecting</span> <span class="org-string">"true"</span> or <span class="org-string">"false"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pBool2 <span class="org-string">""</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> end <span class="org-haskell-keyword">of</span> input
+<span class="org-haskell-definition">expecting</span> <span class="org-string">"true"</span> or <span class="org-string">"false"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-2-2-3-3" name="sec-1-2-2-3-3"></a><span class="todo TODO">TODO</span> Operator (&gt;&gt;=) bind<br  /><div class="outline-text-6" id="text-1-2-2-3-3">
+<div class="org-src-container">
+
+<pre class="src src-haskell">(<span class="org-haskell-definition">&gt;&gt;=</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> b) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> b
+</pre>
+</div>
+</div>
+</li></ol>
+</li>
+<li><a id="sec-1-2-2-4" name="sec-1-2-2-4"></a>Applicative operators (&lt;*), (*&gt;) and (&lt;*&gt;)<br  /><ol class="org-ol"><li><a id="sec-1-2-2-4-1" name="sec-1-2-2-4-1"></a>Operator (*&gt;)<br  /><div class="outline-text-6" id="text-1-2-2-4-1">
+<p>
+Run two parsers and returns the result of second one.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell">(<span class="org-haskell-definition">*&gt;</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Applicative</span> f <span class="org-haskell-operator">=&gt;</span> f a <span class="org-haskell-operator">-&gt;</span> f b <span class="org-haskell-operator">-&gt;</span> f b
+(<span class="org-haskell-definition">*&gt;</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> b <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> b    <span class="org-comment-delimiter">-- </span><span class="org-comment">For Parsec </span>
+<span class="org-haskell-definition">resultB</span> <span class="org-haskell-operator">=</span> parserA <span class="org-haskell-operator">*&gt;</span> parserB                <span class="org-comment-delimiter">-- </span><span class="org-comment">Mneumonic</span>
+</pre>
+</div>
+
+<p>
+Example: Parse the word 'true' followed by number returning it.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pNum</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">pNum</span> <span class="org-haskell-operator">=</span> fmap read <span class="org-haskell-operator">$</span> P.many1 P.digit
+<span class="org-haskell-constructor">:</span>}   
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.string <span class="org-string">"true"</span> <span class="org-haskell-operator">*&gt;</span> pNum) <span class="org-string">"true1003"</span>
+1003
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.string <span class="org-string">"true"</span> <span class="org-haskell-operator">*&gt;</span> pNum) <span class="org-string">"tru1003"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">"1"</span>
+<span class="org-haskell-definition">expecting</span> <span class="org-string">"true"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.string <span class="org-string">"true"</span> <span class="org-haskell-operator">*&gt;</span> pNum) <span class="org-string">"1003"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">"1"</span>
+<span class="org-haskell-definition">expecting</span> <span class="org-string">"true"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.string <span class="org-string">"true"</span> <span class="org-haskell-operator">*&gt;</span> pNum) <span class="org-string">"true"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 5)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> end <span class="org-haskell-keyword">of</span> input
+<span class="org-haskell-definition">expecting</span> digit
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-2-2-4-2" name="sec-1-2-2-4-2"></a>Operator (&lt;*)<br  /><div class="outline-text-6" id="text-1-2-2-4-2">
+<p>
+Run two parsers and returns the result of the first one.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell">(<span class="org-haskell-definition">&lt;*</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Applicative</span> f <span class="org-haskell-operator">=&gt;</span> f a <span class="org-haskell-operator">-&gt;</span> f b <span class="org-haskell-operator">-&gt;</span> f a
+(<span class="org-haskell-definition">&lt;*</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> b <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> a    <span class="org-comment-delimiter">-- </span><span class="org-comment">For Parsec </span>
+<span class="org-haskell-definition">resultA</span> <span class="org-haskell-operator">=</span> parserA <span class="org-haskell-operator">&lt;*</span> parserB                <span class="org-comment-delimiter">-- </span><span class="org-comment">Mneumonic</span>
+</pre>
+</div>
+
+<p>
+Example: Parse a number followed by word true returning the number.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pNum</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">pNum</span> <span class="org-haskell-operator">=</span> fmap read <span class="org-haskell-operator">$</span> P.many1 P.digit
+<span class="org-haskell-constructor">:</span>}   
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (pNum <span class="org-haskell-operator">&lt;*</span> P.string <span class="org-string">"true"</span>) <span class="org-string">"100true"</span>
+100
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (pNum <span class="org-haskell-operator">&lt;*</span> P.string <span class="org-string">"true"</span>) <span class="org-string">"1200true"</span>
+1200
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> ((<span class="org-haskell-operator">*</span>3) <span class="org-haskell-operator">&lt;$&gt;</span> pNum <span class="org-haskell-operator">&lt;*</span> P.string <span class="org-string">"true"</span>) <span class="org-string">"1200true"</span>
+3600
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (pNum <span class="org-haskell-operator">&lt;*</span> P.string <span class="org-string">"true"</span>) <span class="org-string">"1200"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 5)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> end <span class="org-haskell-keyword">of</span> input
+<span class="org-haskell-definition">expecting</span> digit or <span class="org-string">"true"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (pNum <span class="org-haskell-operator">&lt;*</span> P.string <span class="org-string">"true"</span>) <span class="org-string">""</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> end <span class="org-haskell-keyword">of</span> input
+<span class="org-haskell-definition">expecting</span> digit
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (pNum <span class="org-haskell-operator">&lt;*</span> P.string <span class="org-string">"true"</span>) <span class="org-string">"9"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 2)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> end <span class="org-haskell-keyword">of</span> input
+<span class="org-haskell-definition">expecting</span> digit or <span class="org-string">"true"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (pNum <span class="org-haskell-operator">&lt;*</span> P.string <span class="org-string">"true"</span>) <span class="org-string">"true"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">"t"</span>
+<span class="org-haskell-definition">expecting</span> digit
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-2-2-4-3" name="sec-1-2-2-4-3"></a><span class="todo TODO">TODO</span> Operator (&lt;*&gt;)<br  /></li></ol>
+</li>
+<li><a id="sec-1-2-2-5" name="sec-1-2-2-5"></a>Parser choice (&lt;|&gt;) operator<br  /><div class="outline-text-5" id="text-1-2-2-5">
+<p>
+The parser choice operator (&lt;|&gt;) only will try the second alternative
+parser if the first parser has failed and not consummed any input.
+</p>
+
+<p>
+The operator try makes the parser consume any input if it has failed.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell">(<span class="org-haskell-definition">&lt;|&gt;</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> a
+parser1 <span class="org-haskell-definition">&lt;|&gt;</span> parser2 
+parser1 <span class="org-haskell-definition">&lt;|&gt;</span> parser2 <span class="org-haskell-operator">&lt;|&gt;</span> parser3 <span class="org-haskell-operator">&lt;|&gt;</span> parser4 <span class="org-haskell-operator">...</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-comment-delimiter">--</span><span class="org-comment">- Parser Choice</span>
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pChoice1</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-definition">pChoice1</span> <span class="org-haskell-operator">=</span> P.string <span class="org-string">"hello world"</span>
+       <span class="org-haskell-operator">&lt;|&gt;</span> P.try (P.string <span class="org-string">"world"</span>)
+       <span class="org-haskell-operator">&lt;|&gt;</span> P.try (P.string <span class="org-string">"Haskell"</span>)
+       <span class="org-haskell-operator">&lt;|&gt;</span> P.try (P.string <span class="org-string">"ocaml"</span>)
+<span class="org-haskell-constructor">:</span>}
+</pre>
+</div>
+
+<p>
+Running:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pChoice1 <span class="org-string">"world"</span>
+<span class="org-string">"world"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pChoice1 <span class="org-string">"Haskell"</span>
+<span class="org-string">"Haskell"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pChoice1 <span class="org-string">"ocaml"</span>
+<span class="org-string">"ocaml"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pChoice1 <span class="org-string">"ocamlHaskell"</span>
+<span class="org-string">"ocaml"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pChoice1 <span class="org-string">"Haskellocaml"</span>
+<span class="org-string">"Haskell"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pChoice1 <span class="org-string">" Haskellocaml"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">" "</span>
+<span class="org-haskell-definition">expecting</span> <span class="org-string">"hello world"</span>, <span class="org-string">"world"</span>, <span class="org-string">"Haskell"</span> or <span class="org-string">"ocaml"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pChoice1 <span class="org-string">"hello"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> end <span class="org-haskell-keyword">of</span> input
+<span class="org-haskell-definition">expecting</span> <span class="org-string">"hello world"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-2-2-6" name="sec-1-2-2-6"></a><span class="todo TODO">TODO</span> choice<br  /></li>
+<li><a id="sec-1-2-2-7" name="sec-1-2-2-7"></a>many<br  /><div class="outline-text-5" id="text-1-2-2-7">
+<p>
+<b>Simplified signature:</b>
+</p>
+
+<p>
+Applies a parser zero or more times, returning a list of parser results.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-function-name">many</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> [a]
+</pre>
+</div>
+
+<p>
+Example 1: Parse a string with only letters
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pLetter <span class="org-string">"helloworld"</span>
+<span class="org-string">'h'</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.many pLetter) <span class="org-string">"helloworld"</span>
+<span class="org-string">"helloworld"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.many pLetter) <span class="org-string">"helloworld haskell"</span>
+<span class="org-string">"helloworld"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.many pLetter) <span class="org-string">"hello2321321"</span>
+<span class="org-string">"hello"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.many pLetter) <span class="org-string">""</span>
+<span class="org-string">""</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.many pLetter) <span class="org-string">"32423"</span>
+<span class="org-string">""</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.many pLetter) <span class="org-string">"asdas32423"</span>
+<span class="org-string">"asdas"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.many pLetter) <span class="org-string">"0&amp;823asdas32423"</span>
+<span class="org-string">""</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+
+<p>
+Example 2: Parse an identifier. Starts with a letter followed by zero
+or more letter or digit.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pIdentifier1</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-definition">pIdentifier1</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  x  <span class="org-haskell-operator">&lt;-</span> P.letter
+  xs <span class="org-haskell-operator">&lt;-</span> P.many (P.letter <span class="org-haskell-operator">&lt;|&gt;</span> P.try P.digit)
+  return <span class="org-haskell-operator">$</span> x<span class="org-haskell-constructor">:</span>xs
+<span class="org-haskell-constructor">:</span>}
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pIdentifier1 <span class="org-string">"hello"</span>
+<span class="org-string">"hello"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pIdentifier1 <span class="org-string">"h10"</span>
+<span class="org-string">"h10"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pIdentifier1 <span class="org-string">"a013"</span>
+<span class="org-string">"a013"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pIdentifier1 <span class="org-string">"23a013"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">"2"</span>
+<span class="org-haskell-definition">expecting</span> letter
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pIdentifier1 <span class="org-string">"-013"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">"-"</span>
+<span class="org-haskell-definition">expecting</span> letter
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pIdentifier1 <span class="org-string">"a"</span>
+<span class="org-string">"a"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pIdentifier1 <span class="org-string">"a-xf9"</span>
+<span class="org-string">"a"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-2-2-8" name="sec-1-2-2-8"></a>many1<br  /><div class="outline-text-5" id="text-1-2-2-8">
+<p>
+<b>Simplified signature:</b>
+</p>
+
+<p>
+Applies a parser one or more times, returning a list of parser results.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-function-name">many1</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> [a]
+</pre>
+</div>
+
+<p>
+<b>Example 1</b>
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.many1 pLetter) <span class="org-string">"hello"</span>
+<span class="org-string">"hello"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.many1 pLetter) <span class="org-string">"h"</span>
+<span class="org-string">"h"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.many1 pLetter) <span class="org-string">"hello"</span>
+<span class="org-string">"hello"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.many1 pLetter) <span class="org-string">"hello world"</span>
+<span class="org-string">"hello"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.many1 pLetter) <span class="org-string">"hello2321"</span>
+<span class="org-string">"hello"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.many1 pLetter) <span class="org-string">""</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> end <span class="org-haskell-keyword">of</span> input
+<span class="org-haskell-definition">expecting</span> letter
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.many1 pLetter) <span class="org-string">"2321hello"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">"2"</span>
+<span class="org-haskell-definition">expecting</span> letter
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+
+<p>
+<b>Example 2</b> Parse an integer. 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pNumStr</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-definition">pNumStr</span> <span class="org-haskell-operator">=</span> P.many1 P.digit
+<span class="org-haskell-constructor">:</span>}          
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pNum1</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">pNum1</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  s <span class="org-haskell-operator">&lt;-</span> P.many1 P.digit
+  return <span class="org-haskell-operator">$</span> read s   
+<span class="org-haskell-constructor">:</span>}   
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pNum2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">pNum2</span> <span class="org-haskell-operator">=</span> fmap read <span class="org-haskell-operator">$</span> P.many1 P.digit
+     <span class="org-comment-delimiter">-- </span><span class="org-comment">read &lt;$&gt; P.many P.digit</span>
+<span class="org-haskell-constructor">:</span>}
+</pre>
+</div>
+
+<p>
+Running:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pNumStr <span class="org-string">"2300"</span>
+<span class="org-string">"2300"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pNumStr <span class="org-string">"1002"</span>
+<span class="org-string">"1002"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pNumStr <span class="org-string">""</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> end <span class="org-haskell-keyword">of</span> input
+<span class="org-haskell-definition">expecting</span> digit
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pNumStr <span class="org-string">"as2323"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">"a"</span>
+<span class="org-haskell-definition">expecting</span> digit
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pNumStr <span class="org-string">"1000as2323"</span>
+<span class="org-string">"1000"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pNum1 <span class="org-string">""</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> end <span class="org-haskell-keyword">of</span> input
+<span class="org-haskell-definition">expecting</span> digit
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pNum1 <span class="org-string">"asa123"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">"a"</span>
+<span class="org-haskell-definition">expecting</span> digit
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pNum1 <span class="org-string">"134asa"</span>
+134
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li>
+<li><a id="sec-1-2-2-9" name="sec-1-2-2-9"></a>sepBy<br  /><div class="outline-text-5" id="text-1-2-2-9">
+<p>
+Returns zero or more occurences of parser p separated by separator
+sep.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-function-name">sepBy</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> sep <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> [a]
+</pre>
+</div>
+
+<p>
+<b>Example 1:</b>
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pNum1 <span class="org-string">"100"</span>
+100
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pNum1 <span class="org-string">"2000"</span>
+2000
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.sepBy pNum1 (P.char <span class="org-string">','</span>)) <span class="org-string">"100,200,500,600"</span>
+[100,200,500,600]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.sepBy pNum1 (P.char <span class="org-string">','</span>)) <span class="org-string">""</span>
+<span class="org-haskell-constructor">[]</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.sepBy pNum1 (P.char <span class="org-string">','</span>)) <span class="org-string">"asdas"</span>
+<span class="org-haskell-constructor">[]</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.sepBy pNum1 (P.char <span class="org-string">','</span>)) <span class="org-string">"error"</span>
+<span class="org-haskell-constructor">[]</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.sepBy pNum1 (P.char <span class="org-string">','</span>)) <span class="org-string">" 100,200,500,600"</span>
+<span class="org-haskell-constructor">[]</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.sepBy pNum1 (P.char <span class="org-string">','</span>)) <span class="org-string">"100,200,  500,600"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 9)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">" "</span>
+<span class="org-haskell-definition">expecting</span> digit
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.sepBy pNum1 (P.char <span class="org-string">','</span>)) <span class="org-string">"100,200  ,500,600"</span>
+[100,200]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+
+<p>
+<b>Example 2:</b> 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-constructor">:</span>{ 
+<span class="org-function-name">pCsvRow1</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> [<span class="org-haskell-type">Int</span>]
+<span class="org-haskell-definition">pCsvRow1</span> <span class="org-haskell-operator">=</span> P.sepBy pCell (pChar <span class="org-string">','</span>)
+    <span class="org-haskell-keyword">where</span>
+      pCell <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+        P.spaces
+        num <span class="org-haskell-operator">&lt;-</span> pNum1
+        P.spaces
+        return num
+
+<span class="org-haskell-constructor">:</span>}
+</pre>
+</div>
+
+<p>
+Example: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pCsvRow1 <span class="org-string">"100,200 ,300, 400,    500"</span>
+[100,200,300,400,500]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pCsvRow1 <span class="org-string">"100,200 ,300, 400,    500 aaa bb cc"</span>
+[100,200,300,400,500]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pCsvRow1 <span class="org-string">"100,200 ,300, 400  ,    500 , aaa bb cc"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 31)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">"a"</span>
+<span class="org-haskell-definition">expecting</span> space or digit
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pCsvRow1 <span class="org-string">"100,200 ,300, 400  ,    500"</span>
+[100,200,300,400,500]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pCsvRow1 <span class="org-string">"100  , 200 ,300, 400  ,    500"</span>
+[100,200,300,400,500]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pCsvRow1 <span class="org-string">""</span>
+<span class="org-haskell-constructor">[]</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pCsvRow1 <span class="org-string">"asdasd"</span>
+<span class="org-haskell-constructor">[]</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pCsvRow1 <span class="org-string">"asdasd,"</span>
+<span class="org-haskell-constructor">[]</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pCsvRow1 <span class="org-string">"asdasd,566"</span>
+<span class="org-haskell-constructor">[]</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li>
+<li><a id="sec-1-2-2-10" name="sec-1-2-2-10"></a>between<br  /><div class="outline-text-5" id="text-1-2-2-10">
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-function-name">between</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> open <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> close <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> p <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> p
+</pre>
+</div>
+
+<p>
+<b>Example 1: Parse a number between parenthesis</b>
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pNum</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">pNum</span> <span class="org-haskell-operator">=</span> read <span class="org-haskell-operator">&lt;$&gt;</span> P.many1 P.digit    
+<span class="org-haskell-constructor">:</span>}
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.between (P.char <span class="org-string">'('</span>) (P.char <span class="org-string">')'</span>) pNum) <span class="org-string">"()"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 2)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">")"</span>
+<span class="org-haskell-definition">expecting</span> digit
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.between (P.char <span class="org-string">'('</span>) (P.char <span class="org-string">')'</span>) pNum) <span class="org-string">"(22383)"</span>
+22383
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.between (P.char <span class="org-string">'('</span>) (P.char <span class="org-string">')'</span>) pNum) <span class="org-string">"( 22383 )"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 2)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">" "</span>
+<span class="org-haskell-definition">expecting</span> digit
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.between (P.char <span class="org-string">'('</span>) (P.char <span class="org-string">')'</span>) (P.spaces <span class="org-haskell-operator">*&gt;</span> pNum <span class="org-haskell-operator">&lt;*</span> P.spaces)) <span class="org-string">"(  22383)"</span>
+22383
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.between (P.char <span class="org-string">'('</span>) (P.char <span class="org-string">')'</span>) (P.spaces <span class="org-haskell-operator">*&gt;</span> pNum <span class="org-haskell-operator">&lt;*</span> P.spaces)) <span class="org-string">"(  22383  )"</span>
+22383
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.between (P.char <span class="org-string">'('</span>) (P.char <span class="org-string">')'</span>) (P.spaces <span class="org-haskell-operator">*&gt;</span> pNum <span class="org-haskell-operator">&lt;*</span> P.spaces)) <span class="org-string">"(22383)"</span>
+22383
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-type">:</span>{
+<span class="org-function-name">pExpr</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">pExpr</span> <span class="org-haskell-operator">=</span> P.between (P.char <span class="org-string">'('</span>) (P.char <span class="org-string">')'</span>) p
+    <span class="org-haskell-keyword">where</span>
+      p <span class="org-haskell-operator">=</span> P.spaces <span class="org-haskell-operator">*&gt;</span> pNum <span class="org-haskell-operator">&lt;*</span> P.spaces
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pExpr2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">pExpr2</span> <span class="org-haskell-operator">=</span> P.between (P.char <span class="org-string">'('</span>) (P.char <span class="org-string">')'</span>) p
+    <span class="org-haskell-keyword">where</span>
+      p <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+        P.spaces
+        num <span class="org-haskell-operator">&lt;-</span> pNum
+        P.spaces
+        return num 
+<span class="org-haskell-constructor">:</span>}
+
+
+ <span class="org-haskell-operator">&gt;</span> run pExpr <span class="org-string">"( 100 )"</span>
+100
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pExpr <span class="org-string">"( 100 2100 )"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 7)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">"2"</span>
+<span class="org-haskell-definition">expecting</span> space or <span class="org-string">")"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pExpr <span class="org-string">"(2023 )"</span>
+2023
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pExpr <span class="org-string">"( 2023)"</span>
+2023
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pExpr <span class="org-string">"( 2023)  "</span>
+2023
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pExpr <span class="org-string">"( 2023)  asdasdas"</span>
+2023
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pExpr2 <span class="org-string">"(2300)"</span>
+2300
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pExpr2 <span class="org-string">"(  2300  )"</span>
+2300
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+
+
+<p>
+<b>Example 2 : Parse list of numbers between curly brackets.</b>
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pNum</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">pNum</span> <span class="org-haskell-operator">=</span> read <span class="org-haskell-operator">&lt;$&gt;</span> P.many1 P.digit    
+<span class="org-haskell-constructor">:</span>}  
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pNumList</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> [<span class="org-haskell-type">Int</span>]
+<span class="org-haskell-definition">pNumList</span> <span class="org-haskell-operator">=</span> P.between open close pList
+    <span class="org-haskell-keyword">where</span>
+      open <span class="org-haskell-operator">=</span> P.char <span class="org-string">'{'</span> <span class="org-haskell-operator">&gt;&gt;</span> P.spaces
+      close <span class="org-haskell-operator">=</span> P.spaces <span class="org-haskell-operator">&gt;&gt;</span> P.char <span class="org-string">'}'</span>
+      pList <span class="org-haskell-operator">=</span> P.sepBy (P.spaces <span class="org-haskell-operator">*&gt;</span> pNum <span class="org-haskell-operator">&lt;*</span> P.spaces) (P.char <span class="org-string">','</span>)        
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pNumList <span class="org-string">"{100 , 200, 300, 400, 500}"</span>
+[100,200,300,400,500]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pNumList <span class="org-string">"{100 , 200, 300, 400, 500  }"</span>
+[100,200,300,400,500]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pNumList <span class="org-string">"{  100 , 200, 300, 400, 500  }"</span>
+[100,200,300,400,500]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pNumList <span class="org-string">"{  100 }"</span>
+[100]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pNumList <span class="org-string">"{100}"</span>
+[100]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pNumList <span class="org-string">"{}"</span>
+<span class="org-haskell-constructor">[]</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pNumList <span class="org-string">""</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> end <span class="org-haskell-keyword">of</span> input
+<span class="org-haskell-definition">expecting</span> <span class="org-string">"{"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pNumList <span class="org-string">"{"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 2)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> end <span class="org-haskell-keyword">of</span> input
+<span class="org-haskell-definition">expecting</span> white space, digit or <span class="org-string">"}"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-2-2-11" name="sec-1-2-2-11"></a><span class="todo TODO">TODO</span> manyTill<br  /></li>
+<li><a id="sec-1-2-2-12" name="sec-1-2-2-12"></a><span class="todo TODO">TODO</span> sepBy1<br  /></li>
+<li><a id="sec-1-2-2-13" name="sec-1-2-2-13"></a>eof<br  /><div class="outline-text-5" id="text-1-2-2-13">
+<p>
+Only suceeds at the end of input. (EOF - End Of File).
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-function-name">eof</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-constructor">()</span>
+</pre>
+</div>
+
+<p>
+Example: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pNum</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">pNum</span> <span class="org-haskell-operator">=</span> fmap read <span class="org-haskell-operator">$</span> P.many1 P.digit
+<span class="org-haskell-constructor">:</span>}   
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pNum <span class="org-string">"9232"</span>
+9232
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pNum <span class="org-string">"1023  "</span>
+1023
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pNum <span class="org-string">"9232-sadas"</span>
+9232
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pNum <span class="org-string">""</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> end <span class="org-haskell-keyword">of</span> input
+<span class="org-haskell-definition">expecting</span> digit
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pNum <span class="org-string">" 3423 "</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">" "</span>
+<span class="org-haskell-definition">expecting</span> digit
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pNum <span class="org-string">"23 3423 "</span>
+23
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (pNum <span class="org-haskell-operator">&lt;*</span> P.eof) <span class="org-string">"100"</span>
+100
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (pNum <span class="org-haskell-operator">&lt;*</span> P.eof) <span class="org-string">"100 "</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 4)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">' '</span>
+<span class="org-haskell-definition">expecting</span> digit or end <span class="org-haskell-keyword">of</span> input
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (pNum <span class="org-haskell-operator">&lt;*</span> P.eof) <span class="org-string">"34asd"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 3)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">'a'</span>
+<span class="org-haskell-definition">expecting</span> digit or end <span class="org-haskell-keyword">of</span> input
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li></ol>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> Examples - Complete Parsers</h3>
+<div class="outline-text-3" id="text-1-3">
+</div><div id="outline-container-sec-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1"><a id="ID-56be5da0-fa7d-45b2-adc2-6040e5003582" name="ID-56be5da0-fa7d-45b2-adc2-6040e5003582"></a><span class="section-number-4">1.3.1</span> Parsing numbers</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+<p>
+Parse number with/without sign. 
+</p>
+
+<p>
+File: numParser.hs 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-constructor">:</span>set <span class="org-haskell-operator">-</span><span class="org-haskell-constructor">XFlexibleContexts</span>
+
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Text.Parsec.String</span> (<span class="org-haskell-constructor">Parser</span>)
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Text.Parsec</span> ((<span class="org-haskell-operator">&lt;|&gt;</span>))
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-keyword">qualified</span> <span class="org-haskell-constructor">Text.Parsec</span> <span class="org-haskell-keyword">as</span> <span class="org-haskell-constructor">P</span>
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-keyword">qualified</span> <span class="org-haskell-constructor">Text.Parsec.Char</span> <span class="org-haskell-keyword">as</span> <span class="org-haskell-constructor">PC</span>
+
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Monad</span> (void, forever)
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.Either</span> (isRight, isLeft)  
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">run</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Show</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">run</span> p str <span class="org-haskell-operator">=</span>
+    <span class="org-haskell-keyword">case</span> P.parse p <span class="org-string">""</span> str <span class="org-haskell-keyword">of</span>
+      <span class="org-haskell-constructor">Left</span> err  <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-keyword">do</span> putStrLn <span class="org-string">"Parser Error"</span>
+                      print err
+      <span class="org-haskell-constructor">Right</span> res <span class="org-haskell-operator">-&gt;</span> print res
+<span class="org-haskell-constructor">:</span>} 
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pInt</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">pInt</span> <span class="org-haskell-operator">=</span> P.try pPos <span class="org-haskell-operator">&lt;|&gt;</span> pNeg
+  <span class="org-haskell-keyword">where</span>
+
+    <span class="org-comment-delimiter">-- </span><span class="org-comment">Parse positive number</span>
+    pPos <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span> 
+      s <span class="org-haskell-operator">&lt;-</span> P.many1 P.digit 
+      return <span class="org-haskell-operator">$</span> read s
+
+    <span class="org-comment-delimiter">-- </span><span class="org-comment">Parse negative number </span>
+    pNeg <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+      P.char <span class="org-string">'-'</span>
+      n <span class="org-haskell-operator">&lt;-</span> pPos
+      return (<span class="org-haskell-operator">-</span>n)
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-doc">-- | Parse float point numbers</span>
+<span class="org-doc">-- |</span>
+<span class="org-function-name">pFloat</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-definition">pFloat</span> <span class="org-haskell-operator">=</span> pNan
+   <span class="org-haskell-operator">&lt;|&gt;</span> P.try pInfPlus
+   <span class="org-haskell-operator">&lt;|&gt;</span> P.try pInfNeg
+   <span class="org-haskell-operator">&lt;|&gt;</span> P.try (read <span class="org-haskell-operator">&lt;$&gt;</span> pExp)
+   <span class="org-haskell-operator">&lt;|&gt;</span> P.try (read <span class="org-haskell-operator">&lt;$&gt;</span> pDot)
+   <span class="org-haskell-operator">&lt;|&gt;</span> P.try (read <span class="org-haskell-operator">&lt;$&gt;</span> pNDot)       
+    <span class="org-haskell-keyword">where</span>
+    <span class="org-comment-delimiter">-- </span><span class="org-comment">Float point constants </span>
+    pNan     <span class="org-haskell-operator">=</span> P.string <span class="org-string">"nan"</span> <span class="org-haskell-operator">&gt;&gt;</span> return (read <span class="org-string">"NaN"</span>)
+    pInfPlus <span class="org-haskell-operator">=</span> P.string <span class="org-string">"inf"</span> <span class="org-haskell-operator">&gt;&gt;</span> return (read <span class="org-string">"Infinity"</span>)
+    pInfNeg  <span class="org-haskell-operator">=</span> P.string <span class="org-string">"-inf"</span> <span class="org-haskell-operator">&gt;&gt;</span> return (read <span class="org-string">"-Infinity"</span>)
+
+    <span class="org-comment-delimiter">-- </span><span class="org-comment">Parse positive number</span>
+    pPos <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span> 
+      s <span class="org-haskell-operator">&lt;-</span> P.many1 P.digit 
+      return s
+
+    <span class="org-comment-delimiter">-- </span><span class="org-comment">Parse negative number </span>
+    pNeg <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+      P.char <span class="org-string">'-'</span>
+      s <span class="org-haskell-operator">&lt;-</span> pPos
+      return <span class="org-haskell-operator">$</span> <span class="org-string">"-"</span> <span class="org-haskell-operator">++</span> s
+
+    <span class="org-comment-delimiter">-- </span><span class="org-comment">Parse number without dot like 200 or -435</span>
+    pNDot <span class="org-haskell-operator">=</span> P.try pPos <span class="org-haskell-operator">&lt;|&gt;</span> pNeg
+
+    <span class="org-comment-delimiter">-- </span><span class="org-comment">Parse number with dot</span>
+    pDot <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+      num1 <span class="org-haskell-operator">&lt;-</span> P.try pPos <span class="org-haskell-operator">&lt;|&gt;</span> pNeg
+      P.char <span class="org-string">'.'</span>
+      num2 <span class="org-haskell-operator">&lt;-</span> pPos
+      return <span class="org-haskell-operator">$</span> num1 <span class="org-haskell-operator">++</span> <span class="org-string">"."</span> <span class="org-haskell-operator">++</span> num2
+
+    <span class="org-comment-delimiter">-- </span><span class="org-comment">Parse number with format 10e3 20.23e5</span>
+    pExp <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+      num1 <span class="org-haskell-operator">&lt;-</span> P.try pDot <span class="org-haskell-operator">&lt;|&gt;</span> pNDot
+      P.oneOf <span class="org-string">"eE"</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">e or E</span>
+      num2 <span class="org-haskell-operator">&lt;-</span> pNDot
+      return <span class="org-haskell-operator">$</span> num1 <span class="org-haskell-operator">++</span> <span class="org-string">"E"</span> <span class="org-haskell-operator">++</span> num2
+
+<span class="org-haskell-constructor">:</span>}
+</pre>
+</div>
+
+<p>
+Running:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pInt <span class="org-string">"20023"</span>
+20023
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pInt <span class="org-string">"-20023"</span>
+<span class="org-haskell-operator">-</span>20023
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pInt <span class="org-string">"223 "</span>
+223
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pInt <span class="org-string">"223 asa"</span>
+223
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (pInt <span class="org-haskell-operator">&lt;*</span> P.eof) <span class="org-string">"-223"</span>
+<span class="org-haskell-operator">-</span>223
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (pInt <span class="org-haskell-operator">&lt;*</span> P.eof) <span class="org-string">"223"</span>
+223
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (pInt <span class="org-haskell-operator">&lt;*</span> P.eof) <span class="org-string">"223 "</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 4)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">' '</span>
+<span class="org-haskell-definition">expecting</span> digit or end <span class="org-haskell-keyword">of</span> input
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">mapM_</span> (run pFloat) [<span class="org-string">"inf"</span>, <span class="org-string">"nan"</span>, <span class="org-string">"-inf"</span>, <span class="org-string">"100"</span>, <span class="org-string">"0"</span>, <span class="org-string">"-0.0001"</span>, <span class="org-string">"1000e-2"</span>, <span class="org-string">"-100.23"</span>, <span class="org-string">"1e3"</span>, <span class="org-string">"1000"</span>, <span class="org-string">"-0.23e4"</span>]
+<span class="org-haskell-constructor">Infinity</span>
+<span class="org-haskell-constructor">NaN</span>
+<span class="org-haskell-operator">-</span><span class="org-haskell-constructor">Infinity</span>
+100.0
+0.0
+<span class="org-haskell-operator">-</span>1.0e-4
+10.0
+<span class="org-haskell-operator">-</span>100.23
+1000.0
+1000.0
+<span class="org-haskell-operator">-</span>2300.0
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2"><span class="section-number-4">1.3.2</span> Simple Calculator</h4>
+<div class="outline-text-4" id="text-1-3-2">
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Text.Parsec.String</span> (<span class="org-haskell-constructor">Parser</span>)
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Text.Parsec</span> ((<span class="org-haskell-operator">&lt;|&gt;</span>))
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-keyword">qualified</span> <span class="org-haskell-constructor">Text.Parsec</span> <span class="org-haskell-keyword">as</span> <span class="org-haskell-constructor">P</span>
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-keyword">qualified</span> <span class="org-haskell-constructor">Text.Parsec.Char</span> <span class="org-haskell-keyword">as</span> <span class="org-haskell-constructor">PC</span>
+
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Monad</span> (void, forever)
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.Either</span> (isRight, isLeft)
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pNum</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">pNum</span> <span class="org-haskell-operator">=</span> read <span class="org-haskell-operator">&lt;$&gt;</span> P.many1 P.digit    
+<span class="org-haskell-constructor">:</span>} 
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pOperation</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Char</span> <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>) <span class="org-haskell-operator">-&gt;</span>  <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Int</span> 
+<span class="org-haskell-definition">pOperation</span> op fn <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  numA <span class="org-haskell-operator">&lt;-</span> pNum
+  P.spaces
+  P.char op
+  P.spaces
+  numB <span class="org-haskell-operator">&lt;-</span> pNum
+  return <span class="org-haskell-operator">$</span> fn numA numB
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-haskell-definition">pAdd</span> <span class="org-haskell-operator">=</span> pOperation <span class="org-string">'+'</span> (<span class="org-haskell-operator">+</span>)
+<span class="org-haskell-definition">pSub</span> <span class="org-haskell-operator">=</span> pOperation <span class="org-string">'-'</span> (<span class="org-haskell-operator">-</span>)
+<span class="org-haskell-definition">pMul</span> <span class="org-haskell-operator">=</span> pOperation <span class="org-string">'*'</span> (<span class="org-haskell-operator">*</span>)
+<span class="org-haskell-definition">pDiv</span> <span class="org-haskell-operator">=</span> pOperation <span class="org-string">'/'</span> div
+<span class="org-haskell-definition">pRem</span> <span class="org-haskell-operator">=</span> pOperation <span class="org-string">'%'</span> rem       
+<span class="org-haskell-constructor">:</span>}   
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pCalc</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">pCalc</span> <span class="org-haskell-operator">=</span> P.choice [P.try pAdd
+                 ,P.try pSub
+                 ,P.try pMul
+                 ,P.try pDiv
+                 ,P.try pRem
+                 ]         
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">runCalculator</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">runCalculator</span> <span class="org-haskell-operator">=</span>
+    forever <span class="org-haskell-operator">$</span> <span class="org-haskell-keyword">do</span>
+      line <span class="org-haskell-operator">&lt;-</span> putStr <span class="org-string">"calc &gt; "</span> <span class="org-haskell-operator">&gt;&gt;</span> getLine
+      run pCalc line
+<span class="org-haskell-constructor">:</span>}
+</pre>
+</div>
+
+<p>
+Running:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pAdd <span class="org-string">"100 + 200"</span>
+300
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pAdd <span class="org-string">"103+200"</span>
+303
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pAdd <span class="org-string">"103+"</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 5)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> end <span class="org-haskell-keyword">of</span> input
+<span class="org-haskell-definition">expecting</span> white space or digit
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pCalc <span class="org-string">"2010 / 10"</span>
+201
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>  
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pCalc <span class="org-string">"100 % 432"</span>
+100
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pCalc <span class="org-string">"203 - 126"</span>
+77
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pCalc <span class="org-string">"203 + 126"</span>
+329
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pCalc <span class="org-string">"203 * 126"</span>
+25578
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pCalc <span class="org-string">"203 % 126"</span>
+77
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pCalc <span class="org-string">"203 % "</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 7)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> end <span class="org-haskell-keyword">of</span> input
+<span class="org-haskell-definition">expecting</span> space or digit
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> runCalculator <span class="org-comment-delimiter">-- </span><span class="org-comment">Run Ctrl + C to exit </span>
+calc <span class="org-haskell-definition">&gt;</span> 100 <span class="org-haskell-operator">*</span> 20
+2000
+calc <span class="org-haskell-definition">&gt;</span> 89 <span class="org-haskell-operator">-</span> 100
+<span class="org-haskell-operator">-</span>11
+calc <span class="org-haskell-definition">&gt;</span> 2323  <span class="org-haskell-operator">^?</span>
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 7)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> <span class="org-string">"\DEL"</span>
+<span class="org-haskell-definition">expecting</span> space, <span class="org-string">"+"</span>, <span class="org-string">"-"</span>, <span class="org-string">"*"</span>, <span class="org-string">"/"</span> or <span class="org-string">"%"</span>
+calc <span class="org-haskell-definition">&gt;</span> 232 <span class="org-haskell-operator">/</span> 10
+23
+calc <span class="org-haskell-definition">&gt;</span> 35 <span class="org-haskell-operator">*</span> 9
+315
+calc <span class="org-haskell-definition">&gt;</span> 35 <span class="org-haskell-operator">*</span> 
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 6)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> end <span class="org-haskell-keyword">of</span> input
+<span class="org-haskell-definition">expecting</span> space or digit
+calc <span class="org-haskell-definition">&gt;</span> 
+<span class="org-haskell-constructor">Parser</span> <span class="org-haskell-constructor">Error</span>
+(line 1, column 1)<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-definition">unexpected</span> end <span class="org-haskell-keyword">of</span> input
+<span class="org-haskell-definition">expecting</span> digit
+calc <span class="org-haskell-definition">&gt;</span> <span class="org-haskell-operator">^</span>CInterrupted.
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3-3" class="outline-4">
+<h4 id="sec-1-3-3"><a id="ID-bfd7926d-9dcd-46e6-a6f8-efbae7ad30a6" name="ID-bfd7926d-9dcd-46e6-a6f8-efbae7ad30a6"></a><span class="section-number-4">1.3.3</span> S-expression serialization</h4>
+<div class="outline-text-4" id="text-1-3-3">
+
+<p>
+This example shows a s-expression parser that parses a simple
+s-expression AST Abstract Syntax Tree. 
+</p>
+
+<p>
+It was based on: 
+</p>
+
+<ul class="org-ul">
+<li><a href="https://realworldocaml.org/v1/en/html/data-serialization-with-s-expressions.html">Chapter 17. Data Serialization with S-Expressions / Real World OCaml</a>
+</li>
+
+<li><a href="https://ocaml.janestreet.com/ocaml-core/111.28.00/doc/sexplib/#Sexp">OCaml Core - sexplib</a>
+</li>
+
+<li><a href="https://github.com/janestreet/sexplib">janestreet/sexplib: Automated S-expression conversion</a>
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-constructor">:</span>set <span class="org-haskell-operator">-</span><span class="org-haskell-constructor">XFlexibleContexts</span>
+
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Text.Parsec.String</span> (<span class="org-haskell-constructor">Parser</span>)
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Text.Parsec</span> ((<span class="org-haskell-operator">&lt;|&gt;</span>))
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-keyword">qualified</span> <span class="org-haskell-constructor">Text.Parsec</span> <span class="org-haskell-keyword">as</span> <span class="org-haskell-constructor">P</span>
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-keyword">qualified</span> <span class="org-haskell-constructor">Text.Parsec.Char</span> <span class="org-haskell-keyword">as</span> <span class="org-haskell-constructor">PC</span>
+
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Monad</span> (void)
+
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.Either</span> (isRight, isLeft)
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Text.Read</span> (readMaybe)
+
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Test.HUnit</span>     
+
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.List</span> (intercalate)
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Sexp</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Sym</span>   <span class="org-haskell-constructor">String</span>
+          <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Str</span>   <span class="org-haskell-constructor">String</span>
+          <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">List</span> [<span class="org-haskell-constructor">Sexp</span>]
+          <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span>, <span class="org-haskell-constructor">Read</span>, <span class="org-haskell-constructor">Show</span>)
+<span class="org-haskell-constructor">:</span>}
+
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">apply</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Either</span> <span class="org-haskell-type">P.ParseError</span> a
+<span class="org-haskell-definition">apply</span> p s <span class="org-haskell-operator">=</span>  P.parse p <span class="org-string">""</span> s
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">applyOpt</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a
+<span class="org-haskell-definition">applyOpt</span> p s <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">case</span> P.parse p <span class="org-string">""</span> s <span class="org-haskell-keyword">of</span>
+               <span class="org-haskell-constructor">Left</span> <span class="org-haskell-keyword">_</span>  <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Nothing</span>
+               <span class="org-haskell-constructor">Right</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Just</span> a
+<span class="org-haskell-constructor">:</span>}                 
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">run</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Show</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">run</span> p str <span class="org-haskell-operator">=</span>
+    <span class="org-haskell-keyword">case</span> P.parse p <span class="org-string">""</span> str <span class="org-haskell-keyword">of</span>
+      <span class="org-haskell-constructor">Left</span> err  <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-keyword">do</span> putStrLn <span class="org-string">"Parser Error"</span>
+                      print err
+      <span class="org-haskell-constructor">Right</span> res <span class="org-haskell-operator">-&gt;</span> print res
+<span class="org-haskell-constructor">:</span>} 
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">sexpToStr</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Sexp</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-definition">sexpToStr</span> (<span class="org-haskell-constructor">Sym</span> s)   <span class="org-haskell-operator">=</span> s
+<span class="org-haskell-definition">sexpToStr</span> (<span class="org-haskell-constructor">Str</span> s)   <span class="org-haskell-operator">=</span> <span class="org-string">"\""</span> <span class="org-haskell-operator">++</span> s <span class="org-haskell-operator">++</span> <span class="org-string">"\""</span>
+<span class="org-haskell-definition">sexpToStr</span> (<span class="org-haskell-constructor">List</span> xs) <span class="org-haskell-operator">=</span> <span class="org-string">"( "</span> <span class="org-haskell-operator">++</span> (intercalate <span class="org-string">" "</span> <span class="org-haskell-operator">$</span> map sexpToStr xs) <span class="org-haskell-operator">++</span> <span class="org-string">" )"</span>
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-constructor">:</span>{ 
+<span class="org-function-name">pStr</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Sexp</span> 
+<span class="org-haskell-definition">pStr</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  P.char <span class="org-string">'"'</span>
+  s <span class="org-haskell-operator">&lt;-</span> P.manyTill P.anyChar (P.char <span class="org-string">'"'</span>)
+  return <span class="org-haskell-operator">$</span> <span class="org-haskell-constructor">Str</span> s
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pSym</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Sexp</span> 
+<span class="org-haskell-definition">pSym</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Sym</span> <span class="org-haskell-operator">&lt;$&gt;</span> P.many1 p
+      <span class="org-haskell-keyword">where</span>
+        pSym <span class="org-haskell-operator">=</span> P.oneOf <span class="org-string">"!$%&amp;|*+-/:&lt;=&gt;?@^_~"</span> 
+        p <span class="org-haskell-operator">=</span> P.try P.letter <span class="org-haskell-operator">&lt;|&gt;</span> P.try P.digit <span class="org-haskell-operator">&lt;|&gt;</span> P.try pSym
+<span class="org-haskell-constructor">:</span>}   
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">pList</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Sexp</span>
+<span class="org-haskell-definition">pList</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  P.char <span class="org-string">'('</span>
+  P.spaces
+  slist <span class="org-haskell-operator">&lt;-</span> P.many (P.spaces <span class="org-haskell-operator">*&gt;</span> p <span class="org-haskell-operator">&lt;*</span> P.spaces)
+  P.spaces          
+  P.char <span class="org-string">')'</span>
+  return <span class="org-haskell-operator">$</span> <span class="org-haskell-constructor">List</span> slist
+      <span class="org-haskell-keyword">where</span>
+        p <span class="org-haskell-operator">=</span> P.try pStr <span class="org-haskell-operator">&lt;|&gt;</span> P.try pSym <span class="org-haskell-operator">&lt;|&gt;</span> P.try pList
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-constructor">:</span>{ 
+<span class="org-function-name">pSexp</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Sexp</span>
+<span class="org-haskell-definition">pSexp</span> <span class="org-haskell-operator">=</span> P.try pSym
+    <span class="org-haskell-operator">&lt;|&gt;</span> P.try pStr
+    <span class="org-haskell-operator">&lt;|&gt;</span> P.try pList
+<span class="org-haskell-constructor">:</span>}        
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">sexpOfStr</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">Sexp</span>    
+<span class="org-haskell-definition">sexpOfStr</span> <span class="org-haskell-operator">=</span> applyOpt pSexp
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Convert a list of values to s-expression.</span>
+<span class="org-comment-delimiter">--</span>
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">sexpOfList</span> <span class="org-haskell-operator">::</span> (a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Sexp</span>) <span class="org-haskell-operator">-&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Sexp</span>
+<span class="org-haskell-definition">sexpOfList</span> fn xs <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">List</span> <span class="org-haskell-operator">$</span> map fn xs               
+<span class="org-haskell-constructor">:</span>}   
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">sexpOfValue</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Show</span> a <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Sexp</span>
+<span class="org-haskell-definition">sexpOfValue</span> v <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Sym</span> <span class="org-haskell-operator">$</span> show v
+<span class="org-haskell-constructor">:</span>}  
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Tries to extract a list of values form a s-expression.</span>
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">sexpToList</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Sexp</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Sexp</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> [a]
+<span class="org-haskell-definition">sexpToList</span> fn (<span class="org-haskell-constructor">Sym</span> <span class="org-haskell-keyword">_</span>)   <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>
+<span class="org-haskell-definition">sexpToList</span> fn (<span class="org-haskell-constructor">Str</span> <span class="org-haskell-keyword">_</span>)   <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>
+<span class="org-haskell-definition">sexpToList</span> fn (<span class="org-haskell-constructor">List</span> xs) <span class="org-haskell-operator">=</span> sequence <span class="org-haskell-operator">$</span> map fn xs                    
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Try to extract a single value from a s-expression. </span>
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">sexpToValue</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Read</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Sexp</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a
+<span class="org-haskell-definition">sexpToValue</span> sp <span class="org-haskell-operator">=</span>
+    <span class="org-haskell-keyword">case</span> sp <span class="org-haskell-keyword">of</span>
+      <span class="org-haskell-constructor">Sym</span> s <span class="org-haskell-operator">-&gt;</span> readMaybe s
+      <span class="org-haskell-keyword">_</span>     <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Nothing</span>
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-haskell-definition">sexpToInt</span>    <span class="org-haskell-operator">=</span> sexpToValue <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Sexp</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">sexpToDouble</span> <span class="org-haskell-operator">=</span> sexpToValue <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Sexp</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-type">:</span>}
+</pre>
+</div>
+
+<p>
+Example: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>script <span class="org-haskell-operator">/</span>tmp<span class="org-haskell-operator">/</span>sexpSerial<span class="org-haskell-operator">.</span>hs 
+<span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Sexp</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Sym</span> <span class="org-haskell-constructor">String</span> <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Str</span> <span class="org-haskell-constructor">String</span> <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">List</span> [<span class="org-haskell-constructor">Sexp</span>]
+<span class="org-function-name">apply</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Either</span> <span class="org-haskell-type">P.ParseError</span> a
+<span class="org-function-name">applyOpt</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a
+<span class="org-function-name">run</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Show</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Parser</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-function-name">sexpToStr</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Sexp</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span>
+<span class="org-function-name">pStr</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Sexp</span>
+<span class="org-function-name">pSym</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Sexp</span>
+<span class="org-function-name">pList</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Sexp</span>
+<span class="org-function-name">pSexp</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> <span class="org-haskell-type">Sexp</span>
+<span class="org-function-name">sexpOfStr</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">Sexp</span>
+<span class="org-function-name">sexpOfList</span> <span class="org-haskell-operator">::</span> (a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Sexp</span>) <span class="org-haskell-operator">-&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Sexp</span>
+<span class="org-function-name">sexpOfValue</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Show</span> a <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Sexp</span>
+<span class="org-function-name">sexpToList</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Sexp</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Sexp</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> [a]
+<span class="org-function-name">sexpToValue</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Read</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Sexp</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a
+<span class="org-function-name">sexpToDouble</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Sexp</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">Double</span>
+<span class="org-function-name">sexpToInt</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Sexp</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-haskell-operator">&gt;</span> sexpToStr <span class="org-haskell-definition">$</span> <span class="org-haskell-type">List</span> [<span class="org-haskell-type">Sym</span> <span class="org-string">"100"</span>, <span class="org-haskell-type">Sym</span> <span class="org-string">"200"</span>, <span class="org-haskell-type">Sym</span> <span class="org-string">"300"</span>]
+<span class="org-string">"( 100 200 300 )"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-operator">&gt;</span>
+
+<span class="org-haskell-operator">&gt;</span> sexpToStr <span class="org-haskell-definition">$</span> <span class="org-haskell-type">List</span> [<span class="org-haskell-type">Sym</span> <span class="org-string">"100"</span>, <span class="org-haskell-type">List</span> [ <span class="org-haskell-type">Sym</span> <span class="org-string">"200"</span>, <span class="org-haskell-type">Sym</span> <span class="org-string">"300"</span>], <span class="org-haskell-type">Str</span> <span class="org-string">"hello world"</span>, <span class="org-haskell-type">Sym</span> <span class="org-string">"x"</span>]
+<span class="org-string">"( 100 ( 200 300 ) \"hello world\" x )"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-haskell-operator">&gt;</span>  
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pSym <span class="org-string">"hello"</span>
+<span class="org-haskell-constructor">Sym</span> <span class="org-string">"hello"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pSym <span class="org-string">"hello world"</span>
+<span class="org-haskell-constructor">Sym</span> <span class="org-string">"hello"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pSym <span class="org-string">"3434hello world"</span>
+<span class="org-haskell-constructor">Sym</span> <span class="org-string">"3434hello"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pQuotedStr <span class="org-string">"\"hello world haskell\""</span>
+<span class="org-haskell-constructor">Str</span> <span class="org-string">"hello world haskell"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.spaces <span class="org-haskell-operator">&gt;&gt;</span> pQuotedStr) <span class="org-string">"  \"hello world haskell\""</span>
+<span class="org-haskell-constructor">Str</span> <span class="org-string">"hello world haskell"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> (P.spaces <span class="org-haskell-operator">&gt;&gt;</span> pQuotedStr) <span class="org-string">"  \"hello\""</span>
+<span class="org-haskell-constructor">Str</span> <span class="org-string">"hello"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pList <span class="org-string">"( 100 200 300)"</span>
+<span class="org-haskell-constructor">List</span> [<span class="org-haskell-constructor">Sym</span> <span class="org-string">"100"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"200"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"300"</span>]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pList <span class="org-string">"( 100 200 300  )"</span>
+<span class="org-haskell-constructor">List</span> [<span class="org-haskell-constructor">Sym</span> <span class="org-string">"100"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"200"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"300"</span>]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pList <span class="org-string">"( 100 200 300 hello world \"hello\" \"parsec is amazing\" )"</span>
+<span class="org-haskell-constructor">List</span> [<span class="org-haskell-constructor">Sym</span> <span class="org-string">"100"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"200"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"300"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"hello"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"world"</span>,<span class="org-haskell-constructor">Str</span> <span class="org-string">"hello"</span>,<span class="org-haskell-constructor">Str</span> <span class="org-string">"parsec is amazing"</span>]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pList <span class="org-string">"( 100 200 (300 hello world \"hello\") ()  \"parsec is amazing\" )"</span>
+<span class="org-haskell-constructor">List</span> [<span class="org-haskell-constructor">Sym</span> <span class="org-string">"100"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"200"</span>,<span class="org-haskell-constructor">List</span> [<span class="org-haskell-constructor">Sym</span> <span class="org-string">"300"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"hello"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"world"</span>,<span class="org-haskell-constructor">Str</span> <span class="org-string">"hello"</span>],<span class="org-haskell-constructor">List</span> <span class="org-haskell-constructor">[]</span>,<span class="org-haskell-constructor">Str</span> <span class="org-string">"parsec is amazing"</span>]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pList <span class="org-string">"(+ 100 200 300  )"</span>
+<span class="org-haskell-constructor">List</span> [<span class="org-haskell-constructor">Sym</span> <span class="org-string">"+"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"100"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"200"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"300"</span>]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pSexp <span class="org-string">"1232"</span>
+<span class="org-haskell-constructor">Sym</span> <span class="org-string">"1232"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pSexp <span class="org-string">"hello"</span>
+<span class="org-haskell-constructor">Sym</span> <span class="org-string">"hello"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pSexp <span class="org-string">"(hello world)"</span>
+<span class="org-haskell-constructor">List</span> [<span class="org-haskell-constructor">Sym</span> <span class="org-string">"hello"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"world"</span>]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">run</span> pSexp <span class="org-string">"(++ hello world)"</span>
+<span class="org-haskell-constructor">List</span> [<span class="org-haskell-constructor">Sym</span> <span class="org-string">"++"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"hello"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"world"</span>]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> test1 <span class="org-haskell-operator">=</span> <span class="org-string">"( 100 200 300 400 500 )"</span>
+<span class="org-function-name">test1</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">Char</span>]
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> test1 <span class="org-haskell-operator">=</span> <span class="org-string">"( 100 200 300 400 500 )"</span>
+<span class="org-function-name">test1</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">Char</span>]
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sexpOfStr</span> test1 
+<span class="org-haskell-constructor">Just</span> (<span class="org-haskell-constructor">List</span> [<span class="org-haskell-constructor">Sym</span> <span class="org-string">"100"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"200"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"300"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"400"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"500"</span>])
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">Sexp</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sexpOfStr</span> test1 <span class="org-haskell-operator">&gt;&gt;=</span> sexpToList sexpToInt 
+<span class="org-haskell-constructor">Just</span> [100,200,300,400,500]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Maybe</span> [<span class="org-haskell-type">Int</span>]
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sexpOfStr</span> test1 <span class="org-haskell-operator">&gt;&gt;=</span> sexpToList sexpToDouble 
+<span class="org-haskell-constructor">Just</span> [100.0,200.0,300.0,400.0,500.0]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Maybe</span> [<span class="org-haskell-type">Double</span>]
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sexpOfList</span> sexpOfValue [100, 200, 300, 5400]
+<span class="org-haskell-constructor">List</span> [<span class="org-haskell-constructor">Sym</span> <span class="org-string">"100"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"200"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"300"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"5400"</span>]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Sexp</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> test2 <span class="org-haskell-operator">=</span> sexpToStr <span class="org-haskell-operator">$</span> sexpOfList sexpOfValue [100, 200, 300, 5400]
+<span class="org-function-name">test2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-operator">&gt;</span> test2
+<span class="org-string">"( 100 200 300 5400 )"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sexpOfStr</span> test2
+<span class="org-haskell-constructor">Just</span> (<span class="org-haskell-constructor">List</span> [<span class="org-haskell-constructor">Sym</span> <span class="org-string">"100"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"200"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"300"</span>,<span class="org-haskell-constructor">Sym</span> <span class="org-string">"5400"</span>])
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">Sexp</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">sexpOfStr</span> test2 <span class="org-haskell-operator">&gt;&gt;=</span> sexpToList sexpToInt 
+<span class="org-haskell-constructor">Just</span> [100,200,300,5400]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Maybe</span> [<span class="org-haskell-type">Int</span>]
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-1-4" class="outline-3">
+<h3 id="sec-1-4"><span class="section-number-3">1.4</span> References and Bookmarks</h3>
+<div class="outline-text-3" id="text-1-4">
+<ul class="org-ul">
+<li>Daan Leijen and Erik Meijer. <b>Parsec: Direct Style Monadic Parser
+Combinators. For The Real World</b>
+<a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/parsec-paper-letter.pdf">https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/parsec-paper-letter.pdf</a>
+</li>
+
+<li>Daan Leijen - <b>Parsec, a fast combinator parser</b> Accessed at
+2017-4-1. Available at
+<a href="https://web.archive.org/web/20120401040711/http://legacy.cs.uu.nl/daan/download/parsec/parsec.pdf">https://web.archive.org/web/20120401040711/http://legacy.cs.uu.nl/daan/download/parsec/parsec.pdf</a>
+</li>
+
+<li>Aurick Qiao - <b>Applicative and Monadic Parsing Combinators</b> -
+<a href="https://cs.uwaterloo.ca/~plragde/842/handouts/app-mon-qiao.pdf">https://cs.uwaterloo.ca/~plragde/842/handouts/app-mon-qiao.pdf</a>
+</li>
+
+<li>Parissa H.Sadeghi. <b>Monadic Parser
+Combinators</b>. <a href="https://www.informatik.uni-kiel.de/~mh/lehre/seminare/ss04-sem-arbeiten/sadeghi.pdf">https://www.informatik.uni-kiel.de/~mh/lehre/seminare/ss04-sem-arbeiten/sadeghi.pdf</a> 
+</li>
+
+<li><b>Write Yourself a Scheme in 48 Hours.</b> An Introduction to Haskell
+through Example <a href="https://upload.wikimedia.org/wikipedia/commons/a/aa/Write_Yourself_a_Scheme_in_48_Hours.pdf">https://upload.wikimedia.org/wikipedia/commons/a/aa/Write_Yourself_a_Scheme_in_48_Hours.pdf</a>
+</li>
+
+<li>Yann Esposito. <b>Parsec Presentation</b> <a href="http://yannesposito.com/Scratch/en/blog/Parsec-Presentation/">http://yannesposito.com/Scratch/en/blog/Parsec-Presentation/</a>
+</li>
+
+<li><a href="https://wiki.haskell.org/Parsec">Parsec - HaskellWiki</a>
+</li>
+
+<li><a href="https://github.com/JakeWheat/intro_to_parsing/">JakeWheat/intro_to_parsing: Introduction to parsing with Haskell and Parsec</a>
+</li>
+
+<li><b>What's in a parser combinator?</b> - <a href="https://remusao.github.io/whats-in-a-parser-combinator.html">https://remusao.github.io/whats-in-a-parser-combinator.html</a>
+</li>
+</ul>
+
+<p>
+Misc 
+</p>
+
+<ul class="org-ul">
+<li><a href="http://stackoverflow.com/questions/tagged/parsec">Highest Voted 'parsec' Questions - Stack Overflow</a> - Parsec in StackOverflow.
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Caio Rodrigues Soares Silva</p>
+<p class="date">Created: 2018-05-07 Mon 10:12</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

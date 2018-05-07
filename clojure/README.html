@@ -4,10 +4,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Clojure</title>
-<!-- 2017-03-12 dom 16:47 -->
+<!-- 2018-05-07 Mon 10:13 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
-<meta  name="author" content="arch" />
+<meta  name="author" content="nobody" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   .title  { text-align: center; }
@@ -88,79 +88,9 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
-<link href='/theme/style.css' rel='stylesheet'>
-
-<script type="text/javascript" src="/theme/org-info.js">
-/**
- *
- * @source: /theme/org-info.js
- *
- * @licstart  The following is the entire license notice for the
- *  JavaScript code in /theme/org-info.js.
- *
- * Copyright (C) 2012-2013 Free Software Foundation, Inc.
- *
- *
- * The JavaScript code in this tag is free software: you can
- * redistribute it and/or modify it under the terms of the GNU
- * General Public License (GNU GPL) as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version.  The code is distributed WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
- *
- * As additional permission under GNU GPL version 3 section 7, you
- * may distribute non-source (e.g., minimized or compacted) forms of
- * that code without the copy of the GNU GPL normally required by
- * section 4, provided you include this license notice and a URL
- * through which recipients can access the Corresponding Source.
- *
- * @licend  The above is the entire license notice
- * for the JavaScript code in /theme/org-info.js.
- *
- */
-</script>
-
-<script type="text/javascript">
-
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2013 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
-
-<!--/*--><![CDATA[/*><!--*/
-org_html_manager.set("TOC_DEPTH", "3");
-org_html_manager.set("LINK_HOME", "");
-org_html_manager.set("LINK_UP", "");
-org_html_manager.set("LOCAL_TOC", "1");
-org_html_manager.set("VIEW_BUTTONS", "0");
-org_html_manager.set("MOUSE_HINT", "underline");
-org_html_manager.set("FIXED_TOC", "0");
-org_html_manager.set("TOC", "1");
-org_html_manager.set("VIEW", "info");
-org_html_manager.setup();  // activate after the parameters are set
-/*]]>*///-->
-</script>
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+<link href="/Functional-Programming/theme/style.css" rel="stylesheet">
+<script src="/Functional-Programming/theme/org-nav-theme.js"></script>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -222,11 +152,31 @@ for the JavaScript code in this tag.
 <li><a href="#sec-1-3">1.3. Basic Syntax</a>
 <ul>
 <li><a href="#sec-1-3-1">1.3.1. Variables</a></li>
-<li><a href="#sec-1-3-2">1.3.2. Function Declaration</a></li>
+<li><a href="#sec-1-3-2">1.3.2. Function Declaration</a>
+<ul>
+<li><a href="#sec-1-3-2-1">1.3.2.1. Simple Function</a></li>
+<li><a href="#sec-1-3-2-2">1.3.2.2. Function With Docstring</a></li>
+<li><a href="#sec-1-3-2-3">1.3.2.3. Variadic Function</a></li>
+<li><a href="#sec-1-3-2-4">1.3.2.4. Function with Optional arguments</a></li>
+<li><a href="#sec-1-3-2-5">1.3.2.5. Function with Predefined Values</a></li>
+<li><a href="#sec-1-3-2-6">1.3.2.6. Anonymous/ Lambda Functions</a></li>
+</ul>
+</li>
 <li><a href="#sec-1-3-3">1.3.3. Predicates</a></li>
 <li><a href="#sec-1-3-4">1.3.4. Data Types</a></li>
-<li><a href="#sec-1-3-5">1.3.5. String Functions</a></li>
-<li><a href="#sec-1-3-6">1.3.6. Important Functions</a></li>
+<li><a href="#sec-1-3-5">1.3.5. String Functions</a>
+<ul>
+<li><a href="#sec-1-3-5-1">1.3.5.1. Basic String Functions</a></li>
+<li><a href="#sec-1-3-5-2">1.3.5.2. String Parsing Functions</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-3-6">1.3.6. Important Functions</a>
+<ul>
+<li><a href="#sec-1-3-6-1">1.3.6.1. Special Functions</a></li>
+<li><a href="#sec-1-3-6-2">1.3.6.2. Higher Order Functions</a></li>
+<li><a href="#sec-1-3-6-3">1.3.6.3. Lazy Higher Order Functions</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#sec-1-4">1.4. List Comprehension</a></li>
@@ -244,11 +194,23 @@ for the JavaScript code in this tag.
 <li><a href="#sec-1-9-1">1.9.1. Java API Access</a></li>
 <li><a href="#sec-1-9-2">1.9.2. Call Class Static Method</a></li>
 <li><a href="#sec-1-9-3">1.9.3. Java Constructor and Methods</a></li>
-<li><a href="#sec-1-9-4">1.9.4. Doto Macro</a></li>
+<li><a href="#sec-1-9-4">1.9.4. Doto Macro</a>
+<ul>
+<li><a href="#sec-1-9-4-1">1.9.4.1. Doto Macro Expansion</a></li>
+<li><a href="#sec-1-9-4-2">1.9.4.2. Simple GUI</a></li>
+<li><a href="#sec-1-9-4-3">1.9.4.3. Java Import</a></li>
+</ul>
+</li>
 <li><a href="#sec-1-9-5">1.9.5. Classpath</a></li>
 <li><a href="#sec-1-9-6">1.9.6. Load Jar file at run time</a></li>
 <li><a href="#sec-1-9-7">1.9.7. Java Instrospection</a></li>
-<li><a href="#sec-1-9-8">1.9.8. Miscellaneous</a></li>
+<li><a href="#sec-1-9-8">1.9.8. Miscellaneous</a>
+<ul>
+<li><a href="#sec-1-9-8-1">1.9.8.1. Parse Date</a></li>
+<li><a href="#sec-1-9-8-2">1.9.8.2. Get String from Clipboard</a></li>
+<li><a href="#sec-1-9-8-3">1.9.8.3. Http POST/GET</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#sec-1-10">1.10. Resources</a>
@@ -269,6 +231,10 @@ for the JavaScript code in this tag.
 </ul>
 </div>
 </div>
+<lu> 
+  <li><a href="/Functional-Programming/index.html">Index</a></li>
+  <li><a href="https://github.com/caiorss/Functional-Programming">Repository</a></li>
+</lu>
 
 <div id="outline-container-sec-1" class="outline-2">
 <h2 id="sec-1"><span class="section-number-2">1</span> Clojure</h2>
@@ -277,7 +243,9 @@ for the JavaScript code in this tag.
 <h3 id="sec-1-1"><span class="section-number-3">1.1</span> Overview</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
-Clojure is a functional programming lisp dialect that leverages the access to all Java platform libraries. It is based on Scheme, Common Lisp, ML and Haskell.
+Clojure is a functional programming lisp dialect that leverages the
+access to all Java platform libraries. It is based on Scheme, Common
+Lisp, ML and Haskell.
 </p>
 
 <p>
@@ -544,7 +512,9 @@ user=&gt;
 <div id="outline-container-sec-1-3-2" class="outline-4">
 <h4 id="sec-1-3-2"><span class="section-number-4">1.3.2</span> Function Declaration</h4>
 <div class="outline-text-4" id="text-1-3-2">
-</div><ol class="org-ol"><li><a id="sec-1-3-2-1" name="sec-1-3-2-1"></a>Simple Function<br  /><div class="outline-text-5" id="text-1-3-2-1">
+</div><div id="outline-container-sec-1-3-2-1" class="outline-5">
+<h5 id="sec-1-3-2-1"><span class="section-number-5">1.3.2.1</span> Simple Function</h5>
+<div class="outline-text-5" id="text-1-3-2-1">
 <div class="org-src-container">
 
 <pre class="src src-clojure"> user=&gt; (<span class="org-keyword">defn</span> <span class="org-function-name">f</span> [x y] (+ (* 3 x) (* 4 y)))
@@ -558,9 +528,11 @@ user=&gt;
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-2-2" name="sec-1-3-2-2"></a>Function With Docstring<br  /><div class="outline-text-5" id="text-1-3-2-2">
+<div id="outline-container-sec-1-3-2-2" class="outline-5">
+<h5 id="sec-1-3-2-2"><span class="section-number-5">1.3.2.2</span> Function With Docstring</h5>
+<div class="outline-text-5" id="text-1-3-2-2">
 <div class="org-src-container">
 
 <pre class="src src-clojure">user=&gt; (<span class="org-keyword">defn</span> <span class="org-function-name">sqr</span> [x]
@@ -585,9 +557,11 @@ user=&gt;
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-2-3" name="sec-1-3-2-3"></a>Variadic Function<br  /><div class="outline-text-5" id="text-1-3-2-3">
+<div id="outline-container-sec-1-3-2-3" class="outline-5">
+<h5 id="sec-1-3-2-3"><span class="section-number-5">1.3.2.3</span> Variadic Function</h5>
+<div class="outline-text-5" id="text-1-3-2-3">
 <p>
 Function with variable number of arguments:
 </p>
@@ -631,9 +605,11 @@ user=&gt;
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-2-4" name="sec-1-3-2-4"></a>Function with Optional arguments<br  /><div class="outline-text-5" id="text-1-3-2-4">
+<div id="outline-container-sec-1-3-2-4" class="outline-5">
+<h5 id="sec-1-3-2-4"><span class="section-number-5">1.3.2.4</span> Function with Optional arguments</h5>
+<div class="outline-text-5" id="text-1-3-2-4">
 <div class="org-src-container">
 
 <pre class="src src-clojure">(<span class="org-keyword">defn</span> <span class="org-function-name">fun-optional-c</span> [a b &amp; [c]]
@@ -649,9 +625,11 @@ user=&gt;
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-2-5" name="sec-1-3-2-5"></a>Function with Predefined Values<br  /><div class="outline-text-5" id="text-1-3-2-5">
+<div id="outline-container-sec-1-3-2-5" class="outline-5">
+<h5 id="sec-1-3-2-5"><span class="section-number-5">1.3.2.5</span> Function with Predefined Values</h5>
+<div class="outline-text-5" id="text-1-3-2-5">
 <div class="org-src-container">
 
 <pre class="src src-clojure">(<span class="org-keyword">defn</span> <span class="org-function-name">predefined-c-and-d</span> [a b &amp; {<span class="org-clojure-keyword">:keys</span> [c d] <span class="org-clojure-keyword">:or</span> {c 100 d 30}}]
@@ -678,9 +656,11 @@ user=&gt;
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-2-6" name="sec-1-3-2-6"></a>Anonymous/ Lambda Functions<br  /><div class="outline-text-5" id="text-1-3-2-6">
+<div id="outline-container-sec-1-3-2-6" class="outline-5">
+<h5 id="sec-1-3-2-6"><span class="section-number-5">1.3.2.6</span> Anonymous/ Lambda Functions</h5>
+<div class="outline-text-5" id="text-1-3-2-6">
 <pre class="example">
 (fn [&lt;args&gt;] (&lt;body&gt;))
 </pre>
@@ -796,7 +776,7 @@ Clojure has a pretty handy macro that allows to create lambda functions easily.
 </pre>
 </div>
 </div>
-</li></ol>
+</div>
 </div>
 
 <div id="outline-container-sec-1-3-3" class="outline-4">
@@ -1201,7 +1181,9 @@ user=&gt; (format-params {<span class="org-string">"x"</span> <span class="org-s
 <div id="outline-container-sec-1-3-5" class="outline-4">
 <h4 id="sec-1-3-5"><span class="section-number-4">1.3.5</span> String Functions</h4>
 <div class="outline-text-4" id="text-1-3-5">
-</div><ol class="org-ol"><li><a id="sec-1-3-5-1" name="sec-1-3-5-1"></a>Basic String Functions<br  /><div class="outline-text-5" id="text-1-3-5-1">
+</div><div id="outline-container-sec-1-3-5-1" class="outline-5">
+<h5 id="sec-1-3-5-1"><span class="section-number-5">1.3.5.1</span> Basic String Functions</h5>
+<div class="outline-text-5" id="text-1-3-5-1">
 <div class="org-src-container">
 
 <pre class="src src-clojure"><span class="org-comment-delimiter">;; </span><span class="org-comment">Load clojure.string namespace as str </span>
@@ -1267,9 +1249,11 @@ user=&gt;
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-5-2" name="sec-1-3-5-2"></a>String Parsing Functions<br  /><div class="outline-text-5" id="text-1-3-5-2">
+<div id="outline-container-sec-1-3-5-2" class="outline-5">
+<h5 id="sec-1-3-5-2"><span class="section-number-5">1.3.5.2</span> String Parsing Functions</h5>
+<div class="outline-text-5" id="text-1-3-5-2">
 <p>
 <b>Integer -&gt; String</b>
 </p>
@@ -1306,14 +1290,16 @@ user=&gt;
 </pre>
 </div>
 </div>
-</li></ol>
+</div>
 </div>
 
 
 <div id="outline-container-sec-1-3-6" class="outline-4">
 <h4 id="sec-1-3-6"><span class="section-number-4">1.3.6</span> Important Functions</h4>
 <div class="outline-text-4" id="text-1-3-6">
-</div><ol class="org-ol"><li><a id="sec-1-3-6-1" name="sec-1-3-6-1"></a>Special Functions<br  /><div class="outline-text-5" id="text-1-3-6-1">
+</div><div id="outline-container-sec-1-3-6-1" class="outline-5">
+<h5 id="sec-1-3-6-1"><span class="section-number-5">1.3.6.1</span> Special Functions</h5>
+<div class="outline-text-5" id="text-1-3-6-1">
 <p>
 <b>Constantly</b>
 </p>
@@ -1352,9 +1338,11 @@ user=&gt; (range 0 100 10)
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-6-2" name="sec-1-3-6-2"></a>Higher Order Functions<br  /><div class="outline-text-5" id="text-1-3-6-2">
+<div id="outline-container-sec-1-3-6-2" class="outline-5">
+<h5 id="sec-1-3-6-2"><span class="section-number-5">1.3.6.2</span> Higher Order Functions</h5>
+<div class="outline-text-5" id="text-1-3-6-2">
 <p>
 <b>Map</b>
 </p>
@@ -1613,9 +1601,11 @@ user
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-6-3" name="sec-1-3-6-3"></a>Lazy Higher Order Functions<br  /><div class="outline-text-5" id="text-1-3-6-3">
+<div id="outline-container-sec-1-3-6-3" class="outline-5">
+<h5 id="sec-1-3-6-3"><span class="section-number-5">1.3.6.3</span> Lazy Higher Order Functions</h5>
+<div class="outline-text-5" id="text-1-3-6-3">
 <p>
 <b>Iterate</b>
 </p>
@@ -1671,7 +1661,7 @@ user=&gt;
 </pre>
 </div>
 </div>
-</li></ol>
+</div>
 </div>
 </div>
 
@@ -2047,7 +2037,7 @@ user=&gt; (<span class="org-type">clojure.inspector</span><span class="org-defau
 
 
 <div class="figure">
-<p><img src="images/Clojure_Inspector.png" alt="Clojure_Inspector.png" />
+<p><a href="images/Clojure_Inspector.png"><img src="images/Clojure_Inspector.png" alt="Clojure_Inspector.png" /></a>
 </p>
 </div>
 </div>
@@ -2206,7 +2196,6 @@ See also:
 </div>
 </div>
 </div>
-
 
 <div id="outline-container-sec-1-9" class="outline-3">
 <h3 id="sec-1-9"><span class="section-number-3">1.9</span> Java Interoperability</h3>
@@ -2367,7 +2356,9 @@ user=&gt;
 <div id="outline-container-sec-1-9-4" class="outline-4">
 <h4 id="sec-1-9-4"><span class="section-number-4">1.9.4</span> Doto Macro</h4>
 <div class="outline-text-4" id="text-1-9-4">
-</div><ol class="org-ol"><li><a id="sec-1-9-4-1" name="sec-1-9-4-1"></a>Doto Macro Expansion<br  /><div class="outline-text-5" id="text-1-9-4-1">
+</div><div id="outline-container-sec-1-9-4-1" class="outline-5">
+<h5 id="sec-1-9-4-1"><span class="section-number-5">1.9.4.1</span> Doto Macro Expansion</h5>
+<div class="outline-text-5" id="text-1-9-4-1">
 <p>
 <b>Without Doto Macro</b>
 </p>
@@ -2405,9 +2396,11 @@ user=&gt;
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-9-4-2" name="sec-1-9-4-2"></a>Simple GUI<br  /><div class="outline-text-5" id="text-1-9-4-2">
+<div id="outline-container-sec-1-9-4-2" class="outline-5">
+<h5 id="sec-1-9-4-2"><span class="section-number-5">1.9.4.2</span> Simple GUI</h5>
+<div class="outline-text-5" id="text-1-9-4-2">
 <div class="org-src-container">
 
 <pre class="src src-clojure">user=&gt; 
@@ -2422,14 +2415,16 @@ user=&gt;
 
 
 <div class="figure">
-<p><img src="images/simplegui.png" alt="simplegui.png" />
+<p><a href="images/simplegui.png"><img src="images/simplegui.png" alt="simplegui.png" /></a>
 </p>
 </div>
 </div>
-</li>
+</div>
 
 
-<li><a id="sec-1-9-4-3" name="sec-1-9-4-3"></a>Java Import<br  /><div class="outline-text-5" id="text-1-9-4-3">
+<div id="outline-container-sec-1-9-4-3" class="outline-5">
+<h5 id="sec-1-9-4-3"><span class="section-number-5">1.9.4.3</span> Java Import</h5>
+<div class="outline-text-5" id="text-1-9-4-3">
 <p>
 <b>Import Packages</b>
 </p>
@@ -2504,7 +2499,7 @@ user=&gt;
 </pre>
 </div>
 </div>
-</li></ol>
+</div>
 </div>
 
 
@@ -2632,7 +2627,7 @@ user=&gt; (<span class="org-type">clojure.inspector</span><span class="org-defau
 
 
 <div class="figure">
-<p><img src="images/Clojure_Inspector_methods.png" alt="Clojure_Inspector_methods.png" />
+<p><a href="images/Clojure_Inspector_methods.png"><img src="images/Clojure_Inspector_methods.png" alt="Clojure_Inspector_methods.png" /></a>
 </p>
 </div>
 
@@ -2676,7 +2671,9 @@ Examples about calling Java API in Clojure.
 </p>
 </div>
 
-<ol class="org-ol"><li><a id="sec-1-9-8-1" name="sec-1-9-8-1"></a>Parse Date<br  /><div class="outline-text-5" id="text-1-9-8-1">
+<div id="outline-container-sec-1-9-8-1" class="outline-5">
+<h5 id="sec-1-9-8-1"><span class="section-number-5">1.9.8.1</span> Parse Date</h5>
+<div class="outline-text-5" id="text-1-9-8-1">
 <div class="org-src-container">
 
 <pre class="src src-clojure">user=&gt; (<span class="org-clojure-interop-method">.parse</span> (<span class="org-keyword">new</span> <span class="org-type">java.text.SimpleDateFormat</span> <span class="org-string">"dd/MM/yyyy"</span>) <span class="org-string">"03/01/2013"</span>)
@@ -2705,9 +2702,11 @@ user=&gt;
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-9-8-2" name="sec-1-9-8-2"></a>Get String from Clipboard<br  /><div class="outline-text-5" id="text-1-9-8-2">
+<div id="outline-container-sec-1-9-8-2" class="outline-5">
+<h5 id="sec-1-9-8-2"><span class="section-number-5">1.9.8.2</span> Get String from Clipboard</h5>
+<div class="outline-text-5" id="text-1-9-8-2">
 <p>
 Java code:
 </p>
@@ -2718,17 +2717,17 @@ Java code:
 <span class="org-keyword">import</span> <span class="org-constant">java</span>.<span class="org-constant">awt</span>.<span class="org-constant">datatransfer</span>.<span class="org-type">Clipboard</span>;
 <span class="org-keyword">import</span> <span class="org-constant">java</span>.<span class="org-constant">awt</span>.<span class="org-constant">datatransfer</span>.<span class="org-type">DataFlavor</span>;
 
-<span class="org-keyword">public</span> <span class="org-keyword">class</span> <span class="org-type">GetStringFromClipboard</span> {
+<span class="org-keyword">public</span> <span class="org-keyword">class</span> <span class="org-type">GetStringFromClipboard</span> <span class="org-rainbow-delimiters-depth-1">{</span>
 
-    <span class="org-keyword">public</span> <span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">main</span>(<span class="org-type">String</span>[] <span class="org-variable-name">args</span>) <span class="org-keyword">throws</span> <span class="org-type">Exception</span> {
+    <span class="org-keyword">public</span> <span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">main</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">String</span><span class="org-rainbow-delimiters-depth-3">[]</span> <span class="org-variable-name">args</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-keyword">throws</span> <span class="org-type">Exception</span> <span class="org-rainbow-delimiters-depth-2">{</span>
 
-        <span class="org-type">Toolkit</span> <span class="org-variable-name">toolkit</span> = Toolkit.getDefaultToolkit();
-        <span class="org-type">Clipboard</span> <span class="org-variable-name">clipboard</span> = toolkit.getSystemClipboard();
-        <span class="org-type">String</span> <span class="org-variable-name">result</span> = (<span class="org-type">String</span>) clipboard.getData(DataFlavor.stringFlavor);
-        System.out.println(<span class="org-string">"String from Clipboard:"</span> + result);
-    }
+        <span class="org-type">Toolkit</span> <span class="org-variable-name">toolkit</span> = Toolkit.getDefaultToolkit<span class="org-rainbow-delimiters-depth-3">()</span>;
+        <span class="org-type">Clipboard</span> <span class="org-variable-name">clipboard</span> = toolkit.getSystemClipboard<span class="org-rainbow-delimiters-depth-3">()</span>;
+        <span class="org-type">String</span> <span class="org-variable-name">result</span> = <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-type">String</span><span class="org-rainbow-delimiters-depth-3">)</span> clipboard.getData<span class="org-rainbow-delimiters-depth-3">(</span>DataFlavor.stringFlavor<span class="org-rainbow-delimiters-depth-3">)</span>;
+        System.out.println<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"String from Clipboard:"</span> + result<span class="org-rainbow-delimiters-depth-3">)</span>;
+    <span class="org-rainbow-delimiters-depth-2">}</span>
 
-}
+<span class="org-rainbow-delimiters-depth-1">}</span>
 </pre>
 </div>
 
@@ -2749,9 +2748,11 @@ Clojure Code;
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-9-8-3" name="sec-1-9-8-3"></a>Http POST/GET<br  /><div class="outline-text-5" id="text-1-9-8-3">
+<div id="outline-container-sec-1-9-8-3" class="outline-5">
+<h5 id="sec-1-9-8-3"><span class="section-number-5">1.9.8.3</span> Http POST/GET</h5>
+<div class="outline-text-5" id="text-1-9-8-3">
 <p>
 Java Code: <a href="http://www.mkyong.com/java/how-to-send-http-request-getpost-in-java/">How to send HTTP request GET/POST in Java</a>
 </p>
@@ -2895,11 +2896,9 @@ user=&gt;
 </pre>
 </div>
 </div>
-</li></ol>
 </div>
 </div>
-
-
+</div>
 
 <div id="outline-container-sec-1-10" class="outline-3">
 <h3 id="sec-1-10"><span class="section-number-3">1.10</span> Resources</h3>
@@ -3111,9 +3110,9 @@ user=&gt;
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: arch</p>
-<p class="date">Created: 2017-03-12 dom 16:47</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="author">Author: nobody</p>
+<p class="date">Created: 2018-05-07 Mon 10:13</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

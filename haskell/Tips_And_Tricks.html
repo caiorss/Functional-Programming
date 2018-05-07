@@ -1,0 +1,1388 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Tips And Tricks</title>
+<!-- 2018-05-07 Mon 10:12 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="Caio Rodrigues Soares Silva" />
+<meta  name="description" content="Tips and tricks for Haskell development."
+ />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Tips And Tricks</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Tips and Tricks</a>
+<ul>
+<li><a href="#sec-1-1">1.1. Overview</a></li>
+<li><a href="#sec-1-2">1.2. Configuration files in Haskell Syntax</a></li>
+<li><a href="#sec-1-3">1.3. Using undefined to specify function signature before implementation</a></li>
+<li><a href="#sec-1-4">1.4. Using pattern matching for simple command line application</a></li>
+<li><a href="#sec-1-5">1.5. Debug Computations using trace</a></li>
+<li><a href="#sec-1-6">1.6. Haskell Interactive Shell - GHCI</a>
+<ul>
+<li><a href="#sec-1-6-1">1.6.1. GHCI configuration file</a></li>
+<li><a href="#sec-1-6-2">1.6.2. Extract contents of IO action</a></li>
+<li><a href="#sec-1-6-3">1.6.3. Load interactive commands from file</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Tips and Tricks</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Overview</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+It is a collection of many tips and tricks for Haskell development.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><a id="ID-a795774c-42af-46fb-bbab-9c1d370cfba1" name="ID-a795774c-42af-46fb-bbab-9c1d370cfba1"></a><span class="section-number-3">1.2</span> Configuration files in Haskell Syntax</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>
+Configuration files can be written in Haskell since it provides a
+parser (readMaybe) that can read arbitrary data structures defined as
+instance of show and read type classes.
+</p>
+
+<p>
+Example: 
+</p>
+
+<p>
+File: serverConf.hs 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Text.Read</span> (readMaybe)
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Text.Printf</span> (printf)
+
+<span class="org-haskell-keyword">type</span> <span class="org-haskell-type">Password</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-keyword">type</span> <span class="org-haskell-type">Username</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-type">String</span>     
+
+<span class="org-haskell-keyword">data</span> <span class="org-haskell-type">ServerAuth</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">AuthEmpty</span>
+                <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">AuthBasic</span> <span class="org-haskell-constructor">Username</span> <span class="org-haskell-constructor">Password</span>
+                <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span>, <span class="org-haskell-constructor">Read</span>, <span class="org-haskell-constructor">Show</span>)
+
+<span class="org-haskell-keyword">data</span> <span class="org-haskell-type">ServerConf</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">ServerConf</span>
+      {
+      serverHost     <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span>      
+     ,serverPort     <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
+     ,serverAssets   <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span>
+     ,serverSecurity <span class="org-haskell-operator">::</span> <span class="org-haskell-type">ServerAuth</span>
+      } <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span>, <span class="org-haskell-constructor">Read</span>, <span class="org-haskell-constructor">Show</span>)
+
+
+<span class="org-function-name">readConfig1</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">ServerConf</span>
+<span class="org-haskell-definition">readConfig1</span> <span class="org-haskell-operator">=</span> readMaybe 
+
+<span class="org-function-name">readConfig2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">ServerConf</span>
+<span class="org-haskell-definition">readConfig2</span> str <span class="org-haskell-operator">=</span> readMaybe str 
+
+
+<span class="org-function-name">readConfigFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">ServerConf</span>)
+<span class="org-haskell-definition">readConfigFile</span> configFile <span class="org-haskell-operator">=</span> readConfig1 <span class="org-haskell-operator">&lt;$&gt;</span> readFile configFile <span class="org-comment-delimiter">-- </span><span class="org-comment">Or fmap readConfig1 (readFile configFile)</span>
+
+
+<span class="org-function-name">runServer</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">ServerConf</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">runServer</span> config <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span> printf <span class="org-string">"Running server at port %d, listening host %s\n"</span> (serverPort config) (serverHost config) 
+                      putStrLn <span class="org-haskell-operator">$</span> <span class="org-string">"Server Authentication = "</span> <span class="org-haskell-operator">++</span> show (serverSecurity config)
+
+
+<span class="org-function-name">runServerConfigFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">runServerConfigFile</span> configFile <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  config <span class="org-haskell-operator">&lt;-</span> readConfigFile configFile
+  <span class="org-haskell-keyword">case</span> config <span class="org-haskell-keyword">of</span>
+    <span class="org-haskell-constructor">Just</span> conf <span class="org-haskell-operator">-&gt;</span> runServer conf
+    <span class="org-haskell-constructor">Nothing</span>   <span class="org-haskell-operator">-&gt;</span> putStrLn <span class="org-string">"Error: I can't read the server configuration file"</span>
+
+
+
+<span class="org-haskell-definition">config1</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">ServerConf</span> <span class="org-string">"0.0.0.0"</span> 8080 <span class="org-string">"/var/www"</span> <span class="org-haskell-constructor">AuthEmpty</span>
+
+<span class="org-haskell-definition">config2</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">ServerConf</span> { serverHost <span class="org-haskell-operator">=</span> <span class="org-string">"0.0.0.0"</span>,
+                       serverPort <span class="org-haskell-operator">=</span> 9090,
+                       serverAssets <span class="org-haskell-operator">=</span> <span class="org-string">"/home/arch/www"</span>,
+                       serverSecurity <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">AuthBasic</span> <span class="org-string">"gh0st"</span> <span class="org-string">"xmkg3p98sfawgav"</span>
+                     }
+</pre>
+</div>
+
+
+<p>
+Configuration File: server.conf 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-conf"><span class="org-type">ServerConf</span> {
+  <span class="org-variable-name">serverHost</span> = <span class="org-string">"127.0.0.1"</span> 
+ <span class="org-variable-name">,serverPort</span> = 80 
+ <span class="org-variable-name">,serverAssets</span> = <span class="org-string">"/var/www"</span>
+ <span class="org-variable-name">,serverSecurity</span> = AuthBasic <span class="org-string">"admin"</span> <span class="org-string">"xjwxfm2pcfg56hga"</span> 
+}
+</pre>
+</div>
+
+<p>
+Load the file in the REPL:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>load <span class="org-haskell-operator">/</span>tmp<span class="org-haskell-operator">/</span>serverconf<span class="org-haskell-operator">.</span>hs 
+[1 <span class="org-haskell-keyword">of</span> 1] <span class="org-haskell-constructor">Compiling</span> <span class="org-haskell-constructor">Main</span>             ( <span class="org-haskell-operator">/</span>tmp<span class="org-haskell-operator">/</span>serverconf<span class="org-haskell-operator">.</span>hs, interpreted )
+<span class="org-haskell-constructor">Ok</span>, modules loaded<span class="org-haskell-constructor">:</span> Main.
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">ServerConf</span> 
+<span class="org-function-name">ServerConf</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">ServerAuth</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">ServerConf</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-haskell-operator">&gt;</span> config1
+<span class="org-haskell-constructor">ServerConf</span> {serverHost <span class="org-haskell-operator">=</span> <span class="org-string">"0.0.0.0"</span>, serverPort <span class="org-haskell-operator">=</span> 8080, serverAssets <span class="org-haskell-operator">=</span> <span class="org-string">"/var/www"</span>, serverSecurity <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">AuthEmpty</span>}
+<span class="org-haskell-operator">&gt;</span>
+
+<span class="org-haskell-operator">&gt;</span> config2
+<span class="org-haskell-constructor">ServerConf</span> {serverHost <span class="org-haskell-operator">=</span> <span class="org-string">"0.0.0.0"</span>, serverPort <span class="org-haskell-operator">=</span> 9090, serverAssets <span class="org-haskell-operator">=</span> <span class="org-string">"/home/arch/www"</span>, serverSecurity <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">AuthBasic</span> <span class="org-string">"gh0st"</span> <span class="org-string">"xmkg3p98sfawgav"</span>}
+<span class="org-haskell-operator">&gt;</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runServer</span> config1
+<span class="org-haskell-constructor">Running</span> server at port 8080, listening host 0.0<span class="org-haskell-operator">.</span>0.0
+<span class="org-haskell-constructor">Server</span> <span class="org-haskell-constructor">Authentication</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">AuthEmpty</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runServer</span> config2
+<span class="org-haskell-constructor">Running</span> server at port 9090, listening host 0.0<span class="org-haskell-operator">.</span>0.0
+<span class="org-haskell-constructor">Server</span> <span class="org-haskell-constructor">Authentication</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">AuthBasic</span> <span class="org-string">"gh0st"</span> <span class="org-string">"xmkg3p98sfawgav"</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span>
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Read configuration file.</span>
+<span class="org-comment-delimiter">-- </span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">readConfigFile</span> <span class="org-string">"/tmp/server.conf"</span> 
+<span class="org-haskell-constructor">Just</span> (<span class="org-haskell-constructor">ServerConf</span> {serverHost <span class="org-haskell-operator">=</span> <span class="org-string">"127.0.0.1"</span>, serverPort <span class="org-haskell-operator">=</span> 80, serverAssets <span class="org-haskell-operator">=</span> <span class="org-string">"/var/www"</span>, serverSecurity <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">AuthBasic</span> <span class="org-string">"admin"</span> <span class="org-string">"xjwxfm2pcfg56hga"</span>})
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t readConfigFile <span class="org-string">"/tmp/server.conf"</span> 
+<span class="org-haskell-definition">readConfigFile</span> <span class="org-string">"/tmp/server.conf"</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> (<span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">ServerConf</span>)
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runServerConfigFile</span> <span class="org-string">"/tmp/server.conf"</span>
+<span class="org-haskell-constructor">Running</span> server at port 80, listening host 127.0<span class="org-haskell-operator">.</span>0.1
+<span class="org-haskell-constructor">Server</span> <span class="org-haskell-constructor">Authentication</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">AuthBasic</span> <span class="org-string">"admin"</span> <span class="org-string">"xjwxfm2pcfg56hga"</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runServerConfigFile</span> <span class="org-string">"/etc/fstab"</span>
+<span class="org-function-name">Error</span><span class="org-haskell-definition">:</span> <span class="org-haskell-constructor">I</span> can't read the server configuration file
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><a id="ID-21aa4a3c-16d1-407c-a497-f4cbaf28ef5f" name="ID-21aa4a3c-16d1-407c-a497-f4cbaf28ef5f"></a><span class="section-number-3">1.3</span> Using undefined to specify function signature before implementation</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>
+Undefined can be used to define function signatures before they are implemented.
+</p>
+
+<p>
+Example:
+</p>
+
+<p>
+File: math1.hs - Before implement the functions.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-function-name">add</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">add</span> <span class="org-haskell-operator">=</span> undefined
+
+<span class="org-function-name">sub</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">sub</span> x y <span class="org-haskell-operator">=</span> x <span class="org-haskell-operator">-</span> y        
+
+<span class="org-function-name">product</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> a
+<span class="org-haskell-definition">product</span> <span class="org-haskell-operator">=</span> undefined
+</pre>
+</div>
+
+<p>
+Load in the Repl: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>load <span class="org-haskell-operator">/</span>tmp<span class="org-haskell-operator">/</span>math1<span class="org-haskell-operator">.</span>hs 
+[1 <span class="org-haskell-keyword">of</span> 1] <span class="org-haskell-constructor">Compiling</span> <span class="org-haskell-constructor">Main</span>             ( <span class="org-haskell-operator">/</span>tmp<span class="org-haskell-operator">/</span>math1<span class="org-haskell-operator">.</span>hs, interpreted )
+<span class="org-haskell-constructor">Ok</span>, modules loaded<span class="org-haskell-constructor">:</span> Main.
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t add
+<span class="org-function-name">add</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t Main.add
+<span class="org-function-name">Main.add</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t product
+
+<span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>1<span class="org-haskell-type">:</span>1<span class="org-haskell-type">:</span>
+    <span class="org-haskell-type">Ambiguous</span> occurrence &#8216;product&#8217;
+    <span class="org-haskell-constructor">It</span> could refer to either &#8216;Main.product&#8217;,
+                             defined at <span class="org-haskell-operator">/</span>tmp<span class="org-haskell-operator">/</span>math1<span class="org-haskell-operator">.</span>hs<span class="org-haskell-constructor">:</span>6<span class="org-haskell-constructor">:</span>1
+                          or &#8216;Prelude.product&#8217;,
+                             imported from &#8216;<span class="org-haskell-constructor">Prelude</span>&#8217; at <span class="org-haskell-operator">/</span>tmp<span class="org-haskell-operator">/</span>math1<span class="org-haskell-operator">.</span>hs<span class="org-haskell-constructor">:</span>1<span class="org-haskell-constructor">:</span>1
+                             (and originally defined <span class="org-haskell-keyword">in</span> &#8216;<span class="org-haskell-constructor">Data.Foldable</span>&#8217;)
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t Main.product
+<span class="org-function-name">Main.product</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> a
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> Main<span class="org-haskell-definition">.</span>add 3 5
+<span class="org-haskell-operator">***</span> <span class="org-haskell-type">Exception:</span> Prelude.undefined
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> Main<span class="org-haskell-definition">.</span>product [1, 2, 3, 4, 5]
+<span class="org-haskell-operator">***</span> <span class="org-haskell-type">Exception:</span> Prelude.undefined
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+
+
+<p>
+File: math1.hs after implement the functions. 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-function-name">add</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">add</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-operator">\</span>x y <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">+</span> y
+
+<span class="org-function-name">sub</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">sub</span> x y <span class="org-haskell-operator">=</span> x <span class="org-haskell-operator">-</span> y        
+
+<span class="org-function-name">product</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> a
+<span class="org-haskell-definition">product</span> xs <span class="org-haskell-operator">=</span> foldr (<span class="org-haskell-operator">*</span>) 1 xs
+</pre>
+</div>
+
+<p>
+Loading in the repl: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t add
+<span class="org-function-name">add</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">add</span> 3 5
+8
+<span class="org-haskell-operator">&gt;</span>
+
+<span class="org-haskell-operator">&gt;</span> Main<span class="org-haskell-definition">.</span>add 3 5
+8
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t product 
+
+<span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>1<span class="org-haskell-constructor">:</span>1<span class="org-haskell-constructor">:</span>
+    <span class="org-haskell-constructor">Ambiguous</span> occurrence &#8216;product&#8217;
+    <span class="org-haskell-constructor">It</span> could refer to either &#8216;Main.product&#8217;,
+                             defined at <span class="org-haskell-operator">/</span>tmp<span class="org-haskell-operator">/</span>math2<span class="org-haskell-operator">.</span>hs<span class="org-haskell-constructor">:</span>9<span class="org-haskell-constructor">:</span>1
+                          or &#8216;Prelude.product&#8217;,
+                             imported from &#8216;<span class="org-haskell-constructor">Prelude</span>&#8217; at <span class="org-haskell-operator">/</span>tmp<span class="org-haskell-operator">/</span>math2<span class="org-haskell-operator">.</span>hs<span class="org-haskell-constructor">:</span>1<span class="org-haskell-constructor">:</span>1
+                             (and originally defined <span class="org-haskell-keyword">in</span> &#8216;<span class="org-haskell-constructor">Data.Foldable</span>&#8217;)
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> Main<span class="org-haskell-definition">.</span>product [1, 2, 3, 4, 5]
+120
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t Main.product
+<span class="org-function-name">Main.product</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> [a] <span class="org-haskell-operator">-&gt;</span> a
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-1-4" class="outline-3">
+<h3 id="sec-1-4"><a id="ID-84ba0fa5-63d2-4392-bbcf-9a94dfa38fa9" name="ID-84ba0fa5-63d2-4392-bbcf-9a94dfa38fa9"></a><span class="section-number-3">1.4</span> Using pattern matching for simple command line application</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>
+The pattern match is useful to develop simple command line
+applications in a declarative and robust way. 
+</p>
+
+<p>
+File: calculator.hs 
+</p>
+
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">System.Environment</span>  (getArgs)
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">System.Exit</span> (exitFailure, exitSuccess)   
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Text.Read</span> (readMaybe)
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Monad</span> 
+
+<span class="org-function-name">parseNum</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> <span class="org-haskell-type">Double</span> 
+<span class="org-haskell-definition">parseNum</span> <span class="org-haskell-operator">=</span> readMaybe    
+
+<span class="org-function-name">parseNumList</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">String</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> [<span class="org-haskell-type">Double</span>]
+<span class="org-haskell-definition">parseNumList</span> xs <span class="org-haskell-operator">=</span> mapM readMaybe xs                
+
+<span class="org-doc">{- | Perform operation on a single command line argument -}</span>                  
+<span class="org-function-name">doOperation</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Show</span> b <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> b) <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">doOperation</span> fn fnParser arg <span class="org-haskell-operator">=</span>
+    <span class="org-haskell-keyword">case</span> fnParser arg <span class="org-haskell-keyword">of</span>
+      <span class="org-haskell-constructor">Just</span> x  <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-keyword">do</span> putStrLn <span class="org-haskell-operator">$</span> <span class="org-string">"Result = "</span> <span class="org-haskell-operator">++</span> show (fn x)
+                    exitSuccess
+
+      <span class="org-haskell-constructor">Nothing</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-keyword">do</span> putStrLn <span class="org-haskell-operator">$</span> <span class="org-string">"Error: Invalid input '"</span> <span class="org-haskell-operator">++</span> arg <span class="org-haskell-operator">++</span> <span class="org-string">"'"</span>
+                    exitFailure 
+
+<span class="org-doc">{- | Perform operation on multiple command line arguments -}</span>
+<span class="org-function-name">doListOperation</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Show</span> b <span class="org-haskell-operator">=&gt;</span> ([a] <span class="org-haskell-operator">-&gt;</span> b) <span class="org-haskell-operator">-&gt;</span> ([<span class="org-haskell-type">String</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> [a]) <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">String</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span> 
+<span class="org-haskell-definition">doListOperation</span> fn fnParser args <span class="org-haskell-operator">=</span>
+    <span class="org-haskell-keyword">case</span> fnParser args <span class="org-haskell-keyword">of</span>
+      <span class="org-haskell-constructor">Just</span> xs <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-keyword">do</span> putStrLn <span class="org-haskell-operator">$</span> <span class="org-string">"Result = "</span> <span class="org-haskell-operator">++</span> show (fn xs)
+                    exitSuccess
+
+      <span class="org-haskell-constructor">Nothing</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-keyword">do</span> putStrLn <span class="org-haskell-operator">$</span> <span class="org-string">"Error: Invalid input '"</span> <span class="org-haskell-operator">++</span> show args <span class="org-haskell-operator">++</span> <span class="org-string">"'"</span>
+                    exitFailure
+
+
+<span class="org-haskell-definition">showHelp</span> <span class="org-haskell-operator">=</span> putStrLn <span class="org-haskell-operator">$</span> unlines [
+             <span class="org-string">"Calculator App"</span>
+            ,<span class="org-string">"\nOptions\n"</span>
+            ,<span class="org-string">" -help           - Show help"</span>
+            ,<span class="org-string">" -pi             - Show pi number"</span>
+            ,<span class="org-string">" -exp x          - Compute exponential"</span>
+            ,<span class="org-string">" -sin x          - Compute sin"</span>
+            ,<span class="org-string">" -echo file      - Display file"</span>
+            ,<span class="org-string">" -sum 10 20 30   - Compute sum"</span>
+            ,<span class="org-string">" -prod 10 20 30  - Compute product"</span>
+
+            ]
+
+
+<span class="org-haskell-definition">echoFile</span> file <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  content <span class="org-haskell-operator">&lt;-</span> readFile file
+  putStrLn content
+
+<span class="org-function-name">parseArgs</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">String</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">parseArgs</span> args <span class="org-haskell-operator">=</span>
+    <span class="org-haskell-keyword">case</span> args <span class="org-haskell-keyword">of</span>
+      <span class="org-haskell-constructor">[]</span>                <span class="org-haskell-operator">-&gt;</span> showHelp <span class="org-haskell-operator">&gt;&gt;</span> exitSuccess
+      [<span class="org-string">"-pi"</span>]           <span class="org-haskell-operator">-&gt;</span> putStrLn (show 3.1415) <span class="org-haskell-operator">&gt;&gt;</span> exitSuccess                     
+      [<span class="org-string">"-help"</span>]         <span class="org-haskell-operator">-&gt;</span> showHelp <span class="org-haskell-operator">&gt;&gt;</span> exitSuccess
+      [<span class="org-string">"-exp"</span>, x]       <span class="org-haskell-operator">-&gt;</span> doOperation exp parseNum x
+      [<span class="org-string">"-sin"</span>, x]       <span class="org-haskell-operator">-&gt;</span> doOperation sin parseNum x
+      [<span class="org-string">"-cos"</span>, x]       <span class="org-haskell-operator">-&gt;</span> doOperation cos parseNum x                     
+      [<span class="org-string">"-echo"</span>, file]   <span class="org-haskell-operator">-&gt;</span> echoFile file                      
+      <span class="org-string">"-sum"</span><span class="org-haskell-constructor">:</span>args       <span class="org-haskell-operator">-&gt;</span> doListOperation sum parseNumList args
+      <span class="org-string">"-prod"</span><span class="org-haskell-constructor">:</span>args      <span class="org-haskell-operator">-&gt;</span> doListOperation product parseNumList args
+      <span class="org-haskell-keyword">_</span>                 <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-keyword">do</span> putStrLn <span class="org-string">"Error: Invalid command line switches."</span>
+                              exitFailure
+<span class="org-comment-delimiter">{-</span>
+<span class="org-comment">Or </span>
+<span class="org-comment">   main :: IO () </span>
+<span class="org-comment">   main = do </span>
+<span class="org-comment">      args &lt;- getArgs </span>
+<span class="org-comment">      parseArgs args </span>
+
+
+<span class="org-comment">-}</span>                           
+<span class="org-function-name">main</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span> 
+<span class="org-haskell-definition">main</span> <span class="org-haskell-operator">=</span> getArgs <span class="org-haskell-operator">&gt;&gt;=</span> parseArgs
+</pre>
+</div>
+
+<p>
+<b>Command line tests:</b>
+</p>
+
+<p>
+Running in as script:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack exec -- runhaskell /tmp/calculator.hs 
+Calculator App
+
+Options
+
+ -help           - Show help
+ -pi             - Show pi number
+ -exp x          - Compute exponential
+ -sin x          - Compute sin
+ -echo file      - Display file
+ -sum 10 20 30   - Compute sum
+ -prod 10 20 30  - Compute product
+
+
+$ stack exec -- runhaskell /tmp/calculator.hs -help
+Calculator App
+
+Options
+
+ -help           - Show help
+ -pi             - Show pi number
+ -exp x          - Compute exponential
+ -sin x          - Compute sin
+ -echo file      - Display file
+ -sum 10 20 30   - Compute sum
+ -prod 10 20 30  - Compute product
+
+
+$ stack exec -- runhaskell /tmp/calculator.hs sada
+<span class="org-function-name">Error</span>: Invalid command line switches.
+
+
+$ stack exec -- runhaskell /tmp/calculator.hs -exp 1.0
+Result = 2.718281828459045
+
+$ stack exec -- runhaskell /tmp/calculator.hs -exp 2.0
+Result = 7.38905609893065
+
+$ stack exec -- runhaskell /tmp/calculator.hs -sin 3.1415
+Result = 9.265358966049026e-5
+
+$ stack exec -- runhaskell /tmp/calculator.hs -cos x2323
+<span class="org-function-name">Error</span>: Invalid input <span class="org-string">'x2323'</span>
+
+$ stack exec -- runhaskell /tmp/calculator.hs -cos
+<span class="org-function-name">Error</span>: Invalid command line switches.
+
+$ stack exec -- runhaskell /tmp/calculator.hs -sum 1 2 3 4 5
+Result = 15.0
+
+$ stack exec -- runhaskell /tmp/calculator.hs -prod 1 2 3 4 5 
+Result = 120.0
+
+$ stack exec -- runhaskell /tmp/calculator.hs -prod 1 2 3 sads 4 5 
+<span class="org-function-name">Error</span>: Invalid input <span class="org-string">'["1","2","3","sads","4","5"]'</span>
+
+$ stack exec -- runhaskell /tmp/calculator.hs -echo /etc/issue
+Manjaro Linux \r  (\n) (\l)
+</pre>
+</div>
+
+<p>
+Compiling:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ stack exec -- ghc /tmp/calculator.hs -o <span class="org-keyword">/tmp/calculator.bin</span>
+<span class="org-keyword">[1</span> of 1] Compiling Main             ( /tmp/calculator.hs, /tmp/calculator.o )
+Linking /tmp/calculator.bin ...
+
+$ file /tmp/calculator.bin 
+<span class="org-function-name">/tmp/calculator.bin</span>: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32, <span class="org-variable-name">BuildID</span>[sha1]=b3a0da3f4814ef85dd257b9e81651e2d234bb026, not stripped, with debug_info
+
+
+$ /tmp/calculator.bin 
+Calculator App
+
+Options
+
+ -help           - Show help
+ -pi             - Show pi number
+ -exp x          - Compute exponential
+ -sin x          - Compute sin
+ -echo file      - Display file
+ -sum 10 20 30   - Compute sum
+ -prod 10 20 30  - Compute product
+
+$ /tmp/calculator.bin -pi
+3.1415
+
+
+$ /tmp/calculator.bin -exp pi
+<span class="org-function-name">Error</span>: Invalid input <span class="org-string">'pi'</span>
+
+
+$ /tmp/calculator.bin -exp 3.1415
+Result = 23.138548663861286
+
+
+$ /tmp/calculator.bin -sum 1 2 3 4 5 6 7
+Result = 28.0
+
+
+$ /tmp/calculator.bin -sum 1 nothing 3 4 5 6 asdas
+<span class="org-function-name">Error</span>: Invalid input <span class="org-string">'["1","nothing","3","4","5","6","asdas"]'</span>
+
+$ /tmp/calculator.bin -echo /etc/lsb-release
+<span class="org-variable-name">DISTRIB_ID</span>=ManjaroLinux
+<span class="org-variable-name">DISTRIB_RELEASE</span>=17.0
+<span class="org-variable-name">DISTRIB_CODENAME</span>=Gellivara
+<span class="org-variable-name">DISTRIB_DESCRIPTION</span>=<span class="org-string">"Manjaro Linux"</span>
+</pre>
+</div>
+
+<p>
+Testing in REPL:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t parseArgs 
+<span class="org-function-name">parseArgs</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">String</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">parseArgs</span> [<span class="org-string">"-help"</span>]
+<span class="org-haskell-constructor">Calculator</span> <span class="org-haskell-constructor">App</span>
+
+<span class="org-haskell-constructor">Options</span>
+
+ <span class="org-haskell-operator">-</span>help           <span class="org-haskell-operator">-</span> <span class="org-haskell-constructor">Show</span> help
+ <span class="org-haskell-operator">-</span>pi             <span class="org-haskell-operator">-</span> <span class="org-haskell-constructor">Show</span> pi number
+ <span class="org-haskell-operator">-</span>exp x          <span class="org-haskell-operator">-</span> <span class="org-haskell-constructor">Compute</span> exponential
+ <span class="org-haskell-operator">-</span>sin x          <span class="org-haskell-operator">-</span> <span class="org-haskell-constructor">Compute</span> sin
+ <span class="org-haskell-operator">-</span>echo file      <span class="org-haskell-operator">-</span> <span class="org-haskell-constructor">Display</span> file
+ <span class="org-haskell-operator">-</span>sum 10 20 30   <span class="org-haskell-operator">-</span> <span class="org-haskell-constructor">Compute</span> sum
+ <span class="org-haskell-operator">-</span>prod 10 20 30  <span class="org-haskell-operator">-</span> <span class="org-haskell-constructor">Compute</span> product
+
+<span class="org-haskell-operator">***</span> <span class="org-haskell-constructor">Exception:</span> <span class="org-haskell-constructor">ExitSuccess</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">parseArgs</span> [<span class="org-string">"-help"</span>, <span class="org-string">"qasdas"</span>, <span class="org-string">"seds"</span>]
+<span class="org-function-name">Error</span><span class="org-haskell-definition">:</span> <span class="org-haskell-constructor">Invalid</span> command line switches<span class="org-haskell-operator">.</span>
+<span class="org-haskell-operator">***</span> <span class="org-haskell-constructor">Exception:</span> <span class="org-haskell-constructor">ExitFailure</span> 1
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">parseArgs</span> [<span class="org-string">"-pi"</span>]
+3.1415
+<span class="org-haskell-operator">***</span> <span class="org-haskell-constructor">Exception:</span> <span class="org-haskell-constructor">ExitSuccess</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">parseArgs</span> [<span class="org-string">"-exp"</span>, <span class="org-string">"1.23"</span>]
+<span class="org-haskell-constructor">Result</span> <span class="org-haskell-operator">=</span> 3.4212295362896734
+<span class="org-haskell-operator">***</span> <span class="org-haskell-constructor">Exception:</span> <span class="org-haskell-constructor">ExitSuccess</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">parseArgs</span> [<span class="org-string">"-sum"</span>, <span class="org-string">"1.23"</span>, <span class="org-string">"2.323"</span>, <span class="org-string">"4.23"</span>]
+<span class="org-haskell-constructor">Result</span> <span class="org-haskell-operator">=</span> 7.783
+<span class="org-haskell-operator">***</span> <span class="org-haskell-constructor">Exception:</span> <span class="org-haskell-constructor">ExitSuccess</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">parseArgs</span> [<span class="org-string">"-echo"</span>, <span class="org-string">"/etc/lsb-release"</span>]
+<span class="org-haskell-constructor">DISTRIB_ID</span><span class="org-haskell-operator">=</span><span class="org-haskell-constructor">ManjaroLinux</span>
+<span class="org-haskell-constructor">DISTRIB_RELEASE</span><span class="org-haskell-operator">=</span>17.0
+<span class="org-haskell-constructor">DISTRIB_CODENAME</span><span class="org-haskell-operator">=</span><span class="org-haskell-constructor">Gellivara</span>
+<span class="org-haskell-constructor">DISTRIB_DESCRIPTION</span><span class="org-haskell-operator">=</span><span class="org-string">"Manjaro Linux"</span>
+
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-5" class="outline-3">
+<h3 id="sec-1-5"><span class="section-number-3">1.5</span> Debug Computations using trace</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+The module Debug.Trace provides functions to allow debug
+computations. 
+</p>
+
+
+<ul class="org-ul">
+<li>Module: <a href="https://hackage.haskell.org/package/base-4.9.0.0/docs/Debug-Trace.html">Debug.Trace</a>
+</li>
+</ul>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Function</th>
+<th scope="col" class="left">&#xa0;</th>
+<th scope="col" class="left">Signature</th>
+<th scope="col" class="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">trace</td>
+<td class="left">::</td>
+<td class="left">String -&gt; a -&gt; a</td>
+<td class="left">Print the first argument (string) and returns the second.</td>
+</tr>
+
+<tr>
+<td class="left">traceShow</td>
+<td class="left">::</td>
+<td class="left">Show a =&gt; a -&gt; b -&gt; b</td>
+<td class="left">Print the first value and returns the second.</td>
+</tr>
+
+<tr>
+<td class="left">traceIO</td>
+<td class="left">::</td>
+<td class="left">String -&gt; IO ()</td>
+<td class="left">Like trace but works in a IO Monad.</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Debug.Trace</span>
+
+<span class="org-haskell-keyword">let</span> x <span class="org-haskell-operator">=</span> 10 <span class="org-haskell-operator">+</span> 20 <span class="org-haskell-keyword">in</span> trace (<span class="org-string">"the value of (10 + 20) is = "</span> <span class="org-haskell-operator">++</span> show x) x
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">the</span> value <span class="org-haskell-keyword">of</span> (10 <span class="org-haskell-operator">+</span> 20) is <span class="org-haskell-operator">=</span> 30
+30
+it
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">factorial</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Integer</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Integer</span>
+<span class="org-haskell-definition">factorial</span> 0 <span class="org-haskell-operator">=</span> 1
+<span class="org-haskell-definition">factorial</span> n <span class="org-haskell-operator">=</span> trace (<span class="org-string">"n = "</span> <span class="org-haskell-operator">++</span> show n) n <span class="org-haskell-operator">*</span> factorial (n <span class="org-haskell-operator">-</span>1)
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">factorial</span> 5
+<span class="org-haskell-definition">n</span> <span class="org-haskell-operator">=</span> 5
+<span class="org-haskell-definition">n</span> <span class="org-haskell-operator">=</span> 4
+<span class="org-haskell-definition">n</span> <span class="org-haskell-operator">=</span> 3
+<span class="org-haskell-definition">n</span> <span class="org-haskell-operator">=</span> 2
+<span class="org-haskell-definition">n</span> <span class="org-haskell-operator">=</span> 1
+120
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Integer</span>
+<span class="org-haskell-operator">&gt;</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">factorial</span> 10
+<span class="org-haskell-definition">n</span> <span class="org-haskell-operator">=</span> 10
+<span class="org-haskell-definition">n</span> <span class="org-haskell-operator">=</span> 9
+<span class="org-haskell-definition">n</span> <span class="org-haskell-operator">=</span> 8
+<span class="org-haskell-definition">n</span> <span class="org-haskell-operator">=</span> 7
+<span class="org-haskell-definition">n</span> <span class="org-haskell-operator">=</span> 6
+<span class="org-haskell-definition">n</span> <span class="org-haskell-operator">=</span> 5
+<span class="org-haskell-definition">n</span> <span class="org-haskell-operator">=</span> 4
+<span class="org-haskell-definition">n</span> <span class="org-haskell-operator">=</span> 3
+<span class="org-haskell-definition">n</span> <span class="org-haskell-operator">=</span> 2
+<span class="org-haskell-definition">n</span> <span class="org-haskell-operator">=</span> 1
+3628800
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Integer</span>
+<span class="org-haskell-operator">&gt;</span>
+
+
+
+<span class="org-haskell-type">:</span>{    
+<span class="org-function-name">myfoldl</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Show</span> acc <span class="org-haskell-operator">=&gt;</span> (acc <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">-&gt;</span> acc) <span class="org-haskell-operator">-&gt;</span> acc <span class="org-haskell-operator">-&gt;</span> [x] <span class="org-haskell-operator">-&gt;</span> acc
+<span class="org-haskell-definition">myfoldl</span> step acc <span class="org-haskell-constructor">[]</span>      <span class="org-haskell-operator">=</span>  acc
+<span class="org-haskell-definition">myfoldl</span> step acc (x<span class="org-haskell-constructor">:</span>xs)  <span class="org-haskell-operator">=</span>  myfoldl step (step acc x) xs                       
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">myfoldl</span> (<span class="org-haskell-operator">\</span>acc x <span class="org-haskell-operator">-&gt;</span> 10 <span class="org-haskell-operator">*</span> acc <span class="org-haskell-operator">+</span>x) 0 [1, 2, 3, 4, 5]
+12345
+<span class="org-haskell-operator">&gt;</span>     
+
+
+<span class="org-haskell-constructor">:</span>{    
+<span class="org-function-name">myfoldl2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Show</span> acc <span class="org-haskell-operator">=&gt;</span> (acc <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">-&gt;</span> acc) <span class="org-haskell-operator">-&gt;</span> acc <span class="org-haskell-operator">-&gt;</span> [x] <span class="org-haskell-operator">-&gt;</span> acc
+<span class="org-haskell-definition">myfoldl2</span> step acc <span class="org-haskell-constructor">[]</span>      <span class="org-haskell-operator">=</span>  acc
+<span class="org-haskell-definition">myfoldl2</span> step acc (x<span class="org-haskell-constructor">:</span>xs)  <span class="org-haskell-operator">=</span>  <span class="org-haskell-keyword">let</span> acc' <span class="org-haskell-operator">=</span> step acc x
+                             <span class="org-haskell-keyword">in</span> trace (<span class="org-string">"acc' = "</span> <span class="org-haskell-operator">++</span> show acc') <span class="org-haskell-operator">$</span> myfoldl2 step acc' xs                       
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-operator">&gt;</span>  myfoldl2 (<span class="org-haskell-operator">\</span>acc x <span class="org-haskell-operator">-&gt;</span> 10 <span class="org-haskell-operator">*</span> acc <span class="org-haskell-operator">+</span>x) 0 [1, 2, 3, 4, 5]
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 1
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 12
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 123
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 1234
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 12345
+12345
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> result <span class="org-haskell-operator">=</span>  myfoldl2 (<span class="org-haskell-operator">\</span>acc x <span class="org-haskell-operator">-&gt;</span> 10 <span class="org-haskell-operator">*</span> acc <span class="org-haskell-operator">+</span>x) 0 [1, 2, 3, 4, 5]
+
+<span class="org-haskell-operator">&gt;</span> result
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 1
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 12
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 123
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 1234
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 12345
+12345
+
+<span class="org-haskell-operator">&gt;</span> result
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 1
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 12
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 123
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 1234
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 12345
+12345
+
+<span class="org-haskell-operator">&gt;</span> result <span class="org-haskell-definition">*</span> 3
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 1
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 12
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 123
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 1234
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 12345
+37035
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">traceLabel</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Show</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a 
+<span class="org-haskell-definition">traceLabel</span> label value <span class="org-haskell-operator">=</span> trace (label <span class="org-haskell-operator">++</span> show value) value
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-constructor">:</span>{    
+<span class="org-function-name">myfoldl3</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Show</span> acc <span class="org-haskell-operator">=&gt;</span> (acc <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">-&gt;</span> acc) <span class="org-haskell-operator">-&gt;</span> acc <span class="org-haskell-operator">-&gt;</span> [x] <span class="org-haskell-operator">-&gt;</span> acc
+<span class="org-haskell-definition">myfoldl3</span> step acc <span class="org-haskell-constructor">[]</span>      <span class="org-haskell-operator">=</span>  acc
+<span class="org-haskell-definition">myfoldl3</span> step acc (x<span class="org-haskell-constructor">:</span>xs)  <span class="org-haskell-operator">=</span>  myfoldl3 step (traceLabel <span class="org-string">"acc' = "</span> <span class="org-haskell-operator">$</span> step acc x) xs                       
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-operator">&gt;</span>  myfoldl3 (<span class="org-haskell-operator">\</span>acc x <span class="org-haskell-operator">-&gt;</span> 10 <span class="org-haskell-operator">*</span> acc <span class="org-haskell-operator">+</span>x) 0 [1, 2, 3, 4, 5]
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 1
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 12
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 123
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 1234
+<span class="org-haskell-definition">acc'</span> <span class="org-haskell-operator">=</span> 12345
+12345
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-6" class="outline-3">
+<h3 id="sec-1-6"><span class="section-number-3">1.6</span> Haskell Interactive Shell - GHCI</h3>
+<div class="outline-text-3" id="text-1-6">
+</div><div id="outline-container-sec-1-6-1" class="outline-4">
+<h4 id="sec-1-6-1"><span class="section-number-4">1.6.1</span> GHCI configuration file</h4>
+<div class="outline-text-4" id="text-1-6-1">
+<p>
+<b>Example - GHCI without configuration file</b>
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">$</span> stack ghci
+<span class="org-haskell-constructor">Configuring</span> <span class="org-haskell-constructor">GHCi</span> with the following packages<span class="org-haskell-constructor">:</span> 
+<span class="org-haskell-constructor">GHCi</span>, version 8.0<span class="org-haskell-operator">.</span>1<span class="org-haskell-constructor">:</span> http<span class="org-haskell-constructor">://</span>www<span class="org-haskell-operator">.</span>haskell<span class="org-haskell-operator">.</span>org<span class="org-haskell-operator">/</span>ghc<span class="org-haskell-operator">/</span>  <span class="org-haskell-constructor">:?</span> for help
+<span class="org-haskell-constructor">Loaded</span> <span class="org-haskell-constructor">GHCi</span> configuration from <span class="org-haskell-operator">/</span>tmp<span class="org-haskell-operator">/</span>ghci7713<span class="org-haskell-operator">/</span>ghci<span class="org-haskell-operator">-</span>script
+<span class="org-haskell-constructor">Prelude</span><span class="org-haskell-definition">&gt;</span> 
+<span class="org-haskell-constructor">Prelude</span><span class="org-haskell-definition">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Monad</span>
+<span class="org-haskell-constructor">Prelude</span> <span class="org-haskell-constructor">Control.Monad</span><span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-constructor">Prelude</span> <span class="org-haskell-constructor">Control.Monad</span><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">System.Directory</span> <span class="org-haskell-keyword">as</span> <span class="org-haskell-constructor">D</span>
+<span class="org-haskell-constructor">Prelude</span> <span class="org-haskell-constructor">Control.Monad</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-constructor">Prelude</span> <span class="org-haskell-constructor">Control.Monad</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">&gt;</span> D.getDirectoryContents <span class="org-string">"/etc/"</span> <span class="org-haskell-operator">&gt;&gt;=</span> mapM_ putStrLn
+systemd
+motd
+adobe
+ld<span class="org-haskell-definition">.</span>so<span class="org-haskell-operator">.</span>cache
+environment
+libreoffice
+rc_keymaps
+sensors3<span class="org-haskell-definition">.</span>conf
+gshadow
+acpi
+pkcs11
+modules<span class="org-haskell-definition">-</span>load<span class="org-haskell-operator">.</span>d
+cron<span class="org-haskell-definition">.</span>deny
+shadow<span class="org-haskell-definition">-</span>
+gufw
+security
+tmpfiles<span class="org-haskell-definition">.</span>d
+<span class="org-haskell-operator">...</span> <span class="org-haskell-operator">...</span>         
+
+<span class="org-haskell-constructor">Prelude</span> <span class="org-haskell-constructor">Control.Monad</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-constructor">Prelude</span> <span class="org-haskell-constructor">Control.Monad</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>{
+<span class="org-haskell-constructor">Prelude</span> <span class="org-haskell-constructor">Control.Monad</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">|</span> getPassword <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>         
+<span class="org-haskell-constructor">Prelude</span> <span class="org-haskell-constructor">Control.Monad</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">|</span> getPassword password success error <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+<span class="org-haskell-constructor">Prelude</span> <span class="org-haskell-constructor">Control.Monad</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">|</span>   passwd <span class="org-haskell-operator">&lt;-</span> putStr <span class="org-string">"Enter the password: "</span> <span class="org-haskell-operator">&gt;&gt;</span> getLine 
+<span class="org-haskell-constructor">Prelude</span> <span class="org-haskell-constructor">Control.Monad</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">|</span>   <span class="org-haskell-keyword">if</span> passwd <span class="org-haskell-operator">==</span> password
+<span class="org-haskell-constructor">Prelude</span> <span class="org-haskell-constructor">Control.Monad</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">|</span>   <span class="org-haskell-keyword">then</span> success
+<span class="org-haskell-constructor">Prelude</span> <span class="org-haskell-constructor">Control.Monad</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">|</span>   <span class="org-haskell-keyword">else</span> <span class="org-haskell-keyword">do</span> error
+<span class="org-haskell-constructor">Prelude</span> <span class="org-haskell-constructor">Control.Monad</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">|</span>           getPassword password success error
+<span class="org-haskell-constructor">Prelude</span> <span class="org-haskell-constructor">Control.Monad</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">:</span>}
+<span class="org-haskell-constructor">Prelude</span> <span class="org-haskell-constructor">Control.Monad</span> <span class="org-haskell-constructor">D</span><span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+
+<p>
+<b>Example - GHCI with configuration file</b>
+</p>
+
+<p>
+File: ~/.ghci 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Concurrent</span> (forkIO, threadDelay)
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">System.Directory</span> (getCurrentDirectory)
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Set prompts</span>
+
+<span class="org-haskell-constructor">:</span>set prompt <span class="org-string">"&gt; "</span>
+<span class="org-haskell-constructor">:</span>set prompt2 <span class="org-string">"- "</span>
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Print type after evaluation </span>
+<span class="org-haskell-constructor">:</span>set <span class="org-haskell-operator">+</span>t 
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Start at tmp directory </span>
+<span class="org-haskell-constructor">:</span>cd <span class="org-haskell-operator">/</span>tmp
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Add language extensions </span>
+<span class="org-haskell-constructor">:</span>set <span class="org-haskell-operator">-</span><span class="org-haskell-constructor">XFlexibleInstances</span>
+
+<span class="org-haskell-definition">putStrLn</span> <span class="org-string">"Wellcome to Haskell"</span>
+</pre>
+</div>
+
+<p>
+GHCI Repl:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">$</span> stack ghci
+<span class="org-haskell-constructor">Configuring</span> <span class="org-haskell-constructor">GHCi</span> with the following packages<span class="org-haskell-constructor">:</span> 
+<span class="org-haskell-constructor">GHCi</span>, version 8.0<span class="org-haskell-operator">.</span>1<span class="org-haskell-constructor">:</span> http<span class="org-haskell-constructor">://</span>www<span class="org-haskell-operator">.</span>haskell<span class="org-haskell-operator">.</span>org<span class="org-haskell-operator">/</span>ghc<span class="org-haskell-operator">/</span>  <span class="org-haskell-constructor">:?</span> for help
+<span class="org-haskell-constructor">Wellcome</span> to <span class="org-haskell-constructor">Haskell</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-type">Loaded</span> <span class="org-haskell-type">GHCi</span> configuration from <span class="org-haskell-operator">/</span>home<span class="org-haskell-operator">/</span>archbox<span class="org-haskell-operator">/.</span>ghci
+<span class="org-haskell-constructor">Loaded</span> <span class="org-haskell-constructor">GHCi</span> configuration from <span class="org-haskell-operator">/</span>tmp<span class="org-haskell-operator">/</span>ghci8295<span class="org-haskell-operator">/</span>ghci<span class="org-haskell-operator">-</span>script
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Monad</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">System.Directory</span> <span class="org-haskell-keyword">as</span> <span class="org-haskell-constructor">D</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> D<span class="org-haskell-definition">.</span>getDirectoryContents <span class="org-string">"/etc/"</span> <span class="org-haskell-operator">&gt;&gt;=</span> mapM_ putStrLn
+systemd
+motd
+adobe
+ld<span class="org-haskell-definition">.</span>so<span class="org-haskell-operator">.</span>cache
+environment
+libreoffice
+rc_keymaps
+sensors3<span class="org-haskell-definition">.</span>conf
+gshadow
+
+<span class="org-haskell-operator">...</span> <span class="org-haskell-operator">...</span> <span class="org-haskell-operator">...</span>
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Paste this function</span>
+<span class="org-comment-delimiter">{-</span>
+<span class="org-comment">getPassword :: String -&gt; IO () -&gt; IO () -&gt; IO ()         </span>
+<span class="org-comment">getPassword password success error = do</span>
+<span class="org-comment">  passwd &lt;- putStr "Enter the password: " &gt;&gt; getLine </span>
+<span class="org-comment">  if passwd == password</span>
+<span class="org-comment">  then success</span>
+<span class="org-comment">  else do error</span>
+<span class="org-comment">          getPassword password success error</span>
+<span class="org-comment">-}</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>{
+<span class="org-haskell-operator">-</span> getPassword <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>         
+<span class="org-haskell-operator">-</span> getPassword password success error <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+<span class="org-haskell-operator">-</span>   passwd <span class="org-haskell-operator">&lt;-</span> putStr <span class="org-string">"Enter the password: "</span> <span class="org-haskell-operator">&gt;&gt;</span> getLine 
+<span class="org-haskell-operator">-</span>   <span class="org-haskell-keyword">if</span> passwd <span class="org-haskell-operator">==</span> password
+<span class="org-haskell-operator">-</span>   <span class="org-haskell-keyword">then</span> success
+<span class="org-haskell-operator">-</span>   <span class="org-haskell-keyword">else</span> <span class="org-haskell-keyword">do</span> error
+<span class="org-haskell-operator">-</span>           getPassword password success error
+<span class="org-function-name">-</span> <span class="org-haskell-constructor">:</span>}
+<span class="org-function-name">getPassword</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span>
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> fn a b <span class="org-haskell-operator">=</span> 10 <span class="org-haskell-operator">*</span> a <span class="org-haskell-operator">-</span> b
+<span class="org-function-name">fn</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">fn</span> 10 20
+80
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> a
+<span class="org-haskell-operator">&gt;</span> it
+80
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> a
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t forkIO
+<span class="org-function-name">forkIO</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">GHC.Conc.Sync.ThreadId</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t threadDelay 
+<span class="org-function-name">threadDelay</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">forkIO</span> (forever <span class="org-haskell-operator">$</span> threadDelay 1000000 <span class="org-haskell-operator">&gt;&gt;</span> putStrLn <span class="org-string">"Repeat forever with 1 second delay"</span>)
+<span class="org-haskell-constructor">ThreadId</span> 82
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">GHC.Conc.Sync.ThreadId</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">Repeat</span> forever with 1 second delay
+<span class="org-haskell-constructor">Repeat</span> forever with 1 second delay
+<span class="org-haskell-constructor">Repeat</span> forever with 1 second delay
+<span class="org-haskell-constructor">Repeat</span> forever with 1 second delay
+<span class="org-haskell-constructor">Repeat</span> forever with 1 second delay
+<span class="org-haskell-constructor">Repeat</span> forever with 1 second delay
+<span class="org-haskell-constructor">Repeat</span> forever with 1 second delay
+<span class="org-haskell-constructor">Repeat</span> forever with 1 second delay
+     <span class="org-haskell-operator">..</span> <span class="org-haskell-operator">...</span> <span class="org-haskell-operator">...</span> <span class="org-haskell-operator">...</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-6-2" class="outline-4">
+<h4 id="sec-1-6-2"><span class="section-number-4">1.6.2</span> Extract contents of IO action</h4>
+<div class="outline-text-4" id="text-1-6-2">
+<p>
+It is useful to extract the value wrapped by an IO action to small
+experiments and interactive commands. Note: It is only possible in the
+REPL.
+</p>
+
+<p>
+Not possible because readFile returns an IO action.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">putStrLn</span> (readFile <span class="org-string">"/etc/lsb-release"</span>)
+
+<span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>5<span class="org-haskell-constructor">:</span>11<span class="org-haskell-constructor">:</span> error<span class="org-haskell-constructor">:</span>
+    <span class="org-haskell-operator">&#8226;</span> <span class="org-haskell-constructor">Couldn't</span> match <span class="org-haskell-keyword">type</span> &#8216;<span class="org-haskell-type">IO</span> <span class="org-haskell-type">String</span>&#8217; with &#8216;[<span class="org-haskell-type">Char</span>]&#8217;
+      <span class="org-haskell-constructor">Expected</span> <span class="org-haskell-keyword">type</span><span class="org-haskell-type">:</span> <span class="org-haskell-type">String</span>
+        <span class="org-haskell-constructor">Actual</span> <span class="org-haskell-keyword">type</span><span class="org-haskell-type">:</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">String</span>
+    <span class="org-haskell-operator">&#8226;</span> <span class="org-haskell-type">In</span> the first argument <span class="org-haskell-keyword">of</span> &#8216;putStrLn&#8217;, namely
+        &#8216;(readFile <span class="org-string">"/etc/lsb-release"</span>)&#8217;
+      <span class="org-haskell-constructor">In</span> the expression<span class="org-haskell-constructor">:</span> putStrLn (readFile <span class="org-string">"/etc/lsb-release"</span>)
+      <span class="org-haskell-constructor">In</span> an equation for &#8216;it&#8217;<span class="org-haskell-constructor">:</span>
+          it <span class="org-haskell-operator">=</span> putStrLn (readFile <span class="org-string">"/etc/lsb-release"</span>)
+<span class="org-haskell-operator">&gt;</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t readFile
+<span class="org-function-name">readFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">String</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> content <span class="org-haskell-operator">=</span> readFile <span class="org-string">"/etc/lsb-release"</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t content
+<span class="org-function-name">content</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">putStrLn</span> content
+
+<span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>9<span class="org-haskell-type">:</span>10<span class="org-haskell-type">:</span> error<span class="org-haskell-type">:</span>
+    <span class="org-haskell-operator">&#8226;</span> <span class="org-haskell-type">Couldn't</span> match <span class="org-haskell-keyword">type</span> &#8216;<span class="org-haskell-type">IO</span> <span class="org-haskell-type">String</span>&#8217; with &#8216;[<span class="org-haskell-type">Char</span>]&#8217;
+      <span class="org-haskell-constructor">Expected</span> <span class="org-haskell-keyword">type</span><span class="org-haskell-type">:</span> <span class="org-haskell-type">String</span>
+        <span class="org-haskell-constructor">Actual</span> <span class="org-haskell-keyword">type</span><span class="org-haskell-type">:</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">String</span>
+    <span class="org-haskell-operator">&#8226;</span> <span class="org-haskell-type">In</span> the first argument <span class="org-haskell-keyword">of</span> &#8216;putStrLn&#8217;, namely &#8216;content&#8217;
+      <span class="org-haskell-constructor">In</span> the expression<span class="org-haskell-constructor">:</span> putStrLn content
+      <span class="org-haskell-constructor">In</span> an equation for &#8216;it&#8217;<span class="org-haskell-constructor">:</span> it <span class="org-haskell-operator">=</span> putStrLn content
+<span class="org-haskell-operator">&gt;</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t readFile
+<span class="org-function-name">readFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">FilePath</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">String</span>
+</pre>
+</div>
+
+<p>
+<b>Solutions:</b>
+</p>
+
+<p>
+Extract the IO action content. It is possible due to the Haskell REPL
+be inside an IO action.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> contentIOaction <span class="org-haskell-operator">=</span> readFile <span class="org-string">"/etc/lsb-release"</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t contentIOaction 
+<span class="org-function-name">contentIOaction</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> content <span class="org-haskell-operator">&lt;-</span> contentIOaction 
+<span class="org-haskell-operator">&gt;</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t content
+<span class="org-function-name">content</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">putStrLn</span> content
+<span class="org-haskell-constructor">DISTRIB_ID</span><span class="org-haskell-operator">=</span><span class="org-haskell-constructor">ManjaroLinux</span>
+<span class="org-haskell-constructor">DISTRIB_RELEASE</span><span class="org-haskell-operator">=</span>17.0<span class="org-haskell-operator">.</span>1
+<span class="org-haskell-constructor">DISTRIB_CODENAME</span><span class="org-haskell-operator">=</span><span class="org-haskell-constructor">Gellivara</span>
+<span class="org-haskell-constructor">DISTRIB_DESCRIPTION</span><span class="org-haskell-operator">=</span><span class="org-string">"Manjaro Linux"</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">length</span> content
+110
+<span class="org-haskell-operator">&gt;</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">lines</span> content
+[<span class="org-string">"DISTRIB_ID=ManjaroLinux"</span>,<span class="org-string">"DISTRIB_RELEASE=17.0.1"</span>,<span class="org-string">"DISTRIB_CODENAME=Gellivara"</span>,<span class="org-string">"DISTRIB_DESCRIPTION=\"Manjaro Linux\""</span>]
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-comment-delimiter">{- </span><span class="org-comment">-- ========================   Or ======================= --}</span>
+
+<span class="org-haskell-operator">&gt;</span> content <span class="org-haskell-operator">&lt;-</span> readFile <span class="org-string">"/etc/lsb-release"</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t content
+<span class="org-function-name">content</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span>
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">putStrLn</span> content
+<span class="org-haskell-constructor">DISTRIB_ID</span><span class="org-haskell-operator">=</span><span class="org-haskell-constructor">ManjaroLinux</span>
+<span class="org-haskell-constructor">DISTRIB_RELEASE</span><span class="org-haskell-operator">=</span>17.0<span class="org-haskell-operator">.</span>1
+<span class="org-haskell-constructor">DISTRIB_CODENAME</span><span class="org-haskell-operator">=</span><span class="org-haskell-constructor">Gellivara</span>
+<span class="org-haskell-constructor">DISTRIB_DESCRIPTION</span><span class="org-haskell-operator">=</span><span class="org-string">"Manjaro Linux"</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">length</span> content
+110
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+
+<p>
+Pass the IO action content using (&gt;&gt;=) bind or (=&lt;&lt;)
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">readFile</span> <span class="org-string">"/etc/lsb-release"</span> <span class="org-haskell-operator">&gt;&gt;=</span> putStrLn
+<span class="org-haskell-constructor">DISTRIB_ID</span><span class="org-haskell-operator">=</span><span class="org-haskell-constructor">ManjaroLinux</span>
+<span class="org-haskell-constructor">DISTRIB_RELEASE</span><span class="org-haskell-operator">=</span>17.0<span class="org-haskell-operator">.</span>1
+<span class="org-haskell-constructor">DISTRIB_CODENAME</span><span class="org-haskell-operator">=</span><span class="org-haskell-constructor">Gellivara</span>
+<span class="org-haskell-constructor">DISTRIB_DESCRIPTION</span><span class="org-haskell-operator">=</span><span class="org-string">"Manjaro Linux"</span>
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">putStrLn</span> <span class="org-haskell-definition">=&lt;&lt;</span> readFile <span class="org-string">"/etc/lsb-release"</span>
+<span class="org-haskell-constructor">DISTRIB_ID</span><span class="org-haskell-operator">=</span><span class="org-haskell-constructor">ManjaroLinux</span>
+<span class="org-haskell-constructor">DISTRIB_RELEASE</span><span class="org-haskell-operator">=</span>17.0<span class="org-haskell-operator">.</span>1
+<span class="org-haskell-constructor">DISTRIB_CODENAME</span><span class="org-haskell-operator">=</span><span class="org-haskell-constructor">Gellivara</span>
+<span class="org-haskell-constructor">DISTRIB_DESCRIPTION</span><span class="org-haskell-operator">=</span><span class="org-string">"Manjaro Linux"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-6-3" class="outline-4">
+<h4 id="sec-1-6-3"><a id="ID-56ce68d8-6ae4-415a-99b9-68f5b2d5296c" name="ID-56ce68d8-6ae4-415a-99b9-68f5b2d5296c"></a><span class="section-number-4">1.6.3</span> Load interactive commands from file</h4>
+<div class="outline-text-4" id="text-1-6-3">
+
+<p>
+The Ghci directive <span class="underline">:script</span> is load interactive commands that could
+by typed in Ghci shell from a file.  
+</p>
+
+<p>
+File: <a href="src/script_ghci.hs"><a href="src/script_ghci.hs">src/script_ghci.hs</a></a>
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell">content <span class="org-haskell-operator">&lt;-</span> readFile <span class="org-string">"/etc/lsb-release"</span>
+
+<span class="org-haskell-keyword">let</span> nChars <span class="org-haskell-operator">=</span> length content
+
+putStrLn <span class="org-haskell-definition">$</span> <span class="org-string">"File content = \n"</span> <span class="org-haskell-operator">++</span> content
+
+putStrLn <span class="org-haskell-definition">$</span> <span class="org-string">"File size (number of chars) = "</span> <span class="org-haskell-operator">++</span> show nChars
+
+
+<span class="org-haskell-definition">putStrLn</span> <span class="org-string">"--------------------------------"</span>
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">getPassword</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>         
+<span class="org-haskell-definition">getPassword</span> password success error <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  passwd <span class="org-haskell-operator">&lt;-</span> putStr <span class="org-string">"Enter the password: "</span> <span class="org-haskell-operator">&gt;&gt;</span> getLine 
+  <span class="org-haskell-keyword">if</span> passwd <span class="org-haskell-operator">==</span> password
+  <span class="org-haskell-keyword">then</span> success
+  <span class="org-haskell-keyword">else</span> <span class="org-haskell-keyword">do</span> error
+          getPassword password success error
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">showSecreteFile</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">showSecreteFile</span> file <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  content <span class="org-haskell-operator">&lt;-</span> readFile file
+  putStrLn <span class="org-string">"Secrete File Content"</span>
+  putStrLn content
+
+<span class="org-haskell-constructor">:</span>}   
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">getPassword2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">getPassword2</span> password maxTry <span class="org-haskell-operator">=</span> aux (maxTry <span class="org-haskell-operator">-</span> 1)
+  <span class="org-haskell-keyword">where</span>
+    aux counter <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span> 
+      passwd <span class="org-haskell-operator">&lt;-</span> putStr <span class="org-string">"Enter the password: "</span> <span class="org-haskell-operator">&gt;&gt;</span> getLine
+      <span class="org-haskell-keyword">case</span> (counter, passwd) <span class="org-haskell-keyword">of</span>
+        <span class="org-haskell-keyword">_</span> <span class="org-haskell-operator">|</span> passwd <span class="org-haskell-operator">==</span> password
+              <span class="org-haskell-operator">-&gt;</span> showSecreteFile <span class="org-string">"/etc/shells"</span>
+
+        <span class="org-haskell-keyword">_</span> <span class="org-haskell-operator">|</span> counter <span class="org-haskell-operator">==</span> 0
+              <span class="org-haskell-operator">-&gt;</span> putStrLn <span class="org-haskell-operator">$</span> <span class="org-string">"File destroyed after "</span> <span class="org-haskell-operator">++</span> show maxTry <span class="org-haskell-operator">++</span> <span class="org-string">" attempts."</span>                 
+        <span class="org-haskell-keyword">_</span>
+              <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-keyword">do</span> putStrLn <span class="org-haskell-operator">$</span> <span class="org-string">"Try again. You only have "</span> <span class="org-haskell-operator">++</span> show counter <span class="org-haskell-operator">++</span> <span class="org-string">" attempts."</span>
+                    aux (counter <span class="org-haskell-operator">-</span> 1)                                      
+
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-keyword">let</span> printLine <span class="org-haskell-operator">=</span> putStrLn <span class="org-string">"-----------------------------------------------"</span>
+
+printLine                
+<span class="org-haskell-definition">putStrLn</span> <span class="org-string">"Open secrete vault: "</span>
+<span class="org-haskell-definition">getPassword</span> <span class="org-string">"guessthepassword"</span> (putStrLn <span class="org-string">"Vault opened. Ok."</span>) (putStrLn <span class="org-string">"Error: Wrong password. Try Again"</span>)               
+printLine
+<span class="org-haskell-definition">putStrLn</span> <span class="org-string">"Open secret file: (1)"</span>         
+<span class="org-haskell-definition">getPassword2</span> <span class="org-string">"xyzVjkmArchp972343asx"</span> 3
+
+printLine             
+<span class="org-haskell-definition">putStrLn</span> <span class="org-string">"Open secret file: (2)"</span>         
+<span class="org-haskell-definition">getPassword2</span> <span class="org-string">"xyzVjkmArchp972343asx"</span> 3
+</pre>
+</div>
+
+
+<p>
+Running: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">archbox@ghostpc 18:19 ~/Documents/projects/fp-by-example.tutorial/haskell
+$ stack ghci
+Configuring GHCi with the following packages: 
+GHCi, version 8.0.1: http://www.haskell.org/ghc/  :? for help
+Loaded GHCi configuration from /home/archbox/.ghci
+Loaded GHCi configuration from /tmp/ghci7633/ghci-script
+&gt;
+
+&gt; 
+&gt; :script src/script_ghci.hs 
+File content = 
+<span class="org-variable-name">DISTRIB_ID</span>=ManjaroLinux
+<span class="org-variable-name">DISTRIB_RELEASE</span>=17.0.1
+<span class="org-variable-name">DISTRIB_CODENAME</span>=Gellivara
+<span class="org-variable-name">DISTRIB_DESCRIPTION</span>=<span class="org-string">"Manjaro Linux"</span>
+
+File size (number of chars) = 110
+--------------------------------
+-----------------------------------------------
+Open secrete vault: 
+Enter the password: mxkasdasd
+<span class="org-function-name">Error</span>: Wrong password. Try Again
+Enter the password: 32423asdas
+<span class="org-function-name">Error</span>: Wrong password. Try Again
+Enter the password: guessht^?
+<span class="org-function-name">Error</span>: Wrong password. Try Again
+Enter the password: guessthepassword
+Vault opened. Ok.
+-----------------------------------------------
+Open secret file: (1)
+Enter the password: 234asdqa
+Try again. You only have 2 attempts.
+Enter the password: i dont know
+Try again. You only have 1 attempts.
+Enter the password: try again
+File destroyed after 3 attempts.
+-----------------------------------------------
+Open secret file: (2)
+Enter the password: tell me it
+Try again. You only have 2 attempts.
+Enter the password: archxfmksjpfUif83432
+Try again. You only have 1 attempts.
+Enter the password: xyzVjkmArchp972343asx
+Secrete File Content
+<span class="org-comment-delimiter">#</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">/etc/shells</span>
+<span class="org-comment-delimiter">#</span>
+
+/bin/sh
+/bin/bash
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">End of file</span>
+/bin/zsh
+/usr/bin/zsh
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Caio Rodrigues Soares Silva</p>
+<p class="date">Created: 2018-05-07 Mon 10:12</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

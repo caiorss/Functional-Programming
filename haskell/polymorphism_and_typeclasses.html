@@ -1,0 +1,1569 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Polymorphism and Typeclasses</title>
+<!-- 2018-05-07 Mon 10:13 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="Caio Rodrigues Soares Silva" />
+<meta  name="keywords" content="polymorphism ad-hoc typeclass haskell fp" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Polymorphism and Typeclasses</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Polymorphism and Typeclasses</a>
+<ul>
+<li><a href="#sec-1-1">1.1. Polymorphism</a>
+<ul>
+<li><a href="#sec-1-1-1">1.1.1. Parametric Polymorphism</a></li>
+<li><a href="#sec-1-1-2">1.1.2. Ad-hoc Polymorphism</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-2">1.2. Typeclasses</a></li>
+<li><a href="#sec-1-3">1.3. Examples</a>
+<ul>
+<li><a href="#sec-1-3-1">1.3.1. Refactoring functions to work with many types</a></li>
+<li><a href="#sec-1-3-2">1.3.2. Defining typeclasses instances</a></li>
+<li><a href="#sec-1-3-3">1.3.3. Creating a type class</a></li>
+<li><a href="#sec-1-3-4">1.3.4. References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Polymorphism and Typeclasses</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Polymorphism</h3>
+<div class="outline-text-3" id="text-1-1">
+</div><div id="outline-container-sec-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1"><span class="section-number-4">1.1.1</span> Parametric Polymorphism</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+<span class="underline">Parametric polymorphism</span> - Type of a value has one or more
+unconstrained type variables. The type variable can take any value.
+</p>
+
+<ul class="org-ul">
+<li>Single algorithm can have many types.
+</li>
+
+<li>Example: Haskell function id, head and tail
+</li>
+</ul>
+
+<p>
+Examples: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-comment-delimiter">-- </span><span class="org-comment">Identity function.</span>
+<span class="org-function-name">id</span> <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a 
+<span class="org-haskell-definition">id</span> x <span class="org-haskell-operator">=</span> x 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">id</span> <span class="org-string">"hello"</span>
+<span class="org-string">"hello"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">Char</span>]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">id</span> (<span class="org-haskell-type">Just</span> 10)
+<span class="org-haskell-constructor">Just</span> 10
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Maybe</span> a
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">List functions.</span>
+<span class="org-comment-delimiter">--</span>
+<span class="org-comment-delimiter">--</span>
+<span class="org-comment-delimiter">-- </span><span class="org-comment">The type 'a' can be replaced by Int, String, Maybe Int, (Int -&gt; Int)</span>
+<span class="org-comment-delimiter">--  </span><span class="org-comment">or anything.</span>
+<span class="org-comment-delimiter">--</span><span class="org-comment">------------------</span>
+
+<span class="org-haskell-definition">head</span> (x<span class="org-haskell-type">:</span>xs) <span class="org-haskell-operator">=</span> x
+<span class="org-haskell-definition">head</span> <span class="org-haskell-constructor">[]</span>     <span class="org-haskell-operator">=</span> error <span class="org-string">"*** Exception: Prelude.head: empty list"</span>              
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t head
+<span class="org-function-name">head</span> <span class="org-haskell-operator">::</span> [a] <span class="org-haskell-operator">-&gt;</span> a
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t tail
+<span class="org-function-name">tail</span> <span class="org-haskell-operator">::</span> [a] <span class="org-haskell-operator">-&gt;</span> [a]
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t head [<span class="org-string">"hello"</span>, <span class="org-string">"world"</span>, <span class="org-string">"haskell"</span>]
+<span class="org-haskell-definition">head</span> [<span class="org-string">"hello"</span>, <span class="org-string">"world"</span>, <span class="org-string">"haskell"</span>] <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">Char</span>]
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">head</span> [<span class="org-string">"hello"</span>, <span class="org-string">"world"</span>, <span class="org-string">"haskell"</span>]
+<span class="org-string">"hello"</span>
+it 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t head [<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">+</span> 1, <span class="org-haskell-operator">\</span>a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">*</span> 3, <span class="org-haskell-operator">\</span>b <span class="org-haskell-operator">-&gt;</span> b <span class="org-haskell-operator">-</span>5]
+<span class="org-haskell-definition">head</span> [<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">+</span> 1, <span class="org-haskell-operator">\</span>a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">*</span> 3, <span class="org-haskell-operator">\</span>b <span class="org-haskell-operator">-&gt;</span> b <span class="org-haskell-operator">-</span>5] <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">head</span> [<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">+</span> 1, <span class="org-haskell-operator">\</span>a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">*</span> 3, <span class="org-haskell-operator">\</span>b <span class="org-haskell-operator">-&gt;</span> b <span class="org-haskell-operator">-</span>5] <span class="org-haskell-operator">$</span> 9
+10
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> a
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2"><span class="section-number-4">1.1.2</span> Ad-hoc Polymorphism</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+It allows functions to have different algorithms for each type. The
+choice of the algorithme is determined by the context.
+</p>
+
+<p>
+In Haskell ad-hoc polymorphism is achieved through typeclasses which
+are similar to Java interface. A typeclass defines a set of functions
+that must be implemented by every instance of a type class.
+</p>
+
+<p>
+The functions defined by a typeclass can have different behaviors
+depending on the instance of type class and can be used with all type
+class instances. It allows the functions and operators (binary
+functions) such as (+) plus, (-) minus, (&gt;&gt;=) monad bind operator to
+be reused with many different types and have different algorithms for
+each type.
+</p>
+
+<p>
+Benefits: 
+</p>
+
+<ul class="org-ul">
+<li>Reuse operators and functiosn with different types.
+</li>
+
+<li>Operator overloading.
+</li>
+
+<li>Functions with a different algorithm for each type. 
+</li>
+
+<li>Code Reuse for free.
+</li>
+</ul>
+
+<p>
+Example: The type class <span class="underline">Functor</span> 
+</p>
+
+<p>
+The function fmap defined by the type class Functor has different
+behaviors (algorithms) for each instance such as list, Maybe and
+Either types. 
+</p>
+
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-comment-delimiter">-- </span><span class="org-comment">Functor Type Class </span>
+<span class="org-comment-delimiter">-- </span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>info <span class="org-haskell-constructor">Functor</span>
+<span class="org-haskell-keyword">class</span> <span class="org-haskell-type">Functor</span> (f <span class="org-haskell-operator">::</span> <span class="org-haskell-operator">*</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-operator">*</span>) <span class="org-haskell-keyword">where</span>
+  fmap <span class="org-haskell-operator">::</span> (a <span class="org-haskell-operator">-&gt;</span> b) <span class="org-haskell-operator">-&gt;</span> f a <span class="org-haskell-operator">-&gt;</span> f b
+  (<span class="org-haskell-operator">&lt;$</span>) <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> f b <span class="org-haskell-operator">-&gt;</span> f a
+  <span class="org-haskell-pragma">{-# MINIMAL fmap #-}</span>
+
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Instances of Functor type class </span>
+<span class="org-comment-delimiter">--</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>info <span class="org-haskell-type">Functor</span>
+<span class="org-haskell-keyword">class</span> <span class="org-haskell-type">Functor</span> (f <span class="org-haskell-operator">::</span> <span class="org-haskell-operator">*</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-operator">*</span>) <span class="org-haskell-keyword">where</span>
+  fmap <span class="org-haskell-operator">::</span> (a <span class="org-haskell-operator">-&gt;</span> b) <span class="org-haskell-operator">-&gt;</span> f a <span class="org-haskell-operator">-&gt;</span> f b
+  (<span class="org-haskell-operator">&lt;$</span>) <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> f b <span class="org-haskell-operator">-&gt;</span> f a
+  <span class="org-haskell-pragma">{-# MINIMAL fmap #-}</span>
+    <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.Base&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Functor</span> (<span class="org-haskell-type">Either</span> a) <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;Data.Either&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Functor</span> <span class="org-haskell-constructor">[]</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.Base&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Functor</span> <span class="org-haskell-type">Maybe</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.Base&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Functor</span> <span class="org-haskell-type">IO</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.Base&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Functor</span> (<span class="org-haskell-constructor">(-&gt;)</span> r) <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.Base&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Functor</span> (<span class="org-haskell-constructor">(,)</span> a) <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.Base&#8217;</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Function fmap applies a function (a -&gt; b) to a Functor. </span>
+<span class="org-comment-delimiter">--</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t fmap
+<span class="org-function-name">fmap</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Functor</span> f <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> b) <span class="org-haskell-operator">-&gt;</span> f a <span class="org-haskell-operator">-&gt;</span> f b
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-comment-delimiter">--</span><span class="org-comment">- fmap for Functor instance List </span>
+<span class="org-comment-delimiter">--</span><span class="org-comment">-----------------------------------------</span>
+<span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Maybe</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span> <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Just</span> a 
+
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Functor</span> [a] <span class="org-haskell-keyword">where</span>
+    fmap <span class="org-haskell-operator">=</span> map 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">fmap</span> (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">+</span> 1) [1, 2, 3, 4, 5]
+[2,3,4,5,6]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> b <span class="org-haskell-operator">=&gt;</span> [b]
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-comment-delimiter">--</span><span class="org-comment">- fmap for Functor instance Maybe</span>
+<span class="org-comment-delimiter">--</span><span class="org-comment">-----------------------------------------</span>
+
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Functor</span> (<span class="org-haskell-type">Maybe</span> a) <span class="org-haskell-keyword">where</span>
+    fmap fn (<span class="org-haskell-constructor">Just</span> a) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Just</span> (fn a)
+    fmap fn <span class="org-haskell-constructor">Nothing</span>  <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t fmap (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">+</span> 1) (<span class="org-haskell-constructor">Just</span> 10)
+<span class="org-haskell-definition">fmap</span> (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">+</span> 1) (<span class="org-haskell-constructor">Just</span> 10) <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> b <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Maybe</span> b
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">fmap</span> (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">+</span> 1) (<span class="org-haskell-type">Just</span> 10)
+<span class="org-haskell-constructor">Just</span> 11
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> b <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Maybe</span> b
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">fmap</span> (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">+</span> 1) <span class="org-haskell-type">Nothing</span>
+<span class="org-haskell-constructor">Nothing</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> b <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Maybe</span> b
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-comment-delimiter">--</span><span class="org-comment">- fmap for Functor instance Either </span>
+<span class="org-comment-delimiter">--</span><span class="org-comment">-----------------------------------------</span>
+
+<span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Either</span> a b <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Left</span> a <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Right</span> b
+
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Functor</span> (<span class="org-haskell-type">Either</span> a b) <span class="org-haskell-keyword">where</span>
+    fmap fn (<span class="org-haskell-constructor">Right</span> b) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Right</span> (fn b)
+    fmap fn (<span class="org-haskell-constructor">Left</span> a)  <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Left</span> a 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">fmap</span> (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">+</span> 1) (<span class="org-haskell-constructor">Right</span> 10)
+<span class="org-haskell-constructor">Right</span> 11
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> b <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Either</span> a b                        
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">fmap</span> (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">+</span> 1) (<span class="org-haskell-type">Left</span> <span class="org-string">"Error: I can't parse the number"</span>)
+<span class="org-haskell-constructor">Left</span> <span class="org-string">"Error: I can't parse the number"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> b <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Either</span> [<span class="org-haskell-type">Char</span>] b
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> Typeclasses</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+<b>Standard Typeclasses</b>
+</p>
+
+<ul class="org-ul">
+<li><span class="underline">Num</span> - Numeric types. Defines numertic operators (+), (-), (*) and
+functiosn abs and signum.
+
+<ul class="org-ul">
+<li>Methods:   (+), (-), (*), abs, signum 
+</li>
+<li>Standard Instances:
+<ul class="org-ul">
+<li>Int       - 29 bits Signed Integer
+</li>
+<li>Integer   - Arbitrary precision integer
+</li>
+<li>Float     - IEEE 32-bits Float point
+</li>
+<li>Double    - IEEE 64-bit Float Point
+</li>
+</ul>
+</li>
+</ul>
+</li>
+
+<li><span class="underline">Ord</span> - Comparison.
+<ul class="org-ul">
+<li>Operators: (&lt;) (&lt;=) (&gt;) (&gt;=) min and max 
+</li>
+</ul>
+</li>
+
+<li><span class="underline">Enum</span> - Enumeration. Allows syntax such as [1 &#x2026; 10], [0.5 .. 0.1 .. 10] ['a' .. 'z']
+</li>
+
+<li><span class="underline">Eq</span> - Equality.
+<ul class="org-ul">
+<li>Operator (<code>=) and (/</code>)
+</li>
+</ul>
+</li>
+
+<li><span class="underline">Show</span> - Defines method show, which converts an instance of this
+type class to string.
+</li>
+
+<li><span class="underline">Read</span> - Defines the function read, which parses a string into a value.
+</li>
+</ul>
+
+
+<p>
+<b>Type Classes</b>
+</p>
+
+<p>
+Num 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>info <span class="org-haskell-constructor">Num</span>
+<span class="org-haskell-keyword">class</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-keyword">where</span>
+  (<span class="org-haskell-operator">+</span>) <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
+  (<span class="org-haskell-operator">-</span>) <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
+  (<span class="org-haskell-operator">*</span>) <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
+  negate <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  abs <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  signum <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  fromInteger <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Integer</span> <span class="org-haskell-operator">-&gt;</span> a
+  <span class="org-haskell-pragma">{-# MINIMAL (+), (*), abs, signum, fromInteger, (negate | (-)) #-}</span>
+</pre>
+</div>
+
+<p>
+Fractional
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-keyword">class</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Fractional</span> a <span class="org-haskell-keyword">where</span> 
+  (<span class="org-haskell-operator">/</span>) <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
+  recip <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  fromRational <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Rational</span> <span class="org-haskell-operator">-&gt;</span> a
+</pre>
+</div>
+
+<p>
+Eq
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-keyword">class</span> <span class="org-haskell-type">Eq</span> a <span class="org-haskell-keyword">where</span>
+  (<span class="org-haskell-operator">==</span>) <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
+  (<span class="org-haskell-operator">/=</span>) <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
+</pre>
+</div>
+
+<p>
+Ord 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Ordering</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">LT</span> <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">EQ</span> <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">GT</span>
+
+<span class="org-haskell-keyword">class</span> <span class="org-haskell-type">Eq</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Ord</span> a <span class="org-haskell-keyword">where</span>
+  compare <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Ordering</span>
+  (<span class="org-haskell-operator">&lt;</span>) <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
+  (<span class="org-haskell-operator">&lt;=</span>) <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
+  (<span class="org-haskell-operator">&gt;</span>) <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
+  (<span class="org-haskell-operator">&gt;=</span>) <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
+  max <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
+  min <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
+  <span class="org-haskell-pragma">{-# MINIMAL compare | (&lt;=) #-}</span>
+</pre>
+</div>
+
+<p>
+Enum 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>info <span class="org-haskell-constructor">Enum</span>
+<span class="org-haskell-keyword">class</span> <span class="org-haskell-type">Enum</span> a <span class="org-haskell-keyword">where</span>
+  succ <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  pred <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  toEnum <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> a
+  fromEnum <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
+  enumFrom <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> [a]
+  enumFromThen <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> [a]
+  enumFromTo <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> [a]
+  enumFromThenTo <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> [a]
+  <span class="org-haskell-pragma">{-# MINIMAL toEnum, fromEnum #-}</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> Examples</h3>
+<div class="outline-text-3" id="text-1-3">
+</div><div id="outline-container-sec-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1"><span class="section-number-4">1.3.1</span> Refactoring functions to work with many types</h4>
+<div class="outline-text-4" id="text-1-3-1">
+<p>
+Example: Typeclasses allows writing generic functions that can be used
+with all instances of a type class. In this example the function fun1
+can be refactored to work with all instances of Num typeclass.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">fun1</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-definition">fun1</span> x y <span class="org-haskell-operator">=</span> 2 <span class="org-haskell-operator">*</span> x <span class="org-haskell-operator">+</span> 4 <span class="org-haskell-operator">*</span> y         
+<span class="org-haskell-constructor">:</span>}
+
+ <span class="org-haskell-operator">&gt;</span> fun1 3 4
+22.0
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">fun1</span> 3 4.23
+22.92
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> a <span class="org-haskell-operator">=</span> 10 <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
+<span class="org-function-name">a</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> c <span class="org-haskell-operator">=</span> 20 <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
+<span class="org-function-name">c</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">fun1</span> a b
+
+<span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>189<span class="org-haskell-type">:</span>6<span class="org-haskell-type">:</span> error<span class="org-haskell-type">:</span>
+    <span class="org-haskell-operator">&#8226;</span> <span class="org-haskell-type">Couldn't</span> match expected <span class="org-haskell-keyword">type</span> &#8216;<span class="org-haskell-type">Double</span>&#8217; with actual <span class="org-haskell-keyword">type</span> &#8216;<span class="org-haskell-type">Int</span>&#8217;
+    <span class="org-haskell-operator">&#8226;</span> <span class="org-haskell-type">In</span> the first argument <span class="org-haskell-keyword">of</span> &#8216;fun1&#8217;, namely &#8216;a&#8217;
+      <span class="org-haskell-constructor">In</span> the expression<span class="org-haskell-constructor">:</span> fun1 a b
+      <span class="org-haskell-constructor">In</span> an equation for &#8216;it&#8217;<span class="org-haskell-constructor">:</span> it <span class="org-haskell-operator">=</span> fun1 a b
+
+<span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>189<span class="org-haskell-constructor">:</span>8<span class="org-haskell-constructor">:</span> error<span class="org-haskell-constructor">:</span> <span class="org-haskell-constructor">Variable</span> not <span class="org-haskell-keyword">in</span> scope<span class="org-haskell-constructor">:</span> b <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-comment-delimiter">--</span><span class="org-comment">- This function can be rewritten to work with</span>
+<span class="org-comment-delimiter">--</span><span class="org-comment">- all members of Num type class.</span>
+
+<span class="org-haskell-type">:</span>{
+<span class="org-function-name">fun</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
+<span class="org-haskell-definition">fun</span> x y <span class="org-haskell-operator">=</span> 2 <span class="org-haskell-operator">*</span> x <span class="org-haskell-operator">+</span> 4 <span class="org-haskell-operator">*</span> y         
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">fun</span> a c
+100
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">fun</span> 3.0 10.3
+47.2
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Fractional</span> a <span class="org-haskell-operator">=&gt;</span> a
+<span class="org-haskell-operator">&gt;</span> 
+ <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> x <span class="org-haskell-operator">=</span> 10.4 <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>
+<span class="org-function-name">x</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> y <span class="org-haskell-operator">=</span> 20.5 <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>
+<span class="org-function-name">y</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">fun</span> x y 
+102.8
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+
+<p>
+Example: Generic monad combinator. The functions mapM2 applies a
+function fn to two monad instances. 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t (<span class="org-haskell-operator">&gt;&gt;=</span>)
+(<span class="org-haskell-definition">&gt;&gt;=</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> m a <span class="org-haskell-operator">-&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> m b
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t return
+<span class="org-function-name">return</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> m a
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>info <span class="org-haskell-type">Monad</span>
+<span class="org-haskell-keyword">class</span> <span class="org-haskell-type">Applicative</span> m <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Monad</span> (m <span class="org-haskell-operator">::</span> <span class="org-haskell-operator">*</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-operator">*</span>) <span class="org-haskell-keyword">where</span>
+  (<span class="org-haskell-operator">&gt;&gt;=</span>) <span class="org-haskell-operator">::</span> m a <span class="org-haskell-operator">-&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> m b) <span class="org-haskell-operator">-&gt;</span> m b
+  (<span class="org-haskell-operator">&gt;&gt;</span>) <span class="org-haskell-operator">::</span> m a <span class="org-haskell-operator">-&gt;</span> m b <span class="org-haskell-operator">-&gt;</span> m b
+  return <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> m a
+  fail <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> m a
+  <span class="org-haskell-pragma">{-# MINIMAL (&gt;&gt;=) #-}</span>
+        <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.Base&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Monad</span> (<span class="org-haskell-type">Either</span> e) <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;Data.Either&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Monad</span> <span class="org-haskell-constructor">[]</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.Base&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Monad</span> <span class="org-haskell-type">Maybe</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.Base&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Monad</span> <span class="org-haskell-type">IO</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.Base&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Monad</span> (<span class="org-haskell-constructor">(-&gt;)</span> r) <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.Base&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Monoid</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Monad</span> (<span class="org-haskell-constructor">(,)</span> a) <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.Base&#8217;</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-haskell-type">:</span>{
+<span class="org-function-name">mapM2</span> <span class="org-haskell-operator">::</span> (a <span class="org-haskell-operator">-&gt;</span> b <span class="org-haskell-operator">-&gt;</span> c) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> b <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> c
+<span class="org-haskell-definition">mapM2</span> fn ma mb <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  a <span class="org-haskell-operator">&lt;-</span> ma
+  b <span class="org-haskell-operator">&lt;-</span> mb
+  return <span class="org-haskell-operator">$</span> fn a b
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">mapM2a</span> <span class="org-haskell-operator">::</span> (a <span class="org-haskell-operator">-&gt;</span> b <span class="org-haskell-operator">-&gt;</span> c) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> b <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> c
+<span class="org-haskell-definition">mapM2a</span> fn ma mb <span class="org-haskell-operator">=</span> 
+  ma <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span> a <span class="org-haskell-operator">-&gt;</span>
+  mb <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span> b <span class="org-haskell-operator">-&gt;</span> return <span class="org-haskell-operator">$</span> fn a b
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">mapM2</span> (<span class="org-haskell-operator">+</span>) (<span class="org-haskell-constructor">Just</span> 10) (<span class="org-haskell-constructor">Just</span> 4)
+<span class="org-haskell-constructor">Just</span> 14
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> c <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Maybe</span> c
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">mapM2</span> (<span class="org-haskell-operator">+</span>) (<span class="org-haskell-type">Just</span> 10) <span class="org-haskell-type">Nothing</span>
+<span class="org-haskell-constructor">Nothing</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> c <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Maybe</span> c
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">mapM2</span> (<span class="org-haskell-operator">+</span>) <span class="org-haskell-type">Nothing</span> (<span class="org-haskell-type">Just</span> 4)
+<span class="org-haskell-constructor">Nothing</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> c <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Maybe</span> c
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">mapM2</span> (<span class="org-haskell-operator">+</span>) (<span class="org-haskell-type">Right</span> 10) (<span class="org-haskell-type">Right</span> 5)
+
+<span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>225<span class="org-haskell-type">:</span>12<span class="org-haskell-type">:</span> error<span class="org-haskell-type">:</span>
+    <span class="org-haskell-operator">&#8226;</span> <span class="org-haskell-type">Couldn't</span> match expected <span class="org-haskell-keyword">type</span> &#8216;<span class="org-haskell-type">Maybe</span> c&#8217;
+                  with actual <span class="org-haskell-keyword">type</span> &#8216;<span class="org-haskell-type">Either</span> a0 <span class="org-haskell-type">Integer</span>&#8217;
+    <span class="org-haskell-operator">&#8226;</span> <span class="org-haskell-type">In</span> the second argument <span class="org-haskell-keyword">of</span> &#8216;mapM2&#8217;, namely &#8216;(<span class="org-haskell-constructor">Right</span> 10)&#8217;
+      <span class="org-haskell-constructor">In</span> the expression<span class="org-haskell-constructor">:</span> mapM2 (<span class="org-haskell-operator">+</span>) (<span class="org-haskell-constructor">Right</span> 10) (<span class="org-haskell-constructor">Right</span> 5)
+      <span class="org-haskell-constructor">In</span> an equation for &#8216;it&#8217;<span class="org-haskell-constructor">:</span> it <span class="org-haskell-operator">=</span> mapM2 (<span class="org-haskell-operator">+</span>) (<span class="org-haskell-constructor">Right</span> 10) (<span class="org-haskell-constructor">Right</span> 5)
+    <span class="org-haskell-operator">&#8226;</span> <span class="org-haskell-constructor">Relevant</span> bindings include
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">mapM2</span> (<span class="org-haskell-operator">+</span>) [1, 2, 3] [5, 6]
+
+<span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>227<span class="org-haskell-constructor">:</span>11<span class="org-haskell-constructor">:</span> error<span class="org-haskell-constructor">:</span>
+    <span class="org-haskell-operator">&#8226;</span> <span class="org-haskell-constructor">Couldn't</span> match expected <span class="org-haskell-keyword">type</span> &#8216;<span class="org-haskell-type">Maybe</span> c&#8217;
+                  with actual <span class="org-haskell-keyword">type</span> &#8216;[<span class="org-haskell-type">Integer</span>]&#8217;
+    <span class="org-haskell-operator">&#8226;</span> <span class="org-haskell-type">In</span> the second argument <span class="org-haskell-keyword">of</span> &#8216;mapM2&#8217;, namely &#8216;[1, 2, 3]&#8217;
+      <span class="org-haskell-constructor">In</span> the expression<span class="org-haskell-constructor">:</span> mapM2 (<span class="org-haskell-operator">+</span>) [1, 2, 3] [5, 6]
+      <span class="org-haskell-constructor">In</span> an equation for &#8216;it&#8217;<span class="org-haskell-constructor">:</span> it <span class="org-haskell-operator">=</span> mapM2 (<span class="org-haskell-operator">+</span>) [1, 2, 3] [5, 6]
+    <span class="org-haskell-operator">&#8226;</span> <span class="org-haskell-constructor">Relevant</span> bindings include
+        it <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Maybe</span> c (bound at <span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>227<span class="org-haskell-type">:</span>1)
+
+<span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>227<span class="org-haskell-type">:</span>21<span class="org-haskell-type">:</span> error<span class="org-haskell-type">:</span>
+    <span class="org-haskell-operator">&#8226;</span> <span class="org-haskell-type">Couldn't</span> match expected <span class="org-haskell-keyword">type</span> &#8216;<span class="org-haskell-type">Maybe</span> c&#8217;
+                  with actual <span class="org-haskell-keyword">type</span> &#8216;[<span class="org-haskell-type">Integer</span>]&#8217;
+    <span class="org-haskell-operator">&#8226;</span> <span class="org-haskell-type">In</span> the third argument <span class="org-haskell-keyword">of</span> &#8216;mapM2&#8217;, namely &#8216;[5, 6]&#8217;
+      <span class="org-haskell-constructor">In</span> the expression<span class="org-haskell-constructor">:</span> mapM2 (<span class="org-haskell-operator">+</span>) [1, 2, 3] [5, 6]
+      <span class="org-haskell-constructor">In</span> an equation for &#8216;it&#8217;<span class="org-haskell-constructor">:</span> it <span class="org-haskell-operator">=</span> mapM2 (<span class="org-haskell-operator">+</span>) [1, 2, 3] [5, 6]
+    <span class="org-haskell-operator">&#8226;</span> <span class="org-haskell-constructor">Relevant</span> bindings include
+        it <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Maybe</span> c (bound at <span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>227<span class="org-haskell-type">:</span>1)
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">mapM2a</span> (<span class="org-haskell-operator">+</span>) (<span class="org-haskell-type">Just</span> 10) (<span class="org-haskell-type">Just</span> 15)
+<span class="org-haskell-constructor">Just</span> 25
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> c <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Maybe</span> c
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">mapM2a</span> (<span class="org-haskell-operator">+</span>) [1, 2, 3] [4, 5]
+
+<span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>258<span class="org-haskell-type">:</span>12<span class="org-haskell-type">:</span> error<span class="org-haskell-type">:</span>
+    <span class="org-haskell-operator">&#8226;</span> <span class="org-haskell-type">Couldn't</span> match expected <span class="org-haskell-keyword">type</span> &#8216;<span class="org-haskell-type">Maybe</span> c&#8217;
+                  with actual <span class="org-haskell-keyword">type</span> &#8216;[<span class="org-haskell-type">Integer</span>]&#8217;
+    <span class="org-haskell-operator">&#8226;</span> <span class="org-haskell-type">In</span> the second argument <span class="org-haskell-keyword">of</span> &#8216;mapM2a&#8217;, namely &#8216;[1, 2, 3]&#8217;
+      <span class="org-haskell-constructor">In</span> the expression<span class="org-haskell-constructor">:</span> mapM2a (<span class="org-haskell-operator">+</span>) [1, 2, 3] [4, 5]
+      <span class="org-haskell-constructor">In</span> an equation for &#8216;it&#8217;<span class="org-haskell-constructor">:</span> it <span class="org-haskell-operator">=</span> mapM2a (<span class="org-haskell-operator">+</span>) [1, 2, 3] [4, 5]
+    <span class="org-haskell-operator">&#8226;</span> <span class="org-haskell-constructor">Relevant</span> bindings include
+        it <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Maybe</span> c (bound at <span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>258<span class="org-haskell-type">:</span>1)
+
+<span class="org-comment-delimiter">--</span><span class="org-comment">- This function can be rewritten to operate on any Monad instance</span>
+
+<span class="org-haskell-type">:</span>{
+<span class="org-function-name">mapM2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> b <span class="org-haskell-operator">-&gt;</span> c) <span class="org-haskell-operator">-&gt;</span> m a <span class="org-haskell-operator">-&gt;</span> m b <span class="org-haskell-operator">-&gt;</span> m c
+<span class="org-haskell-definition">mapM2</span> fn ma mb <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  a <span class="org-haskell-operator">&lt;-</span> ma
+  b <span class="org-haskell-operator">&lt;-</span> mb
+  return <span class="org-haskell-operator">$</span> fn a b
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">mapM2b</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> b <span class="org-haskell-operator">-&gt;</span> c) <span class="org-haskell-operator">-&gt;</span> m a <span class="org-haskell-operator">-&gt;</span> m b <span class="org-haskell-operator">-&gt;</span> m c
+<span class="org-haskell-definition">mapM2b</span> fn ma mb <span class="org-haskell-operator">=</span> 
+  ma <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>a <span class="org-haskell-operator">-&gt;</span> 
+  mb <span class="org-haskell-operator">&gt;&gt;=</span> <span class="org-haskell-operator">\</span>b <span class="org-haskell-operator">-&gt;</span> 
+  return <span class="org-haskell-operator">$</span> fn a b
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">mapM2</span> (<span class="org-haskell-operator">+</span>) (<span class="org-haskell-constructor">Just</span> 10) (<span class="org-haskell-constructor">Just</span> 4)
+<span class="org-haskell-constructor">Just</span> 14
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> c <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Maybe</span> c
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">mapM2</span> <span class="org-haskell-constructor">(,)</span> [1, 2, 3] [<span class="org-string">"a"</span>, <span class="org-string">"b"</span>]
+[(1,<span class="org-string">"a"</span>),(1,<span class="org-string">"b"</span>),(2,<span class="org-string">"a"</span>),(2,<span class="org-string">"b"</span>),(3,<span class="org-string">"a"</span>),(3,<span class="org-string">"b"</span>)]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> [(a, [<span class="org-haskell-type">Char</span>])]
+<span class="org-haskell-operator">&gt;</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">mapM2</span> (<span class="org-haskell-operator">+</span>) (<span class="org-haskell-type">Right</span> 10) (<span class="org-haskell-type">Right</span> 4)
+<span class="org-haskell-constructor">Right</span> 14
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> c <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Either</span> a c
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">mapM2</span> (<span class="org-haskell-operator">+</span>) (<span class="org-haskell-type">Right</span> 10) (<span class="org-haskell-type">Left</span> <span class="org-string">"Failed"</span>)
+<span class="org-haskell-constructor">Left</span> <span class="org-string">"Failed"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> c <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Either</span> [<span class="org-haskell-type">Char</span>] c
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">mapM2b</span> (<span class="org-haskell-operator">+</span>) (<span class="org-haskell-type">Just</span> 10) (<span class="org-haskell-type">Just</span> 5)
+<span class="org-haskell-constructor">Just</span> 15
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> c <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Maybe</span> c
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">mapM2b</span> (<span class="org-haskell-operator">+</span>) (<span class="org-haskell-type">Just</span> 10) <span class="org-haskell-type">Nothing</span>
+<span class="org-haskell-constructor">Nothing</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> c <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Maybe</span> c
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">mapM2b</span> (<span class="org-haskell-operator">+</span>) (<span class="org-haskell-type">Right</span> 10) (<span class="org-haskell-type">Right</span> 5)
+<span class="org-haskell-constructor">Right</span> 15
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> c <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Either</span> a c
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2"><span class="section-number-4">1.3.2</span> Defining typeclasses instances</h4>
+<div class="outline-text-4" id="text-1-3-2">
+</div><ol class="org-ol"><li><a id="sec-1-3-2-1" name="sec-1-3-2-1"></a>Defining a new instance of typeclass Functor<br  /><div class="outline-text-5" id="text-1-3-2-1">
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Identity</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Identity</span> a <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span>, <span class="org-haskell-constructor">Read</span>, <span class="org-haskell-constructor">Show</span>)
+<span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Identity</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Identity</span> a
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">Identity</span> 10
+<span class="org-haskell-constructor">Identity</span> 10
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Identity</span> a
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">Identity</span> <span class="org-string">"Hello world"</span>
+<span class="org-haskell-constructor">Identity</span> <span class="org-string">"Hello world"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Identity</span> [<span class="org-haskell-type">Char</span>]
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-type">:</span>{ 
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Functor</span> <span class="org-haskell-type">Identity</span> <span class="org-haskell-keyword">where</span>
+    fmap fn (<span class="org-haskell-constructor">Identity</span> a) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Identity</span> (fn a)
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">fmap</span> (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">+</span> 1) (<span class="org-haskell-constructor">Identity</span> 9)
+<span class="org-haskell-constructor">Identity</span> 10
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> b <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Identity</span> b
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">fmap</span> (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">++</span> <span class="org-string">" world"</span>) (<span class="org-haskell-type">Identity</span> <span class="org-string">"Hello "</span>)
+<span class="org-haskell-constructor">Identity</span> <span class="org-string">"Hello  world"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Identity</span> [<span class="org-haskell-type">Char</span>]
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-3-2-2" name="sec-1-3-2-2"></a>Defining a new instance of typeclass Num.<br  /><div class="outline-text-5" id="text-1-3-2-2">
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>info <span class="org-haskell-constructor">Num</span>
+<span class="org-haskell-keyword">class</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-keyword">where</span>
+  (<span class="org-haskell-operator">+</span>) <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
+  (<span class="org-haskell-operator">-</span>) <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
+  (<span class="org-haskell-operator">*</span>) <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
+  negate <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  abs <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  signum <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  fromInteger <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Integer</span> <span class="org-haskell-operator">-&gt;</span> a
+  <span class="org-haskell-pragma">{-# MINIMAL (+), (*), abs, signum, fromInteger, (negate | (-)) #-}</span>
+    <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.Num&#8217;</span>
+
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Num</span> <span class="org-haskell-type">Word</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.Num&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Num</span> <span class="org-haskell-type">Integer</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.Num&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Num</span> <span class="org-haskell-type">Int</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.Num&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Num</span> <span class="org-haskell-type">Float</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.Float&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Num</span> <span class="org-haskell-type">Double</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.Float&#8217;</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Vector3D</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector3D</span> (<span class="org-haskell-constructor">Double</span>, <span class="org-haskell-constructor">Double</span>, <span class="org-haskell-constructor">Double</span>) <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span>, <span class="org-haskell-constructor">Read</span>, <span class="org-haskell-constructor">Show</span>)
+<span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Vector3D</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector3D</span> (<span class="org-haskell-constructor">Double</span>, <span class="org-haskell-constructor">Double</span>, <span class="org-haskell-constructor">Double</span>)
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Extractors</span>
+<span class="org-haskell-operator">&gt;</span>  <span class="org-haskell-keyword">let</span> vX (<span class="org-haskell-constructor">Vector3D</span> (x, y, z)) <span class="org-haskell-operator">=</span> x 
+<span class="org-function-name">vX</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector3D</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> vY (<span class="org-haskell-constructor">Vector3D</span> (x, y, z)) <span class="org-haskell-operator">=</span> y 
+<span class="org-function-name">vY</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector3D</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> vZ (<span class="org-haskell-constructor">Vector3D</span> (x, y, z)) <span class="org-haskell-operator">=</span> z
+<span class="org-function-name">vZ</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector3D</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Smart constructor </span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> vec x y z <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector3D</span> (x, y, z)
+<span class="org-function-name">vec</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Vector3D</span>
+<span class="org-haskell-operator">&gt;</span>
+
+
+<span class="org-haskell-type">:</span>{
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Num</span> <span class="org-haskell-type">Vector3D</span> <span class="org-haskell-keyword">where</span>
+
+    <span class="org-comment-delimiter">-- </span><span class="org-comment">(+) :: Num a =&gt; a -&gt; a -&gt; a</span>
+    <span class="org-haskell-constructor">Vector3D</span> (x1, y1, z1) <span class="org-haskell-operator">+</span> <span class="org-haskell-constructor">Vector3D</span> (x2, y2, z2) <span class="org-haskell-operator">=</span>
+        vec (x1 <span class="org-haskell-operator">+</span> x2) (y1 <span class="org-haskell-operator">+</span> y2) (z1 <span class="org-haskell-operator">+</span> z2)
+
+    <span class="org-comment-delimiter">-- </span><span class="org-comment">(*) :: Num a =&gt; a -&gt; a -&gt; a</span>
+    <span class="org-haskell-constructor">Vector3D</span> (x1, y1, z1) <span class="org-haskell-operator">*</span> <span class="org-haskell-constructor">Vector3D</span> (x2, y2, z2) <span class="org-haskell-operator">=</span>
+         vec (x1 <span class="org-haskell-operator">*</span> x2) (y1 <span class="org-haskell-operator">*</span> y2) (z1 <span class="org-haskell-operator">*</span> z2)
+
+    <span class="org-comment-delimiter">-- </span><span class="org-comment">(-) :: Num a =&gt; a -&gt; a -&gt; a</span>
+    <span class="org-haskell-constructor">Vector3D</span> (x1, y1, z1) <span class="org-haskell-operator">-</span> <span class="org-haskell-constructor">Vector3D</span> (x2, y2, z2) <span class="org-haskell-operator">=</span>
+        vec (x1 <span class="org-haskell-operator">-</span> x2) (y1 <span class="org-haskell-operator">-</span> y2) (z1 <span class="org-haskell-operator">-</span> z2)
+
+    <span class="org-comment-delimiter">-- </span><span class="org-comment">abs :: Num a =&gt; a -&gt; a            </span>
+    abs (<span class="org-haskell-constructor">Vector3D</span> (x1, y1, z1)) <span class="org-haskell-operator">=</span> vec (abs x1) (abs y1) (abs z1)
+
+    <span class="org-comment-delimiter">-- </span><span class="org-comment">Dummy operation for Vector3D - Don't care about this</span>
+    <span class="org-comment-delimiter">-- </span><span class="org-comment">operation.</span>
+    <span class="org-comment-delimiter">--</span>
+    <span class="org-comment-delimiter">-- </span><span class="org-comment">signum :: Num a =&gt; a -&gt; a</span>
+    signum (<span class="org-haskell-constructor">Vector3D</span> (x1, y1, z1)) <span class="org-haskell-operator">=</span>  <span class="org-haskell-constructor">Vector3D</span> (<span class="org-haskell-operator">-</span>x1, <span class="org-haskell-operator">-</span>y1, <span class="org-haskell-operator">-</span>z1)
+
+    <span class="org-comment-delimiter">-- </span><span class="org-comment">Dummy operation</span>
+    <span class="org-comment-delimiter">--                                  </span>
+    <span class="org-comment-delimiter">-- </span><span class="org-comment">fromInteger :: Num a =&gt; Integer -&gt; a</span>
+    fromInteger x  <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">let</span> a <span class="org-haskell-operator">=</span> fromIntegral x
+                     <span class="org-haskell-keyword">in</span> <span class="org-haskell-constructor">Vector3D</span> (a, a, a)
+
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> norm (<span class="org-haskell-constructor">Vector3D</span> (x, y, z)) <span class="org-haskell-operator">=</span> sqrt (x <span class="org-haskell-operator">*</span> x <span class="org-haskell-operator">+</span> y <span class="org-haskell-operator">*</span> y <span class="org-haskell-operator">+</span> z <span class="org-haskell-operator">*</span> z)
+<span class="org-function-name">norm</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector3D</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> dist va vb <span class="org-haskell-operator">=</span> norm <span class="org-haskell-operator">$</span> va <span class="org-haskell-operator">-</span> vb
+<span class="org-function-name">dist</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector3D</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Vector3D</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> scale f (<span class="org-haskell-constructor">Vector3D</span> (x, y, z)) <span class="org-haskell-operator">=</span> vec (f <span class="org-haskell-operator">*</span> x) (f <span class="org-haskell-operator">*</span> y) (f <span class="org-haskell-operator">*</span> z)
+<span class="org-function-name">scale</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Vector3D</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Vector3D</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-comment-delimiter">--</span><span class="org-comment">- Get unitary 3D vector with same direction as v</span>
+<span class="org-haskell-type">:</span>{
+<span class="org-haskell-definition">versor</span> v <span class="org-haskell-operator">=</span> scale f v
+    <span class="org-haskell-keyword">where</span> 
+      f <span class="org-haskell-operator">=</span> 1.0 <span class="org-haskell-operator">/</span> norm v
+<span class="org-haskell-constructor">:</span>}      
+<span class="org-function-name">versor</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector3D</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Vector3D</span>
+<span class="org-haskell-operator">&gt;</span>          
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">vec</span> 1 2 3
+<span class="org-haskell-constructor">Vector3D</span> (1.0,2.0,3.0)
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector3D</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">vec</span> 1 2 3 <span class="org-haskell-operator">+</span> vec 3 4 5
+<span class="org-haskell-constructor">Vector3D</span> (4.0,6.0,8.0)
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector3D</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">vec</span> 1 2 3 <span class="org-haskell-operator">*</span> vec 3 4 5
+<span class="org-haskell-constructor">Vector3D</span> (3.0,8.0,15.0)
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector3D</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">vec</span> 1 2 3 <span class="org-haskell-operator">-</span> vec 3 4 5
+<span class="org-haskell-constructor">Vector3D</span> (<span class="org-haskell-operator">-</span>2.0,<span class="org-haskell-operator">-</span>2.0,<span class="org-haskell-operator">-</span>2.0)
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector3D</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">vec</span> 3 4 5 <span class="org-haskell-operator">-</span> vec 1 2 3
+<span class="org-haskell-constructor">Vector3D</span> (2.0,2.0,2.0)
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector3D</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> norm <span class="org-haskell-definition">$</span> vec 1 2 3
+3.7416573867739413
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">dist</span> (vec 10 4 5.0) (vec 2 7 8)
+9.055385138137417
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">fromInteger</span> 15 <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector3D</span> 
+<span class="org-haskell-constructor">Vector3D</span> (15.0,15.0,15.0)
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector3D</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-operator">-</span> (vec 1 2 3)
+<span class="org-haskell-constructor">Vector3D</span> (<span class="org-haskell-operator">-</span>1.0,<span class="org-haskell-operator">-</span>2.0,<span class="org-haskell-operator">-</span>3.0)
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector3D</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> ux k <span class="org-haskell-operator">=</span> scale k (<span class="org-haskell-constructor">Vector3D</span> (1, 0, 0))
+<span class="org-function-name">ux</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Vector3D</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> uy k <span class="org-haskell-operator">=</span> scale k (<span class="org-haskell-constructor">Vector3D</span> (0, 1, 0))
+<span class="org-function-name">uy</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Vector3D</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> uz k <span class="org-haskell-operator">=</span> scale k (<span class="org-haskell-constructor">Vector3D</span> (0, 0, 1))
+<span class="org-function-name">uz</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Vector3D</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">ux</span> 10
+<span class="org-haskell-constructor">Vector3D</span> (10.0,0.0,0.0)
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector3D</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">ux</span> 5.0
+<span class="org-haskell-constructor">Vector3D</span> (5.0,0.0,0.0)
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector3D</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">uz</span> 9
+<span class="org-haskell-constructor">Vector3D</span> (0.0,0.0,9.0)
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector3D</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">ux</span> 2 <span class="org-haskell-operator">+</span> uy 4 <span class="org-haskell-operator">+</span> uz 7
+<span class="org-haskell-constructor">Vector3D</span> (2.0,4.0,7.0)
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector3D</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Declare an instance of typeclass show to change the way a type is displayed.</span>
+<span class="org-haskell-type">:</span>{
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Show</span> <span class="org-haskell-type">Vector3D</span> <span class="org-haskell-keyword">where</span>
+    show (<span class="org-haskell-constructor">Vector3D</span> (x, y, z)) <span class="org-haskell-operator">=</span>
+        show <span class="org-haskell-operator">$</span> <span class="org-string">"Vector = "</span> <span class="org-haskell-operator">++</span> show x <span class="org-haskell-operator">++</span> <span class="org-string">"i + "</span> <span class="org-haskell-operator">++</span> show y <span class="org-haskell-operator">++</span> <span class="org-string">"j + "</span> <span class="org-haskell-operator">++</span> show z <span class="org-haskell-operator">++</span> <span class="org-string">"k"</span>
+
+<span class="org-haskell-constructor">:</span>}   
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> v1 <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector3D</span> (4.5, 3.0, 2.0)
+<span class="org-function-name">v1</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector3D</span>
+<span class="org-haskell-operator">&gt;</span> v1
+<span class="org-string">"Vector = 4.5i + 3.0j + 2.0k"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector3D</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> v1 <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector3D</span> (4.5, <span class="org-haskell-operator">-</span>3.0, 2.0)
+<span class="org-function-name">v1</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector3D</span>
+<span class="org-haskell-operator">&gt;</span> v1
+<span class="org-string">"Vector = 4.5i + -3.0j + 2.0k"</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector3D</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-3-2-3" name="sec-1-3-2-3"></a>Complex Number Implementation<br  /><div class="outline-text-5" id="text-1-3-2-3">
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Text.Printf</span> (printf)
+
+
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Complex number in rectangular form</span>
+<span class="org-comment-delimiter">-- </span>
+<span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Cpl</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Cpl</span> <span class="org-haskell-constructor">Double</span> <span class="org-haskell-constructor">Double</span> <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span>, <span class="org-haskell-constructor">Read</span>)
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> real (<span class="org-haskell-constructor">Cpl</span> x y) <span class="org-haskell-operator">=</span> x 
+<span class="org-function-name">real</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Cpl</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> imag (<span class="org-haskell-constructor">Cpl</span> x y) <span class="org-haskell-operator">=</span> y 
+<span class="org-function-name">imag</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Cpl</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> rad2deg rad <span class="org-haskell-operator">=</span> 180 <span class="org-haskell-operator">/</span> pi <span class="org-haskell-operator">*</span> rad 
+<span class="org-function-name">rad2deg</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Floating</span> a <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> deg2rad deg <span class="org-haskell-operator">=</span> pi <span class="org-haskell-operator">/</span> 180 <span class="org-haskell-operator">*</span> deg
+<span class="org-function-name">deg2rad</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Floating</span> a <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Magnitude </span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> mag (<span class="org-haskell-constructor">Cpl</span> x y) <span class="org-haskell-operator">=</span> sqrt ( x <span class="org-haskell-operator">*</span> x <span class="org-haskell-operator">+</span> y <span class="org-haskell-operator">*</span> y)
+<span class="org-function-name">mag</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Cpl</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Angle </span>
+<span class="org-haskell-keyword">let</span> phase (<span class="org-haskell-constructor">Cpl</span> x y) <span class="org-haskell-operator">=</span> rad2deg <span class="org-haskell-operator">$</span> atan2 y x 
+
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Complex in polar form with angle in degrees.                       </span>
+<span class="org-haskell-constructor">:</span>{
+<span class="org-haskell-keyword">let</span> polard r a <span class="org-haskell-operator">=</span>
+        <span class="org-haskell-keyword">let</span> ar <span class="org-haskell-operator">=</span> deg2rad a <span class="org-comment-delimiter">-- </span><span class="org-comment">angle in radians</span>
+        <span class="org-haskell-keyword">in</span> <span class="org-haskell-constructor">Cpl</span> (r <span class="org-haskell-operator">*</span> cos ar) (r <span class="org-haskell-operator">*</span> sin ar)
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> (<span class="org-haskell-operator">+.</span>) x y <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Cpl</span> x y
+(<span class="org-haskell-definition">+.</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Cpl</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> (<span class="org-haskell-operator">&lt;@</span>) r a <span class="org-haskell-operator">=</span> polard r a
+(<span class="org-haskell-definition">&lt;@</span>) <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Cpl</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+
+
+<span class="org-haskell-type">:</span>{         
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Show</span> <span class="org-haskell-type">Cpl</span> <span class="org-haskell-keyword">where</span>
+    show (<span class="org-haskell-constructor">Cpl</span> x y) <span class="org-haskell-operator">=</span> printf <span class="org-string">"%.3f + %.3fj"</span> x y 
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-constructor">:</span>{ 
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Num</span> <span class="org-haskell-type">Cpl</span> <span class="org-haskell-keyword">where</span>
+    (<span class="org-haskell-constructor">Cpl</span> x1 y1) <span class="org-haskell-operator">+</span> (<span class="org-haskell-constructor">Cpl</span> x2 y2) <span class="org-haskell-operator">=</span>
+        <span class="org-haskell-constructor">Cpl</span> (x1 <span class="org-haskell-operator">+</span> x2) (y1 <span class="org-haskell-operator">+</span> y2)
+
+    (<span class="org-haskell-constructor">Cpl</span> x1 y1) <span class="org-haskell-operator">-</span> (<span class="org-haskell-constructor">Cpl</span> x2 y2) <span class="org-haskell-operator">=</span>
+        <span class="org-haskell-constructor">Cpl</span> (x1 <span class="org-haskell-operator">-</span> x2) (y1 <span class="org-haskell-operator">-</span> y2)
+
+    <span class="org-comment-delimiter">{- </span><span class="org-comment">(x1 + y1*j)(x2 + y2*j) = x1 x2 + x1 y2 j + y1 x2 j + y1 y2 j j </span>
+<span class="org-comment">                              = (x1 x2 - y1y2) + (x1 y2 + y1 x2)j</span>
+<span class="org-comment">    -}</span>                            
+    (<span class="org-haskell-constructor">Cpl</span> x1 y1) <span class="org-haskell-operator">*</span> (<span class="org-haskell-constructor">Cpl</span> x2 y2) <span class="org-haskell-operator">=</span>
+        <span class="org-haskell-constructor">Cpl</span> (x1 <span class="org-haskell-operator">*</span> x2 <span class="org-haskell-operator">-</span> y1 <span class="org-haskell-operator">*</span> y2) (x1 <span class="org-haskell-operator">*</span> y2 <span class="org-haskell-operator">+</span> y1 <span class="org-haskell-operator">*</span> x2)
+
+    negate (<span class="org-haskell-constructor">Cpl</span> x y) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Cpl</span> (<span class="org-haskell-operator">-</span>x) (<span class="org-haskell-operator">-</span>y)
+
+    abs (<span class="org-haskell-constructor">Cpl</span> x y) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Cpl</span> (sqrt <span class="org-haskell-operator">$</span> x <span class="org-haskell-operator">*</span> x <span class="org-haskell-operator">+</span> y <span class="org-haskell-operator">*</span> y) 0                   
+
+    signum (<span class="org-haskell-constructor">Cpl</span> x y) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Cpl</span> (signum x) 0
+
+    fromInteger x <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Cpl</span> (fromIntegral x) 0 
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>info <span class="org-haskell-constructor">Fractional</span>
+<span class="org-haskell-keyword">class</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Fractional</span> a <span class="org-haskell-keyword">where</span>
+  (<span class="org-haskell-operator">/</span>) <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
+  recip <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  fromRational <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Rational</span> <span class="org-haskell-operator">-&gt;</span> a
+  <span class="org-haskell-pragma">{-# MINIMAL fromRational, (recip | (/)) #-}</span>
+        <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.Real&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Fractional</span> <span class="org-haskell-type">Float</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.Float&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Fractional</span> <span class="org-haskell-type">Double</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.Float&#8217;</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-type">:</span>{
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Fractional</span> <span class="org-haskell-type">Cpl</span> <span class="org-haskell-keyword">where</span>
+    recip (<span class="org-haskell-constructor">Cpl</span> x y) <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">let</span> s <span class="org-haskell-operator">=</span> x <span class="org-haskell-operator">*</span> x <span class="org-haskell-operator">+</span> y <span class="org-haskell-operator">*</span> y
+                      <span class="org-haskell-keyword">in</span>  <span class="org-haskell-constructor">Cpl</span> (x <span class="org-haskell-operator">/</span> s) (<span class="org-haskell-operator">-</span> y <span class="org-haskell-operator">/</span> s)
+
+    fromRational x <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Cpl</span> 1.0 0 <span class="org-comment-delimiter">-- </span><span class="org-comment">Dummy operation to satisfy the type class                      </span>
+<span class="org-haskell-constructor">:</span>}   
+
+
+<span class="org-haskell-operator">&gt;</span> 10 <span class="org-haskell-operator">+.</span> 4
+10.000 <span class="org-haskell-operator">+</span> 4.000j
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Cpl</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> 20.0 <span class="org-haskell-operator">&lt;@</span> 45.0
+14.142 <span class="org-haskell-operator">+</span> 14.142j
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Cpl</span>
+<span class="org-haskell-operator">&gt;</span> 10.0 <span class="org-haskell-operator">&lt;@</span> 60.0
+5.000 <span class="org-haskell-operator">+</span> 8.660j
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Cpl</span>
+<span class="org-haskell-operator">&gt;</span> 10.0 <span class="org-haskell-operator">&lt;@</span> 30.0
+8.660 <span class="org-haskell-operator">+</span> 5.000j
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Cpl</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">polard</span> 2.0 (<span class="org-haskell-operator">-</span>135.0)
+<span class="org-haskell-operator">-</span>1.414 <span class="org-haskell-operator">+</span> <span class="org-haskell-operator">-</span>1.414j
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Cpl</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> phase <span class="org-haskell-definition">$</span> polard 2.0 (<span class="org-haskell-operator">-</span>135.0)
+<span class="org-haskell-operator">-</span>135.0
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> mag <span class="org-haskell-definition">$</span> polard 2.0 (<span class="org-haskell-operator">-</span>135.0)
+2.0
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">Cpl</span> 3.0 (<span class="org-haskell-operator">-</span>4.0)
+3.000 <span class="org-haskell-operator">+</span> <span class="org-haskell-operator">-</span>4.000j
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Cpl</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">Cpl</span> 3.0 4.0 
+3.000 <span class="org-haskell-operator">+</span> 4.000j
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Cpl</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">Cpl</span> 3.0 0.0
+3.000 <span class="org-haskell-operator">+</span> 0.000j
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Cpl</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">Cpl</span> 10 3 <span class="org-haskell-operator">+</span> <span class="org-haskell-type">Cpl</span> 4 5
+14.000 <span class="org-haskell-operator">+</span> 8.000j
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Cpl</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">Cpl</span> 10 3 <span class="org-haskell-operator">*</span> <span class="org-haskell-type">Cpl</span> 4 5
+25.000 <span class="org-haskell-operator">+</span> 62.000j
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Cpl</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">Cpl</span> 0 1 <span class="org-haskell-operator">*</span> <span class="org-haskell-type">Cpl</span> 0 1
+<span class="org-haskell-operator">-</span>1.000 <span class="org-haskell-operator">+</span> 0.000j
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Cpl</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> c1 <span class="org-haskell-operator">=</span> 10 <span class="org-haskell-operator">+.</span> 20
+<span class="org-function-name">c1</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Cpl</span>
+<span class="org-haskell-operator">&gt;</span> c1
+10.000 <span class="org-haskell-operator">+</span> 20.000j
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Cpl</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> c2 <span class="org-haskell-operator">=</span> 5 <span class="org-haskell-operator">+.</span> 0 
+<span class="org-function-name">c2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Cpl</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> c3 <span class="org-haskell-operator">=</span> 10.0 <span class="org-haskell-operator">&lt;@</span> 30.0 
+<span class="org-function-name">c3</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Cpl</span>
+<span class="org-haskell-operator">&gt;</span> c3
+8.660 <span class="org-haskell-operator">+</span> 5.000j
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Cpl</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> mag <span class="org-haskell-definition">$</span> recip c3 
+0.1
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> phase <span class="org-haskell-definition">$</span> recip c3 
+<span class="org-haskell-operator">-</span>29.999999999999993
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> c1 <span class="org-haskell-definition">/</span> c2 
+2.000 <span class="org-haskell-operator">+</span> 4.000j
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Cpl</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> c1 <span class="org-haskell-definition">/</span> c3 
+1.866 <span class="org-haskell-operator">+</span> 1.232j
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Cpl</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-3-2-4" name="sec-1-3-2-4"></a>Vector Arithmetic<br  /><div class="outline-text-5" id="text-1-3-2-4">
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Vector</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> [<span class="org-haskell-constructor">Double</span>] <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span>, <span class="org-haskell-constructor">Read</span>, <span class="org-haskell-constructor">Show</span>)
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t uncurry
+<span class="org-function-name">uncurry</span> <span class="org-haskell-operator">::</span> (a <span class="org-haskell-operator">-&gt;</span> b <span class="org-haskell-operator">-&gt;</span> c) <span class="org-haskell-operator">-&gt;</span> (a, b) <span class="org-haskell-operator">-&gt;</span> c
+<span class="org-haskell-operator">&gt;</span>               
+
+<span class="org-haskell-type">:</span>{ 
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Num</span> <span class="org-haskell-type">Vector</span> <span class="org-haskell-keyword">where</span>   
+
+    (<span class="org-haskell-constructor">Vector</span> xs) <span class="org-haskell-operator">+</span> (<span class="org-haskell-constructor">Vector</span> ys) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> <span class="org-haskell-operator">$</span> map (uncurry (<span class="org-haskell-operator">+</span>)) (zip xs ys)
+
+    (<span class="org-haskell-constructor">Vector</span> xs) <span class="org-haskell-operator">-</span> (<span class="org-haskell-constructor">Vector</span> ys) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> <span class="org-haskell-operator">$</span> map (uncurry (<span class="org-haskell-operator">-</span>)) (zip xs ys)
+
+    (<span class="org-haskell-constructor">Vector</span> xs) <span class="org-haskell-operator">*</span> (<span class="org-haskell-constructor">Vector</span> ys) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> <span class="org-haskell-operator">$</span> map (uncurry (<span class="org-haskell-operator">*</span>)) (zip xs ys)                                
+
+    negate (<span class="org-haskell-constructor">Vector</span> xs) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> <span class="org-haskell-operator">$</span> map (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-operator">-</span>1.0 <span class="org-haskell-operator">*</span> x) xs
+
+    abs (<span class="org-haskell-constructor">Vector</span> xs) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> <span class="org-haskell-operator">$</span> map abs xs
+
+    signum (<span class="org-haskell-constructor">Vector</span> xs) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> <span class="org-haskell-operator">$</span> map signum xs
+
+    <span class="org-comment-delimiter">-- </span><span class="org-comment">Dummy operation (Don't care)                      </span>
+    fromInteger x <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> [fromIntegral x]
+<span class="org-haskell-constructor">:</span>}
+
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Fractional</span> <span class="org-haskell-type">Vector</span> <span class="org-haskell-keyword">where</span>
+    <span class="org-comment-delimiter">-- </span><span class="org-comment">recip (Vector xs) = Vector $ map (\x -&gt; 1 / x) xs</span>
+    <span class="org-comment-delimiter">--</span><span class="org-comment">- Or</span>
+    (<span class="org-haskell-constructor">Vector</span> xs) <span class="org-haskell-operator">/</span> (<span class="org-haskell-constructor">Vector</span> ys) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> <span class="org-haskell-operator">$</span> map (uncurry (<span class="org-haskell-operator">/</span>)) (zip xs ys)    
+
+    <span class="org-comment-delimiter">-- </span><span class="org-comment">Dummy operation - Don't care</span>
+    fromRational x <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> [fromRational x]
+<span class="org-haskell-constructor">:</span>}   
+
+<span class="org-haskell-keyword">let</span> apply fn (<span class="org-haskell-constructor">Vector</span> xs) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> (map fn xs)
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> scale k <span class="org-haskell-operator">=</span> apply (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">*</span> k)
+<span class="org-function-name">scale</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Vector</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Vector</span>
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> repeatv x size <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> (take size <span class="org-haskell-operator">$</span> repeat x)
+<span class="org-function-name">repeatv</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Vector</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>info <span class="org-haskell-type">Floating</span>
+<span class="org-haskell-keyword">class</span> <span class="org-haskell-type">Fractional</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Floating</span> a <span class="org-haskell-keyword">where</span>
+  pi <span class="org-haskell-operator">::</span> a
+  exp <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  log <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  sqrt <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  (<span class="org-haskell-operator">**</span>) <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
+  logBase <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a
+  sin <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  cos <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  tan <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  asin <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  acos <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  atan <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  sinh <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  cosh <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  tanh <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  asinh <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  acosh <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  atanh <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  GHC.Float.log1p <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  GHC.Float.expm1 <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  GHC.Float.log1pexp <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  GHC.Float.log1mexp <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a
+  <span class="org-haskell-pragma">{-# MINIMAL pi, exp, log, sin, cos, asin, acos, atan, sinh, cosh,</span>
+<span class="org-haskell-pragma">              asinh, acosh, atanh #-}</span>
+        <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.Float&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Floating</span> <span class="org-haskell-type">Float</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.Float&#8217;</span>
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Floating</span> <span class="org-haskell-type">Double</span> <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;GHC.Float&#8217;</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-type">:</span>{
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Floating</span> <span class="org-haskell-type">Vector</span> <span class="org-haskell-keyword">where</span>
+    pi                    <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> <span class="org-haskell-operator">$</span> repeat pi
+    exp  (<span class="org-haskell-constructor">Vector</span> xs)      <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> (map exp xs)
+    log  (<span class="org-haskell-constructor">Vector</span> xs)      <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> (map log xs)
+    sqrt  (<span class="org-haskell-constructor">Vector</span> xs)     <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> (map sqrt xs)
+
+    (<span class="org-haskell-operator">**</span>) (<span class="org-haskell-constructor">Vector</span> xs) (<span class="org-haskell-constructor">Vector</span> ns) <span class="org-haskell-operator">=</span>
+        <span class="org-haskell-keyword">let</span> n <span class="org-haskell-operator">=</span> head ns
+        <span class="org-haskell-keyword">in</span> <span class="org-haskell-constructor">Vector</span> <span class="org-haskell-operator">$</span> map (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> x <span class="org-haskell-operator">**</span> n) xs
+
+    logBase (<span class="org-haskell-constructor">Vector</span> xs) (<span class="org-haskell-constructor">Vector</span> ns) <span class="org-haskell-operator">=</span>
+        <span class="org-haskell-keyword">let</span> n <span class="org-haskell-operator">=</span> head ns
+        <span class="org-haskell-keyword">in</span> <span class="org-haskell-constructor">Vector</span> <span class="org-haskell-operator">$</span> map (<span class="org-haskell-operator">\</span>x <span class="org-haskell-operator">-&gt;</span> logBase x n) xs
+
+    sin (<span class="org-haskell-constructor">Vector</span> xs)       <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> <span class="org-haskell-operator">$</span> map sin xs
+    cos (<span class="org-haskell-constructor">Vector</span> xs)       <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> <span class="org-haskell-operator">$</span> map cos xs
+    tan (<span class="org-haskell-constructor">Vector</span> xs)       <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> <span class="org-haskell-operator">$</span> map tan xs
+    asin (<span class="org-haskell-constructor">Vector</span> xs)      <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> <span class="org-haskell-operator">$</span> map asin xs
+    acos (<span class="org-haskell-constructor">Vector</span> xs)      <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> <span class="org-haskell-operator">$</span> map acos xs
+    atan (<span class="org-haskell-constructor">Vector</span> xs)      <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> <span class="org-haskell-operator">$</span> map atan xs
+    sinh (<span class="org-haskell-constructor">Vector</span> xs)      <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> <span class="org-haskell-operator">$</span> map sinh xs
+    cosh (<span class="org-haskell-constructor">Vector</span> xs)      <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> <span class="org-haskell-operator">$</span> map cosh xs
+    tanh (<span class="org-haskell-constructor">Vector</span> xs)      <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> <span class="org-haskell-operator">$</span> map tanh xs
+    asinh (<span class="org-haskell-constructor">Vector</span> xs)     <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> <span class="org-haskell-operator">$</span> map asinh xs
+    acosh (<span class="org-haskell-constructor">Vector</span> xs)     <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> <span class="org-haskell-operator">$</span> map acosh xs
+    atanh (<span class="org-haskell-constructor">Vector</span> xs)     <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> <span class="org-haskell-operator">$</span> map atanh xs
+<span class="org-haskell-constructor">:</span>}
+
+
+
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">------------------- Testing ------------------------ </span>
+
+
+
+<span class="org-haskell-operator">&gt;</span> 10.0 <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector</span>
+<span class="org-haskell-constructor">Vector</span> [10.0]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> xs <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> [1.0, 2.0, 3.0, 4.0]
+<span class="org-function-name">xs</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> ys <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> [10.0, 3.0, 5.0, 6.0] 
+<span class="org-function-name">ys</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-haskell-operator">&gt;</span> ys <span class="org-haskell-definition">-</span> xs
+<span class="org-haskell-constructor">Vector</span> [9.0,1.0,2.0,2.0]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> xs <span class="org-haskell-definition">*</span> ys 
+<span class="org-haskell-constructor">Vector</span> [10.0,6.0,15.0,24.0]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">apply</span> sqrt xs
+<span class="org-haskell-constructor">Vector</span> [1.0,1.4142135623730951,1.7320508075688772,2.0]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">apply</span> sqrt ys
+<span class="org-haskell-constructor">Vector</span> [3.1622776601683795,1.7320508075688772,2.23606797749979,2.449489742783178]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector</span>
+<span class="org-haskell-operator">&gt;</span>
+
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">scale</span> 4.0 ys <span class="org-haskell-operator">+</span> scale 3.0 xs
+<span class="org-haskell-constructor">Vector</span> [43.0,18.0,29.0,36.0]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">scale</span> 4.0 ys <span class="org-haskell-operator">/</span> scale 3.0 xs
+<span class="org-haskell-constructor">Vector</span> [13.333333333333334,2.0,2.2222222222222223,2.0]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> xs <span class="org-haskell-definition">+</span> repeatv 3.0 5 <span class="org-haskell-operator">+</span> ys
+<span class="org-haskell-constructor">Vector</span> [14.0,8.0,11.0,13.0]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">exp</span> xs
+<span class="org-haskell-constructor">Vector</span> [2.718281828459045,7.38905609893065,20.085536923187668,54.598150033144236]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> xs <span class="org-haskell-definition">+</span> sqrt ys
+<span class="org-haskell-constructor">Vector</span> [4.16227766016838,3.732050807568877,5.23606797749979,6.449489742783178]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> xs <span class="org-haskell-definition">**</span> 5.0 <span class="org-haskell-operator">-</span> scale 3.0 ys
+<span class="org-haskell-constructor">Vector</span> [<span class="org-haskell-operator">-</span>29.0,23.0,228.0,1006.0]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Vector</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-3-2-5" name="sec-1-3-2-5"></a>Num a =&gt; Maybe a as instance of Num typeclass<br  /><div class="outline-text-5" id="text-1-3-2-5">
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">mapM2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-operator">=&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> b <span class="org-haskell-operator">-&gt;</span> c) <span class="org-haskell-operator">-&gt;</span> m a <span class="org-haskell-operator">-&gt;</span> m b <span class="org-haskell-operator">-&gt;</span> m c
+<span class="org-haskell-definition">mapM2</span> fn ma mb <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  a <span class="org-haskell-operator">&lt;-</span> ma
+  b <span class="org-haskell-operator">&lt;-</span> mb
+  return <span class="org-haskell-operator">$</span> fn a b 
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Num</span> (<span class="org-haskell-type">Maybe</span> a) <span class="org-haskell-keyword">where</span>
+    (<span class="org-haskell-operator">+</span>) <span class="org-haskell-operator">=</span> mapM2 (<span class="org-haskell-operator">+</span>)
+    (<span class="org-haskell-operator">-</span>) <span class="org-haskell-operator">=</span> mapM2 (<span class="org-haskell-operator">-</span>)
+    (<span class="org-haskell-operator">*</span>) <span class="org-haskell-operator">=</span> mapM2 (<span class="org-haskell-operator">*</span>)
+
+    negate <span class="org-haskell-operator">=</span> fmap negate
+    abs    <span class="org-haskell-operator">=</span> fmap abs
+    signum <span class="org-haskell-operator">=</span> fmap signum
+
+    fromInteger x <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Just</span> (fromInteger x)
+<span class="org-haskell-constructor">:</span>}
+</pre>
+</div>
+
+<p>
+Running in REPL: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">Just</span> 10 <span class="org-haskell-operator">+</span> <span class="org-haskell-constructor">Just</span> 15
+<span class="org-haskell-constructor">Just</span> 25
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Maybe</span> a
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">Just</span> 10 <span class="org-haskell-operator">+</span> <span class="org-haskell-type">Nothing</span>
+<span class="org-haskell-constructor">Nothing</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Maybe</span> a
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span>  <span class="org-haskell-type">Just</span> 10 <span class="org-haskell-operator">+</span> 20 <span class="org-haskell-operator">*</span> 5 <span class="org-haskell-operator">+</span> 3 <span class="org-haskell-operator">*</span> 4 <span class="org-haskell-operator">*</span> 5 
+<span class="org-haskell-constructor">Just</span> 170
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Maybe</span> a
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">Just</span> 10 <span class="org-haskell-operator">+</span> 20 <span class="org-haskell-operator">*</span> 5 <span class="org-haskell-operator">+</span> 3 <span class="org-haskell-operator">*</span> 4 <span class="org-haskell-operator">*</span> 5 <span class="org-haskell-operator">+</span> <span class="org-haskell-type">Nothing</span>
+<span class="org-haskell-constructor">Nothing</span>
+
+
+<span class="org-haskell-operator">&gt;</span> signum <span class="org-haskell-definition">$</span> <span class="org-haskell-constructor">Just</span> (<span class="org-haskell-operator">-</span>10)
+<span class="org-haskell-constructor">Just</span> (<span class="org-haskell-operator">-</span>1)
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Maybe</span> a
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> signum <span class="org-haskell-definition">$</span> <span class="org-haskell-type">Just</span> (10)
+<span class="org-haskell-constructor">Just</span> 1
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Maybe</span> a
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> signum <span class="org-haskell-definition">$</span> <span class="org-haskell-type">Nothing</span>
+<span class="org-haskell-constructor">Nothing</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Num</span> a <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Maybe</span> a
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</li></ol>
+</div>
+
+<div id="outline-container-sec-1-3-3" class="outline-4">
+<h4 id="sec-1-3-3"><span class="section-number-4">1.3.3</span> Creating a type class</h4>
+<div class="outline-text-4" id="text-1-3-3">
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-constructor">:</span>{
+<span class="org-haskell-keyword">class</span> <span class="org-haskell-type">Shape</span> a <span class="org-haskell-keyword">where</span>
+    shapePerimiter <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
+    shapeArea      <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-type">:</span>}                 
+
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">Paste in the REPL </span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>{
+<span class="org-haskell-operator">-</span> <span class="org-haskell-keyword">class</span> <span class="org-haskell-type">Shape</span> <span class="org-haskell-keyword">where</span>
+<span class="org-haskell-operator">-</span>     shapePerimiter <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Shape</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">-</span>     shapeArea <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Shape</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
+<span class="org-function-name">-</span> <span class="org-haskell-type">:</span>}                 
+<span class="org-haskell-keyword">class</span> <span class="org-haskell-type">Shape</span> a <span class="org-haskell-keyword">where</span>
+  shapePerimiter <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
+  shapeArea <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
+  <span class="org-haskell-pragma">{-# MINIMAL shapePerimiter, shapeArea #-}</span>
+<span class="org-haskell-operator">&gt;</span>     
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Square</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Square</span> a <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span>, <span class="org-haskell-constructor">Read</span>, <span class="org-haskell-constructor">Show</span>)
+
+<span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Circle</span> r <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Circle</span> r <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span>, <span class="org-haskell-constructor">Read</span>, <span class="org-haskell-constructor">Show</span>)
+
+<span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Rectangle</span> x y <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Rectangle</span> x y <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span>, <span class="org-haskell-constructor">Read</span>, <span class="org-haskell-constructor">Show</span>)
+
+<span class="org-haskell-constructor">:</span>{                   
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Shape</span> (<span class="org-haskell-type">Square</span> <span class="org-haskell-type">Double</span>) <span class="org-haskell-keyword">where</span>
+    shapePerimiter (<span class="org-haskell-constructor">Square</span> a) <span class="org-haskell-operator">=</span> 4.0 <span class="org-haskell-operator">*</span> a
+    shapeArea (<span class="org-haskell-constructor">Square</span> a) <span class="org-haskell-operator">=</span> a <span class="org-haskell-operator">*</span> a 
+<span class="org-haskell-constructor">:</span>}
+
+ <span class="org-haskell-constructor">:</span>{                   
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Shape</span> (<span class="org-haskell-type">Circle</span> <span class="org-haskell-type">Double</span>) <span class="org-haskell-keyword">where</span>
+    shapePerimiter (<span class="org-haskell-constructor">Circle</span> r) <span class="org-haskell-operator">=</span> 2.0 <span class="org-haskell-operator">*</span> pi <span class="org-haskell-operator">*</span> r 
+    shapeArea (<span class="org-haskell-constructor">Circle</span> r) <span class="org-haskell-operator">=</span> pi <span class="org-haskell-operator">*</span> r <span class="org-haskell-operator">*</span> r 
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Shape</span> (<span class="org-haskell-type">Rectangle</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-type">Double</span>) <span class="org-haskell-keyword">where</span>
+    shapePerimiter (<span class="org-haskell-constructor">Rectangle</span> x y) <span class="org-haskell-operator">=</span> 2.0 <span class="org-haskell-operator">*</span> (x <span class="org-haskell-operator">+</span> y)
+    shapeArea (<span class="org-haskell-constructor">Rectangle</span> x y) <span class="org-haskell-operator">=</span> x <span class="org-haskell-operator">*</span> y
+<span class="org-haskell-constructor">:</span>}    
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> s1 <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Square</span> 10.0 <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Square</span> <span class="org-haskell-type">Double</span>
+<span class="org-function-name">s1</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Square</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> s2 <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Circle</span> 2.0 <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Circle</span> <span class="org-haskell-type">Double</span>
+<span class="org-function-name">s2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Circle</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> s3 <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Rectangle</span> 5.0 4.0 <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Rectangle</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-type">Double</span>
+<span class="org-function-name">s3</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Rectangle</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span>
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t shapeArea 
+<span class="org-function-name">shapeArea</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Shape</span> a <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t shapePerimiter 
+<span class="org-function-name">shapePerimiter</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Shape</span> a <span class="org-haskell-operator">=&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">shapePerimiter</span> s1
+40.0
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">shapePerimiter</span> s2
+12.566370614359172
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">shapePerimiter</span> s3
+18.0
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">shapeArea</span> s1
+100.0
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">shapeArea</span> s2
+12.566370614359172
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">shapeArea</span> s3
+20.0
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span>
+<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-1-3-4" class="outline-4">
+<h4 id="sec-1-3-4"><span class="section-number-4">1.3.4</span> References</h4>
+<div class="outline-text-4" id="text-1-3-4">
+<p>
+See: 
+</p>
+
+<ul class="org-ul">
+<li><b>A Gentle Introduction to Haskell: Classes</b> Accessed at
+2017-3-0. Available at
+<a href="https://www.haskell.org/tutorial/classes.html">https://www.haskell.org/tutorial/classes.html</a>
+</li>
+
+<li><b>Polymorphism - HaskellWiki</b> Accessed at 2017-3-5. Available at
+<a href="https://wiki.haskell.org/Polymorphism">https://wiki.haskell.org/Polymorphism</a>
+</li>
+
+<li><b>The Power of Polymorphism</b> Accessed at 2017-3-5. Available at
+<a href="http://www2.sys-con.com/itsg/virtualcd/Java/archives/0508/barnabee/index.html">http://www2.sys-con.com/itsg/virtualcd/Java/archives/0508/barnabee/index.html</a>
+</li>
+
+<li><b>Lecture Notes, Type Classes in Haskell</b> Accessed at
+2017-3-0. Available at
+<a href="https://john.cs.olemiss.edu/~hcc/csci450/14fall/notes/typeClasses.html">https://john.cs.olemiss.edu/~hcc/csci450/14fall/notes/typeClasses.html</a>
+</li>
+
+<li><b>05-type-classes</b> Accessed at 2017-3-0. Available at
+<a href="http://www.seas.upenn.edu/~cis194/spring13/lectures/05-type-classes.html">http://www.seas.upenn.edu/~cis194/spring13/lectures/05-type-classes.html</a>
+</li>
+
+<li><b>Chapter 6. Using Typeclasses</b> Accessed at 2017-3-0. Available at
+<a href="http://book.realworldhaskell.org/read/using-typeclasses.html">http://book.realworldhaskell.org/read/using-typeclasses.html</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Caio Rodrigues Soares Silva</p>
+<p class="date">Created: 2018-05-07 Mon 10:13</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

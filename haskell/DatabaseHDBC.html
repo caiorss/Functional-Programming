@@ -4,10 +4,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Databases in Haskell - HDBC</title>
-<!-- 2017-03-12 dom 16:47 -->
+<!-- 2018-05-07 Mon 10:11 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
-<meta  name="author" content="Caio Rodrigues" />
+<meta  name="author" content="nobody" />
 <meta  name="description" content="Databases in Haskell, database drivers"
  />
 <meta  name="keywords" content="haskell, database, drivers, hdbc, sqlite, postgres" />
@@ -91,80 +91,9 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
-<link href='/theme/style.css' rel='stylesheet'>
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
 <link href="/Functional-Programming/theme/style.css" rel="stylesheet">
-
-<script type="text/javascript" src="/theme/org-info.js">
-/**
- *
- * @source: /theme/org-info.js
- *
- * @licstart  The following is the entire license notice for the
- *  JavaScript code in /theme/org-info.js.
- *
- * Copyright (C) 2012-2013 Free Software Foundation, Inc.
- *
- *
- * The JavaScript code in this tag is free software: you can
- * redistribute it and/or modify it under the terms of the GNU
- * General Public License (GNU GPL) as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version.  The code is distributed WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
- *
- * As additional permission under GNU GPL version 3 section 7, you
- * may distribute non-source (e.g., minimized or compacted) forms of
- * that code without the copy of the GNU GPL normally required by
- * section 4, provided you include this license notice and a URL
- * through which recipients can access the Corresponding Source.
- *
- * @licend  The above is the entire license notice
- * for the JavaScript code in /theme/org-info.js.
- *
- */
-</script>
-
-<script type="text/javascript">
-
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2013 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
-
-<!--/*--><![CDATA[/*><!--*/
-org_html_manager.set("TOC_DEPTH", "4");
-org_html_manager.set("LINK_HOME", "");
-org_html_manager.set("LINK_UP", "");
-org_html_manager.set("LOCAL_TOC", "1");
-org_html_manager.set("VIEW_BUTTONS", "0");
-org_html_manager.set("MOUSE_HINT", "underline");
-org_html_manager.set("FIXED_TOC", "0");
-org_html_manager.set("TOC", "1");
-org_html_manager.set("VIEW", "info");
-org_html_manager.setup();  // activate after the parameters are set
-/*]]>*///-->
-</script>
+<script src="/Functional-Programming/theme/org-nav-theme.js"></script>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -223,7 +152,12 @@ for the JavaScript code in this tag.
 <ul>
 <li><a href="#sec-1-1">1.1. Overview</a></li>
 <li><a href="#sec-1-2">1.2. Install the Database Drivers</a></li>
-<li><a href="#sec-1-3">1.3. Example</a></li>
+<li><a href="#sec-1-3">1.3. Examples</a>
+<ul>
+<li><a href="#sec-1-3-1">1.3.1. Example - Simple Database Query</a></li>
+<li><a href="#sec-1-3-2">1.3.2. Example - Datbase query with ReaderT monad transformer.</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -295,21 +229,21 @@ driver.
 <div class="org-src-container">
 
 <pre class="src src-sh"><span class="org-comment-delimiter"># </span><span class="org-comment">Download sample database dump </span>
-$ curl -L -o zotero.sql https://github.com/caiorss/zhserver/raw/master/database/zotero-test.sql
+$ curl -L -o <span class="org-keyword">zotero.sql</span> https://github.com/caiorss/zhserver/raw/master/database/zotero-test.sql
 
 $ du -h zotero.sql 
 3,0M    zotero.sql
 3,0M    total
 
 $ file zotero.sql 
-zotero.sql: UTF-8 Unicode text, with very long lines, with LF, NEL line terminators
+<span class="org-function-name">zotero.sql</span>: UTF-8 Unicode text, with very long lines, with LF, NEL line terminators
 
 <span class="org-comment-delimiter"># </span><span class="org-comment">Make the database </span>
 $ cat zotero.sql | sqlite3 zotero.sqlite
 
 <span class="org-comment-delimiter"># </span><span class="org-comment">Check the file type </span>
 $ file zotero.sqlite 
-zotero.sqlite: SQLite 3.x database, last written using SQLite version 3016002
+<span class="org-function-name">zotero.sqlite</span>: SQLite 3.x database, last written using SQLite version 3016002
 
 sqlite&gt; 
 sqlite&gt; .tables
@@ -385,8 +319,11 @@ $ stack ghci
 </div>
 
 <div id="outline-container-sec-1-3" class="outline-3">
-<h3 id="sec-1-3"><span class="section-number-3">1.3</span> Example</h3>
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> Examples</h3>
 <div class="outline-text-3" id="text-1-3">
+</div><div id="outline-container-sec-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1"><span class="section-number-4">1.3.1</span> Example - Simple Database Query</h4>
+<div class="outline-text-4" id="text-1-3-1">
 <p>
 Connect to sqlite3 database 
 </p>
@@ -397,7 +334,7 @@ Connect to sqlite3 database
 <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Database.HDBC.Sqlite3</span> 
 
 <span class="org-haskell-operator">&gt;</span> conn <span class="org-haskell-operator">&lt;-</span> connectSqlite3 <span class="org-string">"zotero.sqlite"</span> 
-<span class="org-haskell-definition">conn</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Connection</span>
+<span class="org-function-name">conn</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Connection</span>
 <span class="org-haskell-operator">&gt;</span>
 </pre>
 </div>
@@ -412,7 +349,7 @@ Database Metadata
 <span class="org-comment-delimiter">--</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">hdbcDriverName</span> conn
 <span class="org-string">"sqlite3"</span>
-<span class="org-haskell-definition">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t hdbcDriverName conn
 <span class="org-haskell-definition">hdbcDriverName</span> conn <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span>
 <span class="org-haskell-operator">&gt;</span> 
@@ -422,7 +359,7 @@ Database Metadata
 <span class="org-comment-delimiter">--</span>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">dbServerVer</span> conn
 <span class="org-string">"3.14.1"</span>
-<span class="org-haskell-definition">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t dbServerVer conn
@@ -438,7 +375,7 @@ Tables metadata
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t getTables 
-<span class="org-haskell-definition">getTables</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IConnection</span> conn <span class="org-haskell-operator">=&gt;</span> conn <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> [<span class="org-haskell-type">String</span>]
+<span class="org-function-name">getTables</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IConnection</span> conn <span class="org-haskell-operator">=&gt;</span> conn <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> [<span class="org-haskell-type">String</span>]
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">getTables</span> conn 
@@ -494,7 +431,7 @@ zoteroDummyTable
 (<span class="org-string">"clientDateModified"</span>,<span class="org-haskell-constructor">SqlColDesc</span> {colType <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">SqlUnknownT</span> <span class="org-string">"timestamp"</span>, colSize <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>, colOctetLength <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>, colDecDigits <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>, colNullable <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>})
 (<span class="org-string">"libraryID"</span>,<span class="org-haskell-constructor">SqlColDesc</span> {colType <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">SqlIntegerT</span>, colSize <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>, colOctetLength <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>, colDecDigits <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>, colNullable <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>})
 (<span class="org-string">"key"</span>,<span class="org-haskell-constructor">SqlColDesc</span> {colType <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">SqlVarCharT</span>, colSize <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>, colOctetLength <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>, colDecDigits <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>, colNullable <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>})
-<span class="org-haskell-definition">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span>
 </pre>
 </div>
@@ -534,7 +471,7 @@ Quick query
  [<span class="org-haskell-constructor">SqlInt64</span> 93,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"design"</span>],
  [<span class="org-haskell-constructor">SqlInt64</span> 94,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"manual"</span>],
  [<span class="org-haskell-constructor">SqlInt64</span> 95,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"cable"</span>]]
-<span class="org-haskell-definition">it</span> <span class="org-haskell-operator">::</span> [[<span class="org-haskell-type">SqlValue</span>]]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> [[<span class="org-haskell-type">SqlValue</span>]]
 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">quickQuery</span> conn <span class="org-string">"SELECT tagID, name FROM tags WHERE tagID &gt; 80 LIMIT 15"</span> <span class="org-haskell-constructor">[]</span> <span class="org-haskell-operator">&gt;&gt;=</span> mapM_ print
@@ -553,7 +490,7 @@ Quick query
 [<span class="org-haskell-constructor">SqlInt64</span> 93,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"design"</span>]
 [<span class="org-haskell-constructor">SqlInt64</span> 94,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"manual"</span>]
 [<span class="org-haskell-constructor">SqlInt64</span> 95,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"cable"</span>]
-<span class="org-haskell-definition">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span>
 </pre>
 </div>
@@ -578,43 +515,43 @@ itemDataValues<span class="org-haskell-definition">.</span>valueID <span class="
 <span class="org-haskell-definition">and</span> itemData<span class="org-haskell-operator">.</span>itemID <span class="org-haskell-operator">=</span> 5805
 <span class="org-haskell-definition">and</span> fields<span class="org-haskell-operator">.</span>fieldID <span class="org-haskell-operator">=</span> itemData<span class="org-haskell-operator">.</span>fieldID
 
-<span class="org-haskell-definition">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t prepare 
-<span class="org-haskell-definition">prepare</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IConnection</span> conn <span class="org-haskell-operator">=&gt;</span> conn <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">Statement</span>
+<span class="org-function-name">prepare</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IConnection</span> conn <span class="org-haskell-operator">=&gt;</span> conn <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">Statement</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> stmt <span class="org-haskell-operator">&lt;-</span> prepare conn query 
-<span class="org-haskell-definition">stmt</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Statement</span>
+<span class="org-function-name">stmt</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Statement</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t stmt 
-<span class="org-haskell-definition">stmt</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Statement</span>
+<span class="org-function-name">stmt</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Statement</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t execute
-<span class="org-haskell-definition">execute</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Statement</span> <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">SqlValue</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">Integer</span>
+<span class="org-function-name">execute</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Statement</span> <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">SqlValue</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">Integer</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> nrows <span class="org-haskell-operator">&lt;-</span> execute stmt <span class="org-haskell-constructor">[]</span>
-<span class="org-haskell-definition">nrows</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Integer</span>
+<span class="org-function-name">nrows</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Integer</span>
 <span class="org-haskell-operator">&gt;</span> nrows
 0
-<span class="org-haskell-definition">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Integer</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Integer</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">getColumnNames</span> stmt
 [<span class="org-string">"fieldName"</span>,<span class="org-string">"value"</span>]
-<span class="org-haskell-definition">it</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">String</span>]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">String</span>]
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">========= fetchAllRows =============== -</span>
 
 
 <span class="org-haskell-operator">&gt;</span> rows <span class="org-haskell-operator">&lt;-</span> fetchAllRows stmt <span class="org-comment-delimiter">-- </span><span class="org-comment">Output changed to fit on the screen.</span>
-<span class="org-haskell-definition">rows</span> <span class="org-haskell-operator">::</span> [[<span class="org-haskell-type">SqlValue</span>]]
+<span class="org-function-name">rows</span> <span class="org-haskell-operator">::</span> [[<span class="org-haskell-type">SqlValue</span>]]
 <span class="org-haskell-operator">&gt;</span> rows
 [[<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"url"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"http://www.eliza.ch/doc/wadler92essence_of_FP.pdf"</span>]
   ,[<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"place"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"Albuquerque, NM, USA"</span>],
@@ -626,7 +563,7 @@ itemDataValues<span class="org-haskell-definition">.</span>valueID <span class="
    [<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"language"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"en"</span>],
    [<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"title"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"The essence of functional programming"</span>],
    [<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"proceedingsTitle"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"POPL '92 Proceedings of the 19th ACM SIGPLAN-SIGACT symposium on Principles of programming languages"</span>]]
-<span class="org-haskell-definition">it</span> <span class="org-haskell-operator">::</span> [[<span class="org-haskell-type">SqlValue</span>]]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> [[<span class="org-haskell-type">SqlValue</span>]]
 
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">mapM_</span> print rows
@@ -640,12 +577,12 @@ itemDataValues<span class="org-haskell-definition">.</span>valueID <span class="
 [<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"language"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"en"</span>]
 [<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"title"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"The essence of functional programming"</span>]
 [<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"proceedingsTitle"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"POPL '92 Proceedings of the 19th ACM SIGPLAN-SIGACT symposium on Principles of programming languages"</span>]
-<span class="org-haskell-definition">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> sqlRowToString <span class="org-haskell-operator">=</span> map (fromSql <span class="org-haskell-operator">::</span> <span class="org-haskell-type">SqlValue</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span>)
 <span class="org-haskell-operator">-</span> 
-<span class="org-haskell-definition">sqlRowToString</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">SqlValue</span>] <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">String</span>]
+<span class="org-function-name">sqlRowToString</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">SqlValue</span>] <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">String</span>]
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">mapM_</span> print <span class="org-haskell-operator">$</span> map sqlRowToString rows 
 [<span class="org-string">"url"</span>,<span class="org-string">"http://www.eliza.ch/doc/wadler92essence_of_FP.pdf"</span>]
@@ -658,12 +595,12 @@ itemDataValues<span class="org-haskell-definition">.</span>valueID <span class="
 [<span class="org-string">"language"</span>,<span class="org-string">"en"</span>]
 [<span class="org-string">"title"</span>,<span class="org-string">"The essence of functional programming"</span>]
 [<span class="org-string">"proceedingsTitle"</span>,<span class="org-string">"POPL '92 Proceedings of the 19th ACM SIGPLAN-SIGACT symposium on Principles of programming languages"</span>]
-<span class="org-haskell-definition">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> sqlRowToLine row <span class="org-haskell-operator">=</span> unwords <span class="org-haskell-operator">$</span> map (fromSql <span class="org-haskell-operator">::</span> <span class="org-haskell-type">SqlValue</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span>) row
 <span class="org-haskell-operator">-</span> 
-<span class="org-haskell-definition">sqlRowToLine</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">SqlValue</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span>
+<span class="org-function-name">sqlRowToLine</span> <span class="org-haskell-operator">::</span> [<span class="org-haskell-type">SqlValue</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span>
 <span class="org-haskell-operator">&gt;</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">mapM_</span> putStrLn <span class="org-haskell-operator">$</span> map sqlRowToLine rows 
@@ -677,30 +614,30 @@ itemDataValues<span class="org-haskell-definition">.</span>valueID <span class="
 <span class="org-haskell-definition">language</span> en
 <span class="org-haskell-definition">title</span> <span class="org-haskell-constructor">The</span> essence <span class="org-haskell-keyword">of</span> functional programming
 <span class="org-haskell-definition">proceedingsTitle</span> <span class="org-haskell-constructor">POPL</span> '92 <span class="org-haskell-constructor">Proceedings</span> <span class="org-haskell-keyword">of</span> the 19th <span class="org-haskell-constructor">ACM</span> <span class="org-haskell-constructor">SIGPLAN</span><span class="org-haskell-operator">-</span><span class="org-haskell-constructor">SIGACT</span> symposium on <span class="org-haskell-constructor">Principles</span> <span class="org-haskell-keyword">of</span> programming languages
-<span class="org-haskell-definition">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> 
 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">fetchAllRows</span> stmt 
 <span class="org-haskell-constructor">[]</span>
-<span class="org-haskell-definition">it</span> <span class="org-haskell-operator">::</span> [[<span class="org-haskell-type">SqlValue</span>]]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> [[<span class="org-haskell-type">SqlValue</span>]]
 <span class="org-haskell-operator">&gt;</span> 
 
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">================  fetchAllRowsAL  ======================= ---</span>
 
 <span class="org-haskell-operator">&gt;</span> stmt <span class="org-haskell-operator">&lt;-</span> prepare conn query 
-<span class="org-haskell-definition">stmt</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Statement</span>
+<span class="org-function-name">stmt</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Statement</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">execute</span> stmt <span class="org-haskell-constructor">[]</span>
 0
-<span class="org-haskell-definition">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Integer</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Integer</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> rows <span class="org-haskell-operator">&lt;-</span> fetchAllRowsAL stmt
-<span class="org-haskell-definition">rows</span> <span class="org-haskell-operator">::</span> [[(<span class="org-haskell-type">String</span>, <span class="org-haskell-type">SqlValue</span>)]]
+<span class="org-function-name">rows</span> <span class="org-haskell-operator">::</span> [[(<span class="org-haskell-type">String</span>, <span class="org-haskell-type">SqlValue</span>)]]
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">mapM_</span> print rows
 [(<span class="org-string">"fieldName"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"url"</span>),(<span class="org-string">"value"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"http://www.eliza.ch/doc/wadler92essence_of_FP.pdf"</span>)]
@@ -713,19 +650,19 @@ itemDataValues<span class="org-haskell-definition">.</span>valueID <span class="
 [(<span class="org-string">"fieldName"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"language"</span>),(<span class="org-string">"value"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"en"</span>)]
 [(<span class="org-string">"fieldName"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"title"</span>),(<span class="org-string">"value"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"The essence of functional programming"</span>)]
 [(<span class="org-string">"fieldName"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"proceedingsTitle"</span>),(<span class="org-string">"value"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"POPL '92 Proceedings of the 19th ACM SIGPLAN-SIGACT symposium on Principles of programming languages"</span>)]
-<span class="org-haskell-definition">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-comment-delimiter">-- </span><span class="org-comment">=============== fetchAllRowsMap ================== --</span>
 
 <span class="org-haskell-operator">&gt;</span> stmt <span class="org-haskell-operator">&lt;-</span> prepare conn query 
-<span class="org-haskell-definition">stmt</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Statement</span>
+<span class="org-function-name">stmt</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Statement</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">execute</span> stmt <span class="org-haskell-constructor">[]</span>
 0
 
 <span class="org-haskell-operator">&gt;</span> rows <span class="org-haskell-operator">&lt;-</span> fetchAllRowsMap stmt
-<span class="org-haskell-definition">rows</span> <span class="org-haskell-operator">::</span> [containers<span class="org-haskell-operator">-</span>0.5<span class="org-haskell-operator">.</span>7.1<span class="org-haskell-type">:Data.Map.Base.Map</span> <span class="org-haskell-type">String</span> <span class="org-haskell-type">SqlValue</span>]
+<span class="org-function-name">rows</span> <span class="org-haskell-operator">::</span> [containers<span class="org-haskell-operator">-</span>0.5<span class="org-haskell-operator">.</span>7.1<span class="org-haskell-type">:Data.Map.Base.Map</span> <span class="org-haskell-type">String</span> <span class="org-haskell-type">SqlValue</span>]
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">mapM_</span> print rows
 <span class="org-haskell-definition">fromList</span> [(<span class="org-string">"fieldName"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"url"</span>),(<span class="org-string">"value"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"http://www.eliza.ch/doc/wadler92essence_of_FP.pdf"</span>)]
@@ -738,7 +675,7 @@ itemDataValues<span class="org-haskell-definition">.</span>valueID <span class="
 <span class="org-haskell-definition">fromList</span> [(<span class="org-string">"fieldName"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"language"</span>),(<span class="org-string">"value"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"en"</span>)]
 <span class="org-haskell-definition">fromList</span> [(<span class="org-string">"fieldName"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"title"</span>),(<span class="org-string">"value"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"The essence of functional programming"</span>)]
 <span class="org-haskell-definition">fromList</span> [(<span class="org-string">"fieldName"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"proceedingsTitle"</span>),(<span class="org-string">"value"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"POPL '92 Proceedings of the 19th ACM SIGPLAN-SIGACT symposium on Principles of programming languages"</span>)]
-<span class="org-haskell-definition">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span>
 </pre>
 </div>
@@ -751,7 +688,7 @@ Query Item by ID
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-constructor">:</span>{
-<span class="org-haskell-definition">queryItemByID</span> <span class="org-haskell-operator">::</span>  <span class="org-haskell-type">IConnection</span> conn <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> conn <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> [[<span class="org-haskell-type">SqlValue</span>]]
+<span class="org-function-name">queryItemByID</span> <span class="org-haskell-operator">::</span>  <span class="org-haskell-type">IConnection</span> conn <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> conn <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> [[<span class="org-haskell-type">SqlValue</span>]]
 <span class="org-haskell-definition">queryItemByID</span> itemID conn <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
   stmt <span class="org-haskell-operator">&lt;-</span> prepare conn query
   execute stmt [toSql itemID]
@@ -765,18 +702,18 @@ Query Item by ID
                       ]
 <span class="org-haskell-constructor">:</span>}
 
-<span class="org-haskell-definition">queryItemByID</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IConnection</span> conn <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> conn <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> [[<span class="org-haskell-type">SqlValue</span>]]
+<span class="org-function-name">queryItemByID</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IConnection</span> conn <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> conn <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> [[<span class="org-haskell-type">SqlValue</span>]]
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">queryItemByID</span> 5569 conn <span class="org-haskell-operator">&gt;&gt;=</span> mapM_ print
 [<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"title"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"From Stochastic Calculus to Mathematical Finance-Kabanov.pdf"</span>]
-<span class="org-haskell-definition">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">queryItemByID</span> 5790 conn <span class="org-haskell-operator">&gt;&gt;=</span> mapM_ print
 [<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"url"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"http://twanvl.nl/blog/haskell/building-pipes-with-monad-transformers"</span>]
 [<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"accessDate"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"2016-04-04 16:45:25"</span>]
 [<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"title"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"Building pipes with monad transformers"</span>]
-<span class="org-haskell-definition">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">queryItemByID</span> 5805 conn <span class="org-haskell-operator">&gt;&gt;=</span> mapM_ print
@@ -790,7 +727,7 @@ Query Item by ID
 [<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"language"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"en"</span>]
 [<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"title"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"The essence of functional programming"</span>]
 [<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"proceedingsTitle"</span>,<span class="org-haskell-constructor">SqlByteString</span> <span class="org-string">"POPL '92 Proceedings of the 19th ACM SIGPLAN-SIGACT symposium on Principles of programming languages"</span>]
-<span class="org-haskell-definition">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span>
 </pre>
 </div>
@@ -803,22 +740,493 @@ Disconnect
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t disconnect 
-<span class="org-haskell-definition">disconnect</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IConnection</span> conn <span class="org-haskell-operator">=&gt;</span> conn <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-function-name">disconnect</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IConnection</span> conn <span class="org-haskell-operator">=&gt;</span> conn <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">disconnect</span> conn
-<span class="org-haskell-definition">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+</div>
+</div>
+
+
+
+
+
+<div id="outline-container-sec-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2"><span class="section-number-4">1.3.2</span> Example - Datbase query with ReaderT monad transformer.</h4>
+<div class="outline-text-4" id="text-1-3-2">
+<p>
+Note: The type of the monad is <code>ReaderT r m</code> without the parameter of
+return value a.
+</p>
+
+<ul class="org-ul">
+<li>Documentation: <a href="https://hackage.haskell.org/package/mtl-2.2.1/docs/Control-Monad-Reader.html">Control.Monad.Reader</a>
+</li>
+</ul>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">&#xa0;</th>
+<th scope="col" class="left">Signature</th>
+<th scope="col" class="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">ReaderT r m a</td>
+<td class="left">&#xa0;</td>
+<td class="left">Encapsulates a function or computation (a -&gt; m b) where m is a monad.</td>
+</tr>
+
+<tr>
+<td class="left">ReaderT</td>
+<td class="left">(r -&gt; m a) -&gt; ReaderT r m a</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">runReaderT</td>
+<td class="left">ReaderT r m a -&gt; r -&gt; m a</td>
+<td class="left">Run computation and get its value.</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">return</td>
+<td class="left">a -&gt; (ReaderT r m) a</td>
+<td class="left">Monad return function.</td>
+</tr>
+
+<tr>
+<td class="left">(&gt;&gt;=)</td>
+<td class="left">a -&gt; (ReaderT r m) b -&gt; (ReaderT r m) b</td>
+<td class="left">Monad bind function.</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">fmap</td>
+<td class="left">(a -&gt; b) -&gt; (ReaderT r m) a -&gt; (ReaderT r m) b</td>
+<td class="left">Apply a function (a -&gt; b) to the result of computation Reader r a.</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">ask</td>
+<td class="left">m r</td>
+<td class="left">Read environment or configuration.</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">local</td>
+<td class="left">(r -&gt; r) -&gt; m a -&gt; m a</td>
+<td class="left">Modify environment by applying a function to it.</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">liftIO</td>
+<td class="left">MonadIO m =&gt; IO a -&gt; m a</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">liftIO</td>
+<td class="left">IO a -&gt; (Reader r m) a</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Example: This example will need the database and the haskell packages
+shown in  <a href="DatabaseHDBC.html">Databases - HDBC package</a>
+</p>
+
+
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Monad</span> (mapM_, forM_)
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Monad.Reader</span> 
+
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-keyword">qualified</span> <span class="org-haskell-constructor">Database.HDBC</span> <span class="org-haskell-keyword">as</span> <span class="org-haskell-constructor">HDBC</span>
+<span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Database.HDBC.Sqlite3</span> 
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">In file add the lines</span>
+<span class="org-haskell-pragma">{-# LANGUAGE OverloadedStrings #-}</span>
+<span class="org-haskell-pragma">{-# LANGUAGE RankNTypes #-}</span>
+<span class="org-haskell-pragma">{-# LANGUAGE FlexibleContexts #-}</span>
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">In the REPL</span>
+<span class="org-haskell-constructor">:</span>set <span class="org-haskell-operator">-</span><span class="org-haskell-constructor">XOverloadedStrings</span>
+<span class="org-haskell-constructor">:</span>set <span class="org-haskell-operator">-</span><span class="org-haskell-constructor">XRankNTypes</span>
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">fromSqlToInt</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">HDBC.SqlValue</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">fromSqlToInt</span>  sv <span class="org-haskell-operator">=</span> HDBC.fromSql sv  
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-constructor">:</span>{ 
+<span class="org-function-name">fromSqlToString</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">HDBC.SqlValue</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-definition">fromSqlToString</span> sv <span class="org-haskell-operator">=</span> HDBC.fromSql sv 
+<span class="org-haskell-constructor">:</span>}
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-doc">{- | Convert number to HDBC value -}</span>
+<span class="org-function-name">fromIntToHDBC</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">HDBC.SqlValue</span>
+<span class="org-haskell-definition">fromIntToHDBC</span> n <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">HDBC.SqlInt64</span> <span class="org-haskell-operator">$</span> fromIntegral n                 
+<span class="org-haskell-constructor">:</span>}
+
+ <span class="org-doc">{- | Convert string to HDBC string -}</span>                  
+<span class="org-haskell-definition">fromStrToHDBC</span> s <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">HDBC.SqlString</span> s                 
+
+
+conn <span class="org-haskell-operator">&lt;-</span> connectSqlite3 <span class="org-string">"zotero.sqlite"</span> 
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">queryItemByIDRaw</span> <span class="org-haskell-operator">::</span>  <span class="org-haskell-type">HDBC.IConnection</span> conn <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> conn <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> [(<span class="org-haskell-type">String</span>, <span class="org-haskell-type">String</span>)]
+<span class="org-haskell-definition">queryItemByIDRaw</span> itemID conn <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  stmt <span class="org-haskell-operator">&lt;-</span> HDBC.prepare conn query
+  HDBC.execute stmt [HDBC.toSql itemID]
+  rows <span class="org-haskell-operator">&lt;-</span> HDBC.fetchAllRows stmt 
+  return <span class="org-haskell-operator">$</span> map projection rows 
+  <span class="org-haskell-keyword">where</span>
+    projection row <span class="org-haskell-operator">=</span> (fromSqlToString <span class="org-haskell-operator">$</span> row <span class="org-haskell-operator">!!</span> 0, fromSqlToString <span class="org-haskell-operator">$</span> row <span class="org-haskell-operator">!!</span> 1)
+
+    query <span class="org-haskell-operator">=</span> unlines <span class="org-haskell-operator">$</span> [ <span class="org-string">"SELECT fieldName, value FROM itemDataValues, itemData, fields WHERE"</span>, 
+                        <span class="org-string">"itemDataValues.valueID = itemData.valueID"</span>, 
+                        <span class="org-string">"and itemData.itemID = ?"</span>,
+                        <span class="org-string">"and fields.fieldID = itemData.fieldID"</span>
+                      ]
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t queryItemByIDRaw 10 conn
+<span class="org-haskell-definition">queryItemByIDRaw</span> 10 conn <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> [(<span class="org-haskell-type">String</span>, <span class="org-haskell-type">String</span>)]
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">queryItemByIDRaw</span> 10 conn
+[(<span class="org-string">"url"</span>,<span class="org-string">"http://fsharp.org/specs/language-spec/4.0/FSharpSpec-4.0-latest.pdf"</span>),(<span class="org-string">"accessDate"</span>,<span class="org-string">"2016-11-07 22:00:06"</span>),(<span class="org-string">"title"</span>,<span class="org-string">"FSharpSpec-4.0-latest.pdf"</span>)]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> [(<span class="org-haskell-type">String</span>, <span class="org-haskell-type">String</span>)]
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">queryItemByIDRaw</span> 10 conn <span class="org-haskell-operator">&gt;&gt;=</span> mapM_ print
+(<span class="org-string">"url"</span>,<span class="org-string">"http://fsharp.org/specs/language-spec/4.0/FSharpSpec-4.0-latest.pdf"</span>)
+(<span class="org-string">"accessDate"</span>,<span class="org-string">"2016-11-07 22:00:06"</span>)
+(<span class="org-string">"title"</span>,<span class="org-string">"FSharpSpec-4.0-latest.pdf"</span>)
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">queryItemByIDRaw</span> 16 conn <span class="org-haskell-operator">&gt;&gt;=</span> mapM_ print
+(<span class="org-string">"url"</span>,<span class="org-string">"http://www.digilife.be/quickreferences/QRC/LINUX%20Admin%20Quick%20Reference.pdf"</span>)
+(<span class="org-string">"accessDate"</span>,<span class="org-string">"2016-11-07 22:06:48"</span>)
+(<span class="org-string">"title"</span>,<span class="org-string">"linux_quickref.PDF - LINUX Admin Quick Reference.pdf"</span>)
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+
+
+<span class="org-doc">{- | Transform this computation to ReaderT monad with database connection as the </span>
+<span class="org-doc">     implicit parameter or configuration. </span>
+<span class="org-doc"> -}</span>
+<span class="org-haskell-type">:</span>{
+<span class="org-function-name">queryItemByID1</span> <span class="org-haskell-operator">::</span>  <span class="org-haskell-type">HDBC.IConnection</span> conn <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">ReaderT</span> conn <span class="org-haskell-type">IO</span> [(<span class="org-haskell-type">String</span>, <span class="org-haskell-type">String</span>)]
+<span class="org-haskell-definition">queryItemByID1</span> itemID <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">ReaderT</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-operator">\</span> conn <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-keyword">do</span>                      
+  stmt <span class="org-haskell-operator">&lt;-</span> liftIO <span class="org-haskell-operator">$</span> HDBC.prepare conn query
+  liftIO <span class="org-haskell-operator">$</span> HDBC.execute stmt [HDBC.toSql itemID]
+  rows <span class="org-haskell-operator">&lt;-</span> liftIO <span class="org-haskell-operator">$</span> HDBC.fetchAllRows stmt 
+  return <span class="org-haskell-operator">$</span> map projection rows 
+  <span class="org-haskell-keyword">where</span>
+    projection row <span class="org-haskell-operator">=</span> (fromSqlToString <span class="org-haskell-operator">$</span> row <span class="org-haskell-operator">!!</span> 0, fromSqlToString <span class="org-haskell-operator">$</span> row <span class="org-haskell-operator">!!</span> 1)
+
+    query <span class="org-haskell-operator">=</span> unlines <span class="org-haskell-operator">$</span> [ <span class="org-string">"SELECT fieldName, value FROM itemDataValues, itemData, fields WHERE"</span>, 
+                        <span class="org-string">"itemDataValues.valueID = itemData.valueID"</span>, 
+                        <span class="org-string">"and itemData.itemID = ?"</span>,
+                        <span class="org-string">"and fields.fieldID = itemData.fieldID"</span>
+                      ]
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t runReaderT
+<span class="org-function-name">runReaderT</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">ReaderT</span> r m a <span class="org-haskell-operator">-&gt;</span> r <span class="org-haskell-operator">-&gt;</span> m a
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t queryItemByID1 10
+<span class="org-haskell-definition">queryItemByID1</span> 10
+  <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IConnection</span> conn <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">ReaderT</span> conn <span class="org-haskell-type">IO</span> [(<span class="org-haskell-type">String</span>, <span class="org-haskell-type">String</span>)]
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>t runReaderT (queryItemByID1 10) conn 
+<span class="org-haskell-definition">runReaderT</span> (queryItemByID1 10) conn <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> [(<span class="org-haskell-type">String</span>, <span class="org-haskell-type">String</span>)]
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runReaderT</span> (queryItemByID1 10) conn
+[(<span class="org-string">"url"</span>,<span class="org-string">"http://fsharp.org/specs/language-spec/4.0/FSharpSpec-4.0-latest.pdf"</span>),(<span class="org-string">"accessDate"</span>,<span class="org-string">"2016-11-07 22:00:06"</span>),(<span class="org-string">"title"</span>,<span class="org-string">"FSharpSpec-4.0-latest.pdf"</span>)]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> [(<span class="org-haskell-type">String</span>, <span class="org-haskell-type">String</span>)]
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runReaderT</span> (queryItemByID1 10) conn <span class="org-haskell-operator">&gt;&gt;=</span> mapM_ print
+(<span class="org-string">"url"</span>,<span class="org-string">"http://fsharp.org/specs/language-spec/4.0/FSharpSpec-4.0-latest.pdf"</span>)
+(<span class="org-string">"accessDate"</span>,<span class="org-string">"2016-11-07 22:00:06"</span>)
+(<span class="org-string">"title"</span>,<span class="org-string">"FSharpSpec-4.0-latest.pdf"</span>)
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">=======================================================================      </span>
+<span class="org-doc">{- |  Variation 2 - Simplify - ReaderT conn IO [(String, String)]  -}</span>
+
+<span class="org-doc">{- | Database Connection -&gt; DbConn a = ReaderT conn IO a = conn -&gt; IO a -}</span>
+<span class="org-haskell-keyword">type</span> <span class="org-haskell-type">DBConn</span> a <span class="org-haskell-operator">=</span> forall conn<span class="org-haskell-operator">.</span> (<span class="org-haskell-type">HDBC.IConnection</span> conn) <span class="org-haskell-operator">=&gt;</span>  <span class="org-haskell-type">ReaderT</span> conn <span class="org-haskell-type">IO</span> a
+
+
+<span class="org-haskell-type">:</span>{
+<span class="org-function-name">queryItemByID2</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">DBConn</span> [(<span class="org-haskell-type">String</span>, <span class="org-haskell-type">String</span>)]
+<span class="org-haskell-definition">queryItemByID2</span> itemID <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">ReaderT</span> <span class="org-haskell-operator">$</span> <span class="org-haskell-operator">\</span> conn <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-keyword">do</span>                      
+  stmt <span class="org-haskell-operator">&lt;-</span> liftIO <span class="org-haskell-operator">$</span> HDBC.prepare conn query
+  liftIO <span class="org-haskell-operator">$</span> HDBC.execute stmt [HDBC.toSql itemID]
+  rows <span class="org-haskell-operator">&lt;-</span> liftIO <span class="org-haskell-operator">$</span> HDBC.fetchAllRows stmt 
+  return <span class="org-haskell-operator">$</span> map projection rows 
+  <span class="org-haskell-keyword">where</span>
+    projection row <span class="org-haskell-operator">=</span> (fromSqlToString <span class="org-haskell-operator">$</span> row <span class="org-haskell-operator">!!</span> 0, fromSqlToString <span class="org-haskell-operator">$</span> row <span class="org-haskell-operator">!!</span> 1)                    
+    query <span class="org-haskell-operator">=</span> unlines <span class="org-haskell-operator">$</span> [ <span class="org-string">"SELECT fieldName, value FROM itemDataValues, itemData, fields WHERE"</span>, 
+                        <span class="org-string">"itemDataValues.valueID = itemData.valueID"</span>, 
+                        <span class="org-string">"and itemData.itemID = ?"</span>,
+                        <span class="org-string">"and fields.fieldID = itemData.fieldID"</span>
+                      ]
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t queryItemByID2 10
+<span class="org-haskell-definition">queryItemByID2</span> 10
+  <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IConnection</span> conn <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">ReaderT</span> conn <span class="org-haskell-type">IO</span> [(<span class="org-haskell-type">String</span>, <span class="org-haskell-type">String</span>)]
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runReaderT</span> (queryItemByID2 10) conn
+[(<span class="org-string">"url"</span>,<span class="org-string">"http://fsharp.org/specs/language-spec/4.0/FSharpSpec-4.0-latest.pdf"</span>),(<span class="org-string">"accessDate"</span>,<span class="org-string">"2016-11-07 22:00:06"</span>),(<span class="org-string">"title"</span>,<span class="org-string">"FSharpSpec-4.0-latest.pdf"</span>)]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> [(<span class="org-haskell-type">String</span>, <span class="org-haskell-type">String</span>)]
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runReaderT</span> (queryItemByID2 10) conn <span class="org-haskell-operator">&gt;&gt;=</span> mapM_ print
+(<span class="org-string">"url"</span>,<span class="org-string">"http://fsharp.org/specs/language-spec/4.0/FSharpSpec-4.0-latest.pdf"</span>)
+(<span class="org-string">"accessDate"</span>,<span class="org-string">"2016-11-07 22:00:06"</span>)
+(<span class="org-string">"title"</span>,<span class="org-string">"FSharpSpec-4.0-latest.pdf"</span>)
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-comment-delimiter">-- </span><span class="org-comment">=======================================================================      </span>
+<span class="org-doc">{- |  Variation 3 - It can be simplified and generalized even further. -}</span>
+
+<span class="org-haskell-keyword">type</span> <span class="org-haskell-type">SQL</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-type">String</span>
+<span class="org-haskell-keyword">type</span> <span class="org-haskell-type">DBConn</span> a <span class="org-haskell-operator">=</span> forall conn<span class="org-haskell-operator">.</span> (<span class="org-haskell-type">HDBC.IConnection</span> conn) <span class="org-haskell-operator">=&gt;</span>  <span class="org-haskell-type">ReaderT</span> conn <span class="org-haskell-type">IO</span> a
+
+<span class="org-haskell-type">:</span>{    
+<span class="org-function-name">sqlQueryAll</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">SQL</span> <span class="org-haskell-operator">-&gt;</span> [<span class="org-haskell-type">HDBC.SqlValue</span>] <span class="org-haskell-operator">-&gt;</span> ([<span class="org-haskell-type">HDBC.SqlValue</span>] <span class="org-haskell-operator">-&gt;</span> b) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">DBConn</span> [b]     
+<span class="org-haskell-definition">sqlQueryAll</span> sql sqlvals projection <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  con     <span class="org-haskell-operator">&lt;-</span> ask 
+  stmt    <span class="org-haskell-operator">&lt;-</span> liftIO <span class="org-haskell-operator">$</span> HDBC.prepare con sql
+  liftIO  <span class="org-haskell-operator">$</span>  HDBC.execute stmt sqlvals  
+  rows    <span class="org-haskell-operator">&lt;-</span> liftIO <span class="org-haskell-operator">$</span> HDBC.fetchAllRows stmt
+  return (fmap projection rows)
+<span class="org-haskell-constructor">:</span>}
+
+
+
+<span class="org-haskell-constructor">:</span>{
+<span class="org-function-name">queryItemByID3</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">DBConn</span> [(<span class="org-haskell-type">String</span>, <span class="org-haskell-type">String</span>)]
+<span class="org-haskell-definition">queryItemByID3</span> itemID <span class="org-haskell-operator">=</span> sqlQueryAll query [fromIntToHDBC itemID] projection
+  <span class="org-haskell-keyword">where</span>
+    projection row <span class="org-haskell-operator">=</span> (fromSqlToString <span class="org-haskell-operator">$</span> row <span class="org-haskell-operator">!!</span> 0, fromSqlToString <span class="org-haskell-operator">$</span> row <span class="org-haskell-operator">!!</span> 1)                    
+    query <span class="org-haskell-operator">=</span> unlines <span class="org-haskell-operator">$</span> [ <span class="org-string">"SELECT fieldName, value FROM itemDataValues, itemData, fields WHERE"</span>, 
+                        <span class="org-string">"itemDataValues.valueID = itemData.valueID"</span>, 
+                        <span class="org-string">"and itemData.itemID = ?"</span>,
+                        <span class="org-string">"and fields.fieldID = itemData.fieldID"</span>
+                      ]
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runReaderT</span> (queryItemByID3 10) conn
+[(<span class="org-string">"url"</span>,<span class="org-string">"http://fsharp.org/specs/language-spec/4.0/FSharpSpec-4.0-latest.pdf"</span>),(<span class="org-string">"accessDate"</span>,<span class="org-string">"2016-11-07 22:00:06"</span>),(<span class="org-string">"title"</span>,<span class="org-string">"FSharpSpec-4.0-latest.pdf"</span>)]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> [(<span class="org-haskell-type">String</span>, <span class="org-haskell-type">String</span>)]
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runReaderT</span> (queryItemByID3 10) conn <span class="org-haskell-operator">&gt;&gt;=</span> mapM_ print
+(<span class="org-string">"url"</span>,<span class="org-string">"http://fsharp.org/specs/language-spec/4.0/FSharpSpec-4.0-latest.pdf"</span>)
+(<span class="org-string">"accessDate"</span>,<span class="org-string">"2016-11-07 22:00:06"</span>)
+(<span class="org-string">"title"</span>,<span class="org-string">"FSharpSpec-4.0-latest.pdf"</span>)
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span>
+
+<span class="org-doc">-- | Get all tags associated with a given item</span>
+<span class="org-haskell-type">:</span>{
+<span class="org-function-name">getItemTags</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">DBConn</span> [(<span class="org-haskell-type">Int</span>, <span class="org-haskell-type">String</span>)]
+<span class="org-haskell-definition">getItemTags</span> itemID <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>  
+  sqlQueryAll sql [fromIntToHDBC itemID] projection
+  <span class="org-haskell-keyword">where</span>
+    sql <span class="org-haskell-operator">=</span> unlines [<span class="org-string">"SELECT  tags.tagID, tags.name"</span>,
+                   <span class="org-string">"FROM    itemTags, tags"</span>, 
+                   <span class="org-string">"WHERE   itemTags.tagID = tags.tagID"</span>, 
+                   <span class="org-string">"AND     itemID = ?"</span>
+                   ]
+
+    projection xs <span class="org-haskell-operator">=</span> (fromSqlToInt (xs <span class="org-haskell-operator">!!</span> 0), fromSqlToString (xs <span class="org-haskell-operator">!!</span> 1))
+<span class="org-haskell-constructor">:</span>}
+
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runReaderT</span> (getItemTags 12) conn
+[(2,<span class="org-string">"fp"</span>),(3,<span class="org-string">"fsharp"</span>),(4,<span class="org-string">"doc"</span>),(5,<span class="org-string">"overview"</span>)]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> [(<span class="org-haskell-type">Int</span>, <span class="org-haskell-type">String</span>)]
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runReaderT</span> (getItemTags 13) conn
+[(2,<span class="org-string">"fp"</span>),(3,<span class="org-string">"fsharp"</span>),(4,<span class="org-string">"doc"</span>)]
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> [(<span class="org-haskell-type">Int</span>, <span class="org-haskell-type">String</span>)]
+<span class="org-haskell-operator">&gt;</span> 
+
+
+<span class="org-haskell-type">:</span>{
+<span class="org-function-name">showItem</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">DBConn</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">showItem</span> itemID <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
+  itemData <span class="org-haskell-operator">&lt;-</span> queryItemByID3 itemID  
+  tags   <span class="org-haskell-operator">&lt;-</span> getItemTags itemID
+
+  <span class="org-comment-delimiter">-- </span><span class="org-comment">liftIO :: IO () =&gt; DBConn ()          </span>
+  liftIO <span class="org-haskell-operator">$</span> <span class="org-haskell-keyword">do</span>
+    putStrLn <span class="org-string">"Item Data"</span>
+    putStrLn <span class="org-string">"---------------------------"</span>             
+    forM_ itemData print
+    putStrLn <span class="org-string">"Item Tags"</span>
+    putStrLn <span class="org-string">"---------------------------"</span>
+    forM_ tags print     
+<span class="org-haskell-constructor">:</span>}   
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runReaderT</span> (showItem 12) conn
+<span class="org-haskell-constructor">Item</span> <span class="org-haskell-constructor">Data</span>
+<span class="org-comment-delimiter">--</span><span class="org-comment">-------------------------</span>
+(<span class="org-string">"url"</span>,<span class="org-string">"http://tomasp.net/articles/fsharp-i-introduction/article.pdf"</span>)
+(<span class="org-string">"accessDate"</span>,<span class="org-string">"2016-11-07 22:01:04"</span>)
+(<span class="org-string">"title"</span>,<span class="org-string">"F# Language Overview"</span>)
+<span class="org-haskell-constructor">Item</span> <span class="org-haskell-constructor">Tags</span>
+<span class="org-comment-delimiter">--</span><span class="org-comment">-------------------------</span>
+(2,<span class="org-string">"fp"</span>)
+(3,<span class="org-string">"fsharp"</span>)
+(4,<span class="org-string">"doc"</span>)
+(5,<span class="org-string">"overview"</span>)
+<span class="org-function-name">it</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-operator">&gt;</span> 
+<span class="org-haskell-operator">&gt;</span> 
+
+<span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runReaderT</span> (showItem 13) conn
+<span class="org-haskell-constructor">Item</span> <span class="org-haskell-constructor">Data</span>
+<span class="org-comment-delimiter">--</span><span class="org-comment">-------------------------</span>
+(<span class="org-string">"url"</span>,<span class="org-string">"http://fsharp.org/specs/language-spec/4.0/FSharpSpec-4.0-latest.pdf"</span>)
+(<span class="org-string">"accessDate"</span>,<span class="org-string">"2016-11-07 22:00:06"</span>)
+(<span class="org-string">"title"</span>,<span class="org-string">"The F# 4.0 Language Specification"</span>)
+<span class="org-haskell-constructor">Item</span> <span class="org-haskell-constructor">Tags</span>
+<span class="org-comment-delimiter">--</span><span class="org-comment">-------------------------</span>
+(2,<span class="org-string">"fp"</span>)
+(3,<span class="org-string">"fsharp"</span>)
+(4,<span class="org-string">"doc"</span>)
+<span class="org-function-name">it</span> <span class="org-haskell-definition">:</span>
 </pre>
 </div>
 </div>
 </div>
 </div>
 </div>
+</div>
 <div id="postamble" class="status">
-<p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2017-03-12 dom 16:47</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="author">Author: nobody</p>
+<p class="date">Created: 2018-05-07 Mon 10:11</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

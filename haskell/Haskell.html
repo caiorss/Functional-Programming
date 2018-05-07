@@ -4,10 +4,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Setting up a Haskell Development Environment</title>
-<!-- 2017-03-12 dom 16:47 -->
+<!-- 2018-05-07 Mon 10:11 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
-<meta  name="author" content="arch" />
+<meta  name="author" content="Caio Rodrigues Soares Silva" />
 <meta  name="keywords" content="haskell development environment fp ide editor stack" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
@@ -89,79 +89,6 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
-<link href='/theme/style.css' rel='stylesheet'>
-
-<script type="text/javascript" src="/theme/org-info.js">
-/**
- *
- * @source: /theme/org-info.js
- *
- * @licstart  The following is the entire license notice for the
- *  JavaScript code in /theme/org-info.js.
- *
- * Copyright (C) 2012-2013 Free Software Foundation, Inc.
- *
- *
- * The JavaScript code in this tag is free software: you can
- * redistribute it and/or modify it under the terms of the GNU
- * General Public License (GNU GPL) as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version.  The code is distributed WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
- *
- * As additional permission under GNU GPL version 3 section 7, you
- * may distribute non-source (e.g., minimized or compacted) forms of
- * that code without the copy of the GNU GPL normally required by
- * section 4, provided you include this license notice and a URL
- * through which recipients can access the Corresponding Source.
- *
- * @licend  The above is the entire license notice
- * for the JavaScript code in /theme/org-info.js.
- *
- */
-</script>
-
-<script type="text/javascript">
-
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2013 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
-
-<!--/*--><![CDATA[/*><!--*/
-org_html_manager.set("TOC_DEPTH", "3");
-org_html_manager.set("LINK_HOME", "");
-org_html_manager.set("LINK_UP", "");
-org_html_manager.set("LOCAL_TOC", "1");
-org_html_manager.set("VIEW_BUTTONS", "0");
-org_html_manager.set("MOUSE_HINT", "underline");
-org_html_manager.set("FIXED_TOC", "0");
-org_html_manager.set("TOC", "1");
-org_html_manager.set("VIEW", "info");
-org_html_manager.setup();  // activate after the parameters are set
-/*]]>*///-->
-</script>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -526,6 +453,9 @@ See the instructions to install stack at <a href="https://www.haskellstack.org/"
 
 <li><a href="https://www.inf.ed.ac.uk/teaching/courses/inf1/fp/emacs.pdf">Setting up Haskell Mode for Emacs</a>
 </li>
+
+<li><a href="https://github.com/serras/emacs-haskell-tutorial/blob/master/tutorial.md">emacs-haskell-tutorial/tutorial.md at master · serras/emacs-haskell-tutorial · GitHub</a>
+</li>
 </ul>
 </div>
 </li></ol>
@@ -614,10 +544,10 @@ $ stack install HUnit
 [1 of 2] Compiling Main             ( /home/arch/.stack/setup-exe-src/setup-mPHDZzAJ.hs, /home/arch/.stack/setup-exe-src/setup-mPHDZzAJ.o )
 [2 of 2] Compiling StackSetupShim   ( /home/arch/.stack/setup-exe-src/setup-shim-mPHDZzAJ.hs, /home/arch/.stack/setup-exe-src/setup-shim-mPHDZzAJ.o )
 Linking /home/arch/.stack/setup-exe-cache/x86_64-linux/tmp-Cabal-simple_mPHDZzAJ_1.24.0.0_ghc-8.0.1 ...
-HUnit-1.3.1.2: download
-HUnit-1.3.1.2: configure
-HUnit-1.3.1.2: build
-HUnit-1.3.1.2: copy/register
+<span class="org-function-name">HUnit-1.3.1.2</span>: download
+<span class="org-function-name">HUnit-1.3.1.2</span>: configure
+<span class="org-function-name">HUnit-1.3.1.2</span>: build
+<span class="org-function-name">HUnit-1.3.1.2</span>: copy/register
 </pre>
 </div>
 </div>
@@ -647,7 +577,7 @@ Just run <code>$ stack ghci</code> outside of a project directory.
 <span class="org-haskell-constructor">Prelude</span><span class="org-haskell-definition">|</span> <span class="org-haskell-constructor">:</span>}
 <span class="org-haskell-constructor">Prelude</span><span class="org-haskell-definition">&gt;</span> 
 <span class="org-haskell-constructor">Prelude</span><span class="org-haskell-definition">&gt;</span> <span class="org-haskell-constructor">:</span>t mysum 
-<span class="org-haskell-definition">mysum</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
+<span class="org-function-name">mysum</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Double</span>
 <span class="org-haskell-constructor">Prelude</span><span class="org-haskell-definition">&gt;</span> 
 <span class="org-haskell-constructor">Prelude</span><span class="org-haskell-definition">&gt;</span> mysum 10.23 20.23
 30.46
@@ -697,9 +627,9 @@ installing packages HDBC, HDBC-sqlite3 and random automatically.
 <div class="org-src-container">
 
 <pre class="src src-sh">$ stack --resolver lts-3.22 --install-ghc ghci --package HDBC --package HDBC-sqlite3 --package random
-HDBC-sqlite3-2.3.3.1: configure
-HDBC-sqlite3-2.3.3.1: build
-HDBC-sqlite3-2.3.3.1: copy/register
+<span class="org-function-name">HDBC-sqlite3-2.3.3.1</span>: configure
+<span class="org-function-name">HDBC-sqlite3-2.3.3.1</span>: build
+<span class="org-function-name">HDBC-sqlite3-2.3.3.1</span>: copy/register
 Configuring GHCi with the following packages: 
 GHCi, version 7.10.2: http://www.haskell.org/ghc/  :? for help
 Prelude&gt;
@@ -730,7 +660,7 @@ or with command line options:
 
 <div class="org-src-container">
 
-<pre class="src src-sh">$ stack exec -- ghc Main.hs Module1.hs Module2.hs -o myapp.bin
+<pre class="src src-sh">$ stack exec -- ghc Main.hs Module1.hs Module2.hs -o <span class="org-keyword">myapp.bin</span>
 </pre>
 </div>
 </div>
@@ -840,7 +770,7 @@ File gui1.hs
 <pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Control.Concurrent</span> (forkIO, killThread)
 <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Graphics.UI.Gtk</span>
 
-<span class="org-haskell-definition">main</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-function-name">main</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-definition">main</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
   initGUI
 
@@ -882,7 +812,7 @@ File: gui1.hs
 
 <pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Graphics.UI.Gtk</span>
 
-<span class="org-haskell-definition">main</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>    
+<span class="org-function-name">main</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>    
 <span class="org-haskell-definition">main</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
   initGUI  
   window  <span class="org-haskell-operator">&lt;-</span> windowNew
@@ -904,7 +834,7 @@ It happens because there are two packages gtk2hs installed gtk (gtk 2.0) and gtk
 
 <pre class="src src-sh">$ stack --resolver lts-3.22 runhaskell /tmp/gui1.hs 
 
-/tmp/gui1.hs:2:8:
+<span class="org-function-name">/tmp/gui1.hs</span>:2:8:
     Ambiguous module name &#8216;Graphics.UI.Gtk&#8217;:
       it was found<span class="org-keyword"> in</span> multiple packages:
       gtk3-0.14.2@gtk3_AhgiKTeOdGE7p0vrO3qlnB gtk-0.13.9@gtk_DUp9k2RGwvV1yhb3dtjYiE
@@ -945,7 +875,7 @@ An alternative solution is to use the language extension:
 <pre class="src src-haskell"><span class="org-haskell-pragma">{-# language PackageImports #-}</span>
 <span class="org-haskell-keyword">import</span> <span class="org-string">"gtk"</span> <span class="org-haskell-constructor">Graphics.UI.Gtk</span>
 
-<span class="org-haskell-definition">main</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>    
+<span class="org-function-name">main</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>    
 <span class="org-haskell-definition">main</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
   initGUI  
   window  <span class="org-haskell-operator">&lt;-</span> windowNew
@@ -969,7 +899,7 @@ import <span class="org-string">"gtk3"</span> Graphics.UI.Gtk.Gdk.EventM
 
 import Control.Concurrent (forkIO, killThread)
 
-main :: IO ()
+<span class="org-function-name">main</span> :: IO ()
 main = do
   initGUI
 
@@ -1054,28 +984,28 @@ See:
 
 <pre class="src src-sh">$ stack path
 
-stack-root: /home/arch/.stack
-project-root: /home/arch/Documents/projects/zhserver.haskell
-config-location: /home/arch/Documents/projects/zhserver.haskell/stack.yaml
-bin-path: /home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1/bin:/home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/home/arch/bin:/home/arch/.local/bin:/home/arch/opt/cling/bin:/home/arch/opt/cling2:/home/arch/opt/fsformatting:/home/arch/opt/gambit-4.8.4/bin:/home/arch/opt/jars:/home/arch/opt/java/bin:/home/arch/opt/jdk/bin:/home/arch/opt/jdk1.8.0_20/bin:/home/arch/opt/maven/bin:/home/arch/opt/scala-2.11.8/bin:/home/arch/opt/vivaldi
-programs: /home/arch/.stack/programs/x86_64-linux
-compiler-exe: /home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/bin/ghc
-compiler-bin: /home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/bin
-local-bin: /home/arch/.local/bin
-extra-include-dirs: 
-extra-library-dirs: 
-snapshot-pkg-db: /home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb
-local-pkg-db: /home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb
-global-pkg-db: /home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/lib/ghc-8.0.1/package.conf.d
-ghc-package-path: /home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb:/home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb:/home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/lib/ghc-8.0.1/package.conf.d
-snapshot-install-root: /home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1
-local-install-root: /home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1
-snapshot-doc-root: /home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1/doc
-local-doc-root: /home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1/doc
-dist-dir: .stack-work/dist/x86_64-linux/Cabal-1.24.0.0
-local-hpc-root: /home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1/hpc
-local-bin-path: /home/arch/.local/bin
-ghc-paths: /home/arch/.stack/programs/x86_64-linux
+<span class="org-function-name">stack-root</span>: /home/arch/.stack
+<span class="org-function-name">project-root</span>: /home/arch/Documents/projects/zhserver.haskell
+<span class="org-function-name">config-location</span>: /home/arch/Documents/projects/zhserver.haskell/stack.yaml
+<span class="org-function-name">bin-path</span>: /home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1/bin:/home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/home/arch/bin:/home/arch/.local/bin:/home/arch/opt/cling/bin:/home/arch/opt/cling2:/home/arch/opt/fsformatting:/home/arch/opt/gambit-4.8.4/bin:/home/arch/opt/jars:/home/arch/opt/java/bin:/home/arch/opt/jdk/bin:/home/arch/opt/jdk1.8.0_20/bin:/home/arch/opt/maven/bin:/home/arch/opt/scala-2.11.8/bin:/home/arch/opt/vivaldi
+<span class="org-function-name">programs</span>: /home/arch/.stack/programs/x86_64-linux
+<span class="org-function-name">compiler-exe</span>: /home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/bin/ghc
+<span class="org-function-name">compiler-bin</span>: /home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/bin
+<span class="org-function-name">local-bin</span>: /home/arch/.local/bin
+<span class="org-function-name">extra-include-dirs</span>: 
+<span class="org-function-name">extra-library-dirs</span>: 
+<span class="org-function-name">snapshot-pkg-db</span>: /home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb
+<span class="org-function-name">local-pkg-db</span>: /home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb
+<span class="org-function-name">global-pkg-db</span>: /home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/lib/ghc-8.0.1/package.conf.d
+<span class="org-function-name">ghc-package-path</span>: /home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb:/home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1/pkgdb:/home/arch/.stack/programs/x86_64-linux/ghc-8.0.1/lib/ghc-8.0.1/package.conf.d
+<span class="org-function-name">snapshot-install-root</span>: /home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1
+<span class="org-function-name">local-install-root</span>: /home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1
+<span class="org-function-name">snapshot-doc-root</span>: /home/arch/.stack/snapshots/x86_64-linux/ghc-8.0.1/8.0.1/doc
+<span class="org-function-name">local-doc-root</span>: /home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1/doc
+<span class="org-function-name">dist-dir</span>: .stack-work/dist/x86_64-linux/Cabal-1.24.0.0
+<span class="org-function-name">local-hpc-root</span>: /home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/ghc-8.0.1/8.0.1/hpc
+<span class="org-function-name">local-bin-path</span>: /home/arch/.local/bin
+<span class="org-function-name">ghc-paths</span>: /home/arch/.stack/programs/x86_64-linux
 </pre>
 </div>
 
@@ -1100,8 +1030,8 @@ Way 1:
 <div class="org-src-container">
 
 <pre class="src src-sh">$ echo $(<span class="org-sh-quoted-exec">stack</span> exec -- bash -c <span class="org-string">"echo \$PATH"</span>) | tr <span class="org-string">':'</span> <span class="org-string">'\n'</span> | grep stack | xargs ls -l
-ls: cannot access <span class="org-string">'/home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/lts-8.0/8.0.2/bin'</span>: No such file or directory
-/home/arch/.stack/programs/x86_64-linux/ghc-8.0.2/bin:
+<span class="org-function-name">ls</span>: cannot access <span class="org-string">'/home/arch/Documents/projects/zhserver.haskell/.stack-work/install/x86_64-linux/lts-8.0/8.0.2/bin'</span>: No such file or directory
+<span class="org-function-name">/home/arch/.stack/programs/x86_64-linux/ghc-8.0.2/bin</span>:
 total 72
 lrwxrwxrwx 1 arch arch     9 fev 16 10:58 ghc -&gt; ghc-8.0.2
 -rwxr-xr-x 1 arch arch   418 fev 16 10:58 ghc-8.0.2
@@ -1118,7 +1048,7 @@ lrwxrwxrwx 1 arch arch    12 fev 16 10:58 runghc -&gt; runghc-8.0.2
 -rwxr-xr-x 1 arch arch   426 fev 16 10:58 runghc-8.0.2
 lrwxrwxrwx 1 arch arch     6 fev 16 10:58 runhaskell -&gt; runghc
 
-/home/arch/.stack/snapshots/x86_64-linux/lts-8.0/8.0.2/bin:
+<span class="org-function-name">/home/arch/.stack/snapshots/x86_64-linux/lts-8.0/8.0.2/bin</span>:
 total 30164
 -rwxr-xr-x 1 arch arch 18205184 fev 16 11:44 cabal
 -rwxr-xr-x 1 arch arch 12677664 fev 16 11:20 smpl
@@ -1332,9 +1262,9 @@ See also:
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: arch</p>
-<p class="date">Created: 2017-03-12 dom 16:47</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="author">Author: Caio Rodrigues Soares Silva</p>
+<p class="date">Created: 2018-05-07 Mon 10:11</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

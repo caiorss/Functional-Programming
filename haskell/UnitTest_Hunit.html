@@ -4,10 +4,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>UnitTest_Hunit</title>
-<!-- 2017-03-12 dom 16:47 -->
+<!-- 2018-05-07 Mon 10:11 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
-<meta  name="author" content="arch" />
+<meta  name="author" content="Caio Rodrigues Soares Silva" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   .title  { text-align: center; }
@@ -88,79 +88,6 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
-<link href='/theme/style.css' rel='stylesheet'>
-
-<script type="text/javascript" src="/theme/org-info.js">
-/**
- *
- * @source: /theme/org-info.js
- *
- * @licstart  The following is the entire license notice for the
- *  JavaScript code in /theme/org-info.js.
- *
- * Copyright (C) 2012-2013 Free Software Foundation, Inc.
- *
- *
- * The JavaScript code in this tag is free software: you can
- * redistribute it and/or modify it under the terms of the GNU
- * General Public License (GNU GPL) as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version.  The code is distributed WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
- *
- * As additional permission under GNU GPL version 3 section 7, you
- * may distribute non-source (e.g., minimized or compacted) forms of
- * that code without the copy of the GNU GPL normally required by
- * section 4, provided you include this license notice and a URL
- * through which recipients can access the Corresponding Source.
- *
- * @licend  The above is the entire license notice
- * for the JavaScript code in /theme/org-info.js.
- *
- */
-</script>
-
-<script type="text/javascript">
-
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2013 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
-
-<!--/*--><![CDATA[/*><!--*/
-org_html_manager.set("TOC_DEPTH", "3");
-org_html_manager.set("LINK_HOME", "");
-org_html_manager.set("LINK_UP", "");
-org_html_manager.set("LOCAL_TOC", "1");
-org_html_manager.set("VIEW_BUTTONS", "0");
-org_html_manager.set("MOUSE_HINT", "underline");
-org_html_manager.set("FIXED_TOC", "0");
-org_html_manager.set("TOC", "1");
-org_html_manager.set("VIEW", "info");
-org_html_manager.setup();  // activate after the parameters are set
-/*]]>*///-->
-</script>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -371,7 +298,7 @@ Type: <span class="underline">Test</span>
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-haskell-definition">assertFailure</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Assertion</span>
+<pre class="src src-haskell"><span class="org-function-name">assertFailure</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Assertion</span>
 <span class="org-haskell-definition">assertFailure</span> msg <span class="org-haskell-operator">=</span> ioError (userError (<span class="org-string">"HUnit:"</span> <span class="org-haskell-operator">++</span> msg))
 </pre>
 </div>
@@ -396,7 +323,7 @@ Example:
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-haskell-definition">assertBool</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Assertion</span>
+<pre class="src src-haskell"><span class="org-function-name">assertBool</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Assertion</span>
 <span class="org-haskell-definition">assertBool</span> msg b <span class="org-haskell-operator">=</span> unless b (assertFailure msg)
 </pre>
 </div>
@@ -422,7 +349,7 @@ Example:
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-haskell-definition">assertString</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Assertion</span>
+<pre class="src src-haskell"><span class="org-function-name">assertString</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Assertion</span>
 <span class="org-haskell-definition">assertString</span> s <span class="org-haskell-operator">=</span> unless (null s) (assertFailure s)
 </pre>
 </div>
@@ -449,7 +376,7 @@ Example:
 
 <div class="org-src-container">
 
-<pre class="src src-haskell"><span class="org-haskell-definition">assertEqual</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Eq</span> a, <span class="org-haskell-type">Show</span> a) <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Assertion</span>
+<pre class="src src-haskell"><span class="org-function-name">assertEqual</span> <span class="org-haskell-operator">::</span> (<span class="org-haskell-type">Eq</span> a, <span class="org-haskell-type">Show</span> a) <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">String</span> <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Assertion</span>
 <span class="org-haskell-definition">assertEqual</span> preface expected actual <span class="org-haskell-operator">=</span>
   unless (actual <span class="org-haskell-operator">==</span> expected) (assertFailure msg)
  <span class="org-haskell-keyword">where</span> msg <span class="org-haskell-operator">=</span> (<span class="org-haskell-keyword">if</span> null preface <span class="org-haskell-keyword">then</span> <span class="org-string">""</span> <span class="org-haskell-keyword">else</span> preface <span class="org-haskell-operator">++</span> <span class="org-string">"\n"</span>) <span class="org-haskell-operator">++</span>
@@ -479,7 +406,7 @@ Example:
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t runTestTT
-<span class="org-haskell-definition">runTestTT</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Test</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">Counts</span>
+<span class="org-function-name">runTestTT</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Test</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-type">Counts</span>
 </pre>
 </div>
 
@@ -502,16 +429,16 @@ Example: Running a single test
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runTestTT</span> (<span class="org-haskell-constructor">TestCase</span> <span class="org-haskell-operator">$</span> assertEqual <span class="org-string">"sum should be equal to 25"</span> 25 (10 <span class="org-haskell-operator">+</span> 15))
-<span class="org-haskell-constructor">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 0
+<span class="org-function-name">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 0
 <span class="org-haskell-constructor">Counts</span> {cases <span class="org-haskell-operator">=</span> 1, tried <span class="org-haskell-operator">=</span> 1, errors <span class="org-haskell-operator">=</span> 0, failures <span class="org-haskell-operator">=</span> 0}
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runTestTT</span> (<span class="org-haskell-constructor">TestCase</span> <span class="org-haskell-operator">$</span> assertEqual <span class="org-string">"sum should be equal to 25"</span> 25 (50 <span class="org-haskell-operator">+</span> 15))
 <span class="org-preprocessor">### Failure:                              </span>
 <span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>161
 <span class="org-haskell-definition">sum</span> should be equal to 25
-expected<span class="org-haskell-definition">:</span> 25
+<span class="org-function-name">expected</span><span class="org-haskell-definition">:</span> 25
  but got<span class="org-haskell-constructor">:</span> 65
-<span class="org-haskell-constructor">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 1
+<span class="org-function-name">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 1
 <span class="org-haskell-constructor">Counts</span> {cases <span class="org-haskell-operator">=</span> 1, tried <span class="org-haskell-operator">=</span> 1, errors <span class="org-haskell-operator">=</span> 0, failures <span class="org-haskell-operator">=</span> 1}
 <span class="org-haskell-operator">&gt;</span>
 </pre>
@@ -527,7 +454,7 @@ Example: Running a single test with label
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runTestTT</span> testEqual25 
-<span class="org-haskell-constructor">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 0
+<span class="org-function-name">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 0
 <span class="org-haskell-constructor">Counts</span> {cases <span class="org-haskell-operator">=</span> 1, tried <span class="org-haskell-operator">=</span> 1, errors <span class="org-haskell-operator">=</span> 0, failures <span class="org-haskell-operator">=</span> 0}
 <span class="org-haskell-operator">&gt;</span> 
 
@@ -540,9 +467,9 @@ Example: Running a single test with label
 <span class="org-preprocessor">### Failure in: testEqual25               </span>
 <span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>153
 <span class="org-haskell-definition">sum</span> should be equal to 25
-expected<span class="org-haskell-definition">:</span> 25
+<span class="org-function-name">expected</span><span class="org-haskell-definition">:</span> 25
  but got<span class="org-haskell-constructor">:</span> 35
-<span class="org-haskell-constructor">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 1
+<span class="org-function-name">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 1
 <span class="org-haskell-constructor">Counts</span> {cases <span class="org-haskell-operator">=</span> 1, tried <span class="org-haskell-operator">=</span> 1, errors <span class="org-haskell-operator">=</span> 0, failures <span class="org-haskell-operator">=</span> 1}
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span>
@@ -568,9 +495,9 @@ Example: Running multiple test cases.
 <span class="org-preprocessor">### Failure in: 3                         </span>
 <span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>166
 <span class="org-haskell-constructor">The</span> sum should be equal to 25
-expected<span class="org-haskell-definition">:</span> 25
+<span class="org-function-name">expected</span><span class="org-haskell-definition">:</span> 25
  but got<span class="org-haskell-constructor">:</span> 175
-<span class="org-haskell-constructor">Cases</span><span class="org-haskell-definition">:</span> 4  <span class="org-haskell-constructor">Tried:</span> 4  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 2
+<span class="org-function-name">Cases</span><span class="org-haskell-definition">:</span> 4  <span class="org-haskell-constructor">Tried:</span> 4  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 2
 <span class="org-haskell-constructor">Counts</span> {cases <span class="org-haskell-operator">=</span> 4, tried <span class="org-haskell-operator">=</span> 4, errors <span class="org-haskell-operator">=</span> 0, failures <span class="org-haskell-operator">=</span> 2}
 <span class="org-haskell-operator">&gt;</span> 
 
@@ -589,7 +516,7 @@ runTestTT <span class="org-haskell-definition">$</span> <span class="org-haskell
 <span class="org-haskell-operator">-</span>                       <span class="org-haskell-constructor">TestLabel</span> <span class="org-string">"testEqual25"</span> testEqual25,
 <span class="org-haskell-operator">-</span>                       <span class="org-haskell-constructor">TestLabel</span> <span class="org-string">"testEqual25Fail"</span> testEqual25Fail
 <span class="org-haskell-operator">-</span>                      ]
-<span class="org-haskell-operator">-</span> <span class="org-haskell-constructor">:</span>}
+<span class="org-function-name">-</span> <span class="org-haskell-constructor">:</span>}
 <span class="org-preprocessor">### Failure in: 1:testFalse               </span>
 <span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>164
 <span class="org-haskell-constructor">It</span> is gonna fail<span class="org-haskell-operator">.</span>
@@ -597,9 +524,9 @@ runTestTT <span class="org-haskell-definition">$</span> <span class="org-haskell
 <span class="org-preprocessor">### Failure in: 3:testEqual25Fail         </span>
 <span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>166
 <span class="org-haskell-constructor">The</span> sum should be equal to 25
-expected<span class="org-haskell-definition">:</span> 25
+<span class="org-function-name">expected</span><span class="org-haskell-definition">:</span> 25
  but got<span class="org-haskell-constructor">:</span> 175
-<span class="org-haskell-constructor">Cases</span><span class="org-haskell-definition">:</span> 4  <span class="org-haskell-constructor">Tried:</span> 4  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 2
+<span class="org-function-name">Cases</span><span class="org-haskell-definition">:</span> 4  <span class="org-haskell-constructor">Tried:</span> 4  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 2
 <span class="org-haskell-constructor">Counts</span> {cases <span class="org-haskell-operator">=</span> 4, tried <span class="org-haskell-operator">=</span> 4, errors <span class="org-haskell-operator">=</span> 0, failures <span class="org-haskell-operator">=</span> 2}
 <span class="org-haskell-operator">&gt;</span>
 </pre>
@@ -758,7 +685,7 @@ Example: (~:)
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> test1 <span class="org-haskell-operator">=</span> <span class="org-string">"testSumIs25"</span> <span class="org-haskell-operator">~:</span> assertEqual <span class="org-string">"The sum is 25"</span> 25 (10 <span class="org-haskell-operator">+</span> 15)
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runTestTT</span> test1
-<span class="org-haskell-constructor">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 0
+<span class="org-function-name">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 0
 <span class="org-haskell-constructor">Counts</span> {cases <span class="org-haskell-operator">=</span> 1, tried <span class="org-haskell-operator">=</span> 1, errors <span class="org-haskell-operator">=</span> 0, failures <span class="org-haskell-operator">=</span> 0}
 <span class="org-haskell-operator">&gt;</span> 
 
@@ -767,15 +694,15 @@ Example: (~:)
 <span class="org-preprocessor">### Failure in: testSumIs25               </span>
 <span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>223
 <span class="org-haskell-constructor">The</span> sum is 25
-expected<span class="org-haskell-definition">:</span> 25
+<span class="org-function-name">expected</span><span class="org-haskell-definition">:</span> 25
  but got<span class="org-haskell-constructor">:</span> 28
-<span class="org-haskell-constructor">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 1
+<span class="org-function-name">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 1
 <span class="org-haskell-constructor">Counts</span> {cases <span class="org-haskell-operator">=</span> 1, tried <span class="org-haskell-operator">=</span> 1, errors <span class="org-haskell-operator">=</span> 0, failures <span class="org-haskell-operator">=</span> 1}
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">let</span> test3 <span class="org-haskell-operator">=</span> <span class="org-string">"testSumIs25"</span> <span class="org-haskell-operator">~:</span>  25 <span class="org-haskell-operator">@=?</span> (10 <span class="org-haskell-operator">+</span> 15)
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runTestTT</span> test3
-<span class="org-haskell-constructor">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 0
+<span class="org-function-name">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 0
 <span class="org-haskell-constructor">Counts</span> {cases <span class="org-haskell-operator">=</span> 1, tried <span class="org-haskell-operator">=</span> 1, errors <span class="org-haskell-operator">=</span> 0, failures <span class="org-haskell-operator">=</span> 0}
 <span class="org-haskell-operator">&gt;</span> 
 
@@ -783,9 +710,9 @@ expected<span class="org-haskell-definition">:</span> 25
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runTestTT</span> test4
 <span class="org-preprocessor">### Failure in: testSumIs25               </span>
 <span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>234
-expected<span class="org-haskell-definition">:</span> 25
+<span class="org-function-name">expected</span><span class="org-haskell-definition">:</span> 25
  but got<span class="org-haskell-constructor">:</span> 1038
-<span class="org-haskell-constructor">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 1
+<span class="org-function-name">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 1
 <span class="org-haskell-constructor">Counts</span> {cases <span class="org-haskell-operator">=</span> 1, tried <span class="org-haskell-operator">=</span> 1, errors <span class="org-haskell-operator">=</span> 0, failures <span class="org-haskell-operator">=</span> 1}
 <span class="org-haskell-operator">&gt;</span>
 </pre>
@@ -798,16 +725,16 @@ Example: (~?=)
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> runTestTT <span class="org-haskell-definition">$</span> 20 <span class="org-haskell-operator">~?=</span> 20
-<span class="org-haskell-constructor">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 0
+<span class="org-function-name">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 0
 <span class="org-haskell-constructor">Counts</span> {cases <span class="org-haskell-operator">=</span> 1, tried <span class="org-haskell-operator">=</span> 1, errors <span class="org-haskell-operator">=</span> 0, failures <span class="org-haskell-operator">=</span> 0}
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> runTestTT <span class="org-haskell-definition">$</span> 10 <span class="org-haskell-operator">~?=</span> 20
 <span class="org-preprocessor">### Failure:                              </span>
 <span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>276
-expected<span class="org-haskell-definition">:</span> 20
+<span class="org-function-name">expected</span><span class="org-haskell-definition">:</span> 20
  but got<span class="org-haskell-constructor">:</span> 10
-<span class="org-haskell-constructor">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 1
+<span class="org-function-name">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 1
 <span class="org-haskell-constructor">Counts</span> {cases <span class="org-haskell-operator">=</span> 1, tried <span class="org-haskell-operator">=</span> 1, errors <span class="org-haskell-operator">=</span> 0, failures <span class="org-haskell-operator">=</span> 1}
 <span class="org-haskell-operator">&gt;</span>
 </pre>
@@ -822,14 +749,14 @@ Example: (~=?)
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> runTestTT <span class="org-haskell-definition">$</span> 10 <span class="org-haskell-operator">~=?</span> 20
 <span class="org-preprocessor">### Failure:                              </span>
 <span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>281
-expected<span class="org-haskell-definition">:</span> 10
+<span class="org-function-name">expected</span><span class="org-haskell-definition">:</span> 10
  but got<span class="org-haskell-constructor">:</span> 20
-<span class="org-haskell-constructor">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 1
+<span class="org-function-name">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 1
 <span class="org-haskell-constructor">Counts</span> {cases <span class="org-haskell-operator">=</span> 1, tried <span class="org-haskell-operator">=</span> 1, errors <span class="org-haskell-operator">=</span> 0, failures <span class="org-haskell-operator">=</span> 1}
 <span class="org-haskell-operator">&gt;</span> 
 
 <span class="org-haskell-operator">&gt;</span> runTestTT <span class="org-haskell-definition">$</span> 20 <span class="org-haskell-operator">~=?</span> 20
-<span class="org-haskell-constructor">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 0
+<span class="org-function-name">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 0
 <span class="org-haskell-constructor">Counts</span> {cases <span class="org-haskell-operator">=</span> 1, tried <span class="org-haskell-operator">=</span> 1, errors <span class="org-haskell-operator">=</span> 0, failures <span class="org-haskell-operator">=</span> 0}
 <span class="org-haskell-operator">&gt;</span>
 </pre>
@@ -856,7 +783,7 @@ expected<span class="org-haskell-definition">:</span> 10
 <span class="org-haskell-constructor">:</span>}
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runTestTT</span> tests
-<span class="org-haskell-constructor">Cases</span><span class="org-haskell-definition">:</span> 5  <span class="org-haskell-constructor">Tried:</span> 5  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 0
+<span class="org-function-name">Cases</span><span class="org-haskell-definition">:</span> 5  <span class="org-haskell-constructor">Tried:</span> 5  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 0
 <span class="org-haskell-constructor">Counts</span> {cases <span class="org-haskell-operator">=</span> 5, tried <span class="org-haskell-operator">=</span> 5, errors <span class="org-haskell-operator">=</span> 0, failures <span class="org-haskell-operator">=</span> 0}
 <span class="org-haskell-operator">&gt;</span>
 </pre>
@@ -893,7 +820,7 @@ Example using <code>$ stack ghci</code>
         <span class="org-comment-delimiter">-- </span><span class="org-comment">Defined in &#8216;Test.HUnit.Base&#8217;</span>
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">TestCase</span> 
-<span class="org-haskell-constructor">TestCase</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Assertion</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Test</span>
+<span class="org-function-name">TestCase</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Assertion</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Test</span>
 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>info <span class="org-haskell-type">Assertion</span>
@@ -904,7 +831,7 @@ Example using <code>$ stack ghci</code>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-type">:</span>{
 <span class="org-haskell-operator">-</span> addInt <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span> 
 <span class="org-haskell-operator">-</span> addInt x y <span class="org-haskell-operator">=</span> x <span class="org-haskell-operator">+</span> y
-<span class="org-haskell-operator">-</span> <span class="org-haskell-type">:</span>}
+<span class="org-function-name">-</span> <span class="org-haskell-type">:</span>}
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">addInt</span> 10 20
 30
@@ -912,7 +839,7 @@ Example using <code>$ stack ghci</code>
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Test.HUnit</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>t <span class="org-haskell-constructor">TestCase</span>
-<span class="org-haskell-constructor">TestCase</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Assertion</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Test</span>
+<span class="org-function-name">TestCase</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Assertion</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Test</span>
 <span class="org-haskell-operator">&gt;</span> 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">assertEqual</span> <span class="org-string">"add 2 10 should be 12"</span> 12 (add 10 2)
 <span class="org-haskell-operator">&gt;</span> 
@@ -965,8 +892,8 @@ Example using <code>$ stack ghci</code>
 
 <span class="org-haskell-operator">&gt;</span> runTestTT <span class="org-haskell-definition">$</span> <span class="org-haskell-constructor">TestCase</span> <span class="org-haskell-operator">$</span> testFile2 <span class="org-string">"/afile.txt"</span> <span class="org-string">"hello"</span> <span class="org-string">"hello"</span>
 <span class="org-preprocessor">### Error:                                </span>
-<span class="org-haskell-operator">/</span>afile<span class="org-haskell-operator">.</span>txt<span class="org-haskell-constructor">:</span> openFile<span class="org-haskell-constructor">:</span> permission denied (<span class="org-haskell-constructor">Permission</span> denied)
-<span class="org-haskell-constructor">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 1  <span class="org-haskell-constructor">Failures:</span> 0
+<span class="org-function-name">/afile.txt</span><span class="org-haskell-constructor">:</span> openFile<span class="org-haskell-constructor">:</span> permission denied (<span class="org-haskell-constructor">Permission</span> denied)
+<span class="org-function-name">Cases</span><span class="org-haskell-definition">:</span> 1  <span class="org-haskell-constructor">Tried:</span> 1  <span class="org-haskell-constructor">Errors:</span> 1  <span class="org-haskell-constructor">Failures:</span> 0
 <span class="org-haskell-constructor">Counts</span> {cases <span class="org-haskell-operator">=</span> 1, tried <span class="org-haskell-operator">=</span> 1, errors <span class="org-haskell-operator">=</span> 1, failures <span class="org-haskell-operator">=</span> 0}
 <span class="org-haskell-operator">&gt;</span> 
 
@@ -1003,9 +930,9 @@ Example using <code>$ stack ghci</code>
 <span class="org-preprocessor">### Failure in: 2:testFailure             </span>
 <span class="org-haskell-operator">&lt;</span>interactive<span class="org-haskell-operator">&gt;:</span>94
 <span class="org-haskell-constructor">It</span> will fail 10 <span class="org-haskell-operator">+</span> 2 <span class="org-haskell-operator">=</span> 15
-expected<span class="org-haskell-definition">:</span> 12
+<span class="org-function-name">expected</span><span class="org-haskell-definition">:</span> 12
  but got<span class="org-haskell-constructor">:</span> 15
-<span class="org-haskell-constructor">Cases</span><span class="org-haskell-definition">:</span> 4  <span class="org-haskell-constructor">Tried:</span> 4  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 1
+<span class="org-function-name">Cases</span><span class="org-haskell-definition">:</span> 4  <span class="org-haskell-constructor">Tried:</span> 4  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 1
 <span class="org-haskell-constructor">Counts</span> {cases <span class="org-haskell-operator">=</span> 4, tried <span class="org-haskell-operator">=</span> 4, errors <span class="org-haskell-operator">=</span> 0, failures <span class="org-haskell-operator">=</span> 1}
 <span class="org-haskell-operator">&gt;</span> 
 
@@ -1020,7 +947,7 @@ expected<span class="org-haskell-definition">:</span> 12
 
 
 <span class="org-haskell-operator">&gt;</span> <span class="org-haskell-definition">runTestTT</span> testlist2
-<span class="org-haskell-constructor">Cases</span><span class="org-haskell-definition">:</span> 3  <span class="org-haskell-constructor">Tried:</span> 3  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 0
+<span class="org-function-name">Cases</span><span class="org-haskell-definition">:</span> 3  <span class="org-haskell-constructor">Tried:</span> 3  <span class="org-haskell-constructor">Errors:</span> 0  <span class="org-haskell-constructor">Failures:</span> 0
 <span class="org-haskell-constructor">Counts</span> {cases <span class="org-haskell-operator">=</span> 3, tried <span class="org-haskell-operator">=</span> 3, errors <span class="org-haskell-operator">=</span> 0, failures <span class="org-haskell-operator">=</span> 0}
 <span class="org-haskell-operator">&gt;</span>
 </pre>
@@ -1051,7 +978,7 @@ expected<span class="org-haskell-definition">:</span> 12
                      <span class="org-haskell-constructor">TestLabel</span> <span class="org-string">"testProd"</span> testProd                    
                     ]
 
-<span class="org-haskell-definition">main</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
+<span class="org-function-name">main</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">IO</span> <span class="org-haskell-constructor">()</span>
 <span class="org-haskell-definition">main</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-keyword">do</span>
   runTestTT testlist
   return <span class="org-haskell-constructor">()</span>
@@ -1070,11 +997,11 @@ Run the test as a script with runhaskell:
 
 <pre class="src src-sh">$ stack exec -- runhaskell /tmp/uniTestExample.hs 
 <span class="org-comment-delimiter">### </span><span class="org-comment">Failure in: 2:testFailure             </span>
-/tmp/uniTestExample.hs:12
+<span class="org-function-name">/tmp/uniTestExample.hs</span>:12
 It will fail 10 + 2 = 15
-expected: 12
+<span class="org-function-name">expected</span>: 12
  but got: 15
-Cases: 4  Tried: 4  Errors: 0  Failures: 1
+<span class="org-function-name">Cases</span>: 4  Tried: 4  Errors: 0  Failures: 1
 </pre>
 </div>
 
@@ -1090,11 +1017,11 @@ Linking /tmp/uniTestExample ..
 
 $ /tmp/uniTestExample
 <span class="org-comment-delimiter">### </span><span class="org-comment">Failure in: 2:testFailure             </span>
-/tmp/uniTestExample.hs:12
+<span class="org-function-name">/tmp/uniTestExample.hs</span>:12
 It will fail 10 + 2 = 15
-expected: 12
+<span class="org-function-name">expected</span>: 12
  but got: 15
-Cases: 4  Tried: 4  Errors: 0  Failures: 1
+<span class="org-function-name">Cases</span>: 4  Tried: 4  Errors: 0  Failures: 1
 </pre>
 </div>
 </div>
@@ -1121,9 +1048,9 @@ Cases: 4  Tried: 4  Errors: 0  Failures: 1
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: arch</p>
-<p class="date">Created: 2017-03-12 dom 16:47</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="author">Author: Caio Rodrigues Soares Silva</p>
+<p class="date">Created: 2018-05-07 Mon 10:11</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
