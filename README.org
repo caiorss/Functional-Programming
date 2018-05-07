@@ -16,23 +16,28 @@ The purpose of this tutorial is to illustrate functional programming
 concepts in many languages by providing reusable and useful snippets
 of code, examples, case studies and applications. 
 
+Author:  [[https://www.linkedin.com/in/caiorodrigues][Caio Rodrigues]] / <caiorss DOT rodrigue AT gmail DOT com> 
 
-Author:   [[https://www.linkedin.com/in/caiorodrigues][Caio Rodrigues]] / <caiorss.rodrigue@gmail.com> 
+Notes: 
+ + This is a endless work in progress.
+ + This repository is dedicated to public domain.
 
-Note: This still a work in progress and a long term project.
-
-You can access this page from:
+This repository can be accessed from the following URLs:
 
  - https://github.com/caiorss/Functional-Programming
 
  - http://tinyurl.com/fpbyexample
 
-The website of this repository is:
+The website of this repository is: 
 
- - http://caiorss.github.io/Functional-Programming  
+ + http://caiorss.github.io/Functional-Programming
 
+   + The project's web site was updated and improved with a table of
+     contents on side-bar. In addition, the new layout makes reading
+     easier to read and browse the content.
 
-This repository is dedicated to public domain.
+   + Those pages in the theme are in the gh-pages branch which can
+     easy be downloaded for offline usage.
 
 *General*
 
