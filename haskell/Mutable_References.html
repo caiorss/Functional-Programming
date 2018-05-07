@@ -4,10 +4,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Mutable References</title>
-<!-- 2018-05-07 Mon 10:10 -->
+<!-- 2018-05-07 Mon 11:29 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
-<meta  name="author" content="Caio Rodrigues Soares Silva" />
+<meta  name="author" content="nobody" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   .title  { text-align: center; }
@@ -88,6 +88,9 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+<link href="/Functional-Programming/theme/style.css" rel="stylesheet">
+<script src="/Functional-Programming/theme/org-nav-theme.js"></script>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -147,7 +150,15 @@ for the JavaScript code in this tag.
 <li><a href="#sec-1-1">1.1. IORef - Mutable References Inside IO Monad</a>
 <ul>
 <li><a href="#sec-1-1-1">1.1.1. Overview</a></li>
-<li><a href="#sec-1-1-2">1.1.2. Examples</a></li>
+<li><a href="#sec-1-1-2">1.1.2. Examples</a>
+<ul>
+<li><a href="#sec-1-1-2-1">1.1.2.1. Simple IORef example in Haskell REPL:</a></li>
+<li><a href="#sec-1-1-2-2">1.1.2.2. Stateful Function</a></li>
+<li><a href="#sec-1-1-2-3">1.1.2.3. Example: Sum list elements in a imperative way using IORef.</a></li>
+<li><a href="#sec-1-1-2-4">1.1.2.4. Infinite loop with delay</a></li>
+<li><a href="#sec-1-1-2-5">1.1.2.5. Simulating objects with closures</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#sec-1-2">1.2. ST Monad - Mutable References Inside Pure Functions</a>
@@ -161,6 +172,10 @@ for the JavaScript code in this tag.
 </ul>
 </div>
 </div>
+<lu> 
+  <li><a href="/Functional-Programming/index.html">Index</a></li>
+  <li><a href="https://github.com/caiorss/Functional-Programming">Repository</a></li>
+</lu>
 
 <div id="outline-container-sec-1" class="outline-2">
 <h2 id="sec-1"><span class="section-number-2">1</span> Mutable References</h2>
@@ -272,7 +287,9 @@ Module: <a href="https://hackage.haskell.org/package/base-4.9.1.0/docs/Data-IORe
 <div id="outline-container-sec-1-1-2" class="outline-4">
 <h4 id="sec-1-1-2"><span class="section-number-4">1.1.2</span> Examples</h4>
 <div class="outline-text-4" id="text-1-1-2">
-</div><ol class="org-ol"><li><a id="sec-1-1-2-1" name="sec-1-1-2-1"></a>Simple IORef example in Haskell REPL:<br  /><div class="outline-text-5" id="text-1-1-2-1">
+</div><div id="outline-container-sec-1-1-2-1" class="outline-5">
+<h5 id="sec-1-1-2-1"><span class="section-number-5">1.1.2.1</span> Simple IORef example in Haskell REPL:</h5>
+<div class="outline-text-5" id="text-1-1-2-1">
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-comment-delimiter">{- </span><span class="org-comment">===== Check The Types ====== -}</span>
@@ -466,9 +483,11 @@ Example: Counter.
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-1-2-2" name="sec-1-1-2-2"></a>Stateful Function<br  /><div class="outline-text-5" id="text-1-1-2-2">
+<div id="outline-container-sec-1-1-2-2" class="outline-5">
+<h5 id="sec-1-1-2-2"><span class="section-number-5">1.1.2.2</span> Stateful Function</h5>
+<div class="outline-text-5" id="text-1-1-2-2">
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-keyword">qualified</span> <span class="org-haskell-constructor">Data.IORef</span> <span class="org-haskell-keyword">as</span> <span class="org-haskell-constructor">IORef</span>
@@ -511,9 +530,11 @@ Example: Counter.
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-1-2-3" name="sec-1-1-2-3"></a>Example: Sum list elements in a imperative way using IORef.<br  /><div class="outline-text-5" id="text-1-1-2-3">
+<div id="outline-container-sec-1-1-2-3" class="outline-5">
+<h5 id="sec-1-1-2-3"><span class="section-number-5">1.1.2.3</span> Example: Sum list elements in a imperative way using IORef.</h5>
+<div class="outline-text-5" id="text-1-1-2-3">
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.IORef</span> 
@@ -652,9 +673,11 @@ Example: Ask the number for a number and display the sum in a infinite loop.
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-1-2-4" name="sec-1-1-2-4"></a>Infinite loop with delay<br  /><div class="outline-text-5" id="text-1-1-2-4">
+<div id="outline-container-sec-1-1-2-4" class="outline-5">
+<h5 id="sec-1-1-2-4"><span class="section-number-5">1.1.2.4</span> Infinite loop with delay</h5>
+<div class="outline-text-5" id="text-1-1-2-4">
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Data.IORef</span>
@@ -696,8 +719,10 @@ Example: Ask the number for a number and display the sum in a infinite loop.
 </pre>
 </div>
 </div>
-</li>
-<li><a id="sec-1-1-2-5" name="sec-1-1-2-5"></a>Simulating objects with closures<br  /><div class="outline-text-5" id="text-1-1-2-5">
+</div>
+<div id="outline-container-sec-1-1-2-5" class="outline-5">
+<h5 id="sec-1-1-2-5"><span class="section-number-5">1.1.2.5</span> Simulating objects with closures</h5>
+<div class="outline-text-5" id="text-1-1-2-5">
 <p>
 The code below simulates an object counter that has an internal
 integer state. The functions or IO actions incrementCounter,
@@ -773,7 +798,7 @@ Running:
 </pre>
 </div>
 </div>
-</li></ol>
+</div>
 </div>
 </div>
 <div id="outline-container-sec-1-2" class="outline-3">
@@ -1046,8 +1071,8 @@ fucntion like foldST despite it has local mutability.
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: Caio Rodrigues Soares Silva</p>
-<p class="date">Created: 2018-05-07 Mon 10:10</p>
+<p class="author">Author: nobody</p>
+<p class="date">Created: 2018-05-07 Mon 11:29</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

@@ -4,10 +4,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Polymorphism and Typeclasses</title>
-<!-- 2018-05-07 Mon 10:13 -->
+<!-- 2018-05-07 Mon 11:30 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
-<meta  name="author" content="Caio Rodrigues Soares Silva" />
+<meta  name="author" content="nobody" />
 <meta  name="keywords" content="polymorphism ad-hoc typeclass haskell fp" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
@@ -89,6 +89,9 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+<link href="/Functional-Programming/theme/style.css" rel="stylesheet">
+<script src="/Functional-Programming/theme/org-nav-theme.js"></script>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -155,7 +158,15 @@ for the JavaScript code in this tag.
 <li><a href="#sec-1-3">1.3. Examples</a>
 <ul>
 <li><a href="#sec-1-3-1">1.3.1. Refactoring functions to work with many types</a></li>
-<li><a href="#sec-1-3-2">1.3.2. Defining typeclasses instances</a></li>
+<li><a href="#sec-1-3-2">1.3.2. Defining typeclasses instances</a>
+<ul>
+<li><a href="#sec-1-3-2-1">1.3.2.1. Defining a new instance of typeclass Functor</a></li>
+<li><a href="#sec-1-3-2-2">1.3.2.2. Defining a new instance of typeclass Num.</a></li>
+<li><a href="#sec-1-3-2-3">1.3.2.3. Complex Number Implementation</a></li>
+<li><a href="#sec-1-3-2-4">1.3.2.4. Vector Arithmetic</a></li>
+<li><a href="#sec-1-3-2-5">1.3.2.5. Num a =&gt; Maybe a as instance of Num typeclass</a></li>
+</ul>
+</li>
 <li><a href="#sec-1-3-3">1.3.3. Creating a type class</a></li>
 <li><a href="#sec-1-3-4">1.3.4. References</a></li>
 </ul>
@@ -165,6 +176,10 @@ for the JavaScript code in this tag.
 </ul>
 </div>
 </div>
+<lu> 
+  <li><a href="/Functional-Programming/index.html">Index</a></li>
+  <li><a href="https://github.com/caiorss/Functional-Programming">Repository</a></li>
+</lu>
 
 <div id="outline-container-sec-1" class="outline-2">
 <h2 id="sec-1"><span class="section-number-2">1</span> Polymorphism and Typeclasses</h2>
@@ -756,7 +771,9 @@ function fn to two monad instances.
 <div id="outline-container-sec-1-3-2" class="outline-4">
 <h4 id="sec-1-3-2"><span class="section-number-4">1.3.2</span> Defining typeclasses instances</h4>
 <div class="outline-text-4" id="text-1-3-2">
-</div><ol class="org-ol"><li><a id="sec-1-3-2-1" name="sec-1-3-2-1"></a>Defining a new instance of typeclass Functor<br  /><div class="outline-text-5" id="text-1-3-2-1">
+</div><div id="outline-container-sec-1-3-2-1" class="outline-5">
+<h5 id="sec-1-3-2-1"><span class="section-number-5">1.3.2.1</span> Defining a new instance of typeclass Functor</h5>
+<div class="outline-text-5" id="text-1-3-2-1">
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Identity</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Identity</span> a <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span>, <span class="org-haskell-constructor">Read</span>, <span class="org-haskell-constructor">Show</span>)
@@ -788,9 +805,11 @@ function fn to two monad instances.
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-2-2" name="sec-1-3-2-2"></a>Defining a new instance of typeclass Num.<br  /><div class="outline-text-5" id="text-1-3-2-2">
+<div id="outline-container-sec-1-3-2-2" class="outline-5">
+<h5 id="sec-1-3-2-2"><span class="section-number-5">1.3.2.2</span> Defining a new instance of typeclass Num.</h5>
+<div class="outline-text-5" id="text-1-3-2-2">
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-operator">&gt;</span> <span class="org-haskell-constructor">:</span>info <span class="org-haskell-constructor">Num</span>
@@ -982,9 +1001,11 @@ function fn to two monad instances.
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-2-3" name="sec-1-3-2-3"></a>Complex Number Implementation<br  /><div class="outline-text-5" id="text-1-3-2-3">
+<div id="outline-container-sec-1-3-2-3" class="outline-5">
+<h5 id="sec-1-3-2-3"><span class="section-number-5">1.3.2.3</span> Complex Number Implementation</h5>
+<div class="outline-text-5" id="text-1-3-2-3">
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-keyword">import</span> <span class="org-haskell-constructor">Text.Printf</span> (printf)
@@ -1174,9 +1195,11 @@ function fn to two monad instances.
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-2-4" name="sec-1-3-2-4"></a>Vector Arithmetic<br  /><div class="outline-text-5" id="text-1-3-2-4">
+<div id="outline-container-sec-1-3-2-4" class="outline-5">
+<h5 id="sec-1-3-2-4"><span class="section-number-5">1.3.2.4</span> Vector Arithmetic</h5>
+<div class="outline-text-5" id="text-1-3-2-4">
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Vector</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Vector</span> [<span class="org-haskell-constructor">Double</span>] <span class="org-haskell-keyword">deriving</span> (<span class="org-haskell-constructor">Eq</span>, <span class="org-haskell-constructor">Read</span>, <span class="org-haskell-constructor">Show</span>)
@@ -1360,9 +1383,11 @@ function fn to two monad instances.
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-2-5" name="sec-1-3-2-5"></a>Num a =&gt; Maybe a as instance of Num typeclass<br  /><div class="outline-text-5" id="text-1-3-2-5">
+<div id="outline-container-sec-1-3-2-5" class="outline-5">
+<h5 id="sec-1-3-2-5"><span class="section-number-5">1.3.2.5</span> Num a =&gt; Maybe a as instance of Num typeclass</h5>
+<div class="outline-text-5" id="text-1-3-2-5">
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-constructor">:</span>{
@@ -1427,7 +1452,7 @@ Running in REPL:
 </pre>
 </div>
 </div>
-</li></ol>
+</div>
 </div>
 
 <div id="outline-container-sec-1-3-3" class="outline-4">
@@ -1560,8 +1585,8 @@ See:
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: Caio Rodrigues Soares Silva</p>
-<p class="date">Created: 2018-05-07 Mon 10:13</p>
+<p class="author">Author: nobody</p>
+<p class="date">Created: 2018-05-07 Mon 11:30</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

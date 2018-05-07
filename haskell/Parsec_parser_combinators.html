@@ -4,10 +4,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Parsec - Parser Combinators</title>
-<!-- 2018-05-07 Mon 10:12 -->
+<!-- 2018-05-07 Mon 11:30 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
-<meta  name="author" content="Caio Rodrigues Soares Silva" />
+<meta  name="author" content="nobody" />
 <meta  name="description" content="Parsec parser combinators"
  />
 <style type="text/css">
@@ -90,6 +90,9 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+<link href="/Functional-Programming/theme/style.css" rel="stylesheet">
+<script src="/Functional-Programming/theme/org-nav-theme.js"></script>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -155,8 +158,33 @@ for the JavaScript code in this tag.
 </li>
 <li><a href="#sec-1-2">1.2. Parser Combinators</a>
 <ul>
-<li><a href="#sec-1-2-1">1.2.1. Primitive Parsers</a></li>
-<li><a href="#sec-1-2-2">1.2.2. Combinators</a></li>
+<li><a href="#sec-1-2-1">1.2.1. Primitive Parsers</a>
+<ul>
+<li><a href="#sec-1-2-1-1">1.2.1.1. Parse Char</a></li>
+<li><a href="#sec-1-2-1-2">1.2.1.2. Parse Digit</a></li>
+<li><a href="#sec-1-2-1-3">1.2.1.3. Parse any character - anychar</a></li>
+<li><a href="#sec-1-2-1-4">1.2.1.4. <span class="todo TODO">TODO</span> oneOf</a></li>
+<li><a href="#sec-1-2-1-5">1.2.1.5. <span class="todo TODO">TODO</span> noneOf</a></li>
+<li><a href="#sec-1-2-1-6">1.2.1.6. Parse String</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-2-2">1.2.2. Combinators</a>
+<ul>
+<li><a href="#sec-1-2-2-1">1.2.2.1. Monad do-notation - parse sequence</a></li>
+<li><a href="#sec-1-2-2-2">1.2.2.2. Functor fmap and operator (&lt;$&gt;)</a></li>
+<li><a href="#sec-1-2-2-3">1.2.2.3. Monad operators return, (&gt;&gt;=) and &gt;&gt;</a></li>
+<li><a href="#sec-1-2-2-4">1.2.2.4. Applicative operators (&lt;*), (*&gt;) and (&lt;*&gt;)</a></li>
+<li><a href="#sec-1-2-2-5">1.2.2.5. Parser choice (&lt;|&gt;) operator</a></li>
+<li><a href="#sec-1-2-2-6">1.2.2.6. <span class="todo TODO">TODO</span> choice</a></li>
+<li><a href="#sec-1-2-2-7">1.2.2.7. many</a></li>
+<li><a href="#sec-1-2-2-8">1.2.2.8. many1</a></li>
+<li><a href="#sec-1-2-2-9">1.2.2.9. sepBy</a></li>
+<li><a href="#sec-1-2-2-10">1.2.2.10. between</a></li>
+<li><a href="#sec-1-2-2-11">1.2.2.11. <span class="todo TODO">TODO</span> manyTill</a></li>
+<li><a href="#sec-1-2-2-12">1.2.2.12. <span class="todo TODO">TODO</span> sepBy1</a></li>
+<li><a href="#sec-1-2-2-13">1.2.2.13. eof</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#sec-1-3">1.3. Examples - Complete Parsers</a>
@@ -172,6 +200,10 @@ for the JavaScript code in this tag.
 </ul>
 </div>
 </div>
+<lu> 
+  <li><a href="/Functional-Programming/index.html">Index</a></li>
+  <li><a href="https://github.com/caiorss/Functional-Programming">Repository</a></li>
+</lu>
 
 <div id="outline-container-sec-1" class="outline-2">
 <h2 id="sec-1"><span class="section-number-2">1</span> Parsec - Parser Combinators</h2>
@@ -506,7 +538,9 @@ the result.
 </div><div id="outline-container-sec-1-2-1" class="outline-4">
 <h4 id="sec-1-2-1"><span class="section-number-4">1.2.1</span> Primitive Parsers</h4>
 <div class="outline-text-4" id="text-1-2-1">
-</div><ol class="org-ol"><li><a id="sec-1-2-1-1" name="sec-1-2-1-1"></a>Parse Char<br  /><div class="outline-text-5" id="text-1-2-1-1">
+</div><div id="outline-container-sec-1-2-1-1" class="outline-5">
+<h5 id="sec-1-2-1-1"><span class="section-number-5">1.2.1.1</span> Parse Char</h5>
+<div class="outline-text-5" id="text-1-2-1-1">
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-constructor">:</span>{
@@ -547,9 +581,11 @@ Running:
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-2-1-2" name="sec-1-2-1-2"></a>Parse Digit<br  /><div class="outline-text-5" id="text-1-2-1-2">
+<div id="outline-container-sec-1-2-1-2" class="outline-5">
+<h5 id="sec-1-2-1-2"><span class="section-number-5">1.2.1.2</span> Parse Digit</h5>
+<div class="outline-text-5" id="text-1-2-1-2">
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-haskell-constructor">:</span>{
@@ -587,9 +623,11 @@ Running:
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-2-1-3" name="sec-1-2-1-3"></a>Parse any character - anychar<br  /><div class="outline-text-5" id="text-1-2-1-3">
+<div id="outline-container-sec-1-2-1-3" class="outline-5">
+<h5 id="sec-1-2-1-3"><span class="section-number-5">1.2.1.3</span> Parse any character - anychar</h5>
+<div class="outline-text-5" id="text-1-2-1-3">
 <p>
 Consume anycharater returning it.
 </p>
@@ -624,11 +662,17 @@ Example:
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-2-1-4" name="sec-1-2-1-4"></a><span class="todo TODO">TODO</span> oneOf<br  /></li>
-<li><a id="sec-1-2-1-5" name="sec-1-2-1-5"></a><span class="todo TODO">TODO</span> noneOf<br  /></li>
-<li><a id="sec-1-2-1-6" name="sec-1-2-1-6"></a>Parse String<br  /><div class="outline-text-5" id="text-1-2-1-6">
+<div id="outline-container-sec-1-2-1-4" class="outline-5">
+<h5 id="sec-1-2-1-4"><span class="section-number-5">1.2.1.4</span> <span class="todo TODO">TODO</span> oneOf</h5>
+</div>
+<div id="outline-container-sec-1-2-1-5" class="outline-5">
+<h5 id="sec-1-2-1-5"><span class="section-number-5">1.2.1.5</span> <span class="todo TODO">TODO</span> noneOf</h5>
+</div>
+<div id="outline-container-sec-1-2-1-6" class="outline-5">
+<h5 id="sec-1-2-1-6"><span class="section-number-5">1.2.1.6</span> Parse String</h5>
+<div class="outline-text-5" id="text-1-2-1-6">
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-comment-delimiter">-- </span><span class="org-comment">Parse string </span>
@@ -676,13 +720,15 @@ Running:
 </pre>
 </div>
 </div>
-</li></ol>
+</div>
 </div>
 
 <div id="outline-container-sec-1-2-2" class="outline-4">
 <h4 id="sec-1-2-2"><span class="section-number-4">1.2.2</span> Combinators</h4>
 <div class="outline-text-4" id="text-1-2-2">
-</div><ol class="org-ol"><li><a id="sec-1-2-2-1" name="sec-1-2-2-1"></a>Monad do-notation - parse sequence<br  /><div class="outline-text-5" id="text-1-2-2-1">
+</div><div id="outline-container-sec-1-2-2-1" class="outline-5">
+<h5 id="sec-1-2-2-1"><span class="section-number-5">1.2.2.1</span> Monad do-notation - parse sequence</h5>
+<div class="outline-text-5" id="text-1-2-2-1">
 <p>
 It parses a letter surrounded by parenthesis. The do-notation and the
 monad combinators (&gt;&gt;) and (&gt;&gt;=) sequences the parsers <code>(P.char ')')</code>,
@@ -772,9 +818,11 @@ Running:
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-2-2-2" name="sec-1-2-2-2"></a>Functor fmap and operator (&lt;$&gt;)<br  /><div class="outline-text-5" id="text-1-2-2-2">
+<div id="outline-container-sec-1-2-2-2" class="outline-5">
+<h5 id="sec-1-2-2-2"><span class="section-number-5">1.2.2.2</span> Functor fmap and operator (&lt;$&gt;)</h5>
+<div class="outline-text-5" id="text-1-2-2-2">
 <p>
 The function fmap or the operator (&lt;$&gt;) that is a fmap synonym apply a
 function to the parser result.
@@ -836,9 +884,12 @@ Example:
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-2-2-3" name="sec-1-2-2-3"></a>Monad operators return, (&gt;&gt;=) and &gt;&gt;<br  /><ol class="org-ol"><li><a id="sec-1-2-2-3-1" name="sec-1-2-2-3-1"></a>Function return<br  /><div class="outline-text-6" id="text-1-2-2-3-1">
+<div id="outline-container-sec-1-2-2-3" class="outline-5">
+<h5 id="sec-1-2-2-3"><span class="section-number-5">1.2.2.3</span> Monad operators return, (&gt;&gt;=) and &gt;&gt;</h5>
+<div class="outline-text-5" id="text-1-2-2-3">
+</div><ol class="org-ol"><li><a id="sec-1-2-2-3-1" name="sec-1-2-2-3-1"></a>Function return<br  /><div class="outline-text-6" id="text-1-2-2-3-1">
 <p>
 Creates a parser that always returns the same value regardless of the
 input.
@@ -1014,8 +1065,11 @@ Running:
 </div>
 </div>
 </li></ol>
-</li>
-<li><a id="sec-1-2-2-4" name="sec-1-2-2-4"></a>Applicative operators (&lt;*), (*&gt;) and (&lt;*&gt;)<br  /><ol class="org-ol"><li><a id="sec-1-2-2-4-1" name="sec-1-2-2-4-1"></a>Operator (*&gt;)<br  /><div class="outline-text-6" id="text-1-2-2-4-1">
+</div>
+<div id="outline-container-sec-1-2-2-4" class="outline-5">
+<h5 id="sec-1-2-2-4"><span class="section-number-5">1.2.2.4</span> Applicative operators (&lt;*), (*&gt;) and (&lt;*&gt;)</h5>
+<div class="outline-text-5" id="text-1-2-2-4">
+</div><ol class="org-ol"><li><a id="sec-1-2-2-4-1" name="sec-1-2-2-4-1"></a>Operator (*&gt;)<br  /><div class="outline-text-6" id="text-1-2-2-4-1">
 <p>
 Run two parsers and returns the result of second one.
 </p>
@@ -1138,8 +1192,10 @@ Example: Parse a number followed by word true returning the number.
 </li>
 
 <li><a id="sec-1-2-2-4-3" name="sec-1-2-2-4-3"></a><span class="todo TODO">TODO</span> Operator (&lt;*&gt;)<br  /></li></ol>
-</li>
-<li><a id="sec-1-2-2-5" name="sec-1-2-2-5"></a>Parser choice (&lt;|&gt;) operator<br  /><div class="outline-text-5" id="text-1-2-2-5">
+</div>
+<div id="outline-container-sec-1-2-2-5" class="outline-5">
+<h5 id="sec-1-2-2-5"><span class="section-number-5">1.2.2.5</span> Parser choice (&lt;|&gt;) operator</h5>
+<div class="outline-text-5" id="text-1-2-2-5">
 <p>
 The parser choice operator (&lt;|&gt;) only will try the second alternative
 parser if the first parser has failed and not consummed any input.
@@ -1215,10 +1271,14 @@ Running:
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-2-2-6" name="sec-1-2-2-6"></a><span class="todo TODO">TODO</span> choice<br  /></li>
-<li><a id="sec-1-2-2-7" name="sec-1-2-2-7"></a>many<br  /><div class="outline-text-5" id="text-1-2-2-7">
+<div id="outline-container-sec-1-2-2-6" class="outline-5">
+<h5 id="sec-1-2-2-6"><span class="section-number-5">1.2.2.6</span> <span class="todo TODO">TODO</span> choice</h5>
+</div>
+<div id="outline-container-sec-1-2-2-7" class="outline-5">
+<h5 id="sec-1-2-2-7"><span class="section-number-5">1.2.2.7</span> many</h5>
+<div class="outline-text-5" id="text-1-2-2-7">
 <p>
 <b>Simplified signature:</b>
 </p>
@@ -1317,9 +1377,11 @@ or more letter or digit.
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-2-2-8" name="sec-1-2-2-8"></a>many1<br  /><div class="outline-text-5" id="text-1-2-2-8">
+<div id="outline-container-sec-1-2-2-8" class="outline-5">
+<h5 id="sec-1-2-2-8"><span class="section-number-5">1.2.2.8</span> many1</h5>
+<div class="outline-text-5" id="text-1-2-2-8">
 <p>
 <b>Simplified signature:</b>
 </p>
@@ -1449,8 +1511,10 @@ Running:
 </pre>
 </div>
 </div>
-</li>
-<li><a id="sec-1-2-2-9" name="sec-1-2-2-9"></a>sepBy<br  /><div class="outline-text-5" id="text-1-2-2-9">
+</div>
+<div id="outline-container-sec-1-2-2-9" class="outline-5">
+<h5 id="sec-1-2-2-9"><span class="section-number-5">1.2.2.9</span> sepBy</h5>
+<div class="outline-text-5" id="text-1-2-2-9">
 <p>
 Returns zero or more occurences of parser p separated by separator
 sep.
@@ -1571,8 +1635,10 @@ Example:
 </pre>
 </div>
 </div>
-</li>
-<li><a id="sec-1-2-2-10" name="sec-1-2-2-10"></a>between<br  /><div class="outline-text-5" id="text-1-2-2-10">
+</div>
+<div id="outline-container-sec-1-2-2-10" class="outline-5">
+<h5 id="sec-1-2-2-10"><span class="section-number-5">1.2.2.10</span> between</h5>
+<div class="outline-text-5" id="text-1-2-2-10">
 <div class="org-src-container">
 
 <pre class="src src-haskell"><span class="org-function-name">between</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Parser</span> open <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> close <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> p <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Parser</span> p
@@ -1738,11 +1804,17 @@ Example:
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-2-2-11" name="sec-1-2-2-11"></a><span class="todo TODO">TODO</span> manyTill<br  /></li>
-<li><a id="sec-1-2-2-12" name="sec-1-2-2-12"></a><span class="todo TODO">TODO</span> sepBy1<br  /></li>
-<li><a id="sec-1-2-2-13" name="sec-1-2-2-13"></a>eof<br  /><div class="outline-text-5" id="text-1-2-2-13">
+<div id="outline-container-sec-1-2-2-11" class="outline-5">
+<h5 id="sec-1-2-2-11"><span class="section-number-5">1.2.2.11</span> <span class="todo TODO">TODO</span> manyTill</h5>
+</div>
+<div id="outline-container-sec-1-2-2-12" class="outline-5">
+<h5 id="sec-1-2-2-12"><span class="section-number-5">1.2.2.12</span> <span class="todo TODO">TODO</span> sepBy1</h5>
+</div>
+<div id="outline-container-sec-1-2-2-13" class="outline-5">
+<h5 id="sec-1-2-2-13"><span class="section-number-5">1.2.2.13</span> eof</h5>
+<div class="outline-text-5" id="text-1-2-2-13">
 <p>
 Only suceeds at the end of input. (EOF - End Of File).
 </p>
@@ -1815,7 +1887,7 @@ Example:
 </pre>
 </div>
 </div>
-</li></ol>
+</div>
 </div>
 </div>
 
@@ -2469,8 +2541,8 @@ Misc
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: Caio Rodrigues Soares Silva</p>
-<p class="date">Created: 2018-05-07 Mon 10:12</p>
+<p class="author">Author: nobody</p>
+<p class="date">Created: 2018-05-07 Mon 11:30</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

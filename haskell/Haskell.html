@@ -4,10 +4,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Setting up a Haskell Development Environment</title>
-<!-- 2018-05-07 Mon 10:11 -->
+<!-- 2018-05-07 Mon 11:29 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
-<meta  name="author" content="Caio Rodrigues Soares Silva" />
+<meta  name="author" content="nobody" />
 <meta  name="keywords" content="haskell development environment fp ide editor stack" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
@@ -89,6 +89,9 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+<link href="/Functional-Programming/theme/style.css" rel="stylesheet">
+<script src="/Functional-Programming/theme/org-nav-theme.js"></script>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -149,14 +152,38 @@ for the JavaScript code in this tag.
 <li><a href="#sec-1-2">1.2. Setting up a Haskell Development Environment</a>
 <ul>
 <li><a href="#sec-1-2-1">1.2.1. Gettin Haskell through stack</a></li>
-<li><a href="#sec-1-2-2">1.2.2. Text editor</a></li>
+<li><a href="#sec-1-2-2">1.2.2. Text editor</a>
+<ul>
+<li><a href="#sec-1-2-2-1">1.2.2.1. Atom</a></li>
+<li><a href="#sec-1-2-2-2">1.2.2.2. Emacs</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#sec-1-3">1.3. Haskell stack tool</a>
 <ul>
-<li><a href="#sec-1-3-1">1.3.1. Using stack without a project</a></li>
+<li><a href="#sec-1-3-1">1.3.1. Using stack without a project</a>
+<ul>
+<li><a href="#sec-1-3-1-1">1.3.1.1. Overview</a></li>
+<li><a href="#sec-1-3-1-2">1.3.1.2. Installing packages globally</a></li>
+<li><a href="#sec-1-3-1-3">1.3.1.3. Running Haskell REPL without a project</a></li>
+<li><a href="#sec-1-3-1-4">1.3.1.4. Run a specific GHC version</a></li>
+<li><a href="#sec-1-3-1-5">1.3.1.5. Run a Haskell script with specific ghc version:</a></li>
+<li><a href="#sec-1-3-1-6">1.3.1.6. Compile a haskell source code without a project</a></li>
+<li><a href="#sec-1-3-1-7">1.3.1.7. Compile a sources without a project with a specific Haskell version</a></li>
+<li><a href="#sec-1-3-1-8">1.3.1.8. Misc</a></li>
+</ul>
+</li>
 <li><a href="#sec-1-3-2">1.3.2. Build and manage projects with Stack</a></li>
-<li><a href="#sec-1-3-3">1.3.3. Exploring Stack</a></li>
+<li><a href="#sec-1-3-3">1.3.3. Exploring Stack</a>
+<ul>
+<li><a href="#sec-1-3-3-1">1.3.3.1. Where is ghci ?</a></li>
+<li><a href="#sec-1-3-3-2">1.3.3.2. Where is ghc ?</a></li>
+<li><a href="#sec-1-3-3-3">1.3.3.3. Show stack search path</a></li>
+<li><a href="#sec-1-3-3-4">1.3.3.4. Show all programs in stack search path</a></li>
+<li><a href="#sec-1-3-3-5">1.3.3.5. Show stack environment variables</a></li>
+</ul>
+</li>
 <li><a href="#sec-1-3-4">1.3.4. Some useful packages</a></li>
 </ul>
 </li>
@@ -166,6 +193,10 @@ for the JavaScript code in this tag.
 </ul>
 </div>
 </div>
+<lu> 
+  <li><a href="/Functional-Programming/index.html">Index</a></li>
+  <li><a href="https://github.com/caiorss/Functional-Programming">Repository</a></li>
+</lu>
 
 <div id="outline-container-sec-1" class="outline-2">
 <h2 id="sec-1"><span class="section-number-2">1</span> Haskell</h2>
@@ -429,7 +460,9 @@ See the instructions to install stack at <a href="https://www.haskellstack.org/"
 <div id="outline-container-sec-1-2-2" class="outline-4">
 <h4 id="sec-1-2-2"><span class="section-number-4">1.2.2</span> Text editor</h4>
 <div class="outline-text-4" id="text-1-2-2">
-</div><ol class="org-ol"><li><a id="sec-1-2-2-1" name="sec-1-2-2-1"></a>Atom<br  /><div class="outline-text-5" id="text-1-2-2-1">
+</div><div id="outline-container-sec-1-2-2-1" class="outline-5">
+<h5 id="sec-1-2-2-1"><span class="section-number-5">1.2.2.1</span> Atom</h5>
+<div class="outline-text-5" id="text-1-2-2-1">
 <ul class="org-ul">
 <li><a href="https://atom.io/packages/ide-haskell#configuration">ide-haskell</a>
 </li>
@@ -441,9 +474,11 @@ See the instructions to install stack at <a href="https://www.haskellstack.org/"
 </li>
 </ul>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-2-2-2" name="sec-1-2-2-2"></a>Emacs<br  /><div class="outline-text-5" id="text-1-2-2-2">
+<div id="outline-container-sec-1-2-2-2" class="outline-5">
+<h5 id="sec-1-2-2-2"><span class="section-number-5">1.2.2.2</span> Emacs</h5>
+<div class="outline-text-5" id="text-1-2-2-2">
 <ul class="org-ul">
 <li><a href="https://commercialhaskell.github.io/intero/">Intero for Emacs</a>
 </li>
@@ -458,7 +493,7 @@ See the instructions to install stack at <a href="https://www.haskellstack.org/"
 </li>
 </ul>
 </div>
-</li></ol>
+</div>
 </div>
 </div>
 
@@ -468,7 +503,9 @@ See the instructions to install stack at <a href="https://www.haskellstack.org/"
 </div><div id="outline-container-sec-1-3-1" class="outline-4">
 <h4 id="sec-1-3-1"><span class="section-number-4">1.3.1</span> Using stack without a project</h4>
 <div class="outline-text-4" id="text-1-3-1">
-</div><ol class="org-ol"><li><a id="sec-1-3-1-1" name="sec-1-3-1-1"></a>Overview<br  /><div class="outline-text-5" id="text-1-3-1-1">
+</div><div id="outline-container-sec-1-3-1-1" class="outline-5">
+<h5 id="sec-1-3-1-1"><span class="section-number-5">1.3.1.1</span> Overview</h5>
+<div class="outline-text-5" id="text-1-3-1-1">
 <p>
 Stack can be used exploratory programming without setting up a
 project by running any stack command outside a project directory (a
@@ -528,9 +565,11 @@ directory without an stack.yaml file).
 </tbody>
 </table>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-1-2" name="sec-1-3-1-2"></a>Installing packages globally<br  /><div class="outline-text-5" id="text-1-3-1-2">
+<div id="outline-container-sec-1-3-1-2" class="outline-5">
+<h5 id="sec-1-3-1-2"><span class="section-number-5">1.3.1.2</span> Installing packages globally</h5>
+<div class="outline-text-5" id="text-1-3-1-2">
 <p>
 To install a package globally run <code>$ stack install &lt;package&gt;</code> outside
 any project directory. 
@@ -551,9 +590,11 @@ Linking /home/arch/.stack/setup-exe-cache/x86_64-linux/tmp-Cabal-simple_mPHDZzAJ
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-1-3" name="sec-1-3-1-3"></a>Running Haskell REPL without a project<br  /><div class="outline-text-5" id="text-1-3-1-3">
+<div id="outline-container-sec-1-3-1-3" class="outline-5">
+<h5 id="sec-1-3-1-3"><span class="section-number-5">1.3.1.3</span> Running Haskell REPL without a project</h5>
+<div class="outline-text-5" id="text-1-3-1-3">
 <p>
 Just run <code>$ stack ghci</code> outside of a project directory.
 </p>
@@ -605,9 +646,11 @@ or
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-1-4" name="sec-1-3-1-4"></a>Run a specific GHC version<br  /><div class="outline-text-5" id="text-1-3-1-4">
+<div id="outline-container-sec-1-3-1-4" class="outline-5">
+<h5 id="sec-1-3-1-4"><span class="section-number-5">1.3.1.4</span> Run a specific GHC version</h5>
+<div class="outline-text-5" id="text-1-3-1-4">
 <p>
 Run Haskell REPL ghci for LTS resolver 3.22 / ghc-7.10.2. GHC will be
 installed if it is not available.
@@ -636,18 +679,22 @@ Prelude&gt;
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-1-5" name="sec-1-3-1-5"></a>Run a Haskell script with specific ghc version:<br  /><div class="outline-text-5" id="text-1-3-1-5">
+<div id="outline-container-sec-1-3-1-5" class="outline-5">
+<h5 id="sec-1-3-1-5"><span class="section-number-5">1.3.1.5</span> Run a Haskell script with specific ghc version:</h5>
+<div class="outline-text-5" id="text-1-3-1-5">
 <div class="org-src-container">
 
 <pre class="src src-sh">$ stack --resolver lts-3.22 --install-ghc runghc haskell-script.hs
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-1-6" name="sec-1-3-1-6"></a>Compile a haskell source code without a project<br  /><div class="outline-text-5" id="text-1-3-1-6">
+<div id="outline-container-sec-1-3-1-6" class="outline-5">
+<h5 id="sec-1-3-1-6"><span class="section-number-5">1.3.1.6</span> Compile a haskell source code without a project</h5>
+<div class="outline-text-5" id="text-1-3-1-6">
 <div class="org-src-container">
 
 <pre class="src src-sh">$ stack ghc Main.hs Module1.hs Module2.hs
@@ -664,17 +711,22 @@ or with command line options:
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-1-7" name="sec-1-3-1-7"></a>Compile a sources without a project with a specific Haskell version<br  /><div class="outline-text-5" id="text-1-3-1-7">
+<div id="outline-container-sec-1-3-1-7" class="outline-5">
+<h5 id="sec-1-3-1-7"><span class="section-number-5">1.3.1.7</span> Compile a sources without a project with a specific Haskell version</h5>
+<div class="outline-text-5" id="text-1-3-1-7">
 <div class="org-src-container">
 
 <pre class="src src-sh">$ stack --resolver lts-3.22 --install-ghc ghc Main.hs Module1.hs Module2.hs ...
 </pre>
 </div>
 </div>
-</li>
-<li><a id="sec-1-3-1-8" name="sec-1-3-1-8"></a>Misc<br  /><ol class="org-ol"><li><a id="sec-1-3-1-8-1" name="sec-1-3-1-8-1"></a>Install and run a plot library<br  /><div class="outline-text-6" id="text-1-3-1-8-1">
+</div>
+<div id="outline-container-sec-1-3-1-8" class="outline-5">
+<h5 id="sec-1-3-1-8"><span class="section-number-5">1.3.1.8</span> Misc</h5>
+<div class="outline-text-5" id="text-1-3-1-8">
+</div><ol class="org-ol"><li><a id="sec-1-3-1-8-1" name="sec-1-3-1-8-1"></a>Install and run a plot library<br  /><div class="outline-text-6" id="text-1-3-1-8-1">
 <ul class="org-ul">
 <li><a href="https://hackage.haskell.org/package/easyplot-1.0/docs/Graphics-EasyPlot.html">Graphics.EasyPlot</a>
 </li>
@@ -926,7 +978,7 @@ main = do
 </div>
 </div>
 </li></ol>
-</li></ol>
+</div>
 </div>
 
 <div id="outline-container-sec-1-3-2" class="outline-4">
@@ -959,7 +1011,9 @@ See:
 <div id="outline-container-sec-1-3-3" class="outline-4">
 <h4 id="sec-1-3-3"><span class="section-number-4">1.3.3</span> Exploring Stack</h4>
 <div class="outline-text-4" id="text-1-3-3">
-</div><ol class="org-ol"><li><a id="sec-1-3-3-1" name="sec-1-3-3-1"></a>Where is ghci ?<br  /><div class="outline-text-5" id="text-1-3-3-1">
+</div><div id="outline-container-sec-1-3-3-1" class="outline-5">
+<h5 id="sec-1-3-3-1"><span class="section-number-5">1.3.3.1</span> Where is ghci ?</h5>
+<div class="outline-text-5" id="text-1-3-3-1">
 <div class="org-src-container">
 
 <pre class="src src-sh">$ stack exec -- which ghci
@@ -967,9 +1021,11 @@ See:
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-3-2" name="sec-1-3-3-2"></a>Where is ghc ?<br  /><div class="outline-text-5" id="text-1-3-3-2">
+<div id="outline-container-sec-1-3-3-2" class="outline-5">
+<h5 id="sec-1-3-3-2"><span class="section-number-5">1.3.3.2</span> Where is ghc ?</h5>
+<div class="outline-text-5" id="text-1-3-3-2">
 <div class="org-src-container">
 
 <pre class="src src-sh">$ stack exec -- which ghc
@@ -977,9 +1033,11 @@ See:
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-3-3" name="sec-1-3-3-3"></a>Show stack search path<br  /><div class="outline-text-5" id="text-1-3-3-3">
+<div id="outline-container-sec-1-3-3-3" class="outline-5">
+<h5 id="sec-1-3-3-3"><span class="section-number-5">1.3.3.3</span> Show stack search path</h5>
+<div class="outline-text-5" id="text-1-3-3-3">
 <div class="org-src-container">
 
 <pre class="src src-sh">$ stack path
@@ -1024,9 +1082,11 @@ Way 1:
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-3-4" name="sec-1-3-3-4"></a>Show all programs in stack search path<br  /><div class="outline-text-5" id="text-1-3-3-4">
+<div id="outline-container-sec-1-3-3-4" class="outline-5">
+<h5 id="sec-1-3-3-4"><span class="section-number-5">1.3.3.4</span> Show all programs in stack search path</h5>
+<div class="outline-text-5" id="text-1-3-3-4">
 <div class="org-src-container">
 
 <pre class="src src-sh">$ echo $(<span class="org-sh-quoted-exec">stack</span> exec -- bash -c <span class="org-string">"echo \$PATH"</span>) | tr <span class="org-string">':'</span> <span class="org-string">'\n'</span> | grep stack | xargs ls -l
@@ -1055,9 +1115,11 @@ total 30164
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-3-5" name="sec-1-3-3-5"></a>Show stack environment variables<br  /><div class="outline-text-5" id="text-1-3-3-5">
+<div id="outline-container-sec-1-3-3-5" class="outline-5">
+<h5 id="sec-1-3-3-5"><span class="section-number-5">1.3.3.5</span> Show stack environment variables</h5>
+<div class="outline-text-5" id="text-1-3-3-5">
 <div class="org-src-container">
 
 <pre class="src src-sh">$ stack exec env 
@@ -1122,7 +1184,7 @@ $
 </pre>
 </div>
 </div>
-</li></ol>
+</div>
 </div>
 <div id="outline-container-sec-1-3-4" class="outline-4">
 <h4 id="sec-1-3-4"><span class="section-number-4">1.3.4</span> Some useful packages</h4>
@@ -1262,8 +1324,8 @@ See also:
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: Caio Rodrigues Soares Silva</p>
-<p class="date">Created: 2018-05-07 Mon 10:11</p>
+<p class="author">Author: nobody</p>
+<p class="date">Created: 2018-05-07 Mon 11:29</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
