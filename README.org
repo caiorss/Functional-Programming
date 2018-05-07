@@ -1,10 +1,12 @@
-
 #+TITLE: Functional Programming by Example
-#+AUTHOR: Caio Rodrigues Soares Silva
-#+EMAIL: <caiorss.rodrigues@gmail.com>
+#+AUTHOR: -
+#+EMAIL:  -
 #+DESCRIPTION: Functional programming examples, theory, 
 #+URL:   https://github.com/caiorss/Functional-Programming
-#+HTML_HEAD: <link href="/theme/index.css" rel="stylesheet">
+
+#+HTML_HEAD: <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+#+HTML_HEAD: <link href="/Functional-Programming/theme/style.css" rel="stylesheet">
+#+HTML_HEAD: <script src="/Functional-Programming/theme/org-nav-theme.js"></script>
 
 # * Functional Programming by Example
 
@@ -12,7 +14,7 @@
 
 The purpose of this tutorial is to illustrate functional programming
 concepts in many languages by providing reusable and useful snippets
-of code, examples, case studies and applications.
+of code, examples, case studies and applications. 
 
 
 Author:   [[https://www.linkedin.com/in/caiorodrigues][Caio Rodrigues]] / <caiorss.rodrigue@gmail.com> 

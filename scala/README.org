@@ -1,3 +1,4 @@
+#+INCLUDE: ../theme/style.org
 #+TITLE: Functional and OOP Programming in Scala
 #+STARTUP: content
 #+DESCRIPTION: fp oop functional object oriented scala java jvm platform

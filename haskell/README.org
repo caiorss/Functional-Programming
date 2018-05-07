@@ -1,3 +1,4 @@
+#+INCLUDE: ../theme/style.org
 #+TITLE: Functional Programming in Haskell 
 
  - [[file:Haskell.org][Setting Up Development Environment ]]
