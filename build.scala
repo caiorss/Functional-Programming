@@ -1,3 +1,10 @@
+/** 
+    => Compile all org-mode files to html.
+       $ scala -save build.scala -make all
+   
+    => Clean all compiled (*.html) files.
+       $ scala -save build.scala -clean
+*/
 
 class SFile(path: String) extends java.io.File(path){
   /** Return new path with extension changed. */
@@ -15,6 +22,7 @@ class SFile(path: String) extends java.io.File(path){
   }  
 }
 
+/** Allows to print with color in Ansi terminals. */
 object AnsiTerm{
 
   /** Check whether terminal is Ansi */
@@ -147,7 +155,7 @@ def compileOrgToHtml(file: java.io.File): Int = {
 }
 
 /** Build target file if input file has changed or the target does not exist.
-  * 
+  *  
   * @param fileIn:  Input file needed for compilation
   * @param fileOut: Output file that will build
   * @param builder: Function that generates output file returning the process status code.
@@ -175,13 +183,14 @@ def cleanHtmlFiles() =
   }
 
 
-def compileFile(file: java.io.File, destDirectory: String) = {
+def compileFile(file: java.io.File, destDirectory: String, renameToIndex: Boolean = false) = {
   val input = new SFile(file.getPath())
   val out1 = input.changeExt("html")
-  val out2: File = if(input.getName() != "README.org")
+  val out2: File = if(!(renameToIndex && input.getName() == "README.org"))
     out1.changeParent(destDirectory)
   else
     new java.io.File(destDirectory, "index.html")
+  println()
   A.println("Target = " + out2, logColor)
   buildTarget(input, out2){ file =>
     // Build file out1 (.html)
@@ -190,7 +199,7 @@ def compileFile(file: java.io.File, destDirectory: String) = {
       val flag = out1.renameTo(out2)
       if(flag)
         A.println(s"Moved file <$out1> to <$out2>", logColor)
-    }
+    }   
     status
   }
 }
@@ -200,19 +209,29 @@ def compileDirectory(directory: String, destDirectory: String) = {
   orgFiles foreach { file => compileFile(file, destDirectory) }
 }
 
+args.toList match{
+  case List("-make", "all") => {
+    // Compile README.org to README.html and then rename to index.html
+    compileFile(F.file("README.org"), "dist/", true)
+    compileDirectory("haskell", "dist/haskell")
+    compileDirectory("clojure", "dist/clojure")
+    compileDirectory("ocaml",   "dist/ocaml")
+    compileDirectory("scheme",  "dist/scheme")
+    compileDirectory("papers",  "dist/papers")
+    compileDirectory("scala",   "dist/scala")
+  }
 
-compileDirectory("haskell", "dist/haskell")
-compileDirectory("clojure", "dist/clojure")
-compileDirectory("ocaml",   "dist/ocaml")
-compileDirectory("scheme",  "dist/scheme")
-compileDirectory("papers",  "dist/papers")
-compileDirectory("scala",   "dist/scala")
+  case List("-make", "clojure") =>
+    compileDirectory("clojure", "dist/clojure")
 
+  case List("-make", "scala") =>
+    compileDirectory("scala",   "dist/scala")
 
+  case List("-clean") => 
+    cleanHtmlFiles()   
 
-
-
-
+  case _ => println("Error: invalid option")
+}
 
 
 
