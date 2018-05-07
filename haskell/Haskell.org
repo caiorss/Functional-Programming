@@ -1,4 +1,4 @@
-# #+INCLUDE: ../theme/style.org
+#+INCLUDE: ../theme/style.org
 #+TITLE: Setting up a Haskell Development Environment
 #+DESCRIPTION:
 #+KEYWORDS: haskell development environment fp ide editor stack

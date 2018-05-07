@@ -1,3 +1,6 @@
+#+INCLUDE: ../theme/style.org
+
+#+TITLE: Unit Testing with HUNit 
 * Unit Testing with HUnit 
 ** Overview - HUnit functions and types
 

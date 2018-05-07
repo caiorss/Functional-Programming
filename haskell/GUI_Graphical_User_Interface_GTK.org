@@ -1,3 +1,4 @@
+#+INCLUDE: ../theme/style.org
 #+TITLE: Graphical User Interface with Gtk
 #+DESCRIPTION: Graphical User Interface with GTK 
 #+KEYWORDS: gui, haskell, gtk, fp, gtk 

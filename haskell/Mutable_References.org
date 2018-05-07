@@ -1,3 +1,4 @@
+#+INCLUDE: ../theme/style.org
 #+TITLE: Mutable References 
 #+DESCRIPTIONS: Mutable references in Haskell 
 #+KEWYWORDS:    haskell mutability mutable references io monad 

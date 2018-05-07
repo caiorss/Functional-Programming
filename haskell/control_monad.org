@@ -1,3 +1,4 @@
+#+INCLUDE: ../theme/style.org
 #+TITLE: Module: Control.Monad 
 
 * Control.Monad - Monad Combinators 

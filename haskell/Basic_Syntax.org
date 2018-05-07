@@ -1,3 +1,4 @@
+#+INCLUDE: ../theme/style.org
 #+TITLE: Basic Syntax 
 
 * Basic Syntax
