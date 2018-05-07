@@ -1,3 +1,4 @@
+#+INCLUDE: ../theme/style.org
 #+TITLE:  Polymorphism and Typeclasses
 #+KEYWORDS: polymorphism ad-hoc typeclass haskell fp
 

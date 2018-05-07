@@ -1,3 +1,4 @@
+#+INCLUDE: ../theme/style.org
 #+TITLE: Tips And Tricks
 #+DESCRIPTION: Tips and tricks for Haskell development. 
 #+STARTUP:  overview

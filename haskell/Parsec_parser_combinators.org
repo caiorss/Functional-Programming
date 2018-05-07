@@ -1,3 +1,4 @@
+#+INCLUDE: ../theme/style.org
 #+TITLE: Parsec - Parser Combinators 
 #+DESCRIPTION: Parsec parser combinators 
 
