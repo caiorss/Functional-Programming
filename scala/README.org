@@ -2496,6 +2496,57 @@ Singletons can implement interfaces or traits.
 
 #+END_SRC
 
+*** Do-while loop 
+
+#+BEGIN_SRC scala 
+  val fr  = new java.io.FileReader("/etc/protocols")
+  val bfr = new java.io.BufferedReader(fr)
+  val maxLines = 15
+  var line = ""
+  var n = 0 
+
+  do{
+    line = bfr.readLine()
+    println(s"Line $n = " + line)
+    n = n + 1
+  } while(line != null && n < maxLines)
+
+  println(s"Number of lines read is equal to $n ")
+
+  fr.close()
+  bfr.close()
+
+#+END_SRC
+
+Output:
+
+#+BEGIN_SRC scala 
+  scala> do{
+       |   line = bfr.readLine()
+       |   println(s"Line $n = " + line)
+       |   n = n + 1
+       | } while(line != null && n < maxLines)
+  Line 0 = # /etc/protocols:
+  Line 1 = # $Id: protocols,v 1.12 2016/07/08 12:27 ovasik Exp $
+  Line 2 = #
+  Line 3 = # Internet (IP) protocols
+  Line 4 = #
+  Line 5 = #  from: @(#)protocols 5.1 (Berkeley) 4/17/89
+  Line 6 = #
+  Line 7 = # Updated for NetBSD based on RFC 1340, Assigned Numbers (July 1992).
+  Line 8 = # Last IANA update included dated 2011-05-03
+  Line 9 = #
+  Line 10 = # See also http://www.iana.org/assignments/protocol-numbers
+  Line 11 = 
+  Line 12 = ip    0   IP      # internet protocol, pseudo protocol number
+  Line 13 = hopopt    0   HOPOPT      # hop-by-hop options for ipv6
+  Line 14 = icmp  1   ICMP        # internet control message protocol
+
+  scala> println(s"Number of lines read is equal to $n ")
+  Number of lines read is equal to 15 
+
+#+END_SRC
+
 *** For-loop
 
 #+BEGIN_SRC scala
