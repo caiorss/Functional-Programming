@@ -16,50 +16,97 @@
 /** Variables */
 
 :root {
-
-    /** ====== Table of contents settings ===== */
-
-    --toc-width:    270px;        
+    /** =================== Table of contents settings ===== */
+    --toc-width:    300px;        
     --toc-bgcolor:  #D8D8D8;
 
-
-    /** ====== Body Settings =================== */
-    
+    /** ====================== Body Settings =================== */   
     /** Content length */
     --main-width:    800px;
-
     --header-color:  #1572AE;
-
-
     --max-image-width: 600px;
-    
     --max-text-width: 90%;  /* Max paragraph length and text in bullet lists. */
-
-    /** Color of hyperlinks at the body. tag <a> 
-        #AEE1B0;  /* #007bb8; */
-    
     --linkcolor: #00FC00;
-
     /** Body background color - Usef #fff for white. */
-    --bodyBgColor: #152128;
+    --bodyBgColor: #1d1f20; /* #152128; */
 
-    /* #3A3A3A;  /\* #252525; /\\* #1A1A1A;  *\\/ *\/ */
+    /** ====== Mobile Layout Global Settings =================== */
+    /** Font size used to make tables and code blocks (pre tag) fit in mobile screen. */
+    --small-font-size: 8pt;
 
 
-  /** ====== Mobile Layout Settings =================== */
-
-   /** Font size used to make tables and code blocks (pre tag) fit in mobile screen. */
-  --small-font-size: 8pt;
-    
+  /** ====== Table Settings ========= **/
+  --table-header-bg-color: black;
+  --table-bg-color:        #0b191f;
+  --table-fg-color:        #fff;
+  
 }
 
 html {
     font-size: 100%;
     color: #fff;
+    /* background-color: #262c33; */
+    height: 100%;
+   
+    /* background-image: linear-gradient(#10416b, black); */
+    /* background: linear-gradient(black, gray, white); */
+    background: linear-gradient(black, darkgray, black);
+    background-repeat: no-repeat;
+    background-attachment: fixed;    
+}
+
+body{
+    background-color:  var(--bodyBgColor); /* rgba(255,255,255,1.0); */
+}
+
+#content{
+    
+}
+
+
+#table-of-contents{        
+   background-color: var(--toc-bgcolor);
+   color: var(--header-color);        
+}
+
+#table-of-contents ul {
+    padding-left: 0px;
+    padding-top:  5px;
+    padding-bottom: 10px;
+    list-style-type:     none;
+    list-style-position: inside;
+}
+
+#table-of-contents li {
+    padding-left: 10px;
+    padding-top:   4px;
+    font-size:    14px;
+}
+
+
+#table-of-contents  a {
+    /* color:          rgba(0,0,0,1); */
+    /* font-weight:    700; */
+    color:            #383838; /* rgb(11, 83, 149); */
+    position:       relative;
+    text-overflow:  ellipsis;
+    border-bottom:  none;
+}
+
+#table-of-contents a:hover {
+    /* text-decoration:  underline; */
+    border-bottom: 2px rgba(51,102,204,1.0)  dotted;
+    font-weight:  bold;
+}
+
+#table-of-contents a:active{
+    font-weight: bold;
+}
+
+#table-of-contents .tag{
+    display: none;
 }
     
-
-
 h1 {
 
     text-align: center;
@@ -95,10 +142,11 @@ a {
     transition:         none 86ms ease-out;
 }
 
-a {
-    background-color:             transparent;
-    -webkit-text-decoration-skip: objects;
+a:hover {
+    /* text-decoration: underline; */
+    border-bottom: 2px var(--linkcolor) dotted;
 }
+
 
 
 .tag {
@@ -138,37 +186,6 @@ li {
     padding-top:   4px;
     font-size:    14px;
 }
-
-
-
-#table-of-contents ul {
-    padding-left: 0px;
-    padding-top:  5px;
-    padding-bottom: 10px;
-    list-style-type:     none;
-    list-style-position: inside;
-}
-
-#table-of-contents li {
-    padding-left: 10px;
-    padding-top:   4px;
-    font-size:    14px;
-}
-
-#table-of-contents  a {
-    /* color:          rgba(0,0,0,1); */
-    /* font-weight:    700; */
-    color:            #383838; /* rgb(11, 83, 149); */
-    position:       relative;
-    text-overflow:  ellipsis;
-    border-bottom:  none;
-}
-
-#table-of-contents a:hover {
-    color:            rgba(51,102,204,1.0);
-    text-decoration:  underline;
-}
-
 
 
 
@@ -230,10 +247,7 @@ li {
         margin-left: 0;
         margin-right: 0;
         padding-bottom: 20px;
-        padding-left: -10px;
-        
-        background-color: var(--toc-bgcolor);
-        color: var(--header-color);    
+        padding-left: -10px;      
         
         float: left;
         position: fixed;
@@ -337,8 +351,7 @@ li {
        font-family: 'Merriweather', Georgia, 'Times New Roman', Times, serif;
    }
 
-    
-    
+        
    #permalink_section
    {
        white-space: pre-wrap; /* css-3 */    
@@ -349,7 +362,7 @@ li {
    }
 
     
-
+   /* Mobile screen table */
     table {
         border-collapse: collapse;
         border-spacing:  0;
@@ -357,14 +370,14 @@ li {
         margin-top:      20px;
         margin-bottom:   20px;
 
-        background-color: cyan;
+        background-color: var(--table-bg-color);
 
         font-size: var(--small-font-size);
     }
 
     th {
-        background-color: black;
-        color: white;
+        background-color: var(--table-header-bg-color);
+        color:            var(--table-fg-color);
         /* padding-top: 30px; */
         font-weight: bold;
 
@@ -380,7 +393,7 @@ li {
         /* width: 100%; */
     }
 
-
+    /* Code block of mobile screen  */ 
     pre {
         font-family: "Operator Mono SSm A", "Operator Mono SSm B", 'Source Code Pro', Menlo, Consolas, Monaco, monospace;
         font-size:   var(--small-font-size);
@@ -393,6 +406,7 @@ li {
 
         /* background-color:#292929; */
         background-color: #e4eadb;
+        color:  black;
         filter: invert(90%); 
 
         display: block;
@@ -468,7 +482,6 @@ li {
         
         /* float:     bottom; */
         position:  absolute;
-
         display:   block;
 
         /* padding-bottom:60px; */
@@ -503,10 +516,7 @@ li {
         height: 50px;
         width:  100%;        
         overflow-y: hidden;
-        
-        background-color: var(--toc-bgcolor);
-        color: var(--header-color);    
-        
+
         float: left;
         position: fixed;
 
@@ -594,9 +604,8 @@ li {
        white-space: -o-pre-wrap; /* Opera 7 */    
        word-wrap: break-word; /* Internet Explorer 5.5+ */
    }
-
-    
-
+   
+   /* Tablet screen table */ 
     table {
         border-collapse: collapse;
         border-spacing:  0;
@@ -604,17 +613,16 @@ li {
         margin-top:      20px;
         margin-bottom:   20px;
 
-        background-color: lavender;
+        background-color: var(--table-bg-color);
 
         font-size: var(--small-font-size);
     }
 
     th {
-        background-color: black;
-        color: white;
+        background-color: var(--table-header-bg-color);
+        color:            var(--table-fg-color);
         /* padding-top: 30px; */
         font-weight: bold;
-
         /* text-align: justified; */
     }
 
@@ -627,7 +635,7 @@ li {
         /* width: 100%; */
     }
 
-
+    /* Code block for tablet-size screens */
     pre {
         font-family: "Operator Mono SSm A", "Operator Mono SSm B", 'Source Code Pro', Menlo, Consolas, Monaco, monospace;
         font-size:   var(--small-font-size);
@@ -640,6 +648,7 @@ li {
 
         /* background-color:#292929; */
         background-color: #e4eadb;
+        color: black; 
         filter: invert(90%); 
 
         display: block;
@@ -701,10 +710,7 @@ li {
 */
 @media only screen and (min-width: 961px) {
 
-    html {
-        background-color: #262c33;
-    }
-    
+   
     body {
 
         position:  absolute;
@@ -723,20 +729,18 @@ li {
         padding-left:    20px;
         padding-right:   50px;
         /* overflow-x:       scroll; */
-        background-color:  var(--bodyBgColor); /* rgba(255,255,255,1.0); */
+      
         /* z-index:          9999; */
     }
 
-
+  
     #table-of-contents {
         top:    0px;
         left:   0px;
         width:  var(--toc-width);        
         height: 100%;
         overflow-y: scroll;
-        
-        background-color: var(--toc-bgcolor);
-        color: var(--header-color);    
+
         
         float: left;
         position: fixed;
@@ -783,6 +787,7 @@ li {
 
     /* ======== Table ================================== */
 
+   /* Desktop screen table */
    table {
        font-size: 10pt;
        border-collapse: collapse;
@@ -791,12 +796,12 @@ li {
        margin-top:      20px;
        margin-bottom:   20px;
 
-       background-color:  #0b191f ;
+       background-color: var(--table-bg-color);
     }
 
     th {
-        background-color: black;
-        color: #fff;
+        background-color: var(--table-header-bg-color);
+        color:            var(--table-fg-color);
         /* padding-top: 30px; */
         font-weight: bold;
 
@@ -813,7 +818,7 @@ li {
     }
 
    
-    
+    /* Code block of desktop screen */
     pre {
         font-family: "Operator Mono SSm A", "Operator Mono SSm B", 'Source Code Pro', Menlo, Consolas, Monaco, monospace;
         /* font-family: monospace,monospace; */
