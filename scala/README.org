@@ -2464,7 +2464,6 @@ Singletons can implement interfaces or traits.
 
 #+END_SRC
 
-
 ** Imperative Constructs
 *** While loop
 
@@ -9657,6 +9656,537 @@ Notes:
 
 
 #+END_SRC
+** Scala Implicit 
+*** Use Cases 
+
+Use Cases: 
+
+ + Implict type conversion. 
+
+ + Implicit conversions of Functions to Single-Method Interfaces
+
+ + Class Extension
+
+ + Type Classes
+
+
+*** Implicit type conversion 
+**** Overview 
+
+Allows the compiler to implict convert a type A to another B where the
+type B is needed and a type A is supplied. Example: convert a integer
+3 values tuple to Date object wherever is necessary a data object.
+
+**** Converting Tuple to LocalDate 
+
+#+BEGIN_SRC scala 
+
+  object DateTuple {
+
+    import java.time.LocalDate
+
+    implicit def tupleToDate(tpl: (Int, Int, Int)) = {
+      val (y, m, d) = tpl
+      LocalDate.of(y, m, d)
+    }
+  }
+
+
+  //---------- Before importing DateTuple object / module ---------- //
+
+  /// Java 8 Date API 
+  scala> java.time.LocalDate.of(2010, 10, 1)
+  res83: java.time.LocalDate = 2010-10-01
+
+
+  scala> (2010, 10, 1): java.time.LocalDate
+  <console>:12: error: type mismatch;
+   found   : (Int, Int, Int)
+   required: java.time.LocalDate
+         (2010, 10, 1): java.time.LocalDate
+         ^
+
+  scala> (2010, 10, 1).getYear()
+  <console>:12: error: value getYear is not a member of (Int, Int, Int)
+         (2010, 10, 1).getYear()
+
+
+  //---------- After importing DateTuple object -----------------------//
+
+  scala> import DateTuple._
+  import DateTuple._
+
+  scala> (2010, 10, 1)
+  res22: (Int, Int, Int) = (2010,10,1)
+
+  // Compiler converts triple tuple to local date 
+  scala> (2010, 10, 1): java.time.LocalDate
+  res6: java.time.LocalDate = 2010-10-01
+
+  // Compiler converts triple tuple to local date and invokes the method getYear.
+  scala> (2010, 10, 1).getYear
+  res10: Int = 2010
+
+  scala> (2010, 10, 1).getMonth
+  res11: java.time.Month = OCTOBER
+
+  scala> (2010, 10, 1).getDayOfMonth
+  res12: Int = 1
+
+  scala> (2010, 10, 1).getDayOfYear
+  res13: Int = 274
+
+  scala> List((2010, 10, 1), (1998, 10, 1), (2002, 4, 5)) map (_.getYear)
+  res14: List[Int] = List(2010, 1998, 2002)
+
+
+
+  scala> import java.time.LocalDate 
+  import java.time.LocalDate
+
+  scala> val d1 = (2001, 10, 1): LocalDate
+  d1: java.time.LocalDate = 2001-10-01
+
+  scala> val d2 : LocalDate = (2001, 10, 1)
+  d2: java.time.LocalDate = 2001-10-01
+
+  scala> d1.getYear()
+  res15: Int = 2001
+
+  scala> d2.getYear()
+  res16: Int = 2001
+
+  scala> d1 == d2
+  res17: Boolean = true
+
+
+  cala> def addDays(ndays: Int, d: java.time.LocalDate) = d.plusDays(ndays)
+  addDays: (ndays: Int, d: java.time.LocalDate)java.time.LocalDate
+
+  scala> addDays(10, java.time.LocalDate.of(2001, 10, 1))
+  res19: java.time.LocalDate = 2001-10-11
+
+  scala> addDays(10, (2001, 10, 1))
+  res20: java.time.LocalDate = 2001-10-11
+
+  scala> val t = (2001, 10, 1)
+  t: (Int, Int, Int) = (2001,10,1)
+
+  scala> addDays(10, t)
+  res21: java.time.LocalDate = 2001-10-11
+
+#+END_SRC
+
+*** Implicit conversions of Functions to Single-Method Interfaces
+**** Overview 
+
+Java has many single method-interfaces such as ActionListener,
+Runnable, Callable and etc which require a verbose instantiation of
+anonymous classes of those interfaces.
+
+Scala implicit type conversion can make the code shorter by
+eliminating the need for instatiation of single-method interface
+through implicit converting a function to an anonymous class which
+implementing this single-method interface. For instance, it allows a
+function be passed as an argument to a method that requires an
+ActionListener or a Runnable interface.
+
+
+As can be seen in the codes below all single-methods interfaces could
+be replaced by functions. 
+
+Runnable Interface: 
+
+#+BEGIN_SRC java 
+  interface Runnable{ 
+      public void run();
+  }
+#+END_SRC
+
+ActionListener
+
+#+BEGIN_SRC java 
+  interface ActionListener{
+      public void actionPerformed(ActionEvent e);
+  }
+#+END_SRC
+
+
+
+**** Converting Functions to Java Swing Event Listener 
+
+In the code below, the object (module) FunctionToListener provides
+functions that converts click event handler functions to
+ActionListener required by the JButton method addActionListener.
+
+
+#+BEGIN_SRC scala 
+  object FunctionToListener{
+    import java.awt.event.{ActionEvent, ActionListener}
+
+    implicit def funToActionListener1(handler: ActionEvent => Unit) = {
+      new ActionListener(){
+        def actionPerformed(evt: ActionEvent) = handler(evt)
+      }
+    }
+
+    implicit def funToActionListener2(handler: () => Unit) = {
+      new ActionListener(){
+        def actionPerformed(evt: ActionEvent) = handler()
+      }
+    }
+
+    implicit def funToActionListener3(handler: => Unit) = {
+      new ActionListener(){
+        def actionPerformed(evt: ActionEvent) = handler
+      }
+    }
+
+  } //------- End of object FunctionToListener ------- //
+
+
+  import javax.swing.{JFrame, JButton}
+  import java.awt.event.{ActionEvent, ActionListener}
+
+  val btn = new JButton("Click me")
+  val frame = new JFrame("Hello world")
+  frame.setSize(400, 500)
+  frame.setLayout(new java.awt.FlowLayout())
+  frame.add(btn)
+  frame.setVisible(true)
+
+  // -------- Before importing FunctionToListener  --------- //
+
+
+  scala> btn.addActionListener _ 
+  res6: java.awt.event.ActionListener => Unit = $$Lambda$1404/1838333871@a23b96b
+
+  // Error!
+  scala> btn.addActionListener(() => println("I was clicked"))
+  <console>:14: error: type mismatch;
+   found   : () => Unit
+   required: java.awt.event.ActionListener
+         btn.addActionListener(() => println("I was clicked"))
+
+  // Error! 
+  scala>  btn.addActionListener{ println("I was clicked")}
+  <console>:15: error: type mismatch;
+   found   : Unit
+   required: java.awt.event.ActionListener
+          btn.addActionListener{ println("I was clicked")}
+                 
+
+  // -------- After importing FunctionToListener  --------- //
+
+  import FunctionToListener._
+
+  btn.addActionListener(() => println("Handler1: I was clicked"))
+
+  btn.addActionListener{
+    println("Handler2: I was clicked")
+  }
+
+  btn.addActionListener{ (evt: ActionEvent) =>
+    println("Handler3: I was clicked ")
+  }
+
+  // User clicks at the button ...
+  scala> Handler3: I was clicked 
+  Handler2: I was clicked
+  Handler1: I was clicked
+  Handler3: I was clicked 
+  Handler2: I was clicked
+  Handler1: I was clicked
+  Handler3: I was clicked 
+  Handler2: I was clicked
+    ... ... ... ...
+
+
+  scala> val hnd: ActionListener = println("Hello Java")
+  hnd: java.awt.event.ActionListener = FunctionToListener$$anon$3@28dd038f
+
+  scala> val hnd2: ActionListener = () => println("Hello Java")
+  hnd2: java.awt.event.ActionListener = FunctionToListener$$anon$2@4ca6f587
+
+
+#+END_SRC
+
+**** Converting code block to Runnable
+
+#+BEGIN_SRC scala 
+object BlockToRunnable {
+
+  /** Converts a code block to a Runnable instance */
+  implicit def funToRunnable(action: => Unit) = {
+    new Runnable(){
+      def run() = action
+    }
+  }
+
+}
+
+
+//--------- Before Import the Helper object -------------- //
+//
+
+val th = new Thread(
+  while(true){
+    println("I will run every 1 second")
+    Thread.sleep(1000)
+})
+
+
+scala> val th = new Thread(
+     |   while(true){
+     |     println("I will run every 1 second")
+     |     Thread.sleep(1000)
+     | })
+<console>:11: error: overloaded method constructor Thread with alternatives:
+  (x$1: String)Thread <and>
+  (x$1: Runnable)Thread
+ cannot be applied to (Unit)
+       val th = new Thread(
+
+
+//--------- After Import the Helper object -------------- //
+//
+
+scala> import BlockToRunnable._
+import BlockToRunnable._
+
+// Now it works!!         
+scala> val th = new Thread(
+     |   while(true){
+     |     println("I will run every 1 second")
+     |     Thread.sleep(1000)
+     | })
+th: Thread = Thread[Thread-4,5,main]
+
+
+scala> th.start()
+
+scala> I will run every 1 second
+I will run every 1 second
+I will run every 1 second
+I will run every 1 second
+I will run every 1 second
+I will run every 1 second
+I will run every 1 second
+  ... ... ... ...
+
+
+// A code block can be cast to runnable                  
+val block : Runnable = {
+  while(true){
+    println("I will run every 1 second")
+    Thread.sleep(1000)
+  }
+}
+
+scala> block.run _
+res0: () => Unit = $$Lambda$1311/1798538641@277474fc
+
+scala> block.run()
+I will run every 1 second
+I will run every 1 second
+I will run every 1 second
+I will run every 1 second
+
+
+
+
+#+END_SRC
+
+*** Class Extension 
+**** Overview 
+
+It is useful to add new functionality to code defined in libraries and
+sources that cannot be modified in a type-safe way.
+
+**** String class extension to parse Dates 
+
+The String class extension, DateStr defines the methods toDate,
+toDateMDY and toDateMDY that can parse date strings.
+
+#+BEGIN_SRC scala 
+  object DateParsers { 
+
+    // International - ISO 8601 standard Date Format
+    val dateFormatYMD = new java.text.SimpleDateFormat("yyyy-mm-dd")
+
+    // American Date Format 
+    val dateFormatMDY = new java.text.SimpleDateFormat("mm-dd-yyyy")
+
+    val dateFormatDMY = new java.text.SimpleDateFormat("dd-mm-yyyy")
+
+    implicit class DateStr(s: String){
+      def toDate()    = dateFormatYMD.parse(s)
+      def toDateMDY() = dateFormatMDY.parse(s)
+      def toDateDMY() = dateFormatDMY.parse(s)
+    }
+
+  }
+
+
+  scala> import DateParsers._
+  import DateParsers._
+
+
+  scala> "2015-10-01".toDate
+  res58: java.util.Date = Thu Jan 01 00:10:00 BRT 2015
+
+  scala> "10-01-2015".toDateMDY
+  res61: java.util.Date = Thu Jan 01 00:10:00 BRT 2015
+
+  scala> "2015-10-01".toDate == "10-01-2015".toDateMDY
+  res62: Boolean = true
+
+  scala> "01-10-2015".toDateDMY == "10-01-2015".toDateMDY
+  res63: Boolean = true
+
+  scala> List("01-01-1970", "02-03-2001", "10-10-2002").map(_.toDate)
+  res66: List[java.util.Date] = List(Mon May 24 00:01:00 BRT 6, Fri Jun 24 00:03:00 BRT 7, Tue Jun 25 00:10:00 BRT 15)
+
+  scala> List("01-01-1970", "02-03-2001", "10-10-2002").map(_.toDate).foreach(println)
+  Mon May 24 00:01:00 BRT 6
+  Fri Jun 24 00:03:00 BRT 7
+  Tue Jun 25 00:10:00 BRT 15
+
+
+  scala> val s : DateStr = "2001-10-01" 
+  s: DateParsers.DateStr = DateParsers$DateStr@32d87fe1
+
+  scala> s.toDate // Type Tab to complete 
+  toDate   toDateDMY   toDateMDY
+
+  scala> s.toDate
+  res68: java.util.Date = Mon Jan 01 00:10:00 BRT 2001
+
+
+#+END_SRC
+
+**** Extension to print elements.
+
+#+BEGIN_SRC scala 
+  object PrintHelpers {
+    implicit class Printable (x: Any) {
+      def printn() = println(x)
+    }
+
+    implicit class PrintSeq[A](seq: Seq[A]){
+      def printAll() = seq foreach println
+    }
+
+    implicit class PrintableArray[A](xs: Array[A]){
+      def printAll() = xs foreach println
+    }
+
+    implicit class PrintableList[A](xs: List[A]){
+      def printAll() = xs foreach println
+    }
+  }
+
+  scala> 100 printn()
+  100
+
+  scala> "hello world" printn()
+  hello world
+
+  scala> List(1, 2, 3, 5) printn()
+  List(1, 2, 3, 5)
+
+
+
+  scala> List(1, 2, 3, 4).printAll()
+  1
+  2
+  3
+  4
+
+  scala> Array(1, 2, 3, 4).printAll()
+  1
+  2
+  3
+  4
+
+  scala> val xs: Seq[Int] = List(1, 2, 4, 5)
+  xs: Seq[Int] = List(1, 2, 4, 5)
+
+  scala> xs.printAll()
+  1
+  2
+  4
+  5
+
+
+  scala> new java.io.File("/").listFiles().printAll()
+  /home
+  /var
+  /bin
+  /usr
+  /root
+  /Applications
+  ... ... 
+
+#+END_SRC
+
+**** Reverse function application 
+
+The implicit class Apply allows the compiler convert any Scala object
+to this class whenever the method _ap_ is invoked. The class Apply can
+be used to peform reverse function application like the F# and OCaml
+operator (|>).
+
+
+#+BEGIN_SRC scala 
+
+  object ApplyHelper{
+    implicit class Apply[A](x: A){
+      def ap[B](f: A => B) = f(x)
+    }
+  }
+
+  scala> import ApplyHelper._
+  import ApplyHelper._
+
+  scala> "hello world" ap println
+  hello world
+
+
+  scala> val s = "hello world" : Apply[String]
+  s: ApplyHelper.Apply[String] = ApplyHelper$Apply@3fa2c8e7
+
+  scala> s.ap(println)
+  hello world
+
+  scala> s ap println
+  hello world
+
+
+  scala> 1000.0 ap Math.log10
+  res24: Double = 3.0
+
+  scala> 1000.0 ap Math.log10 ap Math.exp
+  res26: Double = 20.085536923187668
+
+  scala> 1000.0 ap Math.log10 ap Math.exp ap Math.log
+  res27: Double = 3.0
+
+  scala> 1000.0 ap Math.log10 ap Math.exp ap Math.log ap println
+  3.0
+
+  scala> new java.io.File("/") ap (_.listFiles) ap(_.foreach(println))
+  /home
+  /var
+  /bin
+  /usr
+  /root
+  /Applications
+  /proc
+  /boot
+  /dev
+  ... .... ... 
+#+END_SRC
 ** OO - Design Patterns 
 *** Overview 
 
@@ -12899,537 +13429,6 @@ val counterModel = new CounterModel(0)
 val presenter    = new CounterPresenter(counterModel)
 presenter.show()
 
-#+END_SRC
-** Scala Implicit 
-*** Use Cases 
-
-Use Cases: 
-
- + Implict type conversion. 
-
- + Implicit conversions of Functions to Single-Method Interfaces
-
- + Class Extension
-
- + Type Classes
-
-
-*** Implicit type conversion 
-**** Overview 
-
-Allows the compiler to implict convert a type A to another B where the
-type B is needed and a type A is supplied. Example: convert a integer
-3 values tuple to Date object wherever is necessary a data object.
-
-**** Converting Tuple to LocalDate 
-
-#+BEGIN_SRC scala 
-
-  object DateTuple {
-
-    import java.time.LocalDate
-
-    implicit def tupleToDate(tpl: (Int, Int, Int)) = {
-      val (y, m, d) = tpl
-      LocalDate.of(y, m, d)
-    }
-  }
-
-
-  //---------- Before importing DateTuple object / module ---------- //
-
-  /// Java 8 Date API 
-  scala> java.time.LocalDate.of(2010, 10, 1)
-  res83: java.time.LocalDate = 2010-10-01
-
-
-  scala> (2010, 10, 1): java.time.LocalDate
-  <console>:12: error: type mismatch;
-   found   : (Int, Int, Int)
-   required: java.time.LocalDate
-         (2010, 10, 1): java.time.LocalDate
-         ^
-
-  scala> (2010, 10, 1).getYear()
-  <console>:12: error: value getYear is not a member of (Int, Int, Int)
-         (2010, 10, 1).getYear()
-
-
-  //---------- After importing DateTuple object -----------------------//
-
-  scala> import DateTuple._
-  import DateTuple._
-
-  scala> (2010, 10, 1)
-  res22: (Int, Int, Int) = (2010,10,1)
-
-  // Compiler converts triple tuple to local date 
-  scala> (2010, 10, 1): java.time.LocalDate
-  res6: java.time.LocalDate = 2010-10-01
-
-  // Compiler converts triple tuple to local date and invokes the method getYear.
-  scala> (2010, 10, 1).getYear
-  res10: Int = 2010
-
-  scala> (2010, 10, 1).getMonth
-  res11: java.time.Month = OCTOBER
-
-  scala> (2010, 10, 1).getDayOfMonth
-  res12: Int = 1
-
-  scala> (2010, 10, 1).getDayOfYear
-  res13: Int = 274
-
-  scala> List((2010, 10, 1), (1998, 10, 1), (2002, 4, 5)) map (_.getYear)
-  res14: List[Int] = List(2010, 1998, 2002)
-
-
-
-  scala> import java.time.LocalDate 
-  import java.time.LocalDate
-
-  scala> val d1 = (2001, 10, 1): LocalDate
-  d1: java.time.LocalDate = 2001-10-01
-
-  scala> val d2 : LocalDate = (2001, 10, 1)
-  d2: java.time.LocalDate = 2001-10-01
-
-  scala> d1.getYear()
-  res15: Int = 2001
-
-  scala> d2.getYear()
-  res16: Int = 2001
-
-  scala> d1 == d2
-  res17: Boolean = true
-
-
-  cala> def addDays(ndays: Int, d: java.time.LocalDate) = d.plusDays(ndays)
-  addDays: (ndays: Int, d: java.time.LocalDate)java.time.LocalDate
-
-  scala> addDays(10, java.time.LocalDate.of(2001, 10, 1))
-  res19: java.time.LocalDate = 2001-10-11
-
-  scala> addDays(10, (2001, 10, 1))
-  res20: java.time.LocalDate = 2001-10-11
-
-  scala> val t = (2001, 10, 1)
-  t: (Int, Int, Int) = (2001,10,1)
-
-  scala> addDays(10, t)
-  res21: java.time.LocalDate = 2001-10-11
-
-#+END_SRC
-
-*** Implicit conversions of Functions to Single-Method Interfaces
-**** Overview 
-
-Java has many single method-interfaces such as ActionListener,
-Runnable, Callable and etc which require a verbose instantiation of
-anonymous classes of those interfaces.
-
-Scala implicit type conversion can make the code shorter by
-eliminating the need for instatiation of single-method interface
-through implicit converting a function to an anonymous class which
-implementing this single-method interface. For instance, it allows a
-function be passed as an argument to a method that requires an
-ActionListener or a Runnable interface.
-
-
-As can be seen in the codes below all single-methods interfaces could
-be replaced by functions. 
-
-Runnable Interface: 
-
-#+BEGIN_SRC java 
-  interface Runnable{ 
-      public void run();
-  }
-#+END_SRC
-
-ActionListener
-
-#+BEGIN_SRC java 
-  interface ActionListener{
-      public void actionPerformed(ActionEvent e);
-  }
-#+END_SRC
-
-
-
-**** Converting Functions to Java Swing Event Listener 
-
-In the code below, the object (module) FunctionToListener provides
-functions that converts click event handler functions to
-ActionListener required by the JButton method addActionListener.
-
-
-#+BEGIN_SRC scala 
-  object FunctionToListener{
-    import java.awt.event.{ActionEvent, ActionListener}
-
-    implicit def funToActionListener1(handler: ActionEvent => Unit) = {
-      new ActionListener(){
-        def actionPerformed(evt: ActionEvent) = handler(evt)
-      }
-    }
-
-    implicit def funToActionListener2(handler: () => Unit) = {
-      new ActionListener(){
-        def actionPerformed(evt: ActionEvent) = handler()
-      }
-    }
-
-    implicit def funToActionListener3(handler: => Unit) = {
-      new ActionListener(){
-        def actionPerformed(evt: ActionEvent) = handler
-      }
-    }
-
-  } //------- End of object FunctionToListener ------- //
-
-
-  import javax.swing.{JFrame, JButton}
-  import java.awt.event.{ActionEvent, ActionListener}
-
-  val btn = new JButton("Click me")
-  val frame = new JFrame("Hello world")
-  frame.setSize(400, 500)
-  frame.setLayout(new java.awt.FlowLayout())
-  frame.add(btn)
-  frame.setVisible(true)
-
-  // -------- Before importing FunctionToListener  --------- //
-
-
-  scala> btn.addActionListener _ 
-  res6: java.awt.event.ActionListener => Unit = $$Lambda$1404/1838333871@a23b96b
-
-  // Error!
-  scala> btn.addActionListener(() => println("I was clicked"))
-  <console>:14: error: type mismatch;
-   found   : () => Unit
-   required: java.awt.event.ActionListener
-         btn.addActionListener(() => println("I was clicked"))
-
-  // Error! 
-  scala>  btn.addActionListener{ println("I was clicked")}
-  <console>:15: error: type mismatch;
-   found   : Unit
-   required: java.awt.event.ActionListener
-          btn.addActionListener{ println("I was clicked")}
-                 
-
-  // -------- After importing FunctionToListener  --------- //
-
-  import FunctionToListener._
-
-  btn.addActionListener(() => println("Handler1: I was clicked"))
-
-  btn.addActionListener{
-    println("Handler2: I was clicked")
-  }
-
-  btn.addActionListener{ (evt: ActionEvent) =>
-    println("Handler3: I was clicked ")
-  }
-
-  // User clicks at the button ...
-  scala> Handler3: I was clicked 
-  Handler2: I was clicked
-  Handler1: I was clicked
-  Handler3: I was clicked 
-  Handler2: I was clicked
-  Handler1: I was clicked
-  Handler3: I was clicked 
-  Handler2: I was clicked
-    ... ... ... ...
-
-
-  scala> val hnd: ActionListener = println("Hello Java")
-  hnd: java.awt.event.ActionListener = FunctionToListener$$anon$3@28dd038f
-
-  scala> val hnd2: ActionListener = () => println("Hello Java")
-  hnd2: java.awt.event.ActionListener = FunctionToListener$$anon$2@4ca6f587
-
-
-#+END_SRC
-
-**** Converting code block to Runnable
-
-#+BEGIN_SRC scala 
-object BlockToRunnable {
-
-  /** Converts a code block to a Runnable instance */
-  implicit def funToRunnable(action: => Unit) = {
-    new Runnable(){
-      def run() = action
-    }
-  }
-
-}
-
-
-//--------- Before Import the Helper object -------------- //
-//
-
-val th = new Thread(
-  while(true){
-    println("I will run every 1 second")
-    Thread.sleep(1000)
-})
-
-
-scala> val th = new Thread(
-     |   while(true){
-     |     println("I will run every 1 second")
-     |     Thread.sleep(1000)
-     | })
-<console>:11: error: overloaded method constructor Thread with alternatives:
-  (x$1: String)Thread <and>
-  (x$1: Runnable)Thread
- cannot be applied to (Unit)
-       val th = new Thread(
-
-
-//--------- After Import the Helper object -------------- //
-//
-
-scala> import BlockToRunnable._
-import BlockToRunnable._
-
-// Now it works!!         
-scala> val th = new Thread(
-     |   while(true){
-     |     println("I will run every 1 second")
-     |     Thread.sleep(1000)
-     | })
-th: Thread = Thread[Thread-4,5,main]
-
-
-scala> th.start()
-
-scala> I will run every 1 second
-I will run every 1 second
-I will run every 1 second
-I will run every 1 second
-I will run every 1 second
-I will run every 1 second
-I will run every 1 second
-  ... ... ... ...
-
-
-// A code block can be cast to runnable                  
-val block : Runnable = {
-  while(true){
-    println("I will run every 1 second")
-    Thread.sleep(1000)
-  }
-}
-
-scala> block.run _
-res0: () => Unit = $$Lambda$1311/1798538641@277474fc
-
-scala> block.run()
-I will run every 1 second
-I will run every 1 second
-I will run every 1 second
-I will run every 1 second
-
-
-
-
-#+END_SRC
-
-*** Class Extension 
-**** Overview 
-
-It is useful to add new functionality to code defined in libraries and
-sources that cannot be modified in a type-safe way.
-
-**** String class extension to parse Dates 
-
-The String class extension, DateStr defines the methods toDate,
-toDateMDY and toDateMDY that can parse date strings.
-
-#+BEGIN_SRC scala 
-  object DateParsers { 
-
-    // International - ISO 8601 standard Date Format
-    val dateFormatYMD = new java.text.SimpleDateFormat("yyyy-mm-dd")
-
-    // American Date Format 
-    val dateFormatMDY = new java.text.SimpleDateFormat("mm-dd-yyyy")
-
-    val dateFormatDMY = new java.text.SimpleDateFormat("dd-mm-yyyy")
-
-    implicit class DateStr(s: String){
-      def toDate()    = dateFormatYMD.parse(s)
-      def toDateMDY() = dateFormatMDY.parse(s)
-      def toDateDMY() = dateFormatDMY.parse(s)
-    }
-
-  }
-
-
-  scala> import DateParsers._
-  import DateParsers._
-
-
-  scala> "2015-10-01".toDate
-  res58: java.util.Date = Thu Jan 01 00:10:00 BRT 2015
-
-  scala> "10-01-2015".toDateMDY
-  res61: java.util.Date = Thu Jan 01 00:10:00 BRT 2015
-
-  scala> "2015-10-01".toDate == "10-01-2015".toDateMDY
-  res62: Boolean = true
-
-  scala> "01-10-2015".toDateDMY == "10-01-2015".toDateMDY
-  res63: Boolean = true
-
-  scala> List("01-01-1970", "02-03-2001", "10-10-2002").map(_.toDate)
-  res66: List[java.util.Date] = List(Mon May 24 00:01:00 BRT 6, Fri Jun 24 00:03:00 BRT 7, Tue Jun 25 00:10:00 BRT 15)
-
-  scala> List("01-01-1970", "02-03-2001", "10-10-2002").map(_.toDate).foreach(println)
-  Mon May 24 00:01:00 BRT 6
-  Fri Jun 24 00:03:00 BRT 7
-  Tue Jun 25 00:10:00 BRT 15
-
-
-  scala> val s : DateStr = "2001-10-01" 
-  s: DateParsers.DateStr = DateParsers$DateStr@32d87fe1
-
-  scala> s.toDate // Type Tab to complete 
-  toDate   toDateDMY   toDateMDY
-
-  scala> s.toDate
-  res68: java.util.Date = Mon Jan 01 00:10:00 BRT 2001
-
-
-#+END_SRC
-
-**** Extension to print elements.
-
-#+BEGIN_SRC scala 
-  object PrintHelpers {
-    implicit class Printable (x: Any) {
-      def printn() = println(x)
-    }
-
-    implicit class PrintSeq[A](seq: Seq[A]){
-      def printAll() = seq foreach println
-    }
-
-    implicit class PrintableArray[A](xs: Array[A]){
-      def printAll() = xs foreach println
-    }
-
-    implicit class PrintableList[A](xs: List[A]){
-      def printAll() = xs foreach println
-    }
-  }
-
-  scala> 100 printn()
-  100
-
-  scala> "hello world" printn()
-  hello world
-
-  scala> List(1, 2, 3, 5) printn()
-  List(1, 2, 3, 5)
-
-
-
-  scala> List(1, 2, 3, 4).printAll()
-  1
-  2
-  3
-  4
-
-  scala> Array(1, 2, 3, 4).printAll()
-  1
-  2
-  3
-  4
-
-  scala> val xs: Seq[Int] = List(1, 2, 4, 5)
-  xs: Seq[Int] = List(1, 2, 4, 5)
-
-  scala> xs.printAll()
-  1
-  2
-  4
-  5
-
-
-  scala> new java.io.File("/").listFiles().printAll()
-  /home
-  /var
-  /bin
-  /usr
-  /root
-  /Applications
-  ... ... 
-
-#+END_SRC
-
-**** Reverse function application 
-
-The implicit class Apply allows the compiler convert any Scala object
-to this class whenever the method _ap_ is invoked. The class Apply can
-be used to peform reverse function application like the F# and OCaml
-operator (|>).
-
-
-#+BEGIN_SRC scala 
-
-  object ApplyHelper{
-    implicit class Apply[A](x: A){
-      def ap[B](f: A => B) = f(x)
-    }
-  }
-
-  scala> import ApplyHelper._
-  import ApplyHelper._
-
-  scala> "hello world" ap println
-  hello world
-
-
-  scala> val s = "hello world" : Apply[String]
-  s: ApplyHelper.Apply[String] = ApplyHelper$Apply@3fa2c8e7
-
-  scala> s.ap(println)
-  hello world
-
-  scala> s ap println
-  hello world
-
-
-  scala> 1000.0 ap Math.log10
-  res24: Double = 3.0
-
-  scala> 1000.0 ap Math.log10 ap Math.exp
-  res26: Double = 20.085536923187668
-
-  scala> 1000.0 ap Math.log10 ap Math.exp ap Math.log
-  res27: Double = 3.0
-
-  scala> 1000.0 ap Math.log10 ap Math.exp ap Math.log ap println
-  3.0
-
-  scala> new java.io.File("/") ap (_.listFiles) ap(_.foreach(println))
-  /home
-  /var
-  /bin
-  /usr
-  /root
-  /Applications
-  /proc
-  /boot
-  /dev
-  ... .... ... 
 #+END_SRC
 ** C# Delegates in Scala 
 *** Delegates in C# 
