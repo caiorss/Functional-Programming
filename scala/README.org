@@ -2332,6 +2332,137 @@ Example 2: Passing code blocks as java swing event handlers.
   // Run dispose1 to remove event handler.
   scala> dispose1() 
 #+END_SRC
+*** Singleton or Module
+
+A singleton object is an object of a class with a single instance
+implementing the singleton design pattern. A singletion object can be
+used as an ML-module which is a container for grouping functions. 
+
+#+BEGIN_SRC scala 
+  cala> :paste
+  // Entering paste mode (ctrl-D to finish)
+
+
+  object Module {
+
+    val code = "xyzfmnk"
+
+    var amount = 1000 
+
+    def sayHello () = println("Hello world")
+
+    def fn(x: Int, y: Int) = 3 * x + 4 * y
+
+    def showFiles(path: String) = {
+      val files = (new java.io.File(path)).listFiles().filter(_.isFile)
+      files.foreach(println)    
+    }
+
+    def showDirectories(path: String) = {
+      val files = (new java.io.File(path)).listFiles().filter(_.isDirectory)
+      files.foreach(println)    
+    }
+
+  }
+
+  scala> Module.fn _
+  res204: (Int, Int) => Int = <function2>
+
+  scala> Module.sayHello _
+  res205: () => Unit = <function0>
+
+  scala> Module.showFiles _
+  res206: String => Unit = <function1>
+
+  scala> Module.showFiles("/boot")
+  /boot/initramfs-3.10-x86_64.img
+  /boot/vmlinuz-4.9-x86_64
+  /boot/initramfs-3.10-x86_64-fallback.img
+  /boot/vmlinuz-3.10-x86_64
+  /boot/initramfs-4.9-x86_64-fallback.img
+  /boot/initramfs-4.9-x86_64.img
+  /boot/intel-ucode.img
+  /boot/linux310-x86_64.kver
+  /boot/linux49-x86_64.kver
+
+  scala> Module.showDirectories("/boot/grub")
+  /boot/grub/i386-pc
+  /boot/grub/locale
+  /boot/grub/fonts
+  /boot/grub/themes
+
+  scala> Module.sayHello()
+  Hello world
+
+  scala> Module.code 
+  res219: String = xyzfmnk
+
+  scala> Module.code = "hello"
+  <console>:13: error: reassignment to val
+         Module.code = "hello"
+                     ^
+
+  scala> Module.amount += 300
+
+  scala> Module.amount
+  res223: Int = 1300
+
+
+  scala> Module.amount = 0
+  Module.amount: Int = 0
+
+  scala> Module.getClass()
+  res224: Class[_ <: Module.type] = class Module$
+#+END_SRC
+
+Singletons can implement interfaces or traits.
+
+#+BEGIN_SRC scala 
+  trait Observer{
+    def onChange(): Unit
+    def onError():  Unit  
+  }
+
+  class Observer1 extends Observer{
+    def onChange() =
+      println("I received a change event.")
+
+    def onError() =
+      println("I received an error event.")
+  }
+
+  object SingleTonObserver extends Observer{
+    def onChange() =
+      println("Singleton: I received a change event.")
+
+    def onError() =
+      println("Singleton: I received an error event.")
+  }
+
+  scala> obs1.onChange()
+  I received a change event.
+
+  scala> obs1.onError()
+  I received an error event.
+
+  scala> SingleTonObserver.onChange()
+  Singleton: I received a change event.
+
+  scala> SingleTonObserver.onError()
+  Singleton: I received an error event.
+
+  def generateErrorEvent(obs: Observer) =
+    obs.onError()
+
+  scala> generateErrorEvent(obs1)
+  I received an error event.
+
+  scala> generateErrorEvent(SingleTonObserver)
+  Singleton: I received an error event.
+
+
+
+#+END_SRC
 
 
 ** Imperative Constructs
@@ -8148,139 +8279,6 @@ In Scala everything is an object:
   res58: List[Int] = List(11, 12, 13, 14)
 
 #+END_SRC
-*** Singleton Object
-
-A singleton object is an object of a class with a single instance
-implementing the singleton design pattern. A singletion object can be
-used as an ML-module which is a container grouping functions.
-
-#+BEGIN_SRC scala
-  cala> :paste
-  // Entering paste mode (ctrl-D to finish)
-
-
-  object Module {
-
-    val code = "xyzfmnk"
-
-    var amount = 1000
-
-    def sayHello () = println("Hello world")
-
-    def fn(x: Int, y: Int) = 3 * x + 4 * y
-
-    def showFiles(path: String) = {
-      val files = (new java.io.File(path)).listFiles().filter(_.isFile)
-      files.foreach(println)
-    }
-
-    def showDirectories(path: String) = {
-      val files = (new java.io.File(path)).listFiles().filter(_.isDirectory)
-      files.foreach(println)
-    }
-
-  }
-
-
-  scala> Module.fn _
-  res204: (Int, Int) => Int = <function2>
-
-  scala> Module.sayHello _
-  res205: () => Unit = <function0>
-
-  scala> Module.showFiles _
-  res206: String => Unit = <function1>
-
-  scala> Module.showFiles("/boot")
-  /boot/initramfs-3.10-x86_64.img
-  /boot/vmlinuz-4.9-x86_64
-  /boot/initramfs-3.10-x86_64-fallback.img
-  /boot/vmlinuz-3.10-x86_64
-  /boot/initramfs-4.9-x86_64-fallback.img
-  /boot/initramfs-4.9-x86_64.img
-  /boot/intel-ucode.img
-  /boot/linux310-x86_64.kver
-  /boot/linux49-x86_64.kver
-
-  scala> Module.showDirectories("/boot/grub")
-  /boot/grub/i386-pc
-  /boot/grub/locale
-  /boot/grub/fonts
-  /boot/grub/themes
-
-  scala> Module.sayHello()
-  Hello world
-
-  scala> Module.code
-  res219: String = xyzfmnk
-
-  scala> Module.code = "hello"
-  <console>:13: error: reassignment to val
-         Module.code = "hello"
-                     ^
-
-  scala> Module.amount += 300
-
-  scala> Module.amount
-  res223: Int = 1300
-
-
-  scala> Module.amount = 0
-  Module.amount: Int = 0
-
-  scala> Module.getClass()
-  res224: Class[_ <: Module.type] = class Module$
-#+END_SRC
-
-Singletons can implement interfaces or traits.
-
-#+BEGIN_SRC scala
-  trait Observer{
-    def onChange(): Unit
-    def onError():  Unit
-  }
-
-  class Observer1 extends Observer{
-    def onChange() =
-      println("I received a change event.")
-
-    def onError() =
-      println("I received an error event.")
-  }
-
-  object SingleTonObserver extends Observer{
-    def onChange() =
-      println("Singleton: I received a change event.")
-
-    def onError() =
-      println("Singleton: I received an error event.")
-  }
-
-  scala> obs1.onChange()
-  I received a change event.
-
-  scala> obs1.onError()
-  I received an error event.
-
-  scala> SingleTonObserver.onChange()
-  Singleton: I received a change event.
-
-  scala> SingleTonObserver.onError()
-  Singleton: I received an error event.
-
-  def generateErrorEvent(obs: Observer) =
-    obs.onError()
-
-  scala> generateErrorEvent(obs1)
-  I received an error event.
-
-  scala> generateErrorEvent(SingleTonObserver)
-  Singleton: I received an error event.
-
-
-
-#+END_SRC
-
 *** Case classes as records 
 
 Example: Simple record type.
