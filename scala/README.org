@@ -2549,6 +2549,12 @@ Output:
 
 *** For-loop
 
+Note: Scala's for-loop is not equivalent to the Java's for-loop, it is
+actually a syntax sugar for the method .foreach, so the Scala's
+for-loop has a performance overhead which may be significant for
+numerical or array operations. In this case the primitive while loop
+is faster and equivalent to the Java's for-loop.
+
 #+BEGIN_SRC scala
 scala> for (i <- 1 to 10) println(i)
 1
