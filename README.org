@@ -51,6 +51,8 @@ The website of this repository is:
 
  - [[file:scala/README.org][Scala]] (JVM / Java Platform)
 
+ - [[file:scala/PRACTICAL_RECIPES.org][Scala Recipes]] - Practical examples about Scala.
+
 *Dynamically Typed Programming Languages*
 
  - [[file:scheme/README.org][Scheme]] 
