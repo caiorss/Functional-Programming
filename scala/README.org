@@ -10368,7 +10368,7 @@ I will run every 1 second
 
 #+END_SRC
 
-*** Class Extension 
+*** Extension methods 
 **** Overview 
 
 It is useful to add new functionality to code defined in libraries and
@@ -10558,6 +10558,217 @@ operator (|>).
   /dev
   ... .... ... 
 #+END_SRC
+*** Implicit parameter passing - basic 
+
+Methods or functions with _implicit parameters_ can be called passing an
+_implicit value_ in the scope when the parameters marked as implicit are
+not provided.
+
+#+BEGIN_SRC scala 
+@ def mulBy(x: Int)(implicit y: Int) = x * y 
+defined function mulBy
+
+@ mulBy(10)(5)  
+res1: Int = 50
+
+@ mulBy(10)(2)  
+res2: Int = 20
+#+END_SRC
+
+Before supplying an implicit value: It fails because there is no
+implicit value in the scope of type int.
+
+#+BEGIN_SRC scala 
+@ mulBy(10) 
+cmd3.sc:1: could not find implicit value for parameter y: Int
+val res3 = mulBy(10)
+                ^
+Compilation Failed
+
+
+#+END_SRC
+
+After supplying an implicit value: The implicit value a is passed to
+the function mulBy implicitly.  
+
+#+BEGIN_SRC scala 
+  // The name of the implicita parameter doesn't matter. 
+  // The compiler looks for the implicit parameter of type int 
+  // at the current context.
+  //-----------------------------------------------------------
+  @ implicit val a = 10 
+  a: Int = 10
+
+  // y = 10 
+  @ mulBy(10) 
+  res4: Int = 100
+  // y = 10
+  @ mulBy(3) 
+  res5: Int = 30
+  // y = 2 
+  @ mulBy(3)(2) 
+  res6: Int = 6
+
+  // The implicit parameter can be supplied only once.
+  scala> implicit val x = 5
+  x: Int = 5
+
+  scala> mulBy(4)
+  <console>:15: error: ambiguous implicit values:
+   both value a of type => Int
+   and value x of type => Int
+   match expected type Int
+         mulBy(4)
+
+
+#+END_SRC
+
+
+Implicit parameters and escope: 
+
+ + Note: There can be only one implicit parameter of a single type. 
+
+#+BEGIN_SRC scala 
+  // Restart experiment by exiting REPL and restarting again. 
+  //
+
+  def mulBy(x: Int)(implicit y: Int) = x * y 
+
+  scala> mulBy(10)
+  <console>:13: error: could not find implicit value for parameter y: Int
+         mulBy(10)
+
+  {  
+    println("mulBy(10) = " + mulBy(10))
+    println("mulBy(4) = " + mulBy(4))
+  }
+
+  scala> {  
+       |   println("mulBy(10) = " + mulBy(10))
+       |   println("mulBy(4) = " + mulBy(4))
+       | }
+  <console>:14: error: could not find implicit value for parameter y: Int
+           println("mulBy(10) = " + mulBy(10))
+                                         ^
+  <console>:15: error: could not find implicit value for parameter y: Int
+           println("mulBy(4) = " + mulBy(4))
+
+
+  // Supply implicit value at local scope 
+  {
+    implicit val a = 5
+    println("mulBy(10) = " + mulBy(10))
+    println("mulBy(4) = " + mulBy(4))
+  }
+
+  scala> {
+       |   implicit val a = 5
+       |   println("mulBy(10) = " + mulBy(10))
+       |   println("mulBy(4) = " + mulBy(4))
+       | }
+  mulBy(10) = 50
+  mulBy(4) = 20
+
+
+  // Supply implicit value at local scope (y = 6)
+  {
+    implicit val k = 6
+    println("mulBy(10) = " + mulBy(10))
+    println("mulBy(4) = " + mulBy(4))
+  }
+
+  scala> {
+       |   implicit val k = 6
+       |   println("mulBy(10) = " + mulBy(10))
+       |   println("mulBy(4) = " + mulBy(4))
+       | }
+  mulBy(10) = 60
+  mulBy(4) = 24
+
+  def computeWithImplicit(k: Int) = {
+    implicit val y = k 
+    println("mulBy(10) = " + mulBy(10))
+    println("mulBy(4) = " + mulBy(4))
+  }
+
+  scala> computeWithImplicit(3)
+  mulBy(10) = 30
+  mulBy(4) = 12
+
+  scala> computeWithImplicit(4)
+  mulBy(10) = 40
+  mulBy(4) = 16
+
+
+#+END_SRC
+
+Multiple Implicit Values: 
+
+#+BEGIN_SRC scala 
+
+  def tellYourName(implicit name: String, surname: String) = 
+
+  scala> tellNameAndID(200, "Somebody else")
+  Name of user = Somebody else, user ID = 200
+
+  scala> tellNameAndID
+  <console>:13: error: could not find implicit value for parameter userID: Int
+         tellNameAndID
+
+  {
+    implicit val a = 200
+    implicit val x = "John Ghost"
+    tellNameAndID
+  }
+
+  scala> {
+       |   implicit val a = 200
+       |   implicit val x = "John Ghost"
+       |   tellNameAndID
+       | }
+  Name of user = John Ghost, user ID = 200
+
+  {
+    implicit val a = 25
+    implicit val x = "Dummy Test User"
+    tellNameAndID
+  }
+
+  scala> {
+       |   implicit val a = 25
+       |   implicit val x = "Dummy Test User"
+       |   tellNameAndID
+       | }
+  Name of user = Dummy Test User, user ID = 25
+
+
+  // There can be only one implicit value of a given type.
+  // More than one int implicit value will generate an compile
+  // error. 
+  {
+    implicit val a = 25
+    implicit val z = 10
+    implicit val x = "Dummy Test User"
+    tellNameAndID
+  }
+
+  scala> {
+       |   implicit val a = 25
+       |   implicit val z = 10
+       |   implicit val x = "Dummy Test User"
+       |   tellNameAndID
+       | }
+  <console>:17: error: ambiguous implicit values:
+   both value z of type Int
+   and value a of type Int
+   match expected type Int
+           tellNameAndID
+
+#+END_SRC
+
+
+
+
 ** OO - Design Patterns 
 *** Overview 
 
