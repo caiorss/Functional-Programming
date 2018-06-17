@@ -1,5 +1,5 @@
 all:
-	scala -save build.scala --make all
+	scala -save build.scala -make all
 
 show:
 	firefox dist/index.html
