@@ -14,24 +14,21 @@ allows type-safe programming with high productivity.
 
 Features:
 
- - _Interactive_ - Scala REPL allows the user to do exploratory design and
-   test the Java API interactively.
+ + _Interactive_ - Scala REPL allows the user to perform exploratory
+   design and learn and experiment the Java API interactively.
 
- - _Scripting language_ Scala has a fast initialization time what makes
-   it suitable for scripting.
+ + _Scripting language_ - Scala has a fast initialization time what makes
+   it suitable for scripting and small proof-concept programs.
 
- - _Java Integration_ As a JVM language Scala allows reuse of all Java
+ + _Java Integration_ - As a JVM language Scala allows reusing of all Java
    libraries and integration with old code bases.
 
- - Multi Paradigm:
-
+ + Multi Paradigm:
    - Imperative
-
    - Object Oriented
-
    - Functional
 
- - Functional Programming Features
+ + Functional Programming Features
 
    - Lambda function (aka anonymous function) 
 
@@ -49,13 +46,55 @@ Features:
 
    - _Pattern Matching_
 
-   - _Tail Call Optimization_. TCO makes tail-recursive functions not
-     consume stack frames avoiding stack overflows.
+   - _Tail Call Optimization_. TCO makes tail-recursive functions be
+     equivalent to a while loop, hence not consuming stack frames
+     avoiding stack overflows.
+
+   - _Rich Collection Library_ - Collections are standard data
+     structures such as lists, arrays, vectors, hash maps (hash
+     tables, aka dictionaries), tuples and so on with a wide variety
+     of performance guarantees. The collection library provides lots
+     of higher order methods (methods which takes functions as
+     arguments) such as .map, .foreach, .flatMap, .take(n) ...
+
+   - _Interoperability between OOP and FP_ - There are lots features and
+     syntax sugars in Scala which makes the integration between OOP
+     and FP smoothly, such as syntax sugars for calling methods, the
+     ability to pass functions and method as arguments of methods or
+     functions and the collection library.
+
+ + Object Oriented Features 
+
+   - Pure Object Oriented language - Everything in Scala is an object,
+     there is no primitive types like in Java and all objects can be
+     extended or get extension methods.
+
+   - Better interfaces: Unlike, Java interfaces, Scala traits allows
+     concrete methods.
+
+ + Drawbacks - As everything in the real world, there is always trade-offs.
+
+   - Slower compilation time than Java.
+
+   - Scala generated code is not binary compatible between Scala
+     releases, for instance, a library compiled againt Scala 2.11 may
+     not run  when compiled against version 2.12.
+
+   - No convenient syntax sugar for function application which avoids
+     parenthesis, for instance the expression f1(f2(f3(x))) can be
+     written as f1 $ f2 $ f3 $ x in Haskell and as f1 <| f2 <| f3 <| x
+     in F# or using reverse function application as x |> f1 |> f2 |> f3.
+
+   - While it is easy to call Java code from Scala, the inverse is
+     harder due to Scala advanced type system.
 
 Notes: 
 
- - Scala is also useful to learn quickly about Java API since it is
-   interactive.
+ - Scala may also be convenient as first programming language since it
+   provides object oriented programming and functional programming
+   support and also provides access to the whole Java API. The scala
+   REPL (Read-Eval-Print-Loop) also makes experimentation and
+   exploratory design easier.
 
 *** Getting Scala
 
