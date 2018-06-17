@@ -2088,8 +2088,6 @@ Pass collections as arguments of variadic functions:
 
 
 
-
-
 *** Functions with default parameters
 
 #+BEGIN_SRC scala
@@ -2334,6 +2332,8 @@ Example 2: Passing code blocks as java swing event handlers.
   // Run dispose1 to remove event handler.
   scala> dispose1() 
 #+END_SRC
+
+
 ** Imperative Constructs
 *** While loop
 
@@ -2538,32 +2538,77 @@ res53: Boolean = false
 **** Example 1
 
 #+BEGIN_SRC scala 
-@ "the value of square root of %.3f is equal to %.3f".format(10.0, Math.sqrt(10.0)) 
-res70: String = "the value of square root of 10.000 is equal to 3.162"
-@  
+  scala> val x = 10.24
+  x: Double = 10.24
 
-@ printf("the value of square root of %.3f is equal to %.3f\n", 10.0, Math.sqrt(10.0)) 
-the value of square root of 10.000 is equal to 3.162
+  scala> val y = 2.5413
+  y: Double = 2.5413
 
-@ "Sum of array = %d".format(sum(Array(1, 2, 3, 4))) 
-res78: String = "Sum of array = 10"
-@  
+  scala> val text = s"The value of x is $x and the value of y is $y, the sum of x + y = ${x + y}"
+  text: String = The value of x is 10.24 and the value of y is 2.5413, the sum of x + y = 12.7813
+
+  @ "the value of square root of %.3f is equal to %.3f".format(10.0, Math.sqrt(10.0)) 
+  res70: String = "the value of square root of 10.000 is equal to 3.162"
+  @  
+
+  @ printf("the value of square root of %.3f is equal to %.3f\n", 10.0, Math.sqrt(10.0)) 
+  the value of square root of 10.000 is equal to 3.162
+
+  @ "Sum of array = %d".format(sum(Array(1, 2, 3, 4))) 
+  res78: String = "Sum of array = 10"
+  @  
 #+END_SRC
 
 **** Example 2
 
 #+BEGIN_SRC scala 
-@ val xs = List(1, 2, 3, 4, 5) 
-xs: List[Int] = List(1, 2, 3, 4, 5)
-@  
-@ val str = "hello world" 
-str: String = "hello world"
-@  
-@ s"xs = ${xs} ; sum(xs) = ${xs sum} ; str = '${str}' ; size(str) = ${str size} " 
-res86: String = "xs = List(1, 2, 3, 4, 5) ; sum(xs) = 15 ; str = 'hello world' ; size(str) = 11 "
-@  
+  @ val xs = List(1, 2, 3, 4, 5) 
+  xs: List[Int] = List(1, 2, 3, 4, 5)
+  @  
+  @ val str = "hello world" 
+  str: String = "hello world"
+  @  
+  @ s"xs = ${xs} ; sum(xs) = ${xs sum} ; str = '${str}' ; size(str) = ${str size} " 
+  res86: String = "xs = List(1, 2, 3, 4, 5) ; sum(xs) = 15 ; str = 'hello world' ; size(str) = 11 "
+  @  
 
 #+END_SRC
+*** Join multiple strings by common separators 
+
+#+BEGIN_SRC scala 
+  scala> List("Oversee", "fixed", "income", "assets").mkString(", ")
+  res11: String = Oversee, fixed, income, assets
+
+  scala> List("Oversee", "fixed", "income", "assets") mkString " "
+  res12: String = Oversee fixed income assets
+
+  scala> Vector("Oversee", "fixed", "income", "assets") mkString " "
+  res13: String = Oversee fixed income assets
+
+  scala> Array("Oversee", "fixed", "income", "assets") mkString ":"
+  res14: String = Oversee:fixed:income:assets
+
+  scala> xs.mkString(", ")
+  res15: String = 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+
+  scala> xs.mkString("; ")
+  res16: String = 1; 2; 3; 4; 5; 6; 7; 8; 9; 10
+
+  scala> val rootDir = new java.io.File("/").listFiles().mkString("\n => ")
+  rootDir: String =
+  /etc
+   => /tmp
+   => /sbin
+   => /sys
+   => /opt
+   => /media
+   => /boot
+   => /.local
+   => /.autorelabel
+   => /home
+
+#+END_SRC
+
 *** String conversion 
 
 String to Boolean 
@@ -8103,13 +8148,13 @@ In Scala everything is an object:
   res58: List[Int] = List(11, 12, 13, 14)
 
 #+END_SRC
-*** Singleton Object 
+*** Singleton Object
 
 A singleton object is an object of a class with a single instance
 implementing the singleton design pattern. A singletion object can be
-used as an ML-module which is a container grouping functions. 
+used as an ML-module which is a container grouping functions.
 
-#+BEGIN_SRC scala 
+#+BEGIN_SRC scala
   cala> :paste
   // Entering paste mode (ctrl-D to finish)
 
@@ -8118,7 +8163,7 @@ used as an ML-module which is a container grouping functions.
 
     val code = "xyzfmnk"
 
-    var amount = 1000 
+    var amount = 1000
 
     def sayHello () = println("Hello world")
 
@@ -8126,12 +8171,12 @@ used as an ML-module which is a container grouping functions.
 
     def showFiles(path: String) = {
       val files = (new java.io.File(path)).listFiles().filter(_.isFile)
-      files.foreach(println)    
+      files.foreach(println)
     }
 
     def showDirectories(path: String) = {
       val files = (new java.io.File(path)).listFiles().filter(_.isDirectory)
-      files.foreach(println)    
+      files.foreach(println)
     }
 
   }
@@ -8166,7 +8211,7 @@ used as an ML-module which is a container grouping functions.
   scala> Module.sayHello()
   Hello world
 
-  scala> Module.code 
+  scala> Module.code
   res219: String = xyzfmnk
 
   scala> Module.code = "hello"
@@ -8189,10 +8234,10 @@ used as an ML-module which is a container grouping functions.
 
 Singletons can implement interfaces or traits.
 
-#+BEGIN_SRC scala 
+#+BEGIN_SRC scala
   trait Observer{
     def onChange(): Unit
-    def onError():  Unit  
+    def onError():  Unit
   }
 
   class Observer1 extends Observer{
