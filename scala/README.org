@@ -2034,7 +2034,9 @@ in data structures such as lists, arrays, maps and also stored in objects.
   Print Cash Flow statement of company = XZYZW Solution. Inc.
 
 #+END_SRC
-*** Function with variable number of arguments
+*** Variadic - function or functions with variable number of arguments:
+
+Basic example:
 
 #+BEGIN_SRC scala
 
@@ -2049,8 +2051,44 @@ in data structures such as lists, arrays, maps and also stored in objects.
   World
   Scala
   Rocks
-
 #+END_SRC
+
+Pass collections as arguments of variadic functions: 
+
+#+BEGIN_SRC scala 
+  scala> val xs = List("hello", "World", "Scala", "Rocks")
+  xs: List[String] = List(hello, World, Scala, Rocks)
+
+  scala> varfun(xs)
+  <console>:14: error: type mismatch;
+   found   : List[String]
+   required: String
+         varfun(xs)
+                ^
+
+  scala> varfun(xs : _ *)
+  I got the parameters: 
+  hello
+  World
+  Scala
+  Rocks
+
+  scala> val xs2  = Vector("Java", "everywhere", "in", "desktop", "servers", "mobile")
+  xs2: scala.collection.immutable.Vector[String] = Vector(Java, everywhere, in, desktop, servers, mobile)
+
+  scala> varfun(xs2 :_ *)
+  I got the parameters: 
+  Java
+  everywhere
+  in
+  desktop
+  servers
+  mobile
+#+END_SRC
+
+
+
+
 
 *** Functions with default parameters
 
@@ -2180,7 +2218,6 @@ Example 1: Some custom "control structures".
     println("Scala is amazing.")
     println("Scala's super powers.\n")
   }
-
 
   scala> dotimes(3){
        |   println("Scala is amazing.")
