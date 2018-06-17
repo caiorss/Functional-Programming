@@ -733,6 +733,74 @@ Variables can be declared with type annotation too:
 
 #+END_SRC
 
+*** Scope 
+
+#+BEGIN_SRC scala 
+  val x = 10 
+  val y = 15 
+  val z = x + y 
+
+  scala> val x = 10 
+  x: Int = 10
+
+  scala> val y = 15 
+  y: Int = 15
+
+  scala> val z = x + y 
+  z: Int = 25
+
+  // Local Scope 
+  scala> { val x  = 5 ; val y = 4 ; val z = x + y ; println("z = " + z) }
+  z = 9
+
+  // Values from local scope are not affected by the values of local one.
+  scala> x
+  res4: Int = 10
+
+  scala> y
+  res5: Int = 15
+
+
+  scala> val k1 = { println("k1 set to 5.0") ; 5.0 }
+  k1 set to 5.0
+  k1: Double = 5.0
+
+  scala> 2 * k1
+  res1: Double = 10.0
+
+
+#+END_SRC
+
+Return value from scope:
+
+#+BEGIN_SRC scala 
+  val z2 = {
+    val a = 2
+    val b = 5
+    // Return value from scope is the last value
+    a + b
+  }
+
+  scala> val z2 = {
+       |   val a = 2
+       |   val b = 5
+       |   // Return value from scope is the last value
+       |   a + b
+       | }
+  z2: Int = 7
+
+  scala> a
+  <console>:12: error: not found: value a
+         a
+         ^
+
+  scala> b
+  <console>:12: error: not found: value b
+         b
+         ^
+
+#+END_SRC
+
 *** Import Java and Scala Libraries 
 
 Import everythign from namespace java.io. Equivalent to java statement (import java.io.*).
