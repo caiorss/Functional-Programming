@@ -9713,6 +9713,321 @@ Notes:
 
 
 #+END_SRC
+** Scala Type System
+*** Subtyping annotation 
+
+As Scala is an object oriented language, it has subtyping, if the
+classes B and C are subclasses (aka derived classes) of the class A,
+then B and C are subtypes of A and any instance (object) of derived
+classes of A can be supplied where an object of type A is expected.
+
+So the relations between classes B, C and A can be stated as: 
+
+ * A <: B => It means that A is an subtype of B. It can also be said
+   that the type A is _upper bounded_ by B. This subtype relationship
+   happens when a class A inherits a class B. 
+
+ * A >: B => A is an supertype of B or that they type A is _lower_
+   _bounded by type B_. 
+
+Example: 
+
+#+BEGIN_SRC scala 
+  // Supertype 
+  class TCPProtocol{
+    def getName() = "generic TCP/IP protocol"
+  }
+
+  // Subtypes of TCPProtocol
+  class FTP extends TCPProtocol{
+    override def getName() = "FTP Protocol"
+  }
+
+  class HTTP extends TCPProtocol{
+    override def getName() = "HTTP Protocol"
+    def getMethods()  = List("POST", "GET", "DELETE", "HEAD")
+  }
+
+  class Webdav extends HTTP{
+    override def getName() = "HTTP Protocol extension - Webdav"
+    override def getMethods() = super.getMethods() ++ List("COPY", "LOCK", "MOVE")
+  }
+
+  // Sample client code: 
+  def identifyProtocol(prot: TCPProtocol) = {
+    println("Network protocol is = " + prot.getName())
+  }
+
+  // Sample client code with subtyping annotation
+  //
+  def identifyProtocolSub[P <: TCPProtocol](prot: P) = {
+    println("[P] - Network protocol is = " + prot.getName())
+  }
+
+#+END_SRC
+
+Any subtype or subclass of TCPProtocol can be used where an instance
+of this class is expected such as in the function identifyProtocol
+which works with the protocols FTP, HTTP and Webdav. The same fact
+happens with the function identifyHTTPProtocol, it works with any
+subtype of HTTP such as HTTP and Webdav, but doesn't work with FTP or
+TCPProtocol. Generalizing what was stated, any subtype of a type can
+be used where the super type is expected, as reasult any subclass can
+be used where the parent class or interface is expected.
+
+#+BEGIN_SRC scala 
+  // Testing objects
+  val tcp = new TCPProtocol()
+  val http = new HTTP()
+  val webdav = new Webdav()
+
+  // The function identifyProtocol works with any subtype of TCPProtocol
+  scala> identifyProtocol(tcp)
+  Network protocol is = generic TCP/IP protocol
+
+  scala> identifyProtocol(ftp)
+  Network protocol is = FTP Protocol
+
+  scala> identifyProtocol(http)
+  Network protocol is = HTTP Protocol
+
+  scala> identifyProtocol(webdav)
+  Network protocol is = HTTP Protocol extension - Webdav
+
+
+  scala> identifyProtocolSub(tcp)
+  [P] - Network protocol is = generic TCP/IP protocol
+
+  scala> identifyProtocolSub(http)
+  [P] - Network protocol is = HTTP Protocol
+
+  scala> identifyProtocolSub(webdav)
+  [P] - Network protocol is = HTTP Protocol extension - Webdav
+
+  scala> val protocolList = List(http, webdav, tcp)
+  protocolList: List[TCPProtocol] = List(HTTP@dffcf1, Webdav@519e14f6, TCPProtocol@6d2f910b)
+
+  scala> protocolList foreach identifyProtocolSub
+  [P] - Network protocol is = HTTP Protocol
+  [P] - Network protocol is = HTTP Protocol extension - Webdav
+  [P] - Network protocol is = generic TCP/IP protocol
+
+  // This function only accepts 
+  // instances of HTTP or instances of its subclasses 
+  def identifyHTTPProtocol(prot: HTTP) = { 
+    println("HTTP Protocol = " + prot.getName())
+    println("HTTP Methods  = " + prot.getMethods())
+  }
+
+  scala> identifyHTTPProtocol(webdav)
+  HTTP Protocol = HTTP Protocol extension - Webdav
+  HTTP Methods  = List(POST, GET, DELETE, HEAD, COPY, LOCK, MOVE)
+
+  scala> identifyHTTPProtocol(tcp)
+  <console>:19: error: type mismatch;
+   found   : TCPProtocol
+   required: HTTP
+    identifyHTTPProtocol(tcp)
+  ^
+
+#+END_SRC
+*** Variance 
+
+Variance is the relationship between subytpes of parametrized types or
+type constructos and subtypes of types parameters. 
+
+The relationship between the type constructor ~F[ ]~ and its type
+parameter T can be described as: 
+
+ * _Covariance_ 
+   + Notation: F[+T]
+   + The type constructor F is covariant at parameter T if:
+     * A <: B implies that F[A] <: F[B]
+     * A <: B means that A is a subtype of B
+     * F[A] <: F[B] means that F[A] is a subtype of F[B]
+
+ * _Contravariance_
+   + Notation: F[-T]
+   + F[-A]
+   + The type constructor F is contravarint at parameter T if:
+     * A <: B (A is a subytpe of B) implies that F[B] <: F[A]
+
+ * _Invariance_ => Invariant type constructor
+   + F[T]
+   + None of the relationship applies for the type constructor F at
+     parameter T. So there is any type relationship between two types
+     F[A] and F[B] when A <: B, A is an subtype of B.
+
+Note: 
+
+ + F[A <: B] denotes that the type constructor F can take any type
+   parameter (or class) wich is a subtype of B. It doesn't have the
+   same meaning.
+
+   + _case class F[T <: Shape](t: T)_ ...  The parameter A of this the
+     tyep constructor F can take any argument t wich is subtype of
+     Shape, it can be a derived trait, derived class or case object.
+
+ + F[+T] means that that if an class A is a subtype of class B, then the
+   type F[A] will be a subtype of F[B].
+
+   + _case class F[+T](t: T)_ 
+
+
+  *Example:*
+
+Sample experimentation classes:
+
+#+BEGIN_SRC  scala 
+trait Vehicle{
+  def getName(): String
+  def getType(): String 
+  def getID():   Int
+  override def toString() =
+    s"Vehicle type = ${getName()} / name = ${getName()}"
+}
+
+class Car(name: String) extends Vehicle{
+  def getName() = name 
+  def getType() = "car"
+  def getID() = 20 
+}
+
+class OilTanker(name: String) extends Vehicle{
+  def getName() = name
+  def getType() = "Oil Tanker"
+  def getID() = 251
+}
+
+val carArray = Array(new Car("model1"), new Car("model2"), new Car("model2"))
+val tankerArray = Array(new OilTanker("FPSO X4AKT2"), new OilTanker("FPSO M4A372"))
+
+val car1    = new Car("Model X")
+val tanker1 = new OilTanker("Super oil carrier")
+
+#+END_SRC
+
+Experiments: 
+
+ - Array (same as Java's array []) is an invariant type, thre is no
+   type relationship between Array[Vehicle] and Array[Car]
+
+#+BEGIN_SRC scala 
+  // Java Array is invariant: The following code will not work
+  // because Array[Car] is not a subtype of vehicle.
+  //
+
+  def countPortfolio(xs: Array[Vehicle]) =
+    println("Number of items is equal to " + xs.length)
+
+  scala> countPortfolio(carArray)
+  <console>:14: error: type mismatch;
+   found   : Array[Car]
+   required: Array[Vehicle]
+  Note: Car <: Vehicle, but class Array is invariant in type T.
+  You may wish to investigate a wildcard type such as `_ <: Vehicle`. (SLS 3.2.10)
+         countPortfolio(carArray)
+                        ^
+  // It only works with exactly Array[Vehicle]
+  scala> countPortfolio(carArray.asInstanceOf[Array[Vehicle]])
+  Number of items is equal to 3
+#+END_SRC
+
+ - Scala's list is covariant as List[Car] is a subtype of List[Vehicle].
+
+#+BEGIN_SRC scala 
+  def countPortfolio2(xs: List[Vehicle]) =
+    println("Number of items is equal to " + xs.length)
+
+  scala> val vehicleList = List(new Car("m1"), new OilTanker("FPSO AXPF"), new Car("m3"))
+  vehicleList: List[Vehicle] = List(Vehicle type = m1 / name = m1,  ... )
+
+  scala> val carList = List(new Car("m1"), new Car("m3"))
+  carList: List[Car] = List(Vehicle type = m1 / name = m1, Vehicle type = m3 / name = m3)
+
+  scala> countPortfolio2(vehicleList)
+  Number of items is equal to 3
+
+  scala> countPortfolio2(carList)
+  Number of items is equal to 2
+
+#+END_SRC
+
+ - The type constructor Container1 is invariant for type parameter A,
+   therefore the function showContainer will only work with type
+   showContainer. 
+
+#+BEGIN_SRC scala 
+  // type Container1 is invariant at parameter A
+  trait Container1[A]{
+    def get(): A
+  }
+
+  def showContainer1(cont: Container1[Vehicle]) =
+    println("Container = " + cont.get())
+
+  scala> val cont1 = new Container1[Vehicle]{ def get() = car1 }
+  cont3: Container1[Vehicle]{def get(): Car} = $anon$1@1cab1e3d
+
+  scala> val cont2 = new Container1[Car]{ def get() = car1 }
+  cont2: Container1[Car] = $anon$1@2b3e1279
+
+  scala> showContainer1(cont1)
+  Container = Vehicle type = Model X / name = Model X
+
+  scala> showContainer1(cont2)
+  <console>:14: error: type mismatch;
+   found   : Container1[Car]
+   required: Container1[Vehicle]
+  Note: Car <: Vehicle, but trait Container1 is invariant in type A.
+  You may wish to define A as +A instead. (SLS 4.5)
+         showContainer1(cont2)
+                        ^
+#+END_SRC
+
+ - The type constructor Container2 is covariant for type parameter A,
+   as a result the function showContainer2 will work with any subtype
+   of Vehicle. 
+
+#+BEGIN_SRC scala 
+  // Type Container2 is variant at parameter A
+  trait Container2[+A]{
+    def get(): A
+  }
+
+  def showContainer2(cont: Container2[Vehicle]) =
+    println("Container = " + cont.get())
+
+  scala> val cont1b = new Container2[Vehicle]{ def get() = car1 }
+  cont1b: Container2[Vehicle]{def get(): Car} = $anon$1@6bbaf0db
+
+  scala> val cont2b = new Container2[Car]{ def get() = car1 }
+  cont2b: Container2[Car] = $anon$1@52dd3c57
+
+  scala> showContainer2(cont1b)
+  Container = Vehicle type = Model X / name = Model X
+
+  scala> showContainer2(cont2b)
+  Container = Vehicle type = Model X / name = Model X
+     
+#+END_SRC
+
+ *Further Reading*
+ 
+ * *A practical tour of Scala's type system*.
+    <http://chariotsolutions.com/wp-content/uploads/2016/04/HeatherMiller.pdf>
+
+ * https://en.wikipedia.org/wiki/Subtyping
+
+ * [[https://en.wikipedia.org/wiki/Covariance_and_contravariance_(computer_science)][Covariance and contravariance (computer science) - Wikipedia]]
+
+ * [[https://stackoverflow.com/questions/8481301/covariance-invariance-and-contravariance-explained-in-plain-english][java - Covariance, Invariance and Contravariance explained in plain English? - Stack Overflow]]
+
+ * [[https://stackoverflow.com/questions/20508529/subtype-in-scala-what-is-type-x-y][Subtype in Scala: what is "type X <: Y"? - Stack Overflow]]
+
+ * Armando Solar-Lezama. [[https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-820-fundamentals-of-program-analysis-fall-2015/lecture-notes/MIT6_820F15_L08.pdf][Type Classes and Subtyping]] 
+
+ * [[http://like-a-boss.net/2012/09/17/variance-in-scala.html][Variance in scala.]]
 ** Scala Implicit 
 *** Use Cases 
 
@@ -9725,7 +10040,6 @@ Use Cases:
  + Class Extension
 
  + Type Classes
-
 
 *** Implicit type conversion 
 **** Overview 
